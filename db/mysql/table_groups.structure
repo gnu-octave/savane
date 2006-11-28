@@ -1,0 +1,125 @@
+# This file was generated for Savane SVN (toward 2.1).
+#
+# This is an SQL file necessary to create the table groups part of a
+# Savane database.
+# 
+# Check groups.README for specifics about this table.
+# (if this file does not exist, there is nothing specific)
+# 
+# Go at <https://gna.org/projects/savane> if you need information 
+# about Savane.
+
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: savane
+-- ------------------------------------------------------
+-- Server version	4.1.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `groups`
+--
+
+DROP TABLE IF EXISTS `groups`;
+CREATE TABLE `groups` (
+  `group_id` int(11) NOT NULL auto_increment,
+  `group_name` varchar(255) default NULL,
+  `type` int(11) NOT NULL default '1',
+  `is_public` int(11) NOT NULL default '0',
+  `status` char(1) NOT NULL default 'A',
+  `unix_group_name` varchar(30) NOT NULL default '',
+  `short_description` varchar(255) default NULL,
+  `license` varchar(16) default NULL,
+  `register_purpose` text,
+  `required_software` text,
+  `other_comments` text,
+  `license_other` text,
+  `register_time` int(11) NOT NULL default '0',
+  `rand_hash` text,
+  `registered_gpg_keys` text,
+  `use_homepage` char(1) default '0',
+  `use_mail` char(1) default '0',
+  `use_patch` char(1) default '0',
+  `use_task` char(1) default '0',
+  `use_forum` char(1) default '0',
+  `use_cvs` char(1) default '0',
+  `use_arch` char(1) default '0',
+  `use_svn` char(1) default '0',
+  `use_news` char(1) default '0',
+  `use_support` char(1) default '0',
+  `use_download` char(1) default '0',
+  `use_bugs` char(1) default '0',
+  `use_extralink_documentation` char(1) default '0',
+  `bugs_preamble` text,
+  `task_preamble` text,
+  `patch_preamble` text,
+  `support_preamble` text,
+  `cookbook_preamble` text,
+  `long_description` text,
+  `devel_status` varchar(5) default '0',
+  `url_homepage` varchar(255) default NULL,
+  `url_download` varchar(255) default NULL,
+  `url_forum` varchar(255) default NULL,
+  `url_support` varchar(255) default NULL,
+  `url_mail` varchar(255) default NULL,
+  `url_cvs` varchar(255) default NULL,
+  `url_cvs_viewcvs` varchar(255) default NULL,
+  `url_cvs_viewcvs_homepage` varchar(255) default NULL,
+  `url_arch` varchar(255) default NULL,
+  `url_arch_viewcvs` varchar(255) default NULL,
+  `url_svn` varchar(255) default NULL,
+  `url_svn_viewcvs` varchar(255) default NULL,
+  `url_bugs` varchar(255) default NULL,
+  `url_task` varchar(255) default NULL,
+  `url_patch` varchar(255) default NULL,
+  `url_extralink_documentation` varchar(255) default NULL,
+  `dir_cvs` varchar(255) default NULL,
+  `dir_arch` varchar(255) default NULL,
+  `dir_svn` varchar(255) default NULL,
+  `dir_homepage` varchar(255) default NULL,
+  `dir_download` varchar(255) default NULL,
+  `new_bugs_address` text NOT NULL,
+  `new_patch_address` text NOT NULL,
+  `new_support_address` text NOT NULL,
+  `new_task_address` text NOT NULL,
+  `new_news_address` text NOT NULL,
+  `new_cookbook_address` text NOT NULL,
+  `bugs_glnotif` int(11) NOT NULL default '1',
+  `support_glnotif` int(11) NOT NULL default '1',
+  `task_glnotif` int(11) NOT NULL default '1',
+  `patch_glnotif` int(11) NOT NULL default '1',
+  `cookbook_glnotif` int(11) NOT NULL default '1',
+  `send_all_bugs` int(11) NOT NULL default '0',
+  `send_all_patch` int(11) NOT NULL default '0',
+  `send_all_support` int(11) NOT NULL default '0',
+  `send_all_task` int(11) NOT NULL default '0',
+  `send_all_cookbook` int(11) NOT NULL default '0',
+  `bugs_private_exclude_address` text,
+  `task_private_exclude_address` text,
+  `support_private_exclude_address` text,
+  `patch_private_exclude_address` text,
+  `cookbook_private_exclude_address` text,
+  PRIMARY KEY  (`group_id`),
+  KEY `idx_groups_status` (`status`),
+  KEY `idx_groups_public` (`is_public`),
+  KEY `idx_groups_unix` (`unix_group_name`),
+  KEY `idx_groups_type` (`type`),
+  KEY `is_public` (`is_public`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

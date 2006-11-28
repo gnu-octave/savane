@@ -1,0 +1,17 @@
+<!-- Savannah - Misc add here details about special features you bring -->
+<!-- $Id$ -->
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+//
+
+// <br><br><br>
+// <H2>Miscellanous...</H2>
+
+//echo '<H3><A HREF="http://'.$GLOBALS['sys_default_domain'].'/cvs.backups/.'$GLOBALS['group_name'].'.tar.gz">Nightly CVS Tree Tarball</A></H3>';
+
+//<dd>This tarball is updated every night and contains a copy of your Source CVS tree.</dd>
+
+?>

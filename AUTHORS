@@ -1,0 +1,80 @@
+The following people were involved in the cooperative building of Savane.
+This list is non-exhaustive, if we forgot your name here, blame the author
+of the list for the period.
+
+
+-------------------------------------------------------------------------------
+ Before late 2000, before Savannah
+-------------------------------------------------------------------------------
+
+See AUTHORS.SourceForge for the authors of the original SourceForge-2.0
+software.
+
+-------------------------------------------------------------------------------
+ Between 2001 and 2004, before Savane
+-------------------------------------------------------------------------------
+
+See AUTHORS.Savannah for the authors of the Savannah software.
+
+-------------------------------------------------------------------------------
+ Nowadays, 2004-2006
+-------------------------------------------------------------------------------
+
+Timothee Besset		<ttimo--ttimo.net>
+	Subversion support implementation.
+
+Sylvain Beucler		<beuc--beuc.net>
+	Bugfixing, code improvements.
+
+James E. Blair		<corvus--gnu.org>
+	Code improvements.
+
+Armando L. Caro Jr. 	<acaro--bbn.com>
+	Code improvements.
+
+Vincent Caron		<zerodeux--gnu.org>
+	Bugfixing, css themes improvements.
+
+Michael Casadevall	<sonicmctails--ssonicnet.com>
+	Bugfixing, code improvements.
+
+Paul Fisher		<rao--gnu.org>
+	Code improvements.
+
+Lorenzo Hernández Garcia-Hierro
+                        <lorenzohgh--tuxedo-es.org>
+	Code improvements, security checks.
+
+Joxean Koret		<joxeankoret--yahoo.es >
+	Code improvements.
+
+Elfyn McBratney 	<beu--gnu.org>
+	Bugfixing, code improvements. 
+
+Yves Perrin		<yves.perrin--cern.ch>
+	Bugfixing, code improvements.
+
+Paul Pogonyshev 	<pogonyshev--gmx.net>
+	Code improvements.
+
+Mathieu Roy		<yeupou--gnu.org>
+	Development coordination, code improvements, bugfixing, 
+	French translation.
+
+Philippe Roy 		<phroy--gna.org>
+	Cosmetics improvements of the darkslate theme.
+
+Tobias Toedter		<t.toedter--gmx.net>
+	Code improvements, bugfixing, German translation.
+
++ Translators:
+	Daniel Nylander <info--danielnylander.se> (Swedish)
+	Ajuntament Santa Coloma de Gramenet <ajstc--grame.net> (Catalan)
+	Matteo Settenvini <msettenvini--tin.it> (Italian)
+
++ Icons:
+	GNOME and KDE project GPLed icons
+
+
+[list in alphabetical order made by yeupou--gnu.org]
+-------------------------------------------------------------------------------

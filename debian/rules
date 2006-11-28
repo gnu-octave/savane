@@ -1,0 +1,105 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This is the debhelper compatibility version to use.
+export DH_COMPAT=3
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+
+ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -g
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
+config.status: configure
+	dh_testdir
+	# We do not want user input here, so we create a configure.cache
+	# with crappy content, it does not matter
+	echo "# bla" > configure.cache
+	./configure
+
+build: build-stamp
+
+build-stamp:  config.status
+	dh_testdir
+
+	# Add here commands to compile the package.
+	$(MAKE)
+	#/usr/bin/docbook-to-man debian/pdbv.sgml > pdbv.1
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	# Add here commands to clean up after the build process.
+	-$(MAKE) clean
+	-test -r /usr/share/misc/config.sub && \
+	  cp -f /usr/share/misc/config.sub config.sub
+	-test -r /usr/share/misc/config.guess && \
+	  cp -f /usr/share/misc/config.guess config.guess
+
+	dh_clean config.sub config.guess
+
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Add here comands to install the package into debian/savane.
+	$(MAKE) deb-savane-frontend debwww=$(CURDIR)/debian/savane-frontend/var/www debprefix=$(CURDIR)/debian/savane-frontend/usr debetc=$(CURDIR)/debian/savane-frontend/etc
+	$(MAKE) deb-savane-frontend-mail debwww=$(CURDIR)/debian/savane-frontend-mail/var/www debprefix=$(CURDIR)/debian/savane-frontend-mail/usr debetc=$(CURDIR)/debian/savane-frontend-mail/etc
+	$(MAKE) deb-savane-lib debprefix=$(CURDIR)/debian/savane-lib/usr debetc=$(CURDIR)/debian/savane-lib/etc
+	$(MAKE) deb-savane-backend-mail debprefix=$(CURDIR)/debian/savane-backend-mail/usr debetc=$(CURDIR)/debian/savane-backend-mail/etc
+	$(MAKE) deb-savane-backend-extra-cvs debprefix=$(CURDIR)/debian/savane-backend-extra-cvs/usr debetc=$(CURDIR)/debian/savane-backend-extra-cvs/etc
+	$(MAKE) deb-savane-backend-extra-subversion debprefix=$(CURDIR)/debian/savane-backend-extra-subversion/usr debetc=$(CURDIR)/debian/savane-backend-extra-subversion/etc
+	$(MAKE) deb-savane-backend-download debprefix=$(CURDIR)/debian/savane-backend-download/usr debetc=$(CURDIR)/debian/savane-backend-download/etc
+	$(MAKE) deb-savane-backend-export debprefix=$(CURDIR)/debian/savane-backend-export/usr debetc=$(CURDIR)/debian/savane-backend-export/etc
+	$(MAKE) deb-savane-backend-misc debprefix=$(CURDIR)/debian/savane-backend-misc/usr debetc=$(CURDIR)/debian/savane-backend-misc/etc
+	$(MAKE) deb-savane-backend-members-shell debprefix=$(CURDIR)/debian/savane-backend-members-shell/usr debetc=$(CURDIR)/debian/savane-backend-members-shell/etc
+	$(MAKE) deb-savane-database debprefix=$(CURDIR)/debian/savane-database/usr debetc=$(CURDIR)/debian/savane-database/etc
+	$(MAKE) deb-savane-backend-config debprefix=$(CURDIR)/debian/savane-config/usr debetc=$(CURDIR)/debian/savane-config/etc
+	$(MAKE) deb-savane-doc debprefix=$(CURDIR)/debian/savane-doc/usr debetc=$(CURDIR)/debian/savane-doc/etc
+	$(MAKE) deb-savane-update debprefix=$(CURDIR)/debian/savane-update/usr
+	$(MAKE) deb-savane-backend-spamcheck debprefix=$(CURDIR)/debian/savane-backend-spamcheck/usr debetc=$(CURDIR)/debian/savane-backend-spamcheck/etc
+
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdebconf 
+	dh_installdocs
+	dh_installman
+	dh_installchangelogs ChangeLog.byversion
+	dh_link 
+	dh_strip
+	dh_compress
+	dh_fixperms 
+	dh_installdeb 
+	dh_shlibdeps
+	dh_perl 
+	dh_gencontrol 
+	dh_md5sums 
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

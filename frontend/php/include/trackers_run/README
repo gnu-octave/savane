@@ -1,0 +1,15 @@
+This directory contains files that should be included by trackers using the 
+common tracker code.
+
+They may do that or not, depending on their purpose.
+Most of them will do.
+
+See in frontend/php/bugs for an example of inclusion.
+Most trackers are like the bug tracker, and as such are merely symlinks against
+ its main directory.
+
+For instance:
+	- frontend/php/bugs do include of files 
+	frontend/php/include/trackers_run
+	- frontend/php/support and frontend/php/task are symlinks against
+	frontend/php/bugs

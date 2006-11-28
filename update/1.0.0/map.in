@@ -1,0 +1,169 @@
+##################################################
+# Syntax of this file:
+#
+# Lines contain one keyword followed by arguments
+#
+# mapping a table
+#   map_table new_table_name old_table_name
+#
+# mapping a column
+#   map_col   new_table.new_col  old_table.old_col
+#
+# specifying that no mapping exists for a column or table either in the
+# source or target DB. The pattern is a perl regular expression (so all
+# columns of a table could be ignored by using a pattern like
+# "tablename\.". If you want to exclude table 'task' from being mapped,
+# use "task$", because "task" will also match any string like "task_dep")
+#     nomap_target_table namepattern
+#     nomap_target_col   namepattern
+#     nomap_source_col   namepattern
+###################################################
+
+
+
+# TABLE: groups
+# WARNING: mapping of cvs related column TO BE CHECKED WITH DEREK
+
+map_col groups.bugs_preamble             groups.bug_preamble
+map_col groups.new_bugs_address          groups.new_bug_address
+map_col groups.task_preamble             groups.pm_preamble
+map_col groups.send_all_patch            groups.send_all_patches
+map_col groups.send_all_task             groups.send_all_tasks
+# TODO: check the meaning of url_cvs, cvs_box is not used in old cern-v.
+map_col groups.url_homepage              groups.homepage
+map_col groups.use_download              groups.use_file
+map_col groups.use_task                  groups.use_pm
+
+# CERN specific: the configurable url to the web hosted
+# cvs repositories was stored in the groups.html_cvs field
+map_col groups.url_cvs                   groups.html_cvs
+# CERN specific: CERN does not host CVS for project web pages
+nomap_target_col groups.url_cvs_viewcvs_homepage
+
+####################
+
+# TABLE: user_group
+map_col user_group.bugs_flags  user_group.bug_flags
+map_col user_group.news_flags  user_group.doc_flags
+map_col user_group.task_flags  user_group.project_flags
+
+#DEREK DEBUG, just to test the script. This should create a
+#             type mismatch. Remove for actual testing
+# map_col support.bug_id bug.details
+
+
+
+
+################################
+# BUG TRACKER
+
+# trivial name changes of the bug tracker tables
+# bugs <== bug
+map_table bugs			    bug
+map_table bugs_cc                   bug_cc
+map_table bugs_canned_responses     bug_canned_responses
+map_table bugs_field                bug_field                
+map_table bugs_field_usage          bug_field_usage          
+map_table bugs_field_value          bug_field_value          
+map_table bugs_file                 bug_file                 
+map_table bugs_filter               bug_filter               
+map_table bugs_history              bug_history              
+map_table bugs_report               bug_report               
+map_table bugs_report_field         bug_report_field         
+# map_table bugs_watcher              bug_watcher              
+
+# TABLE: bugs_dependencies
+nomap_target_table bugs_dependencies$
+
+
+# the priority field in the new release of Savannah
+#   is now used for the coloring of the entries. I.e.
+#   priority starts as a copy of the severity column.
+map_col bugs.priority               bug.severity
+
+
+
+################################
+# SUPPORT TRACKER
+
+nomap_target_table support$
+nomap_target_table support_cc
+
+# The new support_history table will be made up of the entries in the
+# old support_history table. The followup messages which were stored in
+# the support_messages table will be migrated separately on top of them
+# by another script (entries with field_name='details' in the new system).
+# The new field 'type' should be set to NULL for all the entries from the
+# old support_history table. It only has meaning for the details
+# field
+map_col support_history.bug_id support_history.support_id
+map_col support_history.bug_history_id support_history.support_history_id 
+
+nomap_target_table support_dependencies
+
+# TABLE: support_canned_responses
+map_col support_canned_responses.bug_canned_id  support_canned_responses.support_canned_id
+
+
+
+################################
+# TASK TRACKER
+
+# TABLE: task
+nomap_target_table task$
+
+# The task_history (old: project_history) is migrated in another script
+# together with the task entries.
+nomap_target_table task_history
+
+nomap_target_table task_dependencies
+
+
+################################
+# PATCH TRACKER
+
+nomap_target_table patch$
+
+#DEREK TODO: Check history migration
+nomap_target_table patch_history$
+#map_col patch_history.bug_id   patch_history.patch_id
+#map_col patch_history.bug_history_id  patch_history.patch_history_id
+
+nomap_target_table patch_dependencies$
+
+
+####################
+
+# TABLE: trackers_notification
+map_col trackers_notification.event_id    bug_notification.event_id
+map_col trackers_notification.notify      bug_notification.notify
+map_col trackers_notification.role_id     bug_notification.role_id
+map_col trackers_notification.user_id     bug_notification.user_id
+
+
+# The tracker notification configuration is kept in these two
+# tables. They are generated when installing Savannah and must
+# not be migrated 
+nomap_target_table trackers_notification_event
+nomap_target_table trackers_notification_role
+
+
+####################
+
+# TABLE: trackers_watcher
+# map_col trackers_watcher.group_id ('watching' was global so this field did not exist in bug_watcher)
+map_col trackers_watcher.user_id      bug_watcher.user_id
+map_col trackers_watcher.watchee_id   bug_watcher.watchee_id
+
+
+# The following entries define which source tables/cols are not mapped
+# on purpose. Therefore there should be no warning produced.
+
+nomap_source_col foundry_
+nomap_source_col frs_
+nomap_source_col snippet_
+nomap_source_col survey_
+nomap_source_col trove_
+nomap_source_col _metric
+nomap_source_col stats_
+

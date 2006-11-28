@@ -1,0 +1,79 @@
+MSGMERGE = msgmerge
+XGETTEXT = xgettext
+
+NLSPACKAGE = savane
+CATALOGS = $(shell ls *.po)
+FMTCATALOGS = $(patsubst %.po,%.mo,$(CATALOGS))
+POTFILES_PHP = $(shell find ../frontend/php -iname "*.php" -or -iname "*.class" | LANG=C LC_ALL=C sort)
+
+all: $(NLSPACKAGE).pot $(FMTCATALOGS)
+
+echo:
+	echo $(POTFILES_PHP)
+
+ask-update:
+	if [ -e /usr/bin/podebconf-report-po ]; then /usr/bin/podebconf-report-po --package=savane --podir=. --from="savane-dev-i18n@gna.org" --package="Savane" --template=../devel/updatepo-template.txt ; else echo " " && echo "podebconf-report-po not found, not able to ask to translators to update"; fi
+
+potfile: $(POTFILES_PHP)
+# Use --language=PHP. It means for now that using the same pot
+# for both perl and PHP code is not possible.
+	$(XGETTEXT) --language=PHP --add-comments=I18N --output $(NLSPACKAGE).po \
+	$(POTFILES_PHP)
+	if cmp -s $(NLSPACKAGE).po $(NLSPACKAGE).pot; then \
+	    rm -f $(NLSPACKAGE).po; \
+	else \
+	    mv $(NLSPACKAGE).po $(NLSPACKAGE).pot; \
+	fi
+	@echo " "
+	@echo "Please, make sure before generating potfile that your Makefile"
+	@echo "is up to date (run ./configure in the top directory)"
+
+update-po: refresh-po
+refresh-po: potfile Makefile
+	catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+		lang=`echo $$cat | sed 's/.po//'`; \
+		if $(MSGMERGE) $$lang.po $(NLSPACKAGE).pot > $$lang.pot ; then \
+			mv -f $$lang.pot $$lang.po ; \
+			echo "$(MSGMERGE) of $$lang succeeded" ; \
+		else \
+			echo "$(MSGMERGE) of $$lang failed" ; \
+			rm -f $$lang.pot ; \
+		fi \
+	done
+
+stats: report
+report:
+	@for cat in $(CATALOGS); do \
+		echo "$$cat:"; \
+		echo -n "   "; \
+		msgfmt -v --check --statistics --output-file=/dev/null $$cat; \
+	done
+
+
+install: all
+	if [ ! -e $(INSTALLNLSDIR) ]; then  mkdir -p $(INSTALLNLSDIR) ; fi
+	for n in $(CATALOGS); do \
+	    l=`basename $$n .po`; \
+	    mo=$$l.mo; \
+	    install -m 755 -d $(INSTALLNLSDIR)/$$l; \
+	    install -m 755 -d $(INSTALLNLSDIR)/$$l/LC_MESSAGES; \
+	    install -m 644 $$mo \
+		$(INSTALLNLSDIR)/$$l/LC_MESSAGES/$(NLSPACKAGE).mo; \
+	done
+
+
+uninstall:
+	for n in $(CATALOGS); do \
+	    l=`basename $$n .po`; \
+	    rm -f $(INSTALLNLSDIR)/$$l/LC_MESSAGES/$(NLSPACKAGE).mo; \
+	done
+
+%.mo: %.po
+	msgconv --to-code=UTF-8 --output-file=temp.po $<
+	msgfmt -o $@ temp.po
+	rm -f temp.po
+
+clean:
+	rm -f Makefile *mo *.pyc
+	if [ -x /usr/bin/darius-mrclean ]; then /usr/bin/darius-mrclean . ; fi

@@ -1,0 +1,10 @@
+# This section is highly specific to an installation. We provide here
+# only samples. 
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+# Daily cvs tarball
+#6 5 * * *	root    sv_daily_cvs_tarball --MISSING PARAMETERS.
+#                                            (try with --help)
+
+# END

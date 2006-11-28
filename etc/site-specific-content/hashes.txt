@@ -1,0 +1,63 @@
+<?php
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+# With this file, you can modify the hashes used by your Savane.
+#
+# For instance, you can modify here the set of license available.
+# Remove the license you do not want to be available for your user.
+#
+# You can also change the development status
+
+
+$LICENSE['gpl'] = 'GNU General Public License V2 or later';
+$LICENSE['lgpl'] = 'GNU Lesser General Public License';
+$LICENSE['fdl'] = 'GNU Free Documentation License';
+$LICENSE['mbsd'] = 'Modified BSD License';
+$LICENSE['x11'] = 'X11 license';
+$LICENSE['cryptix'] = 'Cryptix General License';
+$LICENSE['zlib'] = 'The license of ZLib';
+$LICENSE['imatrix'] = 'The license of the iMatix Standard Function Library';
+$LICENSE['w3c'] = 'The W3C Software Notice and License';
+$LICENSE['berkeley'] = 'The Berkeley Database License';
+$LICENSE['python16'] = 'The License of Python 1.6a2 and earlier versions';
+$LICENSE['cartistic'] = 'The Clarified Artistic License';
+$LICENSE['expat'] = 'Expat License (sometime refered to as MIT License)';
+$LICENSE['affero'] = 'Affero General Public License V1 or later';
+$LICENSE['website'] = 'WebSite Only';
+$LICENSE['other'] = 'Other';
+
+/* should be equal to '0' when no url exists */ 
+$LICENSE_URL['gpl'] = 'http://www.gnu.org/copyleft/gpl.html';
+$LICENSE_URL['lgpl'] = 'http://www.gnu.org/copyleft/lesser.html';
+$LICENSE_URL['fdl'] = 'http://www.gnu.org/copyleft/fdl.html';
+$LICENSE_URL['mbsd'] = 'http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5';
+$LICENSE_URL['x11'] = 'http://www.x.org/terms.htm';
+$LICENSE_URL['cryptix'] = 'http://www.cryptix.org/docs/license.html';
+$LICENSE_URL['zlib'] = 'ftp://ftp.freesoftware.com/pub/infozip/zlib/zlib_license.html';
+$LICENSE_URL['imatrix'] = '0';
+$LICENSE_URL['w3c'] = 'http://www.w3.org/Consortium/Legal/copyright-software.html';
+$LICENSE_URL['berkeley'] = 'http://www.sleepycat.com/license.net';
+$LICENSE_URL['python16'] = 'http://www.python.org/doc/Copyright.html';
+$LICENSE_URL['cartistic'] = 'http://www.statistica.unimib.it/utenti/dellavedova/software/artistic2.html';
+$LICENSE_URL['expat'] = 'http://www.gnu.org/licenses/license-list.html#Expat';
+$LICENSE_URL['affero'] = 'http://www.affero.org/oagpl.html';
+$LICENSE_URL['website'] = '0';
+$LICENSE_URL['other'] = '0';
+
+
+$DEVEL_STATUS[0] = '0 - Undefined';
+$DEVEL_STATUS[1] = '1 - Planning';
+$DEVEL_STATUS[2] = '2 - Pre-Alpha';
+$DEVEL_STATUS[3] = '3 - Alpha';
+$DEVEL_STATUS[4] = '4 - Beta';
+$DEVEL_STATUS[5] = '5 - Production/Stable';
+$DEVEL_STATUS[6] = '6 - Mature';
+# 7 must be kept untouched because it has been used on several installation
+# for 'N/A'
+# $DEVEL_STATUS[7] = 'N/A';
+$DEVEL_STATUS[8] = '? - Orphaned/Unmaintained';
+ 
+?>

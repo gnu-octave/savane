@@ -1,0 +1,394 @@
+/*
+ *
+ * Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+ *    This theme was inspired by the colors of the soft green theme
+ *    shipped with KDE 3.3
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.15 */
+
+@import "internal/base.css";
+
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body { 
+	margin-top: 2px;
+	margin-left: 2px;
+  	margin-right: 2px;
+  	margin-bottom: 2px;
+  	background-color: #8A817C;
+ 	color: black;
+}
+
+a { 
+	text-decoration: none;
+	color: #0E9904;
+}
+a:hover { 
+	text-decoration: underline; 
+	color: #264B2C;
+}
+a:active { 
+	color: #800080; 
+}
+
+
+.unavailable { 
+	color: #c1c1b0; 
+	text-decoration: none; 
+}
+.unavailable:hover { 
+	text-decoration: line-through; 
+	color: #c1c1b0; 
+}
+
+
+.footer { font-size: x-small; color: #a0a092; }
+
+/* Titles */
+
+/* <h2> Page title */
+/* <h3> Section title */
+h3 {
+	text-indent: 1em; 
+	border-top: solid thin #d3c5be;
+	border-bottom: solid thin #d3c5be;
+}
+
+/* <h4> Small section title */
+/* <h5> Input form label */
+h5 {
+	border-top: solid thin #d3c5be;
+	border-bottom: solid thin #d3c5be;
+}
+
+.highlight { 
+	background-color: #ffdd76;
+	color: black;
+}
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+.realbody {  border-spacing: 4; border: 0; }
+.main { 
+	background-color: white;
+	vertical-align: top;  
+	margin-left: 160px; 
+	border-spacing: 0; 
+	border: 2px solid #d3c5be;
+	color: #532113;
+}
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu { 
+	vertical-align: top; 
+	width: 150px; 
+	border-spacing: 0; 
+	border: 0; 
+	font-size: smaller;
+}
+
+.menutitle { 
+	background-color: #748473;
+	border: thin outset #748473;
+	color: #e5d6cf;
+	vertical-align: top; 
+	font-weight: bold; 
+	text-align: center; 
+}
+
+.menuitem { 
+	background-color: #d3c5be;
+	border: thin outset #d3c5be;
+	vertical-align: top; 
+	text-align: left; 
+	
+}
+
+.menusearch { 
+	font-size: xx-small; 
+	background-color: #d3c5be;
+	border: thin outset #d3c5be;
+} 
+
+.menu a { 
+  	color: black;
+}
+.menuitem:hover {
+	background-color: #93C3A4;
+	border: thin outset #93C3A4;
+	color: black;
+}
+
+.menu a:hover {
+	background-color: #93C3A4;
+	text-decoration: none;
+	color: black;
+}
+
+.toptitle {
+	margin-top: 0;
+	background-color: #417f4b;
+	color: white;
+}
+
+.topmenutitle {
+	background-color: #417f4b;
+	border: thin solid #d3c5be;
+	font-weight: bold; 
+	text-align: center; 
+	color: white;
+	padding: 0;
+}
+
+.topmenuitem { 
+	background-color: #d3c5be;
+	border: thin outset #d3c5be;
+	margin-left: 15%;
+	padding-left: 1%;
+}
+
+ul.topmenuitemsubmenu {
+	background-color: #d3c5be;
+	border: thin outset #d3c5be;
+}
+
+
+ul.topmenuitemsubmenu li {
+	border: none;
+	border-top: thin outset #d3c5be;
+	border-bottom: thin outset #d3c5be;
+}
+
+
+li.topmenuitemsubmenu a {
+	color: black;
+}
+
+li.topmenuitemsubmenu a:hover {
+	background-color: #93C3A4;
+	text-decoration: none;
+	color: black;
+}
+
+
+
+.tabs { 
+	color: #000000; 
+}
+.tabselect { 
+	color: #000000; 
+	font-weight: bold; 
+	text-decoration: underline;
+}
+.tabselect:hover { 
+	color: black; 
+}
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.box { 
+	background-color: #d3c5be;
+	border: 2px outset #d3c5be;
+	border-spacing: 0; 
+	color: #2e5a35;
+}
+
+.boxtitle { 
+	background-color: #417f4b;
+	font-weight: bold; 
+	text-align: center; 
+	text-transform: capitalize; 
+	color: white; 
+}
+
+.boxtitle a { 
+	color: white; 
+	text-decoration: underline;
+}
+.boxtitle a:hover { 
+	color: white;
+}
+
+.boxitem { 
+	border-bottom: 1px solid #a3a292;
+}
+.boxitemalt { 
+	background-color: #f9f9f2;
+	border-bottom: 1px solid #a3a292; 	 
+}
+.boxhighlight { 
+	background-color: #ffdd76; 
+	color: black;
+}
+
+.boxoptions { 
+	text-align: left; 
+	background-color: #eeeee6;
+	border: thin solid #a3a292;
+	color: black;
+} 
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+
+input { 
+	background-color: #E6FFE8;
+	color: black; 
+}
+select { 
+	background-color: #E6FFE8;
+	color: black; 
+}
+textarea { 
+	background-color: #E6FFE8;
+	color: black; 
+}
+
+/* text before inputs */
+.preinput {
+	font-style: italic;
+}
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+.priora { 
+	background-color: #fff2f2; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e; 
+}
+.priorb { 
+	background-color: #ffe8e8; 
+	border: 0; 
+	border-bottom: thin solid #ef6e6e;
+}
+.priorc { 
+	background-color: #ffe0e0; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e; 
+}
+.priord { 
+	background-color: #ffd8d8; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e; 
+}
+.priore { 
+	background-color: #ffcece; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorf { 
+	background-color: #ffc6c6;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorg { 
+	background-color: #ffbfbf;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorh { 
+	background-color: #ffb7b7;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+ }
+.priori { 
+	background-color: #ffadad;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+
+.prioraclosed { 
+	background-color: #F5FFEB; 
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorbclosed { 
+	background-color: #EDFFE6;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorcclosed { 
+	background-color: #EEFFE1;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priordclosed { 
+	background-color: #E0FFD5;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.prioreclosed { 
+	background-color: #CCFFBB;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorfclosed { 
+	background-color: #C6FFB9;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorgclosed { 
+	background-color: #C0FFB2;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorhclosed { 
+	background-color: #ADFFA4;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.prioriclosed { 
+	background-color: #A0FF9D;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+

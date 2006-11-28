@@ -1,0 +1,107 @@
+/*
+ *
+ * Part of the GNU Savannah Project
+ * Copyright 2003 (c) Mathieu Roy <yeupou@gnu.org>
+ * See the changelog file for a detailed list of changes
+ *
+ *  http://savannah.gnu.org 
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+ *
+ * This is the css file for viewcvs, it's not a theme.
+ *
+*/
+
+/* general stuff */
+body { 
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-bottom: 2%;
+  background-color: #eae3d7;
+  font-family: arial,helvetica;
+  font-size: small;
+  color: #333333;
+}
+
+a { text-decoration: none; color: #841212;}
+a:hover { text-decoration: underline; color: #ff0000; }
+a:active { color: #ff0000; }
+
+.smaller { font-size: smaller; }
+.small { font-size: small; }
+.xsmall { font-size: xx-small; }
+.center { text-align: center; }
+.left { text-align: left; }
+.error { font-weight: bold; color: #ff0000; }
+.warn { font-weight: bold; color: #aa2200; }
+.bold { font-weight: bold; }
+.feedback { color: red; }
+
+pre,tt { font-family: courier,sans-serif; }
+
+.footer { font-size: x-small; color: #333333; }
+.standardtable { 
+	width: 99%;
+	border-spacing: 0;
+	border: none;
+	color: #333333;
+}
+
+/* forms */
+
+input {
+        background-color: #fff9e0;
+        color: #841212;
+}
+input:hover { color: #ff0000; }
+select {
+         background-color: #fff9e0;
+         color: #841212;
+}
+
+/* commented out because of a bug in Mozilla 1.2* and 1.1
+select:hover { color: #ff0000; }
+*/
+textarea {
+           background-color: #fff9e0;
+           color: #000000;
+}
+textarea:hover { color: #ff0000; }
+
+
+/* content frame specific */
+table { 
+  vertical-align: top;
+  width: 100%; 
+}
+
+.content {
+  background-color: white; 
+  vertical-align: top;
+  width: 100%; 
+  border-spacing: 0; 
+  border: thin solid #333333; 
+}
+
+/* classic box */
+.boxtable { width: 99%; vertical-align: top; border-spacing: 1px; border: 0; }
+.boxtitle { background-image: url("/images/savannah.theme/leopard.png"); background-color: #eddb5a; font-weight: bold; text-transform: capitalize; color: #000000; }
+.boxtitlealt { border: thin solid #333333; background-color: #f4d495; font-weight: bold; text-transform: capitalize; color: #000000; }
+.boxitem { background-color: #fff9e0; color: #333333; }
+.boxitemalt { background-color: #ffffff;  color: #333333; }

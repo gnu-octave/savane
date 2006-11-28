@@ -1,0 +1,235 @@
+/*
+ * Part of the Savane! Project
+ * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+/* GUIDELINES VERSION FOLLOWED: 1.16 */
+
+@import "internal/base.css";
+
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+
+body { 
+	margin-top: 1%;
+	margin-left: 1%;
+	margin-right: 1%;
+	margin-bottom: 1%;
+	background-color: #d3c996;
+	color: #000000;
+}
+
+a {
+	border-bottom: thin dotted #167c3a;
+	text-decoration: none;
+	color: #086629;
+}
+
+a:hover {
+	background-color: #9ae2b1;
+	text-decoration: none;
+	color: #086629;
+}
+
+a:active {
+	color: #ffffff;
+}
+
+
+.unavailable {
+	text-decoration: line-through;
+	font-style: italic;
+	color: #515151;
+}
+.unavailable:hover { 
+	text-decoration: line-through;
+	font-style: italic;
+	color: #d36363;
+}
+.unavailable:active { 
+	color: #553b63; 
+}
+
+
+
+h3 {
+	font-weight: normal;
+	border-bottom: thin solid #e0c080;
+	border-right: thin solid #e0c080;
+}
+
+h5 {
+	font-weight: normal;
+	border-bottom: thin solid #e0c080;
+	border-right: thin solid #e0c080;
+}
+
+
+.highlight {	
+	background-color: #ffffff;
+}
+
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+.main {
+	vertical-align: top; 
+	background-color: #f2e6ab;
+	border-spacing: 0;
+	border: 2px solid #086629;
+} 
+
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu {	
+	background-color: transparent;
+	color: #086629;
+}
+
+.menutitle {	
+	vertical-align: top;
+	border: #f2e6ab;
+	font-weight: bold;
+	text-align: center;
+}
+
+.menuitem {	
+	vertical-align: top;
+	border: 0;
+	text-align: left;
+}
+
+
+.topmenu {
+	border: none;
+}
+
+
+ul.topmenuitemsubmenu {
+	background-color: #fff4c9;
+ 	border: thin solid #086629;
+}
+
+ul.topmenuitemsubmenu li {
+	background-color: #fff4c9;
+	border: solid thin #086629;
+	/* no top border, that would be make too large separators 
+	 while it is perfectly fine to overload the right and bottom with 
+	the ul border, it makes some kind of light 3d effect*/
+	border-top: none;
+	border-left: 0.4em solid #086629;
+}
+
+
+
+/* we cannot keep it in bold, it makes an extra space with some konqueror
+  version (RHEL) */
+.tabselect { background-color: #fff4c9; text-decoration: none;  color: #000000; /* font-weight: bold; */ }
+.tabselect:hover { text-decoration: none; color: #000000; /* font-weight: bold; */ }
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.boxtitle {	
+	border: 2px solid #086629;
+	font-weight: bold;
+	text-align: left;
+	text-indent: 2em;
+	text-transform: capitalize;
+	background-color: #d3c996;
+	color: #086629;
+}
+
+.boxitem {	
+	text-align: left;
+	background-color: transparent;
+}
+
+.boxitemalt {	
+	background-color: #fff4c9;
+	text-align: left;
+}
+
+.boxoptions {	
+	background-color: #fff4c9;
+}
+
+.boxhighlight {	
+	background-color: #ffffff;
+	text-align: left;
+}
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input {
+	background-color: #f2e6ab;
+	font-weight: bold; 
+	border: 0;
+	border-bottom: thin dashed #167c3a;
+	color: #086629;
+}
+
+input:hover { background-color: #9ae2b1; text-decoration: none; color: #034418; }
+
+select {
+ background-color: #f2e6ab;
+ font-weight: bold;
+ border: 0;
+ border-bottom: thin dashed #167c3a;
+ color: #086629;
+}
+
+select:hover { background-color: #9ae2b1; text-decoration: none; color: #034418; }
+
+textarea {
+ background-color: #f2e6ab;
+ font-weight: bold;
+ border: 0;
+ border-bottom: thin dashed #167c3a;
+ color: #086629;
+}
+
+textarea:hover { background-color: #9ae2b1; text-decoration: none; color: #034418;}
+

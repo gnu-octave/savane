@@ -1,0 +1,3 @@
+<!-- Savannah - User account modification page info about password-->
+<!-- $Id$  BEGIN -->
+<!-- $Id$  BEGIN -->

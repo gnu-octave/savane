@@ -1,0 +1,55 @@
+The Savane Backend:
+-------------------
+
+This part of Savane is a set of scripts that permits to synchronize the 
+Savane database with the system.
+
+Some of theme are purely accessories, some of them are important on Savane
+installation. 
+
+Scripts beginning by the prefix sv_extra are useful only when use with 
+another service (like a cvs server) that is not part of Savane. 
+
+Usually, the backend relies on perl scripts and the Savane lib (Savannah.pm).
+
+Most of the script provide a --help option.
+
+
+Description of the subdirectories:
+----------------------------------
+
+accounts:
+	Scripts related to accounts managements. These scripts can be used
+	to create unix groups and users on a system with the info in the
+	database.
+	It can also build repositories of different kind.
+
+
+admin:
+	Scripts designed for savane administrators (of an installation). For
+	instance, sv_register_discard permit to remove a group from the 
+	database completely.
+
+cvs: 
+	Scripts for CVS management
+
+darwin:
+	Scripts for savane use on Darwin/Mac OS X
+
+devel:
+	Scripts for savane developers
+
+
+install:
+	Scripts for savane installation / upgrade
+
+
+mail:
+	Scripts related to mail management
+
+
+*-specific:
+	Specific to an installation of Savane, like the installation at Gna!
+
+
+$Id$

@@ -1,0 +1,183 @@
+<?php
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+#  Copyright 2005      (c) Mathieu Roy <yeupou--gnu.org>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+# Count the remaining votes of a given user
+function trackers_votes_user_remains_count ($user_id)
+{
+  $total = 100;
+  
+  $sql = "SELECT howmuch FROM user_votes WHERE user_id='$user_id'";
+  $result = db_query($sql);
+
+  if (db_numrows($result)) 
+    {
+      while ($row = db_fetch_array($result)) 
+	{
+	  $total = $total - $row['howmuch'];
+	}
+    }
+  
+    
+  # Total < 0 does not make sense
+  if ($total < 0) 
+    {
+      fb(_("You appear to have less than 0 votes remaining. There's a bug somewhere, please contact the administrators"), 1);
+    }
+
+  return $total;
+}
+
+# Count the number of vote of a given user of a given item
+function trackers_votes_user_giventoitem_count ($user_id, $tracker, $item_id)
+{
+  $total = 0;
+  
+  $sql = "SELECT howmuch FROM user_votes WHERE user_id='$user_id' AND tracker='$tracker' AND item_id='$item_id' LIMIT 1";
+  $result = db_query($sql);
+
+  if (db_numrows($result)) 
+    {
+      $total = db_result($result, 0, 'howmuch');
+    }
+   
+  return $total;
+}
+
+
+# Update the database: add / update votes
+function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
+{
+  # Vote must be simple integer
+  if (!ctype_digit($new_vote))
+    {
+      fb(_("Vote provided is not a simple integer, it has been ignored"), 1);
+      return false;
+    }
+
+  # If the tracker is undefined, use the constant,
+  if (!$tracker)
+    {
+      $tracker = ARTIFACT;
+    }
+
+  # If group_id is not known, we guess it
+  if (!$group_id)
+    {
+      $res_getgroupid = db_query("SELECT group_id FROM ".$tracker." WHERE bug_id='$item_id'");
+      $group_id = db_result($res_getgroupid, 0, 'group_id');
+    }
+  
+  # If the user already voted for this item:
+  #   - if he voted 0, we must simply remove the vote
+  #   - if he voted something else, we must add or remove the diff
+  
+  # Vote = 0
+  if ($new_vote < 1) 
+    {
+      $registered_vote = trackers_votes_user_giventoitem_count(user_getid(), $tracker, $item_id);
+      if ($registered_vote)
+	{
+	  db_query("DELETE FROM user_votes WHERE user_id='".user_getid()."' AND tracker='".$tracker."' AND item_id='$item_id' LIMIT 1");
+	  $res_get = db_query("SELECT vote FROM ".$tracker." WHERE bug_id='$item_id' AND group_id='$group_id'");
+	  $real_new_vote = db_result($res_get, 0, 'vote') - $registered_vote;
+	  db_query("UPDATE ".$tracker." SET vote='$real_new_vote' WHERE bug_id='$item_id' AND group_id='$group_id'");
+	  
+	  fb(_("Vote erased"));
+	}
+      return false; 
+    }
+  else
+    {
+      # Vote > 0 
+
+      # Check the diff between the registered vote and the new vote
+      $registered_vote = trackers_votes_user_giventoitem_count(user_getid(), $tracker, $item_id);
+      $diff_vote = $new_vote - $registered_vote;
+
+      # If new vote equal to the current vote, nothing to do
+      if (!$diff_vote)
+	{
+	  return true;
+	}
+
+      # Check whether the user have not specified more votes than he actually
+      # got available
+      $remains = trackers_votes_user_remains_count(user_getid());
+      if ($remains < $diff_vote)
+	{
+          # If so, set the diff_vote and new_vote as the maximum possible
+          $diff_vote = $remains;
+	  $new_vote = $diff_vote + $registered_vote;
+	}
+
+      # If the vote is new, we do a SQL INSERT, otherwise a SQL UPDATE
+      # in the user_votes table
+      if (!$registered_vote)
+	{
+	  $sql = "INSERT INTO user_votes ".
+	    "(user_id,tracker,item_id,howmuch) ".
+	    "VALUES ('".user_getid()."','".$tracker."','$item_id','$new_vote')";	  
+
+          # Add in CC
+	  unset($bah); 
+          # workaround for stupid function that require a 
+          # variable to be passed as final argument.
+	  trackers_add_cc($item_id,
+			  $group_id,
+			  user_getname(),
+			  "Voted in favor of this item",  
+			  $bah);
+
+	}
+      else
+	{
+	  $sql = "UPDATE user_votes SET howmuch='$new_vote' WHERE ".
+	    "user_id='".user_getid()."' AND tracker='".$tracker."' AND item_id='$item_id'";	  
+	}
+      $res_insert = db_query($sql);
+      if (db_affected_rows($res_insert) < 1)
+	{ 
+	  # In case of problem, kept unmodified the item proper info
+	  fb(_("Unable to record the vote, please report to admins"), 1); 
+	  return false;
+	}
+      
+      # Add the new vote to the item proper info table
+      $res_get = db_query("SELECT vote FROM ".$tracker." WHERE bug_id='$item_id' AND group_id='$group_id'");
+      $real_new_vote = db_result($res_get, 0, 'vote') + $diff_vote;
+      $res_update = db_query("UPDATE ".$tracker." SET vote='$real_new_vote' WHERE bug_id='$item_id' AND group_id='$group_id'");
+      if (db_affected_rows($res_update) < 1)
+	{ 
+	  # In case of problem, kept unmodified the item proper info
+	  fb(_("Unable to finally record the vote, please report to admins"), 1); 
+	  return false;
+	}
+      
+      # If we arrive here, everything went properly
+      if ($diff_vote > 0)
+	{ $diff_vote = "+$diff_vote"; }
+      fb(_("Vote recorded")." ($diff_vote)");
+      return true;
+    }
+}
+
+?>

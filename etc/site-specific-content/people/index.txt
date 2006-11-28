@@ -1,0 +1,13 @@
+<!-- Savannah - People index introduction -->
+<!-- $Id$  BEGIN -->
+<P>
+Browse through the category menu to find projects looking for your help.
+<P>
+If you're a project admin, log in, enter your project page, follow
+the project admin link (in the navigation bar) and you will find a
+<i>Post Jobs</i> section where you can submit help wanted requests
+to appear in this list.
+<P>
+To suggest new job categories, visit the support manager
+<P>
+<!-- $Id$  END -->

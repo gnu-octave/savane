@@ -1,0 +1,151 @@
+/*
+ * Part of the Savane project
+ * Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
+ *   
+ * Based on Emeraud                      
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.17 */
+
+@import "Emeraud.css";
+
+
+/* Left Menu */
+
+.menu {
+	background-color: #EEEAD2;
+	border: thin solid #E2DEC7;
+}
+
+.menuitem { 
+  	border-bottom: thin solid #E2DEC7;
+}
+
+.menu a:hover { 
+	color: #535353;
+}
+
+.menu a:hover { 
+	background-color: #FFFCE6;
+}
+
+/* Top Menu */
+
+.topmenu {
+	border: none;
+}
+
+.topmenutitle, h3, h4, h5 {
+	border: thin solid #006699;
+	background: #8BB9EA;
+	text-shadow: 0.1em 0.1em #006699;
+	color: white;
+}
+
+
+.topmenuitemmainitem {
+	background: #EEEAD2;
+	border: thin solid #E2DEC7;
+}
+
+.tabs {
+	color: #535353;
+	text-decoration: none;
+}
+
+.tabs:hover {
+	background-color: #FFFCE6;
+	color: #535353;
+	text-decoration: none;
+}
+
+.tabselect { 
+	color: #535353; 
+	text-decoration: none; 
+} 
+
+.tabselect:hover, .topmenuitemmainitem:hover { 
+	background-color: #FFFCE6;
+	color: #535353;
+	text-decoration: none; 
+} 
+
+ul.topmenuitemsubmenu {
+ 	border: thin solid #E2DEC7;
+}
+
+
+ul.topmenuitemsubmenu li {
+	background: #fdfdf4;
+	border-left: 0.6em solid #8BB9EA;
+}
+
+
+li.topmenuitemsubmenu a {
+	color: #535353;
+}
+
+li.topmenuitemsubmenu:hover {
+	border-left: 0.6em solid #006699;
+}
+
+li.topmenuitemsubmenu a:hover {
+	background: #EEEAD2;
+	color: #535353;
+}
+
+
+/* Unavailable links (usually inside menus) */
+.unavailable {
+	color: #CCC8B4 !important;
+}
+.unavailable:hover {
+	color: #CCC8B4 !important;
+}
+
+
+/* Boxes */
+.boxtitle {
+	background: #759BC5;
+	border: thin solid #526D8A;
+	text-shadow: 0.1em 0.1em #526D8A;
+}
+
+
+.boxtitle a, h3 a, h4 a, h5 a {
+	text-shadow: 0.1em 0.1em #526D8A;
+	color: white;
+}
+
+.boxtitle a:hover, h3 a:hover, h4 a:hover, h5 a:hover {
+	background: #7CA4D1 !important;
+	color: white;
+}
+
+/* Forms */
+
+input { background: #EEEAD2; color: black; border: thin solid #E2DEC7; }
+select { background: #EEEAD2; color: black; border: thin solid #E2DEC7; }
+textarea { background: #EEEAD2; color: black; border: thin solid #E2DEC7; }
+
+input:hover { background: #F9F9F2; }
+select:hover { background: #F9F9F2; }
+textarea:hover { background: #F9F9F2; }
+
+
+/* EOF */

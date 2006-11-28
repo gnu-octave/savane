@@ -1,0 +1,298 @@
+/*
+ *
+ * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.15 */
+
+@import "internal/base.css";
+
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body { 
+  margin: 1%;
+  border: #d3d3c9;
+  background: #002A4E;
+  color: #DCDCDC;
+}
+
+
+
+a { text-decoration: none; color: #005096;}
+a:hover { text-decoration: underline; color: #002A4E; }
+a:active { color: #aa6666; }
+
+
+.unavailable {
+	text-decoration: none !important;
+	color: #517FB6 !important;
+}
+.unavailable:hover { 
+	text-decoration: none !important;
+	color: #606060;
+}
+.unavailable:active { 
+	color: #606060; 
+}
+
+
+h2, h3, h5 {
+	text-indent: 1em;
+	border-collapse: collapse;
+}
+
+h2, h3 {
+  	text-shadow: 0.1em 0.1em #002A4E;
+}
+
+h3, h5 {
+	border-bottom: 0.1em solid #002A4E; 
+
+}
+
+h3:hover, h5:hover {
+	background: #F1F1F1;	
+}
+
+
+.highlight { background-color: #ffe0db; color: #333333; }
+
+.quote { color: #706e68; }
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+.main { 
+	padding: 0.5em;
+	border: thin solid #bcbcb7;
+	background: #ffffff;  
+	color: black;
+}
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu { 
+	background-color: #426794;
+	width: 16%;
+	color: white;
+}
+
+.menutitle { 
+	vertical-align: top; 
+	font-weight: bold; 
+	text-align: center; 
+	border-bottom: thin solid #002A4E; 
+  	text-shadow: 0.1em 0.1em #002A4E;
+}
+.menuitem { 
+	padding-left: 0.5em;
+	color: #333333; 
+	border-bottom: thin solid #517FB6;
+}
+
+.menuitem:hover {
+	background: #639ADE;
+	color: white;
+}
+
+
+.menu a {
+	color: #9AE2FF;
+}
+
+.menu a:hover {
+	background: #639ADE;
+	color: white;
+	text-decoration: none;
+}
+
+
+.relatedrecipes { 
+	text-align: right;
+	color: #333333; 
+	padding-right: 0.5em; 
+	list-style-type: none;
+	border-bottom: thin solid #d3d3c9;
+}
+
+
+.topmenutitle {
+	background-color: #426794;
+	color: white;
+	font-weight: bold; 
+	text-align: center; 
+	/*border-bottom: thin solid black; 	*/
+}
+
+.topmenuitemmainitem {
+	border-bottom: thin solid #517FB6;
+}
+
+ul.topmenuitemsubmenu {
+	background: #639ADE;
+ 	border: thin solid #002A4E;
+}
+
+
+ul.topmenuitemsubmenu li {
+ 	border: none;
+	border-left: 1em solid #37567B;
+	border-bottom: thin solid #517FB6;
+}
+
+
+ul.topmenuitemsubmenu a {
+	color: white;
+}
+
+ul.topmenuitemsubmenu a:hover {
+	background: #5CB3FF;
+}
+
+li.topmenuitemsubmenu:hover {
+	background: #5CB3FF;
+
+}
+
+
+li.topmenuitemsubmenuseparator {
+	background-color: #517FB6;
+}
+
+
+
+/* we cannot keep it in bold, it makes an extra space with some konqueror
+  version (RHEL) */
+.tabselect { background: #002A4E; color: white; /* font-weight: bold; */ }
+.tabselect:hover { color: white; /*font-weight: bold;*/ }
+.tabs:hover { 
+	background: #639ADE;
+	color: white;
+	text-decoration: none;
+}
+
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.box { 
+	vertical-align: top; 
+	border-spacing: 1px; 
+	border: 0; 
+}
+
+.boxtitle { 
+	background-color: #002A4E;
+	color: white;
+	border: thin solid #0061B6;
+  	text-shadow: 0.1em 0.1em #0061B6;
+}
+.boxtitle a {
+	color: white;
+	text-decoration: underline;
+}
+.boxtitle a:hover {
+	background-color: #003665;
+}
+.boxitem {  
+	background-color: #efefef; 
+	text-align: left; 
+	color: #333333; 
+	border: thin solid #e0e0e0;
+}
+.boxitemalt { 
+	background-color: #ffffff; 
+	text-align: left; 
+	color: #333333; 
+	border: thin solid #f4f4f4;
+}
+.boxoptions { 
+	background-color: #f9f5e8; 
+	text-align: left; 
+	color: #333333; 
+}
+.boxhighlight { background-color: #ffe0db; text-align: left; color: #333333; }
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+.preinput {
+	color: #706e68;
+}
+
+input { background-color: #639ADE; color: white; border: thin solid #517FB6; }
+select { background-color: #639ADE; color: white; border: thin solid #517FB6; }
+textarea { background-color: #639ADE; color: white; border: thin solid #517FB6; }
+
+input:hover { background-color: #5CB3FF;  }
+select:hover { background-color: #5CB3FF; }
+textarea:hover { background-color: #5CB3FF; }
+
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+.priora { border: none; }
+.priorb { border: none; }
+.priorc { border: none; }
+.priord { border: none; }
+.priore { border: none; }
+.priorf { border: none; }
+.priorg { border: none; }
+.priorh { border: none; }
+.priori { border: none; }
+
+
+.prioraclosed { border: none; }
+.priorbclosed { border: none; }
+.priorcclosed { border: none; }
+.priordclosed { border: none; }
+.prioreclosed { border: none; }
+.priorfclosed { border: none; }
+.priorgclosed { border: none; }
+.priorhclosed { border: none; }
+.prioriclosed { border: none; }
+

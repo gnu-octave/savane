@@ -1,0 +1,49 @@
+
+all:	
+	cd $(SV_DB) && \
+	rm -f database_savane.structure && \
+	for file in table_*.structure; do \
+		cat $$file >> database_savane.structure ;\
+	done
+	cd $(SV_DB) && \
+	rm -f database_savane.initvalues && \
+	for file in table_*.initvalues; do \
+		cat $$file >> database_savane.initvalues ;\
+	done
+
+
+create-db:
+	$(SV_DB_CMD) $(SV_DB_OPTIONS) -e "create database $(SV_DB_NAME)" 
+
+# the default behavior is to generate files from the dbfiles,
+# but these files must be up-to-date
+init-structure:
+	make 
+	make init-structure-from-dbfiles
+#	make init-structure-from-tbfiles
+
+init-values:
+	make
+	make init-values-from-dbfiles
+#	make init-values-from-tbfiles
+
+
+init-structure-from-dbfiles:
+	cd $(SV_DB) && $(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < database_savane.structure
+
+init-values-from-dbfiles:
+	cd $(SV_DB) && $(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < database_savane.initvalues
+
+
+init-structure-from-tbfiles:
+	cd $(SV_DB) && \
+	for file in table_*.structure; do \
+		$(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < $$file ;\
+	done
+
+init-values-from-tbfiles:
+	cd $(SV_DB) && \
+	for file in table_*.initvalues; do \
+		$(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < $$file ;\
+	done
+

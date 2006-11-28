@@ -1,0 +1,15 @@
+#!/usr/bin/perl 
+#
+# This postinst script will warn user that he still have work to do, the
+# package wont do it for him
+
+print "Don't forget these are very basic debian packages. 
+
+This update package will not perform any update directly for you. You must
+take a look at /usr/share/doc/savane-update, read the READMEs and run the
+update scripts.
+";
+sleep(4);
+
+
+# End

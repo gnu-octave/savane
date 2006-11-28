@@ -1,0 +1,29 @@
+Savane is a Web-based Libre Software hosting system. It currently includes issue tracking, project member management by roles and individual account maintenance. The issue tracking handles bugs, tasks, and support. The issue tracker's fields are configurable in many ways: mandatory of not, shown to users according to their role in a project, and with transition management. It is internationalised and themable. It depends on Apache (>= 1.3.x) , Perl (>= 5.6), PHP (>= 4.1.0) and MySQL (>= 3.x).
+
+				 ---------
+
+The project homepage is <http://gna.org/projects/savane>
+
+
+				 ---------
+
+Need some help/documentation to install Savane on another site? 
+Take a look at the docs in http://download.gna.org/savane-doc/
+
+(they may has well has been included with your Savane package, depending
+on the packager)
+
+If it is not helpful enough to you, if you'd like to request new features, 
+use our support tracker  to get assistance:
+<https://gna.org/support/?group=savane>
+ 
+
+
+				 --------
+
+Savane is composed of a database, a web frontend and a system backend.
+
+The web frontend is the user interface, run by a webserver with PHP. All users modifications in the database are made via this frontend. It permits them to submit items (bugs, task...), modify items, change their preferences, etc.
+
+The system backend is mainly used by cronjob, or by site administrators in a console shell. It is written in Perl, composed of Perl Scripts and Perl Modules. It's purpose is to update the system(s) with the database information. For instance if you give to project a download area, the backend will, on the system that host the area, create a unix group, create unix users account associated with the group for any member of the group, create a download area at the configured location, associate that area with the group.
+

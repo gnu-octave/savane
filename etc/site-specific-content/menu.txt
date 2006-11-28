@@ -1,0 +1,22 @@
+<!-- $Id$  BEGIN -->
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+//
+// Savannah - Additional menus sample file
+//    You can create other menus here, following the model above. They 
+//    will be shown in every page. You can also delete the above menu
+//    and leave this page empty if you want to.
+
+global $HTML;
+$HTML->menuhtml_top('Links'); 
+
+$HTML->menu_entry('https://gna.org/projects/savane','Savane');
+$HTML->menu_entry("http://validator.w3.org/check?uri=http://".$GLOBALS['HTTP_HOST']. $GLOBALS['PHP_SELF'], 'W3C Validation');
+
+$HTML->menuhtml_bottom();
+
+?>
+<!-- $Id$  END -->

@@ -1,0 +1,9 @@
+#!/usr/bin/perl 
+# Make sure the export directory exists and belongs to root
+$xmldir = "/var/cache/savane";
+
+system("mkdir", "-pv", $xmldir) unless -e $xmldir;
+system("chown", "root:root", $xmldir);
+system("chmod", "o-w", $xmldir);
+
+# End

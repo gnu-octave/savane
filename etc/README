@@ -1,0 +1,18 @@
+The Savane etc:
+-------------------
+
+In this directory are a default crontab and logrotate file you may want to
+copy in /etc/cron.d and /etc/logrorate.d.
+
+You are in fact advised to do so, after editing the files.
+
+
+Site Specific Content:
+----------------------
+
+Text files that permit you to change the content of the website.
+In these files, you can do HTML and PHP.
+
+
+  
+$Id$

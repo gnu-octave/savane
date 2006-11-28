@@ -1,0 +1,6 @@
+<!-- Savannah - Project registration administration group type infos -->
+<!-- $Id$  BEGIN -->
+
+
+
+<!-- $Id$  BEGIN -->

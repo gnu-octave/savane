@@ -1,0 +1,7 @@
+docs:
+	cd devel && make docs
+# should wget savane-doc docs, once we have permanent links
+
+clean:
+	rm -f Makefile
+	cd devel && make clean

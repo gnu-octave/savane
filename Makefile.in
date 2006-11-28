@@ -1,0 +1,305 @@
+BASE_CONF_COMMAND=backend/install/sv_update_conf.pl --recreate --http-user=$(WWW_SERVER_USER) --confdir=$(SV_CONF) --default-domain=`hostname -f` --www-topdir=`pwd`/frontend/php --url-topdir=$(SV_URLROOT) --incdir=\$$sys_www_topdir/../../etc/site-specific-content
+
+all: update-path
+	if [ ! -e www ]; then ln -s frontend/php www; fi
+	cd po && make
+	cd db && make
+
+savane: all database conf install
+
+reset:
+	make reset-path
+
+cache:
+	@echo "This feature no longer present"
+
+changelog:
+# svn2cl comes from http://ch.tudelft.nl/~arthur/svn2cl/
+	svn --verbose --xml log | \
+	 xsltproc --stringparam linelen 78 \
+           --stringparam include-rev yes \
+           "devel/svn2cl.xsl" - > ChangeLog.commits
+
+
+docs:
+	cd doc && make docs
+	ln -sf ../../doc/admin/savannah.html frontend/php/savannah.html
+
+.PHONY: tests
+tests:
+	cd devel/tests && make tests
+
+icons:
+	cd frontend/php/images && make icons
+
+clean: reset-path
+	cd lib && make clean
+	cd backend && make clean
+	cd po && make clean
+	cd frontend/php/css && make clean
+#	cd doc && make -i clean
+	find . \( -name "Makefile" -or -name "#*#" -or -name ".#*" -or -name "*~" -or -name ".*~" \) -exec rm -rfv {} \;
+	rm -fv *.cache
+
+conf:
+	if [ $(SV_CONF_INTERACTIVE) == "yes" ] ; then $(BASE_CONF_COMMAND) ; else $(BASE_CONF_COMMAND) --non-interactive ; fi
+	make update-path
+
+local.inc: conf
+
+database: database-structure database-initvalues
+
+database-structure:
+	cd db && make create-db init-structure
+
+database-initvalues:
+	cd db && make init-values
+
+update-path:
+	cd lib && make update-path
+	cd frontend/php/css && make update-path
+
+reset-path:
+	cd lib && make reset-path
+	cd frontend/php/css && make reset-path
+
+update-conf:
+	backend/install/sv_update_conf.pl --update --confdir=$(SV_CONF) --http-user=$(WWW_SERVER_USER)
+	make update-path
+
+update:
+	svn update
+	./configure
+	make
+	make update-conf
+	make install -i
+	sv_skill
+
+install-backend:
+	cd backend && make install install-extra
+
+uninstall-backend:
+	cd backend && make uninstall
+
+install-lib:
+	cd lib && make install
+
+uninstall-lib:
+	cd lib && make uninstall
+
+install-i18n:
+	cd po && make install
+
+uninstall-i18n:
+	cd po && make uninstall
+
+install-test: 
+	cd backend && make list-files FILES="accounts/*.pl"
+
+install: all install-backend install-lib install-i18n
+	cd etc && make install
+
+uninstall: uninstall-backend uninstall-lib uninstall-i18n
+
+
+###############################################################
+###############################################################
+### Info for developers
+devinfo: 
+	cd po && make stats
+	devel/sv_check_register_globals.pl --path "./frontend/php";
+
+###############################################################
+###############################################################
+### Usual package building process:
+
+tar:
+# takes rel= as argument
+	rm -rf /tmp/savane-$(rel)
+	mkdir /tmp/savane-$(rel)
+	cp -rf * /tmp/savane-$(rel)
+	rm -rf `find /tmp/savane-$(rel) -type d -name ".svn"`
+	rm -rf /tmp/savane-$(rel)/lib/Savannah/
+	rm -rf /tmp/savane-$(rel)/devel
+	rm -rf `find /tmp/savane-$(rel)/debian -type d -name "savane*"`
+	cd /tmp/savane-$(rel) && make clean
+	cd /tmp/savane-$(rel)/doc && rm -f *.pdf && wget http://dl.gna.org/savane-doc/savane-install-guide.pdf http://dl.gna.org/savane-doc/savane-user-guide.pdf
+	cd /tmp && tar cfz savane-$(rel).tar.gz savane-$(rel)
+	rm -rf /tmp/savane-$(rel)
+	@echo "Targz build in /tmp"
+
+###############################################################
+###############################################################
+### Debian package building process:
+
+debetc=/etc
+debprefix=/usr
+debwww=/var/www
+
+# Alias
+deb: deb-packages
+
+deb-packages:
+# save configure.cache
+	cp -f configure.cache .configure.cache.beforepackaging
+# remove previous package
+	rm -f ../savane_* ../savane-*
+	dpkg-buildpackage -rfakeroot -uc -us
+# remove build dir
+	rm -rf `find debian -type 'd' -name 'savane*' -maxdepth 1`
+# remove .changes, .tar.gz
+	rm -rf ../savane_*.dsc ../savane_*.changes ../savane_*.tar.gz
+# put back configure.cache
+	mv -f .configure.cache.beforepackaging configure.cache
+
+deb-savane-doc:
+	mkdir -p $(debprefix)/share/doc/savane-doc
+	cp ChangeLog.byversion $(debprefix)/share/doc/savane-doc/changelog.byversion
+	cp INSTALL.verbose $(debprefix)/share/doc/savane-doc/non-debian-specific.INSTALL
+	cp AUTHORS $(debprefix)/share/doc/savane-doc/
+	cp AUTHORS.Savannah $(debprefix)/share/doc/savane-doc/
+	cp AUTHORS.SourceForge $(debprefix)/share/doc/savane-doc/	
+	cd $(debprefix)/share/doc/savane-doc && rm -f *.pdf && wget http://dl.gna.org/savane-doc/savane-install-guide.pdf http://dl.gna.org/savane-doc/savane-user-guide.pdf
+	cp debian/README.Debian $(debprefix)/share/doc/savane-doc/README.Debian
+
+deb-savane-frontend: 
+# build i18n files
+	cd po && make
+# build css files
+	cd frontend/php/css && make
+# copy conffile
+	mkdir -p $(debetc)/apache/conf.d
+	mkdir -p $(debetc)/apache-ssl/conf.d
+	mkdir -p $(debetc)/apache2/conf.d
+	install --mode=644 etc/apache $(debetc)/apache/conf.d/savane.conf
+	install --mode=644 etc/apache $(debetc)/apache-ssl/conf.d/savane.conf
+	install --mode=644 etc/apache2 $(debetc)/apache2/conf.d/savane.conf
+# copy php files	
+	mkdir -p $(debprefix)/share/savane-frontend
+	cp -rf frontend/php/* $(debprefix)/share/savane-frontend
+#	cp -f frontend/php/.htaccess $(debprefix)/share/savane-frontend-php
+# remove CVS directories from php files
+	rm -rf `find $(debprefix)/share/savane-frontend -type d -name ".svn"`
+# install site specific content (with backward compat symlink)
+	mkdir -p $(debetc)/savane-frontend-content
+	cp -rf etc/site-specific-content/* $(debetc)/savane-frontend-content
+	ln -sf $(debetc)/savane-frontend-content $(debetc)/savane-frontend-php-content
+# remove CVS directories from site specific content
+	rm -rf `find $(debetc)/savane-frontend-content -type d -name ".svn"`	
+# install i18n files
+	mkdir -p $(debprefix)/share/locale
+	cd po && make install INSTALLNLSDIR=$(debprefix)/share/locale
+
+deb-savane-frontend-mail:
+# copy conffile
+	mkdir -p $(debetc)/apache/conf.d
+	mkdir -p $(debetc)/apache-ssl/conf.d
+	mkdir -p $(debetc)/apache2/conf.d
+	install --mode=644 etc/apache-mail $(debetc)/apache/conf.d/savane-mail.conf
+	install --mode=644 etc/apache-mail $(debetc)/apache-ssl/conf.d/savane-mail.conf
+	install --mode=644 etc/apache-mail $(debetc)/apache2/conf.d/savane-mail.conf
+# copy perl files	
+	mkdir -p $(debprefix)/share/savane-frontend-mail/private-archives
+	install frontend/perl/mail-private-archives/index.pl $(debprefix)/share/savane-frontend-mail/private-archives/
+# remove CVS directories from perl files
+	rm -rf `find $(debprefix)/share/savane-frontend-mail -type d -name ".svn"`
+
+deb-savane-lib: 
+# copy db files
+	mkdir -p $(debprefix)/lib/perl5
+	cd lib && make install PERL_INC=$(debprefix)/lib/perl5
+# remove CVS directories from site specific content
+	rm -rf `find $(debprefix)/lib/perl5 -type d -name ".svn"`	
+
+deb-savane-backend-mail:
+# copy conffile
+	mkdir -p $(debetc)/cron.d
+	install --mode=644  etc/crontab-mail $(debetc)/cron.d/savane-mail
+# install bin
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-mail SV_BIN=$(debprefix)/bin
+
+deb-savane-backend-export:
+# copy conffile
+	mkdir -p $(debetc)/cron.d
+	install --mode=644  etc/crontab-export $(debetc)/cron.d/savane-export
+# install bin
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-export SV_BIN=$(debprefix)/bin
+
+deb-savane-backend-spamcheck:
+# copy conffile
+	mkdir -p $(debetc)/cron.d $(debetc)/spamassassin
+	install --mode=644  etc/crontab-spamcheck $(debetc)/cron.d/savane-spamcheck
+	install --mode=644  etc/spamassassin.pl $(debetc)/spamassassin/savane.cf
+# install bin
+# special case: we want only a part of what is in misc, because this goes
+# in a separate package
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-files FILES="misc/sv_spamcheck*.pl" SV_BIN=$(debprefix)/bin
+
+
+deb-savane-backend-extra-cvs: 
+# copy conffile
+	mkdir -p $(debetc)/cron.d
+	install --mode=644 etc/crontab-cvs $(debetc)/cron.d/savane-cvs
+# install bin
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-extra-cvs SV_BIN=$(debprefix)/bin
+
+deb-savane-backend-extra-subversion: 
+# install bin
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-extra-subversion SV_BIN=$(debprefix)/bin
+	chmod 6755 $(debprefix)/bin/sv_extra_svn_postcommit_brigde
+
+
+deb-savane-backend-download: 
+# copy conffile
+	mkdir -p $(debetc)/cron.d
+	install --mode=644 etc/crontab-download $(debetc)/cron.d/savane-download
+# install bin
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-download SV_BIN=$(debprefix)/bin
+
+deb-savane-backend-misc: 
+# copy conffile
+	mkdir -p $(debetc)/cron.d
+	install --mode=644 etc/crontab-misc $(debetc)/cron.d/savane-misc
+# install bin (include extra siteadmin bins, exclude spamcheck)
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-misc SV_BIN=$(debprefix)/bin
+	cd backend && make install-extra-siteadmin SV_BIN=$(debprefix)/bin
+	rm -f $(debprefix)/bin/*spamcheck*
+
+
+deb-savane-backend-members-shell: 
+# copy conffiles
+	mkdir -p $(debetc)/cron.d
+	install --mode=644 etc/crontab-members-shell $(debetc)/cron.d/savane-members-shell
+# install 
+	mkdir -p $(debprefix)/bin
+	cd backend && make install-accounts SV_BIN=$(debprefix)/bin
+
+deb-savane-database: 
+# create db files
+	cd db && make
+# copy db files
+	mkdir -p $(debprefix)/share/doc/savane-database
+	install --mode=644 db/mysql/database_savane.structure $(debprefix)/share/doc/savane-database/1.database_savane.structure.sql
+	install --mode=644 db/mysql/database_savane.initvalues $(debprefix)/share/doc/savane-database/2.database_savane.initvalues.sql
+
+deb-savane-backend-config: 
+# install 
+	mkdir -p $(debprefix)/bin $(debetc)/logrotate.d
+	install --mode=644 etc/logrotate $(debetc)/logrotate.d/savane
+	cd backend && make install-install SV_BIN=$(debprefix)/bin
+	cd $(debprefix)/bin/ && ln -s sv_update_conf savane-configure
+
+deb-savane-update: 
+# install 
+	mkdir -p $(debprefix)/share/doc/savane-update
+	cp -rf update/* $(debprefix)/share/doc/savane-update/
+# remove CVS directories from site specific content
+	rm -rf `find $(debprefix)/share/doc/savane-update/ -type d -name ".svn"`
+

@@ -1,0 +1,29 @@
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id: forbidden_theme.txt 3686 2004-09-22 08:11:52Z yeupou $
+//
+//    You can fed $forbid_mail_domains_regexp by a perl regexp
+//    with theme domain names you want to forbid on your system.
+//
+//    This forbid_mail_domains_regexp site specific variable be useful if you 
+//    do not want to allow registration of users accounts on the basis of
+//    a given domain.
+//
+//    For instance, you may not want to allow people to create account
+//    with your Savane installation domain, because it would allow people
+//    to endlessly create account and mail aliases.
+//    Or you may want to allow only people having an address @yourcompany
+//    to create account.
+//
+//    As it is regexp for the full address, you can basically block from
+//    here any address your want.
+
+
+// The perl regexp:
+//    The two slashes (/ /) are mandatory, see the preg_match manual.
+
+$GLOBALS['forbid_mail_domains_regexp'] = "/^(.*\@invalid\.dom)$/";
+
+?>

@@ -1,0 +1,111 @@
+Savane transition to UTF-8
+==========================
+
+Savane was always intended to use the UTF-8 encoding for the website and
+the database. However, we discovered recently that Savane indeed did not
+use UTF-8 -- neither on the website nor in the database.
+
+This upgrade is only intended to switch existing Savane installations from
+the current local encoding to UTF-8.
+
+We recommend that you read this README _completely_ before starting the 
+upgrade process, to have a good overview of it.
+
+
+WARNING
+***************************************************************************
+* Please note that it is not possible to automatically detect the charset *
+* which a file or database uses. Therefore, this upgrade may cause data   *
+* corruption. We HIGHLY recommend to make backups of your existing Savane *
+* installation, i.e. the database and site-specific files.                *
+***************************************************************************
+
+Concerning the conversion into UTF-8, we need to determine which charset
+was used previously. Unfortunately, this is nowhere specified, so we'll have
+to guess. It is highly likely that your files and database are encoded
+in ISO-8859-1, so all scripts listed below assume that encoding as default.
+You can always override this default setting with the command line option
+"--input=<charset>", which is accepted by every script doing a conversion.
+The input charset is passed on to iconv, so you can type "iconv --list" at
+the command line to get a listing of all possible charsets.
+
+Please follow the detailed instructions below for this upgrade, to minimize
+any possible impact on your installation. Remember that you can use the
+command line option "--debug" with all scripts to get a first impression of
+what might happen without actually changing anything.
+
+* Shut down your server for the public
+  When you do the conversion in the database, it might be possible that a
+  user inserts new data in the database, which would not be converted. In
+  the worst scenario it might even be possible that this data is lost
+  during the update. We highly recommend to shut down your server during
+  the update.
+
+* Update the contents of your Savane directory, so that the changes in the
+  PHP code take effect and your pages are really delivered in UTF-8.
+
+* Update your po/Makefile
+  To achieve this, it should be enough to run "./configure" from the Savane
+  main directory.
+
+* Run make install within the po/ directory
+  This will install the binary message catalogs for gettext. Savane is
+  translated into other languages with those files.
+
+* Run the script "generate_locales.pl"
+  The script checks for the UTF-8 version of all needed locales and
+  generates any missing locale on the fly. If you use "--debug", you
+  can see which locales are missing and thus would be generated.
+
+* Run the script "update_site-specific_files.pl"
+  The script converts all your site-specific files from ISO-8859-1 to UTF-8.  
+  If you need to use another input charset for the conversion, you can do so
+  by specifying the "--input=<charset>" command line option.
+  Note that you must not run this script more than once. Otherwise, the
+  files already in UTF-8 would be converted into UTF-8 again, which would
+  mangle the characters in them.
+  There's another command line switch, called "--folder=<dir>". You can
+  specify the directory which will be processed. Please provide the absolute
+  path to be certain about the location. Once again, it's a good idea to
+  have a look at the output with "--debug" first.
+  As a security measure, the script creates a backup copy of your current
+  site-specific-content directory. If something goes wrong, you can
+  just overwrite the newly converted files with your backup copy.
+ 
+  WARNING: note that localization names changed, you need to add .UTF-8 to
+  localized file names. For instance, homepage.fr_FR must be renamed 
+  homepage.fr_FR.UTF-8.
+
+* Run the script "backup_database.pl"
+  The script creates a backup dump of your Savane database. You can specify
+  the directory which will be used for the storage with the command line
+  option "--folder=<dir>".
+
+* Run the script "convert_database.pl"
+  The script takes one mandatory argument, namely "--file=<database.sql>".
+  You must provide the filename of the database dump you created in the
+  step before.
+  That file will be converted from ISO-8859-1 to UTF-8. If your database
+  did use another charset than ISO-8859-1, you can specify which input
+  charset to use with the command line option "--input=<charset>". Have
+  a look at the success of this script with "--debug".
+
+  NOTE: it may generates a lot of garbage in the console. Don't be afraid,
+  let it go, wait until the script finish by himself.
+
+* [OPTIONAL] Run the script "recover_database.pl"
+  You'll only need this script in case something goes wrong. Just use
+  the command line option "--file=<database.sql>" to give the name of the
+  backup copy to the script. It then restores your savane database to
+  the values before the conversion.
+
+* Re-open your server for the public
+  Make sure that Apache does not add by force a default charset that is not
+  UTF-8 (you should have "AddDefaultCharset off" to avoid it) 
+
+
+* You're done! Congratulations.
+  We recommend that you keep your backup files (site-specific-content and
+  database) around for a while, if you discover an error later on. It'll be
+  rather trivial to fix such errors in the encoding when comparing the
+  current content with the one before the switch to UTF-8.

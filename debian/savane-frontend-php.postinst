@@ -1,0 +1,22 @@
+#!/usr/bin/perl 
+#
+
+# Make sure task/ , support/ and patch/ exists. They are symlinks but they
+# were previously real directories. 
+# While removing their content, dpkg will not remove the directory itself.
+# And it will not overwrite the directory with the symlink, unfortunately.
+
+my @symlinks = ("task", "support", "patch");
+
+chdir("/usr/share/savane-frontend-php");
+
+for (@symlinks) {
+    unless (-e $_."/index.php") {
+	print "Recreate /usr/share/savane-frontend-php/$_ as symlink.\n";
+	system("rm", "-rf", $_);
+	system("ln", "-s", "bugs", $_);
+    }
+}
+
+
+# End

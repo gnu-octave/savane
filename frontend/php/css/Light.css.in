@@ -1,0 +1,277 @@
+/*
+ *
+ * Part of the Savane Project
+ * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ * See the changelog file for a detailed list of changes
+ *
+ *  http://gna.org/p/savane
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.16 */
+
+@import "internal/base.css";
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body { 
+  margin-top: 0.5%;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  margin-bottom: 0.5%;
+  background-color: #f2f2f2;
+  font-family: arial,helvetica;
+  color: #333333;
+}
+
+a {
+	text-decoration: none;
+	color: #606060;
+}
+a:hover { 
+	text-decoration: underline; 
+	color: #000000;
+}
+a:active { 
+	color: #553b63; 
+}
+
+
+.unavailable {
+	text-decoration: line-through;
+	font-style: italic;
+	color: #606060;
+}
+.unavailable:hover { 
+	text-decoration: line-through;
+	font-style: italic;
+	color: #d36363;
+}
+.unavailable:active { 
+	color: #553b63; 
+}
+
+.error { font-weight: bold; color: #c12424; }
+.warn {  color: #c12424; }
+
+.footer { color: #333333;  }
+
+h2 {
+	text-indent: 0.3em;
+}
+
+h3 {
+	background-color: #f3dbff; 
+	border: thin solid #d19fea; 
+	color: #6a447c; 
+	text-indent: 0.8em;
+	font-weight: normal;
+}
+
+h5 {
+	border-bottom: thin solid #d19fea;
+	background-color: #f9efff; 
+	font-weight: normal;
+}
+
+.highlight { 
+	background-color: #ffd3d3;
+	color: #333333; 
+	border-left: thin dotted #e2c4f2;
+	border-right: thin dotted #e2c4f2;
+	border-bottom: thin dotted #e2c4f2;
+}
+
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+.realbody {  
+	color: #333333; 
+  	border: thin solid #333333; 
+	background-color: #ffffff;
+}
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menutitle {
+	background-color: #eaffed; 
+	border: thin solid #257025;
+	font-weight: bold;
+	text-align: center;
+	color: #257025;
+	padding-top: 0;
+}
+
+.menuitem { 
+	list-style-type: none;
+	background-color: #f7fff8; 
+	text-align: right;
+	border-left: thin dotted #c1f2c5;
+	border-right: thin dotted #c1f2c5;
+	color: #333333;
+	border-bottom: thin dotted #c1f2c5;
+}
+
+.menusearch {
+	background-color: #f7fff8; 
+	border-left: thin dotted #c1f2c5;
+	border-right: thin dotted #c1f2c5;
+}
+
+.topmenu {
+  	background-color: #e5fff4; 
+	border: thin solid #69f4c3;
+}
+
+.topmenutitle {   
+	background-color: #f2fff9;
+	border:thin solid #69f4c3;
+ }
+
+ul.topmenuitemsubmenu {
+	background-color: #f7fff8;
+	border: thin dotted #c1f2c5;
+	border-left: 0.3em dotted #c1f2c5;
+}
+
+u.topmenuitemsubmenu li {
+	background-color: #f7fff8;
+	border: none;
+	border-bottom: thin dotted #c1f2c5;
+}
+
+li.topmenuitemsubmenu:hover {
+	color: black;
+}
+
+li.topmenuitemsubmenu a:hover {
+	text-decoration: underline;
+}
+
+
+.tabs { color: #008456; }
+.tabs:hover { color: #005135; }
+.tabselect { text-decoration: underline; color: #000000; }
+.tabselect:hover { color: #000000; }
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+
+.boxtitle {  
+	background-color: #f3dbff; 
+	border: thin solid #d19fea; 
+	color: #6a447c; 
+}
+
+.boxtitle a { color: #6a447c; }
+.boxtitle a:hover { color: #ff0000; }
+
+.boxitem {  
+	background-color: #fbf7ff;  
+	color: #333333; 
+	border-left: thin dotted #e2c4f2;
+	border-right: thin dotted #e2c4f2;
+	border-bottom: thin dotted #e2c4f2;
+}
+.boxitemalt { 
+	background-color: #ffffff; 
+	color: #333333; 
+	border-left: thin dotted #e2c4f2;
+	border-right: thin dotted #e2c4f2;
+	border-bottom: thin dotted #e2c4f2;
+}
+.boxhighlight { 
+	background-color: #ffd3d3;
+	color: #333333; 
+	border-left: thin dotted #e2c4f2;
+	border-right: thin dotted #e2c4f2;
+	border-bottom: thin dotted #e2c4f2;
+}
+.boxoptions { 
+	background-color: #ffffff; 
+	color: #333333; 
+	border: thin dotted #e2c4f2;
+}
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input {
+ background-color: #e8f0ff;
+ border: thin solid #004cd1;
+ color: #004cd1;
+}
+
+input:hover { background-color: #d6e9ff; }
+
+select { 
+ background-color: #e8f0ff;
+ border: thin solid #004cd1;
+ color: #004cd1;
+}
+
+select:hover { background-color: #d6e9ff; }
+
+textarea { 
+ background-color: #e8f0ff;
+ border: thin solid #004cd1;
+ color: #004cd1;
+}
+
+textarea:hover { background-color: #d6e9ff; }
+
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+.priora { background-color: #fff2f2; border: thin solid #ef6e6e; }
+.priorb { background-color: #ffe8e8; border: thin solid #ef6e6e; }
+.priorc { background-color: #ffe0e0; border: thin solid #ef6e6e; }
+.priord { background-color: #ffd8d8; border: thin solid #ef6e6e; }
+.priore { background-color: #ffcece; border: thin solid #ef6e6e; }
+.priorf { background-color: #ffc6c6; border: thin solid #ef6e6e; }
+.priorg { background-color: #ffbfbf; border: thin solid #ef6e6e; }
+.priorh { background-color: #ffb7b7; border: thin solid #ef6e6e; }
+.priori { background-color: #ffadad; border: thin solid #ef6e6e; }
+

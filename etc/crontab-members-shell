@@ -1,0 +1,19 @@
+# Sync groups/project in the database and on the system.
+# Sync users in the database and on the system.
+# These script must run in a correct order, groups before users
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+# There are many things you can do:
+# This would create everything possible (cvs repositories, accounts...).
+# This is the basic standard behavior.
+30 */2 * * *    root    sv_groups  --cron && sv_users --cron 
+
+# Check sv_groups and sv_users options. You can slip each part (cvs repository
+# create, unix accounts creation etc) so a CVS server, for instance, would not
+# create arch repositories...
+# sv_groups assumes that you have cvs/svn/ssh... properly installed.
+
+
+
+# END

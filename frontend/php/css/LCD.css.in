@@ -1,0 +1,309 @@
+/*
+ *
+ * Part of the Savane project
+ * Copyright 2004 (c) Mathieu Roy <yeupou--gnu.org>
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.16 */
+
+@import "internal/base.css";
+
+
+/* This class is LCD screen oriented: dark background and high contrast 
+      is more lisible with this kind of screens
+
+*/
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body { 
+  margin-top: 0.5%;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  margin-bottom: 0.5%;
+  background-color: #636363;
+  font-family: arial,helvetica;
+  color: #c4c4c4;
+}
+
+a { text-decoration: none; color: #a3bdff;}
+a:hover { text-decoration: underline; color: #fffaba; }
+a:active { color: #ffc4ba; }
+
+.unavailable { text-decoration: line-through; font-style: italic;  }
+.unavailable:hover { text-decoration: line-through; font-style: italic;  }
+
+
+.footer { font-size: x-small; }
+.warn { color: #efb57f; }
+.error { font-weight: bold; color: #efb57f; }
+
+.smaller { font-size: smaller; }
+.small { font-size: small; }
+.xsmall { font-size: xx-small; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+
+.help {
+	border-bottom: thin dotted black;
+}
+
+/* Titles */
+
+/* <h2> Page title */
+h2 {
+	text-indent: 0.3em;
+}
+/* <h3> Section title */
+h3 {
+	font-weight: normal;
+	text-indent: 1em;
+	border-bottom: thin solid #a5a5a5;
+	background-color: #282828; 
+}
+/* <h4> Small section title */
+/* <h5> Input form label */
+h5 {
+	font-weight: normal;
+	background-color: #282828; 
+	border-bottom: #a5a5a5 solid thin;
+}
+
+
+.highlight  {
+	background-color: #575757;	
+	border-left: thin dashed #777777;
+	border-right: thin dashed #777777;
+	border-bottom: thin dashed #777777;
+	color: white;
+}
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+
+.realbody { 
+	border-spacing: 0;
+ 	background-color: #000000;
+  	border: thin solid #ffffff;
+	color: #bcbcbc;
+}
+
+.main {
+  	vertical-align: top;
+  	border-spacing: 0; 
+}
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu { 
+	vertical-align: top;
+	border-spacing:	0;
+	border: none;
+	margin-top: 25px;
+	padding-left: 5px;
+	font-size: small;
+}
+
+.menutitle { 
+	background-color: #445572;
+	vertical-align: top;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+	border: thin solid #a3bdff;
+	border: thin solid #a3bdff;
+	border: thin solid #a3bdff;
+	margin-top: 25px;
+	padding-top: 0;
+}
+
+.menuitem {
+	list-style-type: none;
+	background-color: #445572;
+	vertical-align: middle;
+	text-align: right;
+	border-bottom: thin solid #a3bdff;
+	padding-right: 5px;
+}
+
+
+.topmenu {
+	background-color: #445572;
+	border-left: thin solid #a3bdff;
+	border-top: thin solid #a3bdff;
+	border-bottom: thin solid #a3bdff;
+	vertical-align: middle;	
+}
+
+
+ul.topmenuitemsubmenu  {
+ 	border: thin solid #686868;
+}
+
+
+ul.topmenuitemsubmenu li {
+	background: #494949;
+	border: none;
+ 	border-top: thin solid #686868;
+	border-left: 0.3em solid #a3bdff;
+}
+
+li.topmenuitemsubmenu:hover {
+	border-left: 0.3em solid #fffaba;
+}
+
+.topmenutitle {
+	font-style: italic; 
+	width: 13%;
+	padding: 3px 2px 3px 10px;  
+}
+
+.topmenuitem {
+	padding: 3px 2px 3px 10px;
+}
+
+.tabselect { text-decoration: underline; color: #a3bdff; }
+.tabselect:hover { text-decoration: underline; }
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+
+.boxtitle  {	
+	background-color: #637899;
+	border: thin solid #ffffff;
+	font-weight: bold;
+	text-align: center;
+	text-transform: capitalize;
+	color: #ffffff;
+}
+
+.boxitem  {
+	text-align: left;
+	border-left: thin dashed #777777;
+	border-right: thin dashed #777777;
+	border-bottom: thin dashed #777777;
+}
+
+.boxitemalt  {	
+	text-align: left;
+	background-color: #282828;
+	color: #eaeaea;
+	border-left: thin dashed #777777;
+	border-right: thin dashed #777777;
+	border-bottom: thin dashed #777777;
+}
+
+.boxoptions  {	
+	text-align: left;
+	background-color: #282828;
+	color: #eaeaea;
+	border: thin dashed #777777;
+}
+
+
+.boxhighlight  {
+	background-color: #575757;	
+	text-align: left;
+	border-left: thin dashed #777777;
+	border-right: thin dashed #777777;
+	border-bottom: thin dashed #777777;
+	color: white;
+}
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input {
+ background-color: #494949;
+ border: thin solid #a5a5a5;
+ color: #a5a5a5;
+}
+
+input:hover { background-color: #282828; }
+
+select { 
+ background-color: #494949;
+ border: thin solid #a5a5a5;
+ color: #a5a5a5;
+}
+
+select:hover { background-color: #282828; }
+
+textarea { 
+ background-color: #494949;
+ border: thin solid #a5a5a5;
+ color: #a5a5a5;
+}
+
+textarea:hover { background-color: #282828; }
+
+
+/* text before inputs */
+.preinput {
+	font-style: italic;
+}
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+.priora { background-color: #777777; border: 0; }
+.priorb { background-color: #777777; border: 0; }
+.priorc { background-color: #777777; border: 0; }
+.priord { background-color: #494949; border: 0; }
+.priore { background-color: #494949; border: 0; }
+.priorf { background-color: #494949; border: 0; }
+.priorg { background-color: #000000; border: 0; }
+.priorh { background-color: #000000; border: 0; }
+.priori { background-color: #000000; border: 0; }
+
+.prioraclosed { background-color: #5a8756; border: 0; }
+.priorbclosed { background-color: #5a8756; border: 0; }
+.priorcclosed { background-color: #5a8756; border: 0; }
+.priordclosed { background-color: #41633e; border: 0; }
+.prioreclosed { background-color: #41633e; border: 0; }
+.priorfclosed { background-color: #41633e; border: 0; }
+.priorgclosed { background-color: #304c2f; border: 0; }
+.priorhclosed { background-color: #304c2f; border: 0; }
+.prioriclosed { background-color: #304c2f; border: 0; }

@@ -1,0 +1,11 @@
+<!-- Savannah - Project registration STEP 2 -->
+<!-- $Id$  BEGIN -->
+
+<p>
+We now need a short description of your project. This description
+needs to contain the purpose of the project and a summarization of your
+goals.
+</p>
+
+
+<!-- $Id$  END -->

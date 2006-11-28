@@ -1,0 +1,40 @@
+<!-- Savannah - Project registration STEP 2 additional comments -->
+<!-- $Id$ BEGIN -->
+
+<p>
+You now have to choose a name for your project.
+There are two types of names that will be associated with this project.
+</p>
+
+<p>
+The "Full Name" is descriptive, not too restrictive (except from
+a 40 character limit) and you can change it later on. The "System Name"
+can only be changed by the administrators and has several restrictions 
+("system" refers to the fact that it will identify areas of your project, 
+and not to the operating system your project uses).
+</p>
+
+The restrictions for the system name are:
+
+<ul>
+<li>It cannot match the system name of any other project</li>
+<li>It must be between 3 and 16 characters in length</li>
+<li>It can only contain text characters, numbers, and dashes
+(no + signs)</li>
+<li>It must be a valid GNU/Linux username</li>
+<li>It cannot match one of our reserved domains</li>
+</ul>
+
+<p>
+Your system name is important because it will be used for
+many things, including:
+</p>
+
+<ul>
+<li>Directory names</li>
+<li>CVS repository name</li>
+<li>Group names</li>
+<li>Project searches throughout the site</li>
+</ul>
+
+<!-- $Id$ END -->

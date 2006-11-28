@@ -1,0 +1,94 @@
+This branch has been merged in the trunk on Sat Jan 31 03:35:46 CET 2004.
+--------------------------------------------------------------------------
+
+
+
+What have been done during September:
+
+	- Merge of CERN development into the GNU trunk version:
+		a user can easily ask for membership to a group. 
+
+	- A common codebase for all the trackers: 
+		The bug tracker interface and code is now used by the
+		others trackers.
+
+	- Possibility to reassign an item (bug / task / patch / support)
+		over different projects or trackers.
+	
+	- Mail notification per category of item (bug / task / patch /
+		 support).
+
+	- Top-menu configuration per group:
+		Projects admins can modify the links of the top-menu
+		(if the site admins allow that). For CERN it is a 
+		good way to permit groups to change the viewcvs url.
+
+	- Members permission model more subtle:
+		When a member is added to a project, no permission are
+		set in the database.
+		The permissions given to the user are the default
+		member permission defined for the group.
+		If the group did not defined default permission, the
+		system use the group type default permission.
+		It follows a simple scheme: there are 3 level of
+		configuration, per user, per group, per group type.
+		If the user configuration is undefined, we use the 
+		group one. If the group configuration is undefined,
+		we use the group type one.
+
+	- Members permission model more clear:
+		The confusion between project 'administration' and
+		tracker administration must come to an end.
+		Trackers admins are now renamed 'trackers manager',
+		as they only can manage items (assign a bug to someone
+		for instance), they are not able to configure the
+		tracker.
+		To reflect that, every management link are no longer
+		in "admin" subdirectories.
+
+	- Watcher possibility moved to user area:
+		A user can have a copy of the notification of someone
+		else for the project. This possibility was hidden in
+		the bug tracker admin area.
+		Now it is in the user /my.
+
+	- Database cleanup and restructuring:
+		Unused and useless table has been removed from the
+		database.
+		New tables has been added, required by the new 
+		features introduced.
+
+	- Code cleanup:
+		Unused and useless function has been removed. 
+		Numerous minor bugs has been fixed. Part of the 
+		code has been rearranged (Group.class and Project.class
+		are now mixed in one common file ; group membership
+		related function has been moved from user.php to
+		member.php)
+
+	- Cosmetics cleanup:
+		Uniformization of the design. Too many changes to
+		mention them.
+
+	- Content cleanup:
+		Separation of different kind of project configuration.
+		For instance selecting which features a project use is
+		no longer done in the same page where you update
+		information about the group.
+
+	- More secure authentication:
+		Unless a user asked not to be logged with SSL each
+		time he use the web interface, he will automatically
+		directed to https. Useful for user coming from an
+		http:// link in a mail.
+		However, the initial comparison database->session_hash
+		/ cookie->session_hash is still not made via https.
+		(is there something possible to do against that?)
+
+	 
+
+
+
+		
+
+	

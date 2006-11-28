@@ -1,0 +1,388 @@
+/*
+ * Part of the Savane project
+ * Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ * Inspired by colors of the Emerald theme shipped with KDE 3.x
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+
+/* THIS IS THE DEFAULT SAVANE THEME (2.0) */
+
+/* GUIDELINES VERSION FOLLOWED: 1.17 */
+
+@import "internal/base.css";
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body {
+	margin: 0;
+	padding: 0;
+	color: black;
+	background-color: #fafafa;
+}
+
+a {
+	color: #203080;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0059c6;
+	text-decoration: underline;
+}
+
+a:active {
+	color: #00c6a5;
+}
+
+.unavailable {
+	color: #D7D7CF !important;
+	text-decoration: none !important;
+}
+.unavailable:hover { 
+	color: #D7D7CF !important;
+}
+
+.error { font-weight: bold; color: #c12424; }
+.warn { color: #d36363; }
+
+.footer { 
+        text-align: center;
+	background-color: #f3f3f3;
+	border: solid #d2d2d2 thin;
+	margin-left: 5%;
+	margin-right: 5%;
+	color: #475a5a;
+}
+
+
+h2 {
+        margin-bottom: 1%;
+	text-shadow: 0.1em 0.1em #c2c2c2;
+}
+
+h3 {
+	background-color: #BCF4BC;
+	text-indent: 0.8em;
+	font-weight: normal;
+	text-shadow: 0.1em 0.1em #86CC86;
+ 	border: solid #86CC86 thin;
+	color: #307330;
+}
+
+h3 a {
+	color: #307330;
+}
+
+h3 a:hover {	
+	background-color: #d0ffd0;
+	text-decoration: none;
+}
+
+h5 {
+	background-color: #BCF4BC;
+	text-shadow: 0.1em 0.1em #86CC86;
+ 	border: solid #86CC86 thin;
+	font-weight: normal;
+	color: #307330;
+}
+
+h5 a {
+	color: #307330;
+}
+
+h5 a:hover {	
+	background-color: #d0ffd0;
+	text-decoration: none;
+}
+
+
+hr {
+	background-color: #b0b0b0;
+}
+
+
+
+.highlight {
+	background-color: #CFD9E7;
+}
+
+.quote {
+	color: #828282;
+}
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+
+.realbody { 
+	background-color: #fafafa;
+	padding-right: 0;
+}
+
+.main {
+	padding-top: 10px;
+	padding-right: 0;
+	margin-left: 162px;
+}
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu { 
+	background: #EEEEE6;
+	width: 146px;
+	margin: 2px;
+	padding-left: 5px;
+	padding-bottom: 15px;
+	border-collapse: collapse;
+  	border: thin solid #D7D7CF;
+}
+
+.menutitle {
+	text-align: left;
+  	font-weight: bold;
+	border-bottom: thin solid black;
+	text-shadow: 0.1em 0.1em #d2d2c2;
+}
+
+.menuitem { 
+	text-align: left;
+	list-style-type: none;
+  	border-bottom: thin solid #DBDBD3;
+	padding: 2px;
+}
+
+.relatedrecipes { 
+	text-align: left;
+	list-style-type: none;
+  	border-bottom: thin solid #DBDBD3;
+	padding: 2px;
+}
+
+.relatedrecipesitem { 
+  	border-top: thin solid #e6e6dd;
+}
+
+
+.menu a, .tabs, li.topmenuitemsubmenu a { 
+	color: #535353;
+	text-decoration: none;
+}
+
+
+.menu a:hover, .tabs:hover, .tabselect:hover, .topmenuitemmainitem:hover  { 
+	color: #000000;
+	background-color: #F9F9F0;
+	text-decoration: none;
+}
+
+.tabselect:hover { 
+	text-decoration: underline;
+}
+
+.topmenu {
+  	border-top: thin solid #D7D7CF;
+}
+
+.topmenutitle {
+	background-color: #E9B879;
+	text-shadow: 0.1em 0.1em #CC885E;	
+	font-weight: bold;
+  	border: solid #CC885E thin;
+}
+
+.topmenuitemmainitem {
+	background: #EEEEE6;
+  	border-bottom: thin solid #D7D7CF;
+  	border-left: thin solid #D7D7CF;
+  	border-right: thin solid #D7D7CF;
+}
+
+
+ul.topmenuitemsubmenu {
+	background: #fdfdf4;
+ 	border: thin solid #545454;
+}
+
+
+ul.topmenuitemsubmenu li {
+	background: #fdfdf4;
+	border-left: 0.5em solid #E9B879;
+}
+
+
+li.topmenuitemsubmenu:hover {
+	background: #EEEEE6;
+	border-left: 0.5em solid #CC885E;
+	color: #000000;
+}
+
+li.topmenuitemsubmenu a:hover {
+	/* redundant with the previous but necessary for MSIE */
+	background: #EEEEE6;
+	color: #000000;
+	text-decoration: none;
+}
+
+
+li.topmenuitemsubmenuseparator  {
+	background-color: #D7D7CF;
+}
+
+/*
+
+ul.topmenuitemsubmenu li {
+	background: #fdfdf4;
+	border-left: 0.6em solid #8BB9EA;
+}
+
+
+li.topmenuitemsubmenu a {
+	color: #535353;
+}
+
+li.topmenuitemsubmenu:hover {
+	border-left: 0.6em solid #006699;
+}
+
+li.topmenuitemsubmenu a:hover {
+	background: #EEEAD2;
+	color: #535353;
+}
+*/
+
+
+.tabselect { color: #000000; background-color: #f9f9f2; text-decoration: underline; } 
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.box {
+	border-spacing: 0;
+}
+
+.boxleft {
+	border-spacing: 0;
+}
+
+.boxtitle {
+	background-color: #86CC86;
+	border: solid #6BA36B thin;
+	text-shadow: 0.1em 0.1em #6BA36B;
+	color: #ffffff;
+}
+
+.boxtitle a { color: #ffffff; }
+.boxtitle a:hover { color: #ffffff; background-color: #79bc79; }
+
+.boxitem {
+	background-color: #fafafa;
+	padding: 1%;
+	border: solid #b0b0b0;
+	border-width: 0 thin thin thin;
+}
+
+.boxitemextra {
+	background-color: #F6F6F6;
+}
+
+.boxitemalt {
+	background-color: #F4F4EB;
+	padding: 1%;
+	border: solid #b0b0b0;
+	border-width: 0 thin thin thin;
+}
+
+.boxitemaltextra {
+	background-color: #F0F0E8;
+}
+
+.boxhighlight {
+	background-color: #CFD9E7;
+	padding: 1%;
+	border: solid #cebb9a;
+	border-width: 0 thin thin 0;
+}
+
+
+.boxoptions {
+	background-color: #FAFCED;
+	padding: 1%;
+	border: thin solid #C1C5AB;
+}
+
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input {
+ background-color: #F8FAE8;
+ color: black;
+ border: thin solid #C1C5AB;
+}
+
+input:hover { background-color: #FCFDF3; }
+
+select {
+ background-color: #F8FAE8;
+ color: black;
+ border: thin solid #C1C5AB;
+}
+
+select:hover { background-color: #FCFDF3; }
+
+textarea {
+ background-color: #F8FAE8;
+ color: black;
+ border: thin solid #C1C5AB;
+}
+
+textarea:hover { background-color: #FCFDF3; }
+
+/* text before inputs */
+.preinput {
+	color: #5b5b5b;
+	font-style: italic;
+}
+
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+/* nothing specific */

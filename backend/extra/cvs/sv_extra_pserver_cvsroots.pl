@@ -1,0 +1,114 @@
+#!/usr/bin/perl
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+#
+#
+#  Copyright 2003 (c) Mathieu Roy <yeupou@gnu.org> 
+#  Heavily inspired by sv_cvs.pl, 2001 (c) Loic Dachary <loic@gnu.org>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#
+#
+#
+#
+
+##
+## This script should be used via a cronjob to update the system
+## by reading the database about groups.
+##
+## It will add create/update a group for each group. 
+## It will also create a download area, a web area, and a cvs repository 
+## if in the database the fields dir_cvs dir_homepage and dir_download 
+## contains the string %PROJECT
+## (if they don't, it means that no group specific directories like that
+## are desired).
+## (the web area can be also a cvs repository 
+##
+## Note that each group on savannah got two groups: $group and web$group.
+## The first one to manage the source repository, the second one to
+## manage the web repository. 
+##
+## WARNING: sv_groups should run before sv_users.
+## WARNING: this script will only care about groups in A status.
+##      deleting groups should happens rarely and be handle by an admin
+##      that will have to decide whether deleting the group from the
+##      database is enough or not
+## 
+
+use strict;
+use Savane;
+use Getopt::Long;
+use Term::ANSIColor qw(:constants);
+use POSIX qw(strftime);
+
+# Import
+
+my $script = "sv_pserver_cvsroots";
+my $getopt;
+my $help;
+my $debug;
+my $cvsroots_file = "/etc/cvs-pserver.cvsroots";
+
+# get options
+eval {
+    $getopt = GetOptions("help" => \$help,
+			 "debug" => \$debug);
+};
+
+if($help) {
+    print STDERR <<EOF;
+Usage: $0 [project] [OPTIONS] 
+
+Update the file /etc/cvs-pserver.cvsroots.
+
+  -h, --help                   Show this help and exit
+  -d, --debug                  Do nothing, print everything
+  
+Authors: Mathieu Roy <yeupou\@gnu.org>
+EOF
+exit(1);
+}
+
+# Get a list of active and and non-private groups
+my @cvsroots;
+foreach my $name (GetDB("groups", 
+			"status='A' and is_public='1'",
+			"unix_group_name")) {
+    chomp($name);
+    print "DBG db: get group $name from database\n" if $debug;
+    push(@cvsroots,  "/cvsroot/$name");
+}
+
+# Update the cvs-pserver.cvsroots file
+open (CVSROOTS, ">${cvsroots_file}.new");
+print CVSROOTS join("\n", sort @cvsroots);
+print CVSROOTS <<EOF;
+ 
+/cvs
+/home/cvs
+/cvsroot
+/cvsroot/www
+/webcvs
+EOF
+close(CVSROOTS);
+
+`mv -f $cvsroots_file ${cvsroots_file}.old && mv -f ${cvsroots_file}.new $cvsroots_file`;
+  
+
+# EOF

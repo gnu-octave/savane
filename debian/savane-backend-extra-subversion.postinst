@@ -1,0 +1,8 @@
+#!/usr/bin/perl 
+
+# Make sure the the svn commit annotate trackers script is able to 
+# read conffile
+system("chmod", "a+s", "/usr/bin/sv_extra_svn_postcommit_brigde");
+
+
+# End

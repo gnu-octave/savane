@@ -1,0 +1,391 @@
+/*
+ * Part of the Savane project
+ * Copyright 2004-2006 (c) Vincent Caron <zerodeux--gnu.org>
+ * Heavily based on Light theme by Mathieu Roy <yeupou--gnu.org>
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.17 */
+
+@import "internal/base.css";
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body {
+	margin: 0;
+	padding: 0;
+	color: black;
+	background-color: #ffffff;
+}
+
+a {
+	color: #203080;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #0059c6;
+	text-decoration: underline;
+}
+
+a:active {
+	color: #00c6a5;
+}
+
+a.unavailable {
+	color: #acc7c7 !important;
+	text-decoration: none !important;
+}
+
+a.unavailable:hover {
+	color: #acc7c7 !important;
+}
+
+.error { font-weight: bold; color: #c12424; }
+.warn { color: #d36363; }
+
+.footer {
+        text-align: center;
+	background-color: #f3f3f3;
+	border: solid #d2d2d2 thin;
+	margin-left: 5%;
+	margin-right: 5%;
+	color: #475a5a;
+ }
+
+h2 {
+        margin-bottom: 1%;
+	text-shadow: 0.1em 0.1em #c2c2c2;
+}
+
+
+h3 {
+	background-color: #0869bc;
+	color: #ffffff;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	text-indent: 0.8em;
+	font-weight: normal;
+ 	border: solid #004c8c thin;
+	text-shadow: 0.1em 0.1em #004c8c;
+}
+
+h3 a {
+	color: #ffffff;
+}
+
+h3 a:hover {
+	background-color: #0879d9;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+h5 {
+	background-color: #0869bc;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	color: #ffffff;
+	font-weight: normal;
+ 	border: solid #004c8c thin;
+	text-shadow: 0.1em 0.1em #004c8c;
+}
+
+
+h5 a {
+	color: #ffffff;
+}
+
+h5 a:hover {
+	background-color: #0768ba;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+
+hr {
+	background-color: #b0b0b0;
+}
+
+.highlight {
+	background-color: #C2E2EF;
+}
+
+.quote {
+	color: #01559e;
+}
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+
+.realbody {
+	padding-right: 0;
+}
+
+.main {
+	padding-top: 10px;
+	padding-right: 0;
+	padding-left: 4px;
+	margin-left: 160px;
+}
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu {
+	background: #cef0f0;
+	width: 150px;
+	margin: 0;
+	padding-left: 5px;
+	border-collapse: collapse;
+  	border-right: thin solid #b3e2e3;
+}
+
+.menutitle {
+	text-indent: 0.8em;
+	text-align: left;
+  	font-weight: bold;
+	border-bottom: thin solid black;
+	text-shadow: 0.1em 0.1em #b3e2e3;
+}
+
+.menuitem {
+	list-style-type: none;
+	text-align: left;
+  	border-bottom: thin solid #b3e2e3;
+	padding: 2px;
+}
+
+.relatedrecipes {
+	list-style-type: none;
+	text-align: left;
+  	border-bottom: thin solid #b1cccc;
+	padding: 2px;
+}
+
+.relatedrecipesitem {
+  	border-top: thin solid #c0dede;
+}
+
+
+/*
+cannot be used with item links as blocks
+.menuitem:before {
+	content: url("/images/Gna.theme/point.png")" ";
+}
+
+*/
+
+.menu a {
+  	color: #303030;
+	text-decoration: none;
+}
+
+.menu a:hover {
+	background-color: #d7f8f8;
+}
+
+.topmenu {
+  	border: thin solid white;
+  	border-top: solid thin #004c8c;
+}
+
+.topmenu a {
+	text-decoration: none;
+}
+
+
+.topmenutitle {
+        background-color: #0879d9;
+        border-bottom: thin solid #004c8c;
+        border-left: thin solid #004c8c;
+        border-right: thin solid #004c8c;
+	font-weight: bold;
+	color: white;
+	text-shadow: 0.1em 0.1em #004c8c;
+}
+
+
+.topmenuitemmainitem {
+        background-color: #cef0f0; 
+  	border: thin solid #b3e2e3;
+}
+
+.topmenuitemmainitem:hover {
+	background-color: #d7f8f8;
+
+}
+
+ul.topmenuitemsubmenu {
+	background-color: #F4FFFE;
+ 	border: thin solid #0869bc;
+}
+
+ul.topmenuitemsubmenu li {
+	background-color: #F4FFFE;
+	border: 0;
+	border-bottom: solid thin #E4EEED;
+	border-left: 0.5em solid #B0B0B0;
+}
+
+li.topmenuitemsubmenu:hover {
+        background-color: #cef0f0; 
+	color: black;
+	border-left: 0.5em solid #0869bc;
+}
+
+li.topmenuitemsubmenu a:hover {
+	color: black;
+	/* all this is in theory redundant but necessary for MSIE */
+	background-color: #b3e2e3;
+	text-decoration: none;
+}
+
+li.topmenuitemsubmenuseparator {
+	background-color: #b3e2e3;
+}
+
+
+.tabs:hover { text-decoration: none; }
+/* we cannot keep it in bold, it makes an extra space with some konqueror
+  version (RHEL) */
+.tabselect {  background-color: #d7f8f8; }
+.tabselect:hover {  background-color: #b7e7e8; color: black;  text-decoration: none; }
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.box {
+	border-spacing: 0;
+}
+
+.boxleft {
+	border-spacing: 0;
+}
+
+.boxtitle {
+	background-color: #80c0e0;
+	border: solid #5080c0;
+  	border-width: 0 thin thin 0;
+	text-shadow: 0.1em 0.1em #5080c0;
+}
+
+.boxtitle a {
+	color: #ffffff;
+}
+
+.boxtitle a:hover {
+	background-color: #83c5e6;
+}
+
+
+.boxitem {
+	background-color: #fafafa;
+	padding: 1%;
+	border: solid #b0b0b0;
+	border-width: 0 thin thin thin;
+}
+
+.boxitemextra {
+	background-color: #F8F8F8;
+}
+
+.boxitemalt {
+	background-color: #ebebeb;
+	padding: 1%;
+	border: solid #b0b0b0;
+	border-width: 0 thin thin thin;
+}
+
+.boxitemaltextra {
+	background-color: #E9E9E9;
+}
+
+
+.boxhighlight {
+	background-color: #C2E2EF;
+	padding: 1%;
+	border-width: 0 thin thin 0;
+}
+
+.boxoptions {
+	background-color: #ebebeb;
+	padding: 1%;
+	border: thin solid #b0b0b0;
+}
+
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input {
+ background-color: #e7f5fc;
+ color: black;
+ border: thin solid #b1cccc;
+}
+
+input:hover { background-color: #f8fdff; }
+
+select {
+ color: black;
+ border: thin solid #b1cccc;
+ background-color: #e7f5fc;
+}
+
+select:hover { background-color: #f8fdff; }
+
+textarea {
+ background-color: #e7f5fc;
+ color: black;
+ border: thin solid #b1cccc;
+}
+
+textarea:hover { background-color: #f8fdff; }
+
+/* text before inputs */
+.preinput {
+	color: #5b5b5b;
+}
+
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+
+/* nothing specific */

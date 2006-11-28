@@ -1,0 +1,6 @@
+For each usual icons, two sizes availables are prefered:
+	$file.orig.png = 48x48
+	$file.png = 24x24
+
+The $file.png can be regenerated typing
+	make icons

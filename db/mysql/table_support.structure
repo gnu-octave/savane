@@ -1,0 +1,117 @@
+# This file was generated for Savane SVN (toward 2.1).
+#
+# This is an SQL file necessary to create the table support part of a
+# Savane database.
+# 
+# Check support.README for specifics about this table.
+# (if this file does not exist, there is nothing specific)
+# 
+# Go at <https://gna.org/projects/savane> if you need information 
+# about Savane.
+
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: savane
+-- ------------------------------------------------------
+-- Server version	4.1.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `support`
+--
+
+DROP TABLE IF EXISTS `support`;
+CREATE TABLE `support` (
+  `bug_id` int(11) NOT NULL auto_increment,
+  `group_id` int(11) NOT NULL default '0',
+  `status_id` int(11) NOT NULL default '100',
+  `severity` int(11) NOT NULL default '5',
+  `privacy` int(2) NOT NULL default '1',
+  `discussion_lock` int(1) default '0',
+  `vote` int(11) default '0',
+  `spamscore` int(2) default '0',
+  `ip` varchar(15) default NULL,
+  `category_id` int(11) NOT NULL default '100',
+  `submitted_by` int(11) NOT NULL default '100',
+  `assigned_to` int(11) NOT NULL default '100',
+  `date` int(11) NOT NULL default '0',
+  `summary` text,
+  `details` text,
+  `close_date` int(11) default NULL,
+  `bug_group_id` int(11) NOT NULL default '100',
+  `resolution_id` int(11) NOT NULL default '100',
+  `category_version_id` int(11) NOT NULL default '100',
+  `platform_version_id` int(11) NOT NULL default '100',
+  `reproducibility_id` int(11) NOT NULL default '100',
+  `size_id` int(11) NOT NULL default '100',
+  `fix_release_id` int(11) NOT NULL default '100',
+  `plan_release_id` int(11) NOT NULL default '100',
+  `hours` float(10,2) NOT NULL default '0.00',
+  `component_version` varchar(255) NOT NULL default '',
+  `fix_release` varchar(255) NOT NULL default '',
+  `plan_release` varchar(255) NOT NULL default '',
+  `priority` int(11) NOT NULL default '5',
+  `planned_starting_date` int(11) default NULL,
+  `planned_close_date` int(11) default NULL,
+  `percent_complete` int(11) default '1',
+  `keywords` varchar(255) NOT NULL default '',
+  `release_id` int(11) NOT NULL default '100',
+  `release` varchar(255) NOT NULL default '',
+  `originator_name` varchar(255) NOT NULL default '',
+  `originator_email` varchar(255) NOT NULL default '',
+  `originator_phone` varchar(255) NOT NULL default '',
+  `custom_tf1` varchar(255) NOT NULL default '',
+  `custom_tf2` varchar(255) NOT NULL default '',
+  `custom_tf3` varchar(255) NOT NULL default '',
+  `custom_tf4` varchar(255) NOT NULL default '',
+  `custom_tf5` varchar(255) NOT NULL default '',
+  `custom_tf6` varchar(255) NOT NULL default '',
+  `custom_tf7` varchar(255) NOT NULL default '',
+  `custom_tf8` varchar(255) NOT NULL default '',
+  `custom_tf9` varchar(255) NOT NULL default '',
+  `custom_tf10` varchar(255) NOT NULL default '',
+  `custom_ta1` text NOT NULL,
+  `custom_ta2` text NOT NULL,
+  `custom_ta3` text NOT NULL,
+  `custom_ta4` text NOT NULL,
+  `custom_ta5` text NOT NULL,
+  `custom_ta6` text NOT NULL,
+  `custom_ta7` text NOT NULL,
+  `custom_ta8` text NOT NULL,
+  `custom_ta9` text NOT NULL,
+  `custom_ta10` text NOT NULL,
+  `custom_sb1` int(11) NOT NULL default '100',
+  `custom_sb2` int(11) NOT NULL default '100',
+  `custom_sb3` int(11) NOT NULL default '100',
+  `custom_sb4` int(11) NOT NULL default '100',
+  `custom_sb5` int(11) NOT NULL default '100',
+  `custom_sb6` int(11) NOT NULL default '100',
+  `custom_sb7` int(11) NOT NULL default '100',
+  `custom_sb8` int(11) NOT NULL default '100',
+  `custom_sb9` int(11) NOT NULL default '100',
+  `custom_sb10` int(11) NOT NULL default '100',
+  `custom_df1` int(11) NOT NULL default '0',
+  `custom_df2` int(11) NOT NULL default '0',
+  `custom_df3` int(11) NOT NULL default '0',
+  `custom_df4` int(11) NOT NULL default '0',
+  `custom_df5` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`bug_id`),
+  KEY `idx_bug_group_id` (`group_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

@@ -1,0 +1,144 @@
+<?php
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id: sessions.php 4977 2005-11-15 17:38:40Z yeupou $
+#
+#  Copyright 2006      (c) Mathieu Roy <yeupou--gnu.org>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+require "../../include/pre.php";
+
+register_globals_off();
+
+# Check if the user is logged in.
+session_require(array('isloggedin'=>'1'));
+
+# Initialize some vars
+$trackers = array("bugs", "task", "patch", "support", "cookbook");
+$user_id = user_getid();
+$user_email = user_getemail();
+$user_name = user_getname();
+
+########################################################################
+# Update the database
+if (sane_isset("cancel"))
+{
+  $whichgroup = sane_get("cancel");
+  reset($trackers);
+  foreach ($trackers as $tracker)
+    {
+      if ($whichgroup == 'any')
+	{
+          # If it all groups, go the easy way
+	  db_query("DELETE FROM ".$tracker."_cc WHERE ".$tracker."_cc.email='$user_id' OR ".$tracker."_cc.email='$user_email' OR ".$tracker."_cc.email='$user_name'");
+	}
+      else
+	{
+	  # If we need to remove items only for a given group, we first need
+	  # to get this list of itemsps
+	  $result = db_query("SELECT bug_id FROM ".$tracker." WHERE group_id='$whichgroup'");
+	  while ($entry = db_fetch_array($result))
+	    {
+	      db_query("DELETE FROM ".$tracker."_cc WHERE bug_id='".$entry['bug_id']."' AND (".$tracker."_cc.email='$user_id' OR ".$tracker."_cc.email='$user_email' OR ".$tracker."_cc.email='$user_name')");
+
+	    }
+	  
+	}
+    }
+
+  # Not much crosscheck here, so no feedback (the result should be obvious
+  # anyway)
+}
+
+########################################################################
+# Actually prints the HTML page
+
+site_user_header(array('title'=>_("Cancel Mail Notifications"),
+		       'context'=>'account'));
+
+# The following text is in two gettext string, because the first part is also
+# shown in My Admin index.
+print '<p>'._("Here, you can cancel all mail notifications.").' '._("Beware: this process cannot be undone, you will be definitely removed from carbon-copy lists of any items of the selected groups.").'<p>';
+
+# Find all CC the users is registered to receive, list them per groups.
+$groups_with_cc = array();
+$groups_with_cc_gid = array();
+reset($trackers);
+foreach ($trackers as $tracker)
+{
+  $result = db_query("SELECT groups.unix_group_name,groups.group_name,".$tracker.".group_id FROM groups,".$tracker.",".$tracker."_cc WHERE groups.group_id=".$tracker.".group_id AND ".$tracker.".bug_id=".$tracker."_cc.bug_id AND (".$tracker."_cc.email='$user_id' OR ".$tracker."_cc.email='$user_email' OR ".$tracker."_cc.email='$user_name') GROUP BY groups.group_name");
+  while ($entry = db_fetch_array($result)) 
+    {
+      if (isset($groups_with_cc[$entry['group_id']]))
+	{ continue; }
+      $groups_with_cc[$entry['unix_group_name']] = $entry['group_name'];
+      $groups_with_cc_gid[$entry['unix_group_name']] = $entry['group_id'];
+    }
+}
+
+if (!count($groups_with_cc))
+{
+  print '<p class="warn">'._("You are not registered on any Carbon-Copy list.").'</p>';
+  site_user_footer(array());
+  exit;
+}
+
+
+
+print $HTML->box_top(_("Groups to which belong items you are in Carbon Copy for"));
+ksort($groups_with_cc);
+$i = 0;
+foreach ($groups_with_cc as $thisunixname => $thisname)
+{
+
+  $i++;
+  if ($i > 1)
+    { print $HTML->box_nextitem(utils_get_alt_row_color($i)); }
+
+  print '<span class="trash">';
+  print utils_link($_SERVER['PHP_SELF'].'?cancel='.$groups_with_cc_gid[$thisunixname],
+		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Cancel CC for this group").'" />');
+  print '</span>';
+  
+  # I18N
+  # The variables are: session identifier, time, remote host
+  print  '<a href="'.$GLOBALS['sys_home'].'projects/'.$thisunixname.'/">'.$thisname.'</a><br />';
+}
+
+# Allow to kill sessions apart the current one,
+# if more than 3 sessions were counted
+# (otherwise, it looks overkill)
+if ($i > 3)
+{
+  $i++;
+  print $HTML->box_nextitem(utils_get_alt_row_color($i));
+ print '<span class="trash">';
+  print utils_link($_SERVER['PHP_SELF'].'?cancel=any',
+		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Cancel All CC").'" />');
+  print '</span>';
+  print '<em>'.sprintf(_("All Carbon-Copies over %s"), $GLOBALS['sys_name']).'</em><br />&nbsp;';
+
+}
+
+print $HTML->box_bottom();
+
+
+site_user_footer(array());
+
+
+?>

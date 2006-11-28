@@ -1,0 +1,49 @@
+<?php
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2000-2003 (c) Free Software Foundation
+#
+# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+# The context of this page cannot be guessed later, we have to hardcode it
+define(CONTEXT, "people");
+require "./include/pre.php";    
+
+register_globals_off();
+
+# Extract the user name
+$res_user=user_get_result_set_from_unix(safeinput(ereg_replace("\?.*", "", basename($_SERVER[REQUEST_URI]))));
+
+if (db_numrows($res_user) < 1) {
+
+	exit_error("Invalid User","That user does not exist.");
+
+} else {
+
+	# set up the group_id
+	$user_id=db_result($res_user,0,'user_id');
+
+	# now show the project page
+	include ('./include/user_home.php');
+
+}
+
+?>

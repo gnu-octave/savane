@@ -1,0 +1,35 @@
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+//
+// Savannah - Forbidden themes
+// 
+//    You can fed $forbid_theme_regexp by a perl regexp
+//    with theme names you want to forbid on your system.
+//
+//    The theme name given in this regexp must not have the extension
+//    .css.
+//
+//    This forbid_theme_regexp site specific variable be useful if you 
+//    do not want to provide to users every  themes available for Savannah,
+//    for instance because some of them creates troubles with a browser
+//    widely used in your company/organisation.
+//
+//    By default, Savane forbid only themes which have been made for
+//    a specific installation and are very very close to a more generic
+//    theme.
+//    If you run a public server, please do not use these themes as default
+//    to avoid confusions for users.
+//
+
+// The perl regexp:
+//    The two slashes (/ /) are mandatory, see the preg_match manual.
+//    Theme names are at this step uncapitalized
+//    (currently, nov 2006):
+//    	savanedu is a modified version of savannah
+//      cern is a CERN-specific version of Emeraud
+$GLOBALS['forbid_theme_regexp'] = "/^(savanedu|ugent|cern)$/";
+
+?>

@@ -1,0 +1,114 @@
+#!/bin/sh
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+#  Copyright 2005      (c) Michael Casadevall <sonicmctails--ssonicnet.com>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+# 
+#  This Script emulates the useradd command that is 
+#  standard in many UNIX like Operating Systems
+#  this script should pe placed in /usr/sbin
+#  it should be owned by root.admin and chmod 755  
+# 
+#
+###########
+
+# script version
+version="1.00"
+deluser(){
+ if [ $r -eq 1 ]; then 
+	HomeDir=`/usr/bin/nidump passwd . | /usr/bin/grep '$user:'|/usr/bin/cut -d":" -f9 `
+ 	/bin/rm -rf "$HomeDir"
+ fi
+ /usr/bin/niutil -destroy . /users/$user
+}
+
+
+usage()
+ {
+ 
+cat <<EOF
+       USAGE:
+             userdel [-r] login
+
+       READ userdel (8) manpage for more data.
+
+EOF
+    exit $1
+}
+
+#are we root
+check_uid() {
+    if [ "`whoami`" = root ]
+    then
+	uID=0
+    else
+	if [ "$uID" = "" ]
+	then
+	    uID=-1
+	fi
+    fi
+    export uID
+}
+
+
+#case the options and prams
+export r=0
+while [ $# -ne 0 ]
+do
+    case "$1" in
+    --help)
+            usage 0
+            ;;
+ --version)
+            echo "userdel: version $version, by Chris Roberts"
+            echo "userdel: (c) 2002 Chris Roberts <chris@osxgnu.org> "
+            exit 0
+            ;;
+        -r)
+	    export r=1
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            usage 1
+            ;;
+         *)
+ 	    export user="$1"
+            ;;
+    esac
+    shift
+done
+check_uid
+if [ $uID != 0 ]
+then
+	>&2 echo groupdel: you must be root
+	exit 7
+fi
+
+if [ -z $user ]; then
+  	>&2 echo "userdel: You Must provide a Login"
+   	usage 1
+fi
+if [ `/usr/bin/nidump passwd . | /usr/bin/grep -c "$user:"` -eq 0 ];then
+	>&2 echo "userdel: Ligin '$user' not found"
+	exit 7
+fi
+deluser 
+
+

@@ -1,0 +1,39 @@
+### CONTENT OF THIS DIRECTORY
+
+db/mysql/* files for mysql db
+db/old/* old files
+
+### CONTENT OF THOSE DIRECTORIES (old excluded):
+
+*.structure : 
+	  describe the structure of a file or a database
+*.initvalues:
+	  set the initials values required for a file or a database
+
+database_*  :
+	  describe/set a complete database
+table_*	    :
+	  describe/set a complete table
+
+### THE 100 VALUE AND MYSQL
+
+There are recurrent troubles with the 100 entries with our tables. That's why the value 100 is already set on almost every tables.
+
+### INSTALL
+
+For now, the better method is to type:
+    mysql -u user -p  database < mysql/database_savannah.structure
+    mysql -u user -p  database < mysql/database_savannah.initvalues
+
+In the future, you will be able to insert in a modular way each table.
+And it will be cleaner than using the previously explained method, since
+only SV2 tables are in table_* format. 
+
+
+
+### UPDATE
+
+Don't update the *structure files manually. Use sv_export_db to do
+it.
+
+

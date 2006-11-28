@@ -1,0 +1,1 @@
+ALTER TABLE group_type ADD mailing_list_virtual_host VARCHAR(255) DEFAULT '' AFTER mailing_list_address;

@@ -1,0 +1,52 @@
+How to perform unit testing of Savane
+=====================================
+
+Savane uses PHPUnit for unit testing. For information about PHPUnit,
+see <http://www.sebastian-bergmann.de/talks/2005-05-04-PHPUnit.pdf>.
+
+You need to get a copy of PHPUnit (not PHPUnit2), available
+from here: <http://pear.php.net/package/PHPUnit>.
+
+Download the tarball and copy the file PHPUnit.php and the
+directory PHPUnit into this directory.
+
+You can run all tests by executing the following command:
+
+$> make tests
+
+
+How to write test cases for Savane
+==================================
+
+In order to get your new tests run automatically, simply follow
+these instructions:
+
+* Create a new file.
+* Include the Savane file you want to test.
+* Create a new test class. It's a good idea to name your class
+  something similar to the path of the Savane file you'll test,
+  without the frontend/php part. For example, if you want to test
+  the file frontend/php/include/version.php, your class should be
+  called "include_version".
+* Place as many functions named test* in your class as you like.
+* Save your file as "test_<classname>.php". In the example, this
+  would be test_include_version.php.
+
+That's all, folks!
+
+
+Skeleton example of a test file
+===============================
+
+<?php
+require_once '../../frontend/php/include/version.php';
+
+class include_version extends PHPUnit_TestCase
+  {
+    function testHomepage()
+      {
+        global $savane_url;
+        $this->assertEquals($savane_url, "http://gna.org/projects/savane");
+      }
+  }
+?>

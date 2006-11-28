@@ -1,0 +1,62 @@
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+//
+// Savannah - User registration reminder to group admins. 
+//    Here, you can configure the mail sent to group admins.
+//    BEWARE, this file content must be PHP, with no parse-error.
+//    Do not modify it until you really know what you're doing.
+//
+
+// we include this as function, it's easier to work with vars
+// in this way
+
+function approval_user_gen_email ($group_name, $unix_group_name, $group_id, $user_name, $user_full_name, $user_email, $user_message) {
+   $message = '	
+'.$user_full_name.' requested membership to the group '.$group_name.' 
+at '.$GLOBALS['sys_name'].'
+
+User Details:
+-------------
+Name:   '.$user_full_name.'
+Login:   '.$user_name.'
+Email:   '.$user_email.'
+
+Project Details:
+----------------
+Name:   '.$group_name.'
+Unix Name: '.$unix_group_name.'
+Main Page:        '.$GLOBALS['sys_https_url'].'/projects/'.$unix_group_name.'
+
+Message from user:
+------------------
+
+'.$user_message.'
+
+
+Note:
+-----
+You receive this email because you are registered as an administrator of this project and the system has been configured to send emails to administrators when new users register.
+
+
+
+
+Please login and go to the page
+'.
+
+$GLOBALS['sys_https_url'].'/project/admin/useradmin.php?group='.$unix_group_name.
+
+'
+and approve or discard this membership request.
+
+
+ -- the '.$GLOBALS['sys_name'].' team
+  	';
+
+   return $message;
+}
+
+//
+?>

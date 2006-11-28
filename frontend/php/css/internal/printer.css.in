@@ -1,0 +1,563 @@
+/*
+ *
+ * Part of the Savane Project
+ * Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ * See the changelog file for a detailed list of changes
+ *
+ *  http://gna.org/p/savane
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+/* THIS CSS DEFINES THE PRINTER MODE, IT IS NOT SUPPOSED TO BE USE OTHERWISE */
+
+/* GUIDELINES VERSION FOLLOWED: 1.17 */
+
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body {
+	background-color: white;
+	color: black;
+	/* Font more confortable for a printout: */
+	font-family: georgia, "Times New Roman", Times, serif;
+}
+
+img { 
+	border: none; 
+}
+
+.icon { 
+	width: 1em; 
+	height: 1em;
+	margin-bottom: -0.2em;
+}
+
+.pageicon {
+	padding-right: 0.5em;
+	margin-bottom: -0.5em;
+}
+
+
+strong { font-weight: bold; }
+em { font-style: italic; }
+
+
+.block { display: block; }
+
+
+.smaller { font-size: smaller; }
+.small { font-size: small; }
+.xsmall { font-size: xx-small; }
+
+.error { font-weight: bold; color: #c12424; }
+.warn {  font-style: italic; }
+
+.bold { font-weight: bold; }
+
+.footer { 
+	padding: 0.5%;
+	border: thin solid black;
+	font-size: xx-small;
+	clear: both; 
+	}
+
+
+.text {
+	text-align: justify;
+	padding-left: 5px;
+	text-indent: 1em;
+	font-size: smaller;
+}
+
+
+.minusorplus { 
+        vertical-align: middle;
+	font-family: monospace;
+	font-size: xx-small;	
+}
+
+.minusorplus:after {
+	content: " ";
+}
+
+.noprint {
+        display: none;
+
+}
+
+.
+/* only error feedback is still printed */
+.feedback {
+	display: none;
+}
+
+feedbackerror {
+	font-weight: normal;
+	border: thin solid #871b00;
+	background-color: #ff947c; 
+	text-align: center;
+	color: #871b00;
+	position: fixed;
+	top: 7%;
+	right: 9%;
+	bottom: auto;
+	left: 9%;
+}
+
+
+.feedbackback {
+	display: none;	
+}
+
+
+.unavailable {
+	text-decoration: line-through;
+}
+
+.unavailable:hover { 
+	text-decoration: line-through;
+}
+
+.preinput {
+        color: #7c7c7c;
+
+}
+
+a {
+	text-decoration: underline;
+	color: black;
+}
+a:visited {
+	text-decoration: underline;
+	color: black;
+}
+/* The following should happen in comments, to get real links printed,
+   We need to add CSS ids for texts that should get links printed. 
+   (not navigational links, indeed)
+	
+   Until then, keep it commented.
+a:after {
+  content: " (" attr(href) ") ";
+  font-weight: normal;
+}
+*/
+
+
+h2 {
+	text-indent: 2%;
+}
+
+h3 {
+	background-color: #f4f4f4;
+  	border-top: 1px solid black;
+  	border-left: 1px solid black;
+  	border-right: 2px solid black;
+  	border-bottom: 2px solid black;
+	text-indent: 2%;
+
+}
+
+h3 a {
+	text-decoration: none;
+}
+
+h4 {
+	background-color: #f4f4f4;
+  	border: thin solid black;
+	text-indent: 2%;
+}
+
+h4 a {
+	text-decoration: none;
+}
+
+
+h5 {
+	background-color: #f4f4f4;
+  	border: thin solid black;
+	text-indent: 2%;
+}
+
+h5 a {
+	text-decoration: none;
+}
+
+
+input {
+	background-color: white;
+  	border: thin solid black;
+}
+
+hr { 
+	background-color: black;
+	height: 1px;
+	border: 0;
+}
+
+
+.highlight { 
+	background-color: #efe0cf;
+	color: black;
+	font-weight: bold;
+  	border-right: thin solid black;
+  	border-bottom: thin solid black;
+}
+
+
+/* only for bots */
+#website {
+	visibility: hidden;
+	display: none;	
+}
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+.center { text-align: center; }
+.left { text-align: left; }
+.right { text-align: right; }
+.justify { text-align: justify; }
+
+
+.backtotop { display: none; }
+
+.indexcenter { vertical-align: top; width: 80%; }
+.indexright { vertical-align: top; float: right; width: 19%; }
+
+.splitleft { margin-left: 1%; 	margin-right: 51%; }
+.splitright {  display:block;  float: right; margin-right: 1%; width: 49%; overflow: hidden; vertical-align: top;} 
+
+.trash { display: none; }
+.feedbackimage { display: none; }
+
+
+.clear { clear: both; }
+.clearl { clear: left; }
+.clearr { clear: right; }
+
+
+.realbody {  
+	vertical-align: top;
+}
+
+
+.main {
+  	vertical-align: top;
+	border-spacing: 0;
+	border: none;
+	display: block;
+}
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu { 
+	display: none;
+}
+
+.topmenu {
+	display: none;
+}
+
+.toptitle {
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.box { 
+	width: 96%;
+	margin-left: 2%;
+  	margin-right: 2%; 
+	vertical-align: top; 	
+	border-spacing: 1px; 
+}
+
+.boxli { 
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-spacing: 0;
+}
+
+
+
+.boxtitle {  
+	text-align: center; 
+	text-transform: capitalize; 
+  	border: 0;
+	background-color: white;
+  	border-top: 1px solid black;
+  	border-left: 1px solid black;
+  	border-right: 2px solid black;
+  	border-bottom: 2px solid black;
+}
+
+.boxitem {   
+	padding: 1%;
+	text-indent: 0;
+	list-style-type: none;
+	text-align: left;
+  	border-right: thin solid black;
+  	border-bottom: thin solid black; 
+	list-style-type: none;
+}
+
+.boxitemalt { 
+	padding: 1%;
+	text-indent: 0;
+	list-style-type: none;
+	text-align: left; 
+	background-color: #f9f9f9;
+  	border-right: thin solid black;
+  	border-bottom: thin solid black;
+	list-style-type: none;
+}
+
+.boxhighlight { 
+	padding: 1%;
+	text-indent: 0;
+	list-style-type: none;
+	text-align: left; 
+	font-weight: bold;
+	background-color: #f1f1f1;
+	color: black;
+  	border-right: thin solid black;
+  	border-bottom: thin solid black;
+}
+
+.boxitemextra {
+	text-align: right;
+	font-size: smaller;
+	vertical-align: top;	
+}
+
+.boxitemaltextra {
+	text-align: right;
+	font-size: smaller;
+	vertical-align: top;	
+}
+
+.boxhighlightextra {
+	text-align: right;
+	font-size: smaller;
+	vertical-align: top;	
+}
+
+.boxoptions { 
+	padding: 1%;
+	text-align: left; 
+	background-color: #f9f9f9;
+  	border: thin solid black;
+}
+
+/* in printer mode, the default is too show the box option, instead of
+  not showing it */
+#boxoptionslinkshow {
+	display: none;
+}
+
+
+/**********************************************************************
+ *
+ * Trackers specific
+ *
+ **********************************************************************/
+
+.trackersoriginalsubmission {
+	padding-left: 0.2em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	border-left: thin #f4f4f4 solid;
+}
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+
+.priora {
+	background-color: #fff2f2;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+
+
+.priorb {
+	background-color: #ffe8e8;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+
+.priorc {
+	background-color: #ffe0e0;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+
+.priord {
+	background-color: #ffd8d8;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+
+.priore {
+	background-color: #ffcece;
+	border: thin solid #ef6e6e;
+	list-style-type: none;  }
+
+.priorf {
+	background-color: #ffc6c6;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+.priorg {
+	background-color: #ffbfbf;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+.priorh {
+	background-color: #ffb7b7;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+.priori {
+	background-color: #ffadad;
+	border: thin solid #ef6e6e;
+	list-style-type: none; }
+
+
+.prioraclosed {
+	background-color: #F5FFEB;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+.priorbclosed {
+	background-color: #EDFFE6;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+.priorcclosed {
+	background-color: #EEFFE1;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+.priordclosed {
+	background-color: #E0FFD5;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+
+.prioreclosed {
+	background-color: #CCFFBB;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+
+.priorfclosed {
+	background-color: #C6FFB9;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+.priorgclosed {
+	background-color: #C0FFB2;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+.priorhclosed {
+	background-color: #ADFFA4;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+.prioriclosed {
+	background-color: #A0FF9D;
+	border: thin solid #51DA96;
+	list-style-type: none; }
+
+/* Same background color for both closed and open: difference is made by
+   the line-through on closed item. Printouts & Xerox prefers
+   black and white.
+   The border stay colorized, for people that prints in color  */
+.prioraclosed, .priora {
+	background-color: #fafafa;
+	list-style-type: none; }
+.priorbclosed, .priorb {
+	background-color: #f5f5f5;
+	list-style-type: none; }
+.priorcclosed, .priorc {
+	background-color: #f0f0f0;
+	list-style-type: none; }
+.priordclosed, .priord {
+	background-color: #ebebeb;
+	list-style-type: none; }
+.prioreclosed, .priore {
+	background-color: #e6e6e6;
+	list-style-type: none; }
+.priorfclosed, .priorf {
+	background-color: #e0e0e0;
+	list-style-type: none; }
+.priorgclosed, .priorg {
+	background-color: #dbdbdb;
+	list-style-type: none; }
+.priorhclosed, .priorh {
+	background-color: #d6d6d6;
+	list-style-type: none; }
+.prioriclosed, .priori {
+	background-color: #d1d1d1;
+	list-style-type: none; }
+
+
+
+/* Hyperlinks not underlined in printouts  */
+.priora a,
+.priorb a,
+.priorc a,
+.priord a,
+.priore a,
+.priorf a,
+.priorg a,
+.priorh a,
+.priori a,
+.prioraclosed a,
+.priorbclosed a,
+.priorcclosed a,
+.priordclosed a,
+.prioreclosed a,
+.priorfclosed a,
+.priorgclosed a,
+.priorhclosed a,
+.prioriclosed a
+	{ text-decoration: none; }
+
+/* Differenciate closed an opened item by a line through */
+.prioraclosed,
+.priorbclosed,
+.priorcclosed,
+.priordclosed,
+.prioreclosed,
+.priorfclosed,
+.priorgclosed,
+.priorhclosed,
+.prioriclosed 
+	{ text-decoration: line-through; }
+

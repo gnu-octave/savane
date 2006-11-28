@@ -1,0 +1,29 @@
+Definitions of type of projects available, which features they can
+use...
+
+In the case of sv.gnu.org, there's for example "gnu" and "nongnu" type
+of projects.
+
+| type_id | name | description | base_host | 
+homepage_host |  homepage_dir | homepage_url | cvs_host | cvs_dir | cvs_view_url |
+  download_host | download_dir | download_url | mailing_list_host
+ mailing_list_listinfo_url | mailing_list_archives_url |
+  mailing_list_archives_private_url |  mailing_list_admin_url |
+  mailing_list_address | license_array | devel_status_array
+can_use_homepage | can_use_cvs | can_use_download |
+can_use_mailing_list | can_use_forum  | can_use_patch | can_use_task |
+can_use_news | can_use_support | can_use_bug | can_use_license | can_use_devel_status 
+ 
+host = bla.bla.org (ex download_host is used for scp commands)
+url = http://...
+dir = /bla... on the filesytem (can be cvs dir)
+can_use = features that can be used for a project of this type
+
+description = will be added on several pages as /projects/$project
+
+homepage_url = will help to set homepage in groups; does not force anything
+homepage_dir = will help to set html_cvs in groups; does not force
+anything
+
+mailing_list_url = as mail.gnu.org/mailman
+mailing_list_adress = as @gnu.org

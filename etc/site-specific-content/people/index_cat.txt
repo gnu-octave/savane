@@ -1,0 +1,6 @@
+<!-- Savannah - People index introduction if category is defined -->
+<!-- $Id$ BEGIN -->
+<P>
+Click job titles for more detailed descriptions.
+<P>
+<!-- $Id$  END -->

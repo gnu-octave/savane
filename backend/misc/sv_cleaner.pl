@@ -1,0 +1,386 @@
+#!/usr/bin/perl
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+#  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org> 
+#                          BBN Technologies Corp
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+##
+## This script should be used via a cronjob to clean up the system and
+## the database.
+## Why cleaning up? Well, in some case, when an operation is interrupted,
+## the PHP frontend cannot make this cleanup by himself.
+##
+## This script should run every hour at least.
+## 
+## WARNING: this script is not supposed to handle bugs in the PHP interface
+## but handle issues that the PHP interface cannot handled without being
+## bloated.
+##
+
+use strict;
+use Savane;
+use Getopt::Long;
+use Term::ANSIColor qw(:constants);
+use POSIX qw(strftime);
+use Time::Local;
+use Date::Calc qw(Add_Delta_YMD Add_Delta_YMDHMS);
+
+# Import
+our $sys_cron_cleaner;
+
+my $script = "sv_cleaner";
+my $logfile = "/var/log/sv_cleaner.log";
+my $getopt;
+my $help;
+my $debug;
+my $big_cleanup;
+my $cron;
+my $version = GetVersion();
+
+# get options
+eval {
+    $getopt = GetOptions("help" => \$help,
+			 "cron" => \$cron,
+			 "big-cleanup" => \$big_cleanup,
+			 "debug" => \$debug);
+};
+
+if($help) {
+    print STDERR <<EOF;
+Usage: $0 [project] [OPTIONS] 
+ 
+Cleaner of the database. Why cleaning up? Well, in some case, when an
+operation is interrupted, the PHP frontend cannot make this cleanup by
+himself.
+
+  -h, --help                   Show this help and exit
+      --big-cleanup            Will take care of unusual cases (like removing
+			       items from deleted groups). Should be run
+			       only once per week, or manually from time to
+			       time.
+		  Warning: The first time you use that option, you should
+		    first make a backup of your database, just in case.
+      --cron                   Option to set when including this script
+                               in a crontab
+
+Savane version: $version
+EOF
+exit(1);
+}
+
+# Test if we should run, according to conffile
+exit if ($cron && ! $sys_cron_cleaner);
+
+# Log: Starting logging
+open (LOG, ">>$logfile");
+print LOG strftime "[$script] %c - starting\n", localtime;
+
+# Locks: This script should not run concurrently
+AcquireReplicationLock();
+
+
+###********************************************************************
+###********************************************************************
+###
+### NORMAL CLEANUP PART
+###
+###********************************************************************
+###********************************************************************
+
+
+#######################################################################
+##
+## Remove user account registration not confirmed after three days
+##
+#######################################################################
+
+
+my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
+($year,$month,$day) = Add_Delta_YMD($year,$month,$day, 
+				    0,0,-3);
+my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
+
+my $result = DeleteUsers("status='P' AND add_date < $date");
+
+print LOG strftime "[$script] %c ---- deleted $result unconfirmed user accounts\n", localtime if $result > 0;
+
+
+#######################################################################
+##
+## Remove inactive projects, usually registration interrupted
+##
+#######################################################################
+ 
+my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
+($year,$month,$day) = Add_Delta_YMD($year,$month,$day,
+				    0,0,-1);
+my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
+
+my $result = DeleteGroups("status='I' AND register_time < $date");
+
+print LOG strftime "[$script] %c ---- deleted $result inactive groups\n", localtime if $result > 0;
+
+
+#######################################################################
+##
+## Remove deleted projects, no matter their registration time
+##
+#######################################################################
+ 
+my $result = DeleteGroups("status='D'");
+
+print LOG strftime "[$script] %c ---- deleted $result deleted groups\n", localtime if $result > 0;
+
+
+#######################################################################
+##
+## Remove too old form_id, forms created more than one day ago an still
+## not submitted
+##
+#######################################################################
+ 
+my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
+($year,$month,$day) = Add_Delta_YMD($year,$month,$day, 
+				    0,0,-1);
+my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
+
+my $result = DeleteDB("form", "timestamp < $date");
+
+print LOG strftime "[$script] %c ---- deleted $result outdated form ids\n", localtime if $result > 0;
+
+
+#######################################################################
+##
+## Remove IP from the spam ban list added since more than 6 hours
+##
+#######################################################################
+ 
+my ($year, $month, $day, $hour, $min, $sec) = split(",", `date +%Y,%m,%d,%H,%M,0`);
+($year,$month,$day,$hour,$min,$sec) = Add_Delta_YMDHMS($year,$month,$day,$hour,$min,0,
+				       0,0,0,-6,0,0);
+my $date = timelocal($sec,$min,$hour,$day,($month-1),($year-1900));
+
+my $result = DeleteDB("trackers_spamban", "date < $date");
+
+print LOG strftime "[$script] %c ---- deleted $result outdated IPs bans\n", localtime if $result > 0;
+
+
+
+#######################################################################
+##
+## Remove too old sessions, session older than one year
+##
+#######################################################################
+ 
+my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
+($year,$month,$day) = Add_Delta_YMD($year,$month,$day, -1,0,0);
+my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
+
+my $result = DeleteDB("session", "time < $date");
+
+print LOG strftime "[$script] %c ---- deleted $result sessions older than one year\n", localtime if $result > 0;
+
+
+#######################################################################
+##
+## Remove lost password request count, if they were not made this jour
+##
+#######################################################################
+ 
+my $result = DeleteDB("user_lostpw", "DAYOFYEAR(DATE) <> DAYOFYEAR(CURRENT_DATE) OR HOUR(DATE) <> HOUR(NOW())");
+
+print LOG strftime "[$script] %c ---- deleted $result lost password request\n", localtime if $result > 0;
+
+
+
+#######################################################################
+##
+## Project in holding status for too long should be pending
+##
+#######################################################################
+ 
+# FIXME: TODO
+
+
+
+###********************************************************************
+###********************************************************************
+###
+### BIG CLEANUP PART
+###
+###********************************************************************
+###********************************************************************
+
+if ($big_cleanup) {
+#######################################################################
+##
+## Remove items from groups that no longer exists in the database.
+## When a group is deleted, his items no longer make sense.
+##
+## It will also make sure there no configuration remains, or user associated
+## with the group
+##
+#######################################################################
+    
+    # First build an hash of valid group_id. We take as valid any group_id
+    # actually in the database. We want to remove items only if they no longer
+    # exists at all in the database.
+    my @group_ids = GetGroupList("1", "group_id");
+    my %group_exists;
+    for (@group_ids) {
+	$group_exists{$_} = 1;
+    }
+
+    ####
+    # Browse each tracker item to found out if there are items to trash
+    my @trackers = ("bugs", "support", "task", "patch");
+    foreach my $tracker (@trackers) {
+	my @items_to_delete;
+	
+	# Find items to delete in tracker-specific tables
+	foreach my $line (GetDB($tracker, "1", "bug_id,group_id")) {
+	    chomp($line);
+	    my ($item_id, $group_id) = split(",", $line);
+
+	    unless ($group_exists{$group_id}) {
+		push(@items_to_delete, $item_id);
+		print "DBG: item to delete $item_id, because group $group_id is dead\n" if $debug; 
+		# That information is important, we log it (before doing the
+		# actual removal
+		print LOG strftime "[$script] %c ---- deleted $tracker #$item_id, from dead group #$group_id\n", localtime unless $debug;
+	   }
+	}
+    
+	# Now do the cleanup on trackers
+	unless ($debug) {
+	    foreach my $item (@items_to_delete) {
+		# Clean tables that tracker-specific
+		DeleteDB($tracker, "bug_id='$item'");
+		DeleteDB($tracker."_cc", "bug_id='$item'");
+		DeleteDB($tracker."_history", "bug_id='$item'");
+		DeleteDB($tracker."_dependencies", "item_id='$item' OR (is_dependent_on_item_id='$item' AND is_dependent_on_item_id_artifact='$tracker')");
+
+		# Clean tables that are common to all trackers
+		DeleteDB("trackers_file", "artifact='$tracker' AND item_id='$item'");
+		
+	    }
+	}
+    }
+    
+    ####
+    # Now look in others tables to find if there was entries of deleted 
+    # groups. To keep it simple and not too much rendudant, we first get
+    # all the dead group_id, and then we run simple delete on all table
+    # where these groups id exists
+    my @dead_group_id;
+    my %dead_group_id_already_found;
+
+    my @tables_to_check = ("user_group",
+			   "groups_default_permissions",
+			   "group_preferences",
+			   "group_history",
+			   "news_bytes",
+			   "forum_group_list",
+			   "trackers_watcher",
+			   "mail_group_list");
+    
+    foreach my $table (@tables_to_check) {
+	foreach my $line (GetDB($table, "1", "group_id")) {
+	    chomp($line);
+	    my ($group_id) = split(",", $line);
+	    
+	    next if $group_exists{$group_id};
+	    next if $dead_group_id_already_found{$group_id};
+	    
+	    push(@dead_group_id, $group_id);
+	    $dead_group_id_already_found{$group_id} = 1;
+	    print "DBG: $table found dead group $group_id\n" if $debug;
+	}
+    }
+
+  
+    # Find entries to delete in trackers query forms (dont bother removing
+    # the query forms in depth values, they wont be visible anyway
+    # since they refer to an query id that will be made bogus.
+    # Do exactly the same for project field values.
+    foreach my $tracker (@trackers) {
+	@tables_to_check = ($tracker."_report", 
+			    $tracker."_field_usage",
+			    $tracker."_field_value");
+
+	foreach my $table (@tables_to_check) {
+	    foreach my $line (GetDB($table, "1", "group_id")) {
+		chomp($line);
+		my ($group_id) = split(",", $line);
+		
+		next if $group_exists{$group_id};
+		next if $dead_group_id_already_found{$group_id};
+		
+		push(@dead_group_id, $group_id);
+		$dead_group_id_already_found{$group_id} = 1;
+		print "DBG: ".$table." found dead group $group_id\n" if $debug;
+	    }
+	}
+    }
+    
+
+    
+    # Now remove anything that belong to a group that is dead
+    unless ($debug) {
+	foreach my $group_id (@dead_group_id) {
+	    # Die if the current group_id is not something valid
+	    die "Strange wrong id found for dead group, exiting" if $group_id eq "";
+	    print LOG strftime "[$script] %c ---- delete anything else that belong to dead group #$group_id\n", localtime;
+		
+	    DeleteDB("user_group", "group_id='$group_id'");
+	    DeleteDB("groups_default_permissions", "group_id='$group_id'");
+	    DeleteDB("group_preferences", "group_id='$group_id'");
+	    DeleteDB("group_history", "group_id='$group_id'");
+	    DeleteDB("user_group", "group_id='$group_id'");
+	    DeleteDB("news_bytes", "group_id='$group_id'");
+	    DeleteDB("forum_group_list", "group_id='$group_id'");
+	    DeleteDB("trackers_watcher", "group_id='$group_id'");
+
+	    # For mailing-list, we mark the lists as deleted, so sv_mailman
+	    # will finish the job, unless their status is equal to 0,
+	    # which means they no longer exists already
+	    # (backward compat case)
+	    SetDBSettings("mail_group_list",
+			  "group_id='$group_id'",
+			  "is_public='9'");
+	    DeleteDB("mail_group_list", "group_id='$group_id' AND status='0'");
+
+
+	    foreach my $tracker (@trackers) {
+		DeleteDB($tracker."_report", "group_id='$group_id'");
+		DeleteDB($tracker."_field_usage", "group_id='$group_id'");
+		DeleteDB($tracker."_field_value", "group_id='$group_id'");		
+	    }
+   
+	}
+    }
+}
+
+
+# Final exit
+print LOG strftime "[$script] %c - work finished\n", localtime;
+print LOG "[$script] ------------------------------------------------------\n";
+
+# EOF

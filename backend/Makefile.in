@@ -1,0 +1,79 @@
+# Install files passed as arg, creating a savane- symlink
+list-files: $(FILES)
+	for file in $(FILES); do \
+		svfile=`basename $$file | sed s/\\\.pl$$//g | sed s/\\\.py$$//g | sed s/\\\.sh$$//g`; \
+		savanefile=`basename $$svfile | sed s/sv_/savane-/`; \
+		echo "ORIGINAL FILE $$file"; \
+		echo "DESTINATION FILE $(SV_BIN)/$$svfile"; \
+		echo "SYMLINK $$svfile -> $$savanefile"; \
+	done
+
+
+
+# Install files passed as arg, creating a savane- symlink
+install-files: $(FILES)
+	@for file in $(FILES); do \
+		svfile=`basename $$file | sed s/\\\.pl$$//g | sed s/\\\.py$$//g | sed s/\\\.sh$$//g`; \
+		savanefile=`basename $$svfile | sed s/sv_/savane-/`; \
+		oldpwd=`pwd`; \
+		install -v $$file $(SV_BIN)/$$svfile; \
+		cd $(SV_BIN) && ln -sfv $$svfile $$savanefile; \
+		cd $$oldpwd; \
+	done
+
+# Does the contrary
+uninstall-files: $(FILES)
+	@for file in $(FILES); do \
+		svfile=`basename $$file | sed s/\\\.pl$$//g | sed s/\\\.py$$//g | sed s/\\\.sh$$//g`; \
+		savanefile=`basename $$file | sed s/sv_/savane-/`; \
+		rm -fv $(SV_BIN)/$$svfile $(SV_BIN)/$$savanefile; \
+	done
+
+
+
+# Actually proceed to install
+install: clean-alias install-accounts install-download install-export install-install install-mail install-misc
+
+install-extra: clean-alias install-extra-cvs install-extra-siteadmin install-extra-subversion
+
+
+install-accounts:
+	make install-files FILES="accounts/*.pl"
+
+install-download:
+	make install-files FILES="download/*.pl"
+
+install-export:
+	make install-files FILES="export/*.pl"
+
+install-install:
+	make install-files FILES="install/*.pl"
+
+install-mail:
+	make install-files FILES="mail/*.pl"
+
+install-misc:
+	make install-files FILES="misc/*.pl"
+
+install-extra-cvs:
+	make install-files FILES="extra/cvs/*.pl"
+
+install-extra-siteadmin:
+	make install-files FILES="extra/siteadmin/*.pl"
+
+install-extra-subversion:
+	make install-files FILES="extra/subversion/*.pl"
+
+# Uninstall process
+uninstall:
+	make uninstall-files FILES="accounts/*.pl download/*.pl export/*.pl install/*.pl mail/*.pl misc/*.pl extra/cvs/*.pl extra/siteadmin/*.pl extra/subversion/*.pl"
+
+# Cleanups
+clean: clean
+	if [ -x /usr/bin/darius-mrclean ]; then /usr/bin/darius-mrclean . ; fi
+	rm -fv Makefile
+
+
+clean-alias:
+	rm -fv `find . -name "savane-*"`
+

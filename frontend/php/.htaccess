@@ -1,0 +1,30 @@
+# By default, Savane expect these to be configured directly in apache 
+# conffiles.
+# 
+# But if it is not the case, it should be able usually to rely on these.
+
+ErrorDocument 404 /404.php
+
+<Files projects>
+ForceType application/x-httpd-php
+</Files>
+<Files p>
+ForceType application/x-httpd-php
+</Files>
+<Files pr>
+ForceType application/x-httpd-php
+</Files>
+
+<Files users>
+ForceType application/x-httpd-php
+</Files>
+<Files u>
+ForceType application/x-httpd-php
+</Files>
+<Files us>
+ForceType application/x-httpd-php
+</Files>
+
+<Files file>
+ForceType application/x-httpd-php
+</Files>

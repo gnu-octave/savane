@@ -1,0 +1,303 @@
+/*
+ * This file is part of the Savane project
+ * <http://gna.org/projects/savane/>
+ *
+ * $Id$
+ * 
+ * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ *                         Philippe Roy <philou--gnu.org>        
+ *
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ */
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.16 */
+
+@import "internal/base.css";
+
+/**********************************************************************
+ *
+ * Colors notes:
+ *
+ **********************************************************************/
+
+/*
+ * 314d52 : darkgreen
+ * 40656b : "darkgreen clair"
+ * 223538 : "darkgreen foncé"
+ * f5deb3 : "weat"
+ * d2b48c : "tan"
+ * efdb84 : "lightgoldenrod emacs"
+ * ff9e7b : "lightsalmon emacs"
+ * ffffde : "light yellow emacs"
+ * 526929 : "olive"
+ * 3b5654 : gris
+ * 2c454a : gris v2
+ * de71d5 : "mauve clair"
+ * ffbece : "pink emacs"
+ * ffb6bd : "light pink emacs"
+ * ff7173 : "rouge (#ff7272) emacs"
+ * 84cff7 : "lightskyblue emacs"
+ * add7e7 : "lightblue emacs"
+ * e5f8ff : "lightlightblue philou"
+ * 00ffff : "cyan emacs"
+ * deffff : "light cyan emacs"
+ * 7bffd6 : "aquamarine emacs" 
+ * 63cbad : "aquamarine3 emacs" 
+ * 428a73 : "aquamarine4 emacs" 
+
+ * 94fa94 : "palegreen emacs"
+ * 6a997b : "vert clair"
+ */
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body { 
+  margin-top: 0%;
+  margin-left: 0%;
+  margin-right: 0%;
+  margin-bottom: 0%;
+  background: #314d52;
+  font-family: arial,helvetica;
+  color: #f5deb3;
+  
+}
+
+a { text-decoration: none; color: #add7e7; }
+a:hover { text-decoration: underline; color: #deffff; }
+a:active { color: #ffffff; }
+
+.unavailable {
+	text-decoration: line-through;
+	font-style: italic;
+	color: #ffb6bd;
+}
+.unavailable:hover { 
+	text-decoration: line-through;
+	font-style: italic;
+	color: #d36363;
+}
+.unavailable:active { 
+	color: #553b63; 
+}
+
+.footer { font-size: x-small; color: #333333; }
+.warn { color: #ff7173; }
+.error { font-weight: bold; color: #ff7173; }
+
+.help { 
+	font-style: italic;
+}
+
+/* Titles */
+
+h2 {
+	text-indent: 0.3em; }
+
+h3 {
+	background-color: #70535a; 
+	border: thin solid #223538; }
+
+h5 {
+	background-color: #70535a; 
+        border: thin solid #223538; }
+
+
+.highlight { 
+	      background-color: #24af98; 
+}
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.topmenu { 
+	 background-color: #526929;
+	 border: thin solid #223538;
+}
+
+.topmenutitle {
+	      background-color: #526929;
+	      font-weight: bold;
+}
+
+ul.topmenuitemsubmenu {
+	border: thin solid #add7e7;
+}
+
+
+ul.topmenuitemsubmenu li {
+	background: #40656b;
+	border: none;
+	border-left: 0.3em solid #526929;
+        border-bottom: thin dotted #526929;
+}
+
+ul.topmenuitemsubmenu li {
+	background: #40656b;
+	border: none;
+	border-left: 0.3em solid #526929;
+        border-bottom: thin dotted #526929;
+}
+
+
+li.topmenuitemsubmenu:hover {
+	background-color: #314d52;
+	border-left: 0.3em solid #deffff;
+}
+
+
+.menu { 
+	background-color: #314d52;
+	border-spacing: 0;
+	border: 0;
+	font-size: small; 
+	margin-bottom: 15%; 
+}
+
+.menutitle {  
+	   background-color: #526929;
+	   vertical-align: top; 
+	   font-weight: bold; 
+	   text-align: left;
+	   border: thin solid #223538; 
+  	   padding-top: 0;
+	 margin-top: 15px;
+}
+
+.menuitem { 
+	  vertical-align: top; 
+	  text-align: right; 
+	  border-bottom: thin dotted #526929; }	
+
+
+.tabselect { 
+/* we cannot keep it in bold, it makes an extra space with some konqueror
+  version (RHEL) */
+	   /*font-weight: bold; */
+	   color: #f5deb3; }
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.box { 
+     vertical-align: top; 
+     border-spacing: 1px; 
+     border: 0; }
+
+.boxleft { 
+     vertical-align: top; 
+     border-spacing: 1px; 
+     border: 0; }
+
+.boxtitle { 
+	  background-color: #428a73; 
+	  font-weight: bold; 
+	  text-align: center; 
+	  text-transform: capitalize; 
+	  border: thin solid #223538; }
+
+.boxtitle a { 
+	    color: #add7e7; } 
+
+.boxitem { 
+	 text-align: left; 
+	 border-left: thin dotted #428a73;
+	 border-right: thin dotted #428a73;
+	 border-bottom: thin dotted #428a73; }
+
+.boxitemalt { 
+	    background-color: #40656b; 
+	    text-align: left; 
+	    border-left: thin dotted #428a73;
+	    border-right: thin dotted #428a73;
+	    border-bottom: thin dotted #428a73; }
+
+.boxhighlight { 
+	      background-color: #24af98; 
+	      text-align: left; 
+	      border-left: thin dotted #428a73;
+	      border-right: thin dotted #428a73;
+	      border-bottom: thin dotted #428a73; }
+
+.boxoptions { 
+	    background-color: #40656b; 
+	    text-align: left; 
+	    border: thin dotted #428a73;
+}
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
+input:hover { background: #526929; color: #f5deb3; }
+select { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
+select:hover { background: #526929;  color: #f5deb3; }
+textarea { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
+textarea:hover { background: #526929; color: #f5deb3; } }
+
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+
+.priora { background-color: #31513b; border: thin dotted #243924; } 
+
+.priorb { background-color: #426f51; border: thin dotted #243924; } /* 140,41,43 */
+.priorc { background-color: #426f42; border: thin dotted #243924; } /* 120,41,43 */
+.priord { background-color: #516f42; border: thin dotted #243924; } /* 100,41,43 */
+.priore { background-color: #606f42; border: thin dotted #243924; } /* 80,41,43 */
+.priorf { background-color: #6f6f42; border: thin dotted #243924; } /* 60,41,43 */
+.priorg { background-color: #6f6042; border: thin dotted #243924; } /* 40,41,43 */
+.priorh { background-color: #6f5142; border: thin dotted #243924; } /* 20,41,43 */
+.priori { background-color: #6f4242; border: thin dotted #243924; } /* 0,41,43 */
+.priora { background-color: #31513b; border: thin dotted #243924; } 
+
+
+.prioraclosed { color: black }
+.priorbclosed { color: black }
+.priorcclosed { color: black }
+.priordclosed { color: black }
+.prioreclosed { color: black }
+.priorfclosed { color: black }
+.priorgclosed { color: black }
+.priorhclosed { color: black }
+.prioriclosed { color: black }

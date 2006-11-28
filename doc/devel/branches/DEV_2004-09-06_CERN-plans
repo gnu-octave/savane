@@ -1,0 +1,121 @@
+This CERN branch is supposed to be merged back in the trunk at the end of september.
+The purpose of this branch is to include/merge CERN developments into Savane.
+Follows a list of items supposed to be carried out by this branch. Others item, secondary, are not listed and will be added depending on the timeline.
+
+Please, ask yeupou at coleumes.org and yves.perrin at cern.ch before making 
+any commits on this branch. 
+
+
+
+(CERN) Fix code related to notifications after posting a follow-up comment
+Savane
+yeupou
+lun 06.09.2004 à 19:05
+
+
+(CERN) Fix code related to size checking of attached files
+Savane
+yeupou
+lun 06.09.2004 à 19:00
+
+
+(CERN) Implementation of tracker field value transitions control (EGEE request)
+Savane
+yeupou
+lun 06.09.2004 à 18:59
+
+
+(CERN) Fix code related to email addresses in case of 'add cc'
+Savane
+yeupou
+lun 06.09.2004 à 18:58
+
+
+(CERN) Fix 'From' field in savannah notification emails (" needed since[])
+Savane
+yeupou
+lun 06.09.2004 à 18:58
+
+
+(CERN) Fix sentence in account/change.php:
+Savane
+yeupou
+lun 06.09.2004 à 18:58
+
+
+(CERN) Fix to notification not sent to submitter if 'send on updates' box not checked
+Savane
+yeupou
+lun 06.09.2004 à 18:57
+
+
+(CERN) Removed restriction of forbidding dashes in project names
+Savane
+yeupou
+lun 06.09.2004 à 18:56
+
+
+(CERN) User preferences for download area display now kept in database
+Savane
+yeupou
+lun 06.09.2004 à 18:55
+
+
+(CERN) Administration form for download area
+Savane
+yeupou
+lun 06.09.2004 à 18:55
+
+
+(CERN) Fix to category specific notification
+Savane
+yeupou
+lun 06.09.2004 à 18:54
+
+
+(CERN) Show Originator Email on modification form only if non logged-in user
+Savane
+yeupou
+lun 06.09.2004 à 18:53
+
+
+(CERN) Filter non logged-in users when submitting (if option selected)
+Savane
+yeupou
+lun 06.09.2004 à 18:51
+
+
+(CERN)Three option radio button for bug tracker in Set Active Features
+Savane
+yeupou
+lun 06.09.2004 à 18:51
+
+
+(CERN) Fix to the 'Submit a task' link on project homepage
+Savane
+yeupou
+lun 06.09.2004 à 18:16
+
+
+(CERN) Fix attached file url in email notification
+Savane
+yeupou
+lun 06.09.2004 à 18:13
+
+
+(CERN) Fix title of printer version of tracker items report to incorporate/study
+Savane
+yeupou
+lun 06.09.2004 à 18:10
+
+
+(CERN) Fix to 'to inclusion in group' to incorporate/study
+Savane
+yeupou
+lun 06.09.2004 à 18:09
+
+
+(CERN) Fix to 'Mailing Lists' to incorporate/study
+Savane
+yeupou
+lun 06.09.2004 à 18:08

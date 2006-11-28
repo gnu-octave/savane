@@ -1,0 +1,18 @@
+<!-- Savannah - Additionnal contact information -->
+<!-- $Id$  BEGIN -->
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+//
+print '
+<p>
+<b>Support questions</b> <u>related to the '.$GLOBALS['sys_name'].' site</u>
+ should be submitted through the 
+<a href="'.$GLOBALS['sys_home'].'support/?func=addsupport&amp;group='.$GLOBALS['sys_unix_group_name'].'">
+Support Tracker</a> or sent by mail to 
+<a href="mailto:'.$GLOBALS['sys_email_adress'].'">'.$GLOBALS['sys_email_adress'].'</a>.
+';
+?>
+<!-- $Id$  END -->

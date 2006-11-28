@@ -1,0 +1,43 @@
+# This file was generated for Savane SVN (toward 2.1).
+#
+# This is an SQL file necessary to create the table groups part of a
+# Savane database.
+# 
+# Check groups.README for specifics about this table.
+# (if this file does not exist, there is nothing specific)
+# 
+# Go at <https://gna.org/projects/savane> if you need information 
+# about Savane.
+
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: savane
+-- ------------------------------------------------------
+-- Server version	4.1.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Dumping data for table `groups`
+--
+
+
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` (`group_id`, `group_name`, `type`, `is_public`, `status`, `unix_group_name`, `short_description`, `license`, `register_purpose`, `required_software`, `other_comments`, `license_other`, `register_time`, `rand_hash`, `registered_gpg_keys`, `use_homepage`, `use_mail`, `use_patch`, `use_task`, `use_forum`, `use_cvs`, `use_arch`, `use_svn`, `use_news`, `use_support`, `use_download`, `use_bugs`, `use_extralink_documentation`, `bugs_preamble`, `task_preamble`, `patch_preamble`, `support_preamble`, `cookbook_preamble`, `long_description`, `devel_status`, `url_homepage`, `url_download`, `url_forum`, `url_support`, `url_mail`, `url_cvs`, `url_cvs_viewcvs`, `url_cvs_viewcvs_homepage`, `url_arch`, `url_arch_viewcvs`, `url_svn`, `url_svn_viewcvs`, `url_bugs`, `url_task`, `url_patch`, `url_extralink_documentation`, `dir_cvs`, `dir_arch`, `dir_svn`, `dir_homepage`, `dir_download`, `new_bugs_address`, `new_patch_address`, `new_support_address`, `new_task_address`, `new_news_address`, `new_cookbook_address`, `bugs_glnotif`, `support_glnotif`, `task_glnotif`, `patch_glnotif`, `cookbook_glnotif`, `send_all_bugs`, `send_all_patch`, `send_all_support`, `send_all_task`, `send_all_cookbook`, `bugs_private_exclude_address`, `task_private_exclude_address`, `support_private_exclude_address`, `patch_private_exclude_address`, `cookbook_private_exclude_address`) VALUES (100,'None',1,0,'X','none',NULL,NULL,'init',NULL,NULL,NULL,0,NULL,NULL,'0','0','0','0','0','0','0','0','0','0','0','0','0',NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','','','','','',1,1,1,1,1,0,0,0,0,0,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

@@ -1,0 +1,29 @@
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+//
+// Savannah - Forbidden group names
+// 
+//    You can fed $specific_forbid_group_regexp by a perl regexp
+//    with group names you want to forbid on your system.
+//
+//    It means that it will not possible to register a project with a name
+//    that match that list.
+//
+//    This would constitue an additional list of group name to forbid.
+//    If you want the system to only take account of that list, not to
+//    take account of the Savannah hardcoded list, set the variable
+//    	 $only_specific_forbid_group_regexp = 1;
+//
+
+
+// The perl regexp:
+//    The two slashes (/ /) are mandatory, see the preg_match manual.
+$GLOBALS['specific_forbid_group_regexp'] = 0;
+
+// Disregard the Savannah default list (dangerous)
+$GLOBALS['only_specific_forbid_group_regexp'] = 0;
+
+?>

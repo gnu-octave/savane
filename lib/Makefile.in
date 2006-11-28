@@ -1,0 +1,47 @@
+#PERL_INC = /usr/local/lib/site_perl
+SV_CONF_DEFAULT=/etc/savannah/local.inc
+CONTAIN_SV_CONF = Savane.pm
+
+SUBMODULES = $(shell ls Savane/*pm)
+
+update-path:
+	make reset-path
+# Need to discuss if this path should be totally configurable or if
+# $prefix/etc/savannah is acceptable where prefix = / || /usr || /usr/local
+#	cat $(CONTAIN_SV_CONF) | sed s@^our.*conffile.*@our\ \$$conffile\ \=\ \"$(SV_CONF)/local.inc.pl\"\;@g > tmp
+#	mv -f tmp $(CONTAIN_SV_CONF)
+
+
+reset-path:
+# Need to discuss if this path should be totally configurable or if
+# $prefix/etc/savannah is acceptable where prefix = / || /usr || /usr/local
+#	cat $(CONTAIN_SV_CONF) | sed s@^our.*conffile.*@our\ \$$conffile\ \=\ \"$(SV_CONF)/local.inc.pl\"\;@g > tmp
+#	mv -f tmp $(CONTAIN_SV_CONF)
+
+update-exports:
+# How can we update our @EXPORT in a easy way? Do not know, so we do it
+# this way, in the meantime.
+# This command is supposed to be ran after addition of new subs.
+	for module in $(SUBMODULES); do \
+		cat $$module | grep ^sub | sed s/^sub\ //g  | sed s/\ \{.*//g | sed s/$$^//g | tr "\n" " " > tmpsub ; \
+		cat $$module | sed s/^our\ \@EXPORT.*/our\ \@EXPORT\ \=\ qw\("`cat tmpsub`"\)\;/g > tmp ; \
+		mv -f tmp $$module ; \
+	done
+	rm -f tmp*
+
+install:
+	if [ ! -e $(PERL_INC) ]; then mkdir -p $(PERL_INC) ; fi
+	install Savane.pm $(PERL_INC)
+	cp -rf Savane $(PERL_INC)
+# provide symlinks to Savannah.pm, in case of old scripts (that may actually
+# not work with Savane.pm, but it worth the try.
+# (especially for update/ scripts)
+	if [ ! -e $(PERL_INC)/Savannah.pm ]; then ln -s $(PERL_INC)/Savane.pm $(PERL_INC)/Savannah.pm ; fi
+	if [ ! -e $(PERL_INC)/Savannah ]; then ln -s $(PERL_INC)/Savane $(PERL_INC)/Savannah ; fi
+
+uninstall:
+	rm -rf $(PERL_INC)/Savane.pm $(PERL_INC)/Savane
+
+clean:
+	rm -f Makefile
+	if [ -x /usr/bin/darius-mrclean ]; then /usr/bin/darius-mrclean . ; fi

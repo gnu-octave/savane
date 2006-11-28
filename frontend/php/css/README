@@ -1,0 +1,207 @@
+CSS writing/editing guidelines:
+-------------------------------
+($Id$)
+
+VERSION: 1.17
+
+Please, conform to this document when writing/editing CSS files. Every items
+in CSS files must be documented here.
+
+An item must not be called by reference to the exact HTML code it should
+apply generally but by purpose. For example, "error" usually apply to a
+<font> tag but it can, someday, be applied to a <table> tag. And CSS does
+not care about which HTML tag is concerned.
+
+When you add new items here, send a mail to savane-dev.
+
+In every CSS file must be added the version number of the guidelines
+followed, to easily find out which CSS file may be severely outdated.
+This number of must change only when an item is added or removed,
+for this reason, we do not rely on CVS versionning.
+
+CSS files included into Savane should respect the software normal behavior
+as it works in the default theme Emeraud. If some site want specific 
+behavior, its theme should not be distributed along with Savane.
+
+Every removed/renamed item must be added in the table at the bottom
+of this file.
+
+WARNING: CSS files that must be edited are the one ending with the suffix
+	.css.in, not with .css! Otherwise, changes will be lost, not kept
+	in the CVS.
+
+
+Very basic (mostly text) items:
+-------------------------------
+
+	* "body" defines margins, default color (background and foreground)
+	* "a" defines links style.
+	* "unavailable" defines links style for unavailable actions.
+	* "footer" defines the little text on each page bottom.
+	* "warn","error" defines error/warning messages style.
+	* "feedback", "feedbackerror" defines feedback messages style
+ 	  (usually defines an h3 tag), the second one is dedicated to error
+	   messages while the first one can give both.
+	* "help" defines the word that got a help balloon on mouseover.
+	* "quote" defines a quoted paragraph, for example in comments
+	* "smaller", "bold", "italic", "small", "xsmall" defines a
+	  text weigth/size.
+	* "highlight" helps to highlight rows, it should be used when
+	  boxhighlight does not work (because of padding, borders...).
+
+	In addition, note that the h3 and h5 headers tag are frequently
+	  used.
+
+
+Alignement, main tables:
+------------------------
+
+	* "center", 'left", "right", are basic items that do a
+	  specific alignement.
+	* "indexcenter" and "indexright" are used to split several
+	  index pages, with a big text in the center and some feature
+	  boxes to the right.
+	* "splitleft" and "splitright" are used to split several pages
+	  50/50.
+	* "realbody" is the table within which every content is, including
+	  left menu.
+	* "main" is the table within which every content is, excluding
+	  left menu.
+	* "clear/clearl/clearr" are used to make sure no floating object
+	  make a fuss.
+
+
+Menus:
+------
+
+We have two menus, the left menu and the top menu. The left is general,
+depend on the Savannah installation. The top is contextual, depend on which
+page is showned.
+
+	* "menu" defines the whole left menu table design.
+	* "menutitle" defines the left menu subtitles.
+	* "menuitem" defines each left menu item style.
+	* "toptitle" defines the title (ontop) of the top menu table
+	   design.
+	* "topmenu" defines the whole top menu table design.
+	* THIS IS OUTDATED please, take a look at Emeraud.css about all
+	   "topmenitem" classes.
+	* "topmenupublic" defines the top menu design of the public area.
+	* "topmenurestricted" defines the top menu design of the restricted
+	   area.
+	* "topmenutitle" defines the top menu title design.
+	* "topmenuitem" defines the top menu item design.
+	* "tabselect" and "tabs" defines how looks like top menu links
+	  (tabselect means the page showned is eq the link)
+
+	* "menulogo" defines the left menu logo style.
+
+	* "relatedrecipes" defines the look of the related recipe box
+	(pointers to cookbook)
+	* "relatedrecipesitem" defines the look of one related recipe
+
+Boxes:
+------
+	* "box" defines the whole box style.
+	* "boxtitle" defines the style of title of the box.
+	* "boxitem" defines the default style of the content of the box.
+	* "boxitemalt" defines the alternative style of the content.
+	* "boxhighlight" defines how a box can be highlighted.
+	   it is alike highlight.
+	* "boxitemextra" and "boxitemaltextra"
+	  define how look like an extra part of a box to
+	  provide additional info (like the part with the users name
+	  in the list of items comments)
+	* "boxoptions" defines how "Display Options" boxes looks like
+
+
+Forms:
+------
+
+The following forms items can be used:
+	* "input".
+	* "select".
+	* "textarea".
+	* "preinput" defines the text before an input field.
+
+
+Priorities:
+-----------
+
+To represent priorities, we use colors. Colors (foreground eventually,
+ background obviously) for "priora", "priorb" [...] "priorh", "priori"
+must be defined.
+
+The same value class with "closed" suffix defines the colors of closed
+items.
+
+
+
+Memento, what changed:
+----------------------
+(edit this table with table.el for Emacs, package emacs-goodies-el)
+
+-removed- means an item is not replaced.
+-new- means an item did not exists previously
+
+
++-----------------------------------+-----------------------------------+
+| Current item name (Guide. version)| Old name                          |
++-----------------------------------+-----------------------------------+
+| box (1.0)                         | boxtable                          |
+| menu (1.0)                        | menutable                         |
+| -removed- (1.0)                   | feedback                          |
+| warn (1.0)                        | error                             |
+| -removed- (1.0)                   | pre,tt                            |
+| main (1.0)                        | standardtable                     |
+| content (1.0)                     | contenttable                      |
+| topmenu (1.0)                     | groupmenutable                    |
+| topmenupublic (1.0)               | maintr                            |
+| topmenurestricted (1.0)           | admintr                           |
+| topmenutitle (1.0)                | titletd                           |
+| topmenuitem (1.0)                 | contenttd                         |
++-----------------------------------+-----------------------------------+
+| error (1.1)                       | -new-                             |
++-----------------------------------+-----------------------------------+
+| preinput (1.2)                    | -new-                             |
++-----------------------------------+-----------------------------------+
+| -removed- (1.3)                   | menusearch                        |
++-----------------------------------+-----------------------------------+
+| feeback (1.4)                     | -new-	                        |
+| feebackerror (1.4)                | -new-	                        |
++-----------------------------------+-----------------------------------+
+| help (1.5)                	    | -new-	                        |
++-----------------------------------+-----------------------------------+
+| toptitle (1.6)               	    | topmenutitle.2 (1.5)              |
++-----------------------------------+-----------------------------------+
+| menulink (1.7)               	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| unavailable (1.8)          	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| @import "base.css"; (1.9)   	    | -new-		                |
+| splitleft (1.9)	   	    | -new-		                |
+| splitright (1.9) 	  	    | -new-		                |
+| realbody (1.9) 	  	    | main (1.8 )                       |
+| main (1.9) 	  	    	    | content (1.8)                     |
+| clear/clearl/clearr (1.9)    	    | -new-                             |
+| backtotop (1.9)  	    	    | -new-                             |
+| menulogo (1.9)  	    	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| prior*-closed (1.10)      	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| .boxtitle a (1.11)	     	    | sortbutton                        |
+| .menu a (1.11)	     	    | menulink	                        |
+| relatedrecipes (1.11)	     	    | -new-	                        |
+| relatedrecipesitem (1.11)   	    | -new-	                        |
++-----------------------------------+-----------------------------------+
+| quote (1.14)                      | -new-                             |
++-----------------------------------+-----------------------------------+
+| topmenuitem* (1.15)               | -new-                             |
++-----------------------------------+-----------------------------------+
+| verbatim     (1.16)               | -new-                             |
++-----------------------------------+-----------------------------------+
+| boxitemextra (1.17)               | -new-                             |
+| boxitemaltextra (1.17)            | -new-                             |
+| boxhighlightextra (1.17)          | -new-                             |
++-----------------------------------+-----------------------------------+
+

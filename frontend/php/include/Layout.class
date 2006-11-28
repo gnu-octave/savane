@@ -1,0 +1,360 @@
+<?php
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+#  Copyright 1999-2000 (c) The SourceForge Crew
+#  Copyright 2000-2003 (c) Free Software Foundation
+#                          Mathieu Roy <yeupou--gnu.org>
+#                          Stéphane Urbanoski <s.urbanovski--ac-nancy-metz.fr>
+#                          Derek Feichtinger <derek.feichtinger--cern.ch>
+#
+#  Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+#                          Yves Perrin <yves.perrin--cern.ch>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+class Layout extends Error
+{
+
+########################################## BASIC HTML
+
+
+  var $bgpri = array();
+
+# Constuctor
+  function Layout ()
+  {
+    GLOBAL $bgpri;
+# Constructor for parent class...
+    $this->Error();
+
+#  Set up the priority color array one time only
+    $bgpri[1] = 'priora';
+    $bgpri[2] = 'priorb';
+    $bgpri[3] = 'priorc';
+    $bgpri[4] = 'priord';
+    $bgpri[5] = 'priore';
+    $bgpri[6] = 'priorf';
+    $bgpri[7] = 'priorg';
+    $bgpri[8] = 'priorh';
+    $bgpri[9] = 'priori';
+
+    $bgpri[11] = 'prioraclosed';
+    $bgpri[12] = 'priorbclosed';
+    $bgpri[13] = 'priorcclosed';
+    $bgpri[14] = 'priordclosed';
+    $bgpri[15] = 'prioreclosed';
+    $bgpri[16] = 'priorfclosed';
+    $bgpri[17] = 'priorgclosed';
+    $bgpri[18] = 'priorhclosed';
+    $bgpri[19] = 'prioriclosed';
+
+  }
+
+
+  function box_top ($title, $subclass="", $noboxitem=0)
+  {
+    $return = '     <div class="box'.$subclass.'">
+       <div class="boxtitle">'.$title.'</div><!-- end boxtitle -->';
+    if (!$noboxitem)
+      {
+	$return .= '
+       <div class="boxitem">';
+      }
+    return $return;
+  }
+
+# Box Middle, equivalent to html_box1_middle()
+  function box_middle ($title, $noboxitem=0)
+  {
+    $return = '</div><!-- end boxitem -->
+       <div class="boxtitle">'.$title.'</div><!-- end boxtitle -->';
+    if (!$noboxitem)
+      {
+	$return .= '
+       <div class="boxitem">';
+      }
+    return $return;
+  }
+
+# Box Middle, equivalent to html_box1_middle()
+  function box_nextitem ($class)
+  {
+    return '</div><!-- end boxitem -->
+       <div class="'.$class.'">';
+  }
+
+# Box Bottom, equivalent to html_box1_bottom()
+  function box_bottom ($noboxitem=0)
+  {
+    if (!$noboxitem)
+      {
+	$return = '</div><!-- end boxitem -->';
+      }
+
+    $return .= '
+     </div><!-- end box -->
+';
+    return $return;
+  }
+
+
+
+# Box Top, equivalent to html_box1_top()
+  function box1_top ($title,$echoout=1,$subclass="")
+  {
+    $return = '<table class="box'.$subclass.'">
+		<tr>
+			<td colspan="2" class="boxtitle">'.$title.'</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="boxitem">';
+    if ($echoout)
+      { print $return; }
+    else
+      { return $return;}
+  }
+
+# Box Middle, equivalent to html_box1_middle()
+  function box1_middle ($title,$bgcolor='')
+  {
+    return '
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="boxtitle">'.$title.'</td>
+		</tr>
+		<tr>
+			<td colspan=2 class="boxitem">';
+  }
+
+# Box Bottom, equivalent to html_box1_bottom()
+  function box1_bottom ($echoout=1)
+  {
+    $return = '
+			</td>
+		</tr>
+	</table>';
+    if ($echoout)
+      {  print $return; }
+    else
+      { return $return; }
+  }
+
+  function generic_header_start ($params)
+  {
+    global $G_USER, $G_SESSION;
+
+# Avoid any cache by setting an expire time in the past, without
+# distinction.
+# On Savane there are many forms, the content changes frequently,
+# it is probably better to avoid any cache problem that way.
+# We could use the Lastest-Modification header, but it would require
+# an extra call to time().
+    $context = $params['context'];
+    if ($context)
+      {
+# Only make the test if context is set.
+# Then look for usual trackers (bugs, patch...), project admin part
+# and personal area (/my)
+	if ("news" == $context ||
+	    "support" == $context ||
+	    "bugs" == $context ||
+	    "task" == $context ||
+	    "my" == $context ||
+	    "myitems" == $context ||
+	    "mygroups" == $context ||
+	    ereg("^a", $context))
+	  {
+	    header("Expires: Thu, 22 Dec 1977 15:00:00 GMT");
+	    dbg("Expires is set.");
+	  }
+      }
+
+    $title = context_title($context, $params['group']);
+
+
+    if ($params['title'] && $title)
+      {
+	$params['title'] = sprintf("%s: %s", $title, $params['title']);
+      }
+    elseif ($title)
+      {
+	$params['title'] = $title;
+      }
+
+    $params['title'] = sprintf("%s [%s]", $params['title'], $GLOBALS['sys_name']);
+
+    $theme = SV_THEME;
+    # Path of printer.css changed to internal/printer.css
+    if ($theme == "printer")
+      { $theme = "internal/printer"; }
+
+    print '<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="'.SV_LANG.'" xml:lang="'.SV_LANG.'">
+<head>
+  <title>'.$params['title'].'</title>
+  <meta name="Generator" content="Savane '.$GLOBALS['savane_version'].', see '.$GLOBALS['savane_url'].'" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/'.$theme.'.css" />
+';
+    
+    # We unfortunately have to maintain some browser-specifics hacks, since
+    # MSIE is total crap in regards to standards. This should be an exception.
+    # We should not implement non-standard things, we can only correct things
+    # for the mosted widely deployed web browser that does not understand
+    # W3C standards.
+    # (ignore in printer mode, as we have no left and top menu and that menus
+    # actually do not matter)
+    if (is_broken_msie() && !$_GET["printer"])
+      {
+	print '  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/internal/msie-dirtyhacks.css" />
+';
+      }
+
+    # If the user want the stone age menu, we must add the appropriate 
+    # additional CSS
+    if ($GLOBALS['stone_age_menu'])
+      { 
+	print '  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/internal/stone-age-menu.css" />
+';
+      }
+    
+    print '  <link rel="icon" type="image/png" href="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/icon.png" />
+';
+    utils_get_content("page_header");
+  }
+  function generic_header_end ($params)
+  {
+    print '
+</head>';
+  }
+
+  function generic_footer ($params)
+  {
+    print '<p class="footer">';
+    utils_get_content("page_footer");
+
+    # Powered by is no longer translated: it allows us to search on google
+    # for a simple string to find public site running Savane, which would be
+    # more complicated if it was i18n-ized
+    print ' </p>
+ <div align="right">'.utils_link($GLOBALS['savane_url'], sprintf("Powered by Savane %s", $GLOBALS['savane_version'])).'</div>'; 
+
+# yeupou--gnu.org 2005-09-16:
+# Dirty hack to get rid of serious issue in MSIE handling of
+# CSS.
+# If we are using MSIE, we havent closed main and realbody yet,
+# because the footer wouldnt be visible otherwise.
+    if (is_broken_msie() && !$_GET["printer"])
+      {
+	print '
+<!-- closing now main and realbody MSIE DIRTY HACK --></div></div>';
+      }
+    print '
+</body>
+</html>';
+  }
+
+  function header ($params)
+  {
+    $this->generic_header_start($params);
+    $this->generic_header_end($params);
+    
+    print '
+<body>
+<div class="realbody">
+';
+    sitemenu($params);
+
+    
+    print '<div class="main"><a name="top"></a>
+';
+    pagemenu($params);
+
+  }
+
+  function footer ($params)
+  {
+    print '
+  <p class="backtotop">
+  '.utils_link("#top", '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/top.orig.png" border="0" alt="'._("Back to the top").'" />').'
+  </p>';
+
+# yeupou--gnu.org 2005-09-16:
+# Dirty hack to get rid of serious issue in MSIE handling of
+# CSS.
+# If we are using MSIE, we cannot close main, because the footer
+# will never be visible otherwise.
+    if (!is_broken_msie() || $_GET["printer"])
+      {
+
+	print '
+</div><!-- end main -->
+<br class="clear" />
+</div><!-- end realbody -->
+';
+      }
+    else
+      {
+	print '
+<!-- not closing yet main and realbody MSIE DIRTY HACK -->
+';
+      }
+    
+    $this->generic_footer ($params);
+
+  }
+
+# ######################################### LEFT MENU
+
+# Most of it is in sitemenu.php
+
+# title of left menu part
+  function menuhtml_top ($title)
+  {
+    print '
+        <li class="menutitle">
+           '.$title.'
+        </li><!-- end menutitle -->';
+  }
+
+# left menu entry
+  function menu_entry ($link, $title, $available=1, $help=0)
+  {
+    print '
+	<li class="menuitem">
+           '.utils_link($link, $title, "menulink", $available, $help).'
+        </li><!-- end menuitem -->';
+  }
+
+# end of left menu part
+  function menuhtml_bottom ()
+  {
+
+  }
+
+# ######################################### TOP MENU
+
+# It is in pagemenu.php
+
+}
+
+?>

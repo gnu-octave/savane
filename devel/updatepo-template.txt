@@ -1,0 +1,13 @@
+Hi,
+
+you are noted as the last translator of the translation of Savane.
+The English template has been changed, and now some messages
+are marked fuzzy in your translation or are missing.
+
+We would be grateful if you could take the time and update it.
+
+If you do not have SVN write access, please post a bug report including
+the po file as attached file.
+
+Thanks,
+

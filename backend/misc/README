@@ -1,0 +1,4 @@
+Scripts in this directory are essential to Savane.
+
+They only requires database access. They won't do any system changes, only database changes.
+

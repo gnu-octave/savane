@@ -1,0 +1,11 @@
+ALTER TABLE groups CHANGE use_homepage use_homepage CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_mail use_mail CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_patch use_patch CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_task use_task CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_forum use_forum CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_cvs use_cvs CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_news use_news CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_support use_support CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_download use_download CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_bugs use_bugs CHAR( 1 ) DEFAULT '0';
+ALTER TABLE groups CHANGE use_extralink_documentation use_extralink_documentation CHAR( 1 ) DEFAULT '0';

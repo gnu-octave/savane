@@ -1,0 +1,1 @@
+../bugs/reporting.php

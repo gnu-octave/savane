@@ -1,0 +1,15 @@
+index.pl is a tool that permits to use Savane session
+to access mailing-list (or any other list) archives.
+
+The idea is not too completely mix savane password, session, with mailman
+ones, as mailman password are insecure (send uncrypted by mail, etc...) but
+to ease archives browsing.
+
+To make use of this module, you need the savane libs installed, and
+savane configured. 
+
+It assumes that the private archives are physically located in
+	/var/www/private/
+
+You need to configure apache like described in savane/etc/apache-mail.
+

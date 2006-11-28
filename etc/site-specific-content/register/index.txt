@@ -1,0 +1,7 @@
+<!-- Savannah - Project registration STEP 0 -->
+<!-- $Id$  BEGIN -->
+<p>
+In the following steps (5) you will be asked to provide a description
+of your project and a choice between options  such as the licence that apply to your project.
+</p>
+<!-- $Id$  END -->

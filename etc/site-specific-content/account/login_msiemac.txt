@@ -1,0 +1,5 @@
+<!-- Savannah - Login error message with MSIE+mac -->
+<!-- $Id$  BEGIN -->
+<h2 class="error">Microsoft Internet Explorer on the Apple Macinosh is not supported currently. Please use another browser.<br>
+This software is non-free. You should consider using browser like Mozilla.</h2>
+<!-- $Id$  END -->

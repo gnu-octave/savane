@@ -1,0 +1,8 @@
+<!-- Savannah - Project registration STEP 5 long description -->
+<!-- $Id$  BEGIN -->
+<H2>Step 5: Project Type</H2>
+
+We host differents types of projects. Choose the type that fit to your project. 
+
+It will help people to find out what is your project about and it will pre-choose tools you may want to use for your project type.
+<!-- $Id$  END -->

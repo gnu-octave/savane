@@ -1,0 +1,269 @@
+/*
+ *
+ * Part of the Savane Project
+ * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ *
+ *  http://gna.org/p/savane 
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.15 */
+
+@import "internal/base.css";
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body { 
+  margin-top: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+  margin-bottom: 1%;
+  background-color: #3d3d3d;
+  font-family: arial,helvetica;
+  color: #ffffff;
+}
+
+a { text-decoration: none; color: #7fffd4; }
+a:hover { text-decoration: underline; color: #98fb98; }
+a:active { color: #87ceeb; }
+.unavailable { text-decoration: line-through; font-style: italic; }
+.unavailable:hover { text-decoration: line-through; font-style: italic; }
+
+
+.footer { font-size: x-small; color: #b5b5b5; }
+
+/* Titles */
+
+/* <h2> Page title */
+h2 {
+	text-indent: 0.3em;
+}
+/* <h3> Section title */
+h3 {
+	text-indent: 1em;	
+	color: #e0c080;
+	border-bottom: thin solid #e0c080;
+}
+/* <h4> Small section title */
+/* <h5> Input form label */
+h5 {
+	margin: 1px 1px 1px 1px;
+	color: #e0c080;
+	border-bottom: thin solid #e0c080;
+}
+
+.warn {
+	color: #ff9e9e;
+}
+
+.error {
+	color: #ff9e9e;
+	font-weight: bold; 
+}
+
+.highlight { background-color: #4f706c; color: white; }  
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.topmenu {
+  border-top: thin solid #12b76a;
+}
+
+.topmenutitle {
+  border: thin solid #12b76a;
+  border-top: none;
+  background-color: #c6ffc6;
+  color: #12b76a;
+  text-align: center;
+}
+
+.topmenuitemmainitem {
+  background-color: #e8ffe8;
+  border-bottom: thin solid #12b76a;
+  color: #12b76a;
+}
+
+.topmenu a { text-decoration: none; color: #38876a }
+.topmenu a:hover { text-decoration: underline; color: #26b526; }
+.tabselect { background: #38876a; color: white !important; }
+
+
+ul.topmenuitemsubmenu {
+  border: thin solid black; 
+  background-color: #3d3d3d;
+}
+
+.topmenuitemsubmenu a { color: #7fffd4; }
+.topmenuitemsubmenu a:hover { color: #98fb98; }
+
+.menu { 
+  vertical-align: top;
+  margin-top: 25px;
+  border-spacing: 0;
+  border: 0;
+  color: #b5b5b5;
+}
+
+.menutitle { 
+  background-color: #c6ffc6;
+  border: thin solid #12b76a; 
+  color: #12b76a;
+  margin-top: 25px;
+  padding-top: 0;
+  text-align: center;
+}
+
+.menuitem {
+  list-style-type: none;
+  font-size: small;
+  background-color: #e8ffe8;
+  vertical-align: middle;
+  text-align: right;
+  border-bottom: thin solid #12b76a;
+  color: #12b76a;
+  padding-right: 0.3em;
+}
+
+.relatedrecipes {
+  list-style-type: none;
+  font-size: small;
+  background-color: #e8ffe8;
+  vertical-align: middle;
+  text-align: right;
+  border-bottom: thin solid #12b76a;
+  color: #12b76a;
+  padding-right: 0.3em;
+}
+
+
+
+.menu a { text-decoration: none; color: #38876a }
+
+.menu a:hover { text-decoration: underline; color: #26b526; }
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.boxtitle {            
+  border: thin solid black; 
+  font-weight: bold;
+  text-align: center;
+  text-transform: capitalize;
+  background-color: #e5e5e5;
+  color: black;
+}
+
+.boxitem {     
+  border: thin solid black; 
+  background-color: #686868;
+}
+
+.boxitemalt { 
+  border: thin solid black; 
+  background-color: #3d3d3d;
+}
+
+.boxoptions { 
+  border: thin solid black; 
+  background-color: #3d3d3d;
+}
+
+.boxtitle a { color: black; }
+.boxtitle a:hover { color: black; }
+
+.boxhighlight { background-color: #4f706c; color: white; }  
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input {
+  background-color: #3d3d3d;
+  border: thin inset #3d3d3d; 
+  color: #7fffd4;
+}
+
+input:hover { color: #98fb98; }
+
+select {
+  background-color: #3d3d3d;
+  border: thin inset #3d3d3d; 
+  color: #7fffd4;
+}
+
+textarea {
+  background-color: #3d3d3d;
+  border: thin inset #3d3d3d; 
+  color: #7fffd4;
+}
+
+textarea:hover { color: #7fffd4; }
+
+.preinput {
+ font-style: italic
+}
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+.priora { background-color: #206a87; }
+.priorb { background-color: #1e647f; }
+.priorc { background-color: #1c5e77; }
+.priord { background-color: #1a5870; }
+.priore { background-color: #195268; }
+.priorf { background-color: #174c60; }
+.priorg { background-color: #154659; }
+.priorh { background-color: #134051; }
+.priori { background-color: #113a49; }
+
+.prioraclosed { background-color: #208261; }
+.priorbclosed { background-color: #1e7a64; }
+.priorcclosed { background-color: #1c7258; }
+.priordclosed { background-color: #1a6b50; }
+.prioreclosed { background-color: #1a6644; }
+.priorfclosed { background-color: #165b38; }
+.priorgclosed { background-color: #155436; }
+.priorhclosed { background-color: #134c2e; }
+.prioriclosed { background-color: #114427; }

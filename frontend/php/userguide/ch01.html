@@ -1,0 +1,66 @@
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&#160;1.&#160;Introduction to <span class="application">Savane</span></th></tr><tr><td width="20%" align="left"><a accesskey="p" href="?file=pr01.html">Prev</a>&#160;</td><th width="60%" align="center">&#160;</th><td width="20%" align="right">&#160;<a accesskey="n" href="?file=ch01s02.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id2468541"></a>Chapter&#160;1.&#160;Introduction to <span class="application">Savane</span></h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="?file=ch01.html#id2468549">What it is</a></span></dt><dd><dl><dt><span class="sect2"><a href="?file=ch01.html#id2468631">Communication tools</a></span></dt><dt><span class="sect2"><a href="?file=ch01.html#id2468695">Development</a></span></dt><dt><span class="sect2"><a href="?file=ch01.html#id2468739">Visibility</a></span></dt><dt><span class="sect2"><a href="?file=ch01.html#id2468751">Project management</a></span></dt></dl></dd><dt><span class="sect1"><a href="?file=ch01s02.html">How a <span class="application">Savane</span> powered
+      platform works</a></span></dt><dd><dl><dt><span class="sect2"><a href="?file=ch01s02.html#id2468957">Levels of configuration</a></span></dt><dt><span class="sect2"><a href="?file=ch01s02.html#id2469020">Administration of a <span class="application">Savane</span> powered site</a></span></dt></dl></dd></dl></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" ><a id="id2468549"></a>What it is</h2></div></div></div><p>Free software has a particular engineering process,
+      involving decentralized collaboration of many people. Special
+      tools to allow collaborative work are needed to canalize these
+      decentralized efforts, and provide communication channels, such
+      as mail lists, version control and bug tracking systems. Web
+      platforms, offering these services without the need for client
+      installation, have become central points for free software
+      development.</p><p><span class="application">Savane</span> is such a web-based free
+    software hosting system. Through a web interface, and without the
+    need of client installation, it provides an environment for
+    collaborative work. It powers free software development platforms
+    such as <a href="?file=http://gna.org" target="_top">Gna!</a> and <a href="?file=http://savannah.gnu.org" target="_top">Savannah</a>. However, its
+    project management tools, and high levels of customization, make
+    it an interesting general project hosting and management system,
+    having been chosen by <span class="acronym">CERN</span>'s
+    <span class="acronym">LCG</span> <a href="?file=http://savannah.cern.ch" target="_top">software process and infrastructure
+    project</a>.</p><p>It integrates functionalities and artifacts implemented by
+      the own platform (account management, trackers, news system...)
+      as well as different external applications installed in the
+      system running <span class="application">Savane</span>
+      (<span class="application">Mailman</span> for mail lists, and
+      <span class="application">CVS</span>/<span class="application">Subversion</span>/<span class="application">Arch</span>
+      for version control). In addition, system disk space can be
+      provided, for download area, repositories, or home page
+      hosting.</p><p>As a result, through a mere web browser anywhere, access
+      to a full set of collaborative work and project management tools
+      is provided:</p><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id2468631"></a>Communication tools</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Mail Lists (through
+	    <span class="application">Mailman</span>)</p><p><span class="application">Savane</span> takes advantage
+	    of <span class="application">Mailman's</span> web interface,
+	    providing easy access to administration and user
+	    functions.</p></li><li><p>News system</p></li><li><p>Support tracker</p><p><span class="application">Savane</span> offers several
+	      different kinds of fully customizable trackers. They are
+	      explained in detail in the last chapter.</p></li><li><p>Mail notification
+	    system.</p><p><span class="application">Savane</span> implements a
+	    customizable mail notification system, making sure that
+	    users keep up to date with information that affects them,
+	    without the need of visiting the site. It is customizable
+	    at different levels: system admin, project admin, personal account
+	    configuration.</p></li></ul></div></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id2468695"></a>Development</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Bug tracker</p></li><li><p>Version control systems</p><p>Through a
+	    <span class="application">Savane</span> platform, users can
+	    potentially access different kinds of source code managers
+	    installed in the system: <span class="application">CVS</span>,
+	    <span class="application">Subversion</span>,
+	    <span class="application">Arch</span>. In addition, repository
+	    and change browsing is provided through
+	    <span class="application">viewcvs</span></p></li></ul></div></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id2468739"></a>Visibility</h3></div></div></div><p>Through http download area, and the possibility to host or
+      link with project homepages.</p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id2468751"></a>Project management</h3></div></div></div><div class="orderedlist"><ol type="1"><li><p>Fast project setup</p><p>Default values for
+	project type will be predefined by the site administrator, so
+	that the project pages will be ready for use with almost no
+	additional configuration. In addition,
+	<span class="application">Savane</span> offers the possibility to
+	copy tracker configuration from other projects hosted at the
+	site.</p></li><li><p>Task tracker</p><p>The
+	<span class="application">Savane</span> trackers offer a series of
+	additional functionalities (see next chapters), useful for
+	project management:</p><div class="itemizedlist"><ul type="disc"><li><p>Dependency system between tracker items (across
+	    tracker kinds and projects)</p></li><li><p>Reassignation of items (to other trackers, to other projects)</p></li><li><p>Automatic fields update</p><p>For
+	    example, if an item's severity field is set to "security",
+	    it could automatically be set to "private", and be
+	    assigned to a specific technician.</p></li><li><p>Item digest</p><p>Can be used to
+		  generate release notes.</p></li></ul></div></li><li><p>Request for inclusion</p><p>Users can
+	request to be included in a certain group, which might save
+	project admin's time in searching for users in the
+	database.</p></li></ol></div></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="?file=pr01.html">Prev</a>&#160;</td><td width="20%" align="center">&#160;</td><td width="40%" align="right">&#160;<a accesskey="n" href="?file=ch01s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">About this document&#160;</td><td width="20%" align="center"><a accesskey="h" href="?file=index.html">Home</a></td><td width="40%" align="right" valign="top">&#160;How a <span class="application">Savane</span> powered
+      platform works</td></tr></table></div>

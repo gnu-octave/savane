@@ -1,0 +1,16 @@
+This directory is supposed to contain files useful to upgrade from one
+version of savane to another.
+
+
+* For example, if you want to upgrade to the release 1.0.3 you should
+run the scripts within the directory 1.0.3
+
+sql files must be run like
+    mysql dbname < file.sql
+
+Other scripts must be run like
+    ./file.pl
+
+
+* When what needs to be done is more complex, a README is included in the
+directory.

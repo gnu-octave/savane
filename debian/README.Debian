@@ -1,0 +1,79 @@
+Savane for Debian, some comments about shipped packages:
+---------------------------------------------------------
+
+frontend-php:
+
+You may have to edit /etc/apache/conf.d/savane to suit your needs.
+
+You'll probably have to edit /etc/apache/httpd.conf to have the following:
+     AddDefaultCharset off
+
+You'll probably have to edit /etc/php4/apache/php.ini to have the following:
+     file_uploads = on
+      register_globals = on
+
+You'll definitely want to edit /etc/savane-frontend-php-content content, which
+contains the site specific content (like homepage text, page footer etc).
+
+=====================
+
+database:
+
+The package will not automatically create a database for you (maybe the 
+package will do that in the future with debconf, but not for now).
+
+The package only contains files necessary to build the database.
+
+You'll have to create the database doing:
+  
+  # uncompress sql files
+  gunzip /usr/share/doc/savane-database/1.database_savane.structure.sql.gz
+  gunzip /usr/share/doc/savane-database/2.database_savane.initvalues.sql.gz
+
+  # create database
+  mysql -e "CREATE DATABASE databasename"
+
+  # create database structure
+  mysql databasename < /usr/share/doc/savane-database/1.database_savane.structure.sql
+  mysql databasename < /usr/share/doc/savane-database/2.database_savane.initvalues.sql
+
+=====================
+
+config:
+
+If no config exits, it will run the Savane interactive configuration tool.
+
+Afterwards, it will be possible to edit by hand the configuration file 
+/etc/savannah/savannah.conf.pl  (default location).
+
+And it will be possible to update it interactively running:
+
+  sv_update_conf
+
+
+=====================
+
+backend-members-shell:
+
+Check sv_groups and sv_users options. You can split each part (cvs repository
+create, unix accounts creation etc) so a CVS server, for instance, would not
+create arch repositories...
+
+sv_groups assumes that you have cvs/svn/ssh... properly installed.
+
+You'll have to edit  /etc/membersh-conf.pl to fit your needs too.
+
+
+=====================
+
+backend-cvs:
+
+Only samples are provided. This scripts may be useful to you but they are not
+necessary to Savane.
+
+=====================
+
+
+Something is not working? Take a look first to the generic installation guide (INSTALL.verbose) shipped by the savane-doc package in 
+	
+	/usr/share/doc/savane-doc/non-debian-specific.INSTALL-GUIDE.gz

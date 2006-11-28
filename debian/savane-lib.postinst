@@ -1,0 +1,9 @@
+#!/usr/bin/perl 
+# Make sure the shared-locks directory exists and belongs to root
+$locksdir = "/var/lock/savane";
+
+system("mkdir", "-pv", $locksdir) unless -e $locksdir;
+system("chown", "root:root", $locksdir);
+system("chmod", "o-w", $locksdir);
+
+# End

@@ -1,0 +1,68 @@
+/*
+ * Part of the Savane project
+ * Copyright 2005-2006 (c) Yves Perrin <ype--cern.ch>
+ *                         Mathieu Roy <yeupou--gnu.org>
+ *   
+ * Based on Emeraud                      
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.16 */
+
+@import "Emeraud.css";
+
+body {
+        color: #666666;
+}
+
+.realbody {
+        padding-top: 2px;
+}
+ 
+.main {
+        padding-top: 2px;
+}
+ 
+.menulogo {
+        margin-top: 0;
+        list-style-type: none;
+        font-weight: bold;
+        font-size: larger;
+        text-align: center;
+}
+
+.hometitle {
+        margin-top: 0;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        background-color: #E9B879;
+        text-shadow: 0.1em 0.1em #CC885E;
+        font-weight: bold;
+        border: solid #CC885E thin;
+        text-align: center;
+        font-size: x-large;
+        color: #ffffff;
+}
+
+.topmenu {
+        border-top: none;
+}
+.topmenuitemmainitem {
+        border-top: thin solid #D7D7CF;
+}
+                                                                                
+/* EOF */

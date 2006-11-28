@@ -1,0 +1,723 @@
+ 
+ 
+############################################################
+## 
+## savannah/backend/README
+## 
+############################################################
+ 
+ 
+The Savane Backend:
+-------------------
+
+This part of Savane is a set of scripts that permits to synchronize the 
+Savane database with the system.
+
+Some of theme are purely accessories, some of them are important on Savane
+installation.
+
+Usually, the backend relies on perl scripts and the Savane lib (Savannah.pm).
+
+Most of the script provide a --help option.
+
+
+Description of the subdirectories:
+----------------------------------
+
+accounts:
+	Scripts related to accounts managements. These scripts can be used
+	to create unix groups and users on a system with the info in the
+	database.
+	It can also build repositories of different kind.
+
+
+admin:
+	Scripts designed for savane administrators (of an installation). For
+	instance, sv_register_discard permit to remove a group from the 
+	database completely.
+
+cvs: 
+	Scripts for CVS management
+
+darwin:
+	Scripts for savane use on Darwin/Mac OS X
+
+devel:
+	Scripts for savane developers
+
+
+install:
+	Scripts for savane installation / upgrade
+
+
+mail:
+	Scripts related to mail management
+
+
+*-specific:
+	Specific to an installation of Savane, like the installation at Gna!
+
+
+$Id$
+ 
+ 
+############################################################
+## 
+## savannah/backend/darwin/README
+## 
+############################################################
+ 
+ 
+These files allow Savane to be used on Mac OS X/Darwin
+properly. The qustion about a prefix for new user/group
+commands should be pointed at this folder (backend/darwin).
+The sv_ni_dump script is used to extact the netinfo information
+into flat files so sv_users, and sv_groups knows what to do with it
+
+Important Note: Do not use /Users as your home folder,
+sv_groups/sv_users flattens paths, and it can cause 
+issues with other programs. Create a /home, and use
+that instead.
+
+The Darwin User tools (with the expection of usermod)
+are from OSX User Utils package (http://www.osxgnu.org)
+and are licensed under the GPL.
+ 
+ 
+############################################################
+## 
+## savannah/frontend/perl/mailman_private_archs/README
+## 
+############################################################
+ 
+ 
+mailman_private_archs/index.pl is a tool that permits to use savannah session
+to access mailman (or any other list) archives.
+
+The idea is not too completely mix savannah password, session, with mailman
+ones, as mailman password are insecure (send uncrypted by mail, etc...) but
+to ease archives browsing.
+
+To make use of this module, you need the savannah libs installed, and
+savannah configured. 
+
+It assumes that the private archives are physically located in
+	/var/www/private/
+
+You need to configure apache (/var/www/private.pl is where the index.pl file
+is stored):
+
+   Alias /private/ /var/www/private.pl/
+   <Directory /var/www/private.pl/>
+    	AllowOverride None
+    	ErrorDocument  404  /private/index.pl
+ 	Options ExecCGI
+    	Order allow,deny
+    	Allow from all
+   </Directory>
+ 
+ 
+############################################################
+## 
+## savannah/frontend/php/css/README
+## 
+############################################################
+ 
+ 
+CSS writing/editing guidelines:
+-------------------------------
+($Id$)
+
+VERSION: 1.11
+
+Please, conform to this document when writing/editing CSS files. Every items
+in CSS files must be documented here.
+
+An item must not be called by reference to the exact HTML code it should
+apply generally but by purpose. For example, "error" usually apply to a
+<font> tag but it can, someday, be applied to a <table> tag. And CSS does
+not care about which HTML tag is concerned.
+
+When you add new items here, send a mail to <savannah-dev@gnu.org>.
+
+In every CSS file must be added the version number of the guidelines
+followed, to easily find out which CSS file may be severely outdated.
+This number of must change only when an item is added or removed,
+for this reason, we do not rely on CVS versionning.
+
+Every removed/renamed item must be added in the table at the bottom
+of this file.
+
+WARNING: CSS files that must be edited are the one ending with the suffix 
+	.css.in, not with .css! Otherwise, changes will be lost, not kept
+	in the CVS.
+
+
+Very basic (mostly text) items:
+-------------------------------
+
+	* "body" defines margins, default color (background and foreground)
+	* "a" defines links style.
+	* "unavailable" defines links style for unavailable actions.
+	* "footer" defines the little text on each page bottom.
+	* "warn","error" defines error/warning messages style.
+	* "feedback", "feedbackerror" defines feedback messages style 
+ 	  (usually defines an h3 tag), the second one is dedicated to error
+	   messages while the first one can give both.
+	* "help" defines the word that got a help balloon on mouseover.
+	* "smaller", "bold", "italic", "small", "xsmall" defines a
+	  text weigth/size.
+	* "highlight" helps to highlight rows, it should be used when
+	  boxhighlight does not work (because of padding, borders...).
+
+	In addition, note that the h3 and h5 headers tag are frequently
+	  used.
+
+
+Alignement, main tables:
+------------------------
+
+	* "center", 'left", "right", are basic items that do a
+	  specific alignement.
+	* "indexcenter" and "indexright" are used to split several
+	  index pages, with a big text in the center and some feature
+	  boxes to the right.
+	* "splitleft" and "splitright" are used to split several pages
+	  50/50.
+	* "realbody" is the table within which every content is, including
+	  left menu.	
+	* "main" is the table within which every content is, excluding
+	  left menu.
+	* "clear/clearl/clearr" are used to make sure no floating object
+	  make a fuss.
+
+
+Menus:
+------
+
+We have two menus, the left menu and the top menu. The left is general,
+depend on the Savannah installation. The top is contextual, depend on which
+page is showned.
+
+	* "menu" defines the whole left menu table design.
+	* "menutitle" defines the left menu subtitles.
+	* "menuitem" defines each left menu item style.
+	* "menulink" defines each left menu link style.
+	* "toptitle" defines the title (ontop) of the top menu table
+	   design.
+	* "topmenu" defines the whole top menu table design.
+	* "topmenupublic" defines the top menu design of the public area.
+	* "topmenurestricted" defines the top menu design of the restricted
+	   area.
+	* "topmenutitle" defines the top menu title design.
+	* "topmenuitem" defines the top menu item design.
+	* "tabselect" and "tabs" defines how looks like top menu links
+	  (tabselect means the page showned is eq the link)
+
+	* "menulogo" defines the left menu logo style.	
+
+Boxes:
+------
+	* "box" defines the whole box style.
+	* "boxtitle" defines the style of title of the box.
+	* "boxitem" defines the default style of the content of the box.
+	* "boxitemalt" defines the alternative style of the content.
+	* "boxhighlight" defines how a box can be highlighted.
+	   it is alike highlight.
+	* "boxoptions" defines how "Display Options" boxes looks like
+
+
+Forms:
+------
+
+The following forms items can be used:
+	* "input".
+	* "select".
+	* "textarea".
+	* "preinput" defines the text before an input field.
+
+
+Priorities:
+-----------
+
+To represent priorities, we use colors. Colors (foreground eventually,
+ background obviously) for "priora", "priorb" [...] "priorh", "priori"
+must be defined.
+
+The same value class with "closed" suffix defines the colors of closed 
+items.
+
+
+
+Memento, what changed:
+---------------------- 
+(edit this table with table.el for Emacs, package emacs-goodies-el)
+
+-removed- means an item is not replaced.
+-new- means an item did not exists previously
+
+
++-----------------------------------+-----------------------------------+
+| Current item name (Guide. version)| Old name                          |
++-----------------------------------+-----------------------------------+
+| box (1.0)                         | boxtable                          |
++-----------------------------------+-----------------------------------+
+| menu (1.0)                        | menutable                         |
++-----------------------------------+-----------------------------------+
+| -removed- (1.0)                   | feedback                          |
++-----------------------------------+-----------------------------------+
+| warn (1.0)                        | error                             |
++-----------------------------------+-----------------------------------+
+| -removed- (1.0)                   | pre,tt                            |
++-----------------------------------+-----------------------------------+
+| main (1.0)                        | standardtable                     |
++-----------------------------------+-----------------------------------+
+| content (1.0)                     | contenttable                      |
++-----------------------------------+-----------------------------------+
+| topmenu (1.0)                     | groupmenutable                    |
++-----------------------------------+-----------------------------------+
+| topmenupublic (1.0)               | maintr                            |
++-----------------------------------+-----------------------------------+
+| topmenurestricted (1.0)           | admintr                           |
++-----------------------------------+-----------------------------------+
+| topmenutitle (1.0)                | titletd                           |
++-----------------------------------+-----------------------------------+
+| topmenuitem (1.0)                 | contenttd                         |
++-----------------------------------+-----------------------------------+
+| error (1.1)                       | -new-                             |
++-----------------------------------+-----------------------------------+
+| preinput (1.2)                    | -new-                             |
++-----------------------------------+-----------------------------------+
+| -removed- (1.3)                   | menusearch                        |
++-----------------------------------+-----------------------------------+
+| feeback (1.4)                     | -new-	                        |
++-----------------------------------+-----------------------------------+
+| feebackerror (1.4)                | -new-	                        |
++-----------------------------------+-----------------------------------+
+| help (1.5)                	    | -new-	                        |
++-----------------------------------+-----------------------------------+
+| toptitle (1.6)               	    | topmenutitle.2 (1.5)              |
++-----------------------------------+-----------------------------------+
+| menulink (1.7)               	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| unavailable (1.8)          	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| @import "base.css"; (1.9)   	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| splitleft (1.9)	   	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| splitright (1.9) 	  	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| realbody (1.9) 	  	    | main (1.8 )                       |
++-----------------------------------+-----------------------------------+
+| main (1.9) 	  	    	    | content (1.8)                     |
++-----------------------------------+-----------------------------------+
+| clear/clearl/clearr (1.9)    	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| backtotop (1.9)  	    	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| menulogo (1.9)  	    	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| prior*-closed (1.10)      	    | -new-                             |
++-----------------------------------+-----------------------------------+
+
+
+
+
+ 
+ 
+############################################################
+## 
+## savannah/frontend/php/css/README.~1.8.~
+## 
+############################################################
+ 
+ 
+CSS writing/editing guidelines:
+-------------------------------
+($Id$)
+
+VERSION: 1.11
+
+Please, conform to this document when writing/editing CSS files. Every items
+in CSS files must be documented here.
+
+An item must not be called by reference to the exact HTML code it should
+apply generally but by purpose. For example, "error" usually apply to a
+<font> tag but it can, someday, be applied to a <table> tag. And CSS does
+not care about which HTML tag is concerned.
+
+When you add new items here, send a mail to <savannah-dev@gnu.org>.
+
+In every CSS file must be added the version number of the guidelines
+followed, to easily find out which CSS file may be severely outdated.
+This number of must change only when an item is added or removed,
+for this reason, we do not rely on CVS versionning.
+
+Every removed/renamed item must be added in the table at the bottom
+of this file.
+
+WARNING: CSS files that must be edited are the one ending with the suffix 
+	.css.in, not with .css! Otherwise, changes will be lost, not kept
+	in the CVS.
+
+
+Very basic (mostly text) items:
+-------------------------------
+
+	* "body" defines margins, default color (background and foreground)
+	* "a" defines links style.
+	* "unavailable" defines links style for unavailable actions.
+	* "footer" defines the little text on each page bottom.
+	* "warn","error" defines error/warning messages style.
+	* "feedback", "feedbackerror" defines feedback messages style 
+ 	  (usually defines an h3 tag), the second one is dedicated to error
+	   messages while the first one can give both.
+	* "help" defines the word that got a help balloon on mouseover.
+	* "smaller", "bold", "italic", "small", "xsmall" defines a
+	  text weigth/size.
+	* "highlight" helps to highlight rows, it should be used when
+	  boxhighlight does not work (because of padding, borders...).
+
+	In addition, note that the h3 and h5 headers tag are frequently
+	  used.
+
+
+Alignement, main tables:
+------------------------
+
+	* "center", 'left", "right", are basic items that do a
+	  specific alignement.
+	* "indexcenter" and "indexright" are used to split several
+	  index pages, with a big text in the center and some feature
+	  boxes to the right.
+	* "splitleft" and "splitright" are used to split several pages
+	  50/50.
+	* "realbody" is the table within which every content is, including
+	  left menu.	
+	* "main" is the table within which every content is, excluding
+	  left menu.
+	* "clear/clearl/clearr" are used to make sure no floating object
+	  make a fuss.
+
+
+Menus:
+------
+
+We have two menus, the left menu and the top menu. The left is general,
+depend on the Savannah installation. The top is contextual, depend on which
+page is showned.
+
+	* "menu" defines the whole left menu table design.
+	* "menutitle" defines the left menu subtitles.
+	* "menuitem" defines each left menu item style.
+	* "menulink" defines each left menu link style.
+	* "toptitle" defines the title (ontop) of the top menu table
+	   design.
+	* "topmenu" defines the whole top menu table design.
+	* "topmenupublic" defines the top menu design of the public area.
+	* "topmenurestricted" defines the top menu design of the restricted
+	   area.
+	* "topmenutitle" defines the top menu title design.
+	* "topmenuitem" defines the top menu item design.
+	* "tabselect" and "tabs" defines how looks like top menu links
+	  (tabselect means the page showned is eq the link)
+
+	* "menulogo" defines the left menu logo style.	
+
+Boxes:
+------
+	* "box" defines the whole box style.
+	* "boxtitle" defines the style of title of the box.
+	* "boxitem" defines the default style of the content of the box.
+	* "boxitemalt" defines the alternative style of the content.
+	* "boxhighlight" defines how a box can be highlighted.
+	   it is alike highlight.
+
+
+Forms:
+------
+
+The following forms items can be used:
+	* "input".
+	* "select".
+	* "textarea".
+	* "preinput" defines the text before an input field.
+
+
+Priorities:
+-----------
+
+To represent priorities, we use colors. Colors (foreground eventually,
+ background obviously) for "priora", "priorb" [...] "priorh", "priori"
+must be defined.
+
+The same value class with "closed" suffix defines the colors of closed 
+items.
+
+
+
+Memento, what changed:
+---------------------- 
+(edit this table with table.el for Emacs, package emacs-goodies-el)
+
+-removed- means an item is not replaced.
+-new- means an item did not exists previously
+
+
++-----------------------------------+-----------------------------------+
+| Current item name (Guide. version)| Old name                          |
++-----------------------------------+-----------------------------------+
+| box (1.0)                         | boxtable                          |
++-----------------------------------+-----------------------------------+
+| menu (1.0)                        | menutable                         |
++-----------------------------------+-----------------------------------+
+| -removed- (1.0)                   | feedback                          |
++-----------------------------------+-----------------------------------+
+| warn (1.0)                        | error                             |
++-----------------------------------+-----------------------------------+
+| -removed- (1.0)                   | pre,tt                            |
++-----------------------------------+-----------------------------------+
+| main (1.0)                        | standardtable                     |
++-----------------------------------+-----------------------------------+
+| content (1.0)                     | contenttable                      |
++-----------------------------------+-----------------------------------+
+| topmenu (1.0)                     | groupmenutable                    |
++-----------------------------------+-----------------------------------+
+| topmenupublic (1.0)               | maintr                            |
++-----------------------------------+-----------------------------------+
+| topmenurestricted (1.0)           | admintr                           |
++-----------------------------------+-----------------------------------+
+| topmenutitle (1.0)                | titletd                           |
++-----------------------------------+-----------------------------------+
+| topmenuitem (1.0)                 | contenttd                         |
++-----------------------------------+-----------------------------------+
+| error (1.1)                       | -new-                             |
++-----------------------------------+-----------------------------------+
+| preinput (1.2)                    | -new-                             |
++-----------------------------------+-----------------------------------+
+| -removed- (1.3)                   | menusearch                        |
++-----------------------------------+-----------------------------------+
+| feeback (1.4)                     | -new-	                        |
++-----------------------------------+-----------------------------------+
+| feebackerror (1.4)                | -new-	                        |
++-----------------------------------+-----------------------------------+
+| help (1.5)                	    | -new-	                        |
++-----------------------------------+-----------------------------------+
+| toptitle (1.6)               	    | topmenutitle.2 (1.5)              |
++-----------------------------------+-----------------------------------+
+| menulink (1.7)               	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| unavailable (1.8)          	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| @import "base.css"; (1.9)   	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| splitleft (1.9)	   	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| splitright (1.9) 	  	    | -new-		                |
++-----------------------------------+-----------------------------------+
+| realbody (1.9) 	  	    | main (1.8 )                       |
++-----------------------------------+-----------------------------------+
+| main (1.9) 	  	    	    | content (1.8)                     |
++-----------------------------------+-----------------------------------+
+| clear/clearl/clearr (1.9)    	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| backtotop (1.9)  	    	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| menulogo (1.9)  	    	    | -new-                             |
++-----------------------------------+-----------------------------------+
+| prior*-closed (1.10)      	    | -new-                             |
++-----------------------------------+-----------------------------------+
+
+
+
+
+ 
+ 
+############################################################
+## 
+## savannah/frontend/php/forum/README
+## 
+############################################################
+ 
+ 
+Forum information:
+------------------
+($Id$)
+
+The forums (fora) have not been used for a long time. During
+this time they have been abused for the news. This is why things
+are not clearly seperated and a bit messy.
+
+The forums should not be used by people who expect productive use
+(although I'm using them for production). If you're furious and
+painless, well: go ahead.
+
+
+Mailinglist behaviour:
+----------------------
+The forums can be used as Mailinglists. This requires turning on
+an undocumented option that is undocumented for good reasons. One
+is that this does not completely comply with the savannah philosophy
+the other is that the implementation has some performance issues on
+the database. Support is not given. However, if you are interested,
+make sure to read the sources in php/forum/* and php/include/news/forum.php.
+If you have questions, contact hardt<nospam>@</nospam>-at-iwr-dot-fzk-dot-de.
+
+
+ 
+ 
+############################################################
+## 
+## savannah/frontend/php/images/README
+## 
+############################################################
+ 
+ 
+For each usual icons, two sizes availables are prefered:
+	$file.orig.png = 48x48
+	$file.png = 24x24
+
+The $file.png can be regenerated typing
+	make icons 
+ 
+############################################################
+## 
+## savannah/frontend/php/images/mime_type/README
+## 
+############################################################
+ 
+ 
+These files are replacement for apache-files icons (used also by viewcvs), 
+which looks like the ones used on Savannah by the default theme.
+
+They are free (as in freedom) images from GNOME and KDE project.
+ 
+ 
+############################################################
+## 
+## savannah/lib/README
+## 
+############################################################
+ 
+ 
+2003-02-01 yeupou@gnu.org
+
+============================================
+Purpose: 
+============================================
+
+perl modules that will be used by the new backend (rewriting of sv_cvs espzecially), and maybe with any other frontend.
+
+The final goal is to replace (enhance, actually) the content of savannah/gnuscript. Currently, it's experimental.
+
+============================================
+Perl modules required: 
+============================================
+DBI
+ANSIColor (core module)
+
+
+===========================================
+Sub Naming policy:
+===========================================
+Get... =  return a value (used in another sub, included in a $var...)
+Set... = set a value
+Print... = print (a) value(s) on STDOUT (for information mainly)
+Is... = return boolean value
+CanUse = return boolean value
+
+...Group = related to a group
+...User = related to a group
+
+... So we have
+GetGroupName($group_id);
+GetGroupUsers($group);
+CanGroupUseCvs($group);
+IsGroupHomepageOnCvs
+ 
+ 
+############################################################
+## 
+## savannah/db/README
+## 
+############################################################
+ 
+ 
+### CONTENT OF THIS DIRECTORY
+
+db/mysql/* files for mysql db
+db/old/* old files
+
+### CONTENT OF THOSE DIRECTORIES (old excluded):
+
+*.structure : 
+	  describe the structure of a file or a database
+*.initvalues:
+	  set the initials values required for a file or a database
+
+database_*  :
+	  describe/set a complete database
+table_*	    :
+	  describe/set a complete table
+
+### THE 100 VALUE AND MYSQL
+
+There are recurrent troubles with the 100 entries with our tables. That's why the value 100 is already set on almost every tables.
+
+### INSTALL
+
+For now, the better method is to type:
+    mysql -u user -p  database < mysql/database_savannah.structure
+    mysql -u user -p  database < mysql/database_savannah.initvalues
+
+In the future, you will be able to insert in a modular way each table.
+And it will be cleaner than using the previously explained method, since
+only SV2 tables are in table_* format. 
+
+
+
+### UPDATE
+
+Don't update the *structure files manually. Use sv_export_db to do
+it.
+
+
+ 
+ 
+############################################################
+## 
+## savannah/po/README
+## 
+############################################################
+ 
+ 
+TRANSLATION writing/editing guidelines:
+---------------------------------------
+($Id$)
+
+To add a new language, a file $lang.po must be added. Site-specific content can be added too, by adding new files called thistextfile.$lang.
+
+And finally, each time a new language is added, frontend/php/include/i18n must be edited.
+
+Rules:
+------
+  - Punctuation marks are part of the translation! They must be inside gettext
+    string. For instance, there is a space before all the ; in French, while
+    there is none in English. Then, think about languages written from the
+    right to the left...
+  - Avoiding anglicism as possible is important. 
+    I18n means something only if we do not assume that people have to learn
+    english anyway. So "mail" is not a correct french translation for "mail", 
+    for instance. Courriel is a nice one.
+
+
+Tips:
+-----
+  - Running aspell/ispell periodically is a good option.
+  - Running make refresh-po after editing a po file tells you if you made a
+    syntax error.
+
+
+
+

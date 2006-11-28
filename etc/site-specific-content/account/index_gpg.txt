@@ -1,0 +1,5 @@
+<!-- Savane- User account modification page info about GPG -->
+<!-- Savane- If you use sv_gpgcheckfiles, your users MUST add their key here -->
+<!-- $Id$  BEGIN -->
+GPG Keys can be used to crypt messages, certify originator identity of a file or a message. If you intend to GPG sign files you will upload to your projects download area, you should add your ASCII GPG key here.
+<!-- $Id$  BEGIN -->

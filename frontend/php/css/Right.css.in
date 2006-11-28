@@ -1,0 +1,48 @@
+/*
+ *
+ * Part of the Savane Project
+ * Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+ * See the changelog file for a detailed list of changes
+ *
+ *  http://gna.org/p/savane
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.15 */
+
+@import "Emeraud.css";
+
+/* This theme exists for users that want a menu on the right, but in some
+  pages it leads to quite annoying layout and this theme is not really 
+  much used anyway, so no one bothers really fixing it. */
+
+.main {
+  	vertical-align: top;
+	margin-right: 16%;
+	margin-left: 0;
+	padding-left: 5px;
+	padding-top: 5px;
+}
+
+.menu {
+	float: right; 
+
+}
+

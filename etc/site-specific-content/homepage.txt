@@ -1,0 +1,24 @@
+<!-- Savannah - Sample homepage. Edit as you want for your site -->
+<!-- $Id$  BEGIN -->
+<p>
+This web site is a central point for development, distribution and
+maintainance of software projects
+</p>
+
+<p>
+If you would like to use these facilities to host your
+project, then go to the <b>Register new project</b> menu entry that
+is displayed after login.
+</p>
+
+<p>
+While there are a few separate documents explaining the usage of
+the site, most of the documentation is included in the pages
+themselves (the place where you are most likely to need it).
+</p>
+
+<p>
+The software used to run this site has been developed by the
+<a href="https://gna.org/projects/savane">Savane</a> project.
+</p>
+<!-- $Id$ END -->

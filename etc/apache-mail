@@ -1,0 +1,32 @@
+# -*- apache -*-
+#
+#  THIS FILE IS SUPPOSED TO COME WITH THE DEBIAN PACKAGE. PATH WILL BE
+#  ERRONEOUS FOR A HAND-MADE INSTALLATION
+#
+#  Written for apache 1.x ans 2.x with mod_perl
+#
+# 
+# This is for the extra part of the frontend related to mail private
+# archives access
+# 
+# This frontend assume that archives are accessed by the URL
+#    http://host/private/listname
+# and that files are stored in /var/www/private/listname
+# This is not configurable for now
+#
+####################################################################  
+
+Alias /private/ /usr/share/savane-frontend-mail/private-archives/
+
+<Directory /usr/share/savane-frontend-mail> 
+    DirectoryIndex index.pl 
+    ErrorDocument 404 /private/index.pl              
+    SetHandler perl-script                                                     
+    PerlHandler Apache::Registry  
+    Options +ExecCGI
+    AllowOverride None                     
+    Order allow,deny
+    Allow from all
+</Directory>
+
+# End Of File

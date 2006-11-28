@@ -1,0 +1,14 @@
+# Edit this file to fit your needs.
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+# Send content to spamc
+*/5 * * * *	root    sv_spamcheck_peon
+
+# Monitor the queue
+*/9 * * * *	root    sv_spamcheck_monitor
+
+# Learn from flagged items
+35 */5 * * *	root    sv_spamcheck_scholar 2> /dev/null > /dev/null
+
+# END

@@ -1,0 +1,7 @@
+<!-- Savannah - Job creation introduction -->
+<!-- $Id$ BEGIN -->
+<P>
+Start by filling in the fields below. When you click continue, you 
+will be shown a list of skills and experience levels that this job requires.
+<P>
+<!-- $Id$  END -->

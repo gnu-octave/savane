@@ -1,0 +1,24 @@
+# Edit this file to fit your needs.
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+# List of mail aliases (/etc/aliases) must be rebuild regularly 
+# It will provide aliases for each Savane user.
+# (In order to run, this option must be activated while configuring Savane).
+*/10 * * * *	root	sv_aliases --cron
+
+# New list creation with Mailman
+# (this option must be activated while configuring Savane).
+# (with this setup, password changes may be recorded in this logfile,
+# while users are warned that there is almost no security for mailman 
+# passwords, you should still make sure that this file is not readable
+# by common people around)
+*/30 * * * *	root	sv_mailman --cron >> /var/log/sv_database2system.log
+
+# Register public lists on mail-archive.com
+# Completely deactivated by default, because it register lists on an 
+# external site.
+#25 5    * * 6	root	sv_mailman_and_mailarchivedotcom --cron >/dev/null
+
+
+# END

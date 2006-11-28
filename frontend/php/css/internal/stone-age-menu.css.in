@@ -1,0 +1,58 @@
+/*
+ *
+ * Part of the Savane Project
+ * Copyright 2006     (c) Mathieu Roy <yeupou--gnu.org>
+ * See the changelog file for a detailed list of changes
+ *
+ *  http://gna.org/p/savane
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id: base.css.in 5735 2006-09-11 08:18:04Z yeupou $
+ *
+*/
+
+/* This is supposed to provide an old fashioned top menu for
+   crappy/old browsers
+   Needlessly to say, nothing fancy should be here. Only removal of fancy
+   things.
+*/
+
+
+.topmenu {
+	border: none;
+	margin-right: 1em;
+	padding-bottom: 0;
+}
+
+.topmenutitle {
+	float: none;
+	padding-left: 1%;
+	padding-right: 1%;
+}
+
+.topmenuitem {
+	border: none;
+	padding: 0;
+}
+
+li.topmenuitemmainitem {
+	float: none;
+        position: static; 
+}
+
+li.topmenuitemmainitem a { 
+	padding: 0; 
+}

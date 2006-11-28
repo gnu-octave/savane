@@ -1,0 +1,376 @@
+/*
+ *
+ * Copyright 2005 (c) Mathieu Roy <yeupou--gnu.org>
+ *                    Kathelijne.Sierens <Kathelijne.Sierens@UGent.be>
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id: $
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.12 */
+
+@import "internal/base.css";
+
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body { 
+	margin-top: 2px;
+	margin-left: 2px;
+  	margin-right: 2px;
+  	margin-bottom: 2px;
+  	background-color: white;
+ 	color: black;
+}
+
+a { 
+	text-decoration: none;
+	color: #369;
+}
+a:hover { 
+	text-decoration: underline; 
+	color: #69C;
+}
+a:active { 
+	color: #69C; 
+}
+
+
+.unavailable { 
+	color: #c1c1b0; 
+	text-decoration: none; 
+}
+.unavailable:hover { 
+	text-decoration: line-through; 
+	color: #c1c1b0; 
+}
+
+
+.footer { font-size: x-small; color: black; }
+
+/* Titles */
+
+/* <h2> Page title */
+/* <h3> Section title */
+
+h1 { color:#369; } 
+h2 { color:#333;} 
+h3 { 
+	background-color: white;
+	text-indent: 1em; 
+	border-top: solid thin black;
+	border-bottom: solid thin black;
+	color:#333;
+}
+
+/* <h4> Small section title */
+/* <h5> Input form label */
+h5 {
+	margin: 1px 1px 1px 1px;
+	background-color: white;
+	border-top: solid thin black;
+	border-bottom: solid thin black;
+	color: black;
+}
+
+.highlight { 
+	background-color: white;
+	color: #69C;
+}
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+.realbody {  border-spacing: 4; border: 0; }
+.main { vertical-align: top;  
+	margin-left: 160px; border-spacing: 0; border: 0; }
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.menu { 
+	vertical-align: top; 
+	width: 150px; 
+	border-spacing: 0; 
+	border: 0; 
+	font-size: smaller;
+}
+
+.menutitle { 
+	background-color: #69C;
+	border: 1px solid #e1e1e1;
+	color: white;
+	vertical-align: top; 
+	font-weight: bold; 
+	text-align: center; 
+}
+
+.menuitem { 
+	vertical-align: top; 
+	text-align: left; 
+	background-color: #ECEFF8;
+	border: 1px solid #e1e1e1;
+	
+}
+
+.menusearch { 
+	font-size: xx-small; 
+	background-color: #ECEFF8;
+
+	border: 1px solid #e1e1e1;
+} 
+
+.menulink { 
+  	color: #369;
+}
+.menuitem:hover {
+	background-color: white;
+	border: thin outset white;
+	color: #69C;
+}
+
+.menulink:hover {
+	background-color: #ECEFF8;
+	color: #69C;
+	text-decoration: none; 
+}
+
+.topmenu { 
+	width: 100%; 
+}
+
+.topmenutitle {
+	background-color: #369;
+	border: thin outset #369;
+	font-weight: bold; 
+	text-align: center; 
+	color: white;
+	padding: 0;
+}
+
+.topmenuitem { 
+        color: white;
+	margin-left: 15%;
+	padding-left: 1%;
+	background-color: #369;
+	border: thin outset #369;
+}
+.topmenuitem a { color: white; }
+.topmenuitem a:hover { color: #FC0; }
+
+.tabs { 
+	color: green; 
+}
+.tabselect { 
+	color: green; 
+	font-weight: bold; 
+	text-decoration: underline;
+}
+.tabselect:hover { 
+	color: black; 
+}
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+.box { 
+	background-color: #F2F5FE;
+	border-top: 2px outset #F2F5FE; 
+	border-left: 2px outset #F2F5FE;
+	border-right: 2px outset #F2F5FE;
+	border-bottom: 1px outset #F2F5FE;
+	border-spacing: 0; 
+	color: black;
+}
+
+.boxtitle { 
+	background-color: #369;
+	font-weight: bold; 
+	text-align: center; 
+	text-transform: capitalize; 
+	color: white; 
+}
+
+.boxtitle a { 
+	color: white; 
+	text-decoration: underline;
+}
+.boxtitle a:hover { 
+	color: #FC0; 
+}
+
+.boxitem { 	
+          border-bottom: 1px solid #e1e1e1;
+}
+.boxitemalt { 
+	background-color: white;
+	border-bottom: 1px solid white;
+ 	 
+}
+.boxhighlight { 
+	background-color: red; 
+
+	color: black;
+}
+
+.boxoptions { 
+	text-align: left; 
+	background-color: #eeeee6;
+	border: thin solid #a3a292;
+	color: black;
+} 
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+
+input { 
+	background-color: white; 
+	color: black; 
+}
+select { 
+	background-color: white; 
+	color: black; 
+}
+textarea { 
+	background-color: white; 
+	color: black; 
+}
+
+/* text before inputs */
+.preinput {
+	font-style: italic;
+}
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+.priora { 
+	background-color: #fff2f2; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e; 
+}
+.priorb { 
+	background-color: #ffe8e8; 
+	border: 0; 
+	border-bottom: thin solid #ef6e6e;
+}
+.priorc { 
+	background-color: #ffe0e0; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e; 
+}
+.priord { 
+	background-color: #ffd8d8; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e; 
+}
+.priore { 
+	background-color: #ffcece; 
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorf { 
+	background-color: #ffc6c6;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorg { 
+	background-color: #ffbfbf;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorh { 
+	background-color: #ffb7b7;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+ }
+.priori { 
+	background-color: #ffadad;  
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+
+.prioraclosed { 
+	background-color: #F5FFEB; 
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorbclosed { 
+	background-color: #EDFFE6;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorcclosed { 
+	background-color: #EEFFE1;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priordclosed { 
+	background-color: #E0FFD5;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.prioreclosed { 
+	background-color: #CCFFBB;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorfclosed { 
+	background-color: #C6FFB9;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorgclosed { 
+	background-color: #C0FFB2;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.priorhclosed { 
+	background-color: #ADFFA4;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+.prioriclosed { 
+	background-color: #A0FF9D;
+	border: 0;
+	border-bottom: thin solid #51DA96;
+}
+

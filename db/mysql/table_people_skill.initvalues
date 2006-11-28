@@ -1,0 +1,43 @@
+# This file was generated for Savane SVN (toward 2.1).
+#
+# This is an SQL file necessary to create the table people_skill part of a
+# Savane database.
+# 
+# Check people_skill.README for specifics about this table.
+# (if this file does not exist, there is nothing specific)
+# 
+# Go at <https://gna.org/projects/savane> if you need information 
+# about Savane.
+
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: savane
+-- ------------------------------------------------------
+-- Server version	4.1.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Dumping data for table `people_skill`
+--
+
+
+/*!40000 ALTER TABLE `people_skill` DISABLE KEYS */;
+INSERT INTO `people_skill` (`skill_id`, `name`) VALUES (1,'GNU/Linux'),(2,'FreeBSD'),(3,'NetBSD'),(4,'OpenBSD'),(6,'GNU/Hurd'),(100,'Apache'),(101,'Samba'),(102,'Sendmail'),(103,'INN'),(104,'PostgreSQL'),(105,'MySQL'),(107,'Squid'),(108,'Bind'),(112,'Postfix'),(113,'LaTeX'),(114,'Exim'),(115,'htdig'),(116,'Zope'),(117,'swish-e'),(118,'swish++'),(119,'Hiways'),(120,'Oops'),(121,'GNU mifluz'),(122,'The Gimp'),(123,'Blender'),(201,'PERL'),(202,'PHP'),(203,'Java'),(204,'C'),(205,'C++'),(206,'Lisp'),(207,'Eiffel'),(208,'Fortran'),(209,'Pascal'),(211,'HTML'),(212,'Objective C'),(213,'XML'),(214,'Python'),(215,'SQL'),(216,'Ada'),(217,'Tcl/Tk'),(220,'Corba'),(221,'OTcl'),(222,'Scheme'),(223,'Prolog'),(224,'UML'),(225,'Caml'),(226,'Gtk+'),(227,'SGML'),(228,'CGI'),(229,'SmallEiffel'),(230,'OpenGL'),(231,'SmallTalk'),(232,'SML'),(233,'Automake'),(234,'Autoconf'),(235,'Libtool'),(236,'JavaScript'),(237,'Shell'),(238,'Antlr'),(239,'Flex'),(240,'Yacc'),(241,'Bison'),(242,'Objective Caml'),(243,'Texinfo'),(300,'TCP/IP'),(301,'Firewall'),(303,'WAN'),(304,'IPv6'),(305,'X.25'),(306,'Ethernet'),(307,'IPX/SPX'),(308,'SNMP'),(309,'ATM'),(310,'RNIS'),(311,'VPN'),(312,'NFS'),(313,'DHCP'),(315,'NIS'),(316,'OpenSSL'),(317,'IMAP'),(318,'Token Ring'),(319,'OpenLDAP'),(400,'CVS'),(500,'GNU Coding Standards'),(501,'Software Licensing'),(10000,'GNU Emacs lisp'),(10001,'GNU Emacs internals'),(10002,'Ruby'),(10003,'GNU Arch'),(10004,'Subversion'),(10005,'C#');
+/*!40000 ALTER TABLE `people_skill` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

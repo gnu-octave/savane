@@ -1,0 +1,55 @@
+#!/usr/bin/perl 
+#
+# This postinst script will check whether sv_update_conf is available and
+# if there's a already a conffile.
+# 
+# If there's no conffile, it will run automatically sv_update_conf.
+# This is just a basic script that will not handle elaborated situation 
+
+if (-e "/usr/bin/sv_update_conf") {
+    unless (($ENV{SAVANE_CONF} && -e $ENV{SAVANE_CONF}."/savane.conf.pl") ||
+	    -e "/etc/savane/savane.conf.pl" ||
+	    -e "/etc/savannah/savane.conf.pl" ||
+	    -e "/usr/etc/savane/savane.conf.pl" ||
+	    -e "/usr/local/etc/savane/savane.conf.pl") {
+
+	chomp(my $hostname = `hostname -f`);
+      
+	# It will be interactive. It's not well considered by debian not
+	# to use debconf but... well... that's ok for now.
+	print "\nYou apparently have no Savane configuration yet.\n";
+	print "Do you want to start the interactive configuration process now (Y/n).\n";
+	chomp(my $now = <STDIN>);
+	if (lc($now) ne "n") {
+	    
+	    print "Some answers will be prefilled for you.
+You are advised to stick to default choices presented to you when you 
+are not sure, especially about paths.\n";
+	    sleep(4);
+
+	    system("/usr/bin/sv_update_conf",
+		   "--default-domain=$hostname",
+		   "--http-user=www-data",
+		   "--www-topdir=/usr/share/savane-frontend-php",
+		   "--url-topdir=/savane",
+		   "--incdir=/etc/savane-frontend-php-content",
+		   "--dbhost=localhost",
+		   "--shell=/usr/bin/sv_membersh");
+
+	    print "Configuration done.
+
+Don't forget these are very basic debian packages. 
+Read the README.Debian file (shipped with every package) to continue the 
+software installation.\n";
+	    sleep(4);
+
+	} else {
+	    
+	    print "Ok, you'll have to run sv_update_conf when you feel ready\n";
+	    sleep(4);
+	}
+	       
+    }
+}
+
+# End

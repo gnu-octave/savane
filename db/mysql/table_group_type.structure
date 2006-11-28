@@ -1,0 +1,123 @@
+# This file was generated for Savane SVN (toward 2.1).
+#
+# This is an SQL file necessary to create the table group_type part of a
+# Savane database.
+# 
+# Check group_type.README for specifics about this table.
+# (if this file does not exist, there is nothing specific)
+# 
+# Go at <https://gna.org/projects/savane> if you need information 
+# about Savane.
+
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: savane
+-- ------------------------------------------------------
+-- Server version	4.1.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `group_type`
+--
+
+DROP TABLE IF EXISTS `group_type`;
+CREATE TABLE `group_type` (
+  `type_id` int(11) NOT NULL auto_increment,
+  `name` text,
+  `description` text,
+  `admin_email_adress` varchar(128) default NULL,
+  `base_host` varchar(128) default NULL,
+  `mailing_list_host` varchar(255) default NULL,
+  `can_use_homepage` int(1) NOT NULL default '1',
+  `can_use_download` int(1) NOT NULL default '1',
+  `can_use_cvs` int(1) NOT NULL default '1',
+  `can_use_arch` int(1) NOT NULL default '0',
+  `can_use_svn` int(1) NOT NULL default '0',
+  `can_use_license` int(1) NOT NULL default '1',
+  `can_use_devel_status` int(1) NOT NULL default '1',
+  `can_use_forum` int(1) NOT NULL default '0',
+  `can_use_mailing_list` int(1) NOT NULL default '1',
+  `can_use_patch` int(1) NOT NULL default '0',
+  `can_use_task` int(1) NOT NULL default '1',
+  `can_use_news` int(1) NOT NULL default '1',
+  `can_use_support` int(1) NOT NULL default '1',
+  `can_use_bug` int(1) NOT NULL default '1',
+  `is_menu_configurable_homepage` int(1) NOT NULL default '0',
+  `is_menu_configurable_download` int(1) NOT NULL default '0',
+  `is_menu_configurable_forum` int(1) NOT NULL default '0',
+  `is_menu_configurable_support` int(1) NOT NULL default '0',
+  `is_menu_configurable_mail` int(1) NOT NULL default '0',
+  `is_menu_configurable_cvs` int(1) NOT NULL default '0',
+  `is_menu_configurable_cvs_viewcvs` int(1) NOT NULL default '0',
+  `is_menu_configurable_cvs_viewcvs_homepage` int(1) NOT NULL default '0',
+  `is_menu_configurable_arch` int(1) NOT NULL default '0',
+  `is_menu_configurable_arch_viewcvs` int(1) NOT NULL default '0',
+  `is_menu_configurable_svn` int(1) NOT NULL default '0',
+  `is_menu_configurable_svn_viewcvs` int(1) NOT NULL default '0',
+  `is_menu_configurable_bugs` int(1) NOT NULL default '0',
+  `is_menu_configurable_task` int(1) NOT NULL default '0',
+  `is_menu_configurable_patch` int(1) NOT NULL default '0',
+  `is_menu_configurable_extralink_documentation` int(1) NOT NULL default '0',
+  `is_configurable_download_dir` int(1) NOT NULL default '0',
+  `homepage_scm` varchar(25) NOT NULL default 'cvs',
+  `dir_type_cvs` varchar(255) NOT NULL default 'basiccvs',
+  `dir_type_arch` varchar(255) NOT NULL default 'basicdirectory',
+  `dir_type_svn` varchar(255) NOT NULL default 'basicsvn',
+  `dir_type_homepage` varchar(255) NOT NULL default 'basicdirectory',
+  `dir_type_download` varchar(255) NOT NULL default 'basicdirectory',
+  `dir_homepage` varchar(255) default '/',
+  `dir_cvs` varchar(255) default '/',
+  `dir_arch` varchar(255) default '/',
+  `dir_svn` varchar(255) default '/',
+  `dir_download` varchar(255) default '/',
+  `url_homepage` varchar(255) default 'http://',
+  `url_download` varchar(255) default 'http://',
+  `url_cvs_viewcvs` varchar(255) default 'http://',
+  `url_arch_viewcvs` varchar(255) default 'http://',
+  `url_svn_viewcvs` varchar(255) default 'http://',
+  `url_cvs_viewcvs_homepage` varchar(255) default 'http://',
+  `url_mailing_list_listinfo` varchar(255) default 'http://',
+  `url_mailing_list_subscribe` varchar(255) default 'http://',
+  `url_mailing_list_unsubscribe` varchar(255) default 'http://',
+  `url_mailing_list_archives` varchar(255) default 'http://',
+  `url_mailing_list_archives_private` varchar(255) default 'http://',
+  `url_mailing_list_admin` varchar(255) default 'http://',
+  `url_extralink_documentation` varchar(255) default '',
+  `license_array` text,
+  `devel_status_array` text,
+  `mailing_list_address` varchar(255) default '@',
+  `mailing_list_virtual_host` varchar(255) default '',
+  `mailing_list_format` varchar(255) NOT NULL default '%NAME',
+  `forum_flags` int(1) default '2',
+  `bugs_flags` int(1) default '2',
+  `task_flags` int(1) default '2',
+  `patch_flags` int(1) default '2',
+  `cookbook_flags` int(1) default '2',
+  `support_flags` int(1) default '2',
+  `news_flags` int(1) default '3',
+  `forum_rflags` int(1) default '2',
+  `bugs_rflags` int(1) default '2',
+  `task_rflags` int(1) default '5',
+  `patch_rflags` int(1) default '2',
+  `cookbook_rflags` int(1) default '5',
+  `support_rflags` int(1) default '2',
+  `news_rflags` int(1) default '2',
+  PRIMARY KEY  (`type_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

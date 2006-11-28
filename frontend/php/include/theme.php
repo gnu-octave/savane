@@ -1,0 +1,197 @@
+<?php
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+#  Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# 
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+# theme value is fetched by getting the cookie. But we keep in the
+# database the setting, so someone using another computer can easily
+# remember the theme he previously chose.
+
+# Jump to the next theme available and set cookie appropriately
+function theme_rotate_jump($num) 
+{
+
+  utils_get_content("forbidden_theme");
+  $theme = theme_list();
+ 
+  $num++;
+	
+  # if the num is a value superior of the number of themes
+  # we reset to 0
+  if ($num == count($theme)) 
+    { $num = "0"; }
+  
+  # keep in mind the new number
+  setcookie("SV_THEME_ROTATE_NUMERIC", $num, time() + 60*60*24*365, $GLOBALS['sys_home']);
+
+  # associate this number with a theme
+  setcookie("SV_THEME_ROTATE", $theme[$num], time() + 60*60*24, $GLOBALS['sys_home']);
+}
+
+# Return an array with all the themes, but not the special case "rotate" 
+# and "random"
+function theme_list ()
+{
+  utils_get_content("forbidden_theme");
+
+  # Feed the array
+  $theme = array();
+  $dir = opendir($GLOBALS['sys_www_topdir']."/css/");
+  while ($file = readdir($dir)) 
+    {
+      # Ignore symlinks
+      if (is_link($GLOBALS['sys_www_topdir']."/css/$file"))
+	{ continue; }
+
+      # take only correct css files
+      if (!preg_match("/^(.*)\.css$/", $file, $matches)) 
+	{ continue; }
+	  
+      # base.css and printer.css are always ignored
+      # (as of nov 2006, there are in the subdirectory internal, so this
+      # is only here for backward compat)
+      if ($matches[1] == "base" || 
+	  $matches[1] == "printer" ||
+	  $matches[1] == "msie-dirtyhacks") 
+	{ continue; }
+	  
+      # forbidden themes are also ignored
+      if (preg_match($GLOBALS['forbid_theme_regexp'], strtolower($matches[1])))
+	{ continue; }
+      
+      $theme[] = $matches[1];
+    }
+  closedir($dir);
+  
+  # Sort themes - case insensitive
+  natcasesort($theme);
+
+  # No result? Return only the default theme. 
+  # (If there were no result, there is a problem anyway somewhere in the
+  # installation)
+  if (!count($theme))
+    {
+      $theme[] = $GLOBALS['sys_themedefault'];
+    }
+  return $theme;
+}
+
+
+
+##### THEME SELECTION
+## First check if the printer mode is asked. If not, proceed to the usual
+## theme selection
+if (sane_all("printer") == 1) {
+  define(SV_THEME, "printer");
+  define(PRINTER, 1);
+  return true;
+}
+
+if (isset($HTTP_COOKIE_VARS["SV_THEME"])) 
+{
+  # the user selected a theme
+  if ($HTTP_COOKIE_VARS["SV_THEME"]=="random") 
+    {
+      # the user selected random theme
+      # we set randomly a theme and a cookie for a day
+      if (isset($HTTP_COOKIE_VARS["SV_THEME_RANDOM"])) 
+	{	  
+	  define(SV_THEME, sane_cookie("SV_THEME_RANDOM"));
+	} 
+      else 
+	{
+	  $theme = theme_list();
+	  mt_srand ((double)microtime()*1000000);
+	  $num = mt_rand(0,count($theme)-1);
+	  $random_theme = $theme[$num];
+	  setcookie("SV_THEME_RANDOM", $random_theme, time() + 60*60*24, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);
+	  define('SV_THEME', $random_theme);
+	}
+    } 
+  elseif ($HTTP_COOKIE_VARS["SV_THEME"]=="rotate") 
+    { 
+      # the user want a rotation between themes
+      if (isset($HTTP_COOKIE_VARS["SV_THEME_ROTATE"])) 
+	{	    
+	  define(SV_THEME, sane_cookie("SV_THEME_ROTATE"));
+	} 
+      else 
+	{
+	  $theme = theme_list();
+	  
+	  # we get a number and set a cookie with this number
+	  # if this number exist, +1 to his value
+	  if (!isset($HTTP_COOKIE_VARS["SV_THEME_ROTATE_NUMERIC"])) 
+	    { $num = "0"; } 
+	  else 
+	    {
+	      $num = sane_cookie("SV_THEME_ROTATE_NUMERIC")+1;
+	      # if the num is a value superior of the number of themes
+	      # we reset to 0
+	      if ($num==count($theme)) 
+		{ $num = "0"; }		  
+	    }
+	  setcookie("SV_THEME_ROTATE_NUMERIC", $num, time() + 60*60*24*365, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);	  
+	  # we associate this number with a theme
+	  $rotate_theme = $theme[$num];
+	  setcookie("SV_THEME_ROTATE", $rotate_theme, time() + 60*60*24, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);
+	  define(SV_THEME, $rotate_theme);
+	}
+    } 
+  else 
+    {
+      # the user picked a particular theme
+      $cookie_theme = sane_cookie("SV_THEME");
+
+      # look for invalid / outdated cookies
+      if (!file_exists($GLOBALS['sys_www_topdir']."/css/".$cookie_theme.".css"))
+	{
+	  define(SV_THEME, $GLOBALS['sys_themedefault']);
+	  setcookie("SV_THEME", SV_THEME, time() + 60*60*24*365, $GLOBALS['sys_url_topdir']);
+	}
+      else
+	{
+	  define(SV_THEME, $cookie_theme);
+	}
+    }
+} 
+else 
+{
+  # no theme was defined, we use the default one
+  define(SV_THEME, $GLOBALS['sys_themedefault']);
+}
+
+# Check whether a theme follows latest GUIDELINES
+function theme_guidelines_check ($theme)
+{
+  # Get from the README the latest GUIDELINES number
+  preg_match("/VERSION: (.*)/", utils_read_file($GLOBALS['sys_www_topdir']."/css/README"), $latest);  
+  # Get from the css the current GUIDELINES number
+  preg_match("/\/\* GUIDELINES VERSION FOLLOWED: (.*) \*\//", utils_read_file($GLOBALS['sys_www_topdir']."/css/".$theme.".css"), $current);
+  
+  if ($latest[1] != $current[1])
+    {
+      return false;
+    }
+  
+  return true;
+}
+
+?>

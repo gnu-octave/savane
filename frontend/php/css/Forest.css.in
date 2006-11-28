@@ -1,0 +1,267 @@
+/*
+ *
+ * Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id$
+ *
+*/
+
+
+/* GUIDELINES VERSION FOLLOWED: 1.16 */
+
+@import "internal/base.css";
+
+
+/**********************************************************************
+ *
+ * Very basic (mostly text) items:
+ *
+ **********************************************************************/
+
+body {
+
+  background-color: #edfce0;
+  color: #333333;
+}
+
+a { text-decoration: none; color: #1a750c;}
+a:hover { background-color: #c7ffbf; color: #004f1b; }
+a:active { color: #000000; }
+
+
+.unavailable {
+	text-decoration: line-through;
+	color: #1a750c;
+}
+.unavailable:hover { 
+	background-color: #ffc9c9; color: #004f1b;
+}
+.unavailable:active { 
+	color: #ffaaaa; 
+}
+
+
+.smaller { font-size: smaller; }
+.small { font-size: small; }
+.xsmall { font-size: xx-small; }
+
+.smaller { font-size: smaller; }
+.small { font-size: small; }
+.xsmall { font-size: xx-small; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+.footer { font-size: x-small; color: #333333; }
+
+h3 {
+	background-color: #def9d1;
+	font-weight: normal;
+ 	border: solid #96ad80;
+	border-width: 0 0 thin 0;
+}
+
+h5 {
+	font-weight: normal;
+	background-color: #def9d1;
+	font-weight: normal;
+ 	border: solid #96ad80;
+	border-width: 0 0 thin 0;
+}
+
+.feedback {
+	border: thin solid black;
+	background-color: #d9ffd6; 
+	text-align: center;
+	color: black;
+
+}
+
+.feedbackerror {
+	border: thin solid #871b00;
+	background-color: #ffbfaf; 
+	text-align: center;
+	color: #871b00
+}
+
+.help {
+
+  border-bottom: thin solid #b0b0b0;
+}
+
+.highlight { background-color: #def4b2; color: #333333; }
+
+
+/**********************************************************************
+ *
+ * Alignement, main tables
+ *
+ **********************************************************************/
+
+
+
+.realbody { width: 99%; border-spacing: 0; border: 0; color: #333333; }
+
+.main { 
+  background-color: #fffdf7;
+  vertical-align: top;
+  border-spacing: 0;
+  border: thin solid #e0cd9f; 
+}
+
+
+/**********************************************************************
+ *
+ * Menus
+ *
+ **********************************************************************/
+
+.topmenu {
+  background: #efe3bd;
+  border-spacing: 0;
+  border-bottom: thin solid #e0cd9f; 
+  border-top: thin solid #e0cd9f;  
+}
+
+ul.topmenuitemsubmenu li {
+	background-color: #fffdf7;
+	border: thin solid #e0cd9f; 
+	border-left: 0.3em solid #e0cd9f;  
+
+}
+
+
+/* we cannot keep it in bold, it makes an extra space with some konqueror
+  version (RHEL) */
+.tabs { color: #825e05; }
+.tabs:hover { color: #825e05; }
+.tabselect { background: #efe3bd; color: #000000; /* font-weight: bold; */ }
+.tabselect:hover { background: #c7ffbf; color: #000000; /* font-weight: bold; */ }
+
+.menu { 
+  border: thin solid #e0cd9f; 
+  vertical-align: top;
+  background-color: #efe3bd;
+  font-size: small;
+}
+
+.menutitle {
+  vertical-align: top;
+  font-weight: bold;
+  text-align: left;
+  border-bottom: thin solid #e0cd9f; 
+  color: #333333;
+}
+
+.menuitem {
+  list-style-type: none;
+  vertical-align: top;
+  text-align: right;
+  border: 0; 
+  color: #333333;
+}
+
+.menuitem:after {
+	content: " > ";
+}
+
+.menu a {
+	display: inline;
+}
+
+
+/**********************************************************************
+ *
+ * Boxes
+ *
+ **********************************************************************/
+
+
+.box {
+  border-spacing: 0;
+  border-bottom: thin solid #baeab4; 
+  border-left: thin solid #baeab4;
+  border-right: thin solid #baeab4;
+  background-color: #f3fff2;
+}
+
+.boxleft {
+  border-spacing: 0;
+  border-bottom: thin solid #baeab4; 
+  border-left: thin solid #baeab4;
+  border-right: thin solid #baeab4;
+  background-color: #f3fff2;
+}
+
+.boxtitle {
+  background-color: #95db95;
+  font-weight: bold;
+  text-align: center;
+  text-transform: capitalize;
+  color: #000000; 
+}
+
+.boxitem { 
+  background-color: #f3fff2;
+  text-align: left;
+  color: #333333;
+}
+
+.boxoptions { background-color: #fffdf7; text-align: left; color: #333333; }
+.boxitemalt { background-color: #fffdf7; text-align: left; color: #333333; }
+.boxhighlight { background-color: #def4b2; text-align: left; color: #333333; }
+
+
+/**********************************************************************
+ *
+ * Forms
+ *
+ **********************************************************************/
+
+input {
+  background-color: #ffffff;
+  color: #000000;
+}
+select {
+  background-color: #ffffff;
+  color: #000000;
+}
+option {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+textarea {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+
+/**********************************************************************
+ *
+ * Priorities
+ *
+ **********************************************************************/
+
+.priora { background-color: #fffdf7; }
+.priorb { background-color: #fffbf2; }
+.priorc { background-color: #fffaed; }
+.priord { background-color: #fff9e8; }
+.priore { background-color: #fff7e0; }
+.priorf { background-color: #fff6db; }
+.priorg { background-color: #fff4d6; }
+.priorh { background-color: #fff2ce; }
+.priori { background-color: #fff0c6; }
+

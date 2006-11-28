@@ -1,0 +1,192 @@
+#!/usr/bin/perl
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id:$
+#
+# Copyright 2006 (c) Rudy Gevaert <rudy@gnu.org> 
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+use strict;
+use Getopt::Long;
+use Savane;
+use POSIX qw(strftime);
+
+my $script = "sv_extra_daily_tarball_forbidden";
+my $logfile = "/var/log/sv_daily_tarball_forbidden.log";
+my $lockfile = "/var/run/sv_daily_tarball_forbidden.lock";
+my $cvs_disallow_file = "/etc/daily_cvs_tarball.disallow";
+my $svn_disallow_file = "/etc/daily_svn_tarball.disallow";
+
+# Configure
+my $getopt;
+my $help;
+my $debug;
+my $cvs;
+my $svn;
+my %disallow_cvs;
+my %disallow_svn;
+
+eval {
+    $getopt = GetOptions("debug" => \$debug,
+			 "cvs" => \$cvs,
+			 "svn" => \$svn,
+			 "help" => \$help);
+};
+
+if($help || ( !$cvs && !$svn )) {
+    print STDERR <<EOF;
+usage: $0 
+
+   Scripts that queries for the the private projects and updates 
+   /etc/daily_cvs_tarball.disallow and or /etc/daily_svn_tarball.disallow
+
+	--cvs		        Update disallowed cvs projects
+	--svn		        Update disallowed svn projects
+	--debug                 Don not write back to file and increased verbosity
+	--help			Print this help
+
+Author: rudy\@gnu.org
+EOF
+ exit(1);
+}
+
+# Log: Starting logging
+open (LOG, ">>$logfile");
+print LOG strftime "[$script] %c - starting\n", localtime;
+
+
+# Locks: this script should not run concurrently
+if (-e $lockfile) {
+    print LOG "[$script] There's a lock ($lockfile), exiting\n";
+    print LOG "[$script] ------------------------------------------------------\n";
+    die "There's a lock ($lockfile), exiting";
+}
+`touch $lockfile`;
+
+# Start with reading in the disallow files
+%disallow_cvs = get_forbidden_system ( $cvs_disallow_file);
+%disallow_svn = get_forbidden_system ( $svn_disallow_file);
+
+# Query the database for the private projects, add the cvs and svn
+# directories to the hashes.
+get_from_db(\%disallow_svn, \%disallow_cvs);
+
+# Write the locations of the disallowed projects to the disallow
+# files.
+if ( !$debug )
+{
+    write_to_file (\%disallow_svn, $svn_disallow_file);
+    write_to_file (\%disallow_cvs, $cvs_disallow_file);
+}
+else
+{
+    print "Not writing back:\n";
+    if($svn)
+    {
+	print " Subversion\n";
+	while ( (my $key, my $value) = each %disallow_svn)
+	{
+	    print "  " . $key . "\n";
+	}
+	print " CVS\n";
+	while ( (my $key, my $value) = each %disallow_cvs)
+	{
+	    print "  " . $key . "\n";
+	}
+    }
+}
+
+# Final exit
+print LOG strftime "[$script] %c - work finished\n", localtime;
+print LOG "[$script] ------------------------------------------------------\n";
+unlink($lockfile);
+
+# Get list of forbidden groups from a file on the server
+sub get_forbidden_system
+{
+    my $forbidden_file = shift;
+    my %forbidden;
+
+    print "Parsing $forbidden_file:\n" if $debug;
+    if (-e $forbidden_file)
+    {
+	open(DISALLOW, "< $forbidden_file") 
+	    or die "Internal error, contact the administrators.";
+	while (<DISALLOW>)
+	{
+	    s/\n//g;
+	    my $location = $_;
+	    print " $location\n" if $debug;
+	    $forbidden{$location} = 1;
+	}
+	close(DISALLOW);
+    }
+    return %forbidden;
+}
+
+sub get_from_db
+{
+    my $disallow_svn_href = shift;
+    my $disallow_cvs_href = shift;
+
+    print "Querying database\n" if $debug;
+    foreach my $line ( GetDB("groups, group_type", 
+			     "groups.type = group_type.type_id AND status='A' AND is_public='0'",
+			     "unix_group_name, groups.dir_svn as groups_dir_svn," .
+			     "groups.dir_cvs as groups_dir_cvs, group_type.dir_svn as group_type_dir_svn," . 
+			     "group_type.dir_cvs as group_type_dir_cvs"
+			     )
+		       )
+    {
+	chomp($line);
+	
+	my ($unix_group_name, $group_dir_svn, $group_dir_cvs,
+	    $group_type_dir_svn, $group_type_dir_cvs) = split(",", $line); 
+	
+	my $location;
+	if( $group_dir_svn eq "" )
+	{
+	    ( $location = $group_type_dir_svn ) =~ s/\%PROJECT/$unix_group_name/;
+	    print " $location\n" if $debug;
+	    $disallow_svn_href->{$location} = 1;
+	}
+	if( $group_dir_cvs eq "" )
+	{
+	    ( $location = $group_type_dir_cvs ) =~ s/\%PROJECT/$unix_group_name/;
+	    print " $location\n" if $debug;
+	    $disallow_cvs_href->{$location} = 1;
+	}
+    }
+}
+    
+sub write_to_file
+{
+    my $forbidden_ref = shift;
+    my $forbidden_file = shift; 
+    
+    open(DISALLOW, "> $forbidden_file")
+	or die "Internal error, contact the administrators.";
+    
+    while ( (my $key, my $value) = each %$forbidden_ref) {
+	print DISALLOW $key . "\n";
+    }
+    close(DISALLOW)
+
+}
+
+# END

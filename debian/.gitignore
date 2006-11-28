@@ -1,0 +1,13 @@
+savane
+files
+savane-backend-cvs
+savane-backend
+savane-backend-config
+savane-backend-mail
+savane-backend-members-shell
+savane-backend-misc
+savane-database
+savane-doc
+savane-frontend-php
+savane-lib
+*.substvars

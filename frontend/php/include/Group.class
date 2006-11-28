@@ -1,0 +1,699 @@
+<?php
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#   
+#  Copyright 1999-2000 (c) The SourceForge Crew
+#  Copyright 2000-2003 (c) Free Software Foundation                          
+#                          Mathieu Roy <yeupou--gnu.org>
+#
+#  Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org> 
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+$PROJECT_OBJ=array();
+
+function project_get_object($group_id) 
+{
+  #create a common set of group objects
+  #saves a little wear on the database
+
+  global $PROJECT_OBJ;
+  if (!$PROJECT_OBJ["_".$group_id."_"]) {
+    $PROJECT_OBJ["_".$group_id."_"]= new Project($group_id);
+    return $PROJECT_OBJ["_".$group_id."_"];
+  } else {
+    return $PROJECT_OBJ["_".$group_id."_"];
+  }
+}
+
+
+class Group extends Error 
+{
+  
+  #associative array of data from db
+  var $project_data_array;
+  var $data_array;
+  var $type_data_array;
+  var $group_id;
+  #database result set handle
+  var $db_result;
+  #permissions data row from db
+  var $perm_data_array;
+  #whether the use is an admin/super user of this project
+  var $is_admin;
+  
+  function Group($id) 
+    {
+      $this->Error();
+      $this->group_id=$id;
+      $this->db_result=db_query("SELECT * FROM groups WHERE group_id='$id'");
+      if (db_numrows($this->db_result) < 1) 
+	{
+	  #function in class we extended
+	  $this->setError('Group Not Found');
+	  $this->data_array=array();
+	} 
+      else 
+	{
+	  #set up an associative array for use by other functions
+	  $this->data_array=db_fetch_array($this->db_result);
+	}
+      # find group_type informations
+      #$that->Error();
+      $type=$this->data_array['type'];
+      $this->type_id=$type;
+      $this->db_type_result=db_query("SELECT * FROM group_type WHERE type_id='$type'");
+      if (db_numrows($this->db_type_result) < 1) 
+	{
+	  #fuction in class we extended                         
+	  #$that->setError('Group Type Not Found');
+	  $this->type_data_array=array();
+	} 
+      else 
+	{
+	  #set up an associative array for
+	  $this->type_data_array=db_fetch_array($this->db_type_result);
+	}
+      
+      
+      
+    }
+  
+  # Return database result handle for direct access
+  # Generall should NOT be used - here for supporting deprecated group.php
+  function getData() 
+    {
+      return $this->db_result;
+    }
+  
+  ###########################################
+  # EVERY GET RELATED TO GROUP TYPE
+  #           All those  getType function permit to get
+  #           data defined by the group_type of the group.
+  #           For instance, getTypeName for savannah gnu project type
+  #           will return gnu. 
+  ###########################################
+
+  # ######################
+  # General information
+
+  function getTypeName() 
+    { return $this->type_data_array['name']; }
+  
+  function getTypeDescription() 
+    { return $this->type_data_array['description']; }
+
+  function getTypeBaseHost() 
+    { return $this->type_data_array['base_host']; }
+
+  function getTypeAdminEmailAddress() 
+    { return $this->type_data_array['admin_email_adress']; }
+
+  function getTypeLicenseList() 
+    { return $this->type_data_array['license_array']; }
+  
+  function getTypeDevelStatusList() 
+    { return $this->type_data_array['devel_status_array']; }
+
+  # ######################
+  # Url, Dir, CanUse, Permission
+  # (all takes an argument)
+
+  function getTypeUrl($artifact) 
+    { return utils_makereal($this->type_data_array['url_'.$artifact]); }
+
+  function getTypeDir($artifact) 
+    { return utils_makereal($this->type_data_array['dir_'.$artifact]); }
+  
+  function CanUse($artifact) 
+    { 
+      # tolerates "bugs" to say "bug"
+      if ($artifact == "bugs")
+	{ $artifact = "bug"; }
+      return $this->type_data_array['can_use_'.$artifact]; 
+    }
+
+  function CanModifyUrl($artifact)
+    { return $this->type_data_array['is_menu_configurable_'.$artifact]; }
+
+  function CanModifyDir($artifact)
+    { return $this->type_data_array['is_configurable_'.$artifact]; }
+  
+  function getTypePermissions($flags) 
+    { return $this->type_data_array[$flags.'_flags']; } 
+
+  function getTypeRestrictions($flags) 
+    { return $this->type_data_array[$flags.'_rflags']; } 
+
+  # ######################
+  # Mailing List
+
+  function getTypeMailingListHost() 
+    {  return $this->type_data_array['mailing_list_host']; }
+  
+  function getTypeMailingListListinfoUrl($list="%LIST") 
+    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_listinfo'], "%LIST", $list)); }
+  
+  function getTypeMailingListArchivesUrl($list="%LIST") 
+    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_archives'], "%LIST", $list)); }
+  
+  function getTypeMailingListArchivesPrivateUrl($list="%LIST") 
+    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_archives_private'], "%LIST", $list)); }
+
+  function getTypeMailingListAdminUrl($list="%LIST") 
+    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_admin'], "%LIST", $list)); }
+
+  function getTypeMailingListSubscribeUrl($list="%LIST") 
+    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_subscribe'], "%LIST", $list)); }
+
+  function getTypeMailingListUnsubscribeUrl($list="%LIST") 
+    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_unsubscribe'], "%LIST", $list)); }
+
+  function getTypeMailingListAddress($list="%LIST") 
+    { return utils_makereal(utils_makereal($this->type_data_array['mailing_list_address'], "%LIST", $list)); }
+
+  function getTypeMailingListFormat($list="%NAME") 
+    { return utils_makereal(utils_makereal($this->type_data_array['mailing_list_format'], "%NAME", $list)); }
+
+  function canuseForum() 
+    {
+      # FIXME: until forum reworks in savannah, nobody can
+      return 0;
+      #    return $this->type_data_array['can_use_forum'];
+    }
+  
+
+  ###########################################
+  # EVERY GET RELATED TO GROUP 
+  #           All those  function permit to get
+  #           data defined by the group
+  #           For instance, getType for savannah gnu project 
+  #           will return "1". 
+  ###########################################
+ 
+  function Project($id) {
+    $this->Group($id);
+    $this->project_data_array=$this->data_array;
+  }
+
+  # ######################
+  # General information
+
+  function getGroupId() 
+    { return $this->group_id; }
+  
+  function getType() 
+    { return $this->data_array['type']; }
+  
+  
+  # Statuses include I,H,A,D
+  function getStatus() 
+    {  return $this->data_array['status']; }
+	
+  function isActive() 
+    {
+      if ($this->getStatus()=='A') 
+	{ return true; } 
+      else 
+	{ return false; }
+    }
+
+  #short description as entered on the group admin page
+  function getDescription() 
+    { return $this->data_array['short_description']; }
+
+  # long descript of the Group main page
+  function getLongDescription() 
+    { return $this->data_array['long_description']; }
+
+  function isPublic() 
+    {  return $this->data_array['is_public']; }
+
+  function getUnixName() 
+    { return strtolower($this->data_array['unix_group_name']); }
+
+  function getPublicName() 
+    { return $this->data_array['group_name']; }
+
+  # alias
+  function getName() 
+    {  return $this->getPublicName(); }
+
+  #date the group was registered
+  function getStartDate() 
+    { return $this->data_array['register_time']; }  
+
+  function getLicense() {
+    return $this->project_data_array['license'];
+  }
+
+  function getLicense_other() {
+    return $this->project_data_array['license_other'];
+  }
+                                                                                
+  function getDevelStatus() {
+    return $this->project_data_array['devel_status'];
+  }
+  function getGPGKeyring() 
+    { return $this->data_array['registered_gpg_keys']; }
+
+  # ######################
+  # Url, Dir, Permission
+  # (all takes an argument)
+
+  function getUrl($artifact) 
+    {
+      # similar to getArtifactUrl but refers to GroupType in case nothing
+      # is special, not to Savane core tools.
+      if ($this->project_data_array['url_'.$artifact] != "")
+	{ return $this->project_data_array['url_'.$artifact]; }
+      else
+	{ return $this->getTypeUrl($artifact); }
+    }
+
+  function getArtifactUrl($artifact) 
+    {
+      # There is a drawback here: if the value in the database is filled
+      # while the Group Type no longer accept this value to be non-standard,
+      # the value for the group will override the Group Type setting.
+      # But it can be convenient in some situations and adding one more
+      # test is not very exciting.
+      # And it can be justified anyway to keep a value entered already.
+      # The best would be the software to list conflicting cases to sysadmin.
+      if (!$this->data_array['url_'.$artifact])
+	{ return $GLOBALS[sys_home].$artifact.'/?group='.sane_all("group_name"); }
+      else 
+	{ return $this->data_array['url_'.$artifact]; }
+    }
+
+  function getDir($artifact) 
+    {
+      # Refers to GroupType if unset. These fields should not be often
+      # set, it would defeat the purpose of group types.
+      # As a matter of fact, this function will be rarely used, as
+      # directories are backend specific.
+      if ($this->project_data_array['dir_'.$artifact] != "")
+	{ return $this->project_data_array['dir_'.$artifact]; }
+      else
+	{ return $this->getTypeDir($artifact); }
+    }
+
+
+  function Uses($artifact) 
+    { 
+      if ($this->project_data_array['use_'.$artifact] != "")
+	{ return $this->project_data_array['use_'.$artifact]; }
+      else
+	{ return $this->CanUse($artifact); }
+    }
+  
+  function UsesForHomepage($artifact)
+    {
+      # Useful to determine whether the project is a specific artifact
+      # to manage his homepage:
+      #   - must use homepage
+      #   - must be set as homepage SCM for the group type
+      #   - the projet url must be empty or equal to the group setting
+      if ($this->Uses("homepage") &&
+	  $this->type_data_array['homepage_scm'] == $artifact &&
+	  ($this->project_data_array['url_homepage'] == "" ||
+	   $this->project_data_array['url_homepage'] == $this->getTypeUrl('homepage'))) 
+	{
+	  return true;
+	}
+      else
+	{ 
+	  return false;
+	}
+    }
+
+
+  # ######################
+  # Deprecated
+
+  function isFoundry() 
+    {  return false; }
+
+  function isProject() 
+    { return true; }
+      
+  function usesMail() 
+    {
+      if ($this->data_array['use_mail'] != "")
+	{ return $this->data_array['use_mail']; }
+      else
+	{ return $this->CanUse("mailing_list"); }
+    }
+	  
+  # #### Mail notification related ####
+
+  function getNewBugAddress() {
+    return $this->project_data_array['new_bug_address'];
+  }
+
+  function getGNU() {
+    return $this->project_data_array['gnu'];
+  }
+
+  function getNewSupportAddress() {
+    return $this->project_data_array['new_support_address'];
+  }
+
+  function getNewTaskAddress() {
+    return $this->project_data_array['new_task_address'];
+  }
+
+  function getHtmlCVS() {
+    return $this->project_data_array['html_cvs'];
+  }
+
+  function getNewPatchAddress() {
+    return $this->project_data_array['new_patch_address'];
+  }
+
+
+  #  boolean flags to determine whether or not to send
+  #	an email on every bug/patch/support update
+  function sendAllBugUpdates() {
+    return $this->project_data_array['send_all_bugs'];
+  }
+
+  function sendAllSupportUpdates() {
+    return $this->project_data_array['send_all_support'];
+  }
+
+  function sendAllTasksUpdates() {
+    return $this->project_data_array['send_all_tasks'];
+  }
+
+  function sendAllPatchUpdates() {
+    return $this->project_data_array['send_all_patches'];
+  }
+
+
+}
+
+# backward compatibiliy
+class Project extends Group
+{
+ 
+}
+
+
+######################################################################
+#####################################################################
+
+# Aliases:
+# The object stuff do not allow to easily call a function depending on
+# a variable. These aliases will just do that.
+# (Non-object very convenient functions)
+
+
+function group_getname ($group_id = 0) 
+{
+  $grp = project_get_object($group_id);
+  return $grp->getPublicName();
+}
+
+function group_getunixname ($group_id) 
+{
+  $grp = project_get_object($group_id);
+  return $grp->getUnixName();
+}
+
+function group_getgnu ($group_id) 
+{
+  $grp = project_get_object($group_id);
+  return $grp->getGNU();
+}
+
+function group_get_result($group_id=0) 
+{
+  $grp = project_get_object($group_id);
+  return $grp->getData();
+}   
+
+function group_getid ($group_name) 
+{
+  return db_result(db_query("SELECT group_id FROM groups WHERE unix_group_name='".$group_name."'"),0,'group_id');
+}
+
+function group_getpermissions ($group_id, $flags) 
+{
+  if ($flags)
+    {
+      $sql = "SELECT ".$flags."_flags FROM groups_default_permissions WHERE group_id='$group_id'";
+      return db_result(db_query($sql), 0, $flags."_flags");
+    }
+}
+
+function group_getrestrictions ($group_id, $flags, $event=1) 
+{
+  if ($flags)
+    {
+      $sql = "SELECT ".$flags."_rflags FROM groups_default_permissions WHERE group_id='$group_id'";
+      $flag = db_result(db_query($sql), 0, $flags."_rflags");
+    
+       # flag = (comment post restrictions)*100 + (newitem post restrictions)
+       #        with post restrictions = 2 ... allow post by ANONYMOUS
+       #                               = 3 ... allow post by LOGGED-IN
+       #                               = 5 ... allow post by MEMBERS
+
+      if ($event == 1) 
+	{ 
+          # trying to post a NEW item
+	  $flag = ($flag % 100); 
+	}
+      if ($event == 2) 
+	{ 
+          # trying to post a COMMENT
+	  $flag = (int)($flag / 100); 
+	}  
+
+      # We really want group restrictions here, not group type ones if missing
+      return $flag;
+    }
+
+}
+
+function group_getrestrictions_explained ($group_id, $artifact, $event=1) 
+{
+  # event = 1 corresponds to posting NEW items
+  # event = 2 corresponds to posting FOLLOWUPS
+
+  $flag = group_getrestrictions($group_id, $artifact, $event);
+
+  # flag = (comment post restrictions)*100 + (newitem post restrictions)
+  #        with post restrictions = 2 ... allow post by ANONYMOUS
+  #                               = 3 ... allow post by LOGGED-IN
+  #                               = 5 ... allow post by MEMBERS
+
+  # If we are looking for item post restriction, Get group type default
+  # in case no flag was found.
+  # For comment post restriction we want the group restriction first
+  if (!$flag) 
+    { 
+      if ($event == 2)
+	{
+          # post comment, fetching the restriction for post item
+	  $flag = group_getrestrictions($group_id, $artifact, 1);
+	}
+
+      if ($event == 1 || !$flag)
+	{ 
+	  # post item or post comment with no group restriction to fallback on
+	  $flag = group_gettyperestrictions($group_id, $artifact); 
+	}
+
+    }
+
+  if ($flag == '2')
+    { return _("It is possible to post anonymously on this tracker."); }
+
+  if ($flag == '5')
+    { return _("Project Membership is required to post on this tracker."); }
+
+  if ($flag == '3')
+    { return _("Being logged-in is required to post on this tracker."); }
+
+}
+
+function group_gettypepermissions ($group_id, $flags) 
+{
+  $grp = project_get_object($group_id);
+  return $grp->getTypePermissions($flags);
+}
+
+function group_gettyperestrictions($group_id, $flags) 
+{
+  $grp = project_get_object($group_id);
+  return $grp->getTypeRestrictions($flags);
+}
+
+function group_restrictions_check ($group_id, $artifact, $event=1) 
+{
+  # No restriction for the logged in superuser
+  if (user_is_super_user())
+    { return true; }
+  
+  # flags = (comment post restrictions)*100 + (newitem post restrictions)
+  #         with post restrictions = 2 ... allow post by ANONYMOUS
+  #                                = 3 ... allow post by LOGGED-IN
+  #                                = 5 ... allow post by MEMBERS
+
+  $flag = group_getrestrictions($group_id, $artifact, $event);
+
+  # If we are looking for item post restriction, Get group type default
+  # in case no flag was found.
+  # For comment post restriction we want the group restriction first
+  if (!$flag) 
+    { 
+      if ($event == 2)
+	{
+          # post comment, fetching the restriction for post item
+	  $flag = group_getrestrictions($group_id, $artifact, 1);
+	}
+
+      if ($event == 1 || !$flag)
+	{ 
+	  # post item or post comment with no group restriction to fallback on
+	  $flag = group_gettyperestrictions($group_id, $artifact); 
+	}
+    }
+
+  # Anonymous required? always ok
+  if ($flag == '2') 
+    { return true; } 
+ 
+  # Logged in required? ok if logged in
+  if ($flag == '3' && user_isloggedin())
+    { return true; }
+
+  # Member required?
+  if ($flag == '5' && member_check(0, $group_id))
+    { return true; }
+
+  # Normally we should almost never go so far. In doubt, refuse.
+  return false;
+}
+
+function group_get_history ($group_id=false) 
+{
+  $sql="select group_history.field_name,group_history.old_value,group_history.date,user.user_name ".
+     "FROM group_history,user ".
+     "WHERE group_history.mod_by=user.user_id ".
+     "AND group_id='$group_id' ORDER BY group_history.date DESC";
+  return db_query($sql);
+}	       
+	
+function group_add_history ($field_name,$old_value,$group_id) 
+{
+  /*      
+		handle the insertion of history for these parameters
+  */
+	
+  $sql="insert into group_history(group_id,field_name,old_value,mod_by,date) ".
+     "VALUES ('$group_id','$field_name','$old_value','". user_getid() ."','".time()."')";
+  return db_query($sql);
+}	       
+
+
+
+function group_get_artifact_url ($artifact, $hostname=1)
+{
+  # return the standard url for an artifact
+  if ($artifact == "homepage") 
+    {  
+      return $GLOBALS[project]->getTypeUrl("homepage"); 
+    }
+  else if ($artifact == "download") 
+    {  
+      return $GLOBALS[project]->getTypeUrl("download"); 
+    }
+  else if ($artifact == "cvs_viewcvs") 
+    { 
+      return $GLOBALS[project]->getTypeUrl("cvs_viewcvs"); 
+    }
+  else if ($artifact == "cvs_viewcvs_homepage") 
+    {  
+      return $GLOBALS[project]->getTypeUrl("cvs_viewcvs_homepage"); 
+    }
+  else if ($artifact == "arch_viewcvs") 
+    {  
+      return $GLOBALS[project]->getTypeUrl("arch_viewcvs"); 
+    }
+  else if ($artifact == "svn_viewcvs") 
+    {  
+      return $GLOBALS[project]->getTypeUrl("svn_viewcvs"); 
+    }
+  else 
+    {
+      if ($hostname) 
+	{
+	  if ($GLOBALS[project]->getTypeBaseHost()) 
+	    { $host = $GLOBALS[project]->getTypeBaseHost();	} 
+	  else 
+	    { $host = $GLOBALS['HTTP_HOST']; }
+	  
+	  return "http://".$host.$GLOBALS[sys_home].$artifact.'/?group='.sane_all("group_name");
+	}
+      else
+	{
+	  return $GLOBALS[sys_home].$artifact.'/?group='.sane_all("group_name");
+	}
+    }
+
+}
+
+
+function group_set_preference ($group_id, $preference_name, $value) 
+{
+  if (user_ismember($group_id,'A')) 
+    {
+      $preference_name=strtolower(trim($preference_name));
+      $result=db_query("UPDATE group_preferences SET preference_value='$value' ".
+		       "WHERE group_id='$group_id' AND preference_name='$preference_name'");
+      if (db_affected_rows($result) < 1) 
+	{
+	  $result=db_query("INSERT INTO group_preferences (group_id,preference_name,preference_value) ".
+			   "VALUES ('$group_id','$preference_name','$value')");
+	}
+      return true;
+      
+    } 
+  else 
+    { return false; }
+}
+
+function group_get_preference ($group_id, $preference_name) 
+{
+  # No need to restrict that to admins, prefs arent secret, are they?
+  #if (user_ismember($group_id,'A')) 
+  #  {
+    
+    $preference_name=strtolower(trim($preference_name));
+    
+    $result=db_query("SELECT preference_value FROM group_preferences ".
+		     "WHERE group_id='$group_id' AND preference_name='$preference_name'");
+    if (db_numrows($result) < 1) 
+      { return false;	} 
+    else
+      { return db_result($result, 0, 'preference_value'); }
+}
+
+?>

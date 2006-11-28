@@ -1,0 +1,279 @@
+#!/bin/sh
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$ 
+#
+#  Copyright 2002-2006 (c) Mathieu Roy <yeupou@gnu.org>      
+#                          Lutz Behnke <lutz.behnke@informatik.haw-hamburg.de> 
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+########################## CHECKS ##################################
+
+# Blocker
+item=which
+  WHICH_PATH="/bin/which /usr/bin/which /usr/local/bin/which"
+  WHICH=""
+  echo -n "checking for $item... "
+  for WHICH_TEST in $WHICH_PATH; do
+          if [ -x $WHICH_TEST ]; then
+                  if $WHICH_TEST --version 2>&1 | grep -q "GNU which"; then
+                      WHICH=$WHICH_TEST
+                      which_option="--skip-alias"
+                      echo "yes (GNU)"
+                      break
+                  else
+                      WHICH=$WHICH_TEST
+                      echo "yes (non-gnu)"
+                      break
+                  fi
+          fi
+  done  
+  if [ ! $WHICH ]; then
+          echo no
+          echo "You are encouraged to download GNU which from ftp.gnu.org"
+          exit
+  fi
+
+BLOCKER_ITEM_LIST="make bash perl sed find gettext"
+for item in $BLOCKER_ITEM_LIST; do
+  echo -n "checking for $item... "
+  bin_item=`$WHICH $which_option $item 2>&1`
+  if [ ! -x "$bin_item" ]; then echo "no" \
+   && echo "Error: Unable to find $item. Please check your installation." && \
+   exit ; else echo "yes" ; fi
+done
+
+# Non-blocker
+item=mysql
+  echo -n "checking for $item... "
+  item=`$WHICH $which_option $item 2>&1`
+  # no other db support = blocker
+  if [ ! -x "$item" ]; then 
+      echo "no"
+      SV_DB=no
+      SV_DB_CMD="" 
+  else 
+      echo "yes"
+      SV_DB=`basename $item`
+      SV_DB_CMD=$SV_DB 
+      
+  fi
+
+item=mailman
+  MM_PATH="/usr/lib/cgi-bin/mailman/listinfo /usr/local/lib/cgi-bin/mailman/listinfo /var/mailman/cgi-bin/listinfo /usr/var/mailman/cgi-bin/listinfo"
+  echo -n "checking for $item... "
+  for MM_TEST in $MM_PATH; do  
+      if [ -e "$MM_TEST" ]; then
+	  echo "yes"
+	  SV_MM_CGI_DIR=`dirname $MM_TEST`
+      fi
+  done
+  if [ ! $SV_MM_CGI_DIR ] ; then echo "no" ; fi
+
+NON_BLOCKER_ITEM_LIST="automake autoconf makeinfo gzip"
+for item in $NON_BLOCKER_ITEM_LIST; do
+  echo -n "checking for $item... "
+  bin_item=`$WHICH $which_option $item 2>&1`
+  if [ ! -x "$bin_item" ]; then 
+      echo "no [may deactivate some features]"
+  else 
+      echo "yes" 
+fi
+done
+
+
+# Distro
+item="GNU/Linux distribution"
+  echo -n "checking for $item... "
+  if [ -e  "/etc/debian_version" ]; then 
+      DISTRO="debian-based"
+      WWW_SERVER_USER="www-data"
+      PERL_INC="/usr/lib/perl5"
+  elif [ -e "/etc/redhat-release" ]; then 
+      DISTRO="redhat-based"
+      WWW_SERVER_USER="apache"
+      PERL_INC="/usr/lib/perl5/site_perl"
+  elif [ -e "/etc/gentoo-release" ]; then
+      DISTRO="gentoo-based"
+      WWW_SERVER_USER="apache"
+  elif [ -e "/etc/slackware-version" ]; then
+      DISTRO="slackware-based"
+      WWW_SERVER_USER="nobody"
+  else
+      DISTRO="unable to guess"
+  fi
+  echo $DISTRO
+  
+SV_DIR=`pwd`
+
+########################## USER INPUT ##################################
+
+
+  
+if [ -e configure.cache ]; then 
+    . configure.cache
+else
+    echo " "
+    echo "Do you want the configuration file creation process to be interactive?" 
+    echo "ex: yes"
+    echo "ex: no"
+    echo -n "[yes]: "
+    read SV_CONF_INTERACTIVE
+    if [ "$SV_CONF_INTERACTIVE" = "" ]; then SV_CONF_INTERACTIVE=yes ; fi
+
+    SV_DIR=`pwd`
+
+
+    if [ "$DISTRO" = "unable to guess" ]; then
+    	echo " "
+        echo "I could not identify your distribution."
+        echo "Therefore, could you please provide your"
+        echo "default web server username? "
+        echo "ex: www"
+        echo "ex: apache "
+        echo -n "[apache]"
+        read WWW_SERVER_USER
+        if [ "$WWW_SERVER_USER" = "" ]; then WWW_SERVER_USER=apache;fi
+    fi;
+    
+    echo " "
+    echo "What is the URL directory of Savane on your http server?"
+    echo "ex: for sv.gnu.org/ the answer is /"
+    echo "ex: for bla.org/savane/ the answer is /savane"
+    echo -n "[/]: "
+    read SV_URLROOT
+    if [ "$SV_URLROOT" = "" ]; then SV_URLROOT=/ ; fi
+
+    echo " "
+    echo "Where should we store configuration files?"
+    echo "Choose one of the following."
+    echo "ex: /etc/savane"
+    echo "(WARNING: if you use something else than the default setting, be sure to set SAVANE_CONF environment variable in both Apache and terminals you use, it is required for the frontend and the backend)"
+    echo -n "[/etc/savane]: " 
+    read SV_CONF
+    if [ "$SV_CONF" = "" ]; then SV_CONF=/etc/savane ; fi
+
+    echo " "
+    echo "Where should we install binaries and scripts?"
+    echo "ex: /usr/bin"
+    echo "ex: /usr/local/bin"
+    echo -n "[/usr/local/bin]: "
+    read SV_BIN
+    if [ "$SV_BIN" = "" ]; then SV_BIN=/usr/local/bin ; fi
+    
+    if [ "$SV_DB" = "no" ]; then
+	echo " "
+	echo "No supported database system has been found. Please choose one below:"
+	echo -n "[mysql]: "
+	read SV_DB
+	if [ "$SV_DB" = "" ] ; then SV_DB=mysql && SV_DB_CMD=$SV_DB ; fi
+    fi
+    if [ "$SV_DB_CMD" = "" ]; then
+	echo " "
+	echo "Cannot not find the command for the $SV_DB Database in the path"
+	echo -n "[]: "
+	read SV_DB_CMD
+    fi
+
+    if [ "$PERL_INC" = "" ]; then
+	echo " "
+	echo "Where should we install perl modules?"
+	echo "ex: /usr/lib/perl5/site_perl"
+	echo "ex: /usr/lib/perl5"
+	echo "ex: /usr/local/lib/site_perl"
+	echo -n "[/usr/local/lib/site_perl]: "
+	read PERL_INC
+	if [ "$PERL_INC" = "" ]; then PERL_INC=/usr/local/lib/site_perl ; fi
+    fi
+
+    # the only sensible path seems to be /usr/share/locale, so skip this
+    INSTALLNLSDIR=/usr/share/locale
+#    echo " "
+#    echo "Where should we install i18n files?"
+#    echo "ex: /usr/share/locale"
+#    echo "ex: /usr/local/share/locale" 
+#    echo -n "[/usr/share/locale]: "
+#    read INSTALLNLSDIR
+#    if [ "$INSTALLNLSDIR" = "" ]; then INSTALLNLSDIR=/usr/share/locale ; fi
+
+    echo " "
+    echo "What is the database name?"
+    echo "ex: savane"
+    echo -n "[savane]: "
+    read SV_DB_NAME
+    if [ "$SV_DB_NAME" = "" ]; then SV_DB_NAME=savane ; fi
+
+    echo " "
+    echo "Any options to use for $DB?"
+    echo "ex: you may add for mysql, if you do not have a ~/.my.cnf"
+    echo "something like -u user -p"
+    echo "(never include password in clear text here)"
+    echo -n "options: "
+    read SV_DB_OPTIONS
+
+fi
+    
+# Checks: var that cannot be empty
+if [ ! $SV_CONF_INTERACTIVE ]; then
+    SV_CONF_INTERACTIVE=yes
+fi
+
+########################## GENERATE MAKEFILES ###############################
+
+echo " "
+for mkfile in `find . -name "Makefile.in"` ; do
+        mkfileo=`basename $mkfile .in`
+	mkfiled=`dirname $mkfile`
+	echo "creating $mkfiled/$mkfileo..."
+	echo "SV_DIR=$SV_DIR" > $mkfiled/$mkfileo
+        echo "SV_CONF=$SV_CONF" >> $mkfiled/$mkfileo
+        echo "SV_CONF_INTERACTIVE=$SV_CONF_INTERACTIVE" >> $mkfiled/$mkfileo
+	echo "SV_BIN=$SV_BIN" >> $mkfiled/$mkfileo
+	echo "PERL_INC=$PERL_INC" >> $mkfiled/$mkfileo
+	echo "INSTALLNLSDIR=$INSTALLNLSDIR" >> $mkfiled/$mkfileo
+	echo "SV_URLROOT=$SV_URLROOT" >> $mkfiled/$mkfileo
+	echo "SV_DB=$SV_DB" >> $mkfiled/$mkfileo
+	echo "SV_DB_NAME=$SV_DB_NAME" >> $mkfiled/$mkfileo
+	echo "SV_DB_CMD=$SV_DB_CMD" >> $mkfiled/$mkfileo
+	echo "SV_DB_OPTIONS=$SV_DB_OPTIONS" >> $mkfiled/$mkfileo
+	echo "WWW_SERVER_USER=$WWW_SERVER_USER" >> $mkfiled/$mkfileo
+	echo " " >> $mkfiled/$mkfileo
+	cat $mkfile >> $mkfiled/$mkfileo
+done
+
+mkfileo=configure.cache
+echo "SV_DIR=$SV_DIR" > $mkfileo
+echo "SV_CONF=$SV_CONF" >> $mkfileo
+echo "SV_CONF_INTERACTIVE=$SV_CONF_INTERACTIVE" >> $mkfileo
+echo "SV_BIN=$SV_BIN" >> $mkfileo
+echo "PERL_INC=$PERL_INC" >> $mkfileo
+echo "INSTALLNLSDIR=$INSTALLNLSDIR" >> $mkfileo
+echo "SV_URLROOT=$SV_URLROOT" >> $mkfileo
+echo "SV_DB=$SV_DB" >> $mkfileo
+echo "SV_DB_NAME=$SV_DB_NAME" >> $mkfileo
+echo "SV_DB_CMD=$SV_DB_CMD" >> $mkfileo
+echo "SV_DB_OPTIONS=\"$SV_DB_OPTIONS\"" >> $mkfileo
+echo "WWW_SERVER_USER=$WWW_SERVER_USER" >> $mkfileo
+
+########################## SHOW HELP ###############################
+
+echo " "
+echo "Now, you should continue by doing the following:"
+url=${SV_URLROOT%/}
+sed -e 's,\.\/configure,,g' -e "s,/pathtosavane,$url," INSTALL
+
+# EOF

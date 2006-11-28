@@ -1,0 +1,12 @@
+<!-- Savannah - Project registration STEP 6 Confirmation -->
+<!-- $Id$  BEGIN -->
+<H1>Registration Complete!</H1>
+<P>Your project has been submitted and is waiting to be reviewed by a 
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+// print $GLOBALS['sys_name']; ?> 
+administrator. You will shortly receive a mail message telling you whether your project has been approved, or you have to do some changes before it is approved.
+<!-- $Id$  END -->

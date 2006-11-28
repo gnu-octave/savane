@@ -1,0 +1,9 @@
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+# Database cleaning
+*/25 * * * *	root    sv_cleaner --cron
+48 12 2 * *	root	sv_cleaner --cron --big-cleanup
+
+# Reminder
+4 4 * * * 	root    sv_reminder --cron
+25 18 * *  *	root    sv_reminder --cron

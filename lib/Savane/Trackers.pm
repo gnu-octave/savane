@@ -1,0 +1,129 @@
+#!/usr/bin/perl
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id: Groups.pm 5540 2006-08-10 21:21:50Z toddy $
+#
+#  Copyright 2006      (c) Mathieu Roy <yeupou--gnu.org>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#
+
+##
+## Desc: any subs related to trackers
+## (not loaded by default)
+
+use strict;
+require Exporter;
+use Savane::Mail;
+
+# Exports
+our @ISA = qw(Exporter);
+our @EXPORT = qw(SendTrackersDelayedNotification GetTrackersContentAsMail );
+our $version = 1;
+
+# Imports (needed for strict).
+our $dbd;
+
+
+## To send mail notif for items temporarily delayed until they are checked
+# arg0: tracker
+# arg1: item_id
+# arg2: comment_id
+# arg3: spamscore
+sub SendTrackersDelayedNotification { 
+    # Using PHP CLI to do that would avoid reimplementing frontend code to
+    # build notifications but it is not shipped in SLC4, so it is blocker
+    #
+    # Only sensible option: putting in the database the content of mail notifs
+    # as the frontend would have sent it. 
+    # Not wonderful for the database but... well. It saves the time need
+    # to maintain duplicated codeduplic
+
+    # Get parameters
+    my $tracker = $_[0];
+    my $item_id = $_[1];
+    my $comment_id = $_[2];
+    my $spamscore = $_[3];
+
+    my $table = "trackers_spamcheck_queue_notification";
+    my $where = "artifact='$tracker' AND item_id='$item_id' AND comment_id='$comment_id'";
+
+    # If spamscore if < 5, it is not a spam, send the notification delayed
+    if ($spamscore < 5) {
+	
+	foreach my $entry (GetDBLists($table, $where, "to_header,other_headers,subject_header,message")) {
+	    my ($to_header, $other_headers, $subject_header, $message) = @$entry;
+	    my (@other_headers) = split("\n", $other_headers);
+	    MailSend(0, 
+		     $to_header,
+		     $subject_header,
+		     $message,
+		     0,
+		     @other_headers);
+	} 
+    }
+
+    # Remove the notif from the queue
+    DeleteDB($table, $where);
+}
+
+
+## Build a simili mail from some content (item or comment)
+# arg0 = user
+# arg1 = sender ip
+# arg2 = tracker
+# arg3 = item id
+# arg4 = comment id id
+# arg5 = timestamp
+# arg6 = subject
+# arg7 = message
+sub GetTrackersContentAsMail { 
+    my $maildomain = GetConf("sys_mail_domain");
+    my $wwwdomain = GetConf("sys_default_domain");
+    my $version = GetVersion();
+    
+    my $uid = $_[0];
+    my $sender_ip = $_[1];
+    my $tracker = $_[2];
+    my $item_id = $_[3];
+    my $comment_id = $_[4];
+    my $now = $_[5];
+    my $subject = $_[6];
+    my $message = $_[7];
+
+    my $user = "A Logged In User";
+    $user = "Ann Honymous One" if $uid eq "100";   
+
+    return 'Return-Path: <user'.$uid.'@foo2.com>
+Delivered-To: foo@'.$maildomain.'
+Received: from ['.$sender_ip.']
+        by '.$wwwdomain.' with esmtp (Savane '.$version.')
+	id '.$tracker.'-i'.$item_id.'-c'.$comment_id.'
+	for foo@'.$maildomain.'; '.$now.'
+Mime-Version: 1.0
+Message-Id: <'.$tracker.$item_id.'c'.$comment_id.'@'.$maildomain.'>
+Date: Fri, 20 Apr 2001 16:59:58 -0400
+To: Savane <foo@'.$maildomain.'>
+From: '.$user.' <user'.$uid.'foo2.com>
+Subject: '.$subject.'
+Content-Type: text/plain; charset="utf-8"
+Sender: user'.$uid.'foo2.com
+Reply-To: user'.$uid.'foo2.com
+
+'.$message;
+
+}

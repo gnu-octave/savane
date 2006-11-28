@@ -1,0 +1,29 @@
+TRANSLATION writing/editing guidelines:
+---------------------------------------
+($Id$)
+
+To add a new language, a file $lang.po must be added. Site-specific content can be added too, by adding new files called thistextfile.$lang.
+
+And finally, each time a new language is added, frontend/php/include/i18n must be edited.
+
+Rules:
+------
+  - Punctuation marks are part of the translation! They must be inside gettext
+    string. For instance, there is a space before all the ; in French, while
+    there is none in English. Then, think about languages written from the
+    right to the left...
+  - Avoiding anglicism as possible is important. 
+    I18n means something only if we do not assume that people have to learn
+    english anyway. So "mail" is not a correct french translation for "mail", 
+    for instance. Courriel is a nice one.
+
+
+Tips:
+-----
+  - Running aspell/ispell periodically is a good option.
+  - Running make refresh-po after editing a po file tells you if you made a
+    syntax error.
+
+
+
+

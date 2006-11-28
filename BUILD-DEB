@@ -1,0 +1,4 @@
+To build debian packages, run:
+
+./configure 
+make deb

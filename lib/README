@@ -1,0 +1,34 @@
+2003-02-01 yeupou@gnu.org
+
+============================================
+Purpose: 
+============================================
+
+perl modules that will be used by the new backend (rewriting of sv_cvs espzecially), and maybe with any other frontend.
+
+The final goal is to replace (enhance, actually) the content of savannah/gnuscript. Currently, it's experimental.
+
+============================================
+Perl modules required: 
+============================================
+DBI
+ANSIColor (core module)
+
+
+===========================================
+Sub Naming policy:
+===========================================
+Get... =  return a value (used in another sub, included in a $var...)
+Set... = set a value
+Print... = print (a) value(s) on STDOUT (for information mainly)
+Is... = return boolean value
+CanUse = return boolean value
+
+...Group = related to a group
+...User = related to a group
+
+... So we have
+GetGroupName($group_id);
+GetGroupUsers($group);
+CanGroupUseCvs($group);
+IsGroupHomepageOnCvs

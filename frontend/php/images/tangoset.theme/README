@@ -1,0 +1,9 @@
+This icons set is the one proposed by http://tango.freedesktop.org/Tango_Desktop_Project to provide something standard among environments.
+
+The most wonderful idea would be to have web browsers capable of using desktop  icons in webapps (for instance, in a tag <img desktopicon="home" src="alternativeicon.png">, home will be correctly interpreted and the desktop own icon for home would show up), but until this is achieved, it can be nice to use these tango icons.
+
+We will attempt to do so as soon as there are all the icons we need available. At first, we will try to see how it fits on a limit set of theme (which will have their own *.theme symlinking to this dir).
+
+We will also use the tango filenames, putting symlinks to map with Savane current icon names.
+
+

@@ -1,0 +1,14 @@
+SUFFIX=
+
+all:
+	@echo "Bah!"
+
+install:
+	if [ ! -e /etc/cron.d/savane ]; then install --mode=644 crontab /etc/cron.d/savane$(SUFFIX) ; fi
+	if [ ! -e /etc/logrotate.d/savane ]; then install logrotate /etc/logrotate.d/savane$(SUFFIX) ; fi
+# RedHat and debian have a different path for spamassassin
+	if [ -e /etc/mail/spamassassin ] && [ ! -e /etc/mail/spamassassin/savane.cf$(SUFFIX) ]; then install spamassassin.pl /etc/mail/spamassassin/savane.cf$(SUFFIX) ; fi
+	if [ -e /etc/spamassassin ] && [ ! -e /etc/spamassassin/savane.cf$(SUFFIX) ]; then install spamassassin.pl /etc/spamassassin/savane.cf$(SUFFIX) ; fi
+# RedHat
+	if [ -e /etc/httpd/conf.d ] && [ ! -e /etc/httpd/conf.d/savane.conf$(SUFFIX) ]; then install apache2 /etc/httpd/conf.d/savane.conf$(SUFFIX) ; fi
+

@@ -1,0 +1,197 @@
+Source: savane
+Section: web
+Priority: optional
+Maintainer: Savane Team <savane-dev@gna.org>
+Build-Depends-Indep: gettext, debhelper (>= 3.0.18)
+Standards-Version: 3.5.9.0
+
+Package: savane
+Architecture: all
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-backend (>= 2.0), savane-database (>= 2.0), savane-frontend (>= 2.0), savane-doc
+Recommends: savane-update
+Description: Meta package that fetch every packages for a standard install. 
+ .
+ Savane is a Web-based Libre Software hosting system. 
+ .
+ It currently includes issue tracking (bugs, task, support), project and
+ member management, mailing lists, and individual account maintenance.
+ It is internationalised and themable.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-database
+Architecture: all
+Depends: mysql-server, savane-doc
+Recommends: savane-update
+Description: Necessary files to create a Savane database.
+ This package does not need the Savane lib/backend.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-doc
+Architecture: all
+Description: Savane documentation, related to setup. 
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend
+Architecture: all
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-backend-members-shell (>= 2.0), savane-backend-misc (>= 2.0), savane-backend-mail (>= 2.0), savane-backend-export (>= 2.0), savane-backend-spamcheck (>= 2.0)
+Description: The complete savane backend.
+ .
+ You may want to install only some parts of the backend, in this case use
+ the packages savane-backend-[part wanted].
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-config
+Replaces: savane-backend-config
+Provides: savane-backend-config
+Conflicts: savane-backend-config
+Architecture: all
+Depends: savane-doc, perl-base (>= 5.6.0), perl-modules, libterm-readkey-perl, libfile-find-rule-perl
+Recommends: savane-update
+Description: Savane configurator. This could be handy on any system that
+ runs Savane parts (frontend or backend).
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-members-shell
+Architecture: all
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-doc
+Recommends: gnupg, rcs
+Suggests: savane-backend-extra-subversion, savane-backend-extra-cvs
+Description: Part of Savane backend that help providing shell access to users.
+ .
+ This package provides programs necessary to create unix accounts (groups and 
+ users) according to a Savane database to give them restricted shell access.
+ .
+ It is necessary on all systems that provide write-access to users.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-misc
+Architecture: all
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0), libdate-calc-perl
+Description: Important part of Savane backend that contains misc scripts .
+ .
+ This package provides programs necessary to clean the database or to send
+ reminders to users. This part of the backend is important and must be 
+ up and running.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-mail
+Architecture: all
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-doc, libstring-random-perl
+Suggests: savane-frontend-mail
+Description: Part of Savane backend related to mails.
+ .
+ This package should be installed on the host dealing with Savane-related
+ mails. It include the script that build the list of mail aliases according
+ to the database.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-extra-cvs
+Architecture: all
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0)
+Provides: savane-backend-cvs
+Conflicts: savane-backend-cvs
+Description: Part of Savane backend that contains CVS related scripts.
+ .
+ This package provides handy programs that could be useful to generate
+ cvs repositories dumps and snapshot etc.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-extra-subversion
+Architecture: all
+Provides: savane-backend-extra-svn
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0), libhtml-parser-perl
+Description: Part of Savane backend that contains SVN related scripts.
+ .
+ This package provides handy programs that could be useful to generate
+ SVN repositories dumps and snapshot, to set up automated annotation of
+ trackers item on commit (post-commit script) etc.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-download
+Architecture: all
+Depends: savane-lib (>= 2.0), libfile-find-rule-perl, savane-config (>= 2.0), gnupg
+Description: Part of Savane backend that contains download related scripts.
+ .
+ This package provides handy programs that could be useful to check GPG 
+ signatures of uploaded files
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-export
+Architecture: all
+Depends: savane-lib (>= 2.0), libfile-find-rule-perl, savane-config (>= 2.0), libxml-writer-perl, libdate-calc-perl
+Description: Part of Savane backend that contains export/import related scripts.
+ .
+ This package provides necessary part of the backend for the import/export 
+ savane functionalities.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-backend-spamcheck
+Architecture: all
+Depends: savane-lib (>= 2.0), savane-config (>= 2.0), libdate-calc-perl, spamc (>= 3.0.3), php4-cli
+Description: Part of Savane backend that contains spamassassin related scripts.
+ .
+ This package provides necessary part of the backend for the spamcheck with 
+ spamc savane functionalities.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-lib
+Architecture: all
+Depends: perl-base (>= 5.6.0), perl-modules, liblocale-gettext-perl, libdbi-perl (>= 1.21), libmailtools-perl, libtext-wrapper-perl
+Description: Savane library.
+ .
+ This library is used by the backend and the Perl frontend. 
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-update
+Architecture: all
+Depends: savane-lib (>= 2.0)
+Description: Package containing script necessary for the upgrade of Savane.
+ .
+ From one major version to another, there are heavy changes that you should
+ handle carefully by yourself. This package contains the necessary scripts.
+ .
+ It will put in /usr/share/docs/saane-update a directory per release. Each
+ directory contains the script that must be ran to upgrade a Savane
+ installation from the previous version to the new one.
+ . 
+ These scripts are usually perl scripts (relying on savane-lib) or SQL scripts.
+ .
+ Read the READMEs.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-frontend
+Architecture: all
+Depends: php4 | libapache-mod-php4, php4-mysql, httpd, savane-config (>= 2.0), savane-doc
+Replaces: savane-frontend-php (<< 2.0)
+Provides: savane-frontend-php
+Conflicts: savane-frontend-php (<< 2.0)
+Description: Savane main frontend, the interface most users will use.
+ .
+ This is an essential part of Savane.
+ .
+ Homepage: http://gna.org/projects/savane
+
+Package: savane-frontend-mail
+Architecture: all
+Depends: savane-lib (>= 2.0), httpd, libapache-mod-perl, savane-config (>= 2.0), perl
+Description: Savane extra mail related frontend.
+ .
+ It's a secondary frontend of Savane that provide ways
+ to control access to mailing-list private archives.
+ .
+ Homepage: http://gna.org/projects/savane

@@ -1,0 +1,14 @@
+These files allow Savane to be used on Mac OS X/Darwin
+properly. The qustion about a prefix for new user/group
+commands should be pointed at this folder (backend/darwin).
+The sv_ni_dump script is used to extact the netinfo information
+into flat files so sv_users, and sv_groups knows what to do with it
+
+Important Note: Do not use /Users as your home folder,
+sv_groups/sv_users flattens paths, and it can cause 
+issues with other programs. Create a /home, and use
+that instead.
+
+The Darwin User tools (with the expection of usermod)
+are from OSX User Utils package (http://www.osxgnu.org)
+and are licensed under the GPL.

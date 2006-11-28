@@ -1,0 +1,12 @@
+<!-- Savannah - Project registration administration sys name infos -->
+<!-- $Id$  BEGIN -->
+
+The /webcvs subdirectory on which the project will have write access. Empty
+value means that no directory of /webcvs will be given to this project.
+Make sure you fully understand the <a href=savannah.html#Web%20CVS%20repositories>rationale</a> associated with this value.<br>
+*auto* means that everything will be set according to the project type. 
+
+Note: if you use the text field to set the Subdirectory, you need to give the complete url. In this particular case, the System Name will not be added as subsubdirectory. This field should be used only for web project.
+
+
+<!-- $Id$  BEGIN -->

@@ -1,0 +1,25 @@
+= General Requirements =
+
+* GNU coreutils, textutils, shellutils...
+* GNU gettext
+* PHP >= 4.3
+* Perl >= 5.6
+* Exim (or sendmail, postfix...)
+* MySQL
+* Apache
+
+
+= Perl Modules =
+
+* DBI (libdbi-perl in debian)
+* DBD::mysql
+* Digest::MD5 (perl in debian)
+* Mail::Send (perl-MailTools in slc3)
+* File::Find::Rule (libfile-find-rule-perl in debian)
+* XML::Writer
+* IO::File
+* Date::Calc.pm (perl-Date-Calc in slc4)
+* String::Random (for sv_mailman, libstring-random-perl in debian)
+
+
+(comes from recipe #257)

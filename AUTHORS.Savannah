@@ -1,0 +1,100 @@
+The following people were involved in the cooperative building of the Savannah
+program, not the Savannah installation at GNU.
+
+In the past, the Savannah program project and the Savannah installation at
+GNU was mixed, as result, this file was listing contributions to both projects.
+The part related to the Savannah installation at GNU as been removed from
+this file, as it is not relevant _in the Savane package_.
+
+This list is non-exhaustive, if we forgot your name here, blame the author
+of the list for the period.
+
+
+===============================================================================
+ Before late 2000, before Savannah
+===============================================================================
+
+See AUTHORS.SourceForge for the authors of the original SourceForge-2.0
+software.
+
+
+===============================================================================
+ 2000-2001
+===============================================================================
+
+
+Loic Dachary		<loic--gnu.org>
+	Initiated Savannah, designed and maintained it.
+
+Guillaume Morin		<gmorin--gnu.org>
+	Implemented and maintained the link with mailman.
+
+Jaime E. Villate	<villate--gnu.org>
+	Implemented and maintained the link with viewcvs and cvs
+
+Rodolphe Quiédeville	<rq--lolix.org>
+	Fixed a few bugs.
+
+Olivier Berger		<oberger--april.org>
+	Fixed a few bugs.
+
+Samuel Tardieu		<sam--enst.fr>
+	Fixed a few bugs.
+
+and many others who patiently suffered in the early days.
+
+(List made by loic--gnu.org, adapted to reflect only contributions to the
+Savannah software by yeupou--gnu.org)
+
+
+===============================================================================
+ 2002 to end 2003
+===============================================================================
+
+Vincent Caron		<v.caron--zerodeux.net>
+	Fixed a few bugs
+
+Loic Dachary		<loic--gnu.org>
+	Project leader, fixed a few bugs.
+
+Derek Feichtinger 	<derek.feichtinger--cern.ch>
+	Implementation of PAM support and other CERN-originated 
+	enhancements.
+
+Laurent Julliard	<laurent--moldus.org>
+	Implemented the bug tracker, fixed many bugs, enhanced the task
+	manager.
+
+Guillaume Morin		<gmorin--gnu.org>
+	Fixed a few bugs.
+
+Frederik Orellana	<frederik.orellana--cern.ch>
+	Implementation of PAM support, better useradmin per project
+	and other CERN-originated enhancements.
+
+Yves Perrin		<yves.perrin--cern.ch>
+	Code and database cleanup, improvement of the mail notification
+	system.
+
+Mathieu Roy		<yeupou--gnu.org>
+	Developent coordination, most of the code contribution (excepted 
+	the enormous piece constitued by the bug tracker) for the period
+	(lot of time spent, lot of pleasure to see things going on, I'm will
+	not to make a secret of that)
+
+Benoit Schwinden 	<schwi005--etudiant.univ-nancy2.fr>
+	Contributed to the gettext support.
+
+Stéphane Urbanovski	<s.urbanovski--ac-nancy-metz.fr>
+	Implemented gettext support, several code cleanups/bugfixes.
+
++ Translators:
+	Son Kyung-uk(hey) <vvs740--chol.com> (ko)
+	Marcelo R. Minholi <minholi--unipar.br> (pt_BR)
+	Yukihiro Nakai <ynakai--redhat.com> (ja)
+
++ Icons:
+	GNOME and KDE project GPLed icons
+	
+
+(List in aphabetical order made by yeupou--gnu.org)

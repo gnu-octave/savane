@@ -1,0 +1,43 @@
+# This file was generated for Savane SVN (toward 2.1).
+#
+# This is an SQL file necessary to create the table cookbook part of a
+# Savane database.
+# 
+# Check cookbook.README for specifics about this table.
+# (if this file does not exist, there is nothing specific)
+# 
+# Go at <https://gna.org/projects/savane> if you need information 
+# about Savane.
+
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: savane
+-- ------------------------------------------------------
+-- Server version	4.1.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Dumping data for table `cookbook`
+--
+
+
+/*!40000 ALTER TABLE `cookbook` DISABLE KEYS */;
+INSERT INTO `cookbook` (`bug_id`, `group_id`, `status_id`, `severity`, `privacy`, `discussion_lock`, `vote`, `spamscore`, `ip`, `category_id`, `submitted_by`, `assigned_to`, `date`, `summary`, `details`, `close_date`, `bug_group_id`, `resolution_id`, `category_version_id`, `platform_version_id`, `reproducibility_id`, `size_id`, `fix_release_id`, `plan_release_id`, `hours`, `component_version`, `fix_release`, `plan_release`, `priority`, `planned_starting_date`, `planned_close_date`, `percent_complete`, `keywords`, `release_id`, `release`, `originator_name`, `originator_email`, `originator_phone`, `custom_tf1`, `custom_tf2`, `custom_tf3`, `custom_tf4`, `custom_tf5`, `custom_tf6`, `custom_tf7`, `custom_tf8`, `custom_tf9`, `custom_tf10`, `custom_ta1`, `custom_ta2`, `custom_ta3`, `custom_ta4`, `custom_ta5`, `custom_ta6`, `custom_ta7`, `custom_ta8`, `custom_ta9`, `custom_ta10`, `custom_sb1`, `custom_sb2`, `custom_sb3`, `custom_sb4`, `custom_sb5`, `custom_sb6`, `custom_sb7`, `custom_sb8`, `custom_sb9`, `custom_sb10`, `custom_df1`, `custom_df2`, `custom_df3`, `custom_df4`, `custom_df5`) VALUES (100,100,100,5,1,0,0,3,NULL,100,100,100,0,NULL,NULL,NULL,100,100,100,100,100,100,100,100,0.00,'','','',5,NULL,NULL,1,'',100,'','','','','','','','','','','','','','','','','','','','','','','','',100,100,100,100,100,100,100,100,100,100,0,0,0,0,0),(101,0,3,5,1,0,0,3,NULL,100,100,100,1133253163,'Why log in?','The log-in mechanism used in these webpages is just a simple way of keeping track of users who work in projects hosted in this site. When a user logs in, she/he is conducted to a personal page that lists the projects she/he is collaborating with and any pending tasks that she/he might have.\n\nIf you are involved in any project, if you do not intend to post items on the site, you don\'t need to log in since it will make no difference. \nIf you want to register a project of your own to be hosted in this site, you must first log in, because every project must have at least one administrator and we need to know your user name to make you the administrator of the project.\n\nIn order to log in, you must be registered (using \"New User\" in the menu) and give the user name and password selected during your registration.\n\nIf you lost your password, read recipe #102.',NULL,100,1,100,100,100,100,100,100,0.00,'','','',3,NULL,NULL,1,'',100,'','','','','','','','','','','','','','','','','','','','','','','','',100,100,100,100,100,100,100,100,100,100,0,0,0,0,0),(102,0,3,5,1,0,0,3,NULL,100,100,100,1133253163,'Getting back lost password','If you lose your password simply visit the login page and click \"Lost Your Password?\". \n\nA confirmation mail will be sent to the address we have on file for you. Then, load the URL in the email to reset your password.',NULL,100,1,100,100,100,100,100,100,0.00,'','','',3,NULL,NULL,1,'',100,'','','','','','','','','','','','','','','','','','','','','','','','',100,100,100,100,100,100,100,100,100,100,0,0,0,0,0),(103,0,3,5,1,0,0,3,NULL,100,100,100,1133253163,'Delays on update','Several function related to mail aliases, external services access (SVN, CVS...), user additions, group member changes, CVS, etc, are performed via a cronjob on a regular basis. \n\nChanges made on the web site may appear to be live but will not take effect until the next cron update.',NULL,100,1,100,100,100,100,100,100,0.00,'','','',3,NULL,NULL,1,'',100,'','','','','','','','','','','','','','','','','','','','','','','','',100,100,100,100,100,100,100,100,100,100,0,0,0,0,0);
+/*!40000 ALTER TABLE `cookbook` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

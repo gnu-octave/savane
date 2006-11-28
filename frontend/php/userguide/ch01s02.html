@@ -1,0 +1,52 @@
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">How a <span class="application">Savane</span> powered
+      platform works</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="?file=ch01.html">Prev</a>&#160;</td><th width="60%" align="center">Chapter&#160;1.&#160;Introduction to <span class="application">Savane</span></th><td width="20%" align="right">&#160;<a accesskey="n" href="?file=ch02.html">Next</a></td></tr></table><hr /></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" ><a id="id2468847"></a>How a <span class="application">Savane</span> powered
+      platform works</h2></div></div></div><p>In such a platform, we will have different kinds of users:
+      platform maintainers, project members, generic users. Each of
+      them will have different access level to various services and
+      artifacts. <span class="application">Savane</span> provides the
+      following pre-defined role scheme to control access and
+      use:</p><div class="orderedlist"><ol type="1"><li><p>Anonymous user</p><p>Anyone visiting the
+	  platform web pages. Will be able to read public information,
+	  and depending on project configuration, post items on
+	  certain trackers.</p></li><li><p>Logged-in user</p><p>Anyone who has
+	  registered a user account at the platform. Will be able to
+	  request project registration, as well as posting items on
+	  certain trackers (depending on project
+	  configuration).</p></li><li><p>Group member</p><p>Any registered user member
+	  of a group. Will be able to post on trackers, as well having
+	  access to system services, via the web pages or via shell
+	  (user accounts are provided at the system running
+	  Savane). Access to tracker item handling will depend on
+	  specific group member roles (we'll see this in more detail
+	  in the last chapter):
+	  </p><div class="itemizedlist"><ul type="disc"><li><p>Technician</p></li><li><p>Manager</p></li><li><p>Manager and Technician</p></li></ul></div><p>
+          </p></li><li><p>Project administrators</p><p>A user that
+	  registers a project becomes project administrator. Will be
+	  able to configure project's services and set access level
+	  for trackers and news.</p></li><li><p>System (server) administrators: superuser</p><p>Controls the whole platform, configuring services
+	  offered for different kinds of projects.</p></li></ol></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id2468957"></a>Levels of configuration</h3></div></div></div><p>Configuration of a <span class="application">Savane</span> site
+      is therefore done at three different levels:</p><div class="orderedlist"><ol type="1"><li><p>Site administration</p><p>Will define what services to implement in general, and
+	  will configure different group types with different default
+	  values and services.</p><p>Can manage platform users
+	  and projects. (Delete, accept, assign to a group)</p></li><li><p>Project administration</p><p>Will inherit defaults and service settings from the
+	  group type it belongs to, but will be able to deactivate
+	  certain services, and customize certain artifacts. (If site
+	  administrators allow it, it will be possible to configure
+	  many of the project's links)</p><p>Can accept users
+	  to the group, and manage roles of project members.</p></li><li><p>Individual user account</p><p>Personal information management, configuration of
+	  personal notifications.</p></li></ol></div></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id2469020"></a>Administration of a <span class="application">Savane</span> powered site</h3></div></div></div><p>A <span class="application">Savane</span> powered site will be
+      administered through a special kind of project, hosted at the
+      own site, thus benefiting from all the tools provided for
+      projects.</p><p>For example, site administrators' responsibility for
+      approving/rejecting projects seeking hosting at the site is
+      handled via the administration project's task tracker (new
+      project request will appear as a new opened task).</p><p>The services that will be offered to projects are totally
+      customizable by site administrators, who can chose to
+      offer/deactivate different features or artifacts. One important
+      feature of <span class="application">Savane</span> is the "Group type"
+      (=project type). Different types of projects can be defined by
+      site administrators, setting different services and default
+      values according to project nature. In this way, through a
+      unique platform and application, administrators have the
+      possibility to offer quite different services, and different
+      levels of system access and customization, depending on project type.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="?file=ch01.html">Prev</a>&#160;</td><td width="20%" align="center"><a accesskey="u" href="?file=ch01.html">Up</a></td><td width="40%" align="right">&#160;<a accesskey="n" href="?file=ch02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&#160;1.&#160;Introduction to <span class="application">Savane</span>&#160;</td><td width="20%" align="center"><a accesskey="h" href="?file=index.html">Home</a></td><td width="40%" align="right" valign="top">&#160;Chapter&#160;2.&#160;Users</td></tr></table></div>

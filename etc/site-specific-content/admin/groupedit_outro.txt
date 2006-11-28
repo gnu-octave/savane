@@ -1,0 +1,12 @@
+<!-- Savannah - Project registration administration sys name infos -->
+<!-- $Id$  BEGIN -->
+<?php
+// This file is part of the Savane project
+// <http://gna.org/projects/savane/>
+//
+// $Id$
+// 
+// echo $GLOBALS[group_id]; 
+?>
+
+<!-- $Id$  BEGIN -->

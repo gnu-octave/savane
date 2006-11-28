@@ -1,0 +1,158 @@
+/*
+ *
+ * Part of the Savane Project
+ * Copyright 2006     (c) Mathieu Roy <yeupou--gnu.org>
+ *                        Yves Perrin <yves.perrin--cern.ch>
+ * See the changelog file for a detailed list of changes
+ *
+ *  http://gna.org/p/savane
+ *
+ * The Savane project is free software; you can redistribute it and/or
+ * modify it under the terms of the gnu general public license
+ * as published by the free software foundation; either version 2
+ * of the license, or (at your option) any later version.
+ *
+ * The Savane project is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose.  see the
+ * gnu general public license for more details.
+ *
+ * You should have received a copy of the gnu general public license
+ * along with the Savane project; if not, write to the free software
+ * foundation, inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id: base.css.in 5735 2006-09-11 08:18:04Z yeupou $
+ *
+*/
+
+/* This is not a theme but a collection of dirty hacks for MSIE, in order
+	to fix its bad behavior regarding standards.
+
+	PLEASE NEVER ADD EXTRA FUNCTIONNALITY HERE, WE DO NOT WANT TO 
+	PROVIDE EXTRA STUFF FOR PEOPLE USING A SOFTWARE THAT FORCE US
+	TO MAINTAIN DIRTY HACKS.
+ 
+*/
+
+/* ****************************************
+ Fix problem with the page width that would be to big */
+
+.main {
+	position: absolute;
+	width: 80%;
+	margin-left: 0.5%;
+	overflow: visible
+}
+
+.menu {
+ 	margin-top: 2px;
+	margin-left: 2px;
+  	padding-left: 5px;
+  	padding-right: 5px;
+  	padding-bottom: 5px;
+  	width: 14%;
+}
+
+.indexcenter {
+	width: 100%;
+}
+
+
+/* ****************************************
+ MSIE have a fixed feedback */
+
+.feedbackback {
+	display: none;
+	width: 15%;
+	margin-left: 70%;
+}
+
+.feedback, .feedbackerror {
+	margin-top: 1em;
+	margin-bottom: 1em;
+	cursor: default;
+}
+
+
+
+
+h1, h2, h3, h4, h5, .feedback, .feedbackerror {
+	margin-left: 2%;
+	margin-left: 2%;
+	width: 96%;
+
+}
+
+/* ****************************************
+ Fix problems related to the top-menu */
+
+
+#topmenu {
+        float: left;
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+        padding-bottom: 1em;
+        margin: 0;
+}
+
+
+#topmenuitem {
+        float: left;
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+        padding-bottom: 0;
+        margin: 0;
+        line-height: 1em;
+        list-style-type: none;
+}
+
+.topmenuitem {
+	width: 80%;
+	float: left;
+	padding-left: 0;
+ 	overflow: visible;
+}
+
+
+li.topmenuitemmainitem {
+      	position: static;
+}
+
+li.topmenuitemmainitem a { 
+        display: block;
+}
+
+
+ul.topmenuitemsubmenu {
+	visibility: visible;
+        top: auto;
+	left: -999em;
+}
+
+.topmenuitemsubmenu.hover ul {
+	left: auto;
+}
+
+.topmenuitemsubmenu.sfhover ul {
+	left: auto;
+}
+
+
+.topmenuitemsubmenu {
+	/* This one is über-important, without it, MSIE will close the submenu
+	   each time the mouse is over another link under the menu */ 
+	background: #FBFFFF;
+}
+
+
+
+
+/* This is not a theme but a collection of dirty hacks for MSIE, in order
+	to fix its bad behavior regarding standards.
+
+	PLEASE NEVER ADD EXTRA FUNCTIONNALITY HERE, WE DO NOT WANT TO 
+	PROVIDE EXTRA STUFF FOR PEOPLE USING A SOFTWARE THAT FORCE US
+	TO MAINTAIN DIRTY HACKS.
+
+
+*/

@@ -1,0 +1,43 @@
+# This file was generated for Savane SVN (toward 2.1).
+#
+# This is an SQL file necessary to create the table task_report_field part of a
+# Savane database.
+# 
+# Check task_report_field.README for specifics about this table.
+# (if this file does not exist, there is nothing specific)
+# 
+# Go at <https://gna.org/projects/savane> if you need information 
+# about Savane.
+
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: savane
+-- ------------------------------------------------------
+-- Server version	4.1.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Dumping data for table `task_report_field`
+--
+
+
+/*!40000 ALTER TABLE `task_report_field` DISABLE KEYS */;
+INSERT INTO `task_report_field` (`report_id`, `field_name`, `show_on_query`, `show_on_result`, `place_query`, `place_result`, `col_width`) VALUES (100,'bug_id',0,1,NULL,1,NULL),(100,'category_id',1,0,50,NULL,NULL),(100,'bug_group_id',1,0,55,NULL,NULL),(100,'assigned_to',1,1,20,40,NULL),(100,'status_id',1,0,10,NULL,NULL),(100,'resolution_id',1,1,15,22,NULL),(100,'summary',0,1,NULL,20,NULL),(100,'planned_close_date',0,1,NULL,50,NULL),(101,'bug_id',0,1,NULL,1,NULL),(101,'category_id',1,1,50,21,NULL),(101,'bug_group_id',1,0,55,NULL,NULL),(101,'status_id',1,0,10,NULL,NULL),(101,'resolution_id',1,1,15,23,NULL),(101,'summary',1,1,501,20,NULL),(101,'planned_starting_date',0,1,NULL,900,NULL),(101,'planned_close_date',0,1,NULL,880,NULL),(101,'close_date',0,1,NULL,879,NULL),(101,'submitted_by',1,1,30,41,NULL),(101,'assigned_to',1,1,31,40,NULL),(101,'priority',1,0,402,NULL,NULL),(102,'bug_id',0,1,NULL,1,NULL),(102,'vote',0,1,NULL,2,NULL),(102,'category_id',1,0,50,NULL,NULL),(102,'bug_group_id',1,0,55,NULL,NULL),(102,'assigned_to',1,1,20,40,NULL),(102,'status_id',1,0,10,NULL,NULL),(102,'resolution_id',1,1,15,22,NULL),(102,'summary',0,1,NULL,20,NULL),(102,'date',0,1,NULL,50,NULL),(112,'bug_id',0,1,NULL,1,NULL),(112,'vote',0,1,NULL,2,NULL),(112,'category_id',1,0,50,NULL,NULL),(112,'bug_group_id',1,0,55,NULL,NULL),(112,'assigned_to',1,1,20,40,NULL),(112,'status_id',1,0,10,NULL,NULL),(112,'resolution_id',1,1,15,22,NULL),(112,'summary',0,1,NULL,20,NULL),(112,'planned_starting_date',1,1,1,900,NULL),(112,'planned_close_date',1,1,2,880,NULL),(101,'details',1,0,502,NULL,NULL);
+/*!40000 ALTER TABLE `task_report_field` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
