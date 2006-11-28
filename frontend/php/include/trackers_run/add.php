@@ -226,6 +226,10 @@ if (user_isloggedin())
   print '<p></p>';
 }
 
+# Minimal anti-spam
+if (!user_isloggedin()) {
+  print '<p class="noprint">Please enter 421 here (basic anti-spam test): <input type="text" name="check" /></p>';
+}
 
 print '<p>&nbsp;</p>';
 print '<p><span class="warn">'._("Did you check to see if this item has already been submitted?").'</span></p>';

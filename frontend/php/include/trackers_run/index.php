@@ -117,7 +117,10 @@ switch ($func)
  case 'postadditem' :
    {
 ### Actually add in the database what was filled in the form
-     
+
+ if (!user_isloggedin() && ($_POST['check'] != 421))
+ { exit_error(_("You're not logged in and you didn't enter the magic anti-spam number, please go back!")); }
+
      # Check for duplicates
      if (!form_check($form_id))
        { exit_error(_("Exiting")); }
@@ -457,6 +460,9 @@ switch ($func)
       
  case 'postaddcomment' :
    {
+ if (!user_isloggedin() && ($_POST['check'] != 421))
+ { exit_error(_("You're not logged in and you didn't enter the magic anti-spam number, please go back!")); }
+
 ### Add a comment to a bug already in the database,
 ### these are the only changes an non member can make
      unset($changed);

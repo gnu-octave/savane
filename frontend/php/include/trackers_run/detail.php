@@ -397,6 +397,10 @@ if (db_numrows($result) > 0)
       print html_hidsubpart_footer();
     }
 
+  # Minimal anti-spam
+  if (!user_isloggedin()) {
+    print '<p class="noprint">Please enter 421 here (basic anti-spam test): <input type="text" name="check" /></p>';
+  }
 
   #  ################################  Submit
 
