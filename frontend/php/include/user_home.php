@@ -86,6 +86,8 @@ if (!$is_suspended)
   $rows = db_numrows($result);
   $usergroups = array();
   $usergroups_groupid = array();
+  $usersquads = array();
+  $group_data = array();
   if ($result && $rows > 0)
     {
       for ($j=0; $j<$rows; $j++)
