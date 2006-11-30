@@ -30,22 +30,16 @@ require '../include/pre.php';
 require '../include/account.php';
 
 register_globals_off();
+$from_brother = sane_all('from_brother');
 
 # Block here potential robots
 dnsbl_check();
 
 # Logged users have no business here
-if (user_isloggedin())
+if (user_isloggedin() && !$from_brother)
 { session_redirect($GLOBALS['sys_home']."my/"); }
 
-if ($GLOBALS['sys_https_host'] != "" && !session_issecure())
-{
-  # Force use of TLS for login
-  header('Location: '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.sane_get("uri"));
-}
-
-###### first check for valid login, if so, redirect
-
+# Input checks
 $form_loginname = sane_all("form_loginname");
 $form_pw = sane_all("form_pw");
 $cookie_for_a_year = sane_all("cookie_for_a_year");
@@ -53,25 +47,33 @@ $stay_in_ssl = sane_all("stay_in_ssl");
 $brotherhood = sane_all("brotherhood");
 $uri = sane_all("uri");
 $login = sane_all("login");
+$cookie_test = sane_all("cookie_test");
 
-if (!isset($_COOKIE["cookie_probe"]) and !sane_all("from_brother"))
+
+if ($GLOBALS['sys_https_host'] != "" && !session_issecure())
 {
-  if (sane_all("login"))
+  # Force use of TLS for login
+  header('Location: '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri);
+}
+
+# Check cookie support
+if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
+{
+  if (!$cookie_test)
     {
-      # Warn the user about allowing cookies
-      fb(_("To log-in, we need you to activate cookies in your web browser"),1);
+    // Attempt to set a cookie to go to a new page to see if the client will indeed send that cookie.
+    session_cookie('cookie_probe', 1);
+    header('Location: '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri.'&cookie_test=1');
     }
-  else
+  else # 
     {
-      # Try to set a cookie.
-      # This will allow us to detect if the client accepts them.
-      session_cookie('cookie_probe', 1);
+      fb(sprintf(_("Savane thinks your cookie are not activated for %s. To log-in, we need you to activate cookies in your web browser for this website. Please do so and click here:"), $sys_default_domain).' '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri, 1);
     }
 }
 
 if (sane_all("login"))
 {
-  if (sane_all("from_brother")) 
+  if ($from_brother) 
   {
     $session_uid  = sane_get("session_uid");
     if (!ctype_digit($session_uid))
@@ -193,8 +195,7 @@ if (sane_all("login") && !$success)
 
 if (session_issecure())
 {
-  print '<p class="warn">'._("Cookies must be enabled past this point.").'</p>';
-  print '<p>'._("You will be connected with a secure (https) server and your password will not be visible to other users.").'</p>';
+  print '<p>'._("You're going to be connected with a secure (https) server and your password will not be visible to other users.").'</p>';
 
 }
 print '<form action="'.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php" method="post">';
