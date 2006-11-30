@@ -430,7 +430,9 @@ foreach my $user (@only_in_db){
 	    # Fix modes and ownership
 	    system("/bin/chmod", "2755", $home);
 	    system("/bin/chmod", "755", "$home/.ssh", "$home/.gnupg");
-	    system("/bin/chmod", "600", "$home/.ssh/authorized_keys");
+	    if (-e "$home/.ssh/authorized_keys") {
+		system("/bin/chmod", "600", "$home/.ssh/authorized_keys");
+	    }
 	    system("/bin/chown", "-R", "$user:$svusers", $home);
 	    
 	}
