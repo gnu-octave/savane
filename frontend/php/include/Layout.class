@@ -1,4 +1,5 @@
-<?php
+<?php /*-*-PHP-*-*/
+# 
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -165,9 +166,10 @@ class Layout extends Error
 # it is probably better to avoid any cache problem that way.
 # We could use the Lastest-Modification header, but it would require
 # an extra call to time().
-    $context = $params['context'];
-    if ($context)
+    $context = '';
+    if (isset($params['context']))
       {
+	$context = $params['context'];
 # Only make the test if context is set.
 # Then look for usual trackers (bugs, patch...), project admin part
 # and personal area (/my)
@@ -185,10 +187,10 @@ class Layout extends Error
 	  }
       }
 
-    $title = context_title($context, $params['group']);
+    $title = context_title($context, isset($params['group']) ? $params['group'] : '');
 
 
-    if ($params['title'] && $title)
+    if (isset($params['title']) && $title)
       {
 	$params['title'] = sprintf("%s: %s", $title, $params['title']);
       }
@@ -231,7 +233,7 @@ class Layout extends Error
 
     # If the user want the stone age menu, we must add the appropriate 
     # additional CSS
-    if ($GLOBALS['stone_age_menu'])
+    if (isset($GLOBALS['stone_age_menu']) and $GLOBALS['stone_age_menu'])
       { 
 	print '  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/internal/stone-age-menu.css" />
 ';

@@ -27,6 +27,21 @@ function db_connect()
 {
   global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn;
 
+  // Test the presence of php-mysql - you get a puzzling blank page
+  // when it's not installed
+  if (!extension_loaded('mysql')) {
+    echo "Please install the MySQL extension for PHP:
+    <ul>
+      <li>Debian-based: <code>aptitude install php4-mysql</code>
+        or <code>aptitude install php5-mysql</code></li>
+      <li>Fedora Core: <code>yum install php-mysql</code></li>
+      <li>Check the <a href='{$GLOBALS['sys_url_topdir']}/testconfig.php'>configuration
+        page</a> and the <a href='http://php.net/mysql'>PHP website</a>
+        for more information.</li>
+    </ul>";
+    exit;
+  }
+
   $conn = @mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
   if (!$conn) {
     fb("Failed to connect to database. Please contact as soon as possible server administrators. Until this problem get fixed, you will not be able to use this site.", 1);

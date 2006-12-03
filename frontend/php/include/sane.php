@@ -65,13 +65,13 @@ foreach ($to_sanitize as $var)
 
 # Set group_name only if group was set
 unset($group_name);
-if ($group)
+if (isset($group))
 { $group_name = $group; }
 
 # Keep only numerical characters in the item_id
 # (Set both the global and the _REQUEST vars, because the global may be
 # unregistered by register_globals_off())
-if ($item_id && !ctype_digit($item_id))
+if (isset($item_id) && !ctype_digit($item_id))
 {
   preg_match("/(\d+)/", $item_id, $match);
   sane_set("item_id", $match[0]);
@@ -80,7 +80,7 @@ if ($item_id && !ctype_digit($item_id))
 # Keep only numerical characters in the export_id
 # (Set both the global and the _REQUEST vars, because the global may be
 # unregistered by register_globals_off())
-if ($export_id && !ctype_digit($export_id))
+if (isset($export_id) && !ctype_digit($export_id))
 {
   preg_match("/(\d+)/", $export_id, $match);
   sane_set("export_id", $match[0]);
@@ -90,7 +90,7 @@ if ($export_id && !ctype_digit($export_id))
 # Keep only numerical characters in the group_id
 # (Set both the global and the _REQUEST vars, because the global may be
 # unregistered by register_globals_off())
-if ($group_id && !ctype_digit($group_id))
+if (isset($group_id) && !ctype_digit($group_id))
 {
   preg_match("/(\d+)/", $group_id, $match);
   sane_set("group_id", $match[0]);
@@ -99,7 +99,7 @@ if ($group_id && !ctype_digit($group_id))
 # Keep only numerical characters in the user_id
 # (Set both the global and the _REQUEST vars, because the global may be
 # unregistered by register_globals_off())
-if ($user_id && !ctype_digit($user_id) && !is_array($user_id))
+if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
 {
   preg_match("/(\d+)/", $user_id, $match);
   sane_set("user_id", $match[0]);
@@ -141,26 +141,38 @@ function safeinput ($string)
 # instead, if necessary.
 function sane_all($varname)
 {
-  return safeinput($_REQUEST[$varname]);
+  if (sane_isset($varname))
+    return safeinput($_REQUEST[$varname]);
+  else
+    return '';
 }
 
 # Function to obtain user input submitted as url args
 # (like thispage.php?arg=userinput)
 function sane_get($varname) 
-{  
-  return safeinput($_GET[$varname]);
+{
+  if (sane_isset($varname))
+    return safeinput($_GET[$varname]);
+  else
+    return '';
 }
 
 # Function to obtain user input submitted while posting a form
 function sane_post($varname) 
 {
-  return safeinput($_POST[$varname]);
+  if (sane_isset($varname))
+    return safeinput($_POST[$varname]);
+  else
+    return '';
 }
 
 # Function to obtain user input submitted in a cookie
 function sane_cookie($varname) 
 {
-  return safeinput($_COOKIE[$varname]);
+  if (sane_isset($varname))
+    return safeinput($_COOKIE[$varname]);
+  else
+    return '';
 }
 
 # Does an isset. Not really necessary, just for cohesion sake

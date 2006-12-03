@@ -52,7 +52,7 @@ if (!$confirm && !$pending)
   site_user_header(array('title'=>_("Quit a group"),
 			 'context'=>'mygroups'));
 
-  print '<form action="'.$GLOBALS[PHP_SELF].'" method="post">';
+  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
   print '<input type="hidden" name="quitting_group_id" value="'.$quitting_group_id.'" />';  
   print '<span class="preinput">'.sprintf(_("You are about to leave the group %s, please confirm:"), group_getname($quitting_group_id)).'</span>';
 print '<div class="center"><input type="submit" name="confirm" value="'._("Confirm").'" /> <input type="submit" name="cancel" value="'._("Cancel").'" /></div>';

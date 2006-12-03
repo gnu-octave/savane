@@ -25,12 +25,12 @@
 
 # It can accept db result directy or an array.
 # Total must be an array too, if provided
-function graphs_build ($result, $field=0, $dbdirect=1,$total=0)
+function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
 {
   if (!$result)
     {
       fb(_("No data to work on, no graph will be built"), 1);
-      break;
+      return;
     }
 
   if ($dbdirect)

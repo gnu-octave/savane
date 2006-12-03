@@ -53,6 +53,13 @@ foreach ($GLOBALS as $key => $value)
 
 
 # Defines all of the Savane hosts, databases, etc.
+
+# Default values, so they cannot be found undefined in the code
+$sys_name = 'ChangeMyName';
+$sys_logo_name = 'floating.png';
+$sys_debug_on = 0;
+$sys_use_google = 0;
+
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))
 { require getenv('SAVANE_CONF').'/.savane.conf.php'; }
@@ -88,9 +95,9 @@ else
 # we set it arbitrarily to 1/2 MB, something that should work out of the
 # box on most systems.
 # (depends on MySQL max_allowed_packet and PHP upload_max_filesize
-if (!$GLOBALS['sys_upload_max'])
+if (!isset($GLOBALS['sys_upload_max']))
 {
-  $GLOBALS['sys_upload_max'] = "512";
+  $GLOBALS['sys_upload_max'] = 512;
 }
 
 
@@ -101,20 +108,20 @@ if (!$GLOBALS['sys_upload_max'])
 # just all of the *.php files found in the module's subdirectory).
 
 # Prevent declaration by users.
-if ($_GET['module'] ||
-    $_POST['module'] ||
-    $_COOKIE['module'] ||
-    $_SERVER['module'] ||
-    $_ENV['module'] ||
-    $_FILES['module'] ||
-    $_REQUEST['module'])
+if (isset($_GET['module']) ||
+    isset($_POST['module']) ||
+    isset($_COOKIE['module']) ||
+    isset($_SERVER['module']) ||
+    isset($_ENV['module']) ||
+    isset($_FILES['module']) ||
+    isset($_REQUEST['module']))
 { exit(); }
 
 function require_directory ($module)
 {
   if ($module=="")
     { return; }
-  if ($GLOBALS['directory_'.$module.'_is_loaded'])
+  if (isset($GLOBALS['directory_'.$module.'_is_loaded']))
     { return; }
 
   $dir = $GLOBALS['sys_www_topdir'].'/include/'.$module;
@@ -278,6 +285,9 @@ if (user_isloggedin())
   # Find out if the stone age menu is required
   if (user_get_preference("stone_age_menu"))
     { $GLOBALS['stone_age_menu'] = 1; }
+} else {
+  # Set default timezone - avoid PHP warning
+  putenv('TZ=UTC');
 }
 
 # redirect them from http to https if they said so at login time
@@ -290,7 +300,7 @@ if (!session_issecure() && isset($_COOKIE['redirect_to_https']) && $GLOBALS['sys
 **************************************************************/
 
 # defines the artifact we are using
-define("ARTIFACT", get_module_include_dir($GLOBALS['REQUEST_URI'], 1));
+define('ARTIFACT', get_module_include_dir($_SERVER['REQUEST_URI'], 1));
 
 # if we are on an artifact index page and we have only one argument which is
 # a numeric number, we suppose it is an item_id
@@ -422,7 +432,7 @@ if (isset($group_id))
 
 # If requires/include for an artifact exists, load them all
 # In any case, set the ARTIFACT constant.
-require_directory(get_module_include_dir($GLOBALS['PHP_SELF']));
+require_directory(get_module_include_dir($_SERVER['PHP_SELF']));
 
 # Set the CONTEXT and SUBCONTEXT constants, useful to guess page titles
 # but also to find out if cookbook entries are relevant

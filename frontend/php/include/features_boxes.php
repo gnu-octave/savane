@@ -26,9 +26,9 @@
 function show_features_boxes()
 {
   GLOBAL $HTML;
+  $return = '';
 
   #### General Stats
-  
   $return .= $HTML->box_top(utils_link($GLOBALS['sys_home']."stats/", sprintf(_("%s Statistics"),$GLOBALS['sys_name']),"sortbutton"));
 
   $return .= show_sitestats();
@@ -99,6 +99,7 @@ function show_features_boxes()
 
 function show_sitestats()
 {
+  $return = '';
   $return .= '<span class="smaller">';
   $users = stats_getusers();
   $return .= sprintf(ngettext("%s registered user", "%s registered users", $users), "<strong>$users</strong>");
@@ -107,6 +108,7 @@ function show_sitestats()
   $projects = stats_getprojects_active();
   $return .= sprintf(ngettext("%s hosted project", "%s hosted projects", $projects), "<strong>$projects</strong>").'</span></div>';
   $result = db_query("SELECT type_id,name FROM group_type ORDER BY name");
+  $i = 0;
   while ($eachtype = db_fetch_array($result))
     {
       $i++;
@@ -174,6 +176,7 @@ function show_votes ($limit=10)
 
       $result=db_query($sql);
       $rows=db_numrows($result);
+      $results = 0;
       if ($result && $rows > 0)
 	{
 	  $results = 1;

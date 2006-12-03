@@ -610,6 +610,7 @@ function _markup_inline($line)
   # Group_id may be necessary for recipe #nnn links
   global $group_id;
 
+  $comingfrom = '';
   if ($group_id)
     {
       $comingfrom = "&amp;comingfrom=$group_id";

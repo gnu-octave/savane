@@ -72,7 +72,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
   if ($is_small)
     { $ret .= '<br />'; }
 
-  if ($only_artifact)
+  if (isset($only_artifact))
     {
       $ret .= '<input type="hidden" name="type_of_search" value="'.htmlspecialchars($only_artifact).'" />';
     }
@@ -87,23 +87,23 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
       # If the search is restricted to a given group, remove the possibility
       # to search another group, unless we're showing the left box
-     if (!$group_id)
+     if (!isset($group_id))
        {
       $ret .= '<option value="soft"'.(($type_of_search == "soft")||($type_of_search == "") ? ' selected="selected"' : "").'>'._("Projects")."</option>\n";
 
       $ret .= '<option value="people"'.(($type_of_search == "people") ? ' selected="selected"' : "").'>'._("People")."</option>\n";
        }
 
-      $group_realname = substr(group_getname($group_id), 0, 10)."...";
+     if (isset($group_id))
+       $group_realname = substr(group_getname($group_id), 0, 10)."...";
 
-      if (!$project && $group_id)
+      if (!$project && isset($group_id))
 	{
 	  $project = project_get_object($group_id);
 	}
 
       unset($text);
-      if (!$group_id ||
-	  ($is_small && $group_id))
+      if (!isset($group_id) || $is_small)
 	{ $text = _("Cookbook"); }
       else
 	{
@@ -115,8 +115,8 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       unset($text);
-      if (!$group_id ||
-	  ($is_small && $group_id && $project->Uses("support")))
+      if (!isset($group_id) ||
+	  ($is_small && $project->Uses("support")))
 	{ $text = _("Support");	}
       else
 	{
@@ -132,8 +132,8 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       unset($text);
-      if (!$group_id ||
-	  ($is_small && $group_id && $project->Uses("bugs")))
+      if (!isset($group_id) ||
+	  ($is_small && $project->Uses("bugs")))
 	{ $text = _("Bugs");	}
       else
 	{
@@ -148,8 +148,8 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       unset($text);
-      if (!$group_id ||
-	  ($is_small && $group_id && $project->Uses("task")))
+      if (!isset($group_id) ||
+	  ($is_small && $project->Uses("task")))
 	{ $text = _("Tasks");	}
       else
 	{
@@ -164,8 +164,8 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       unset($text);
-      if (!$group_id ||
-	  ($is_small && $group_id && $project->Uses("patch")))
+      if (!isset($group_id) ||
+	  ($is_small && $project->Uses("patch")))
 	{ $text = _("Patches");	}
       else
 	{
@@ -232,8 +232,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
       $ret .= '<input type="hidden" name="exact" value="1" />';
     }
 
-  if (!$dontclose)
-    { $ret .= '      </form>'; }
+  $ret .= '      </form>';
 
  return $ret;
 }

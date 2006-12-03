@@ -31,9 +31,12 @@
 # Get the user's prefered language from the navigator sended headers :
 $navigatorLanguages = explode(",",getenv("HTTP_ACCEPT_LANGUAGE"));
 
-# Set the default language :
-$locale = $GLOBALS['sys_default_locale'];
-
+// Set the default language:
+if (isset($GLOBALS['sys_default_locale'])) {
+  $locale = $GLOBALS['sys_default_locale'];
+} else {
+  $locale = 'en';
+}
 
 # Table of supported languages :
 # "lang" => "associated prefered sublanguage"
@@ -69,13 +72,13 @@ while (list(, $lng) = each ($navigatorLanguages)) {
     $sublocale = $curlocale."_".strtoupper(substr($lng,3,2));
     if ( isset($supportedLanguages[$sublocale] )) {
       $locale = $curlocale."_".$supportedLanguages[$sublocale];
-      define(SV_LANG, $curlocale."-".$supportedLanguages[$sublocale]);
+      define('SV_LANG', $curlocale."-".$supportedLanguages[$sublocale]);
       break;
     }
   }
   if ( isset($supportedLanguages[$curlocale] )) {
     $locale = $curlocale."_".$supportedLanguages[$curlocale];
-    define(SV_LANG, $curlocale."-".$supportedLanguages[$curlocale]);
+    define('SV_LANG', $curlocale."-".$supportedLanguages[$curlocale]);
     break;
   }
 

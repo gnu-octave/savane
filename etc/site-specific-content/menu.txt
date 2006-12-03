@@ -14,7 +14,7 @@ global $HTML;
 $HTML->menuhtml_top('Links'); 
 
 $HTML->menu_entry('https://gna.org/projects/savane','Savane');
-$HTML->menu_entry("http://validator.w3.org/check?uri=http://".$GLOBALS['HTTP_HOST']. $GLOBALS['PHP_SELF'], 'W3C Validation');
+$HTML->menu_entry("http://validator.w3.org/check?uri=http://".$_SERVER['HTTP_HOST']. $_SERVER['PHP_SELF'], 'W3C Validation');
 
 $HTML->menuhtml_bottom();
 

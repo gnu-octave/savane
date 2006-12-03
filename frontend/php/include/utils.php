@@ -23,6 +23,11 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# Clean initialization for globals
+$GLOBALS['feedback_count'] = 0;
+$GLOBALS['feedback'] = '';
+$GLOBALS['ffeedback'] = '';
+
 function utils_safeinput ($string)
 {
   return safeinput($string);
@@ -1175,23 +1180,13 @@ function fb ($msg, $error=0)
   # Increment feedback count
   $GLOBALS['feedback_count']++;
 
-  # Remove the dot at the end, if existing
-  if (substr($msg, -1) == ".")
-    {
-      $msg = substr($msg, 0, (strlen($msg)-1));
-    }
-
-
-  # First letter capitalized, that's all
-  $msg = strtoupper(substr($msg, 0, 1)).strtolower(substr($msg, 1, strlen($msg)));
-
   if ($GLOBALS['sys_debug_on'])
     {
       $msg .= ' [#'.$GLOBALS['feedback_count'].']';
       dbg("Add feedback #".$GLOBALS['feedback_count']);
     }
 
-  $msg .= _(";").' ';
+  $msg .= ' ';
 
   # feed
   if (!$error)

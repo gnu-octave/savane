@@ -23,7 +23,7 @@
 # Guess the context of the current page
 function context_guess () 
 {
-  return context_guess_from_url($_SERVER[SCRIPT_NAME]);
+  return context_guess_from_url($_SERVER['SCRIPT_NAME']);
 
 }
 
@@ -201,9 +201,9 @@ function context_set ($context, $subcontext, $dontset=false)
     }
 
   # Defines main context, kind of pages (cvs, bug tracker...)
-  define(CONTEXT, $context);
+  define('CONTEXT', $context);
   # Defines subcontext, kind of action done (postitem...)
-  define(SUBCONTEXT, $subcontext);
+  define('SUBCONTEXT', $subcontext);
 
   return true;
 }

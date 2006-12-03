@@ -29,7 +29,7 @@ $USER_RES=array();
 function user_isloggedin() 
 {
   global $G_USER;
-  if ($G_USER['user_id']) 
+  if (isset($G_USER['user_id']) and $G_USER['user_id'] > 0)
     {
       return true;
     } 
@@ -451,26 +451,26 @@ function user_guess ()
   # Not logged in?
   if (!user_isloggedin())
     {
-      define(AUDIENCE, "anonymous");
+      define('AUDIENCE', 'anonymous');
       return true;
     }
 
   # On a non-group page?
   if (!$group_id)
     {
-      define(AUDIENCE, "loggedin");      
+      define('AUDIENCE', 'loggedin');
       return true;
     }
   
   # On a group page without being member of the group?
   if (!member_check(0, $group_id))
     {
-      define(AUDIENCE, "loggedin");      
+      define('AUDIENCE', 'loggedin');
       return true;
     }
 
   # Being member
-  define(AUDIENCE, "members");      
+  define('AUDIENCE', 'members');
   return true;      
 
 }

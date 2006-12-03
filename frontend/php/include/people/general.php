@@ -111,6 +111,7 @@ function people_show_category_list()
   $sql="SELECT * FROM people_job_category ORDER BY category_id";
   $result=db_query($sql);
   $rows=db_numrows($result);
+  $return = '';
   if (!$result || $rows < 1)
     {
       $return .= _("No Categories Found");

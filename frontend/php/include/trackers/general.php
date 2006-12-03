@@ -31,7 +31,7 @@
 function trackers_include()
 {
   # Keep the dirname only if it's admin
-  $dir = get_module_include_dir($GLOBALS['PHP_SELF'], 0, 1);
+  $dir = get_module_include_dir($_SERVER['PHP_SELF'], 0, 1);
   if ($dir != "admin")
     {
       unset($dir);
@@ -42,7 +42,7 @@ function trackers_include()
       $pre = "../";
     }
 
-  return $pre."../include/trackers_run/".$dir.basename($GLOBALS['PHP_SELF']);
+  return $pre."../include/trackers_run/".$dir.basename($_SERVER['PHP_SELF']);
 }
 
 # Does like trackers_include() but load an arbitrary page of the common

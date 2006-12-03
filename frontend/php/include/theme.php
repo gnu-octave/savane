@@ -99,8 +99,8 @@ function theme_list ()
 ## First check if the printer mode is asked. If not, proceed to the usual
 ## theme selection
 if (sane_all("printer") == 1) {
-  define(SV_THEME, "printer");
-  define(PRINTER, 1);
+  define('SV_THEME', "printer");
+  define('PRINTER', 1);
   return true;
 }
 
@@ -113,7 +113,7 @@ if (isset($HTTP_COOKIE_VARS["SV_THEME"]))
       # we set randomly a theme and a cookie for a day
       if (isset($HTTP_COOKIE_VARS["SV_THEME_RANDOM"])) 
 	{	  
-	  define(SV_THEME, sane_cookie("SV_THEME_RANDOM"));
+	  define('SV_THEME', sane_cookie("SV_THEME_RANDOM"));
 	} 
       else 
 	{
@@ -130,7 +130,7 @@ if (isset($HTTP_COOKIE_VARS["SV_THEME"]))
       # the user want a rotation between themes
       if (isset($HTTP_COOKIE_VARS["SV_THEME_ROTATE"])) 
 	{	    
-	  define(SV_THEME, sane_cookie("SV_THEME_ROTATE"));
+	  define('SV_THEME', sane_cookie("SV_THEME_ROTATE"));
 	} 
       else 
 	{
@@ -152,7 +152,7 @@ if (isset($HTTP_COOKIE_VARS["SV_THEME"]))
 	  # we associate this number with a theme
 	  $rotate_theme = $theme[$num];
 	  setcookie("SV_THEME_ROTATE", $rotate_theme, time() + 60*60*24, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);
-	  define(SV_THEME, $rotate_theme);
+	  define('SV_THEME', $rotate_theme);
 	}
     } 
   else 
@@ -163,19 +163,19 @@ if (isset($HTTP_COOKIE_VARS["SV_THEME"]))
       # look for invalid / outdated cookies
       if (!file_exists($GLOBALS['sys_www_topdir']."/css/".$cookie_theme.".css"))
 	{
-	  define(SV_THEME, $GLOBALS['sys_themedefault']);
-	  setcookie("SV_THEME", SV_THEME, time() + 60*60*24*365, $GLOBALS['sys_url_topdir']);
+	  define('SV_THEME', $GLOBALS['sys_themedefault']);
+	  setcookie("SV_THEME", 'SV_THEME', time() + 60*60*24*365, $GLOBALS['sys_url_topdir']);
 	}
       else
 	{
-	  define(SV_THEME, $cookie_theme);
+	  define('SV_THEME', $cookie_theme);
 	}
     }
 } 
 else 
 {
   # no theme was defined, we use the default one
-  define(SV_THEME, $GLOBALS['sys_themedefault']);
+  define('SV_THEME', $GLOBALS['sys_themedefault']);
 }
 
 # Check whether a theme follows latest GUIDELINES

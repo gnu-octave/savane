@@ -346,38 +346,46 @@ print '</p>
 # Get the more popular themes. 7 at most, all superior to 0%
 $themes_list = theme_list();
 $popular_themes = array();
-while (list(,$theme) = each($themes_list))
-{
-  # Get the number of users of the theme
-  unset($count);
-  $count = stats_getthemeusers(strtolower($theme));
-  if (strtolower($theme) == strtolower($GLOBALS['sys_themedefault']))
-    { 
-      # If it is the default theme, add the users that use the default
-      $count += stats_getthemeusers("");
-    }
 
-  # Compute the percentage of users using it
-  $percent = ($count / $count_users) * 100;
-  
-  # Store it only if superior to 0
-  if (round($percent))
+// Check if there's already at least one user registered
+if ($count_users)
+{
+  while (list(,$theme) = each($themes_list))
     {
-      $popular_themes[$theme] = $percent;
+      // Get the number of users of the theme
+      unset($count);
+      $count = stats_getthemeusers(strtolower($theme));
+      if (strtolower($theme) == strtolower($GLOBALS['sys_themedefault']))
+	{ 
+	  // If it is the default theme, add the users that use the default
+	  $count += stats_getthemeusers("");
+	}
+      
+      // Compute the percentage of users using it
+      $percent = ($count / $count_users) * 100;
+      
+      // Store it only if superior to 0
+      if (round($percent))
+	{
+	  $popular_themes[$theme] = $percent;
+	}
     }
+
+  // Print the most popular theme
+  arsort($popular_themes);
+  unset($themes);
+  while (list($theme,$percent) = each($popular_themes))
+    {
+      if ($themes)
+	{ $themes .= ", "; }
+      $themes .= sprintf(_("%s (%s%%)"), $theme, round($percent));
+    }
+  
+  print sprintf(_("Most popular color themes are: %s."), $themes);
+} else {
+  print _('No users yet.');
 }
 
-# Print the most popular theme
-arsort($popular_themes);
-unset($themes);
-while (list($theme,$percent) = each($popular_themes))
-{
-  if ($themes)
-    { $themes .= ", "; }
-  $themes .= sprintf(_("%s (%s%%)"), $theme, round($percent));
-}
-
-print sprintf(_("Most popular color themes are: %s."), $themes);
 
 print '
 </p>';

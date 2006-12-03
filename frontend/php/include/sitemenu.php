@@ -31,6 +31,14 @@ function sitemenu ($params)
 {
   global $HTML;
 
+  # Define variables
+  if (!isset($params['title']))
+    $params['title'] = '';
+  if (!isset($params['toptab']))
+    $params['toptab'] = '';
+  if (!isset($params['group']))
+    $params['group'] = '';
+
   print '
  <ul class="menu">
         <li class="menulogo">
@@ -84,21 +92,21 @@ function sitemenu_extraurl ($only_with_post=false)
 
   if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
-      if ($GLOBALS['group_name'])
+      if (isset($GLOBALS['group_name']) and $GLOBALS['group_name'])
 	{ $extraurl .= "&amp;group=".htmlspecialchars($GLOBALS['group_name'])."&amp;"; }
-      if ($GLOBALS['item_id'])
+      if (isset($GLOBALS['item_id']) and $GLOBALS['item_id'])
 	{ $extraurl .= "&amp;func=detailitem&amp;item_id=".htmlspecialchars($GLOBALS['item_id'])."&amp;"; }
     }
   else
     {
-      if ($GLOBALS['item_id'] && ctype_digit($_SERVER["argv"][0]))
+      if (isset($GLOBALS['item_id']) && ctype_digit($_SERVER['QUERY_STRING']))
 	{
-          # Short link case (like support/?212)
+          # Short link case (like /bugs/?212)
 	  $extraurl .= "&amp;func=detailitem&amp;item_id=".htmlspecialchars($GLOBALS['item_id']);
 	}
       else
 	{
-	  $extraurl = htmlspecialchars($_SERVER["QUERY_STRING"]);
+	  $extraurl = htmlspecialchars($_SERVER['QUERY_STRING']);
 	  $extraurl = str_replace("reload=1&amp;", "", $extraurl);
 	  $extraurl = str_replace("printer=1&amp;", "", $extraurl);
 	  $extraurl = "&amp;".$extraurl;	
@@ -193,17 +201,17 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   $HTML->menuhtml_top(_("This Page"));
   $extraurl = sitemenu_extraurl();
 
-  $HTML->menu_entry($_ENV["SCRIPT_NAME"]."?reload=1".$extraurl,
+  $HTML->menu_entry($_SERVER['SCRIPT_NAME']."?reload=1".$extraurl,
 		    _("Clean Reload"),
 		    1,
 		    _("Reload the page without risk of reposting data"));
-  $HTML->menu_entry($_ENV["SCRIPT_NAME"]."?printer=1".$extraurl,
+  $HTML->menu_entry($_SERVER['SCRIPT_NAME']."?printer=1".$extraurl,
 		    _("Printer Version"),
 		    1,
 		    _("Show this page with a style adapted to printers"));
   $HTML->menuhtml_bottom();
 
-  if (!$GLOBALS['HTTP_POST_VARS'])
+  if (!isset($_POST))
     {
       if (user_isloggedin() && user_get_preference("use_bookmarks"))
 	{
@@ -223,7 +231,8 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   # Show related recipes. Maybe not the best way to put it, but in "this page"
   # it makes sense.
   # And it is hard to find a place elsewhere where it would not be really nasty
-  unset($sql_groupid, $sql_role);
+  $sql_role = '';
+  $sql_groupid = '';
   if ($group_id)
     {
       # We are on a group page
@@ -441,7 +450,7 @@ function sitemenu_notloggedin()
   print '
         <li class="menuitem"> <span class="error">'._("Not Logged In").'</span></li>';
 
-  $HTML->menu_entry($GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.urlencode($GLOBALS['REQUEST_URI'].$extraurl),
+  $HTML->menu_entry($GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.urlencode($_SERVER['REQUEST_URI'].$extraurl),
 		    _("Login"),
 		    1,
 		    _("Login page - you must have registered an account first"));

@@ -71,6 +71,7 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
 
   $result=db_query($sql);
   $rows=db_numrows($result);
+  $return = '';
 
   if (!$result || $rows < 1)
     {
@@ -158,12 +159,12 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
 	{
 	  # You can only submit news from a project now.
 	  # You used to be able to submit general news.
-	  $return .= news_new_subbox($i)
+	  $return .= news_new_subbox(0)
 	     .'<br /> <a href="'.$GLOBALS['sys_home'].'news/submit.php?group_id='
 	     .$group_id.'"><span class="smaller">['._("Submit News").']</span></a>';
 	}
 
-      $return .= news_new_subbox($i)
+      $return .= news_new_subbox(0)
 	 .'<br /> <a href="'.$GLOBALS['sys_home'].'news/?group_id='.$group_id.'"><span class="smaller">['
 	 .sprintf(ngettext("%d news in archive", "%d news in archive", $news_total), $news_total)
          .']</span></a>';

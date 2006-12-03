@@ -39,7 +39,7 @@ if ($group_id && user_ismember($group_id,'A'))
       $hdr = sprintf(_("Reset Values of '%s'"),trackers_data_get_label($field));
       trackers_header_admin(array ('title'=>$hdr));
       
-      print '<form action="'.$GLOBALS[PHP_SELF].'" method="post">';
+      print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
       print '<input type="hidden" name="group_id" value="'.$group_id.'" />';
       print '<input type="hidden" name="field" value="'.$field.'" />';
       print '<span class="preinput">'.sprintf(_("You are about to reset values of the field %s. This action will not be undoable, please confirm:"),trackers_data_get_label($field)).'</span>';

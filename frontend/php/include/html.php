@@ -278,8 +278,8 @@ function html_anchor ($content, $name)
 function html_feedback_top()
 {
   # Escape the html special chars, active markup
-  $GLOBALS[feedback] = markup_basic(htmlspecialchars($GLOBALS[feedback]));
-  $GLOBALS[ffeedback] = markup_basic(htmlspecialchars($GLOBALS[ffeedback]));
+  $GLOBALS['feedback'] = markup_basic(htmlspecialchars($GLOBALS['feedback']));
+  $GLOBALS['ffeedback'] = markup_basic(htmlspecialchars($GLOBALS['ffeedback']));
 
   $script_hide = 'onclick="document.getElementById(\'feedback\').style.visibility=\'hidden\'; document.getElementById(\'feedbackback\').style.visibility=\'visible\';"';
   $script_show = 'onclick="document.getElementById(\'feedback\').style.visibility=\'visible\'; document.getElementById(\'feedbackback\').style.visibility=\'hidden\';"';
@@ -296,26 +296,26 @@ function html_feedback_top()
   if (user_get_preference("nonfixed_feedback"))
     { $script_hide = 'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"'; }
 
-  print '<div '.$script_show.' id="feedbackback" class="feedbackback"'.$dirtyhack.'>'._("Show feedback again").'</div>';
+  print '<div '.$script_show.' id="feedbackback" class="feedbackback">'._("Show feedback again").'</div>';
 
   # Only success
-  if ($GLOBALS[feedback] && !$GLOBALS[ffeedback])
+  if ($GLOBALS['feedback'] && !$GLOBALS['ffeedback'])
     {
-        print '<div id="feedback" class="feedback" '.$script_hide.'><span class="feedbacktitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/ok.png" class="feedbackimage" alt="'._("Success").'" /> '._("Success:").'</span> '.$GLOBALS[feedback].'</div>';
+        print '<div id="feedback" class="feedback" '.$script_hide.'><span class="feedbacktitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/ok.png" class="feedbackimage" alt="'._("Success").'" /> '._("Success:").'</span> '.$GLOBALS['feedback'].'</div>';
     }
 
   # Only errors
-  if ($GLOBALS[ffeedback] && !$GLOBALS[feedback])
+  if ($GLOBALS['ffeedback'] && !$GLOBALS['feedback'])
     {
-      print '<div id="feedback" class="feedbackerror" '.$script_hide.'><span class="feedbackerrortitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.png" class="feedbackimage" alt="'._("Error").'" /> '._("Error:").'</span>'.$GLOBALS[ffeedback].'</div>';
+      print '<div id="feedback" class="feedbackerror" '.$script_hide.'><span class="feedbackerrortitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.png" class="feedbackimage" alt="'._("Error").'" /> '._("Error:").'</span>'.$GLOBALS['ffeedback'].'</div>';
     }
 
   # Errors and success
-  if ($GLOBALS[ffeedback] && $GLOBALS[feedback])
-    {  print '<div id="feedback" class="feedbackerrorandsuccess" '.$script_hide.'><span class="feedbackerrorandsuccesstitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.png" class="feedbackimage" alt="'._("Some Errors").'" /> '._("Some Errors:").'</span>'.$GLOBALS[feedback].' '.$GLOBALS[ffeedback].'</div>'; }
+  if ($GLOBALS['ffeedback'] && $GLOBALS['feedback'])
+    {  print '<div id="feedback" class="feedbackerrorandsuccess" '.$script_hide.'><span class="feedbackerrorandsuccesstitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.png" class="feedbackimage" alt="'._("Some Errors").'" /> '._("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.$GLOBALS['ffeedback'].'</div>'; }
 
-  if ($GLOBALS[sys_debug_on] && $GLOBALS[debug])
-    {  print '<div class="debug">DEBUG information: '.$GLOBALS[debug].'</div>'; }
+  if ($GLOBALS['sys_debug_on'] && $GLOBALS['debug'])
+    {  print '<div class="debug">DEBUG information: '.$GLOBALS['debug'].'</div>'; }
 
 
   # We unset feedback so there will be a bottom feedback only if something
@@ -323,7 +323,7 @@ function html_feedback_top()
   # have two lookalike feedback information providing most of the time the
   # same information AND (that is the problem) sometimes more information
   # in the second one.
-  unset($GLOBALS[feedback],$GLOBALS[ffeedback],$GLOBALS[debug]);
+  unset($GLOBALS['feedback'],$GLOBALS['ffeedback'],$GLOBALS['debug']);
 }
 
 ##
@@ -346,18 +346,19 @@ function html_image ($src,$args,$display=1)
     }
 
   # ## insert a border tag if there isn't one
-  if (!$args['border']) $return .= (' border="0"');
+  if (!isset($args['border']) or !$args['border']) $return .= (' border="0"');
 
 
   # ## if no height AND no width tag, insert em both
-  if (!$args['height'] && !$args['width'])
+  if ((!isset($args['height']) or !$args['height'])
+      and (!isset($args['width']) or !$args['width']))
     {
 
      #Check to see if we've already fetched the image data
  if(!$img_attr[$src] && is_file($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME.'.theme/'.$src))
    {
      list($width, $height, $type, $img_attr[$src]) = @getimagesize($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME.'.theme/'.$src);
-
+     
    }
  else
    {

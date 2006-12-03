@@ -24,6 +24,7 @@ at yourdomain/savane:
       # Pure apache conf:
       SetEnv SAVANE_CONF /etc/savane
       Options SymLinksIfOwnerMatch
+      DirectoryIndex index.php
       AllowOverride None
       #Necessary with apache2: AcceptPathInfo On
       ErrorDocument 404 /savane/404.php

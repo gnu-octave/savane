@@ -26,7 +26,7 @@ require "../include/pre.php";
 
 session_require(array('isloggedin'=>'1'));
 
-require $GLOBALS['sys_www_topdir']."/include/account.php";
+require(dirname(__FILE__).'/../include/account.php');
 
 # push received vars
 if ($insert_purpose && $form_purpose) { 
@@ -59,7 +59,7 @@ if ($insert_purpose && $form_purpose) {
 
 } elseif (!$form_full_name && !$form_unix_name) {
   unset($group_id);
-  exit_error('Error','Missing Information. <strong>PLEASE</strong> fill in all required information.');
+  exit_error('Error','Missing Information. PLEASE fill in all required information.');
 }
 
 # Create the page header just like if there was not yet any group_id

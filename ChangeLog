@@ -1,4 +1,21 @@
-2006-12-03  Beuc
+2006-12-03  Sylvain Beucler  <beuc@beuc.net>
+
+	* Lots of PHP warnings and PHP5 fixes; I try to run Savane with
+	error_reporting = E_ALL | E_STRICT, register_globals=off,
+	magic_quotes=off to clean-up the code.
+
+	* frontend/php/include/utils.php: Removed lowercasing in fb(), as
+	well as other code expecting that $msg is a single sentence - this
+	is often not the case.
+
+	* PHP5 fix: sed -i -e
+	's/$GLOBALS\[.\?PHP_SELF.\?\]/$_SERVER['\''PHP_SELF'\'']/g'
+	my/quitproject.php include/pre.php
+	include/trackers_run/admin/field_values_reset.php
+	include/trackers/general.php include/trackers/general.php
+
+	* Detect when php-mysql is not installed and reports the error
+	clearly.
 
 	* ChangeLog.byversion -> NEWS
 
@@ -6,7 +23,7 @@
 	default architecture. Move Gna-style default layout to the Attic
 	sub.
 
-2006-11-30  Beuc
+2006-11-30  Sylvain Beucler  <beuc@beuc.net>
 
 	* backend/accounts/sv_membersh.pl: uses
 	/usr/local/bin:/usr/bin:/bin as PATH (reverse order compared to
@@ -17,6 +34,6 @@
 
 	* Don't try to chmod ~/.ssh/authorized_keys if doesn't exists.
 	
-2006-11-29  Beuc
+2006-11-29  Sylvain Beucler  <beuc@beuc.net>
 
 	* Fixed warnings in /users/<username due to uninitialized vars.
