@@ -33,7 +33,7 @@
 
 use strict;
 
-$ENV{PATH}="/bin:/usr/bin";
+$ENV{PATH}="/usr/local/bin:/usr/bin:/bin";
 $ENV{CVSEDITOR}="/bin/false";
 
 # Import conf options

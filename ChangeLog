@@ -1,0 +1,22 @@
+2006-12-03  Beuc
+
+	* ChangeLog.byversion -> NEWS
+
+	* Introduce a smaller default SVN repository creation, with no
+	default architecture. Move Gna-style default layout to the Attic
+	sub.
+
+2006-11-30  Beuc
+
+	* backend/accounts/sv_membersh.pl: uses
+	/usr/local/bin:/usr/bin:/bin as PATH (reverse order compared to
+	before, includes /usr/local/bin) - this is the default Debian PATH
+
+	* account/login.php: Uses HTTP 302 redirections to detect cookies
+	immediately.
+
+	* Don't try to chmod ~/.ssh/authorized_keys if doesn't exists.
+	
+2006-11-29  Beuc
+
+	* Fixed warnings in /users/<username due to uninitialized vars.

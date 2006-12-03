@@ -1135,7 +1135,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
 	{ 
 	  # since is is will be registered, we can ignore it in further check
 	  $addresses_to_skip[$email] = true;
-	  $email == user_getid(); 
+	  $email = user_getid($email);
 	}
 
       # If we have a string that contains @, try to find it in the database

@@ -30,6 +30,8 @@
 use strict;
 use warnings;
 
+use IPC::Run qw(run);
+
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(SvnMakeArea SvnMakeAreaAttic SvnMakeAreaAtticWebsite );
@@ -49,25 +51,20 @@ sub SvnMakeArea {
     }
 
     unless (-e $dir_svn) {
-	# set the umask right
-	my $bak_umask = umask();
-	umask(0002);
 	# fsfs repositories are the most stable and scalable. bdb just
-	# doesn't cut it
-	system("svnadmin", "create", "--fs-type", "fsfs", $dir_svn);
-	# create the default repository layout
-	system("svn", "mkdir", "-q", "-m \"default layout\"", "file://$dir_svn/trunk");	system("svn", "mkdir", "-q", "-m \"default layout\"", "file://$dir_svn/tags");
-	system("svn", "mkdir", "-q", "-m \"default layout\"", "file://$dir_svn/branches");
-	# group ownership
-	# svnadmin is expected to set 'set user or group ID on execution (s)'
-	# for group on directories
-	system("chgrp", "-R", $name, $dir_svn);
-	# We do not want hooks to be group-modifiable, that would mean giving
-	# shell access
-	system("chgrp", "-R", "root", "$dir_svn/hooks");
-	umask($bak_umask);
+	# doesn't cut it. fsfs also is the default in new SVN releases.
+	system('svnadmin', 'create', '--fs-type', 'fsfs', $dir_svn);
 
-	return " ".$dir_svn.$warning;	
+	# <no default repository layout for the default SVN>
+
+	# group ownership - svnadmin takes care of setgid
+        # giving privs to db/ is enough
+	# giving privs to hooks/ would mean giving local access
+	system('chgrp', '-R', $name, "$dir_svn/db");
+	my @find = ('find', "$dir_svn/db", '-type', 'd');
+	my @xargs = qw(xargs chmod g+w);
+	run \@find, '|', \@xargs;
+	return ' '.$dir_svn.$warning;	
     }
     return 0;
 }
@@ -78,12 +75,17 @@ sub SvnMakeArea {
 ## Ask yeupou--gna.org before modifying this function
 sub SvnMakeAreaAttic {
     my $ret = SvnMakeArea(@_);
-    
+
     if ($ret) {
 	my ($name,$dir_svn) = @_;
 
 	$dir_svn =~ s/\%PROJECT/$name/;
 	
+	# create the default repository layout
+	system("svn", "mkdir", "-q", "-m \"default layout\"", "file://$dir_svn/trunk");
+	system("svn", "mkdir", "-q", "-m \"default layout\"", "file://$dir_svn/tags");
+	system("svn", "mkdir", "-q", "-m \"default layout\"", "file://$dir_svn/branches");
+
 	# hardcode svnmailer + ciabot support
 	open(FILE, "> $dir_svn/hooks/post-commit");
 	print FILE "#!/usr/bin/perl
