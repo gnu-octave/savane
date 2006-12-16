@@ -38,6 +38,7 @@ our $sys_name;
 our $sys_https_host;
 our $sys_default_domain;
 our $sys_url_topdir;
+our $dbd;
 
 # Configure
 my $script = "sv_export";
@@ -113,7 +114,7 @@ my $now = time();
 # incriminated fields.
 
 my $export_table = 'trackers_export';
-my $fields = 'export_id, task_id, artifact, unix_group_name, user_name, sql, status, date, frequency_day, frequency_hour';
+my $fields = 'export_id, task_id, artifact, unix_group_name, user_name, `sql`, status, date, frequency_day, frequency_hour';
 my $criteria = "date < $now AND status='P'";
 
 my %jobs = GetDBHash($export_table, $criteria, $fields);

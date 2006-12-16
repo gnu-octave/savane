@@ -7,7 +7,7 @@ Standards-Version: 3.5.9.0
 
 Package: savane
 Architecture: all
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-backend (>= 2.0), savane-database (>= 2.0), savane-frontend (>= 2.0), savane-doc
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0), savane-backend (>= 3.0), savane-database (>= 3.0), savane-frontend (>= 3.0), savane-doc
 Recommends: savane-update
 Description: Meta package that fetch every packages for a standard install. 
  .
@@ -36,7 +36,7 @@ Description: Savane documentation, related to setup.
 
 Package: savane-backend
 Architecture: all
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-backend-members-shell (>= 2.0), savane-backend-misc (>= 2.0), savane-backend-mail (>= 2.0), savane-backend-export (>= 2.0), savane-backend-spamcheck (>= 2.0)
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0), savane-backend-members-shell (>= 3.0), savane-backend-misc (>= 3.0), savane-backend-mail (>= 3.0), savane-backend-export (>= 3.0), savane-backend-spamcheck (>= 3.0)
 Description: The complete savane backend.
  .
  You may want to install only some parts of the backend, in this case use
@@ -58,7 +58,7 @@ Description: Savane configurator. This could be handy on any system that
 
 Package: savane-backend-members-shell
 Architecture: all
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-doc
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0), savane-doc
 Recommends: gnupg, rcs
 Suggests: savane-backend-extra-subversion, savane-backend-extra-cvs
 Description: Part of Savane backend that help providing shell access to users.
@@ -72,7 +72,7 @@ Description: Part of Savane backend that help providing shell access to users.
 
 Package: savane-backend-misc
 Architecture: all
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0), libdate-calc-perl
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0), libdate-calc-perl
 Description: Important part of Savane backend that contains misc scripts .
  .
  This package provides programs necessary to clean the database or to send
@@ -83,7 +83,7 @@ Description: Important part of Savane backend that contains misc scripts .
 
 Package: savane-backend-mail
 Architecture: all
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0), savane-doc, libstring-random-perl
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0), savane-doc, libstring-random-perl
 Suggests: savane-frontend-mail
 Description: Part of Savane backend related to mails.
  .
@@ -95,7 +95,7 @@ Description: Part of Savane backend related to mails.
 
 Package: savane-backend-extra-cvs
 Architecture: all
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0)
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0)
 Provides: savane-backend-cvs
 Conflicts: savane-backend-cvs
 Description: Part of Savane backend that contains CVS related scripts.
@@ -108,7 +108,7 @@ Description: Part of Savane backend that contains CVS related scripts.
 Package: savane-backend-extra-subversion
 Architecture: all
 Provides: savane-backend-extra-svn
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0), libhtml-parser-perl
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0), libhtml-parser-perl
 Description: Part of Savane backend that contains SVN related scripts.
  .
  This package provides handy programs that could be useful to generate
@@ -119,7 +119,7 @@ Description: Part of Savane backend that contains SVN related scripts.
 
 Package: savane-backend-download
 Architecture: all
-Depends: savane-lib (>= 2.0), libfile-find-rule-perl, savane-config (>= 2.0), gnupg
+Depends: savane-lib (>= 3.0), libfile-find-rule-perl, savane-config (>= 3.0), gnupg
 Description: Part of Savane backend that contains download related scripts.
  .
  This package provides handy programs that could be useful to check GPG 
@@ -129,7 +129,7 @@ Description: Part of Savane backend that contains download related scripts.
 
 Package: savane-backend-export
 Architecture: all
-Depends: savane-lib (>= 2.0), libfile-find-rule-perl, savane-config (>= 2.0), libxml-writer-perl, libdate-calc-perl
+Depends: savane-lib (>= 3.0), libfile-find-rule-perl, savane-config (>= 3.0), libxml-writer-perl, libdate-calc-perl
 Description: Part of Savane backend that contains export/import related scripts.
  .
  This package provides necessary part of the backend for the import/export 
@@ -139,7 +139,7 @@ Description: Part of Savane backend that contains export/import related scripts.
 
 Package: savane-backend-spamcheck
 Architecture: all
-Depends: savane-lib (>= 2.0), savane-config (>= 2.0), libdate-calc-perl, spamc (>= 3.0.3), php4-cli
+Depends: savane-lib (>= 3.0), savane-config (>= 3.0), libdate-calc-perl, spamc (>= 3.0.3), php4-cli
 Description: Part of Savane backend that contains spamassassin related scripts.
  .
  This package provides necessary part of the backend for the spamcheck with 
@@ -158,7 +158,7 @@ Description: Savane library.
 
 Package: savane-update
 Architecture: all
-Depends: savane-lib (>= 2.0)
+Depends: savane-lib (>= 3.0)
 Description: Package containing script necessary for the upgrade of Savane.
  .
  From one major version to another, there are heavy changes that you should
@@ -176,10 +176,10 @@ Description: Package containing script necessary for the upgrade of Savane.
 
 Package: savane-frontend
 Architecture: all
-Depends: php4 | libapache-mod-php4, php4-mysql, httpd, savane-config (>= 2.0), savane-doc
-Replaces: savane-frontend-php (<< 2.0)
+Depends: php4 (>= 4.3) | php5 | libapache-mod-php4 (>= 4.3) | libapache2-mod-php4 (>= 4.3) | libapache-mod-php5 | libapache2-mod-php5, php4-mysql | php5-mysql, httpd, savane-config (>= 3.0), savane-doc
+Replaces: savane-frontend-php (<< 3.0)
 Provides: savane-frontend-php
-Conflicts: savane-frontend-php (<< 2.0)
+Conflicts: savane-frontend-php (<< 3.0)
 Description: Savane main frontend, the interface most users will use.
  .
  This is an essential part of Savane.
@@ -188,7 +188,7 @@ Description: Savane main frontend, the interface most users will use.
 
 Package: savane-frontend-mail
 Architecture: all
-Depends: savane-lib (>= 2.0), httpd, libapache-mod-perl, savane-config (>= 2.0), perl
+Depends: savane-lib (>= 3.0), httpd, libapache-mod-perl, savane-config (>= 3.0), perl
 Description: Savane extra mail related frontend.
  .
  It's a secondary frontend of Savane that provide ways

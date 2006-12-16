@@ -565,7 +565,7 @@ function utils_line_wrap ($text, $wrap = 78, $break = "\n")
 
 function utils_make_links($data='', $deprecated=0)
 {
-  fb("Using deprecated function utils_make_links(), please post a bug report", 1);
+#  fb("Using deprecated function utils_make_links(), please post a bug report", 1);
   # Group_id may be necessary for recipe #nnn links
   global $group_id;
 

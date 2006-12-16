@@ -35,7 +35,7 @@ sub GetVersion {
     # Should be a valid release number or
     #     SVN (toward x.x)
     #     x.x (prerelease)
-    return "3.0 (prerelease)";
+    return "SVN (toward 3.1)";
 }
 
 # EOF

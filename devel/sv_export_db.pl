@@ -4,7 +4,7 @@
 #
 # $Id$ 
 #
-#  Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+#  Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -56,7 +56,7 @@ my $initvalues_suffix=".initvalues";
 # Conf to be edited
 
 # Path to the db directory
-my $output_path="/home/mroy/dev/savane-trunk/db/mysql";
+my $output_path="/home/projects/svn.gna.org/savane/db/mysql";
 # Tables that will have no initvalues in anyway
 # Unused for now
 #my %table_with_no_initvalues;
@@ -64,6 +64,8 @@ my $output_path="/home/mroy/dev/savane-trunk/db/mysql";
 
 ####################################
 # Build header sub
+my $mysqldumpversion = `mysqldump --version`;
+chomp($mysqldumpversion);
 
 # Takes as argument:
 #  arg0 : the name of the dumpfile
@@ -77,6 +79,8 @@ sub BuildHeader {
 # 
 # Check $_[0].README for specifics about this table.
 # (if this file does not exist, there is nothing specific)
+# 
+# Build by $mysqldumpversion
 # 
 # Go at <https://gna.org/projects/savane> if you need information 
 # about Savane.
@@ -95,14 +99,14 @@ while (my $table = $hop -> fetchrow_array) {
     print "Extract $table structure... ";
     BuildHeader($table, $structure_suffix);
     my $dumpfile = "$output_path/".$table_prefix.$table.$structure_suffix;
-    `mysqldump --allow-keywords --skip-add-locks --no-data --complete-insert $dbname $table -u$dbuser -p$dbpasswd >> $dumpfile`;
+    `mysqldump --compatible="mysql323,mysql40" --skip-comments --allow-keywords --compact --no-data --complete-insert $dbname $table -u$dbuser -p$dbpasswd >> $dumpfile`;
     print "done\n";
 
     # Extract the table init values
     print "Extract $table initvalues... ";
     BuildHeader($table, $initvalues_suffix);
     my $dumpfile = "$output_path/".$table_prefix.$table.$initvalues_suffix;
-    `mysqldump --no-create-db --skip-add-locks --no-create-info --complete-insert $dbname $table -u$dbuser -p$dbpasswd >> $dumpfile`;
+    `mysqldump --compatible="mysql323,mysql40" --skip-comments --allow-keywords --compact  --no-create-db --no-create-info --complete-insert $dbname $table -u$dbuser -p$dbpasswd >> $dumpfile`;
     print "done\n";
 }
 

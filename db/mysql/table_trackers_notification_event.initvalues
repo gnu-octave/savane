@@ -1,4 +1,4 @@
-# This file was generated for Savane SVN (toward 2.1).
+# This file was generated for Savane SVN (toward 3.1).
 #
 # This is an SQL file necessary to create the table trackers_notification_event part of a
 # Savane database.
@@ -6,38 +6,9 @@
 # Check trackers_notification_event.README for specifics about this table.
 # (if this file does not exist, there is nothing specific)
 # 
+# Build by mysqldump  Ver 10.10 Distrib 5.0.27, for pc-linux-gnu (i486)
+# 
 # Go at <https://gna.org/projects/savane> if you need information 
 # about Savane.
 
--- MySQL dump 10.9
---
--- Host: localhost    Database: savane
--- ------------------------------------------------------
--- Server version	4.1.20
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Dumping data for table `trackers_notification_event`
---
-
-
-/*!40000 ALTER TABLE `trackers_notification_event` DISABLE KEYS */;
 INSERT INTO `trackers_notification_event` (`event_id`, `event_label`, `short_description`, `description`, `rank`) VALUES (1,'ROLE_CHANGE','Role has changed','I\'m added to or removed from this role',10),(2,'NEW_COMMENT','New comment','A new followup comment is added',20),(3,'NEW_FILE','New attachment','A new file attachment is added',30),(4,'CC_CHANGE','CC Change','A new CC address is added/removed',40),(5,'CLOSED','Item closed','The item is closed',50),(6,'PSS_CHANGE','PSS change','Priority,Status,Severity changes',60),(7,'ANY_OTHER_CHANGE','Any other Changes','Any changes not mentioned above',70),(8,'I_MADE_IT','I did it','I am the author of the change',80),(9,'NEW_ITEM','New Item','A new item has been submitted',90);
-/*!40000 ALTER TABLE `trackers_notification_event` ENABLE KEYS */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

@@ -561,7 +561,7 @@ function pagemenu_group ()
 	      $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
 					     $project->getUrl("cvs_viewcvs"));
 	    }
-	  if ($project->UsesForHomepage("cvs") && 
+	  if ($project->Uses("homepage") && 
 	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' && 
 	      $project->getUrl("cvs_viewcvs_homepage") != '')
 	    {

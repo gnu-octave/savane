@@ -2165,7 +2165,7 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
       $out .= "    _______________________________________________________\n\nFollow-up Comments:\n\n";
 
   # Loop throuh the follow-up comments and format them
-  for ($i=0; $i < $rows; $i++)
+  for ($i=$rows-1; $i >= 0; $i--)
     {
 
       $comment_type = db_result($result, $i, 'comment_type');
@@ -2393,9 +2393,9 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
   if ($fu_rows > 0) {
     # Loop throuh the follow-up comments and format them
     $fmt = "\n-----Reply from %s on %s-----\n%s\n";
-    for ($i=0; $i < $fu_rows; $i++) {
+    for ($i=$fu_rows-1; $i >= 0; $i--) {
       # prevent output of most recent if already shown
-      if ($was_followup && ($i == 0)) { continue; }
+      if ($was_followup && ($i == $fu_rows-1)) { continue; }
       if (db_result($fu_result, $i, 'realname')) {
         $name = db_result($fu_result, $i, 'realname')." <".db_result($fu_result, $i, 'user_name').">";
       } else {

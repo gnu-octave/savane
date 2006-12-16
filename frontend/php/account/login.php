@@ -33,7 +33,17 @@ register_globals_off();
 $from_brother = sane_all('from_brother');
 
 # Block here potential robots
-dnsbl_check();
+# 2006-12-04, yeupou: allows them to login, so they can post on trackers of
+# their projects. This is a compromise between the need to avoid spam by all
+# means and the fact that we still want to allow to work people in obvious
+# legit cases even if they are blacklisted.
+# They wont be able to use savane normally but only to post on the project
+# they are member of. The way to go for them is to ask their IP to be delisted,
+# not from us to maintain another list of exceptions. If they cant, it is sad*
+# but we cannot encourage this because it would defeat the whole purpose of
+# DNSbl, while DNSbl seems to be the only truly effective way to get rid of
+# spams.
+#dnsbl_check();
 
 # Logged users have no business here
 if (user_isloggedin() && !$from_brother)
@@ -67,7 +77,7 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
     }
   else # 
     {
-      fb(sprintf(_("Savane thinks your cookie are not activated for %s. To log-in, we need you to activate cookies in your web browser for this website. Please do so and click here:"), $sys_default_domain).' '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri, 1);
+      fb(sprintf(_("Savane thinks your cookies are not activated for %s. To log-in, we need you to activate cookies in your web browser for this website. Please do so and click here:"), $sys_default_domain).' '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri, 1);
     }
 }
 

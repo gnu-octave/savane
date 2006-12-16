@@ -13,6 +13,7 @@ bayes_file_mode 0666
 auto_learn 1
 score BAYES_20 2
 score BAYES_40 3
+score BAYES_50 3.5
 score BAYES_60 4
 score BAYES_80 7
 score BAYES_95 8

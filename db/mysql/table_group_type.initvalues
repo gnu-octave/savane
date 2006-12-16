@@ -1,4 +1,4 @@
-# This file was generated for Savane SVN (toward 2.1).
+# This file was generated for Savane SVN (toward 3.1).
 #
 # This is an SQL file necessary to create the table group_type part of a
 # Savane database.
@@ -6,38 +6,9 @@
 # Check group_type.README for specifics about this table.
 # (if this file does not exist, there is nothing specific)
 # 
+# Build by mysqldump  Ver 10.10 Distrib 5.0.27, for pc-linux-gnu (i486)
+# 
 # Go at <https://gna.org/projects/savane> if you need information 
 # about Savane.
 
--- MySQL dump 10.9
---
--- Host: localhost    Database: savane
--- ------------------------------------------------------
--- Server version	4.1.20
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Dumping data for table `group_type`
---
-
-
-/*!40000 ALTER TABLE `group_type` DISABLE KEYS */;
 INSERT INTO `group_type` (`type_id`, `name`, `description`, `admin_email_adress`, `base_host`, `mailing_list_host`, `can_use_homepage`, `can_use_download`, `can_use_cvs`, `can_use_arch`, `can_use_svn`, `can_use_license`, `can_use_devel_status`, `can_use_forum`, `can_use_mailing_list`, `can_use_patch`, `can_use_task`, `can_use_news`, `can_use_support`, `can_use_bug`, `is_menu_configurable_homepage`, `is_menu_configurable_download`, `is_menu_configurable_forum`, `is_menu_configurable_support`, `is_menu_configurable_mail`, `is_menu_configurable_cvs`, `is_menu_configurable_cvs_viewcvs`, `is_menu_configurable_cvs_viewcvs_homepage`, `is_menu_configurable_arch`, `is_menu_configurable_arch_viewcvs`, `is_menu_configurable_svn`, `is_menu_configurable_svn_viewcvs`, `is_menu_configurable_bugs`, `is_menu_configurable_task`, `is_menu_configurable_patch`, `is_menu_configurable_extralink_documentation`, `is_configurable_download_dir`, `homepage_scm`, `dir_type_cvs`, `dir_type_arch`, `dir_type_svn`, `dir_type_homepage`, `dir_type_download`, `dir_homepage`, `dir_cvs`, `dir_arch`, `dir_svn`, `dir_download`, `url_homepage`, `url_download`, `url_cvs_viewcvs`, `url_arch_viewcvs`, `url_svn_viewcvs`, `url_cvs_viewcvs_homepage`, `url_mailing_list_listinfo`, `url_mailing_list_subscribe`, `url_mailing_list_unsubscribe`, `url_mailing_list_archives`, `url_mailing_list_archives_private`, `url_mailing_list_admin`, `url_extralink_documentation`, `license_array`, `devel_status_array`, `mailing_list_address`, `mailing_list_virtual_host`, `mailing_list_format`, `forum_flags`, `bugs_flags`, `task_flags`, `patch_flags`, `cookbook_flags`, `support_flags`, `news_flags`, `forum_rflags`, `bugs_rflags`, `task_rflags`, `patch_rflags`, `cookbook_rflags`, `support_rflags`, `news_rflags`) VALUES (1,'Default',NULL,NULL,NULL,NULL,1,1,1,0,0,1,1,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'cvs','basiccvs','basicdirectory','basicsvn','basicdirectory','basicdirectory','/','/','/','/','/','http://','http://','http://','http://','http://','http://','http://','http://','http://','http://','http://','http://','',NULL,NULL,'@','','%NAME',2,2,2,2,2,2,3,2,2,5,2,5,2,2);
-/*!40000 ALTER TABLE `group_type` ENABLE KEYS */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

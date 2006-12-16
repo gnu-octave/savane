@@ -30,8 +30,6 @@
 use strict;
 use warnings;
 
-use IPC::Run qw(run);
-
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(SvnMakeArea SvnMakeAreaAttic SvnMakeAreaAtticWebsite );
@@ -61,9 +59,7 @@ sub SvnMakeArea {
         # giving privs to db/ is enough
 	# giving privs to hooks/ would mean giving local access
 	system('chgrp', '-R', $name, "$dir_svn/db");
-	my @find = ('find', "$dir_svn/db", '-type', 'd');
-	my @xargs = qw(xargs chmod g+w);
-	run \@find, '|', \@xargs;
+	system('chmod', '-R', 'g+w', "$dir_svn/db");
 	return ' '.$dir_svn.$warning;	
     }
     return 0;

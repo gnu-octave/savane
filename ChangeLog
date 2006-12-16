@@ -1,3 +1,16 @@
+2006-12-16  Beuc
+
+	* Merged Savane changes - bugfix about MySQL5's mysqldump using
+	MySQL5-specific instructions.
+
+2006-12-10  Beuc
+
+	* Show WWW repository ViewCVS link even if the URL differ from the
+	group type default. This puzzled users more than it helped
+	them. Possibly showing/adding the 'Homepage' link should be
+	possible - but currently the 'active features' page is a bit
+	messy.
+
 2006-12-03  Sylvain Beucler  <beuc@beuc.net>
 
 	* Lots of PHP warnings and PHP5 fixes; I try to run Savane with

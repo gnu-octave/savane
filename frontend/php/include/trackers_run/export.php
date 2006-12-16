@@ -297,7 +297,7 @@ if (sane_all("update"))
       # First add an entry in trackers_export. Create the export with the
       # status invalid (I) so it wont be handled by the backend before
       # the next step is done on the frontend side
-      $sql = "INSERT INTO trackers_export (task_id, artifact, unix_group_name , user_name, sql, status, date, frequency_day, frequency_hour) VALUES ('0', '".ARTIFACT."', '".$group_name."', '".user_getname()."', '".addslashes($export_sql)."', 'I', '".$timestamp."', '".$requested_day."', '".$requested_hour."')";
+      $sql = "INSERT INTO trackers_export (task_id, artifact, unix_group_name , user_name, `sql`, status, date, frequency_day, frequency_hour) VALUES ('0', '".ARTIFACT."', '".$group_name."', '".user_getname()."', '".addslashes($export_sql)."', 'I', '".$timestamp."', '".$requested_day."', '".$requested_hour."')";
       $result = db_query($sql);
       if (!$result)
 	{

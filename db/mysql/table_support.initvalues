@@ -1,4 +1,4 @@
-# This file was generated for Savane SVN (toward 2.1).
+# This file was generated for Savane SVN (toward 3.1).
 #
 # This is an SQL file necessary to create the table support part of a
 # Savane database.
@@ -6,38 +6,9 @@
 # Check support.README for specifics about this table.
 # (if this file does not exist, there is nothing specific)
 # 
+# Build by mysqldump  Ver 10.10 Distrib 5.0.27, for pc-linux-gnu (i486)
+# 
 # Go at <https://gna.org/projects/savane> if you need information 
 # about Savane.
 
--- MySQL dump 10.9
---
--- Host: localhost    Database: savane
--- ------------------------------------------------------
--- Server version	4.1.20
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Dumping data for table `support`
---
-
-
-/*!40000 ALTER TABLE `support` DISABLE KEYS */;
 INSERT INTO `support` (`bug_id`, `group_id`, `status_id`, `severity`, `privacy`, `discussion_lock`, `vote`, `spamscore`, `ip`, `category_id`, `submitted_by`, `assigned_to`, `date`, `summary`, `details`, `close_date`, `bug_group_id`, `resolution_id`, `category_version_id`, `platform_version_id`, `reproducibility_id`, `size_id`, `fix_release_id`, `plan_release_id`, `hours`, `component_version`, `fix_release`, `plan_release`, `priority`, `planned_starting_date`, `planned_close_date`, `percent_complete`, `keywords`, `release_id`, `release`, `originator_name`, `originator_email`, `originator_phone`, `custom_tf1`, `custom_tf2`, `custom_tf3`, `custom_tf4`, `custom_tf5`, `custom_tf6`, `custom_tf7`, `custom_tf8`, `custom_tf9`, `custom_tf10`, `custom_ta1`, `custom_ta2`, `custom_ta3`, `custom_ta4`, `custom_ta5`, `custom_ta6`, `custom_ta7`, `custom_ta8`, `custom_ta9`, `custom_ta10`, `custom_sb1`, `custom_sb2`, `custom_sb3`, `custom_sb4`, `custom_sb5`, `custom_sb6`, `custom_sb7`, `custom_sb8`, `custom_sb9`, `custom_sb10`, `custom_df1`, `custom_df2`, `custom_df3`, `custom_df4`, `custom_df5`) VALUES (100,100,100,5,1,0,0,3,NULL,100,100,100,0,NULL,NULL,NULL,100,100,100,100,100,100,100,100,0.00,'','','',5,NULL,NULL,1,'',100,'','','','','','','','','','','','','','','','','','','','','','','','',100,100,100,100,100,100,100,100,100,100,0,0,0,0,0);
-/*!40000 ALTER TABLE `support` ENABLE KEYS */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

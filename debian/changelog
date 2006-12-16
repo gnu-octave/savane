@@ -1,3 +1,18 @@
+savane (3.0+1) unstable; urgency=low
+
+  * Repackaging due to bug #7926.
+
+ -- Mathieu Roy (on behalf of Savane developers) <savane-dev@gna.org>  Mon,  4 Dec 2006 17:28:09 +0100
+
+savane (3.0) unstable; urgency=low
+
+  * New upstream release (read ChangeLog.byversion for more details) 
+  * savane-backend-spamcheck added, necessary if you want to run 
+  spamassassin checks.
+  * Note that init files may not be compliant with mysql 3.x.
+
+ -- Mathieu Roy (on behalf of Savane developers) <savane-dev@gna.org>  Mon,  4 Dec 2006 09:56:55 +0100
+
 savane (2.0) unstable; urgency=low
 
   * New upstream release (read ChangeLog.byversion for more details)

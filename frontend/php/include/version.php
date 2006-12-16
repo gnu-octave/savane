@@ -23,7 +23,7 @@
 # Should be a valid release number or
 #     SVN (toward x.x)
 #     x.x (prerelease)
-$savane_version = "3.0 (prerelease)";
+$savane_version = "SVN (toward 3.1)";
 $savane_url = "http://gna.org/projects/savane";
 
 ?>
