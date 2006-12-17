@@ -34,10 +34,6 @@ if (db_numrows($res_grp) < 1)
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 
-
-site_project_header(array('group'=>$group_id,'context'=>'ahome'));
-
-
 #echo "<pre>";
 #print_r($_POST);
 #echo "</pre>";
@@ -127,6 +123,8 @@ if (isset($_POST['log_accum'])) {
 }
 #echo "</pre>\n";
 
+
+site_project_header(array('group'=>$group_id,'context'=>'ahome'));
 
 $available_hooks = array();
 echo "<p>";

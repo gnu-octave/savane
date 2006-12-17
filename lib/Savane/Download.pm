@@ -32,7 +32,7 @@ use warnings;
 
 require Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT = qw(DownloadMakeArea DownloadMakeAreaSavannah );
+our @EXPORT = qw(DownloadMakeArea);
 our $version = 1;
 
 ## Make a download area
@@ -56,49 +56,5 @@ sub DownloadMakeArea {
 	system("chgrp", $name, $dir_download);
 	return " ".$dir_download.$warning;
     } 
-    return;
-}
-
-
-## Make a gatekeeper download area at Savannah
-## This is temporary
-sub DownloadMakeAreaSavannah {
-    my ($name,$dir_download,$is_public) = @_;
-
-    if (-e "/srv/download/$name" || !$is_public) {
-	return 1;
-    }
-
-    # print LOG strftime "[$script] %c ---- created download $name\n", localtime;
-
-    my $dir_public = "/srv/download/$name";
-    mkdir ($dir_public);
-    chmod (00755, $dir_public);
-    system('/bin/chown', "gatekpr:$name", $dir_public);
-    system('/bin/chmod', "2775", $dir_public);
-
-    # print LOG strftime "[$script] %c ---- created upload $name\n", localtime;
-
-    # create the incoming ftp dir
-    my $gatekpr_prefix = "/var/lib/gatekpr";
-    my $dir_upload = "$gatekpr_prefix/upload/incoming/savannah/$name";
-    mkdir ($dir_upload);
-    chmod (00770, $dir_upload);
-    system ('/bin/chown', 'upload:gatekpr', $dir_upload);
-
-    # print LOG strftime "[$script] %c ---- created ftp-in $name\n", localtime;
-    # print LOG strftime "[$script] %c ---- created ftp-out $name\n", localtime;
-
-    # ..and the ftp-in tmp dir
-    # ..and the ftp-out tmp dir
-    my $dir_ftpin = "$gatekpr_prefix/ftp-in/$name";
-    my $dir_ftpout = "$gatekpr_prefix/ftp-out/$name";
-    mkdir ($dir_ftpin);
-    mkdir ($dir_ftpout);
-    chmod (00770, $dir_ftpin);
-    chmod (00770, $dir_ftpout);
-    system ('/bin/chown', 'gatekpr:gatekpr', $dir_ftpin);
-    system ('/bin/chown', 'gatekpr:gatekpr', $dir_ftpout);
-
     return;
 }

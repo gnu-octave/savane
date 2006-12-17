@@ -250,3 +250,13 @@ function register_globals_off ()
 #      unset($GLOBALS[$key]); 
 #    }
 }      
+
+function sane_mysql($string) {
+  # If magic_quotes is on, count on it to escape data
+  if (get_magic_quotes_gpc()) 
+    {
+      $string = stripslashes($string);
+    } 
+  return mysql_real_escape_string($string);
+}
+

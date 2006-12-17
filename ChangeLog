@@ -4,6 +4,9 @@
 
 2006-12-16  Sylvain Beucler  <beuc@beuc.net>
 
+	* Remove Savannah-specific code from Download.pm - it's now
+	unused.
+
 	* find -name "*.php" -print0 | xargs -r0 sed -i -e
 	's/$PHP_SELF/$_SERVER['\''PHP_SELF'\'']/g'
 
