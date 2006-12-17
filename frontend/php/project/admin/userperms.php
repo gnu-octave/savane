@@ -391,7 +391,7 @@ if ($update)
 # start HTML
 site_project_header(array('title'=>_("Set Permissions"),'group'=>$group_id,'context'=>'ahome'));
 
-print form_header($PHP_SELF).
+print form_header($_SERVER['PHP_SELF']).
 form_input("hidden", "group", $group_name);
 
 ########################### POSTING RESTRICTIONS

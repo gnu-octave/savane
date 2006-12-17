@@ -24,7 +24,6 @@
 function context_guess () 
 {
   return context_guess_from_url($_SERVER['SCRIPT_NAME']);
-
 }
 
 # Get the context given the url. Fpr best efficiency, this function will 
@@ -201,7 +200,8 @@ function context_set ($context, $subcontext, $dontset=false)
     }
 
   # Defines main context, kind of pages (cvs, bug tracker...)
-  define('CONTEXT', $context);
+  if (!defined('CONTEXT'))
+    define('CONTEXT', $context);
   # Defines subcontext, kind of action done (postitem...)
   define('SUBCONTEXT', $subcontext);
 

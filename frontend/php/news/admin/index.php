@@ -48,7 +48,7 @@ if ($group_id && user_ismember($group_id,'A'))
   
   print '<h3>'._("News Tracker Email Notification Settings").'</h3>';
   print '
-<form action="'.$PHP_SELF.'" method="post">
+<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />';
   print '<span class="preinput">'._("Carbon-Copy List:").'</span><br />&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="form_news_address" VALUE="'.$row_grp['new_news_address'].'" SIZE="40" MAXLENGTH="255" />';
   print '

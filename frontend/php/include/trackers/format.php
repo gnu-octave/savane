@@ -664,7 +664,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
 	  unset($html_delete);
 	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2') && !$sober)
 	    {
-	      $html_delete = '<span class="trash"><a href="'.$PHP_SELF.'?func=delete_file&amp;item_id='.$item_id.'&amp;item_file_id='.$item_file_id.'">'.
+	      $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_file&amp;item_id='.$item_id.'&amp;item_file_id='.$item_file_id.'">'.
 		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 
@@ -835,7 +835,7 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	      (user_getemail(user_getid()) == $email) ||
 	      (user_getname(user_getid()) == db_result($result, $i, 'user_name') ))
             {
-$html_delete = '<span class="trash"><a href="'.$PHP_SELF.'?func=delete_cc&amp;item_id='.$item_id.'&amp;item_cc_id='.$item_cc_id.'">'.
+$html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_cc&amp;item_id='.$item_id.'&amp;item_cc_id='.$item_cc_id.'">'.
 		 '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 	  else

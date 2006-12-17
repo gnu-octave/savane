@@ -91,6 +91,7 @@ if (db_numrows($res) < 1)
 
 print $HTML->box_top(_("Opened Sessions"));
 
+$i = 0;
 while ($row = db_fetch_array($res))
 {
   $i++;
@@ -108,7 +109,7 @@ while ($row = db_fetch_array($res))
   print '<span class="trash">';
   if (sane_cookie("session_hash") != $row['session_hash'])
     {
-      print utils_link($PHP_SELF.'?func=del&amp;dsession_hash='.$dsession_hash.'&amp;dip_addr='.$row['ip_addr'].'&amp;dtime='.$row['time'],
+      print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dsession_hash='.$dsession_hash.'&amp;dip_addr='.$row['ip_addr'].'&amp;dtime='.$row['time'],
 		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Kill this session").'" />');
     }
   else
@@ -117,7 +118,7 @@ while ($row = db_fetch_array($res))
 
   # I18N
   # The variables are: session identifier, time, remote host
-  print sprintf(_("Session %s opened on %s from %s"), $dsession_hash, format_date($sys_datefmt, $row['time']), gethostbyaddr($row['ip_addr']))."<br />&nbsp;";
+  print sprintf(_("Session %s opened on %s from %s"), $dsession_hash, utils_format_date($row['time']), gethostbyaddr($row['ip_addr']))."<br />&nbsp;";
 
 }
 
@@ -129,7 +130,7 @@ if ($i > 3)
   $i++;
   print $HTML->box_nextitem(utils_get_alt_row_color($i));
   print '<span class="trash">';
-  print utils_link($PHP_SELF.'?func=del&amp;dkeep_one=1',
+  print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dkeep_one=1',
 		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Kill all sessions").'" />');
   print '</span>'; 
   print '<em>'._("All sessions apart from the current one").'</em><br />&nbsp;';

@@ -117,8 +117,8 @@ db_query("UPDATE user SET confirm_hash='$confirm_hash' WHERE user_id=$row_user[u
 $message = sprintf(_("Someone (presumably you) on the %s site requested a password change through email verification."),$GLOBALS['sys_default_domain']);
 $message .= ' ';
 $message .= _("If this was not you, this could pose a security risk for the system.")."\n\n";
-$message .= sprintf(_("The request came from %s"),gethostbyaddr($GLOBALS['REMOTE_ADDR']))."\n";
-$message .= '(IP: '.$GLOBALS['REMOTE_ADDR'].' port: '.$GLOBALS['REMOTE_PORT'].")\n";
+$message .= sprintf(_("The request came from %s"),gethostbyaddr($_SERVER['REMOTE_ADDR']))."\n";
+$message .= '(IP: '.$_SERVER['REMOTE_ADDR'].' port: '.$GLOBALS['REMOTE_PORT'].")\n";
 $message .= _("with").' '.$GLOBALS['HTTP_USER_AGENT']."\n\n";
 $message .= _("If you requested this verification, visit this URL\nto change your password:")."\n\n";
 $message .= $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."account/lostlogin.php?confirm_hash=".$confirm_hash."\n\n";
@@ -133,8 +133,8 @@ $message_for_admin =
 . "on ".$GLOBALS['sys_default_domain']."\n\n"
 . "Someone is maybe trying to steal a user account.\n\n"
 . "The user affected is ".$form_loginname."\n\n"
-. "The request comes from ".gethostbyaddr($GLOBALS['REMOTE_ADDR'])." "
-. "(IP: ".$GLOBALS['REMOTE_ADDR']." port: ".$GLOBALS['REMOTE_PORT'].") "
+. "The request comes from ".gethostbyaddr($_SERVER['REMOTE_ADDR'])." "
+. "(IP: ".$_SERVER['REMOTE_ADDR']." port: ".$GLOBALS['REMOTE_PORT'].") "
 . "with ".$GLOBALS['HTTP_USER_AGENT']."\n\n"
 . "Date:"
 . gmdate('D, d M Y H:i:s \G\M\T')

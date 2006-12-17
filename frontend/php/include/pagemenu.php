@@ -39,7 +39,7 @@ unset($GLOBALS['stone_age_menu_submenu_content'],
 function pagemenu ($params)
 {
   # Skip topmenu if passed as parameter
-  if ($params['notopmenu'])
+  if (isset($params['notopmenu']) && $params['notopmenu'])
     { return; }
 
   # Reset important variables
@@ -78,9 +78,9 @@ print '
   $title = context_title();
   if ($title)
     { print $title; }
-  if ($title && $params['title'] != "")
+  if ($title && !empty($params['title']))
     { print _(": "); }
-  if ($params['title'] != "")
+  if (!empty($params['title']))
     { print $params['title']; }
   print '</h2>';
   
@@ -115,9 +115,11 @@ print '
     </div>
 <!-- end pagemenu -->
 ';
-  
+
+
   # Add the stone age submenu if relevant
-  if ($GLOBALS['stone_age_menu'] && $GLOBALS['stone_age_menu_submenu_content'])
+  if (!empty($GLOBALS['stone_age_menu'])
+      && !empty($GLOBALS['stone_age_menu_submenu_content']))
     {
       $scope = _("Submenu");
       print '<!--stone age submenu begin --><br />
@@ -131,7 +133,6 @@ print '
     </div>
 <!-- end stone age subemenu -->
 ';
-    
     }
 
   # Here we do something quite strange to avoid an overlap of the menu:
@@ -158,7 +159,7 @@ function pagemenu_submenu_title ($title, $url, $selected=0, $available=1, $help=
   # the current submenu
   # As the current code was not planned to be forced to make context guessing
   # for submenus, we are forced to do it in a quite awkward way
-  if ($GLOBALS['stone_age_menu'])
+  if (!empty($GLOBALS['stone_age_menu']))
     {
       $GLOBALS['stone_age_menu_lastcontext'] = context_guess_from_url($url, true);
     }
@@ -307,9 +308,9 @@ function pagemenu_group ()
       $GLOBALS['group_name'] = $GLOBALS['sys_unix_group_name'];
     }
   
-  unset($is_admin);
+  $is_admin = FALSE;
   if (member_check(0, $group_id, 'A'))
-    { $is_admin = 1; }
+    { $is_admin = TRUE; }
 
   $project = project_get_object($group_id);
   if ($project->isError())
@@ -424,7 +425,7 @@ function pagemenu_group ()
 			     _("List existing Mailing Lists"));
       if ($is_admin)
 	{
-	  unset($ret);
+	  $ret = '';
 	  $ret .= 
 	    pagemenu_submenu_entry(_("Browse"),
 				   $GLOBALS['sys_home'].'mail/?group='.$project->getUnixName(),
@@ -451,7 +452,9 @@ function pagemenu_group ()
       $project->UsesForHomepage("svn"))
     {
       # If it uses only one SCM, main link points to it
-      unset($cvs, $svn, $arch);
+      $cvs = FALSE;
+      $svn = FALSE;
+      $arch = FALSE;
       if ($project->Uses("cvs") || $project->UsesForHomepage("cvs"))
 	{ $cvs = 1; }
       if ($project->Uses("arch") || $project->UsesForHomepage("arch"))
@@ -487,7 +490,8 @@ function pagemenu_group ()
 				 _("Source Code Management"));
 	}
       
-      unset($ret, $count);
+      $ret = '';
+      $count = 0;
       
 
       if ($svn)
@@ -622,7 +626,7 @@ function pagemenu_group ()
 			     CONTEXT == 'news',
 			     1,
 			     _("Read latest News, post News"));
-      unset($ret);
+      $ret = '';
       $ret .= pagemenu_submenu_entry(_("Browse"),
 				     $GLOBALS['sys_home'].'news/?group='.$project->getUnixName());
       $ret .= pagemenu_submenu_entry(_("Submit"),
@@ -654,13 +658,13 @@ function pagemenu_group_trackers ($tracker)
 {
   global $project, $group_id, $sys_group_id;
 
-  unset($is_admin);
+  $is_admin = FALSE;
   if (member_check(0, $group_id, 'A'))
-    { $is_admin = 1; }
+    { $is_admin = TRUE; }
   
   # FIXME: this should first check if the standard savane tool is used 
 
-  unset($ret);
+  $ret = '';
   if ($tracker == "bugs" ||
       $tracker == "support" ||
       $tracker == "patch" ||
@@ -819,7 +823,7 @@ function pagemenu_siteadmin ()
 			 SUBCONTEXT == 'manage');
 
   # If the current page shows a group edition page, add extra links
-  unset($extralinks);
+  $extralinks = '';
   if (SUBCONTEXT == 'manage' && $GLOBALS['group_name'])
     {
       

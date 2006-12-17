@@ -51,6 +51,7 @@ function people_show_category_table()
   $title_arr=array();
   $title_arr[]=_("Category");
 
+  $return = '';
   $return .= html_build_list_table_top ($title_arr);
 
   $sql="SELECT * FROM people_job_category ORDER BY category_id";
@@ -81,6 +82,7 @@ function people_show_grouptype_table()
   $title_arr=array();
   $title_arr[]=_("Project type");
 
+  $return = '';
   $return .= html_build_list_table_top ($title_arr);
   $sql="SELECT group_type.type_id, group_type.name, COUNT(people_job.job_id) AS count FROM group_type JOIN (groups JOIN people_job ON groups.group_id = people_job.group_id) ON group_type.type_id = groups.type GROUP BY type_id ORDER BY type_id";
   $result=db_query($sql);
@@ -265,8 +267,6 @@ function people_verify_job_group($job_id,$group_id)
 
 function people_edit_job_inventory($job_id,$group_id)
 {
-
-  global $PHP_SELF;
   $sql="SELECT *,people_skill.name AS skill_name FROM people_job_inventory,people_skill WHERE job_id='$job_id' AND people_skill.skill_id=people_job_inventory.skill_id";
 
   $result=db_query($sql);
@@ -291,7 +291,7 @@ function people_edit_job_inventory($job_id,$group_id)
       for ($i=0; $i < $rows; $i++)
 	{
 	  print '
-			<form action="'.$PHP_SELF.'" method="POST">
+			<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
 			<input type="HIDDEN" name="job_inventory_id" value="'. db_result($result,$i,'job_inventory_id') .'" />
 			<input type="HIDDEN" name="job_id" value="'. db_result($result,$i,'job_id') .'" />
 			<input type="HIDDEN" name="group_id" value="'.$group_id.'" />
@@ -312,7 +312,7 @@ function people_edit_job_inventory($job_id,$group_id)
 
   print '
 	<tr><td colspan="4"><h3>'._("Add A New Skill").'</h3></td></tr>
-	<form action="'.$PHP_SELF.'" method="POST">
+	<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
 	<input type="HIDDEN" name="job_id" value="'. $job_id .'" />
 	<input type="HIDDEN" name="group_id" value="'.$group_id.'" />
 	<tr class="'. utils_get_alt_row_color($i) .'">
@@ -341,6 +341,7 @@ function people_show_job_list($result, $edit=0)
   $title_arr[]=_("Project");
   $title_arr[]=_("Type");
 
+  $return = '';
   $return .= html_build_list_table_top ($title_arr);
 
   $rows=db_numrows($result);
@@ -544,7 +545,6 @@ function people_show_skill_inventory($user_id)
 
 function people_edit_skill_inventory($user_id)
 {
-  global $PHP_SELF;
   $sql="SELECT *,people_skill.name AS skill_name FROM people_skill_inventory,people_skill WHERE user_id='$user_id' and people_skill.skill_id=people_skill_inventory.skill_id";
   $result=db_query($sql);
 
@@ -556,6 +556,7 @@ function people_edit_skill_inventory($user_id)
 
   print html_build_list_table_top ($title_arr);
 
+  $i = 0;
   $rows=db_numrows($result);
   if (!$result )  {
     print '<tr><td colspan="4"><p class="warn">('._("SQL Error:").')';
@@ -571,7 +572,7 @@ function people_edit_skill_inventory($user_id)
       for ($i=0; $i < $rows; $i++)
 	{
 	  print '
-			<form action="'.$PHP_SELF.'" method="POST">
+			<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
 			<input type="hidden" name="skill_inventory_id" value="'.db_result($result,$i,'skill_inventory_id').'" />
 			<tr class="'. utils_get_alt_row_color($i) .'">
 				<td><span class="smaller">'. db_result($result,$i,'skill_name') .'</span></td>
@@ -591,7 +592,7 @@ function people_edit_skill_inventory($user_id)
 
   print '
 	<tr><td colspan="4"><h3>'._("Add A New Skill").'</h3></td></tr>
-	<form action="'.$PHP_SELF.'" method="POST">
+	<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
 	<tr class="'. utils_get_alt_row_color($i) .'">
 		<td><span class="smaller">'. people_skill_box('skill_id'). '</span></td>
 		<td><span class="smaller">'. people_skill_level_box('skill_level_id'). '</span></td>

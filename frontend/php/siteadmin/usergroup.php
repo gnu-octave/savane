@@ -92,7 +92,7 @@ $row_user = db_fetch_array($res_user);
 Savannah User Group Edit for user: <strong><?php print $user_id . ": " . user_getname($user_id); ?></strong>
 <p>
 Account Info:
-<FORM method="post" action="<?php echo $PHP_SELF; ?>">
+<FORM method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <INPUT type="hidden" name="action" value="update_user">
 <INPUT type="hidden" name="user_id" value="<?php print $user_id; ?>">
 
@@ -131,7 +131,7 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 			. "[Remove User from Group]</a>");
 		// editing for flags
 		?>
-		<form action="<?php echo $PHP_SELF; ?>" method="post">
+		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 		<INPUT type="hidden" name="action" value="update_user_group">
 		<input name="user_id" type="hidden" value="<?php print $user_id; ?>">
 		<input name="group_id" type="hidden" value="<?php print $row_cat[group_id]; ?>">
@@ -151,7 +151,7 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 ?>
 <hr>
 <P>
-<form action="<?php echo $PHP_SELF; ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <INPUT type="hidden" name="action" value="add_user_to_group">
 <input name="user_id" type="hidden" value="<?php print $user_id; ?>">
 <p>

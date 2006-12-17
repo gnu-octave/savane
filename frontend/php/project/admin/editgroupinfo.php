@@ -66,7 +66,7 @@ site_project_header(array('title'=>_("Editing Public Info"),'group'=>$group_id,'
 
 # ####################################### General Description
 
-print form_header($PHP_SELF)
+print form_header($_SERVER['PHP_SELF'])
      .form_input("hidden", "group_id", $group_id);
 
 print '

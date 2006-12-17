@@ -1,4 +1,4 @@
-<?php
+<?php # -*- PHP -*-
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -33,7 +33,7 @@ function project_get_object($group_id)
   #saves a little wear on the database
 
   global $PROJECT_OBJ;
-  if (!$PROJECT_OBJ["_".$group_id."_"]) {
+  if (empty($PROJECT_OBJ["_".$group_id."_"])) {
     $PROJECT_OBJ["_".$group_id."_"]= new Project($group_id);
     return $PROJECT_OBJ["_".$group_id."_"];
   } else {
@@ -46,7 +46,6 @@ class Group extends Error
 {
   
   #associative array of data from db
-  var $project_data_array;
   var $data_array;
   var $type_data_array;
   var $group_id;
@@ -62,7 +61,7 @@ class Group extends Error
       $this->Error();
       $this->group_id=$id;
       $this->db_result=db_query("SELECT * FROM groups WHERE group_id='$id'");
-      if (db_numrows($this->db_result) < 1) 
+      if (db_numrows($this->db_result) < 1)
 	{
 	  #function in class we extended
 	  $this->setError('Group Not Found');
@@ -72,26 +71,22 @@ class Group extends Error
 	{
 	  #set up an associative array for use by other functions
 	  $this->data_array=db_fetch_array($this->db_result);
+	  // find group_type informations
+	  $type = $this->data_array['type'];
+	  $this->type_id = $type;
+	  $this->db_type_result = db_query("SELECT * FROM group_type WHERE type_id='$type'");
+	  if (db_numrows($this->db_type_result) < 1) 
+	    {
+	      // fuction in class we extended                         
+	      //$that->setError('Group Type Not Found');
+	      $this->type_data_array=array();
+	    } 
+	  else 
+	    {
+	      // set up an associative array for
+	      $this->type_data_array=db_fetch_array($this->db_type_result);
+	    }
 	}
-      # find group_type informations
-      #$that->Error();
-      $type=$this->data_array['type'];
-      $this->type_id=$type;
-      $this->db_type_result=db_query("SELECT * FROM group_type WHERE type_id='$type'");
-      if (db_numrows($this->db_type_result) < 1) 
-	{
-	  #fuction in class we extended                         
-	  #$that->setError('Group Type Not Found');
-	  $this->type_data_array=array();
-	} 
-      else 
-	{
-	  #set up an associative array for
-	  $this->type_data_array=db_fetch_array($this->db_type_result);
-	}
-      
-      
-      
     }
   
   # Return database result handle for direct access
@@ -145,11 +140,11 @@ class Group extends Error
       # tolerates "bugs" to say "bug"
       if ($artifact == "bugs")
 	{ $artifact = "bug"; }
-      return $this->type_data_array['can_use_'.$artifact]; 
+      return sane_chk($this->type_data_array['can_use_'.$artifact]);
     }
 
   function CanModifyUrl($artifact)
-    { return $this->type_data_array['is_menu_configurable_'.$artifact]; }
+    { return sane_chk($this->type_data_array['is_menu_configurable_'.$artifact]); }
 
   function CanModifyDir($artifact)
     { return $this->type_data_array['is_configurable_'.$artifact]; }
@@ -206,11 +201,6 @@ class Group extends Error
   #           will return "1". 
   ###########################################
  
-  function Project($id) {
-    $this->Group($id);
-    $this->project_data_array=$this->data_array;
-  }
-
   # ######################
   # General information
 
@@ -259,15 +249,15 @@ class Group extends Error
     { return $this->data_array['register_time']; }  
 
   function getLicense() {
-    return $this->project_data_array['license'];
+    return $this->data_array['license'];
   }
 
   function getLicense_other() {
-    return $this->project_data_array['license_other'];
+    return $this->data_array['license_other'];
   }
                                                                                 
   function getDevelStatus() {
-    return $this->project_data_array['devel_status'];
+    return $this->data_array['devel_status'];
   }
   function getGPGKeyring() 
     { return $this->data_array['registered_gpg_keys']; }
@@ -280,8 +270,8 @@ class Group extends Error
     {
       # similar to getArtifactUrl but refers to GroupType in case nothing
       # is special, not to Savane core tools.
-      if ($this->project_data_array['url_'.$artifact] != "")
-	{ return $this->project_data_array['url_'.$artifact]; }
+      if ($this->data_array['url_'.$artifact] != "")
+	{ return $this->data_array['url_'.$artifact]; }
       else
 	{ return $this->getTypeUrl($artifact); }
     }
@@ -295,8 +285,8 @@ class Group extends Error
       # test is not very exciting.
       # And it can be justified anyway to keep a value entered already.
       # The best would be the software to list conflicting cases to sysadmin.
-      if (!$this->data_array['url_'.$artifact])
-	{ return $GLOBALS[sys_home].$artifact.'/?group='.sane_all("group_name"); }
+      if (empty($this->data_array['url_'.$artifact]))
+	{ return $GLOBALS['sys_home'].$artifact.'/?group='.sane_all("group_name"); }
       else 
 	{ return $this->data_array['url_'.$artifact]; }
     }
@@ -307,8 +297,8 @@ class Group extends Error
       # set, it would defeat the purpose of group types.
       # As a matter of fact, this function will be rarely used, as
       # directories are backend specific.
-      if ($this->project_data_array['dir_'.$artifact] != "")
-	{ return $this->project_data_array['dir_'.$artifact]; }
+      if ($this->data_array['dir_'.$artifact] != "")
+	{ return $this->data_array['dir_'.$artifact]; }
       else
 	{ return $this->getTypeDir($artifact); }
     }
@@ -316,8 +306,8 @@ class Group extends Error
 
   function Uses($artifact) 
     { 
-      if ($this->project_data_array['use_'.$artifact] != "")
-	{ return $this->project_data_array['use_'.$artifact]; }
+      if ($this->data_array['use_'.$artifact] != "")
+	{ return $this->data_array['use_'.$artifact]; }
       else
 	{ return $this->CanUse($artifact); }
     }
@@ -331,8 +321,8 @@ class Group extends Error
       #   - the projet url must be empty or equal to the group setting
       if ($this->Uses("homepage") &&
 	  $this->type_data_array['homepage_scm'] == $artifact &&
-	  ($this->project_data_array['url_homepage'] == "" ||
-	   $this->project_data_array['url_homepage'] == $this->getTypeUrl('homepage'))) 
+	  ($this->data_array['url_homepage'] == "" ||
+	   $this->data_array['url_homepage'] == $this->getTypeUrl('homepage'))) 
 	{
 	  return true;
 	}
@@ -363,46 +353,46 @@ class Group extends Error
   # #### Mail notification related ####
 
   function getNewBugAddress() {
-    return $this->project_data_array['new_bug_address'];
+    return $this->data_array['new_bug_address'];
   }
 
   function getGNU() {
-    return $this->project_data_array['gnu'];
+    return $this->data_array['gnu'];
   }
 
   function getNewSupportAddress() {
-    return $this->project_data_array['new_support_address'];
+    return $this->data_array['new_support_address'];
   }
 
   function getNewTaskAddress() {
-    return $this->project_data_array['new_task_address'];
+    return $this->data_array['new_task_address'];
   }
 
   function getHtmlCVS() {
-    return $this->project_data_array['html_cvs'];
+    return $this->data_array['html_cvs'];
   }
 
   function getNewPatchAddress() {
-    return $this->project_data_array['new_patch_address'];
+    return $this->data_array['new_patch_address'];
   }
 
 
   #  boolean flags to determine whether or not to send
   #	an email on every bug/patch/support update
   function sendAllBugUpdates() {
-    return $this->project_data_array['send_all_bugs'];
+    return $this->data_array['send_all_bugs'];
   }
 
   function sendAllSupportUpdates() {
-    return $this->project_data_array['send_all_support'];
+    return $this->data_array['send_all_support'];
   }
 
   function sendAllTasksUpdates() {
-    return $this->project_data_array['send_all_tasks'];
+    return $this->data_array['send_all_tasks'];
   }
 
   function sendAllPatchUpdates() {
-    return $this->project_data_array['send_all_patches'];
+    return $this->data_array['send_all_patches'];
   }
 
 
@@ -619,42 +609,42 @@ function group_get_artifact_url ($artifact, $hostname=1)
   # return the standard url for an artifact
   if ($artifact == "homepage") 
     {  
-      return $GLOBALS[project]->getTypeUrl("homepage"); 
+      return $GLOBALS['project']->getTypeUrl("homepage"); 
     }
   else if ($artifact == "download") 
     {  
-      return $GLOBALS[project]->getTypeUrl("download"); 
+      return $GLOBALS['project']->getTypeUrl("download"); 
     }
   else if ($artifact == "cvs_viewcvs") 
     { 
-      return $GLOBALS[project]->getTypeUrl("cvs_viewcvs"); 
+      return $GLOBALS['project']->getTypeUrl("cvs_viewcvs"); 
     }
   else if ($artifact == "cvs_viewcvs_homepage") 
     {  
-      return $GLOBALS[project]->getTypeUrl("cvs_viewcvs_homepage"); 
+      return $GLOBALS['project']->getTypeUrl("cvs_viewcvs_homepage"); 
     }
   else if ($artifact == "arch_viewcvs") 
     {  
-      return $GLOBALS[project]->getTypeUrl("arch_viewcvs"); 
+      return $GLOBALS['project']->getTypeUrl("arch_viewcvs"); 
     }
   else if ($artifact == "svn_viewcvs") 
     {  
-      return $GLOBALS[project]->getTypeUrl("svn_viewcvs"); 
+      return $GLOBALS['project']->getTypeUrl("svn_viewcvs"); 
     }
   else 
     {
       if ($hostname) 
 	{
-	  if ($GLOBALS[project]->getTypeBaseHost()) 
-	    { $host = $GLOBALS[project]->getTypeBaseHost();	} 
+	  if ($GLOBALS['project']->getTypeBaseHost()) 
+	    { $host = $GLOBALS['project']->getTypeBaseHost();	} 
 	  else 
-	    { $host = $GLOBALS['HTTP_HOST']; }
+	    { $host = $_SERVER['HTTP_HOST']; }
 	  
-	  return "http://".$host.$GLOBALS[sys_home].$artifact.'/?group='.sane_all("group_name");
+	  return "http://".$host.$GLOBALS['sys_home'].$artifact.'/?group='.sane_all("group_name");
 	}
       else
 	{
-	  return $GLOBALS[sys_home].$artifact.'/?group='.sane_all("group_name");
+	  return $GLOBALS['sys_home'].$artifact.'/?group='.sane_all("group_name");
 	}
     }
 

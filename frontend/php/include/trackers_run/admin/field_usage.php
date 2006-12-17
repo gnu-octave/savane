@@ -110,7 +110,7 @@ if ($group_id && user_ismember($group_id,'A')) {
       ######
       ## General stuff
 
-      print '<form action="'.$PHP_SELF.'" method="post">';
+      print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
       print '<input type="hidden" name="post_changes" value="y" />
       <input type="hidden" name="field" value="'.$field.'" />
       <input type="hidden" name="group_id" value="'.$group_id.'" />
@@ -382,7 +382,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 			   _("System"):_("Project"));
 	  $place_label = ($is_used?trackers_data_get_place($field_name):'-');
 
-	  $html = '<td><a href="'.$PHP_SELF.'?group_id='.$group_id.
+	  $html = '<td><a href="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.
 	     '&update_field=1&field='.$field_name.'">'.
 	     trackers_data_get_label($field_name).'</a></td>'.
 	     "\n<td>".trackers_data_get_display_type_in_clear($field_name).'</td>'.

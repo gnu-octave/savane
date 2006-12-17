@@ -129,7 +129,7 @@ if (user_isloggedin())
 	<P>
 	<H3>Send a Message to the Mailing List Server</H3>
 	<P>
-	<FORM ACTION="<?php print $PHP_SELF ?>?func=send" METHOD="POST">
+	<FORM ACTION="<?php print $_SERVER['PHP_SELF'] ?>?func=send" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $group_id ?>">
 	<INPUT TYPE="HIDDEN" NAME="list_id" VALUE="<?php print $list_id ?>">
 	<INPUT TYPE="HIDDEN" NAME="list" VALUE="<?php print $list_name ?>">

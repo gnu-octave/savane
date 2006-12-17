@@ -258,7 +258,7 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 
       # 1. Restrict to groups the users belongs to  
       # 2. Do a simple SQL count if the group is supposed to be hidden
-      unset($restrict_to_groups);
+      $restrict_to_groups = '';
       reset($usergroups_groupid);
       while (list(,$current_group_id) = each($usergroups_groupid))
 	{
@@ -384,7 +384,7 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
       
       # Go thru the list of groups the user belongs to
       # to find out if any is relevant
-      unset($restrict_to_groups);
+      $restrict_to_groups = NULL;
       reset($usergroups_groupid);
       while (list(,$current_group_id) = each ($usergroups_groupid))
 	{

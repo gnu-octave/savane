@@ -29,7 +29,7 @@ $USER_RES=array();
 function user_isloggedin() 
 {
   global $G_USER;
-  if (isset($G_USER['user_id']) and $G_USER['user_id'] > 0)
+  if (!empty($G_USER['user_id']))
     {
       return true;
     } 
@@ -54,7 +54,7 @@ function user_can_be_super_user()
     {
       if (user_isloggedin()) 
 	{
-	  $sql="SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='".$GLOBALS[sys_group_id]."' AND admin_flags='A'";
+	  $sql="SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='".$GLOBALS['sys_group_id']."' AND admin_flags='A'";
 	  $result=db_query($sql);
 	  if (!$result || db_numrows($result) < 1) 
 	    {
@@ -82,7 +82,7 @@ function user_is_super_user()
   # User is superuser only if he wants to, otherwise he's going to see
   # things like any other user + a link in the left menu
   if (user_can_be_super_user() && 
-      $_COOKIE["session_su"] == "wannabe")
+      sane_chk($_COOKIE["session_su"]) == "wannabe")
     { 
       return true;
     }
@@ -177,12 +177,12 @@ function user_getname($user_id=0, $getrealname=0)
       }
 
       # else must lookup name
-      if ($USER_NAMES["user_$user_id"] &&  $getrealname == 0)
+      if (!empty($USER_NAMES["user_$user_id"]) &&  $getrealname == 0)
 	{
 	  #user name was fetched previously
 	  return $USER_NAMES["user_$user_id"];
 	}
-      elseif ($USER_NAMES["realname_$user_id"] && $getrealname != 0)
+      elseif (!empty($USER_NAMES["realname_$user_id"]) && $getrealname != 0)
 	{
 	  #user name was fetched previously
 	  return $USER_NAMES["realname_$user_id"];
@@ -290,7 +290,7 @@ function user_get_result_set($user_id)
   #so it doesn't have to be fetched each time
   
   global $USER_RES;
-  if (!$USER_RES["_".$user_id."_"]) 
+  if (empty($USER_RES["_".$user_id."_"]))
     {
       $USER_RES["_".$user_id."_"]=db_query("SELECT * FROM user WHERE user_id='$user_id'");
       return $USER_RES["_".$user_id."_"];

@@ -30,9 +30,9 @@ require $GLOBALS['sys_www_topdir']."/include/vars.php";
 
 
 # if we are at wrong url, redirect
-if (strcasecmp($HTTP_HOST, $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())
+if (strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())
 {
-  header ("Location: http".(session_issecure()?'s':'')."://".$project->getTypeBaseHost().$PHP_SELF);
+  header ("Location: http".(session_issecure()?'s':'')."://".$project->getTypeBaseHost().$_SERVER['PHP_SELF']);
   exit;
 }
 
@@ -63,14 +63,14 @@ if ($adminsnum > 0)
     while ($row_admin = db_fetch_array($res_admin))
       {
         print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-        print "&nbsp; - ".utils_link($GLOBALS['sys_home']."users/".$row_admin[user_name], $row_admin[realname]);
+        print "&nbsp; - ".utils_link($GLOBALS['sys_home']."users/".$row_admin['user_name'], $row_admin['realname']);
       }
   }
 
 #count of developers on this project
 $membersnum = db_fetch_array(db_query("SELECT COUNT(*) AS count FROM user_group WHERE group_id=$group_id AND admin_flags<>'P' AND admin_flags<>'SQD'"));
 print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-printf(ngettext("%s member", "%s members", $membersnum[count]),'<strong>'.$membersnum[count].'</strong>');
+printf(ngettext("%s member", "%s members", $membersnum['count']),'<strong>'.$membersnum['count'].'</strong>');
 
 # if member = 1, it's obviously (or it should be) the project admin
 # if there's no admin, we need to get access to the list
@@ -134,7 +134,7 @@ else
       }
   }
 
-print '<p>'._("Registration Date")._(": ").' '.format_date($sys_datefmt,$project->getStartDate())."\n";
+print '<p>'._("Registration Date")._(": ").' '.utils_format_date($project->getStartDate())."\n";
 
 if ($project->CanUse("license"))
 {
@@ -187,7 +187,9 @@ if ($project->Uses("news")) {
 # ############################## ADMIN AREA ###########################
 # #######################################################################
 
-if ($GLOBALS[sys_group_id] == $group_id)
+$odd = 0;
+$even = 1;
+if ($GLOBALS['sys_group_id'] == $group_id)
 {
   if (member_check(0, $group_id, 'A'))
     {
@@ -195,12 +197,12 @@ if ($GLOBALS[sys_group_id] == $group_id)
       print $HTML->box_top(sprintf(_("Administration: %s server"), $GLOBALS['sys_name']));
       print '<div class="justify">'.sprintf(_("Since you are administrator of this project, which one is the \"system project\", you are administrator of the whole %s server."), $GLOBALS['sys_name']).'</div>';
 
-      print $HTML->box_nextitem(utils_get_alt_row_color($i));
+      print $HTML->box_nextitem(utils_get_alt_row_color($odd));
 
       print utils_link($GLOBALS['sys_home'].'admin/',
 		      html_image("admin.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Server Admin"))).'&nbsp;'._("Server Main Administration Page"));
 
-      print $HTML->box_nextitem(utils_get_alt_row_color($i+1));
+      print $HTML->box_nextitem(utils_get_alt_row_color($even));
 
       print utils_link($GLOBALS['sys_home'].'task/?group='.$GLOBALS['sys_unix_group_name'].'&amp;category_id=1&amp;status_id=1&amp;set=custom',
 		       html_image("admin.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Server Admin"))).'&nbsp;'._("Pending Projects List"));
@@ -218,7 +220,7 @@ if (member_check(0, $group_id, 'A'))
   print $HTML->box_top(sprintf(_("Administration: %s project"), $project->getName()));
   print '<div class="justify">'._("As administrator of this project, you can manage members and activate, deactivate and configure your project's tools.").'</div>';
 
-  print $HTML->box_nextitem(utils_get_alt_row_color($i));
+  print $HTML->box_nextitem(utils_get_alt_row_color($odd));
 
   print utils_link($GLOBALS['sys_home'].'project/admin/?group='.$group_name,
 		  html_image("main.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Admin Page"))).'&nbsp;'._("Project Main Administration Page"));
@@ -298,7 +300,7 @@ specific_makesep();
 print utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group_name,
 	 html_image("people.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Memberlist')).'&nbsp;'._("Project Memberlist"));
 print " (";
-printf(ngettext("%s member", "%s members", $membersnum[count]), "<strong>$membersnum[count]</strong>");
+printf(ngettext("%s member", "%s members", $membersnum['count']), "<strong>{$membersnum['count']}</strong>");
 print ")";
 $i++;
 
@@ -318,7 +320,7 @@ print '<br />';
 
 # ################################## COMMUNICATION
 
-if ($GLOBALS[sys_unix_group_name] == $group_name ||
+if ($GLOBALS['sys_unix_group_name'] == $group_name ||
     $project->Uses("support") ||
     $project->Uses("forum") ||
     $project->usesMail() ||
@@ -346,11 +348,11 @@ if ($GLOBALS[sys_unix_group_name] == $group_name ||
 
 
         print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
 	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id");
 	$row_count = db_fetch_array($res_count);
 	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
         print ")\n";
 
 	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));
@@ -380,14 +382,14 @@ if ($GLOBALS[sys_unix_group_name] == $group_name ||
 			      . "AND forum_group_list.is_public=1");
 	$row_count = db_fetch_array($res_count);
 	print " (";
-        printf(ngettext("%s message in", "%s messages in", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s message in", "%s messages in", $row_count['count']), "<strong>{$row_count['count']}</strong>");
 
 	$res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
 			      . "AND is_public=1");
 	$row_count = db_fetch_array($res_count);
 
         print " ";
-	printf(ngettext("%s forum", "%s forums", $row_count[count]), "<strong>$row_count[count]</strong>");
+	printf(ngettext("%s forum", "%s forums", $row_count['count']), "<strong>{$row_count['count']}</strong>");
         print ")\n";
       }
     $i++;
@@ -406,7 +408,7 @@ if ($GLOBALS[sys_unix_group_name] == $group_name ||
       $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
       $row_count = db_fetch_array($res_count);
       print " (";
-      printf(ngettext("%s public mailing-list", "%s public mailing-lists", $row_count[count]), "<strong>$row_count[count]</strong>");
+      printf(ngettext("%s public mailing-list", "%s public mailing-lists", $row_count['count']), "<strong>{$row_count['count']}</strong>");
       print ")";
 
       $i++;
@@ -523,11 +525,11 @@ if ($project->Uses("patch") ||
 	$row_count = db_fetch_array($res_count);
 
         print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
 	$res_count = db_query("SELECT count(*) AS count FROM bugs WHERE group_id=$group_id");
 	$row_count = db_fetch_array($res_count);
 	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
         print ")\n";
 
 	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));
@@ -553,11 +555,11 @@ if ($project->Uses("patch") ||
 	$row_count = db_fetch_array($res_count);
 
 	print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
 	$res_count = db_query("SELECT count(*) AS count FROM task WHERE group_id=$group_id");
 	$row_count = db_fetch_array($res_count);
 	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
         print ")\n";
 
 	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));
@@ -583,11 +585,11 @@ if ($project->Uses("patch") ||
 	$row_count = db_fetch_array($res_count);
 
         print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
 	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id");
 	$row_count = db_fetch_array($res_count);
 	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count[count]), "<strong>$row_count[count]</strong>");
+        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
         print ")\n";
 
 	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));

@@ -277,9 +277,10 @@ function html_anchor ($content, $name)
 # Print out the feedback
 function html_feedback_top()
 {
+  global $feedback, $ffeedback;
   # Escape the html special chars, active markup
-  $GLOBALS['feedback'] = markup_basic(htmlspecialchars($GLOBALS['feedback']));
-  $GLOBALS['ffeedback'] = markup_basic(htmlspecialchars($GLOBALS['ffeedback']));
+  $feedback = markup_basic(htmlspecialchars($feedback));
+  $ffeedback = markup_basic(htmlspecialchars($ffeedback));
 
   $script_hide = 'onclick="document.getElementById(\'feedback\').style.visibility=\'hidden\'; document.getElementById(\'feedbackback\').style.visibility=\'visible\';"';
   $script_show = 'onclick="document.getElementById(\'feedback\').style.visibility=\'visible\'; document.getElementById(\'feedbackback\').style.visibility=\'hidden\';"';
@@ -346,12 +347,11 @@ function html_image ($src,$args,$display=1)
     }
 
   # ## insert a border tag if there isn't one
-  if (!isset($args['border']) or !$args['border']) $return .= (' border="0"');
+  if (empty($args['border'])) $return .= (' border="0"');
 
 
   # ## if no height AND no width tag, insert em both
-  if ((!isset($args['height']) or !$args['height'])
-      and (!isset($args['width']) or !$args['width']))
+  if (empty($args['height']) and empty($args['width']))
     {
 
      #Check to see if we've already fetched the image data
@@ -455,6 +455,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 		The third parameter is optional. Pass the value of the item that should be checked
   */
 
+  $return = '';
   $return .= '
 		<select name="'.$select_name.'">';
 
@@ -528,6 +529,7 @@ function html_build_select_box_from_arrays ($vals,
 
 
 
+  $return = '';
   $return .= '
 		<select name="'.$select_name.'">';
 
@@ -961,15 +963,15 @@ function html_build_checkbox ($name, $is_checked=0)
 # Catch all header functions
 function html_header($params)
 {
-  global $HTML;
+  global $HTML, $feedback;
   print $HTML->header($params);
-  print html_feedback_top($GLOBALS['feedback']);
+  print html_feedback_top($feedback);
 }
 
 function html_footer($params)
 {
-  global $HTML;
-  print html_feedback_bottom($GLOBALS['feedback']);
+  global $HTML, $feedback;
+  print html_feedback_bottom($feedback);
   $HTML->footer($params);
 }
 

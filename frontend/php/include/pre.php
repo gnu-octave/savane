@@ -57,8 +57,10 @@ foreach ($GLOBALS as $key => $value)
 # Default values, so they cannot be found undefined in the code
 $sys_name = 'ChangeMyName';
 $sys_logo_name = 'floating.png';
-$sys_debug_on = 0;
-$sys_use_google = 0;
+$sys_debug_on = FALSE;
+$sys_use_google = FALSE;
+$sys_use_pamauth = FALSE;
+$stone_age_menu = FALSE;
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))
@@ -121,7 +123,7 @@ function require_directory ($module)
 {
   if ($module=="")
     { return; }
-  if (isset($GLOBALS['directory_'.$module.'_is_loaded']))
+  if (!empty($GLOBALS['directory_'.$module.'_is_loaded']))
     { return; }
 
   $dir = $GLOBALS['sys_www_topdir'].'/include/'.$module;
@@ -177,73 +179,73 @@ function get_module_include_dir ($phpself, $true_artifact=0, $true_dir=0)
 **************************************************************/
 
 # sanitize user input, focusing register globals set to off
-require $GLOBALS['sys_www_topdir'].'/include/sane.php';
+require dirname(__FILE__).'/sane.php';
 
 # version info
-require $GLOBALS['sys_www_topdir'].'/include/version.php';
+require dirname(__FILE__).'/version.php';
 
 # i18n setup
-require $GLOBALS['sys_www_topdir'].'/include/i18n.php';
+require dirname(__FILE__).'/i18n.php';
 
 # base error library for new objects
-require $GLOBALS['sys_www_topdir'].'/include/Error.class';
+require dirname(__FILE__).'/Error.class';
 
 # database abstraction
-require $GLOBALS['sys_www_topdir'].'/include/database.php';
+require dirname(__FILE__).'/database.php';
 
 # user functions like get_name, logged_in, etc
-require $GLOBALS['sys_www_topdir'].'/include/user.php';
+require dirname(__FILE__).'/user.php';
 
 # various utilities
-require $GLOBALS['sys_www_topdir'].'/include/utils.php';
+require dirname(__FILE__).'/utils.php';
 
 # security library
-require $GLOBALS['sys_www_topdir'].'/include/session.php';
+require dirname(__FILE__).'/session.php';
 
 # theme - color scheme informations
-require $GLOBALS['sys_www_topdir'].'/include/theme.php';
+require dirname(__FILE__).'/theme.php';
 
 # title, helper to find out appropriate info depending on the context,
 # like title
-require $GLOBALS['sys_www_topdir'].'/include/context.php';
+require dirname(__FILE__).'/context.php';
 
 # left-hand and top menu nav library (requires context to be set)
-require $GLOBALS['sys_www_topdir'].'/include/sitemenu.php';
-require $GLOBALS['sys_www_topdir'].'/include/pagemenu.php';
+require dirname(__FILE__).'/sitemenu.php';
+require dirname(__FILE__).'/pagemenu.php';
 
 # HTML layout class, may be overriden by the Theme class
-require $GLOBALS['sys_www_topdir'].'/include/Layout.class';
+require dirname(__FILE__).'/Layout.class';
 
 $HTML = new Layout();
 
 # group functions like get_name, etc
-require $GLOBALS['sys_www_topdir'].'/include/Group.class';
+require dirname(__FILE__).'/Group.class';
 
 # member functions like member_add, member_approve, etc
-require $GLOBALS['sys_www_topdir'].'/include/member.php';
+require dirname(__FILE__).'/member.php';
 
 # exit_error library
-require $GLOBALS['sys_www_topdir'].'/include/exit.php';
+require dirname(__FILE__).'/exit.php';
 
 #  send mail library
-require $GLOBALS['sys_www_topdir'].'/include/sendmail.php';
+require dirname(__FILE__).'/sendmail.php';
 
 # various html libs like button bar, themable
-require $GLOBALS['sys_www_topdir'].'/include/html.php';
-require $GLOBALS['sys_www_topdir'].'/include/markup.php';
+require dirname(__FILE__).'/html.php';
+require dirname(__FILE__).'/markup.php';
 
 # graphics library
-require $GLOBALS['sys_www_topdir'].'/include/graphs.php';
+require dirname(__FILE__).'/graphs.php';
 
 # calendar library
-require $GLOBALS['sys_www_topdir'].'/include/calendar.php';
+require dirname(__FILE__).'/calendar.php';
 
 # forms library
-require $GLOBALS['sys_www_topdir'].'/include/form.php';
+require dirname(__FILE__).'/form.php';
 
 # spam filtering library
-require $GLOBALS['sys_www_topdir'].'/include/spam.php';
-require $GLOBALS['sys_www_topdir'].'/include/dnsbl.php';
+require dirname(__FILE__).'/spam.php';
+require dirname(__FILE__).'/dnsbl.php';
 
 # search tools, frequently needed
 require_directory('search');
@@ -300,23 +302,32 @@ if (!session_issecure() && isset($_COOKIE['redirect_to_https']) && $GLOBALS['sys
 **************************************************************/
 
 # defines the artifact we are using
-define('ARTIFACT', get_module_include_dir($_SERVER['REQUEST_URI'], 1));
+if(!defined('ARTIFACT'))
+     define('ARTIFACT', get_module_include_dir($_SERVER['REQUEST_URI'], 1));
 
 # if we are on an artifact index page and we have only one argument which is
 # a numeric number, we suppose it is an item_id
 # Maybe it was a link shortcut like
 # blabla.org/task/?nnnn (blabla.org/task/?#nnnn cannot work because # is 
-# ignored by PHP as tag for html anchors)
+# not sent by the browser as it's a tag for html anchors)
 if ((ARTIFACT == "bugs" ||
      ARTIFACT == "task" ||
      ARTIFACT == "support" ||
      ARTIFACT == "patch" ||
      ARTIFACT == "cookbook") &&
-    ctype_digit($_SERVER["argv"][0]))
+    ctype_digit($_SERVER['QUERY_STRING']))
 {
-  sane_set("item_id", $_SERVER["argv"][0]);
+  sane_set("item_id", $_SERVER['QUERY_STRING']);
   sane_set("func", "detailitem");
 }
+
+
+# Set the CONTEXT and SUBCONTEXT constants, useful to guess page titles
+# but also to find out if cookbook entries are relevant
+
+context_guess();
+# Set the AUDIENCE constant
+user_guess();
 
 
 # if we got an item_id and no group_id we need to get the appropriate
@@ -419,10 +430,10 @@ if (isset($group_id))
   # check if we are on the correct page
   # (you can avoid it with $no_redirection=1)
   # if getTypeBaseHost() = "", we use the default host
-  if (isset($group_id) && !$no_redirection)
+  if (isset($group_id) && empty($no_redirection))
     {
       $project = project_get_object($group_id);
-      if (strcasecmp($HTTP_HOST, $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())
+      if (strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())
 	{
 	  header ('Location: http'.(session_issecure()?'s':'').'://'.$project->getTypeBaseHost().$_SERVER["REQUEST_URI"]);
 	  exit;
@@ -433,11 +444,5 @@ if (isset($group_id))
 # If requires/include for an artifact exists, load them all
 # In any case, set the ARTIFACT constant.
 require_directory(get_module_include_dir($_SERVER['PHP_SELF']));
-
-# Set the CONTEXT and SUBCONTEXT constants, useful to guess page titles
-# but also to find out if cookbook entries are relevant
-context_guess();
-# Set the AUDIENCE constant
-user_guess();
 
 ?>

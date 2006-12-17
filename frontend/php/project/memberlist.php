@@ -46,7 +46,7 @@ if ($detailed)
 { $checked = " selected=\"selected\""; }
 # I18N
 # %s currently is "basic" or "detailed"
-  $form_opening = '<form action="'.$PHP_SELF.'#options" method="get">';
+  $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
   $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
 print html_show_displayoptions(sprintf(_("Browse with the %s memberlist."), '<select name="detailed"><option value="0">'._("basic").'</option><option value="1"'.$checked.'>'._("detailed").'</option></select>').'<input type="hidden" name="group" value="'.$group_name.'" />',
 			       $form_opening,

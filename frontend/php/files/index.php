@@ -58,7 +58,7 @@ if ($group_id) {
       }
 
       /* permit to the user to specify something */
-      $content .=  '<form action="'. $PHP_SELF .'" method="get">';
+      $content .=  '<form action="'. $_SERVER['PHP_SELF'] .'" method="get">';
       $content .=  '<input type="hidden" NAME="group_id" value="'.$group_id.'" />';
       $content .=  '<h3>'.sprintf(_("Show %s and highlight version %s."),'<select name="thread_max"><option value="1"> 1</option><option value="3"> 3</option><option value="5" selected> 5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option></select>', '<input type="text" size="6" name="highlight" value="'.$highlight.'" />');
 
@@ -116,7 +116,7 @@ if ($group_id) {
 		      /* if = $thead_show, we show package details */
 		      if ($thread_max < $x && $thread_show != $package_name.$x)
 			{
-			  $content .= $this_row_color.'"><td>&nbsp;&nbsp;</td><td width="55%" class="bold"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&amp;thread_show='.$package_name.$x.'#'.ereg_replace(".pkg","",$package_name).$version_array[$x].'" name="'.ereg_replace(".pkg","",$package_name).$version_array[$x].'">';
+			  $content .= $this_row_color.'"><td>&nbsp;&nbsp;</td><td width="55%" class="bold"><a href="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&amp;thread_show='.$package_name.$x.'#'.ereg_replace(".pkg","",$package_name).$version_array[$x].'" name="'.ereg_replace(".pkg","",$package_name).$version_array[$x].'">';
 			  $content .= $version_array[$x];
 			  $content .= '</a></td><td width="15%" class="center">&nbsp;</td><td width="15%" class="center">&nbsp;</td><td width="15%" class="center">&nbsp;</td></tr>'."\n";
 			}

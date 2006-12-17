@@ -23,9 +23,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";  # Initial db and session library, opens session
-#session_require(array(isloggedin=>1));
-$HTML->header(array(title=>_("New Project Registration")));
+require_once('../include/pre.php');  # Initial db and session library, opens session
+
+$HTML->header(array('title' => _("New Project Registration")));
 
 if (db_numrows(db_query("SELECT type_id FROM group_type")) < 1) {
 	# group_type is empty; it's not prossible to register projects
@@ -42,4 +42,3 @@ print '</div>';
 print '</form>';
 
 $HTML->footer(array());
-?>

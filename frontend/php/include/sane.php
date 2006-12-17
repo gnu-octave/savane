@@ -65,7 +65,7 @@ foreach ($to_sanitize as $var)
 
 # Set group_name only if group was set
 unset($group_name);
-if (isset($group))
+if (!empty($group))
 { $group_name = $group; }
 
 # Keep only numerical characters in the item_id
@@ -111,10 +111,46 @@ if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
 # Functions to access user input
 ###########################################################
 
+# Return the input as-is, without unwanted magic_quotes_gpc effect
+function stripslashesgpc($val)
+{
+  if (get_magic_quotes_gpc()) 
+    return strisplashes($val);
+  return $val;
+}
+
+// Check if the variable exists.
+// Avoid ($var = $_POST['var'] ? $_POST['var'] : '')
+//  redundant constructs
+function sane_chk(&$var) {
+  if (isset($var))
+    return $var;
+  else
+    return NULL;
+}
+
+// Check the existence of a series of input parameters, then return an
+// array suitable for extract()
+function sane_import($method, $names) {
+  if ($method == 'get')
+    $input_array =& $_GET;
+  else if ($method == 'post')
+    $input_array =& $_POST;
+  else
+    $input_array =& $_REQUEST;
+
+  $values = array();
+  foreach ($names as $input_name) {
+    $values[$input_name] = stripslashesgpc(sane_chk($input_array[$input_name]));
+  }
+
+  return $values;
+}
+
 # Backward security function. This will sanitize input already passed via
 # register globals.
 # 
-# In theory, this function should "disappear" from the code and be replaced by 
+# In theory, this function should "disappear" from the code and be replaced by
 # sane_XXX functions.
 #
 # This function should be used whenever user input is used:
@@ -207,10 +243,10 @@ function sane_set($varname, $value)
 # make pages compliant with register globals set to off one by one.
 function register_globals_off ()
 {
-  foreach ($_REQUEST as $key => $value)
-    { 
-      unset($GLOBALS[$key]); 
-    }
+  # This is unsecure: you can switch off existing globals
+  # - unless that's the very first thing you do in the script
+#  foreach ($_REQUEST as $key => $value)
+#    { 
+#      unset($GLOBALS[$key]); 
+#    }
 }      
-
-?>

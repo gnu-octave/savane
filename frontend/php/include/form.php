@@ -84,8 +84,8 @@ function form_submit($text=false, $submit_name="update", $extra=false)
   # the rest of them, which is good enough (task #4151).
   # Sure, some bots will someday implement CSS support, but the ones that does
   # not will not disappear as soon as this happen.
-  unset($trap);
-  if (!$GLOBALS['int_trapisset'] && !user_isloggedin())
+  $trap = '';
+  if (empty($GLOBALS['int_trapisset']) && !user_isloggedin())
     {
       $trap = " ".form_input("text", "website", "http://");
       $GLOBALS['int_trapisset'] = true;

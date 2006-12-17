@@ -75,7 +75,7 @@ if ($group_id) {
 
 
     echo '<h2>'._("Getting a command list to upload the files:").'</h2>';
-    echo '<form action="'. $PHP_SELF .'#list" method="post">
+    echo '<form action="'. $_SERVER['PHP_SELF'] .'#list" method="post">
 <table>';
     echo '<input type="hidden" name="group_id" value="'.$group_id.'" />';
     echo '<tr><td>'._("Package / Branch:").' </td><td><input type="text" name="pkg" value="'.$pkg.'" size="20" maxlength="30" /> ('._("ex: the project name, or stable / unstable").')</td></tr>';

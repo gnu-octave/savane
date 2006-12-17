@@ -33,7 +33,7 @@ function show_item_list ($result_arr,
 			 $url,
 			 $nolink=false)
 {
-  global $group_id,$PHP_SELF,$chunksz,$morder;
+  global $group_id,$chunksz,$morder;
 
   # Build the list of links to use for column headings
   # Used to trigger sort on that column

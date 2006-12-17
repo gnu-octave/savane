@@ -165,7 +165,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 
 			<p style=error>WARNING! You are about to permanently delete a
 			message and all of its followups!</p>
-			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">
+			<FORM METHOD="POST" ACTION="'.$_SERVER['PHP_SELF'].'">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="delete" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -200,7 +200,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 			<P>
 			<H2>Add a Forum</H2>
 
-			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">
+			<FORM METHOD="POST" ACTION="'.$_SERVER['PHP_SELF'].'">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="add_forum" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -261,7 +261,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 				echo '
 					<TR BGCOLOR="'. utils_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
 				echo '
-					<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+					<FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 					<INPUT TYPE="HIDDEN" NAME="change_status" VALUE="y">
 					<INPUT TYPE="HIDDEN" NAME="group_forum_id" VALUE="'.db_result($result,$i,'group_forum_id').'">
@@ -326,9 +326,9 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 					    $result_yn=db_query($sql_yn);
 					    $rows_yn=db_numrows($result_yn);
 					    if ($rows_yn == 0) {
-						    echo '<TR><TD> <A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&manage_members=1&forum_number='.$forum_number.'&member_add=1&user_name='.db_result($result_guy,0,'user_name').'&post_changes=1">ADD</A> </TD>';
+						    echo '<TR><TD> <A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&manage_members=1&forum_number='.$forum_number.'&member_add=1&user_name='.db_result($result_guy,0,'user_name').'&post_changes=1">ADD</A> </TD>';
 					    } else {
-						    echo '<TR><TD> <A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&manage_members=1&forum_number='.$forum_number.'&member_delete='.$uid.'&post_changes=1">DEL</A></TD>';
+						    echo '<TR><TD> <A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&manage_members=1&forum_number='.$forum_number.'&member_delete='.$uid.'&post_changes=1">DEL</A></TD>';
 					    }
 					    echo '
                                    <TD>'.db_result($result_guy,0,'user_name').'</TD>
@@ -360,7 +360,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 				    $result_yn=db_query($sql_yn);
 				    $rows_yn=db_numrows($result_yn);
 				    if ($rows_yn == 0) {
-					    echo '<TR><TD> <A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&manage_members=1&forum_number='.$forum_number.'&member_delete='.$uid.'&post_changes=1">DEL</A></TD>';
+					    echo '<TR><TD> <A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&manage_members=1&forum_number='.$forum_number.'&member_delete='.$uid.'&post_changes=1">DEL</A></TD>';
 					    echo ' <TD>'.db_result($result_guy,0,'user_name').'</TD>
                                    <TD>'.db_result($result_guy,0,'realname').'</TD>
 			           </TR>';
@@ -371,7 +371,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 	    }
 
 	    echo '<H2> Add non members </H2>
-			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">
+			<FORM METHOD="POST" ACTION="'.$_SERVER['PHP_SELF'].'">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="member_add" VALUE="1">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -407,7 +407,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 			  echo '<TABLE>';
 
 			  for ($i=0; $i<$rows; $i++)
-				  echo '<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&manage_members=1&forum_number='.db_result($result,$i,'group_forum_id').'">'.db_result($result,$i,'forum_name').'</A><BR>';
+				  echo '<A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&manage_members=1&forum_number='.db_result($result,$i,'group_forum_id').'">'.db_result($result,$i,'forum_name').'</A><BR>';
 
 			  echo '</TABLE>';
 
@@ -425,13 +425,13 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 		echo '
 			<H2>Forum Administration</H2>
 			<P>
-			<H3><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&add_forum=1">Add Forum</A></H3>
+			<H3><A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&add_forum=1">Add Forum</A></H3>
 			Create a new discussion forum.<br />
-			<H3><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&delete=1">Delete Message</A></H3>
+			<H3><A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&delete=1">Delete Message</A></H3>
 			Delete Forum entries and News items here, if you know the message ID.<br />
-			<H3><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1">Update Forum Info/Status</A></H3>
+			<H3><A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&change_status=1">Update Forum Info/Status</A></H3>
 			Change Forum names, desription and switch between public and private.
-			<H3><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&manage_members=1">Manage Forum Members</A></H3>
+			<H3><A HREF="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&manage_members=1">Manage Forum Members</A></H3>
 			Subscribe and unsubscribe Members and Users to a Forum';
 
 

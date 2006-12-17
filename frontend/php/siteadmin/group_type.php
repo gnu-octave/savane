@@ -196,7 +196,7 @@ if (!isset($type_id))
   print '<br />';
   while ($usr = db_fetch_array($result))
     {
-      print '<a href="'.$PHP_SELF.'?type_id='.$usr[type_id].'">Type #'.$usr[type_id].': '.$usr[name].'</a><br />';
+      print '<a href="'.$_SERVER['PHP_SELF'].'?type_id='.$usr[type_id].'">Type #'.$usr[type_id].': '.$usr[name].'</a><br />';
       $last=$usr[type_id];
     }
   # Find an appropriate unused group type ID (skip value 100)
@@ -204,7 +204,7 @@ if (!isset($type_id))
   if ($type == 100)
     { $type = 101; }
 
-  print '<a href="'.$PHP_SELF.'?type_id='.$type.'&amp;create=1">Create new group type</a>';
+  print '<a href="'.$_SERVER['PHP_SELF'].'?type_id='.$type.'&amp;create=1">Create new group type</a>';
 
 }
 else
@@ -229,7 +229,7 @@ else
   print '<h1>'.$row_grp['name'].' (#'.$row_grp['type_id'].')</h1>';
 
 
-  print '<form action="'.$PHP_SELF.'" method="post">
+  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 <input type="hidden" name="form_type_id" value="'.$type_id.'" />';
 
   # ####################################################################

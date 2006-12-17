@@ -41,7 +41,7 @@ function show_filters ($group_id)
 				iterate and show the existing filters
 			*/
 			?>
-			<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+			<FORM ACTION="<?php echo $_SERVER['PHP_SELF']; ?>" METHOD="POST">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodfilters">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 			<INPUT TYPE="HIDDEN" NAME="subfunc" VALUE="mod">
@@ -70,7 +70,7 @@ function show_filters ($group_id)
 	*/
 
 	?>
-	<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+	<FORM ACTION="<?php echo $_SERVER['PHP_SELF']; ?>" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodfilters">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 	<INPUT TYPE="HIDDEN" NAME="subfunc" VALUE="add">
@@ -82,7 +82,7 @@ function show_filters ($group_id)
 	</TR></FORM>
 	</TABLE>
 	<P>
-	<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+	<FORM ACTION="<?php echo $_SERVER['PHP_SELF']; ?>" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="postmodfilters">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 	<INPUT TYPE="HIDDEN" NAME="subfunc" VALUE="turn_off">

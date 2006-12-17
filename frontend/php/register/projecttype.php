@@ -20,17 +20,25 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+$no_redirection=1;
+
 require "../include/pre.php";
 require "../include/vars.php";
 session_require(array('isloggedin'=>'1'));
 require "../include/account.php";
 
+extract(sane_import('post',
+  array('insert_license', 'rand_hash', 'form_license', 'form_license_other')));
+
 if ($group_id && $insert_license && $rand_hash && $form_license)
 {
    # Hash prevents them from updating a live, existing group account
-   $sql="UPDATE groups SET license='$form_license', license_other='$form_license_other' "
-      . "WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
-   $result=db_query($sql);
+   $result=db_query_escape(
+     "UPDATE groups SET license='%s', license_other='%s'
+      WHERE group_id='%s' AND rand_hash='__%s'",
+     $form_license, $form_license_other,
+     $group_id, $rand_hash
+   );
    if (db_affected_rows($result) < 1)
    {
      unset($group_id);
@@ -48,7 +56,7 @@ else
 # If we have only one project type available, the next page is not a real step
 
 if (db_numrows(db_query("SELECT type_id FROM group_type")) == 1) {
-  Header("Location: ".$GLOBALS['sys_home']."register/confirmation.php?no_redirection=1&show_confirm=y&group_id=".$group_id."&rand_hash=".$rand_hash);
+  Header("Location: ".$GLOBALS['sys_home']."register/confirmation.php?show_confirm=y&group_id=".$group_id."&rand_hash=".$rand_hash);
   
 } else {
 
@@ -63,7 +71,6 @@ if (db_numrows(db_query("SELECT type_id FROM group_type")) == 1) {
   utils_get_content("register/projecttype_long");
   
   print '<form action="confirmation.php" method="post">';
-  print '<input type="hidden" name="no_redirection" value="1" />';
   print '<input type="hidden" name="show_confirm" value="y" />';
   print '<input type="hidden" name="group_id" value="'.$group_id.'" />';
   print '<input type="hidden" name="rand_hash" value="'.$rand_hash.'" />';

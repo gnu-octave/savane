@@ -25,6 +25,9 @@
 # we need to define the theme before loading the pre.php init script,
 # otherwise the page needs to be reloaded for the change to take effect.
 # see bug #1987
+$update = isset($_REQUEST['update'])? $_REQUEST['update'] : '';
+$user_theme = isset($_REQUEST['user_theme']) ? $_REQUEST['user_theme'] : '';
+
 if ($update and $user_theme != "random" and $user_theme != "rotate")
   {
     define("SV_THEME", addslashes($user_theme));
@@ -164,7 +167,7 @@ $keynum = (sizeof($expl_keys));
 if ($expl_keys[$keynum-1] == "")
   $keynum--;
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="editsshkeys.php">';
 if ($keynum > 0)
@@ -208,9 +211,9 @@ print html_splitpage(2);
 print $HTML->box_top(_('Identity Record'));
 
 print sprintf(_("Account #%s"), $row_user['user_id']);
-print '<p class="smaller">'.sprintf(_("Your login is %s."), '<strong>'.$row_user['user_name'].'</strong>').' '.sprintf(_("You registered your account on %s."), '<strong>'.format_date($sys_datefmt,$row_user['add_date']).'</strong>').'</p>';
+print '<p class="smaller">'.sprintf(_("Your login is %s."), '<strong>'.$row_user['user_name'].'</strong>').' '.sprintf(_("You registered your account on %s."), '<strong>'.utils_format_date($row_user['add_date']).'</strong>').'</p>';
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="change.php?item=realname">'._("Change Real Name").'</a>';
 print '<p class="smaller">'.sprintf(_("You are %s."), '<strong>'.$row_user['realname'].'</strong>').'</p>';
@@ -234,7 +237,7 @@ print $HTML->box_top(_('Mail Setup'));
 print '<a href="change.php?item=email">'._("Change Email Address").'</a>';
 print '<p class="smaller">'.sprintf(_("Your current address is %s. It is essential to us that this address remains valid. Keep it up to date."), '<strong>'.$row_user['email'].'</strong>').'</p>';
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
 print '<a href="change_notifications.php">'._("Edit Personal Notification Settings").'</a>';
@@ -281,7 +284,7 @@ print '<input type="checkbox" name="form_use_bookmarks" value="1" '.(user_get_pr
 
 print '<p class="smaller">'._("By default, integrated bookmarks are deactivated to avoid redundancy with the bookmark feature provided by most modern web browsers. However, you may prefer integrated bookmarks if you frequently use different workstations without web browsers bookmarks synchronization.").'</p>';
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
 print '<input type="checkbox" name="form_email_hide" value="1" '.($row_user['email_hide'] ? 'checked="checked"':'').' /> '._("Hide email address from your account information");
@@ -305,7 +308,7 @@ print html_build_select_box_from_arrays($TZs,$TZs,'form_timezone',$row_user['tim
 print ' '._("Timezone");
 print '<p class="smaller">'._("No matter where you live, you can see all dates and times as if it were in your neighborhood.").'</p>';
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
 html_select_theme_box("user_theme", $row_user['theme']);

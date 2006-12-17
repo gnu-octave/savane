@@ -216,7 +216,7 @@ if ($forum_id)
 
       //now show the popup boxes in a form
       $ret_val .= '<TABLE BORDER="0" WIDTH="50%">
-				<FORM ACTION="'. $PHP_SELF .'" METHOD="get">
+				<FORM ACTION="'. $_SERVER['PHP_SELF'] .'" METHOD="get">
 				<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
 				<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="'.$forum_id.'">
 				<TR><TD><span class="smaller">'. $forum_popup .

@@ -24,10 +24,16 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php"; 
-require "../include/vars.php";
-require "../include/account.php";
-session_require(array('isloggedin'=>'1'));
+# avoid pre.php looking for group_type info
+$no_redirection=1;
+
+require_once('../include/pre.php');
+require_once('../include/vars.php');
+require_once('../include/account.php');
+session_require(array('isloggedin' => '1'));
+
+extract(sane_import('post',
+  array('insert_group_name', 'rand_hash', 'form_full_name', 'form_unix_name')));
 
 if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_unix_name)
 {
@@ -38,7 +44,7 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
    if (!account_groupnamevalid($form_unix_name))
    {
       unset($group_id);
-      exit_error(_("Invalid Group Name"), $register_error);
+      exit_error(_("Invalid Group Name"));
    }
 } 
    # make sure the name is not already taken, ignoring incomplete
@@ -46,16 +52,17 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
    # require maintainance, since some people interrupt registration and
    # try to redoit later with another name. 
    # And even if a name clash happens, admins will notice it during approval
-   if (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$form_unix_name' AND status <> 'I'")) > 0)
+   if (db_numrows(db_query_escape("SELECT group_id FROM groups WHERE unix_group_name LIKE '%s' AND status <> 'I'",
+         $form_unix_name)) > 0)
    {
       unset($group_id);
       exit_error("Project Name Taken","A project with that name already exists. Use the back button.");
    }
    # hash to prevent modification of a existing project
-   $sql="UPDATE groups SET unix_group_name='". strtolower($form_unix_name)
-      . "', group_name='$form_full_name' "
-      . " WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
-   $result=db_query($sql);
+   $result=db_query_escape(
+     "UPDATE groups SET unix_group_name='%s', group_name='%s'
+      WHERE group_id='%s' AND rand_hash='__%s'",
+     strtolower($form_unix_name), $form_full_name, $group_id, $rand_hash);
 } 
 else 
 {
@@ -91,7 +98,6 @@ print '<h3>'._("License for This Project").' :</h3>';
 
 print '
 <form action="projecttype.php" method="post">
-<input type="hidden" name="no_redirection" value="1" />
 <input type="hidden" name="insert_license" value="y" />
 <input type="hidden" name="group_id" value="'.$group_id.'" />
 <input type="hidden" name="rand_hash" value="'.$rand_hash.'" />';

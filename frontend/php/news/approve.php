@@ -225,7 +225,7 @@ if ($group_id && member_check(0, $group_id,'N3'))
 
       print '<p>'._("Submitted by:").' '.utils_user_link($submitted_by, user_getrealname(db_result($result,0,'submitted_by'))).'</p>';
       print '
-		<form action="'.$PHP_SELF.'" method="post">
+		<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 		<input type="hidden" name="id" value="'.db_result($result,0,'id').'" />';
 
      # Useless title
@@ -307,7 +307,7 @@ if ($group_id && member_check(0, $group_id,'N3'))
 	    {
 	      print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id']){ print ' class="boxhighlight"'; }
-            print '><a href="'.$PHP_SELF.'?approve=1&amp;id='.db_result($result,$i,'id');
+            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;id='.db_result($result,$i,'id');
 
 	      if ($group_id == $GLOBALS['sys_group_id']) 
                 {
@@ -363,7 +363,7 @@ if ($group_id && member_check(0, $group_id,'N3'))
 	    {
 	      print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id']){ print ' class="boxhighlight"'; }
-            print '><a href="'.$PHP_SELF.'?approve=1&amp;group='.$group_name.'&amp;id='.db_result($result,$i,'id').'">';
+            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='.$group_name.'&amp;id='.db_result($result,$i,'id').'">';
 
               if ($group_id == $GLOBALS['sys_group_id']) 
                 { print group_getname(db_result($result,$i,'group_id')).' - '; }
@@ -398,7 +398,7 @@ if ($group_id && member_check(0, $group_id,'N3'))
 	  for ($i=0; $i<$rows; $i++) {
 	    print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id']){ print ' class="boxhighlight"'; }
-            print '><a href="'.$PHP_SELF.'?approve=1&amp;group='.$group_name.'&amp;id='.db_result($result,$i,'id').'">';
+            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='.$group_name.'&amp;id='.db_result($result,$i,'id').'">';
 
               if ($group_id == $GLOBALS['sys_group_id']) 
                 { print group_getname(db_result($result,$i,'group_id')).' - '; }

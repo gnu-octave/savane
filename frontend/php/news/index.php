@@ -84,7 +84,7 @@ site_project_header(array('group'=>$group_id,
 
 /* permit to the user to specify something */
 
-$form_opening = '<form action="'. $PHP_SELF .'#options" method="get">';
+$form_opening = '<form action="'. $_SERVER['PHP_SELF'] .'#options" method="get">';
 # I18N
 # %s is an input field
 $form = sprintf(_("Print summaries for the %s latest news."), '<input type="text" name="limit" size="4" value="'.$limit.'" />');

@@ -90,16 +90,17 @@ function sitemenu_extraurl ($only_with_post=false)
   if ($only_with_post && $_SERVER["REQUEST_METHOD"] != "POST")
     { return; }
 
+  $extraurl = '';
   if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
-      if (isset($GLOBALS['group_name']) and $GLOBALS['group_name'])
+      if (!empty($GLOBALS['group_name']))
 	{ $extraurl .= "&amp;group=".htmlspecialchars($GLOBALS['group_name'])."&amp;"; }
-      if (isset($GLOBALS['item_id']) and $GLOBALS['item_id'])
+      if (!empty($GLOBALS['item_id']))
 	{ $extraurl .= "&amp;func=detailitem&amp;item_id=".htmlspecialchars($GLOBALS['item_id'])."&amp;"; }
     }
   else
     {
-      if (isset($GLOBALS['item_id']) && ctype_digit($_SERVER['QUERY_STRING']))
+      if (!empty($GLOBALS['item_id']) && ctype_digit($_SERVER['QUERY_STRING']))
 	{
           # Short link case (like /bugs/?212)
 	  $extraurl .= "&amp;func=detailitem&amp;item_id=".htmlspecialchars($GLOBALS['item_id']);
@@ -211,7 +212,7 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
 		    _("Show this page with a style adapted to printers"));
   $HTML->menuhtml_bottom();
 
-  if (!isset($_POST))
+  if (empty($_POST))
     {
       if (user_isloggedin() && user_get_preference("use_bookmarks"))
 	{
@@ -264,7 +265,7 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   # simply fail.
   $sql = "SELECT recipe_id FROM cookbook_context2recipe WHERE (group_id='$sys_group_id' $sql_groupid) AND context_".CONTEXT."='1' AND subcontext_".SUBCONTEXT."='1' AND (audience_".AUDIENCE."='1' $sql_role)";
 
-  $result = db_query($sql);
+  $result = @db_query($sql);
   $rows = db_numrows($result);
 
   # No recipe found? End here
@@ -275,7 +276,8 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   $limit = 25;
   
   # Build a sql to obtain summaries
-  unset($sql_itemid, $sql_privateitems);
+  $sql_itemid = '';
+  $sql_privateitem = '';
   # Check whether the user is authorized to read private items for the active
   # project, if there is an active project
   if ($group_id)
@@ -383,7 +385,7 @@ function sitemenu_loggedin($page_title, $page_toptab=0, $page_group=0)
     }
   if (user_can_be_super_user() && !user_is_super_user())
     {
-      $HTML->menu_entry($GLOBALS['sys_home'].'account/su.php?action=login&amp;uri='.urlencode($GLOBALS['REQUEST_URI']),
+      $HTML->menu_entry($GLOBALS['sys_home'].'account/su.php?action=login&amp;uri='.urlencode($_SERVER['REQUEST_URI']),
 			_("Become Superuser"),
 			1,
 			_("Superuser rights are required to perform site admin tasks"));

@@ -89,7 +89,7 @@ site_project_header(array('title'=>_("Set Notifications"),'group'=>$group_id,'co
 # ####################################### General Description
 
 print '
-<form action="'.$PHP_SELF.'" method="post">
+<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />';
 
 print '<h3>'._("Bug Tracker Email Notification Settings").'</h3>';

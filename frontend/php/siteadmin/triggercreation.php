@@ -21,8 +21,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";
-require "../include/proj_email.php";
+require_once('../include/pre.php');
+require_once('../include/proj_email.php');
 
 # Skip admin rights check if we are dealing with the sys group
 if ($GLOBALS['sys_group_id'] != $group_id)
@@ -35,9 +35,10 @@ if ($GLOBALS['sys_group_id'] != $group_id)
 #   Exception: the patch tracker is deprecated, so it is ignored.
 $group_type = db_result(db_query("SELECT type FROM groups WHERE group_id=$group_id"),0,'type');
 $res_type = db_query("SELECT * FROM group_type WHERE type_id=$group_type");
+$user_id = user_getid();
 
 $to_update = array("homepage", "download", "cvs", "forum","mailing_list","task","news","support","bug");
-unset($upd_list);
+$upd_list = '';
 while (list(,$field) = each($to_update))
 {
   # bug = bugs, mailing_list = mail
@@ -79,7 +80,8 @@ if ($upd_list)
 # We do not even check whether the trackers are used, because we want this
 # configuration to be already done if at some point the tracker gets activated,
 # if it is not the case by default.
-unset($to_update, $upd_list);
+$to_update = '';
+$upd_list = '';
 
 # Build the notification list
 $res_admins = db_query("SELECT user.user_name FROM user,user_group WHERE "
@@ -87,7 +89,7 @@ $res_admins = db_query("SELECT user.user_name FROM user,user_group WHERE "
 		       . "user_group.admin_flags='A'");
 if (db_numrows($res_admins) > 0)
 {
-  unset($admin_list);
+  $admin_list = '';
   while ($row_admins = db_fetch_array($res_admins))
     {
       $admin_list .= ($admin_list ? ', ':'').$row_admins['user_name'];

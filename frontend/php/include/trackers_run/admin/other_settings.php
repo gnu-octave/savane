@@ -83,7 +83,7 @@ if (db_numrows($res_grp) < 1)
 $row_grp = db_fetch_array($res_grp);
 
 echo '<h3>'._("Item Post Form Preamble").'</h3>';
-echo '<form action="'.$PHP_SELF.'" method="post">';
+echo '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
 
 # FIXME: preamble should not be in the groups table!!
 echo '<input type="hidden" name="group_id" value="'.$group_id.'" />';

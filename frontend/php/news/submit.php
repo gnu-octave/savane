@@ -124,7 +124,7 @@ print '
 		<p class="warn">'._("A news manager of this project will have to review and approve the news.")."</p>\n<p>"
 		._("You may include URLs, emails, that will be made clickable, but not HTML.").'
 		</p>'.
-form_header($PHP_SELF, $form_id).
+form_header($_SERVER['PHP_SELF'], $form_id).
 form_input("hidden", "group_id", $group_id).'
                	<span class="preinput">'._("Subject:").'</span><br/>&nbsp;&nbsp;
 		<input type="text" name="summary" value="'.$summary.'" size="65" maxlenght="80" />

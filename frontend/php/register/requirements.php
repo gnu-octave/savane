@@ -26,7 +26,7 @@
 
 require "../include/pre.php";  # Initial db and session library, opens session
 #session_require(array(isloggedin=>1));
-$HTML->header(array(title=>_("Step 1: Services and Requirements")));
+$HTML->header(array('title' => _("Step 1: Services and Requirements")));
 
 
 # get site-specific content

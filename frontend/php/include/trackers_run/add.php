@@ -50,7 +50,7 @@ if ($preamble)
 print '<h3>'._("Details").'</h3>';
 
 # Beginning of the submission form with fixed fields
-print form_header($PHP_SELF, $form_id, "post", 'enctype="multipart/form-data" name="trackers_form"');
+print form_header($_SERVER['PHP_SELF'], $form_id, "post", 'enctype="multipart/form-data" name="trackers_form"');
 print form_input("hidden", "func", "postadditem");
 print form_input("hidden", "group_id", $group_id);
 print '

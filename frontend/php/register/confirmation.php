@@ -22,10 +22,23 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-define("ARTIFACT", "task");
-require "../include/pre.php";
-session_require(array('isloggedin'=>'1'));
-require "../include/vars.php";
+define('ARTIFACT', 'task');
+$no_redirection=1;
+require_once('../include/pre.php');
+
+session_require(array('isloggedin' => '1'));
+
+require_once('../include/vars.php');
+
+extract(sane_import('request',
+  array('show_confirm', 'rand_hash', 'i_agree', 'i_disagree',
+	'form_purpose', 'form_required_sw', 'form_comments',
+	'form_full_name', 'form_license', 'form_license_other',
+	'group_type')));
+
+# No group type = only 1 available, no choice
+if (empty($group_type))
+     $group_type = 1;
 
 $project=project_get_object($group_id);
 if ($show_confirm && $rand_hash)
@@ -43,17 +56,16 @@ if ($show_confirm && $rand_hash)
   $group_id = $group_id_not_yet_valid;
 
 
-  $sql="UPDATE groups SET type='$group_type' WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
-  $result=db_query($sql);
+  $result=db_query_escape("UPDATE groups SET type='%s' WHERE group_id='%s' AND rand_hash='__%s'",
+			  $group_type, $group_id, $rand_hash);
 
-  $sql="SELECT * FROM groups WHERE group_id='$group_id' AND rand_hash='__$rand_hash'";
-  $result=db_query($sql);
+  $result=db_query_escape("SELECT * FROM groups WHERE group_id='%s' AND rand_hash='__%s'",
+		   $group_id, $rand_hash);
 
   print '
 <div align="center"><span class="warn">'._("Do not click the back button").'</span></div>
 
-<form action="'.$PHP_SELF.'" method="post">
-<input type="hidden" name="no_redirection" value="1" />
+<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />
 <input type="hidden" name="rand_hash" value="'.$rand_hash.'" />
 
@@ -111,15 +123,25 @@ if ($show_confirm && $rand_hash)
 else if ($i_agree && $group_id && $rand_hash)
 {
   # complete the db entries
-  $result=db_query("UPDATE groups SET status='P', "
-		   .	"register_purpose='".htmlspecialchars($form_purpose)."', "
-		   .	"required_software='".htmlspecialchars($form_required_sw)."', "
-		   .	"other_comments='".htmlspecialchars($form_comments)."', "
-		   .	"group_name='$form_full_name', license='$form_license', "
-		   .	"license='".htmlspecialchars($form_license)."', "
-		   .	"license_other='".htmlspecialchars($form_license_other)."', "
-		   .	"type='".htmlspecialchars($group_type)."'"
-		   .	"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
+  $result = db_query_escape(
+    "UPDATE groups SET status='P',
+       register_purpose='%s',
+       required_software='%s',
+       other_comments='%s',
+       group_name='%s', license='%s',
+       license='%s',
+       license_other='%s',
+       type='%s'
+     WHERE group_id='%s' AND rand_hash='__%s'",
+      htmlspecialchars($form_purpose),
+      htmlspecialchars($form_required_sw),
+      htmlspecialchars($form_comments),
+      $form_full_name, $form_license,
+      htmlspecialchars($form_license),
+      htmlspecialchars($form_license_other),
+      htmlspecialchars($group_type),
+    $group_id, $rand_hash
+  );
 
   if (db_affected_rows($result) < 1)
     {
@@ -221,13 +243,20 @@ While this item will be useful to track the registration process, *approving or 
       # to appear translated, it may be misleading for site admins 
       # (they may suppose it is a translated string like the rest of the 
       # interface, that would appear in another language to another user)
-      db_query("UPDATE groups SET status='A',short_description='".addslashes("This project is dedicated to the administration of this site.")."' WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");     
+      db_query_escape(
+        "UPDATE groups SET status='A',
+          short_description='%s'
+         WHERE group_id='%s' AND rand_hash='__%s'",
+	"This project is dedicated to the administration of this site.",
+	$group_id, $rand_hash);
 
 
       # We also add a specific field for the task tracker
       # (we need to copy the None field)
-      db_query("INSERT INTO task_field_value (bug_field_id,group_id,value_id,value,description,order_id,status) VALUES (103,$group_id,100,'None','',10,'P')");
-      db_query("INSERT INTO task_field_value (bug_field_id,group_id,value_id,value,description,order_id,status) VALUES (103,$group_id,1,'Project Approval','Pending project registration',11,'P')");
+      db_query("INSERT INTO task_field_value (bug_field_id,group_id,value_id,value,description,order_id,status)
+        VALUES (103,$group_id,100,'None','',10,'P')");
+      db_query("INSERT INTO task_field_value (bug_field_id,group_id,value_id,value,description,order_id,status)
+        VALUES (103,$group_id,1,'Project Approval','Pending project registration',11,'P')");
 
       # We also need to make the task tracker post restriction of comment
       # accepting posting from logged-in users, otherwise they wont be able
@@ -466,8 +495,10 @@ else if ($i_disagree && $group_id && $rand_hash)
   $HTML->header(array('title'=>_("Registration Deleted")));
   $group_id = $group_id_not_yet_valid;
 
-  $result=db_query("DELETE FROM groups "
-		   .	"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
+  $result=db_query_escape(
+    "DELETE FROM groups
+     WHERE group_id='%s' AND rand_hash='__%s'",
+    $group_id, $rand_hash);
 
   print '
 <h3>'._("Project Deleted").'</h3>
@@ -481,7 +512,7 @@ else
   unset($group_id);
   exit_error('Error',_("This is an invalid state.").' '
 	     ._("Some form variables were missing.").' '
-	     .sprintf(_("If you are certain you entered everything, %sPLEASE%s report to %s including info on your browser and platform configuration."),'<strong>','</strong>',$GLOBALS['sys_email_address']));
+	     .sprintf(_("If you are certain you entered everything, PLEASE report to %s including info on your browser and platform configuration."),$GLOBALS['sys_email_address']));
 }
 
 ?>

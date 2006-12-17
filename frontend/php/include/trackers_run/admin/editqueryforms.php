@@ -147,7 +147,7 @@ if ($new_report)
   $title_arr[]=_("Column width (optional)");
 
   print'
-	<form action="'.$PHP_SELF.'" method="post">
+	<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 	   <input type="hidden" name="create_report" value="y" />
 	   <input type="hidden" name="group_id" value="'.$group_id.'" />
 	   <input type="hidden" name="post_changes" value="y" />
@@ -290,7 +290,7 @@ if ($new_report)
       $title_arr[]=_("Rank on Output");
       $title_arr[]=_("Column width (optional)");
 
-      print '<form action="'.$PHP_SELF.'" method="post">
+      print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 	   <input type="hidden" name="update_report" value="y" />
 	   <input type="hidden" name="group_id" value="'.$group_id.'" />
 	   <input type="hidden" name="report_id" value="'.$report_id.'" />
@@ -415,11 +415,11 @@ else
 	    }
 	  else
 	    {
-	      print '<a href="'.$PHP_SELF.'?group='.$group_name.
+	      print '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.
 		'&show_report=1&report_id='.$arr['report_id'].'">'.
 		$arr['report_id'].'</a>';
 	      print "</td>\n";
-	      print '<td><a href="'.$PHP_SELF.'?group='.$group_name.
+	      print '<td><a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.
 		'&show_report=1&report_id='.$arr['report_id'].'">'.
 		$arr['name'].'</a></td>';
 	    }
@@ -434,7 +434,7 @@ else
 	    }
 	  else
 	    {
-	      print '<a href="'.$PHP_SELF.'?group='.$group_name.
+	      print '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.
 		'&amp;delete_report=1&amp;report_id='.$arr['report_id'].
 		'&amp;rep_name='.$arr['name'].'">'.
 		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" /></A>';

@@ -269,7 +269,7 @@ else
     }
 
   $result_w = trackers_data_get_watchers(user_getid());
-  $arr_watchers = array();
+  $watchers = '';
   while ($row_watcher = db_fetch_array($result_w))
     {
       $watchers .= utils_user_link(user_getname($row_watcher['user_id']), user_getrealname($row_watcher['user_id'])).' <span class="smaller">['.group_getname($row_watcher['group_id']).']</span>, ';
@@ -342,7 +342,7 @@ if ($words)
       print '<p>';
       print _("To request inclusion in one or several groups, check the correspondent boxes, write a meaningful message for the project administrator who will approve or disapprove the request, and submit the form.");
 
-      print '</p>'.form_header($PHP_SELF);
+      print '</p>'.form_header($_SERVER['PHP_SELF']);
 
       while ($val = db_fetch_array($result_search))
 	{

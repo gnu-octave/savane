@@ -88,8 +88,8 @@ if (user_isloggedin())
 
   $form_threshold = sane_all("form_threshold");
   $form_open = sane_all("form_open");
-  unset($threshold);
-  unset($open);
+  $threshold = NULL;
+  $open = NULL;
 
   # Extract arguments
   if ($form_threshold)
@@ -133,7 +133,7 @@ if (user_isloggedin())
   $fopen = '<select name="form_open"><option value="open" '.($open == "open" ? 'selected="selected"':'').'>'._("Open").'</option><option value="closed" '.($open == "closed" ? 'selected="selected"':'').'>'._("Closed").'</option></select> ';
   $fthreshold = '<select name="form_threshold"><option value="1" '.($threshold == 1 ? 'selected="selected"':'').'>'._("Lowest").'</option><option value="3" '.($threshold == 3 ? 'selected="selected"':'').'>'._("Low").'</option><option value="5" '.($threshold == 5 ? 'selected="selected"':'').'>'._("Normal").'</option><option value="7" '.($threshold == 7 ? 'selected="selected"':'').'>'._("High").'</option><option value="9" '.($threshold == 9 ? 'selected="selected"':'').'>'._("Immediate").'</option></select> ';
 
-  $form_opening = '<form action="'.$PHP_SELF.'#options" method="get">';
+  $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
   $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
   print html_show_displayoptions(sprintf(_("Show %s new items or of %s priority at least."), $fopen, $fthreshold),
 				 $form_opening,

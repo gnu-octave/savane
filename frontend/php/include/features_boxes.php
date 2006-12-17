@@ -139,6 +139,7 @@ function show_newest_projects($group_type, $limit)
   if (!db_numrows($res_newproj))
     { return false; }
 
+  $base_url = '';
   $sql_type = "SELECT type_id,base_host FROM group_type WHERE type_id=$group_type";
   $res_newproj_type = db_query($sql_type);
   $row_newproj_type = db_fetch_array($res_newproj_type);
@@ -147,12 +148,13 @@ function show_newest_projects($group_type, $limit)
       $base_url = 'http'.(session_issecure()?'s':'').'://'.$row_newproj_type['base_host'];
     }
   
+  $return = '';
   while ($row_newproj = db_fetch_array($res_newproj))
     {
       if ($row_newproj['register_time'])
 	{
 	  $return .= '<div class="'.utils_get_alt_row_color($j).'"><span class="smaller">&nbsp;&nbsp;- <a href="'.$base_url.$GLOBALS['sys_home']."projects/$row_newproj[unix_group_name]/\">"
-	    . $row_newproj[group_name].'</a>, '.format_date('minimal',$row_newproj['register_time']).'</span></div>';
+	    . $row_newproj['group_name'].'</a>, '.format_date('minimal',$row_newproj['register_time']).'</span></div>';
 	  $j++;
 	}
     }

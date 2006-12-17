@@ -78,7 +78,7 @@ trackers_header_admin(array ('title'=>_("Set Permissions")));
 
 ########################### POSTING RESTRICTIONS
 print '<h3>'._("Posting Restrictions").'</h3>';
-print '<form action="'.$PHP_SELF.'" method="post">
+print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 <input type="hidden" name="group" value="'.$group_name.'" />';
 
 ## post restriction

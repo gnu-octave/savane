@@ -60,7 +60,7 @@ $login = sane_all("login");
 $cookie_test = sane_all("cookie_test");
 
 
-if ($GLOBALS['sys_https_host'] != "" && !session_issecure())
+if (isset($GLOBALS['sys_https_host']) && !session_issecure())
 {
   # Force use of TLS for login
   header('Location: '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri);
@@ -168,7 +168,7 @@ if (sane_all("login"))
     }
 }
 
-if ($session_hash)
+if (isset($session_hash))
 {
    # Nuke their old session securely. 
    session_delete_cookie('session_hash');
@@ -245,7 +245,7 @@ if ($cookie_for_a_year)
 print '<p><input type="checkbox" name="cookie_for_a_year" tabindex="1" value="1" '.$checked.'/><span class="preinput">'._("Remember me").'</span><br />';
 print '<span class="text">'._("For a year, your login information will be stored in a cookie. Use this only if you are using your own computer.").'</span>';
 
-if ($GLOBALS['sys_brother_domain'])
+if (!empty($GLOBALS['sys_brother_domain']))
 {
   $checked = 'checked="checked" ';
   if ($login and !$brotherhood)

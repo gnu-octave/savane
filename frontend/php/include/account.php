@@ -39,7 +39,9 @@ function account_pwvalid ($pw)
 
 function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1, $allow_dots=0, $nameof=0, $MAX_ACCNAME_LENGTH=16, $MIN_ACCNAME_LENGTH=3)
 {
-  unset($underscore, $dashe, $dot);
+  $underscore = '';
+  $dashe = '';
+  $dot = '';
 
   # By default, we are supposed to check for an account name. But it may 
   # be a list name or whatever
@@ -104,7 +106,7 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1, $allow
   if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$underscore$dash$dot")
       != strlen($name))
     {
-      unset($tolerated);
+      $tolerated = '';
       if ($allow_underscores) 
 	{ $tolerated .= _("underscores").', '; }
       if ($allow_dashes) 

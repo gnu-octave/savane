@@ -59,15 +59,15 @@ function exit_permission_denied()
 function exit_not_logged_in() 
 {
   #instead of a simple error page, take user to the login page
-  global $REQUEST_URI;
+  global $REQUEST_URI, $sys_https_host, $sys_default_domain, $sys_home;
   
   if ($GLOBALS['sys_https_host'])
     {  
-      header('Location: https://'.$GLOBALS['sys_https_host'].$GLOBALS['sys_home'].'account/login.php?uri='.urlencode($REQUEST_URI));
+      header("Location: https://".$sys_https_host.$sys_home.'account/login.php?uri='.urlencode($REQUEST_URI));
     } 
   else 
     {
-      header ("Location: http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']."account/login.php?uri=".urlencode($REQUEST_URI));
+      header ("Location: http://".$sys_default_domain.$sys_home."account/login.php?uri=".urlencode($REQUEST_URI));
     }
 }
 

@@ -32,7 +32,7 @@ if (!$res_user || db_numrows($res_user) < 1)
   exit_error('No Such User','No Such User');
 }
 
-site_header(array('title'=>sprintf(_("%s Profile"),db_result($res_user, $i, 'realname')),
+site_header(array('title'=>sprintf(_("%s Profile"),db_result($res_user, 0, 'realname')),
 		  'context'=>'people'));
 
 # For suspended account, we will print only very basic info:
@@ -49,7 +49,7 @@ if (db_result($res_user,0,'status') == 'SQD')
 
 
 
-print '<p>'.sprintf(_("Follows the Profile of %s."), utils_user_link(db_result($res_user, $i, 'user_name'),db_result($res_user, $i, 'realname')));
+print '<p>'.sprintf(_("Follows the Profile of %s."), utils_user_link(db_result($res_user, 0, 'user_name'),db_result($res_user, 0, 'realname')));
 
 if ($is_squad) 
 {
@@ -272,6 +272,7 @@ if ($rows_without_history != $rows)
 
   $j = 1;
   unset($content);
+  $exists = FALSE;
   for ($i=0; $i<$rows; $i++)
     {
       # Ignore if requesting for inclusion

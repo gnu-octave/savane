@@ -337,7 +337,7 @@ if (sane_get("add_list"))
   
   print '
 			<p>
-			<form method="post" action="'.$PHP_SELF.'">
+			<form method="post" action="'.$_SERVER['PHP_SELF'].'">
 			<input type="hidden" name="post_changes" value="y" />
 			<input type="hidden" name="add_list" value="y" />
 			<input type="hidden" name="group_id" value="'.$group_id.'" />
@@ -395,7 +395,7 @@ else if (sane_get("change_status"))
       
 
       # Start form
-  print form_header($PHP_SELF);
+  print form_header($_SERVER['PHP_SELF']);
   print form_input("hidden", "post_changes", "y");
   print form_input("hidden", "change_status", "y");
   print form_input("hidden", "group_id", $group_id);
@@ -472,9 +472,9 @@ else
   # the <br /> in front is here to put some space with the menu
   # Please, keep it
   print '<br />
- <a href="'.$PHP_SELF.'?group='.$group_name.'&add_list=1">'._("Add Mailing List").'</a><p class="text">'._("You can create mailing lists for your project using the web interface.").'</p>
+ <a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.'&add_list=1">'._("Add Mailing List").'</a><p class="text">'._("You can create mailing lists for your project using the web interface.").'</p>
  
- <a href="'.$PHP_SELF.'?group='.$group_name.'&change_status=1">'._("Administer/Update Lists").'</A><p class="text">'._("Update information on existing mailing lists and change their policy.").'</p>
+ <a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.'&change_status=1">'._("Administer/Update Lists").'</A><p class="text">'._("Update information on existing mailing lists and change their policy.").'</p>
   ';
  
   site_project_footer(array());

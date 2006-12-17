@@ -21,10 +21,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../../include/pre.php";
+require_once('../../include/pre.php');
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-
+session_require(array('group' => $group_id,
+		      'admin_flags' => 'A'));
 
 # If this was a submission, make updates
 if ($update)
@@ -238,7 +238,7 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
 print _("You can activate or deactivate feature/artifact for your project. In some case, depending on the system administrator's choices, you can even use change the URL for a feature/artifact. If the field 'alternative address' is empty, the standard is used.");
 print '<p></p>';
 
-print form_header($PHP_SELF).form_input("hidden", "group_id", $group_id);
+print form_header($_SERVER['PHP_SELF']).form_input("hidden", "group_id", $group_id);
 
 
 $title_arr=array();

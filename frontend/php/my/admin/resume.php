@@ -146,7 +146,7 @@ $viewableoptions = array("0" => _("No"),
 
 
 
-print '<form action="'.$PHP_SELF.'" method="post">'
+print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">'
 .'<h3>'._("Publicly Viewable").'</h3>'
 .'<span class="preinput">'._("Do you want your resume to be activated:").'</span>&nbsp;&nbsp;'
 .html_build_select_box_from_array(array("0" => _("No"),"1" => _("Yes")),

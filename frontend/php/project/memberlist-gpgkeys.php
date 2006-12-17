@@ -36,7 +36,7 @@ if (!$download) {
 
   print '<p>'._("Below is the content of this project's keyring. These are the successfully registered keys of project members.").'</p>';
   print nl2br(htmlspecialchars($keyring));
-  print '<p>'.sprintf(_("You can %sdownload the keyring%s and import it with the command %s"), '<a href="'.$PHP_SELF.'?group='.$group_name.'&amp;download=1">', '</a>', '<em>gpg --import &lt;file&gt;</em>').'</p>';
+  print '<p>'.sprintf(_("You can %sdownload the keyring%s and import it with the command %s"), '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.'&amp;download=1">', '</a>', '<em>gpg --import &lt;file&gt;</em>').'</p>';
 
   site_project_footer(array());
 } else {

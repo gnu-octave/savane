@@ -48,7 +48,7 @@ elseif ($func == "digestselectfield")
 
   trackers_header(array('title'=>_("Digest Items: Fields Selection")));
 
-  print '<form action="'.$PHP_SELF.'" method="get">
+  print '<form action="'.$_SERVER['PHP_SELF'].'" method="get">
 <input type="hidden" name="group" value="'.$group_name.'" />
 <input type="hidden" name="func" value="digestget" />
 ';

@@ -46,6 +46,8 @@ if (!$item)
   exit_missing_param();
 }
 
+$success = FALSE;
+
 # To delete the account, the user must have first quitted all groups.
 # Yes, this form could do automatically this, but when a user quit his group
 # it send mails to people that should be informed, so it is best to push
@@ -413,6 +415,19 @@ if ($update)
 # If we reach this point, it means that not sucessful update has been
 # already made.
 
+# Texts to be displayed
+$preamble = '';
+$input_specific = '';
+
+# Defines some information if not specific
+$form_item_name = "newvalue";
+$input_title = '';
+$input_type = "text";
+$input2_type = NULL;
+$input3_type = NULL;
+$input4_type = NULL;
+
+
 # Defines the page depending on the item given
 if ($item == "realname")
 {
@@ -509,20 +524,13 @@ else if ($item == "delete")
 
 
 
-# Defines some information if not specific
-if (!$form_item_name)
-{ $form_item_name = "newvalue"; }
-if (!$input_title)
-{ $input_title = $title; }
-if (!$input_type)
-{ $input_type = "text"; }
-
-
 ########################################################################
 # Actually prints the HTML page
 site_user_header(array('title'=>$title,
 		       'context'=>'account'));
 
+if (!$input_title)
+     $input_title = $title;
 
 if ($preamble)
 {

@@ -72,7 +72,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
   if ($is_small)
     { $ret .= '<br />'; }
 
-  if (isset($only_artifact))
+  if (!empty($only_artifact))
     {
       $ret .= '<input type="hidden" name="type_of_search" value="'.htmlspecialchars($only_artifact).'" />';
     }
@@ -87,23 +87,23 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
       # If the search is restricted to a given group, remove the possibility
       # to search another group, unless we're showing the left box
-     if (!isset($group_id))
+     if (empty($group_id))
        {
       $ret .= '<option value="soft"'.(($type_of_search == "soft")||($type_of_search == "") ? ' selected="selected"' : "").'>'._("Projects")."</option>\n";
 
       $ret .= '<option value="people"'.(($type_of_search == "people") ? ' selected="selected"' : "").'>'._("People")."</option>\n";
        }
 
-     if (isset($group_id))
+     if (!empty($group_id))
        $group_realname = substr(group_getname($group_id), 0, 10)."...";
 
-      if (!$project && isset($group_id))
+      if (!$project && !empty($group_id))
 	{
 	  $project = project_get_object($group_id);
 	}
 
       unset($text);
-      if (!isset($group_id) || $is_small)
+      if (empty($group_id) || $is_small)
 	{ $text = _("Cookbook"); }
       else
 	{
@@ -115,7 +115,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       unset($text);
-      if (!isset($group_id) ||
+      if (empty($group_id) ||
 	  ($is_small && $project->Uses("support")))
 	{ $text = _("Support");	}
       else
@@ -132,7 +132,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       unset($text);
-      if (!isset($group_id) ||
+      if (empty($group_id) ||
 	  ($is_small && $project->Uses("bugs")))
 	{ $text = _("Bugs");	}
       else
@@ -148,7 +148,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       unset($text);
-      if (!isset($group_id) ||
+      if (empty($group_id) ||
 	  ($is_small && $project->Uses("task")))
 	{ $text = _("Tasks");	}
       else
@@ -163,8 +163,9 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
       $ret .= '<option value="task"'.(($type_of_search == "task") ? ' selected="selected"' : "").'>'.$text."</option>\n";
 	}
 
-      unset($text);
-      if (!isset($group_id) ||
+      $text = '';
+      $ret = '';
+      if (empty($group_id) ||
 	  ($is_small && $project->Uses("patch")))
 	{ $text = _("Patches");	}
       else

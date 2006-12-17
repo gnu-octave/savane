@@ -74,7 +74,7 @@ if (db_numrows($result) > 0)
 
   print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'), db_result($result,0,'status_id')).'">'.sprintf(_("<em>%s</em>:"), $item_link).' '.db_result($result,0,'summary').'</h2>';
 
-  print form_header($PHP_SELF, $form_id, "post", 'enctype="multipart/form-data" name="item_form"');
+  print form_header($_SERVER['PHP_SELF'], $form_id, "post", 'enctype="multipart/form-data" name="item_form"');
   print form_input("hidden", "func", "postaddcomment");
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "item_id", $item_id);

@@ -22,7 +22,7 @@
 
 # First, initialize some globals var: conffile allows two vals for 
 # admin conveniency.
-if (isset($GLOBALS['sys_spamcheck_spamassassin']))
+if (!empty($GLOBALS['sys_spamcheck_spamassassin']))
 {
   if ($GLOBALS['sys_spamcheck_spamassassin'] == 1)
     { $GLOBALS['sys_spamcheck_spamassassin'] = "anonymous"; }

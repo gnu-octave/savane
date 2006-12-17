@@ -22,11 +22,16 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";    
+require_once('../include/pre.php');
 
-session_require(array('isloggedin'=>'1'));
+session_require(array('isloggedin' => '1'));
 
-require(dirname(__FILE__).'/../include/account.php');
+require('../include/account.php');
+
+
+extract(sane_import('post',
+  array('insert_purpose', 'form_purpose', 'form_required_sw',
+	'form_comments', 'form_full_name', 'form_unix_name')));
 
 # push received vars
 if ($insert_purpose && $form_purpose) { 
@@ -35,23 +40,27 @@ if ($insert_purpose && $form_purpose) {
 	$random_num=mt_rand(0,1000000);
 
 	# make group entry
-	$result = db_query("INSERT INTO groups (group_name,is_public,unix_group_name,status,license,register_purpose,required_software,other_comments,register_time,license_other,rand_hash) VALUES ("
-		. "'__$random_num',"
-		. "1," # public
-		. "'__$random_num',"
-		. "'I'," # status set to inactive until the registration is complete
-		. "'__$random_num',"
-		. "'".htmlspecialchars($form_purpose)."',"
-		. "'".htmlspecialchars($form_required_sw)."',"
-		. "'".htmlspecialchars($form_comments)."',"
-		. time() . ","
-		. "'__$random_num','__".md5($random_num)."')");
+	$result = db_query_escape(
+          "INSERT INTO groups (group_name,is_public,unix_group_name,status,license,
+                               register_purpose,required_software,
+                               other_comments,register_time,
+                               license_other,rand_hash)
+           VALUES ('__%s',1,'__%s','I','__%s',
+                   '%s','%s',
+                   '%s','%s',
+                   '__%s','__%s')",
+	  $random_num, $random_num, $random_num,
+	  htmlspecialchars($form_purpose), htmlspecialchars($form_required_sw),
+	  htmlspecialchars($form_comments), time(),
+	  $random_num, md5($random_num)
+        );
 
 	if (!$result) 
 	  {
 	    unset($group_id);
-	    exit_error('ERROR','INSERT QUERY FAILED. Please notify '.$GLOBALS['sys_mail_admin'].'@'.$GLOBALS['sys_mail_domain']);
-	  } 
+	    exit_error('ERROR','INSERT QUERY FAILED. Please notify '
+		       . $GLOBALS['sys_mail_admin'].'@'.$GLOBALS['sys_mail_domain']);
+	  }
 	else 
 	  {
 	    $group_id=db_insertid($result);
@@ -81,9 +90,6 @@ utils_get_content("register/projectname");
 print '<p>'._("Please complete both fields").'.</p>';
 
 print '<form action="license.php" method="post">';
-
-# avoid pre.php looking for group_type info
-print '<input type="hidden" name="no_redirection" value="1" />';
 
 
 #FIXME
@@ -122,4 +128,3 @@ print '</form>';
 print '<div align="center"><span class="error">'._("Do not click back button after this point (unless asked to).").'</span></div>';
 
 $HTML->footer(array());
-?>

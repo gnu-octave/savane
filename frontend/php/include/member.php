@@ -51,7 +51,6 @@ function member_add ($user_id, $group_id, $status='')
   else
     { 
       fb(_("This user is already member of the group."));
-      print $feedback;
       return 0; 
     }
 }

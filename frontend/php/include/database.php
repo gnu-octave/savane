@@ -25,7 +25,8 @@
 
 function db_connect() 
 {
-  global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn;
+  global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
+
 
   // Test the presence of php-mysql - you get a puzzling blank page
   // when it's not installed
@@ -42,21 +43,39 @@ function db_connect()
     exit;
   }
 
-  $conn = @mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
-  if (!$conn) {
+  $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
+  if (!$conn or !mysql_select_db($sys_dbname, $conn)) {
     fb("Failed to connect to database. Please contact as soon as possible server administrators. Until this problem get fixed, you will not be able to use this site.", 1);
   }
 }
 
+// sprinf-like function to auto-escape SQL strings
+// db_query_escape("SELECT * FROM user WHERE user_name='%s'", $_GET['myuser']);
+function db_query_escape()
+{
+  $num_args = func_num_args();
+  if ($num_args < 1)
+    die(_("Missing parameter"));
+  $args = func_get_args();
+
+  // Escape all params except the query itself
+  for ($i = 1; $i < $num_args; $i++)
+    $args[$i] = mysql_real_escape_string($args[$i]);
+
+  $query = call_user_func_array('sprintf', $args);
+  return db_query($query);
+}
+
 function db_query($qstring,$print=0) 
 {
-
   #	global $QUERY_COUNT;
   #	$QUERY_COUNT++;
   if ($print) print "<br />Query is: $qstring<br />";
   #	if ($GLOBALS[IS_DEBUG]) $GLOBALS[G_DEBUGQUERY] .= $qstring . "<BR>\n";
-  global $sys_dbname;
-  $GLOBALS['db_qhandle'] = @mysql($sys_dbname,$qstring);
+  $GLOBALS['db_qhandle'] = mysql_query($qstring);
+# context-related function rely on failsafe mysql errors - to fix
+#  if (!$GLOBALS['db_qhandle'])
+#    echo mysql_error();
   return $GLOBALS['db_qhandle'];
 }
 
@@ -64,7 +83,7 @@ function db_numrows($qhandle)
 {
   # return only if qhandle exists, otherwise 0
   if ($qhandle) {
-    return @mysql_numrows($qhandle);
+    return mysql_numrows($qhandle);
   } else {
     return 0;
   }
@@ -72,37 +91,37 @@ function db_numrows($qhandle)
 
 function db_free_result($qhandle) 
 {
-  return @mysql_free_result($qhandle);
+  return mysql_free_result($qhandle);
 }
 
 function db_result($qhandle,$row,$field) 
 {
-  return @mysql_result($qhandle,$row,$field);
+  return mysql_result($qhandle,$row,$field);
 }
 
 function db_numfields($lhandle) 
 {
-  return @mysql_numfields($lhandle);
+  return mysql_numfields($lhandle);
 }
 
 function db_fieldname($lhandle,$fnumber) 
 {
-  return @mysql_field_name($lhandle,$fnumber);
+  return mysql_field_name($lhandle,$fnumber);
 }
 
 function db_affected_rows($qhandle) 
 {
-  return @mysql_affected_rows();
+  return mysql_affected_rows();
 }
 	
 function db_fetch_array($qhandle = 0) 
 {
 
   if ($qhandle) {
-    return @mysql_fetch_array($qhandle);
+    return mysql_fetch_array($qhandle);
   } else {
     if ($GLOBALS['db_qhandle']) {
-      return @mysql_fetch_array($GLOBALS['db_qhandle']);
+      return mysql_fetch_array($GLOBALS['db_qhandle']);
     } else {
       return (array());
     }
@@ -112,12 +131,12 @@ function db_fetch_array($qhandle = 0)
 function db_insertid($qhandle) 
 {
 
-  return @mysql_insert_id();
+  return mysql_insert_id();
 }
 
 function db_error() 
 {
-  return @mysql_error();
+  return mysql_error();
 }
 
 # Return an sql insert command taking in input a qhandle:

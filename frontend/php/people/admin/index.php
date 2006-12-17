@@ -126,7 +126,7 @@ if ($people_cat)
   print '<p>';
   print '<h3>'._("Add a new job category:").'</h3>';
   print '<p>';
-  print '<form action="'.$PHP_SELF.'" method="post">';
+  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
   print '<input type="hidden" name="people_cat" value="y" />';
   print '<input type="hidden" name="post_changes" value="y" />';
   print '<h4>'._("New Category Name:").'</h4>';
@@ -169,7 +169,7 @@ else if ($people_skills)
 		
   print '<p><h3>'._("Add a new skill:").'</h3></p>';
   print '<p>;
-		<form action="'.$PHP_SELF.'" method="post">
+		<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 		<input type="hidden" name="people_skills" value="y" />
 		<input type="hidden" name="post_changes" value="y" /></p>';
   print '<h4>'._("New Skill Name:").'</h4>';
@@ -191,10 +191,10 @@ else
 
   print '<h2>'._("Help Wanted Administration").'</h2>';
 
-  print '<p><a href="'.$PHP_SELF.'?people_cat=1">'._("Add Job Categories").'</a><br />';
+  print '<p><a href="'.$_SERVER['PHP_SELF'].'?people_cat=1">'._("Add Job Categories").'</a><br />';
   #	print "\nAdd categories of bugs like, 'mail module','gant chart module','interface', etc<P>";
 
-  print "\n<a href=\"$PHP_SELF?people_skills=1\">"._("Add Job Skills").'</a><br />';
+  print "\n<a href=\"$_SERVER['PHP_SELF']?people_skills=1\">"._("Add Job Skills").'</a><br />';
   #	print "\nAdd Groups of bugs like 'future requests','unreproducible', etc<P>";
 
   site_project_footer(array());

@@ -263,7 +263,7 @@ if ($group_id && user_ismember($group_id,'A'))
 		    }
 		  else
 		    {
-		      $html .= '<td><a href="'.$PHP_SELF.'?update_value=1'.
+		      $html .= '<td><a href="'.$_SERVER['PHP_SELF'].'?update_value=1'.
 			'&fv_id='.$item_fv_id.'&field='.$field.
 			'&group_id='.$group_id.'">'.$value.'</A></td>';
 		    }
@@ -338,7 +338,7 @@ if ($group_id && user_ismember($group_id,'A'))
 # are mandatory
 
 	      print '
-      <form action="'.$PHP_SELF.'" method="post">
+      <form action="'.$_SERVER['PHP_SELF'].'" method="post">
       <input type="hidden" name="post_changes" value="y" />
       <input type="hidden" name="create_value" value="y" />
       <input type="hidden" name="list_value" value="y" />
@@ -543,7 +543,7 @@ if ($group_id && user_ismember($group_id,'A'))
 		      print '<td align="center">---------</td>'
 			.'<td align="center">--------</td>';
 		    }
-                  print '<td align="center">'.utils_link($PHP_SELF.'?group='.$group_name.'&amp;func=deltransition&amp;transition_id='.$transition['transition_id'].'&amp;list_value=1&amp;field='.$field, '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Delete this transition?").'" />').'</td>';
+                  print '<td align="center">'.utils_link($_SERVER['PHP_SELF'].'?group='.$group_name.'&amp;func=deltransition&amp;transition_id='.$transition['transition_id'].'&amp;list_value=1&amp;field='.$field, '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Delete this transition?").'" />').'</td>';
                   print '</tr>';
                 }
 
@@ -557,7 +557,7 @@ if ($group_id && user_ismember($group_id,'A'))
 
 
 	  print '
-                     <form action="'.$PHP_SELF.'#registered" method="post">
+                     <form action="'.$_SERVER['PHP_SELF'].'#registered" method="post">
                      <input type="hidden" name="post_transition_changes" value="y" />
                      <input type="hidden" name="list_value" value="y" />
                      <input type="hidden" name="tracker_name" value="'.ARTIFACT.'" />
@@ -626,7 +626,7 @@ if ($group_id && user_ismember($group_id,'A'))
 # Get all attributes of this value
       $res = trackers_data_get_field_value($fv_id);
 
-      print '<form action="'.$PHP_SELF.'" method="post">
+      print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
       <input type="hidden" name="post_changes" value="y" />
       <input type="hidden" name="update_value" value="y" />
       <input type="hidden" name="list_value" value="y" />
@@ -697,11 +697,11 @@ if ($group_id && user_ismember($group_id,'A'))
 # FIXME: delete should use the basket, like it is done in many
 # other places
 	      print '<tr class="'. utils_get_alt_row_color($i) .'">'.
-		'<td><a href="'.$PHP_SELF.'?update_canned=1&amp;item_canned_id='.
+		'<td><a href="'.$_SERVER['PHP_SELF'].'?update_canned=1&amp;item_canned_id='.
 		db_result($result, $i, 'bug_canned_id').'&amp;group_id='.$group_id.'">'.
 		db_result($result, $i, 'title').'</A></TD>'.
 		'<td>'.substr(db_result($result, $i, 'body'),0,360).'...'.
-		'<td>'.db_result($result, $i, 'order_id').'<td class="center"><a href="'.$PHP_SELF.'?delete_canned=1&amp;item_canned_id='.
+		'<td>'.db_result($result, $i, 'order_id').'<td class="center"><a href="'.$_SERVER['PHP_SELF'].'?delete_canned=1&amp;item_canned_id='.
 		db_result($result, $i, 'bug_canned_id').'&amp;group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Delete this canned answer?").'" />
 		</a></td></tr>';
 	    }
@@ -719,7 +719,7 @@ if ($group_id && user_ismember($group_id,'A'))
       print '<h3>'._("Create a new response").'</h3>
      <p>
      '._("Creating generic quick responses can save a lot of time when giving common responses.").'</p>
-     <form action="'.$PHP_SELF.'" method="post">
+     <form action="'.$_SERVER['PHP_SELF'].'" method="post">
      <input type="hidden" name="create_canned" value="y" />
      <input type="hidden" name="group_id" value="'.$group_id.'" />
      <input type="hidden" name="post_changes" value="y" />
@@ -758,7 +758,7 @@ if ($group_id && user_ismember($group_id,'A'))
 	  print '<p>'
 	    ._("Creating generic messages can save you a lot of time when giving common responses.").'</p>
       <p>
-      <form action="'.$PHP_SELF.'" method="post">
+      <form action="'.$_SERVER['PHP_SELF'].'" method="post">
       <input type="hidden" name="update_canned" value="y" />
       <input type="hidden" name="group_id" value="'.$group_id.'" />
       <input type="hidden" name="item_canned_id" value="'.$item_canned_id.'" />
@@ -809,7 +809,7 @@ if ($group_id && user_ismember($group_id,'A'))
 			       _("Project"):_("System"));
 
 	      print '<tr class="'. utils_get_alt_row_color($i) .'">'.
-		'<td><a href="'.$PHP_SELF.'?group_id='.$group_id.'&list_value=1&field='.$field_name.'">'.trackers_data_get_label($field_name).'</a></td>'.
+		'<td><a href="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&list_value=1&field='.$field_name.'">'.trackers_data_get_label($field_name).'</a></td>'.
 		"\n<td>".trackers_data_get_description($field_name).'</td>'.
 		"\n<td>".$scope_label.'</td>'.
 		'</tr>';
@@ -819,7 +819,7 @@ if ($group_id && user_ismember($group_id,'A'))
 
 # Now the special canned response field
       print '<tr class="'. utils_get_alt_row_color($i) .'">';
-      print "<td><a href=\"$PHP_SELF?group_id=$group_id&amp;create_canned=1\">"._("Canned Responses").'</a></td>';
+      print "<td><a href=\"$_SERVER['PHP_SELF']?group_id=$group_id&amp;create_canned=1\">"._("Canned Responses").'</a></td>';
       print "\n<td>"._("Create or change generic quick response messages for this issue tracker. These pre-written messages can then be used to quickly reply to item submissions.").' </td>';
       print "\n<td>"._("Project").'</td></tr>';
       print '</table>';

@@ -303,10 +303,10 @@ function session_require($req)
   if (user_is_super_user()) 
     { return true; }
   
-  if ($req['group']) 
+  if (!empty($req['group']))
     {
-      $query = "SELECT user_id FROM user_group WHERE user_id=".user_getid()." AND group_id='$req[group]'";
-      if ($req['admin_flags']) 
+      $query = "SELECT user_id FROM user_group WHERE user_id=".user_getid()." AND group_id='{$req['group']}'";
+      if (!empty($req['admin_flags']))
 	{
 	  $query .= " AND admin_flags='$req[admin_flags]'";	
 	}
@@ -318,7 +318,7 @@ function session_require($req)
       
       return true;
     }
-  elseif ($req['user']) 
+  elseif (!empty($req['user']))
     {
       if (user_getid() != $req['user']) 
 	{		  
@@ -327,7 +327,7 @@ function session_require($req)
 
       return true;
     }
-  elseif ($req['isloggedin']) 
+  elseif (!empty($req['isloggedin']))
     {
       if (!user_isloggedin()) 
 	{
@@ -376,13 +376,13 @@ function session_set_new($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
   # concatinate current time, and random seed for MD5 hash
   # continue until unique hash is generated (SHOULD only be once)
   do {
-    $pre_hash = time() . rand() . $GLOBALS['REMOTE_ADDR'] . microtime();
+    $pre_hash = time() . rand() . $_SERVER['REMOTE_ADDR'] . microtime();
     $GLOBALS['session_hash'] = md5($pre_hash);
   } 
   while (db_numrows(db_query("SELECT session_hash FROM session WHERE session_hash='$GLOBALS[session_hash]'")) > 0);
   
   # make new session entries into db
-  db_query("INSERT INTO session (session_hash, ip_addr, time, user_id, stay_in_ssl) VALUES ('".addslashes($GLOBALS[session_hash])."','".addslashes($GLOBALS[REMOTE_ADDR])."'," . time() . ",'$user_id','$stay_in_ssl')");
+  db_query("INSERT INTO session (session_hash, ip_addr, time, user_id, stay_in_ssl) VALUES ('".addslashes($GLOBALS['session_hash'])."','".addslashes($_SERVER['REMOTE_ADDR'])."'," . time() . ",'$user_id','$stay_in_ssl')");
   
   # set global
   $res=db_query("SELECT * FROM session WHERE session_hash='$GLOBALS[session_hash]'");
@@ -443,7 +443,7 @@ function session_set()
       # does hash exist?
       if ($G_SESSION['session_hash']) 
 	{
-	  if (session_checkip($G_SESSION['ip_addr'],$GLOBALS['REMOTE_ADDR'])) 
+	  if (session_checkip($G_SESSION['ip_addr'],$_SERVER['REMOTE_ADDR'])) 
 	    {
 	      $id_is_good = 1;
 	    } 

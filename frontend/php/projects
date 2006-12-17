@@ -1,4 +1,4 @@
-<?php
+<?php # -*- PHP -*-
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -24,13 +24,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # The context of this page cannot be guessed later, we have to hardcode it
-define(CONTEXT, "project");
-require "./include/pre.php";  
+define('CONTEXT', 'project');
+require_once('include/pre.php');
 
 register_globals_off();
 
 # Extract the group name
-$pathinfo = basename(ereg_replace("\?.*", "", $_SERVER[REQUEST_URI]));
+$pathinfo = basename(ereg_replace("\?.*", "", $_SERVER['REQUEST_URI']));
 
 $res_grp=db_query("SELECT * FROM groups WHERE unix_group_name='".safeinput($pathinfo)."'");
 

@@ -66,7 +66,7 @@ function utils_check_path ($path)
 function utils_makereal ($data, $string="%PROJECT", $replacement=0)
 {
   if (!$replacement)
-    { $replacement = $GLOBALS[group_name]; }
+    { $replacement = $GLOBALS['group_name']; }
   return ereg_replace($string, $replacement, $data);
 }
 
@@ -302,8 +302,8 @@ function utils_format_date($timestamp, $format="default")
         # Used by default
 	# Mention timezone to non-logged in users or in printer mode.
 	# Logged-in users have this as account setting, so we can assume they
-	# now and dont want time wasted by that
-	if (user_isloggedin() && !defined(PRINTER))
+	# know and dont want time wasted by that
+	if (user_isloggedin() && !defined('PRINTER'))
 	  {
 	    return strftime('%A %x '._("at").' %R', $timestamp);
 	  }
@@ -1027,7 +1027,7 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false)
 	  {
 	    if ($linkify && $i == 0)
 	      {
-		$link = '<a href="'.$PHP_SELF.'?';
+		$link = '<a href="'.$_SERVER['PHP_SELF'].'?';
 		$linkend = '</a>';
 		if ($linkify == "bug_cat")
 		  {

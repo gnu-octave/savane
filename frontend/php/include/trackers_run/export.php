@@ -396,7 +396,7 @@ else
 	    { print $HTML->box_nextitem(utils_get_alt_row_color($i+1)); }
 
 	 print '<span class="trash">';
-	 print utils_link($PHP_SELF.'?update=1&amp;delete='.db_result($res_export, $i, 'export_id').'&amp;group='.$group_name,
+	 print utils_link($_SERVER['PHP_SELF'].'?update=1&amp;delete='.db_result($res_export, $i, 'export_id').'&amp;group='.$group_name,
 			  '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Remove this job").'" />');
 	 print '</span>';
 
@@ -492,7 +492,7 @@ else
 								   true,
 								   'Basic'),
 					     '<select name="advsrch"><option value="0"'.$advsrch_0.'>'._("Simple").'</option><option value="1"'.$advsrch_1.'>'._("Multiple").'</option></select>'),
-				     form_header($PHP_SELF.'#new', '').form_input("hidden", "group", $group_name),
+				     form_header($_SERVER['PHP_SELF'].'#new', '').form_input("hidden", "group", $group_name),
 				     form_submit(_("Apply")));
 
       ##

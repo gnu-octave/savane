@@ -89,7 +89,7 @@ function sendmail_mail ($from,
 
   # Add a signature for the server (not if delayed, because it will be added
   # we the mail will be actually sent)
-  if (!$int_delayspamcheck)
+  if (empty($int_delayspamcheck))
     {  
       $more_headers .= "X-Savane-Server: ".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']." [".$_SERVER['SERVER_ADDR']."]\n";
     }
@@ -119,7 +119,7 @@ function sendmail_mail ($from,
   # User details.
   # Tell what is the user agent, tell which authenticated user made
   # the mail to be sent
-  if (!$int_delayspamcheck)
+  if (empty($int_delayspamcheck))
     {  
       $more_headers .= "User-Agent: ".$_SERVER['HTTP_USER_AGENT']."\n";
     }
@@ -145,7 +145,7 @@ function sendmail_mail ($from,
 
   # Add a signature for the server (not if delayed, because it will be added
   # we the mail will be actually sent)
-  if (!$int_delayspamcheck)
+  if (empty($int_delayspamcheck))
    {
      $message .= "\n\n_______________________________________________
   ".sprintf(_("Message sent via/by %s"), $GLOBALS['sys_name'])."
@@ -175,7 +175,7 @@ function sendmail_mail ($from,
 
 
   # Forge the real to list, by parsing every item of the $to list
-  unset($real_to);
+  $real_to = '';
 
   # Do a first run to convert squads by users 
   $to2 = array();
@@ -364,10 +364,11 @@ function sendmail_mail ($from,
    # real names.
 
    # Send the final mail, 
+   $ret = '';
    if ($real_to) 
         {
 	  # Normally, $real_to should not contain duplicates
-	  if (!$int_delayspamcheck)
+	  if (empty($int_delayspamcheck))
 	    {
 	      $ret .= mail(sendmail_encode_header_content($real_to), sendmail_encode_header_content($subject), $message, $more_headers);
 	      fb(sprintf(_("Mail sent to %s"), utils_email($real_to, 1)));
@@ -383,7 +384,7 @@ function sendmail_mail ($from,
    # Send mails with specific subject line
    while (list(,$v) = each($list)) 
      {
-       if (!$int_delayspamcheck)
+       if (empty($int_delayspamcheck))
 	 {
 	   $ret .= mail(sendmail_encode_header_content($user_name[$v]), sendmail_encode_header_content($user_subject[$v]), $message, $more_headers);
 	   fb(sprintf(_("Mail sent to %s"), utils_email($user_name[$v], 1)));
@@ -411,6 +412,7 @@ function sendmail_mail ($from,
 # it saves us the time of searching for quotes in every words.
 function sendmail_encode_header_content ($header, $charset="UTF-8")
 {
+  $withquotes = FALSE;
   if (ereg('"', $header)) 
    {
      # quotes found, we each quoted part will be a string to encode
@@ -459,7 +461,7 @@ documentation first? Try to provide any potentially useful information you can t
    <input type="hidden" name="fromuser" value="'.user_getname().'" />
 
    <span class="preinput">'._("From:").'</span><br />&nbsp;&nbsp;&nbsp;'.user_getrealname(user_getid(), 1).' &lt;'.user_getemail(user_getid()).'&gt;<br />
-    <span class="preinput">'._("Mailer:").'</span><br />&nbsp;&nbsp;&nbsp;'.utils_cutstring($GLOBALS['HTTP_USER_AGENT'], "50").'<br />
+    <span class="preinput">'._("Mailer:").'</span><br />&nbsp;&nbsp;&nbsp;'.utils_cutstring($_SERVER['HTTP_USER_AGENT'], "50").'<br />
    <span class="preinput">'._("Subject:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="subject" size="60" maxlength="45" value="" /><br />
    <span class="preinput">'._("Message:").'</span><br />
    &nbsp;&nbsp;&nbsp;<textarea name="body" rows="20" cols="60"></textarea>

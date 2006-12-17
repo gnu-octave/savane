@@ -122,6 +122,7 @@ if (user_isloggedin())
 
   # If there is no relevant group (previous not set), it is not even necessary
   # to run the sql command
+  $result = NULL;
   if ($previous)
     {
       $result = db_query($sql);
@@ -149,7 +150,7 @@ if (user_isloggedin())
   reset($usergroups_groupid);
   # Build an sql request that will fetch any relevant news
   $sql = "SELECT group_id,date,forum_id,summary FROM news_bytes ".
-    "WHERE date > '$new_date_limit' AND (is_approved='0' OR is_approved='1') AND (group_id='".$GLOBALS[sys_group_id]."' ";
+    "WHERE date > '$new_date_limit' AND (is_approved='0' OR is_approved='1') AND (group_id='".$GLOBALS['sys_group_id']."' ";
   while (list($group, $groupname) = each ($usergroups))
     {
       $sql .= "OR group_id='".$usergroups_groupid[$group]."' ";
@@ -163,7 +164,7 @@ if (user_isloggedin())
       for ($j=0; $j<$rows; $j++)
 	{
 	  print '<div class="'.utils_get_alt_row_color($j).'">';
-	  print '<a href="'.$GLOBALS[sys_home].'forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').'">'.db_result($result, $j, 'summary').'</a><br />';
+	  print '<a href="'.$GLOBALS['sys_home'].'forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').'">'.db_result($result, $j, 'summary').'</a><br />';
 	  # FIXME: num. of new comments?
 	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), format_date($sys_datefmt,db_result($result,$j,'date'))).'</span>';
 	  print '</div>';

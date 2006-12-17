@@ -1,4 +1,4 @@
-<?php
+<?php # -*- PHP -*-
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -24,13 +24,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # The context of this page cannot be guessed later, we have to hardcode it
-define(CONTEXT, "people");
+define('CONTEXT', 'people');
 require "./include/pre.php";    
 
 register_globals_off();
 
 # Extract the user name
-$res_user=user_get_result_set_from_unix(safeinput(ereg_replace("\?.*", "", basename($_SERVER[REQUEST_URI]))));
+$res_user=user_get_result_set_from_unix(safeinput(ereg_replace("\?.*", "", basename($_SERVER['REQUEST_URI']))));
 
 if (db_numrows($res_user) < 1) {
 
