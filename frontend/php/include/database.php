@@ -96,7 +96,7 @@ function db_free_result($qhandle)
 
 function db_result($qhandle,$row,$field) 
 {
-  return mysql_result($qhandle,$row,$field);
+  return @mysql_result($qhandle,$row,$field);
 }
 
 function db_numfields($lhandle) 
