@@ -102,7 +102,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	  $project = project_get_object($group_id);
 	}
 
-      unset($text);
+      $text = '';
       if (empty($group_id) || $is_small)
 	{ $text = _("Cookbook"); }
       else
@@ -114,7 +114,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	  $ret .= '<option value="cookbook"'.(($type_of_search == "cookbook") ? ' selected="selected"' : "").'>'.$text."</option>\n";
 	}
 
-      unset($text);
+      $text = '';
       if (empty($group_id) ||
 	  ($is_small && $project->Uses("support")))
 	{ $text = _("Support");	}
@@ -131,7 +131,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	  $ret .= '<option value="support"'.(($type_of_search == "support") ? ' selected="selected"' : "").'>'.$text."</option>\n";
 	}
 
-      unset($text);
+      $text = '';
       if (empty($group_id) ||
 	  ($is_small && $project->Uses("bugs")))
 	{ $text = _("Bugs");	}
@@ -147,7 +147,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	  $ret .= '<option value="bugs"'.(($type_of_search == "bugs") ? ' selected="selected"' : "").'>'.$text."</option>\n";
 	}
 
-      unset($text);
+      $text = '';
       if (empty($group_id) ||
 	  ($is_small && $project->Uses("task")))
 	{ $text = _("Tasks");	}
@@ -164,7 +164,6 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 	}
 
       $text = '';
-      $ret = '';
       if (empty($group_id) ||
 	  ($is_small && $project->Uses("patch")))
 	{ $text = _("Patches");	}
