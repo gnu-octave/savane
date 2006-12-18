@@ -126,7 +126,7 @@ function require_directory ($module)
   if (!empty($GLOBALS['directory_'.$module.'_is_loaded']))
     { return; }
 
-  $dir = $GLOBALS['sys_www_topdir'].'/include/'.$module;
+  $dir = dirname(__FILE__).'/'.$module;
   if (is_dir($dir))
     {
       $odir = opendir($dir);
@@ -134,7 +134,7 @@ function require_directory ($module)
 	{
 	  if (eregi(".*\.(php)$", $file))
 	    {
-	      require $dir."/".$file;
+	      require_once($dir."/".$file);
 	    }
 	}
       closedir($odir);
@@ -314,8 +314,9 @@ if ((ARTIFACT == "bugs" ||
      ARTIFACT == "task" ||
      ARTIFACT == "support" ||
      ARTIFACT == "patch" ||
-     ARTIFACT == "cookbook") &&
-    ctype_digit($_SERVER['QUERY_STRING']))
+     ARTIFACT == "cookbook")
+    && !empty($_SERVER['QUERY_STRING'])
+    && ctype_digit($_SERVER['QUERY_STRING']))
 {
   sane_set("item_id", $_SERVER['QUERY_STRING']);
   sane_set("func", "detailitem");

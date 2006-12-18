@@ -28,6 +28,7 @@
 # For instance, $sober is defined by the cookbook/index.php page
 
 
+$sober = sane_chk($sober) or FALSE;
 $preference_prefix = ARTIFACT;
 if ($sober)
 {
@@ -39,7 +40,7 @@ if ($sober)
 $fields_per_line=5;
 
 # Avoid undesired user input
-unset($browse_preamble);
+$browse_preamble = '';
 
 # Number of bugs displayed on screen in one chunk.
 # Default 50
@@ -61,6 +62,14 @@ else
 $offset = sane_get("offset");
 if (!$offset || $offset < 0)
 { $offset = 0; }
+
+
+$msort = sane_get("msort");
+$sumORdet = sane_get("sumORdet");
+$order = sane_get("order");
+$printer = sane_get("order");
+
+$hdr = '';
 
 # Make sure spamscore has a numeric value between 1 and
 # 20.
@@ -136,6 +145,9 @@ while (list($field,$value_id) = each($url_params))
 
 # If history event additional constraint is used, add it
 $history_search = sane_get("history_search");
+$history_field = sane_get("history_field");
+$history_event = sane_get("history_event");
+$history_date = sane_get("history_date");
 $history_date_yearfd = sane_get("history_date_yearfd");
 $history_date_monthfd = sane_get("history_date_monthfd");
 $history_date_dayfd = sane_get("history_date_dayfd");
@@ -162,8 +174,6 @@ if ($history_search)
 #  ================================================== 
 
 #print "<br />DBG \$morder at top: [$morder ]";
-$morder = sane_get("morder");
-$order = sane_get("order");
 
 # if morder not defined then reuse the one in preferences
 if (user_isloggedin() && !isset($morder))
@@ -254,6 +264,7 @@ trackers_report_init($group_id, $report_id);
 #     &amp;field1[]=value_id1&amp;field2[]=value_id2&amp;.... )
 #  ================================================== 
 $set = sane_get("set");
+$msort = sane_get("msort");
 if (!$set)
 {
 
@@ -599,7 +610,10 @@ $load_cal=false;
 $summary_search = 0;
 $details_search = 0;
 
-while ($field = trackers_list_all_fields(cmp_place_query))
+$labels = '';
+$boxes = '';
+$html_select = '';
+while ($field = trackers_list_all_fields('cmp_place_query'))
 {
   # Skip unused field
   if (!trackers_data_is_used($field))
@@ -686,8 +700,8 @@ if ($digest)
   $lbl_list[] = _("Digest");
 }
 
-unset($morder_icon_is_set);
-while ($field = trackers_list_all_fields(cmp_place_result))
+$morder_icon_is_set = '';
+while ($field = trackers_list_all_fields('cmp_place_result'))
 {
   # Need the full list of used fields
   $full_field_list[] = $field;
@@ -970,6 +984,8 @@ else
 # Select 'list form' or 'select' form
 if (!$printer)
 {
+  $advsrch_0 = '';
+  $advsrch_1 = '';
   if ($advsrch)
     {
       $advsrch_1 = ' selected="selected"';

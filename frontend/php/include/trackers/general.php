@@ -32,9 +32,10 @@ function trackers_include()
 {
   # Keep the dirname only if it's admin
   $dir = get_module_include_dir($_SERVER['PHP_SELF'], 0, 1);
+  $pre = '';
   if ($dir != "admin")
     {
-      unset($dir);
+      $dir = '';
     }
   else
     {
@@ -143,7 +144,7 @@ function trackers_init($group_id)
 function trackers_report_init($group_id, $report_id)
 {
   # Set the global array with report information for faster processing
-  trackers_data_get_all_report_fields($group_id, $report_id, true);
+  trackers_data_get_all_report_fields($group_id, $report_id);
 }
 
 function trackers_list_all_fields($sort_func=false,$by_field_id=false)
@@ -155,7 +156,7 @@ function trackers_list_all_fields($sort_func=false,$by_field_id=false)
   if ($AT_START)
     {
       if (!$sort_func)
-	{ $sort_func = cmp_place; }
+	{ $sort_func = 'cmp_place'; }
       uasort($BF_USAGE_BY_ID, $sort_func);
       uasort($BF_USAGE_BY_NAME, $sort_func);
       $AT_START=false;
@@ -241,6 +242,7 @@ function trackers_field_display ($field_name,
   */
 
   global $sys_datefmt;
+  $output = '';
 
   if ($label)
     {
@@ -347,7 +349,10 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
 {
 
   # value is formatted as Y-m-d
-  list($year, $month, $day) = split("-", $value);
+  $t = split("-", $value);
+  $year = sane_chk($t[0]);
+  $month = sane_chk($t[1]);
+  $day = sane_chk($t[2]);
 
   if ($ro)
     {
@@ -356,8 +361,11 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
   else
     {
       if (!$size || !$maxlength)
-	{ list($size, $maxlength) = trackers_data_get_display_size($field_name);
-    }
+	{
+	  $t = trackers_data_get_display_size($field_name);
+	  $size = sane_chk($t[0]);
+	  $maxlength = sane_chk($t[1]);
+	}
 
       # date part are missing, take the date of the day
       $today = localtime();
@@ -664,8 +672,8 @@ function trackers_extract_field_list($post_method=true)
     }
   else
     {
-      reset($HTTP_GET_VARS);
-      while ( list($key, $val) = each($HTTP_GET_VARS))
+      reset($_GET);
+      while ( list($key, $val) = each($_GET))
 	{
 	  if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
 	    {

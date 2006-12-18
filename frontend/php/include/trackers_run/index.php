@@ -26,8 +26,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # This page does not give access to sober mode
-unset($sober);
- 
+$sober = FALSE;
+
 # No group, no item was passed
 if (!$group_id)
 {
@@ -42,6 +42,11 @@ $project=project_get_object($group_id);
 $changed = false;
 $changes = array();
 unset($browse_preamble, $previous_form_bad_fields, $sober);
+
+
+extract(sane_import('request',
+		    array('func')));
+$func = $func or 'browse';
 
 switch ($func)
 {
@@ -819,7 +824,8 @@ switch ($func)
 	  { exit_not_logged_in(); }
       }
    */
-      
+
+ case 'browse' :      
  default :
    {
 ### Browse thru the bug database

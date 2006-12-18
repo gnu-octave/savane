@@ -373,18 +373,22 @@ function cmp_place($ar1, $ar2)
 
 function cmp_place_query($ar1, $ar2)
 {
-  if ($ar1['place_query']< $ar2['place_query'])
+  $place1 = sane_chk($ar1['place_query']) or 0;
+  $place2 = sane_chk($ar2['place_query']) or 0;
+  if ($place1 < $place2)
     return -1;
-  else if ($ar1['place_query']>$ar2['place_query'])
+  else if ($place1 > $place2)
     return 1;
   return 0;
 }
 
 function cmp_place_result($ar1, $ar2)
 {
-  if ($ar1['place_result']< $ar2['place_result'])
+  $place1 = sane_chk($ar1['place_result']) or 0;
+  $place2 = sane_chk($ar2['place_result']) or 0;
+  if ($place1< $place2)
     return -1;
-  else if ($ar1['place_result']>$ar2['place_result'])
+  else if ($place1>$place2)
     return 1;
   return 0;
 }
@@ -395,7 +399,7 @@ function trackers_data_get_all_report_fields($group_id=false,$report_id=100)
 
   /*
            Get all the bug fields involved in the bug report.
-	   WARNING: This function ust only be called after bug_init()
+	   WARNING: This function must only be called after bug_init()
   */
 
   # Build the list of fields involved in this report
@@ -587,15 +591,15 @@ function trackers_data_is_used($field, $by_field_id=false)
 
 function trackers_data_is_showed_on_query($field)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_query']: $BF_USAGE_BY_NAME[$field]['show_on_query']);
-
+  global $BF_USAGE_BY_NAME;
+  # show_on_query can be unset if not in the DB
+  return !empty($BF_USAGE_BY_NAME[$field]['show_on_query']);
 }
 
 function trackers_data_is_showed_on_result($field)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_result']: $BF_USAGE_BY_NAME[$field]['show_on_result']);
+  global $BF_USAGE_BY_NAME;
+  return !empty($BF_USAGE_BY_NAME[$field]['show_on_result']);
 }
 
 # return a TRUE value if non project members who still are
@@ -801,14 +805,14 @@ function trackers_data_get_display_size($field, $by_field_id=false)
 	{ $val = $BF_USAGE_BY_ID[$field]['display_size']; }
     }  else
       {
-	$val = $BF_USAGE_BY_NAME[$field]['custom_display_size'];
+	$val = sane_chk($BF_USAGE_BY_NAME[$field]['custom_display_size']);
 	if (!isset($val))
-	  { $val = $BF_USAGE_BY_NAME[$field]['display_size']; }
+	  { $val = sane_chk($BF_USAGE_BY_NAME[$field]['display_size']); }
       }
   return(explode('/',$val));
 }
 
-function trackers_data_get_default_value($field,  $by_field_id=false)
+function trackers_data_get_default_value($field, $by_field_id=false)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
   /*
@@ -1208,6 +1212,7 @@ function trackers_data_get_technicians ($group_id)
   $members_res = db_query($members_sql);
   # Build the sql command
   $sql = "SELECT user_id,user_name FROM user WHERE ";
+  $notfirst = FALSE;
   while ($member = db_fetch_array($members_res))
     {
       if (member_check($member['user_id'], $group_id, member_create_tracker_flag(ARTIFACT).'1'))
@@ -1215,7 +1220,7 @@ function trackers_data_get_technicians ($group_id)
 	  if ($notfirst)
 	    { $sql .= " OR "; }
 	  $sql .= " user_id='".$member['user_id']."'";
-	  $notfirst = 1;
+	  $notfirst = TRUE;
 	}
     }
   $sql .= " ORDER BY user_name";
