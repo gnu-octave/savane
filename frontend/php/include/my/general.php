@@ -475,7 +475,7 @@ function my_item_list_extractdata ($sql, $tracker) {
 
 	  # Store data
 	  # (ignore if already found)    
-	  if (array_key_exists('item_id', $item_data)
+	  if (isset($item_data['item_id'])
 	      && is_array($item_data['item_id'])
 	      && array_key_exists($thisitem, $item_data['item_id']))
 	    { continue; }
