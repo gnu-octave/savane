@@ -74,7 +74,7 @@ if ($type_of_search == "soft")
       if (db_result($res_type, 0, 'base_host'))
 	{ $host = db_result($res_type, 0, 'base_host'); }
       else
-	{ $host = $GLOBALS['HTTP_HOST']; }
+	{ $host = $_SERVER['HTTP_HOST']; }
 
       Header("Location: http".(session_issecure()?'s':'')."://".$host.$GLOBALS['sys_home']."projects/$project");
     }
@@ -101,7 +101,7 @@ if ($type_of_search == "soft")
       if (db_result($res_type, 0, 'base_host'))
 	{ $host = db_result($res_type, 0, 'base_host'); }
       else
-	{ $host = $GLOBALS['HTTP_HOST']; }
+	{ $host = $_SERVER['HTTP_HOST']; }
 
       print	'<tr class="'. html_get_alt_row_color($i).'"><td><a href="http'.(session_issecure()?'s':'')."://".$host.$GLOBALS['sys_home']."projects/".db_result($result, $i, 'unix_group_name')."/\">"
 	. db_result($result, $i, 'group_name').'</a></td>'

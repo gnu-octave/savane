@@ -43,7 +43,7 @@ if (db_numrows($result) > 0)
 
   # Check whether this item is private or not. If it is private, show only to
   # the submitter
-  unset($private_intro);
+  $private_intro = '';
   if (db_result($result,0,'privacy') == "2")
     {
       if (member_check_private(0, $group_id))
@@ -98,7 +98,7 @@ if (db_numrows($result) > 0)
       </tr>
       <tr>
           <td class="preinput" width="15%">'._("Submitted on:").'&nbsp;</td>
-          <td width="35%">'.format_date($sys_datefmt,db_result($result,0,'date')).'</td>
+          <td width="35%">'.utils_format_date(db_result($result,0,'date')).'</td>
           <td colspan="'.($fields_per_line).'" align="center"  width="50%" valign="top">&nbsp;</td>
       </tr>';
   $votes = db_result($result,0,'vote');
@@ -173,8 +173,9 @@ if (db_numrows($result) > 0)
 	}
 
       # Fields colors
-      unset($field_class, $row_class);
-      if ($previous_form_bad_fields && array_key_exists($field_name, $previous_form_bad_fields))
+      $field_class = '';
+      $row_class = '';
+      if (!empty($previous_form_bad_fields) && array_key_exists($field_name, $previous_form_bad_fields))
 	{
           # We highlight fields that were not properly/completely
 	  # filled.
@@ -270,7 +271,7 @@ if (db_numrows($result) > 0)
 	  if (!user_isloggedin())
 	    {
 	      print '<h2 class="warn">'._("You are not logged in").'</h2><p>';
-	      printf (_("Please %slog in,%s so followups can be emailed to you."),'<a href="'.$GLOBALS['sys_home'].'account/login.php?uri='.urlencode($REQUEST_URI.$extraurl).'">','</a>');
+	      printf (_("Please %slog in,%s so followups can be emailed to you."),'<a href="'.$GLOBALS['sys_home'].'account/login.php?uri='.urlencode($_SERVER['REQUEST_URI']).'">','</a>');
 	      print '</p>';
 	    }
 	}
@@ -287,7 +288,7 @@ if (db_numrows($result) > 0)
 
   print html_hidsubpart_header("discussion", _("Discussion"), 1);
  
-  print show_item_details($item_id,$group_id,0,$item_assigned_to,$quotation_style);
+  print show_item_details($item_id,$group_id,0,$item_assigned_to);
 
   print '<p>&nbsp;</p>';
   print html_hidsubpart_footer();

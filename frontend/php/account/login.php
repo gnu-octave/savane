@@ -120,14 +120,14 @@ if (sane_all("login"))
 	}
 
       # Optionally stay in TLS mode
-      if ($GLOBALS['sys_https_host'] != "" && $stay_in_ssl)
+      if (!empty($GLOBALS['sys_https_host']) && $stay_in_ssl)
 	{ $http = "https"; }
       else
 	{ $http = "http"; }
 
       # If a brother server exists, login there too, if we are not
       # already coming from there
-      if ($GLOBALS['sys_brother_domain'] && $brotherhood)
+      if (!empty($GLOBALS['sys_brother_domain']) && $brotherhood)
 	{
 	  if (!$from_brother)
 	    {

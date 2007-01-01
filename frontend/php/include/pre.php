@@ -57,10 +57,11 @@ foreach ($GLOBALS as $key => $value)
 # Default values, so they cannot be found undefined in the code
 $sys_name = 'ChangeMyName';
 $sys_logo_name = 'floating.png';
-$sys_debug_on = FALSE;
-$sys_use_google = FALSE;
-$sys_use_pamauth = FALSE;
-$stone_age_menu = FALSE;
+$sys_debug_on = false;
+$sys_use_google = false;
+$sys_use_pamauth = false;
+$stone_age_menu = false;
+$sys_spamcheck_spamassassin = false;
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))

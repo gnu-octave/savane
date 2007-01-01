@@ -34,6 +34,30 @@ if (!$group_id)
   exit_no_group();
 }
 
+# Get parameters
+extract(sane_import('all',
+  array('func', 'printer')));
+extract(sane_import('post',
+  array('form_id', # anti double-post
+	// The comment/follow-up itself
+	'comment', 'additional_comment', 'canned_response',
+	'comment_type_id', # ?
+	// carbon-copy
+	'add_cc', 'cc_comment',
+	// vote field
+	'new_vote',
+	// Reassign item: search a project to assign the item to
+	'depends_search',
+	'depends_search_only_artifact', 'depends_search_only_project',
+	'reassign_change_project_search',
+	// Second button 'submit but then edit this item again'
+	'submitreturn'
+	)));
+
+// FIXME: quotation is broken with new markup feature
+$change_quotation_style = null;
+
+
 
 # Initialize the global data structure before anything else
 trackers_init($group_id);
@@ -41,11 +65,12 @@ trackers_init($group_id);
 $project=project_get_object($group_id);
 $changed = false;
 $changes = array();
-unset($browse_preamble, $previous_form_bad_fields, $sober);
+
+$browse_preamble = '';
+$previous_form_bad_fields = false;
+$sober = false;
 
 
-extract(sane_import('request',
-		    array('func')));
 $func = $func or 'browse';
 
 switch ($func)
@@ -470,7 +495,7 @@ switch ($func)
 
 ### Add a comment to a bug already in the database,
 ### these are the only changes an non member can make
-     unset($changed);
+     $changed = false;
 
      # Check for duplicates
      if (!form_check($form_id))
@@ -519,7 +544,7 @@ switch ($func)
 
      # Attach new file if there is one
      # Do that first so it can update the comment
-     unset($additional_comment);
+     $additional_comment = '';
      if (sane_upload("input_file1", "tmp_name") ||
 	 sane_upload("input_file2", "tmp_name") ||
 	 sane_upload("input_file3", "tmp_name") ||

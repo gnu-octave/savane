@@ -168,7 +168,7 @@ function trackers_list_all_fields($sort_func=false,$by_field_id=false)
   # by_field_id: true return the list of field id, false returns the
   # list of field names
 
-  if ( list($key, $field_array) = each($BF_USAGE_BY_ID))
+  if (list($key, $field_array) = each($BF_USAGE_BY_ID))
     {
       return($by_field_id ? $field_array['bug_field_id'] : $field_array['field_name']);
     }
@@ -186,9 +186,10 @@ function trackers_field_label_display ($field_name, $group_id,$break=false,$asci
 {
   
   $label = trackers_data_get_label($field_name).':';
+  $output = '';
 
   if (!$ascii)
-    { $output = '<span class="preinput"><span class="help" title="'.trackers_data_get_description($field_name).'">'.$label.'</span></span>'; }
+    { $output .= '<span class="preinput"><span class="help" title="'.trackers_data_get_description($field_name).'">'.$label.'</span></span>'; }
 
   if ($break)
     { $output .= ($ascii?"\n":'<br />'); }
@@ -350,9 +351,9 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
 
   # value is formatted as Y-m-d
   $t = split("-", $value);
-  $year = sane_chk($t[0]);
-  $month = sane_chk($t[1]);
-  $day = sane_chk($t[2]);
+  $year = isset($t[0]) ? $t[0] : null;
+  $month = isset($t[1]) ? $t[1] : null;
+  $day = isset($t[2]) ? $t[2] : null;
 
   if ($ro)
     {
@@ -363,8 +364,8 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
       if (!$size || !$maxlength)
 	{
 	  $t = trackers_data_get_display_size($field_name);
-	  $size = sane_chk($t[0]);
-	  $maxlength = sane_chk($t[1]);
+	  $size = isset($t[0]) ? $t[0] : null;
+	  $$maxlength = isset($t[1]) ? $t[1] : null;
 	}
 
       # date part are missing, take the date of the day
@@ -449,7 +450,9 @@ function trackers_field_textarea($field_name,$value='',$cols=0,$rows=0)
 
   if (!$cols || !$rows)
     {
-      list($cols, $rows) = trackers_data_get_display_size($field_name);
+      $t = trackers_data_get_display_size($field_name);
+      $cols = isset($t[0]) ? $t[0] : null;
+      $rows = isset($t[1]) ? $t[1] : null;
 
       # Nothing defined for this field? Use hardcoded default values
       if (!$cols || !$rows)
@@ -491,8 +494,7 @@ function trackers_field_box ($field_name,
 
       if ($allowed_transition_only)
 	{
-          # yeupou--gnu.org 2004-09-12: where the hell is by_field_id set?
-	  $field_id = ($by_field_id ? $field_name : trackers_data_get_field_id($field_name));
+	  $field_id = trackers_data_get_field_id($field_name);
 
           # first check if group has defined transitions for this field
 	  $default_auth = db_result(db_query("SELECT transition_default_auth ".
@@ -621,8 +623,7 @@ function trackers_multiple_field_box2 ($field_name,
 
 function trackers_extract_field_list($post_method=true)
 {
-
-  global $HTTP_GET_VARS, $HTTP_POST_VARS, $BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_NAME;
   /*
        Returns the list of field names in the HTML Form corresponding to a
        field used by this project
@@ -634,8 +635,8 @@ function trackers_extract_field_list($post_method=true)
   $date = array();
   if ($post_method)
     {
-      reset($HTTP_POST_VARS);
-      while ( list($key, $val) = each($HTTP_POST_VARS))
+      reset($_POST);
+      while ( list($key, $val) = each($_POST))
 	{
 	  if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
 	    {
@@ -762,7 +763,7 @@ function trackers_check_empty_fields($field_array, $new_item=true)
 
       # Check if it is mandatory
       $mandatory_flag = trackers_data_mandatory_flag($field_name);
-      unset($is_mandatory);
+      $is_mandatory = false;
       if ($mandatory_flag == 1)
 	{
 	  # Not mandatory
@@ -1243,7 +1244,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
   # The upstream code cannot be cluttered by tons of things like that.
   # This is a one time exception, or almost, needed because this cannot
   # be directly merged in a generic way right now.
-  if ($GLOBALS['sys_default_domain'] == "savannah.cern.ch" || $GLOBALS['sys_debug_cerntest'])
+  if ($GLOBALS['sys_default_domain'] == "savannah.cern.ch" || !empty($GLOBALS['sys_debug_cerntest']))
   {
     $content_type = group_get_preference($group_id, "notif_content");
     if ($content_type == "")
@@ -1263,7 +1264,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
 
   # CONTENT OF THE MAIL MUST NOT BE TRANSLATED
 
-  unset($body);  
+  $body = '';
   
   if ($changes)
     {
@@ -1337,7 +1338,8 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
       $to .= ($to ? ',':'').$more_addresses;
     }
   
-      # If the item is private, take into account the exclude-list
+  # If the item is private, take into account the exclude-list
+  $exclude_list = '';
   if (db_result($result,0,'privacy') == '2')
     {
       $exclude_list = db_result(db_query("SELECT ".$artifact."_private_exclude_address FROM groups WHERE group_id='$group_id'"),0, $artifact."_private_exclude_address");
@@ -1824,6 +1826,7 @@ function trackers_criteria_list_to_text($criteria_list, $url)
 
       $arr = explode(',',$criteria_list);
 
+      $morder = '';
       while (list(,$crit) = each($arr))
 	{
 
@@ -1995,7 +1998,7 @@ function trackers_get_msgid ($artifact, $item_id, $latest="")
     { $latest = "ORDER BY id DESC LIMIT 1"; }
 
   $result = db_query("SELECT msg_id FROM trackers_msgid WHERE artifact='$artifact' AND item_id='$item_id' $latest");
-  unset($list);
+  $list = '';
   while ($id = db_fetch_array($result))
     {
       if (isset($list))

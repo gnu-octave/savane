@@ -149,7 +149,7 @@ EOF;
   # several browsers cant cope when
   # there are several times the same
   # anchor in a page
-  $ret .= '
+  $ret = '
   <h3><a name="'.$uniqueid.'"></a>
   <script type="text/javascript">';
 

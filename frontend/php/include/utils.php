@@ -1161,6 +1161,12 @@ function dbg ($msg)
     }
 }
 
+# temporary debug
+# use it instead of 'echo' so you can easily spot and remove them later after debugging is done
+function temp_dbg($msg) {
+  echo $msg;
+}
+
 
 # alias
 function util_feedback ($msg, $error=0)
@@ -1283,5 +1289,3 @@ function is_broken_msie()
 {
   return utils_is_broken_msie();
 }
-
-?>

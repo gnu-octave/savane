@@ -696,7 +696,8 @@ function show_dependent_item ($item_id, $dependson=0)
   $content = array();
 
   # Slurps the database.
-  unset($item_exists, $item_exists_tracker);
+  $item_exists = false;
+  $item_exists_tracker = false;
   while (list(,$art) = each($artifacts))
     {
       if (!$dependson)

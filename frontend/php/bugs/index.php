@@ -22,6 +22,3 @@
 
 require "../include/pre.php";
 include trackers_include();
-
-
-?>

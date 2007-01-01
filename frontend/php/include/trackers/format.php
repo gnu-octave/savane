@@ -53,7 +53,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
   # (the spams are included to avoid the comment #nnn refs to change, that 
   # could be puzzling to users)
   $result = trackers_data_get_followups($item_id);
-  unset($svn_entries_exist);
+  $svn_entries_exist = false;
   $max_entries = 0;
   if (db_numrows($result))
     {
@@ -111,11 +111,10 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
     { krsort($data); }
 
   # No followup comment -> return now
+  $out = '';
   if (!count($data))
     {
-      if ($ascii)
-	$out = "";
-      else
+      if (!$ascii)
 	$out = '<span class="warn">'._("No Followups Have Been Posted").'</span>';
       return $out;
     }
@@ -275,7 +274,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
       # Increment the comment count
       $i++;
       
-      $comment_type = $entry['comment_type'];
+      $comment_type = isset($entry['comment_type']) ? $entry['comment_type'] : null;
       $is_svn = false;
       if ($comment_type == 'SVN')
 	{ $is_svn = true; }
@@ -328,7 +327,8 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	      $comment_type = '<strong>'.$comment_type.'</strong><br />';
 	    }
 	  
-	  unset($icon, $icon_alt);
+	  $icon = '';
+	  $icon_alt = '';
 	  $class = utils_get_alt_row_color($j);
 
 	  # Find out the user id of the comment author

@@ -30,7 +30,7 @@ $user_theme = isset($_REQUEST['user_theme']) ? $_REQUEST['user_theme'] : '';
 
 if ($update and $user_theme != "random" and $user_theme != "rotate")
   {
-    define("SV_THEME", addslashes($user_theme));
+    define('SV_THEME', addslashes($user_theme));
   }
 
 require "../../include/pre.php";
@@ -317,7 +317,7 @@ print ' '._("Theme");
 if ("rotate"==$row_user['theme'])
 {
   print '<br /><input type="checkbox" name="theme_rotate_jump" value="1" /> '._("Jump to the next theme").'';
-  print '<input type="hidden" name="theme_rotate_numeric" value="'. $HTTP_COOKIE_VARS["SV_THEME_ROTATE_NUMERIC"] .'" />';
+  print '<input type="hidden" name="theme_rotate_numeric" value="'. $_COOKIES['SV_THEME_ROTATE_NUMERIC'] .'" />';
 }
 print '<p class="smaller">'._("Not satisfied with the default color theme of the interface?").'</p>';
 

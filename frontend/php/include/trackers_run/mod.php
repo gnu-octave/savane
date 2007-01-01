@@ -28,9 +28,6 @@
 # Need search functions.
 require_directory("search");
 
-# Get parameters
-$depends_search_only_artifact = sane_post('depends_search_only_artifact');
-$depends_search_only_project = sane_post('depends_search_only_project');
 
 $sql="SELECT * FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
 $fields_per_line=2;
@@ -154,7 +151,7 @@ if (db_numrows($result) > 0)
       </tr>
       <tr>
           <td class="preinput" width="15%">'._("Submitted on:").'&nbsp;</td>
-          <td width="35%">'.format_date($sys_datefmt,db_result($result,0,'date')).'</td>
+          <td width="35%">'.utils_format_date(db_result($result,0,'date')).'</td>
           <td colspan="'.($fields_per_line).'" width="50%" align="center" valign="top"><span class="noprint">'.form_submit(_("Submit Changes and Return to this Item"), "submitreturn").'</span></td>
       </tr>';
 
@@ -226,7 +223,7 @@ if (db_numrows($result) > 0)
       # on database content
       # If we rely on submitted by form content, due to magic_quotes,
       # we need to run both stripslashes and htmlspecialchars
-      if (!$$field_name || $nocache)
+      if (empty($$field_name) || $nocache)
 	{ $field_value = db_result($result,0,$field_name); }
       else
 	{ $field_value = htmlspecialchars(stripslashes($$field_name)); }
@@ -269,7 +266,7 @@ if (db_numrows($result) > 0)
 	}
       
       # check if the field is mandatory
-      unset($star);
+      $star = '';
       $mandatory_flag = trackers_data_mandatory_flag($field_name);
       if ($mandatory_flag == 3 ||
 	  ($mandatory_flag == 0 &&
@@ -280,7 +277,8 @@ if (db_numrows($result) > 0)
 	}
       
       # Fields colors
-      unset($field_class, $row_class);
+      $field_class = '';
+      $row_class = '';
       if ($j % 2 && $field_name != 'details')
 	{
           # We keep the original submission with the default
@@ -363,9 +361,9 @@ if (db_numrows($result) > 0)
 	{ $is_deployed[$entry] = true; }
     }
   
-  # If at the second step of any too-step activity (add deps, reassign, 
+  # If at the second step of any two-step activity (add deps, reassign, 
   # multiple canned answer), deploy only the relevant:
-  # firdt set them all to false without question and then set to true only
+  # first set them all to false without question and then set to true only
   # the relevant
   if ($depends_search || 
       $canned_response == "!multiple!" || 
@@ -458,6 +456,8 @@ if (db_numrows($result) > 0)
   print html_hidsubpart_header("discussion",
 			       _("Discussion"));
  
+  // FIXME: quoted is broken with the new markup feature
+  $quotation_style = false;
   print show_item_details($item_id,$group_id,0,$item_assigned_to,$quotation_style);
 
   print '<p>&nbsp;</p>';

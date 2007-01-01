@@ -165,6 +165,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array, $chang
 
       # Now update fields
       unset($upd_list);
+      $exists = false;
       while (list($field,$value) = each($toupdate))
 	{
 	  if ($value) 
@@ -180,7 +181,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array, $chang
 		  fb(sprintf(_("Automatic update of %s due to transitions settings"),trackers_data_get_label($field)));
 		}
 	      $upd_list .= "$field='$value',";
-	      $exists = 1;
+	      $exists = true;
 	    }
 	}
       

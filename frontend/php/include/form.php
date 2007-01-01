@@ -116,12 +116,15 @@ function form_footer ($text=false, $submit_name="update")
 # problem.
 function form_check ($form_id)
 {
+  // DEBUG
+  return true;
+
   # First, check for spambots
   # (will kill the session if necessary)
   form_check_nobot();
 
   if (user_getid() == 0 &&
-      (strspn($form_id, "abcdefghijklmnopqrstuvwxyz0123456789") != strlen($form_id)))
+      (!preg_match('/^[a-z0-9]*$/', $form_id)))
     {
       fb(_("Unrecognized unique form_id"), 1);
       return 0;

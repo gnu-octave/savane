@@ -467,13 +467,17 @@ function my_item_list_extractdata ($sql, $tracker) {
 	      
 	  # Associate to the group
           # (ignore if it was already done)	      
-	  if (is_array($items_per_groups[$thisgroup]) && array_key_exists($thisitem, $items_per_groups[$thisgroup]))
+	  if (array_key_exists($thisgroup, $items_per_groups)
+	      && is_array($items_per_groups[$thisgroup])
+	      && array_key_exists($thisitem, $items_per_groups[$thisgroup]))
 	    { continue; }
 	  $items_per_groups[$thisgroup][$thisitem] = true;
 
 	  # Store data
 	  # (ignore if already found)    
-	  if (is_array($items_data['item_id']) && array_key_exists($thisitem, $items_data['item_id']))
+	  if (array_key_exists('item_id', $item_data)
+	      && is_array($item_data['item_id'])
+	      && array_key_exists($thisitem, $item_data['item_id']))
 	    { continue; }
 	  
 	  $item_data['item_id'][$thisitem] = db_result($result,$j,'bug_id');

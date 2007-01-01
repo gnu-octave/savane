@@ -819,7 +819,7 @@ if ($group_id && user_ismember($group_id,'A'))
 
 # Now the special canned response field
       print '<tr class="'. utils_get_alt_row_color($i) .'">';
-      print "<td><a href=\"$_SERVER['PHP_SELF']?group_id=$group_id&amp;create_canned=1\">"._("Canned Responses").'</a></td>';
+      print "<td><a href=\"{$_SERVER['PHP_SELF']}?group_id=$group_id&amp;create_canned=1\">"._("Canned Responses").'</a></td>';
       print "\n<td>"._("Create or change generic quick response messages for this issue tracker. These pre-written messages can then be used to quickly reply to item submissions.").' </td>';
       print "\n<td>"._("Project").'</td></tr>';
       print '</table>';

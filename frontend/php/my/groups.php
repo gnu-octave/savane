@@ -370,6 +370,7 @@ print html_splitpage(2);
 ################ LEFT PART ###########################
 
 
+$exists = false;
 if (!$result || $rows < 1)
 {
 
@@ -388,7 +389,7 @@ else
   print $HTML->box_top(_("Groups I'm Administrator of"),'',1);
 
   $j = 1;
-  unset($content);
+  $content = '';
   for ($i=0; $i<$rows; $i++)
     {
       if (db_result($result,$i,'admin_flags') == 'A')
@@ -422,7 +423,7 @@ else
     {
       print '<ul class="boxli">'.$content.'</ul>';
     }
-  unset($exists);
+  $exists = false;
 
   print $HTML->box_bottom(1);
 
@@ -435,7 +436,7 @@ else
   print $HTML->box_top(_("Groups I'm Contributor of"),'',1);
 
   $j = 1;
-  unset($content);
+  $content = '';
   for ($i=0; $i<$rows; $i++)
     {
       if (db_result($result,$i,'admin_flags') == '')
@@ -470,7 +471,7 @@ else
     {
       print '<ul class="boxli">'.$content.'</ul>';
     }
-  unset($exists);
+  $exists = false;
 
   print $HTML->box_bottom(1);
 
@@ -483,7 +484,7 @@ print "<br />\n";
 
 print $HTML->box_top(_("Request for Inclusion Waiting For Approval"),'',1);
 
-unset($content);
+$content = '';
 
 for ($i=0; $i<$rows; $i++)
 {

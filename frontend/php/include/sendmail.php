@@ -188,11 +188,11 @@ function sendmail_mail ($from,
 	{ $touid = user_getid($v); }
 
       # Squad exists in the exclude array? Skip it
-      if ($exclude[$v])
+      if (!empty($exclude[$v]))
         { continue; }
 
       # Already handled?
-      if ($squad_seen_before[$v])
+      if (!empty($squad_seen_before[$v]))
 	{ continue; }
 
       # Record that we handled this already
@@ -236,6 +236,7 @@ function sendmail_mail ($from,
   $user_subject = array();
   $user_name  = array();
   $seen_before = array();
+  $i = 0;
   while (list(,$v) = each($to2)) 
     {
       if (is_numeric($v)) 
@@ -244,11 +245,11 @@ function sendmail_mail ($from,
 	{ $touid = user_getid($v); }
 
       # User exists in the exclude array? Skip it
-      if ($exclude[$v])
+      if (!empty($exclude[$v]))
         { continue; }
 
       # Already handled?
-      if ($seen_before[$v])
+      if (!empty($seen_before[$v]))
 	{ continue; }
       
       # Record that we handled this already
@@ -293,7 +294,7 @@ function sendmail_mail ($from,
 		}
 
               # Already handled?
-	      if ($seen_before[$thisuser_email])
+	      if (!empty($seen_before[$thisuser_email]))
 		{ continue; }
 
               # Record that we handled this already

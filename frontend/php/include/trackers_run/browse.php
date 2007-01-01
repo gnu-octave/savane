@@ -28,7 +28,6 @@
 # For instance, $sober is defined by the cookbook/index.php page
 
 
-$sober = sane_chk($sober) or FALSE;
 $preference_prefix = ARTIFACT;
 if ($sober)
 {
@@ -400,12 +399,14 @@ if (!isset($msort))
 # system group (meaningful on the cookbook)
 $not_group_specific = 1;
 
+global $BF_USAGE_BY_ID;
 while ($field = trackers_list_all_fields())
 {
   # the select boxes for the bug DB search first
   if (trackers_data_is_showed_on_query($field) &&
       trackers_data_is_select_box($field) )
     {
+  if (array_key_exists('category_id', $BF_USAGE_BY_ID)) { temp_dbg("browse:BF_USAGE_BY_ID contains category_id after field=$field<br />"); }
       if (!isset($url_params[$field])) 
 	{ $url_params[$field][] = 0; }
 
@@ -804,6 +805,7 @@ if (!$history_search || $history_event != "modified")
 }
 
 # Additional constraint
+ $history_arr = array();
 if ($history_search) 
 {
   list($unix_history_date,$ok) = utils_date_to_unixtime($history_date);
@@ -861,7 +863,7 @@ while ($thisarray = db_fetch_array($result))
   $thisitem_id = $thisarray['bug_id'];
 
   # Check if we must ignore it due to history additional constraint
-  if ($history_arr[$thisitem_id])
+  if (!empty($history_arr[$thisitem_id]))
     { 
       $totalrows--;
       continue; 
@@ -888,7 +890,10 @@ while ($thisarray = db_fetch_array($result))
   $nb_of_fields = count($full_field_list);
   for ($k=0; $k<$nb_of_fields; $k++)
     {
-      $result_array[$thisitem_id][$full_field_list[$k]] = $thisarray[$full_field_list[$k]];    
+      if (isset($thisarray[$full_field_list[$k]]))
+	$result_array[$thisitem_id][$full_field_list[$k]] = $thisarray[$full_field_list[$k]];
+      else
+	$result_array[$thisitem_id][$full_field_list[$k]] = null;
     }
 }
 

@@ -412,7 +412,7 @@ function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
     }
 
   # don't start a new paragraph again, if we already did that
-  if ($context_stack[0] == '</p>')
+  if (isset($context_stack[0]) && $context_stack[0] == '</p>')
     {
       $start_paragraph = false;
     }
@@ -439,7 +439,7 @@ function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
     }
 
   # append a linebreak while in paragraph mode
-  if ($context_stack[0] == '</p>')
+  if (isset($context_stack[0]) && $context_stack[0] == '</p>')
     {
       $line .= '<br />';
     }

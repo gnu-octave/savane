@@ -30,6 +30,9 @@ if (!empty($GLOBALS['sys_spamcheck_spamassassin']))
     { $GLOBALS['sys_spamcheck_spamassassin'] = "all"; }
 }
 
+$GLOBALS['int_probablyspam'] = false;
+$GLOBALS['int_delayspamcheck_comment_id'] = false;
+
 # Function to mark a spam. This assume that checks on whether the user
 # has proper rights have been made already.
 function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=0)

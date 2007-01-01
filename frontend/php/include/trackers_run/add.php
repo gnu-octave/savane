@@ -26,6 +26,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+extract(sane_import('request',
+  array('form_id')));
+
 if (!group_restrictions_check($group_id, ARTIFACT))
     {
       exit_error(sprintf(_("Action Unavailable: %s"), group_getrestrictions_explained($group_id, ARTIFACT)));
@@ -84,7 +87,7 @@ while ($field_name = trackers_list_all_fields())
 
 	  # We allow people to make urls with predefined values,
 	  # if the values are in the url, we override the default value.
-	  if (!$$field_name)
+	  if (empty($$field_name))
 	    { $field_value = trackers_data_get_default_value($field_name); }
 	  else
 	    { $field_value = htmlspecialchars(stripslashes($$field_name)); }
@@ -102,7 +105,7 @@ while ($field_name = trackers_list_all_fields())
 	    { $label .= ' <span class="preinput">'.markup_info("full").'<span>'; }
 
           # check if the field is mandatory
-	  unset($star);
+	  $star = '';
 	  $mandatory_flag = trackers_data_mandatory_flag($field_name);
 	  if ($mandatory_flag == 3 || $mandatory_flag == 0)	    
 	    {
@@ -127,7 +130,8 @@ while ($field_name = trackers_list_all_fields())
 					  $mandatory_flag);
 	  
           # Fields colors
-	  unset($field_class, $row_class);
+	  $field_class = '';
+	  $row_class = '';
 	  if ($j % 2 && $field_name != 'details')
 	    {
 		  # We keep the original submission with the default
@@ -147,7 +151,7 @@ while ($field_name = trackers_list_all_fields())
 	  
           # We highlight fields that were not properly/completely 
 	  # filled.
-	  if ($previous_form_bad_fields && array_key_exists($field_name, $previous_form_bad_fields))
+	  if (!empty($previous_form_bad_fields) && array_key_exists($field_name, $previous_form_bad_fields))
 	    {  
 	      $field_class = ' class="highlight"';
 	    }

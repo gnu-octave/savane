@@ -28,9 +28,8 @@ require $GLOBALS['sys_www_topdir']."/include/Email.class";
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-global $HTTP_POST_FILES;
 $err = array();
-$action = $HTTP_GET_VARS['action'];
+$action = $_GET['action'];
 
 
 function check_file($file)
@@ -409,17 +408,17 @@ $ret=1;
   }
 }
 
-check_file($HTTP_POST_FILES['file']);
+check_file($_FILES['file']);
 
-update_users($HTTP_POST_FILES['file']['tmp_name']);
+update_users($_FILES['file']['tmp_name']);
 
 site_project_header(array('title'=>"Project Members Management",'group'=>$group_id,'context'=>'ahome'));
 
 
-echo "You have uploaded a file: ".$HTTP_POST_FILES['file']['name'].".<br />";
-echo "Temporary location: ".$HTTP_POST_FILES['file']['tmp_name'].".<br />";
-echo "Mime type: ".$HTTP_POST_FILES['file']['type'].".<br />";
-echo "Size in bytes: ".$HTTP_POST_FILES['file']['size'].".<br />";
+echo "You have uploaded a file: ".$_FILES['file']['name'].".<br />";
+echo "Temporary location: ".$_FILES['file']['tmp_name'].".<br />";
+echo "Mime type: ".$_FILES['file']['type'].".<br />";
+echo "Size in bytes: ".$_FILES['file']['size'].".<br />";
 
 $message="";
 
@@ -442,7 +441,7 @@ user_getemail(user_getid())."</p>";
 mail(user_getemail(user_getid()), $GLOBALS['sys_name'] . " User Administration",$message,"From: " . $GLOBALS['sys_replyto'] . "@".$GLOBALS['sys_lists_domain']);
 
 #destroy the file
-unlink($HTTP_POST_FILES['file']['tmp_name']);
+unlink($_FILES['file']['tmp_name']);
 
 $HTML->footer(array());
 

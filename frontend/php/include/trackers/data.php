@@ -373,8 +373,8 @@ function cmp_place($ar1, $ar2)
 
 function cmp_place_query($ar1, $ar2)
 {
-  $place1 = sane_chk($ar1['place_query']) or 0;
-  $place2 = sane_chk($ar2['place_query']) or 0;
+  $place1 = isset($ar1['place_query']) ? $ar1['place_query'] : 0;
+  $place2 = isset($ar2['place_query']) ? $ar2['place_query'] : 0;
   if ($place1 < $place2)
     return -1;
   else if ($place1 > $place2)
@@ -384,8 +384,8 @@ function cmp_place_query($ar1, $ar2)
 
 function cmp_place_result($ar1, $ar2)
 {
-  $place1 = sane_chk($ar1['place_result']) or 0;
-  $place2 = sane_chk($ar2['place_result']) or 0;
+  $place1 = isset($ar1['place_result']) ? $ar1['place_result'] : 0;
+  $place2 = isset($ar2['place_result']) ? $ar2['place_result'] : 0;
   if ($place1< $place2)
     return -1;
   else if ($place1>$place2)
@@ -396,7 +396,6 @@ function cmp_place_result($ar1, $ar2)
 function trackers_data_get_all_report_fields($group_id=false,$report_id=100)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-
   /*
            Get all the bug fields involved in the bug report.
 	   WARNING: This function must only be called after bug_init()
@@ -451,6 +450,7 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false, $ch
     }
   else
     {
+      $status_cond = '';
 
       # If only active field
       if ($active_only)
@@ -550,12 +550,16 @@ function trackers_data_mandatory_flag ($field, $by_field_id=false)
       $val = $BF_USAGE_BY_ID[$field]['custom_empty_ok'];
       if (!isset($val))
 	{ $val = $BF_USAGE_BY_ID[$field]['empty_ok']; }
-    }  else
-      {
+    }
+  else
+    {
+      if (isset($BF_USAGE_BY_NAME[$field]['custom_empty_ok']))
 	$val = $BF_USAGE_BY_NAME[$field]['custom_empty_ok'];
-	if (!isset($val))
-	  { $val = $BF_USAGE_BY_NAME[$field]['empty_ok']; }
-      }
+      else if (isset($BF_USAGE_BY_NAME[$field]['empty_ok']))
+	$val = $BF_USAGE_BY_NAME[$field]['empty_ok'];
+      else
+	$val = null;
+    }
   return($val);
 }
 
@@ -616,7 +620,15 @@ function trackers_data_is_showed_on_add($field, $by_field_id=false)
 function trackers_data_is_showed_on_add_nologin($field, $by_field_id=false)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_add'] & 2: $BF_USAGE_BY_NAME[$field]['show_on_add'] & 2);
+  $by_id = isset($BF_USAGE_BY_ID[$field]['show_on_add'])
+    ? $BF_USAGE_BY_ID[$field]['show_on_add']
+    : null;
+  $by_id = $by_id & 2;
+  $by_val = isset($BF_USAGE_BY_NAME[$field]['show_on_add'])
+    ? $BF_USAGE_BY_NAME[$field]['show_on_add']
+    : null;
+  $by_val = $by_val & 2;
+  return $by_field_id ? $by_id : $by_val;
 }
 
 # return a TRUE value if project members should be able to
@@ -731,8 +743,14 @@ function trackers_data_get_description($field, $by_field_id=false)
 
 function trackers_data_get_display_type($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['display_type'] : $BF_USAGE_BY_NAME[$field]['display_type']);
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
+  $by_id = isset($BF_USAGE_BY_ID[$field]['display_type'])
+    ? $BF_USAGE_BY_ID[$field]['display_type']
+    : null;
+  $by_val = isset($BF_USAGE_BY_NAME[$field]['display_type'])
+    ? $BF_USAGE_BY_NAME[$field]['display_type']
+    : null;
+  return $by_field_id ? $by_id : $by_val;
 }
 
 function trackers_data_get_display_type_in_clear($field, $by_field_id=false)
@@ -768,12 +786,13 @@ function trackers_data_get_keep_history($field, $by_field_id=false)
       $val = $BF_USAGE_BY_ID[$field]['custom_keep_history'];
       if (!isset($val))
 	{ $val = $BF_USAGE_BY_ID[$field]['keep_history']; }
-    }  else
-      {
-	$val = $BF_USAGE_BY_NAME[$field]['custom_keep_history'];
-	if (!isset($val))
-	  { $val = $BF_USAGE_BY_NAME[$field]['keep_history']; }
-      }
+    }
+  else
+    {
+      $val = $BF_USAGE_BY_NAME[$field]['custom_keep_history'];
+      if (!isset($val))
+	{ $val = $BF_USAGE_BY_NAME[$field]['keep_history']; }
+    }
   return($val);
 }
 
@@ -803,12 +822,16 @@ function trackers_data_get_display_size($field, $by_field_id=false)
       $val = $BF_USAGE_BY_ID[$field]['custom_display_size'];
       if (!isset($val))
 	{ $val = $BF_USAGE_BY_ID[$field]['display_size']; }
-    }  else
-      {
-	$val = sane_chk($BF_USAGE_BY_NAME[$field]['custom_display_size']);
-	if (!isset($val))
-	  { $val = sane_chk($BF_USAGE_BY_NAME[$field]['display_size']); }
-      }
+    }
+  else
+    {
+      if (isset($BF_USAGE_BY_NAME[$field]['custom_display_size']))
+	$val = $BF_USAGE_BY_NAME[$field]['custom_display_size'];
+      else if (isset($BF_USAGE_BY_NAME[$field]['display_size']))
+	$val = $BF_USAGE_BY_NAME[$field]['display_size'];
+      else
+	$val = null;
+    }
   return(explode('/',$val));
 }
 
@@ -2156,6 +2179,9 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
   # presence
   $vfl['status_id'] = '1';
   reset($vfl);
+  $vfl_cols = '';
+  $vfl_values = '';
+  $field_transition_id = '';
   while (list($field,$value) = each($vfl))
     {
       if (trackers_data_is_special($field))
@@ -2169,8 +2195,7 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
       # COPIED from handle_update transition code, with one exception:
       # old_value is equal to "none".
       # handle field transitions checks/changes
-      # yeupou--gnu.org 2004-09-12: where the hell $by_field_id is set???
-      $field_id = ($by_field_id ? $field : trackers_data_get_field_id($field));
+      $field_id = trackers_data_get_field_id($field);
       $field_transition_cc = '';
       if (array_key_exists($field_id, $field_transition))
 	{
@@ -2226,11 +2251,11 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
 
       # Keep track of the change:
       $changes[$field]['del']=
-      trackers_field_display($field,$group_id,$old_value,false,false,true,true);
+	trackers_field_display($field,$group_id,'',false,false,true,true);
       $changes[$field]['add']=
-      trackers_field_display($field,$group_id,$value,false,false,true,true);
+	trackers_field_display($field,$group_id,$value,false,false,true,true);
 
-      $changes[$field]['del-val']= $old_value;
+      $changes[$field]['del-val']= '';
       $changes[$field]['add-val']= $value;
 
       # Register transition id

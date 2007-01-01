@@ -140,11 +140,16 @@ class Group extends Error
       # tolerates "bugs" to say "bug"
       if ($artifact == "bugs")
 	{ $artifact = "bug"; }
-      return sane_chk($this->type_data_array['can_use_'.$artifact]);
+      return isset($this->type_data_array['can_use_'.$artifact])
+	? $this->type_data_array['can_use_'.$artifact]
+	: false;
     }
 
   function CanModifyUrl($artifact)
-    { return sane_chk($this->type_data_array['is_menu_configurable_'.$artifact]); }
+    { return isset($this->type_data_array['is_menu_configurable_'.$artifact])
+	? $this->type_data_array['is_menu_configurable_'.$artifact]
+	: false;
+    }
 
   function CanModifyDir($artifact)
     { return $this->type_data_array['is_configurable_'.$artifact]; }

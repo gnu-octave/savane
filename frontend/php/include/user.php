@@ -79,10 +79,11 @@ function user_can_be_super_user()
 
 function user_is_super_user() 
 {
-  # User is superuser only if he wants to, otherwise he's going to see
-  # things like any other user + a link in the left menu
-  if (user_can_be_super_user() && 
-      sane_chk($_COOKIE["session_su"]) == "wannabe")
+  // User is superuser only if he wants to, otherwise he's going to see
+  // things like any other user + a link in the left menu
+  if (user_can_be_super_user()
+      && isset($_COOKIE["session_su"])
+      && $_COOKIE["session_su"] == "wannabe")
     { 
       return true;
     }
@@ -386,7 +387,7 @@ function user_get_preference ($preference_name, $user_id=false)
 
       # First check to see if we have already fetched the preferences
     if ($user_pref) {
-      if ($user_pref["$preference_name"]) {
+      if (!empty($user_pref["$preference_name"])) {
 	#we have fetched prefs - return part of array
 	return $user_pref["$preference_name"];
       } else {

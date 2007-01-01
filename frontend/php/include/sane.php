@@ -115,19 +115,10 @@ if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
 function stripslashesgpc($val)
 {
   if (get_magic_quotes_gpc()) 
-    return strisplashes($val);
+    return stripslashes($val);
   return $val;
 }
 
-// Check if the variable exists.
-// Avoid ($var = $_POST['var'] ? $_POST['var'] : '')
-//  redundant constructs
-function sane_chk(&$var) {
-  if (isset($var))
-    return $var;
-  else
-    return NULL;
-}
 
 // Check the existence of a series of input parameters, then return an
 // array suitable for extract()
@@ -141,7 +132,11 @@ function sane_import($method, $names) {
 
   $values = array();
   foreach ($names as $input_name) {
-    $values[$input_name] = stripslashesgpc(sane_chk($input_array[$input_name]));
+    if (isset($input_array[$input_name])) {
+      $values[$input_name] = stripslashesgpc($input_array[$input_name]);
+    } else {
+      $values[$input_name] = null;
+    }
   }
 
   return $values;
@@ -158,7 +153,7 @@ function sane_import($method, $names) {
 #        - post
 #        - cookies
 # This will escape the strings appropriately.
-function safeinput ($string)
+function safeinput (&$string)
 {
   # If magic_quotes is on, count on it to escape data
   if (get_magic_quotes_gpc()) 
