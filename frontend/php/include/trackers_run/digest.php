@@ -113,7 +113,7 @@ elseif ($func == "digestget")
     }
 
 
-  trackers_header(array('title'=>_("Digest").' - '.format_date($sys_datefmt,time())));
+  trackers_header(array('title'=>_("Digest").' - '.utils_format_date(time())));
 
 
   # Browse the list of selected item

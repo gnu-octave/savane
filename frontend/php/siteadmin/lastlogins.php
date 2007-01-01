@@ -51,7 +51,7 @@ if (db_numrows($res_logins) < 1) {
 		print '<tr class="'.utils_get_alt_row_color($inc++).'">';
 		print "<td>$row_logins[user_name]</td>";
 		print "<td>$row_logins[ip_addr]</td>";
-		print "<td>" . format_date($sys_datefmt,$row_logins['time']) . "</td>";
+		print "<td>" . utils_format_date($row_logins['time']) . "</td>";
 		print '</tr>';
 	}
 

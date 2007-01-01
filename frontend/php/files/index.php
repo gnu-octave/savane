@@ -153,7 +153,7 @@ if ($group_id) {
 				  $content .= utils_filesize($files_dir."/".$package_name."/".$version_array[$x]."/".$file_array[$z]).'</td>';
 				  $content .= '<td class="center">'.utils_fileextension($files_dir."/".$package_name."/".$version_array[$x]."/"
 											.$file_array[$z]).'</td>';
-				  $content .= '<td class="center">'.format_date('',@filemtime($files_dir."/".$package_name."/".$version_array[$x]."/".$file_array[$z])).'</td>';
+				  $content .= '<td class="center">'.utils_format_date(@filemtime($files_dir."/".$package_name."/".$version_array[$x]."/".$file_array[$z])).'</td>';
 				  $content .= '</tr>'."\n";
 			      #}
 			    }

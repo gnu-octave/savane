@@ -137,7 +137,7 @@ if (user_isloggedin())
 	  print '<div class="'.utils_get_alt_row_color($j).'">';
 	  print '<a href="'.$GLOBALS[sys_home].'news/approve.php?approve=1&amp;id='.db_result($result, $j, 'id').'&amp;group='.group_getunixname(db_result($result, $j, 'group_id')).'">'.db_result($result, $j, 'summary').'</a><br />';
 	  # FIXME: num. of new comments?
-	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), format_date($sys_datefmt,db_result($result,$j,'date'))).'</span>';
+	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), utils_format_date(db_result($result,$j,'date'))).'</span>';
 	  print '</div>';
 	}
       print '</div>';
@@ -166,7 +166,7 @@ if (user_isloggedin())
 	  print '<div class="'.utils_get_alt_row_color($j).'">';
 	  print '<a href="'.$GLOBALS['sys_home'].'forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').'">'.db_result($result, $j, 'summary').'</a><br />';
 	  # FIXME: num. of new comments?
-	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), format_date($sys_datefmt,db_result($result,$j,'date'))).'</span>';
+	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), utils_format_date(db_result($result,$j,'date'))).'</span>';
 	  print '</div>';
 	}
     }

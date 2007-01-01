@@ -63,7 +63,7 @@ if ($msg_id) {
 	print "<tr><td>\n";
 	print '<strong>'.db_result($result,0, "subject").'</strong>';
 	print ' ('._("posted by").' '.utils_user_link(db_result($result,0, "user_name")).", ";
-	print format_date($sys_datefmt,db_result($result,0, "date")).')';
+	print utils_format_date(db_result($result,0, "date")).')';
 	print '<p>';
 	print markup_rich(db_result($result,0, 'body'));
 	print '</p></td></tr></table>';

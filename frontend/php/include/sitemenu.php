@@ -425,7 +425,7 @@ function sitemenu_loggedin($page_title, $page_toptab=0, $page_group=0)
 
  if (user_is_super_user())
     {
-      $HTML->menu_entry($GLOBALS['sys_home'].'account/su.php?action=logout&amp;uri='.urlencode($GLOBALS['REQUEST_URI']),
+      $HTML->menu_entry($GLOBALS['sys_home'].'account/su.php?action=logout&amp;uri='.urlencode($_SERVER['REQUEST_URI']),
 			_("Logout Superuser"),
 			1,
 			_("End the Superuser session, go back to normal user session"));

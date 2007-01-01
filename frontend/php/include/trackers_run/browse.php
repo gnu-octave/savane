@@ -347,6 +347,7 @@ else if ($set=='custom')
   #     or not they were tracker fields used by the project.
 
   reset($url_params);
+  $pref_stg = '';
   while (list($field,$arr_val) = each($url_params))
     {
       while (list(,$value_id) = each($arr_val))
@@ -911,7 +912,7 @@ while ($thisarray = db_fetch_array($result))
 
 if ($printer)
 {
-  trackers_header(array('title'=>_("Browse Items").' - '.format_date($sys_datefmt,time())));
+  trackers_header(array('title'=>_("Browse Items").' - '.utils_format_date(time())));
 }
 else
 {

@@ -49,7 +49,8 @@ extract(sane_import('post',
 	// Reassign item: search a project to assign the item to
 	'depends_search',
 	'depends_search_only_artifact', 'depends_search_only_project',
-	'reassign_change_project_search',
+	'reassign_change_project_search', 'reassign_change_project',
+	'reassign_change_artifact',
 	// Second button 'submit but then edit this item again'
 	'submitreturn'
 	)));
@@ -443,7 +444,7 @@ switch ($func)
          # do it now.
          # We do this after the item update so the previously assignee
          # got the notification of the this change.
-	 if ($changes['assigned_to']['del'])
+	 if (!empty($changes['assigned_to']['del']))
 	   {
 	     $previously_assigned_uid = user_getid($changes['assigned_to']['del']);
 	     if (user_get_preference("removecc_notassignee",

@@ -176,7 +176,7 @@ if (!$is_squad)
     ._("Site Member Since").':
 	</td>
 	<td>
-		<strong>'.format_date(false,db_result($res_user,0,'add_date')).'</strong>
+		<strong>'.utils_format_date(db_result($res_user,0,'add_date')).'</strong>
 	</td>
 </tr>
 <tr valign="top">
@@ -288,7 +288,7 @@ if ($rows_without_history != $rows)
 # date may be unavailable
 	  $content .= '<span class="smaller">'.
 	    sprintf(_("Member since %s"),
-		    format_date('', $date_joined)).
+		    utils_format_date($date_joined)).
 	    '</span>';
 	}
       $content .= '</li>';

@@ -207,7 +207,7 @@ else if ($type_of_search == "people")
 	    . db_result($result, $i, "msg_id")."\"><img src=\"".$GLOBALS['sys_home']."images/msg.png\" border=0 height=12 width=10 /> "
 	    . db_result($result, $i, "subject")."</a></td>"
 	    . "<td>".db_result($result, $i, "user_name")."</td>"
-	    . "<td>".format_date($sys_datefmt,db_result($result,$i,"date"))."</td></tr>\n";
+	    . "<td>".utils_format_date(db_result($result,$i,"date"))."</td></tr>\n";
 	}
       print "</table>\n";
     }
@@ -270,7 +270,7 @@ else if ($type_of_search == 'bugs' ||
 		. '<td><a href="'.$url.'">'.db_result($result, $i, "summary").'</a></td>'
 		. '<td><a href="'.$url.'">'.group_getname(db_result($result, $i, "group_id")).'</a></td>'
 		. "<td>".utils_user_link(db_result($result, $i, "user_name"))."</td>"
-		. "<td>".format_date($sys_datefmt,db_result($result,$i,"date"))."</td></tr>";
+		. "<td>".utils_format_date(db_result($result,$i,"date"))."</td></tr>";
 	      $j++;
 	    }
 	}

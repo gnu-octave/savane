@@ -407,7 +407,7 @@ else
 	      # date may be unavailable
 	      $content .= '<span class="smaller">'.
 	        sprintf(_("Member since %s"),
-	        format_date('', $date_joined)).
+	        utils_format_date($date_joined)).
 	        '</span>';
 	    }
 	  $content .= '</li>';
@@ -454,7 +454,7 @@ else
 	      # date may be unavailable
 	      $content .= '<span class="smaller">'.
 	        sprintf(_("Member since %s"),
-	        format_date('', $date_joined)).
+	        utils_format_date($date_joined)).
 	        '</span>';
 	    }
 	  $content .= '</li>';

@@ -446,5 +446,3 @@ if (isset($group_id))
 # If requires/include for an artifact exists, load them all
 # In any case, set the ARTIFACT constant.
 require_directory(get_module_include_dir($_SERVER['PHP_SELF']));
-
-?>

@@ -53,7 +53,7 @@ function forum_show_a_nested_message ($result,$row=0)
 		' ('._("posted by").' <a href="'.$GLOBALS['sys_home'].'users/'.
 		db_result($result, $row, 'user_name') .'/">'.
 		db_result($result, $row, 'realname') .'</a>, '.
-		format_date($sys_datefmt,db_result($result,$row,'date')).')'.
+		utils_format_date(db_result($result,$row,'date')).')'.
 		'                           </td>
 			</tr><tr>
 				<td><p>
@@ -164,7 +164,7 @@ function forum_header($params)
                     print '<p><em>'.sprintf(_("Item posted by %s on %s."),
                         utils_user_link(user_getname(db_result($result,0,'submitted_by')),
                         user_getrealname(db_result($result,0,'submitted_by'))),
-                        format_date($sys_datefmt,db_result($result,0,'date')))
+                        utils_format_date(db_result($result,0,'date')))
                         .'</em></p>';
                     print markup_full(db_result($result,0,'details'));
 
@@ -319,7 +319,7 @@ function show_thread($thread_id,$et=0)
 
                     $ret_val .= db_result($result, $i, 'subject') .'</A></TD>'.
                         '<TD>'.db_result($result, $i, 'user_name').'</TD>'.
-                        '<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+                        '<TD>'.utils_format_date(db_result($result,$i,'date')).'</TD></TR>';
                     /*
 				Show the body/message if requested
                     */
@@ -395,7 +395,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0)
 
 			$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
 				'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
-				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+				'<TD>'.utils_format_date(db_result($result,$i,'date')).'</TD></TR>';
 
 			/*
 				Show the body/message if requested

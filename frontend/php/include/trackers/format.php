@@ -309,7 +309,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	    }
 	  
 	  $out .= sprintf($fmt,
-			  format_date($sys_datefmt,$entry['date']),
+			  utils_format_date($entry['date']),
 			  $name,
 			  $comment_type,
 			  utils_unconvert_htmlspecialchars($entry['content'])
@@ -356,7 +356,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 		{
 		  # Project admin case: if the group is the admin group,
 		  # show the specific site admin icon
-		  if ($group_id == $GLOBALS[sys_group_id])
+		  if ($group_id == $GLOBALS['sys_group_id'])
 		    {
 		      $icon = "site-admin";
 		      $icon_alt = _("Site Administrator");
@@ -391,7 +391,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	  
 	  $out .= "\n".'<tr class="'.$class.'"><td valign="top">';
 	  $out .= '<a name="comment'.$comment_number.'" href="#comment'.$comment_number.'" class="preinput">';
-	  $out .= format_date($sys_datefmt,$entry['date']);
+	  $out .= utils_format_date($entry['date']);
 	  $out .= ', ';
 	  
 	  if (!$is_svn)
@@ -497,11 +497,12 @@ function format_item_changes ($changes,$item_id,$group_id)
 
   # Process most of the fields
   reset($changes);
+  $out = '';
   while (list($field,$h) = each($changes))
     {
 
       # If both removed and added items are empty skip - Sanity check
-      if (!$h['del'] && !$h['add'])
+      if (empty($h['del']) && empty($h['add']))
 	{ continue; }
 
       if ($field == "details" || $field == "attach")
@@ -527,7 +528,6 @@ function format_item_changes ($changes,$item_id,$group_id)
   # Process special cases: follow-up comments
   if ($changes['details'])
     {
-
       if ($out)
         { $out .= $separator; }
 
@@ -550,7 +550,7 @@ function format_item_changes ($changes,$item_id,$group_id)
 
 
   # Process special cases: file attachment
-  if ($changes['attach'])
+  if (!empty($changes['attach']))
     {
       if ($out)
         { $out .= $separator; }
@@ -652,7 +652,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
       if ($ascii)
 	{
 	  $out .= sprintf($fmt,
-			  format_date($sys_datefmt,db_result($result, $i, 'date')),
+			  utils_format_date(db_result($result, $i, 'date')),
 			  db_result($result, $i, 'filename'),
 			  utils_filesize(0, intval(db_result($result, $i, 'filesize'))),
 			  db_result($result, $i, 'user_name'),
@@ -851,7 +851,7 @@ $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delet
            }
 
 #$href_cc,
-#			  format_date($sys_datefmt,db_result($result, $i, 'date')),
+#			  utils_format_date(db_result($result, $i, 'date')),
 #			  $html_delete);
         }
     }

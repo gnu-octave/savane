@@ -430,7 +430,7 @@ else
 	   }
 	 else
 	   {
-	     $date = format_date('', db_result($res_export, $i, 'date'));
+	     $date = utils_format_date(db_result($res_export, $i, 'date'));
 	   }
 
 	 print '<br /><span class="smaller">'.
@@ -640,7 +640,7 @@ else
 	  $count++;
 	  $day_time = mktime(0, 0, 0, $current_month, $day);
 	  # use format minimal because the hour is meaningless here
-	  $valid_days[] = format_date('minimal', $day_time);
+	  $valid_days[] = utils_format_date($day_time, 'minimal');
 	}
 
       $valid_hours = array();

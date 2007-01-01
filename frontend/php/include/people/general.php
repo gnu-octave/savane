@@ -371,7 +371,7 @@ function people_show_job_list($result, $edit=0)
 	     db_result($result,$i,'job_id') .'">'.
 	     db_result($result,$i,'title') .'</a></td><td>'.
 	     db_result($result,$i,'category_name') .'</td><td>'.
-	     format_date($sys_datefmt,db_result($result,$i,'date')) .
+	     utils_format_date(db_result($result,$i,'date')) .
 	     '</td><td><a href="'.$GLOBALS['sys_home'].'projects/'.strtolower(db_result($result,$i,'unix_group_name')).'/">'.
 	     db_result($result,$i,'group_name') .'</a></td><td>' .
 	     db_result($res_type,0,'name') . '</td></tr>';

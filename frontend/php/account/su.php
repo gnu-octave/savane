@@ -33,7 +33,7 @@ $from_brother = sane_get("from_brother");
 if ($action == "login" && user_can_be_super_user())
 {
   session_cookie("session_su", "wannabe");
-  if ($GLOBALS['sys_brother_domain'])
+  if (!empty($GLOBALS['sys_brother_domain']))
     {
       if (!$from_brother)
 	{

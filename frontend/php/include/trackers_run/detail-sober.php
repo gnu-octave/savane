@@ -171,7 +171,7 @@ else
 {
   $last_update = db_result($result, 0, 'date');
 }
-print '<div align="right" class="smaller">'.sprintf(_("Last update: %s"), format_date('', $last_update)).'</div>';
+print '<div align="right" class="smaller">'.sprintf(_("Last update: %s"), utils_format_date($last_update)).'</div>';
 
 if ($comingfrom)
 {

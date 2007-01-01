@@ -300,7 +300,7 @@ if ($forum_id)
 	      */
 	      $ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
 		 '<TD>'.db_result($result, $i, 'user_name').'</TD>'.
-		 '<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+		 '<TD>'.utils_format_date(db_result($result,$i,'date')).'</TD></TR>';
 
 	      /*
 

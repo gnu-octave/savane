@@ -59,7 +59,7 @@ function show_grouphistory ($group_id)
 	echo db_result($result, $i, 'old_value');
       }
       echo '</td>'.
-	'<td>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</td>'.
+	'<td>'.utils_format_date(db_result($result, $i, 'date')).'</td>'.
 	'<td>'.db_result($result, $i, 'user_name').'</td></tr>';
     }
 
@@ -87,18 +87,18 @@ function project_admin_registration_info ($row_grp)
     print "<a href=\"".$GLOBALS['sys_home']."users/$row_admin[user_name]/\">$row_admin[realname] &lt;$row_admin[email]&gt;</a> ; ";
   }
 
-  print '<p><span class="preinput">'._("Registration Date").':</span><br /> '.format_date($sys_datefmt,$row_grp[register_time]);
+  print '<p><span class="preinput">'._("Registration Date").':</span><br /> '.utils_format_date($row_grp['register_time']);
 
-  print '<p><span class="preinput">'._("System Group Name:").'</span><br /> '.$row_grp[unix_group_name];
+  print '<p><span class="preinput">'._("System Group Name:").'</span><br /> '.$row_grp['unix_group_name'];
 
-  print '<p><span class="preinput">'._("Submitted Description:").'</span><br /> '.markup_full($row_grp[register_purpose]);
+  print '<p><span class="preinput">'._("Submitted Description:").'</span><br /> '.markup_full($row_grp['register_purpose']);
 
-  print '<p><span class="preinput">'._("Required software:").'</span><br /> '.markup_full($row_grp[required_software]);
+  print '<p><span class="preinput">'._("Required software:").'</span><br /> '.markup_full($row_grp['required_software']);
 
-  print '<p><span class="preinput">'._("Other comments:").'</span><br /> '.markup_full($row_grp[other_comments]);
+  print '<p><span class="preinput">'._("Other comments:").'</span><br /> '.markup_full($row_grp['other_comments']);
 
   print '<p>';
-  print utils_registration_history($row_grp[unix_group_name]);
+  print utils_registration_history($row_grp['unix_group_name']);
 
 }
 

@@ -187,16 +187,13 @@ function spam_get_user_score ($user_id=0, $set_by_user_id=0)
   if ($user_id == 100)
     { return 3; }      
 
+  $set_by_user_id_sql = '';
   if ($set_by_user_id)
-    {
-      $set_by_user_id = " AND reporter_user_id='$set_by_user_id'";
-    }
-  else
-    { unset($set_by_user_id); }
+    $set_by_user_id_sql = " AND reporter_user_id='$set_by_user_id'";
   
   # We cannot do a count because it does not allow us to use GROUP BY
   $userscore = 0;
-  $result = db_query("SELECT score FROM trackers_spamscore WHERE affected_user_id='$user_id' $set_by_user_id GROUP BY reporter_user_id");
+  $result = db_query("SELECT score FROM trackers_spamscore WHERE affected_user_id='$user_id' $set_by_user_id_sql GROUP BY reporter_user_id");
   while ($entry = db_fetch_array($result))
     {
       $userscore++;

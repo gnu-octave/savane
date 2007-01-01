@@ -29,14 +29,22 @@ require_directory("project");
 
 session_require(array('group'=>$sys_group_id,'admin_flags'=>'A'));
 
+extract(sane_import('post',
+  array('update', 'form_name', 'form_status', 'form_public', 'form_license',
+	'group_type',
+	'form_dir_arch', 'form_dir_svn', 'form_dir_cvs',
+	'form_dir_homepage', 'form_dir_download')));
+extract(sane_import('get',
+  array('updatefast', 'status')));
+
 # group public choice
 if ($update || $updatefast)
 {
   # Full details update
   if ($update) 
     {
-      $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
-      $res_type = db_query("SELECT * FROM group_type WHERE type_id=$group_type");
+      $res_grp = db_query_safe("SELECT * FROM groups WHERE group_id='%s'", $group_id);
+      $res_type = db_query_safe("SELECT * FROM group_type WHERE type_id='%s'", $group_type);
       
       
       if (db_result($res_grp,0,'status') != $form_status)
@@ -56,16 +64,21 @@ if ($update || $updatefast)
 	  group_add_history ('unix_group_name',db_result($res_grp,0,'unix_group_name'),$group_id);
 	}
       
-      $sql = "UPDATE groups SET is_public=$form_public,status='$form_status',"
-	. "license='$form_license',type='$group_type',unix_group_name='$form_name',dir_arch='$form_dir_arch',dir_svn='$form_dir_svn',dir_cvs='$form_dir_cvs',dir_homepage='$form_dir_homepage',dir_download='$form_dir_download'  WHERE group_id=$group_id";
+      db_query_escape(
+       "UPDATE groups SET
+          is_public=%s, status='%s', license='%s', type='%s', unix_group_name='%s',
+          dir_arch='%s', dir_svn='%s', dir_cvs='%s', dir_homepage='%s', dir_download='%s'
+        WHERE group_id=%s",
+       $form_public, $form_status, $form_license, $group_type, $form_name,
+       $form_dir_arch, $form_dir_svn, $form_dir_cvs, $form_dir_homepage, $form_dir_download,
+       $group_id);
       
     }
   if ($updatefast) 
     {
-      $sql = "UPDATE groups SET status='$status' WHERE group_id=$group_id";
+      db_query_escape("UPDATE groups SET status='%s' WHERE group_id=%s", $status, $group_id);
     }
       
-  db_query($sql);
   fb(_("Updating Project Info"));
 }
 

@@ -154,7 +154,7 @@ function show_item_list ($result_arr,
 		  else
 		    { $highlight_date = ''; }
 		  print "<td $width$highlight_date>";
-		  print format_date('short',$value);
+		  print utils_format_date($value, 'short');
 		  print "</td>\n";
 		}
 	      else
@@ -449,7 +449,7 @@ function show_item_list_sober ($result_arr,
 		  else
 		    { $highlight_date = ''; }
 		  print "<td $width$highlight_date>";
-		  print format_date('short',$value);
+		  print utils_format_date($value, 'short');
 		  print "</td>\n";
 		}
 	      else
@@ -579,7 +579,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	  print "\n".'<tr class="'. utils_get_alt_row_color($j).'">';
 
 	  # Date
-	  print '<td align="center" class="smaller">'.format_date($sys_datefmt,$date).'</td>';
+	  print '<td align="center" class="smaller">'.utils_format_date($date).'</td>';
 
 	  # Person
 	  print '<td align="center" class="smaller">'.utils_user_link($user).'</td>';
@@ -610,7 +610,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	  else if (trackers_data_is_date_field($field))
 	    {
 	      # For date fields do some special processing
-	      print format_date($sys_datefmt,$value_id);
+	      print utils_format_date($value_id);
 	    }
 	  else
 	    {
@@ -628,7 +628,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	  else if (trackers_data_is_date_field($field))
 	    {
 	      # For date fields do some special processing
-	      print format_date($sys_datefmt,$new_value_id);
+	      print utils_format_date($new_value_id);
 	    }
 	  else
 	    {

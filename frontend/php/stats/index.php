@@ -75,7 +75,7 @@ print html_show_displayoptions(sprintf(_("From %s till %s."),
 			       $form_submit);
 
 print '
-<p><h3>'.html_anchor(sprintf(_("From %s till %s"),format_date($sys_datefmt,$since),format_date($sys_datefmt,$until)),"between").'</h3>';
+<p><h3>'.html_anchor(sprintf(_("From %s till %s"),utils_format_date($since),utils_format_date($until)),"between").'</h3>';
 
 if ($since > $until)
 {

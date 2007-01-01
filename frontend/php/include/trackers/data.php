@@ -530,7 +530,9 @@ function trackers_data_is_custom($field, $by_field_id=false)
 function trackers_data_is_special($field, $by_field_id=false)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['special']: $BF_USAGE_BY_NAME[$field]['special']);
+  return($by_field_id
+	 ? !empty($BF_USAGE_BY_ID[$field]['special'])
+	 : !empty($BF_USAGE_BY_NAME[$field]['special']));
 }
 
 # deprecated
@@ -636,7 +638,13 @@ function trackers_data_is_showed_on_add_nologin($field, $by_field_id=false)
 function trackers_data_is_showed_on_add_members($field, $by_field_id=false)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_add_members']: $BF_USAGE_BY_NAME[$field]['show_on_add_members']);
+  $by_id = isset($BF_USAGE_BY_ID[$field]['show_on_add_members'])
+    ? $BF_USAGE_BY_ID[$field]['show_on_add_members']
+    : null;
+  $by_val = isset($BF_USAGE_BY_NAME[$field]['show_on_add_members'])
+    ? $BF_USAGE_BY_NAME[$field]['show_on_add_members']
+    : null;
+  return $by_field_id ? $by_id : $by_val;
 }
 
 function trackers_data_is_date_field($field, $by_field_id=false)
@@ -1402,6 +1410,8 @@ function trackers_data_add_history ($field_name,
 
   # If type has a value add it into the sql statement (this is only for
   # the follow up comments (details field))
+  $fld_type = '';
+  $val_type = '';
   if ($type)
     {
       $fld_type = ',type'; $val_type = ",'$type'";
@@ -1432,6 +1442,11 @@ function trackers_data_add_history ($field_name,
   # Useless if already considered to be spam.
   if ($spamscore < 5)
     {  
+      $result = db_query("SELECT group_id FROM $artifact WHERE bug_id='$item_id'");
+      if (db_numrows($result))
+	$group_id = db_result($result,0,'group_id');
+      else
+	exit_error(_("Item not found"));
       spam_add_to_spamcheck_queue($item_id, db_insertid($result), $artifact, $group_id, $spamscore); 
     }
 
@@ -1502,6 +1517,7 @@ function trackers_data_handle_update ($group_id,
   # statement
   # ($changes was initialized in index, as it is used by other functions)
   reset($vfl);
+  $upd_list = '';
   while (list($field,$value) = each($vfl))
     {
       # $field_transition_id needed to be reset for every field in the loop
@@ -1524,8 +1540,7 @@ function trackers_data_handle_update ($group_id,
 
       # Handle field transitions checks+cc notif,
       # register id of transition to execute
-      # yeupou--gnu.org 2004-09-12: where the hell $by_field_id is set???
-      $field_id = ($by_field_id ? $field : trackers_data_get_field_id($field));
+      $field_id = trackers_data_get_field_id($field);
       $field_transition_cc = '';
       if (array_key_exists($field_id, $field_transition))
 	{
@@ -1765,6 +1780,7 @@ function trackers_data_handle_update ($group_id,
 
   # Enter new dependencies
   $artifacts = array("support", "bugs", "task", "patch");
+  $address = '';
   while (list(, $dependent_on) = each($artifacts))
     {
       $art = $dependent_on;
@@ -2364,7 +2380,7 @@ function trackers_data_get_value($field,$group_id,$value_id,$by_field_id=false)
     }
   else if (trackers_data_is_date_field($field))
     {
-      return format_date($sys_datefmt,$value_id);
+      return utils_format_date($value_id);
     }
 
   if ($by_field_id)

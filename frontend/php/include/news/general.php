@@ -143,7 +143,7 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
 	{ $return .= '<br />&nbsp;&nbsp;&nbsp;&nbsp;'; }
       $return .= ' <span class="smaller"><em>'._("posted by").' <a href="'
 	.$GLOBALS['sys_home'].'users/'. db_result($result,$i,'user_name') .'">'. db_result($result,$i,'user_name')
-	.'</a>, '. format_date($sys_datefmt,db_result($result,$i,'date')) .' - '
+	.'</a>, '. utils_format_date(db_result($result,$i,'date')) .' - '
 	.$reply.'</em></span>'
         .$summ_txt;
 

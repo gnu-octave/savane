@@ -311,12 +311,12 @@ function trackers_field_display ($field_name,
     case 'DF':
       if ($ascii)
 	{
-	  $output .= ( ($value == 0) ? '' : format_date($sys_datefmt,$value));
+	  $output .= ( ($value == 0) ? '' : utils_format_date($value));
 	}
       else
 	{
 	  if ($ro)
-	    { $output .= format_date($sys_datefmt,$value); }
+	    { $output .= utils_format_date($value); }
 	else
 	  {
 	    $output .= trackers_field_date($field_name,
@@ -2206,7 +2206,7 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
               $name = "Anonymous"; # must no be translated, part of mails notifs
 				     }
 	  $out .= sprintf($fmt,
-			  format_date($sys_datefmt,db_result($result, $i, 'date')),
+			  utils_format_date(db_result($result, $i, 'date')),
 			  $name,
 			  $comment_type,
 			  utils_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
@@ -2284,7 +2284,7 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
           $href = $GLOBALS['sys_home'].ARTIFACT."/download.php?file_id=$item_file_id";
 
        $out .= sprintf($fmt,
-			  format_date($sys_datefmt,db_result($result, $i, 'date')),
+			  utils_format_date(db_result($result, $i, 'date')),
 			  db_result($result, $i, 'filename'),
 			  utils_filesize(0, intval(db_result($result, $i, 'filesize'))),
 			  db_result($result, $i, 'user_name'),
@@ -2418,7 +2418,7 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
         $tz = '';
       }
       $body .= sprintf($fmt, $name,
-                       format_date($sys_datefmt,db_result($fu_result, $i, 'date')).$tz,
+                       utils_format_date(db_result($fu_result, $i, 'date')).$tz,
                        utils_unconvert_htmlspecialchars(db_result($fu_result, $i, 'old_value'))
                       );
     }

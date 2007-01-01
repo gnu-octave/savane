@@ -244,16 +244,6 @@ function utils_cutlink ($string, $lenght=35)
 
 
 ##
-# Returns a formatted date for a unix timestamp with the given format
-#
-# Alias of utils_format_date() with inverted parameters (look out!)
-#
-function format_date($format="default", $timestamp, $default_value='-')
-{
-  return utils_format_date($timestamp, $format);
-}
-
-##
 # Returns a formatted date for a unix timestamp
 #
 # The given unix timestamp will be formatted according to

@@ -98,7 +98,7 @@ if ($field)
 	  $sql="SELECT round(avg((close_date-date)/86400), 0) FROM ".$artifact." WHERE close_date > 0 AND (date >= $start AND date <= $end)  AND group_id='$group_id' AND spamscore < 5 ";
 	  $result = db_query($sql);
 
-          $key = sprintf(_("%s to %s"), format_date($sys_datefmt,($start)), format_date($sys_datefmt,($end)));
+          $key = sprintf(_("%s to %s"), utils_format_date($start), utils_format_date($end));
 	  $content[$key] = db_result($result, 0,0);
 	}
 
@@ -116,7 +116,7 @@ if ($field)
 	  $sql="SELECT count(*) FROM ".$artifact." WHERE date >= $start AND date <= $end AND group_id='$group_id' AND spamscore < 5";
 	  $result = db_query($sql);
 
-          $key = sprintf(_("%s to %s"), format_date($sys_datefmt,($start)), format_date($sys_datefmt,($end)));
+          $key = sprintf(_("%s to %s"), utils_format_date($start), utils_format_date($end));
 	  $content[$key] = db_result($result, 0,0);
 	}
 
@@ -134,7 +134,7 @@ if ($field)
 	  $sql="SELECT count(*) FROM ".$artifact." WHERE date <= $end AND (close_date >= $end OR close_date < 1 OR close_date is null) AND group_id='$group_id' AND spamscore < 5";
 	  $result = db_query($sql);
 
-	  $content[format_date($sys_datefmt,($end))] = db_result($result, 0,0);
+	  $content[utils_format_date($end)] = db_result($result, 0,0);
 	}
 
       print "\n<h5>"._("Number of Items Still Open")."</h5>";

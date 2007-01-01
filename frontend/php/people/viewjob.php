@@ -62,7 +62,7 @@ if ($group_id && $job_id)
 
       print  ' '._("wanted for").' <a href="'.$GLOBALS['sys_home'].'project/?group_id='. $group_id .'">'. db_result($result,0,'group_name') .'</a></h2>'.
 	'<p><span class="preinput">'._("Submitted By:").'</span> <a href="'.$GLOBALS['sys_home'].'users/'. db_result($result,0,'user_name') .'">'. db_result($result,0,'user_name').'</a><br />'.
-	'<span class="preinput">'._("Date:").'</span>'. format_date($sys_datefmt,db_result($result,0,'date')) .'<br />'.
+	'<span class="preinput">'._("Date:").'</span>'. utils_format_date(db_result($result,0,'date')) .'<br />'.
 	'<span class="preinput">'._("Status:").'</span> '. db_result($result,0,'status_name').'</p>';
 
 
