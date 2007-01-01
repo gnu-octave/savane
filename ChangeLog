@@ -1,3 +1,11 @@
+2007-01-01  Sylvain Beucler  <beuc@beuc.net>
+
+	* Removed deprecated format_date() and replaced the remaining
+	calls with utils_format_date().
+
+	* There has been quite a lot of changes for PHP5 / E_STRICT /
+	register_globals=off compliance. Not finished yet.
+
 2006-12-17  Sylvain Beucler  <beuc@beuc.net>
 
 	* Other big chunks of PHP warning fixes.
