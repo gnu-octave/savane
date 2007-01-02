@@ -26,7 +26,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # This page does not give access to sober mode
-$sober = FALSE;
+$sober = false;
 
 # No group, no item was passed
 if (!$group_id)

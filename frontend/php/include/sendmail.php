@@ -38,7 +38,7 @@ function sendmail_mail ($from,
 			$additional_headers=0,
 			$exclude_list=0) 
 {
-
+  
   global $int_delayspamcheck;
 
   # Check if $delayspamcheck makes sense

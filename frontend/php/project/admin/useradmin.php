@@ -35,7 +35,7 @@ function show_pending_users_list ($result, $group_id)
   print "<h3>"._("Users Pending for Group")."</h3>
 	<p>
         "._("Users that have requested to be member of the group are listed here. To approve their requests, select their name and click on the button below. To discard requests, go to the next section called \"Removing users from group\".")."
-	<form action=\"$_SERVER['PHP_SELF']\" method=\"post\">
+	<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"approve_for_group\" />
   <select name=\"user_id[]\" size=\"10\" multiple>\n";
 
@@ -65,7 +65,7 @@ function show_all_users_remove_list ($result, $result2, $group_id)
         <h3>"._("Removing users from group")."</h3>
 	<p>
         "._("To remove users, select their name and click on the button below. The administrators of a project cannot be removed unless they quit. Pending users are at the bottom of the list.")."
-	<form action=\"$_SERVER['PHP_SELF']\" method=\"post\">
+	<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"remove_from_group\" />
   <select name=\"user_id[]\" size=\"10\" multiple>\n";
 
@@ -124,7 +124,7 @@ function show_all_users_add_list ($result, $group_id)
   print _("Below is the result of your search in the users database.")."
 
 	<P></P>
-	<form action=\"$_SERVER['PHP_SELF']\" method=\"post\">
+	<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"add_to_group\" />
   <select name=\"user_id[]\" size=\"10\" multiple>\n";
 

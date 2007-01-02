@@ -194,7 +194,7 @@ else
   print '<p><a href="'.$_SERVER['PHP_SELF'].'?people_cat=1">'._("Add Job Categories").'</a><br />';
   #	print "\nAdd categories of bugs like, 'mail module','gant chart module','interface', etc<P>";
 
-  print "\n<a href=\"$_SERVER['PHP_SELF']?people_skills=1\">"._("Add Job Skills").'</a><br />';
+  print "\n<a href=\"{$_SERVER['PHP_SELF']}?people_skills=1\">"._("Add Job Skills").'</a><br />';
   #	print "\nAdd Groups of bugs like 'future requests','unreproducible', etc<P>";
 
   site_project_footer(array());

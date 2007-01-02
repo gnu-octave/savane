@@ -400,14 +400,12 @@ if (!isset($msort))
 # system group (meaningful on the cookbook)
 $not_group_specific = 1;
 
-global $BF_USAGE_BY_ID;
 while ($field = trackers_list_all_fields())
 {
   # the select boxes for the bug DB search first
   if (trackers_data_is_showed_on_query($field) &&
       trackers_data_is_select_box($field) )
     {
-  if (array_key_exists('category_id', $BF_USAGE_BY_ID)) { temp_dbg("browse:BF_USAGE_BY_ID contains category_id after field=$field<br />"); }
       if (!isset($url_params[$field])) 
 	{ $url_params[$field][] = 0; }
 

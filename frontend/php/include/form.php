@@ -116,9 +116,6 @@ function form_footer ($text=false, $submit_name="update")
 # problem.
 function form_check ($form_id)
 {
-  // DEBUG
-  return true;
-
   # First, check for spambots
   # (will kill the session if necessary)
   form_check_nobot();
