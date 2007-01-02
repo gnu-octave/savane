@@ -2350,8 +2350,7 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
       trackers_add_cc($item_id,
 		      $group_id,
 		      user_getid(),
-		      "-SUB-", 
-		      $changes); # use a flag as comment, because if we 
+		      "-SUB-"); # use a flag as comment, because if we 
 		               # translate the string now, people will get
 		               # the translation of the submitter when they
 		               # read the item, not necessarily the one they
