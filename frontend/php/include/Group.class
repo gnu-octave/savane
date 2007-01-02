@@ -154,11 +154,13 @@ class Group extends Error
   function CanModifyDir($artifact)
     { return $this->type_data_array['is_configurable_'.$artifact]; }
   
-  function getTypePermissions($flags) 
-    { return $this->type_data_array[$flags.'_flags']; } 
+  function getTypePermissions($flags)
+    { return isset($this->type_data_array[$flags.'_flags'])
+	? $this->type_data_array[$flags.'_flags']
+	: null; }
 
-  function getTypeRestrictions($flags) 
-    { return $this->type_data_array[$flags.'_rflags']; } 
+  function getTypeRestrictions($flags)
+    { return $this->type_data_array[$flags.'_rflags']; }
 
   # ######################
   # Mailing List
