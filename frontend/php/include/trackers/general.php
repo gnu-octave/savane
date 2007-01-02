@@ -1562,7 +1562,7 @@ function trackers_insert_cc($item_id,$cc,$added_by,$comment,$date)
 
 }
 
-function trackers_add_cc($item_id,$group_id,$email,$comment,&$changes)
+function trackers_add_cc($item_id,$group_id,$email,$comment)
 {
   global $feedback,$ffeedback;
 

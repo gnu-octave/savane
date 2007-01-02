@@ -71,6 +71,8 @@ $browse_preamble = '';
 $previous_form_bad_fields = false;
 $sober = false;
 
+$address = '';
+
 
 $func = $func or 'browse';
 
@@ -160,7 +162,6 @@ switch ($func)
      $vfl = trackers_extract_field_list();
 
      # Data control layer
-     $address = "";
      $item_id = trackers_data_create_item($group_id,$vfl,$address);
 
      if ($item_id)
@@ -372,7 +373,6 @@ switch ($func)
        }
 
      # data control layer
-     $address = "";
      $changed |= trackers_data_handle_update($group_id,
 					     $item_id,
 					     sane_post("dependent_on_task"),

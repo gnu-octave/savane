@@ -138,14 +138,12 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
 	    "VALUES ('".user_getid()."','".$tracker."','$item_id','$new_vote')";	  
 
           # Add in CC
-	  unset($bah); 
           # workaround for stupid function that require a 
           # variable to be passed as final argument.
 	  trackers_add_cc($item_id,
 			  $group_id,
 			  user_getname(),
-			  "Voted in favor of this item",  
-			  $bah);
+			  "Voted in favor of this item");
 
 	}
       else

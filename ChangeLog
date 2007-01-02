@@ -1,3 +1,9 @@
+2007-01-02  Sylvain Beucler  <beuc@beuc.net>
+
+	* Bugfix my bugfixes.
+
+	* Remove unused argument 5 for trackers_add_cc() and its calls.
+
 2007-01-01  Sylvain Beucler  <beuc@beuc.net>
 
 	* Removed deprecated format_date() and replaced the remaining

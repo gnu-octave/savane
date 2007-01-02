@@ -1834,8 +1834,7 @@ function trackers_data_handle_update ($group_id,
 	  trackers_add_cc($item_id,
 			  $group_id,
 			  user_getid(),
-			  "-UPD-",
-			  $changes); 
+			  "-UPD-"); 
                                # use a flag as comment, because if we 
 		               # translate the string now, people will get
  		               # the translation of the submitter when they
