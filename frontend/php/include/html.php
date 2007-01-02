@@ -232,9 +232,9 @@ function html_nextprev ($search_url, $rows, $rows_returned, $varprefix=false)
   global $offset, $max_rows;
 
   if (!$varprefix)
-    { unset($varprefix); }
+    { $varprefix = ''; }
   else
-    { $varprefix .= "_"; }
+    { $varprefix .= '_'; }
 
   if (($rows_returned > $rows) || ($offset != 0))
     {

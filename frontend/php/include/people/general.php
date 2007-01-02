@@ -120,6 +120,7 @@ function people_show_category_list()
     }
   else
     {
+      $j = 0;
       for ($i=0; $i<$rows; $i++)
 	{
 	  $count_res=db_query("SELECT count(*) AS count FROM people_job WHERE category_id='". db_result($result,$i,'category_id') ."' AND status_id='1'");

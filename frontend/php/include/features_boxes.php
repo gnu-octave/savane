@@ -203,7 +203,8 @@ function show_votes ($limit=10)
     { return false; }
 
   # Otherwise, sort items in rank and print the first 10 ones
-  unset($return, $count);
+  $return = '';
+  $count = 0;
   arsort($item_vote);
   foreach ($item_vote as $thisitem => $vote)
     {

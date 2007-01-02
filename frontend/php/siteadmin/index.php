@@ -29,6 +29,9 @@ site_admin_header(array('title'=>_("Home"),'context'=>'admhome'));
 register_globals_off();
 $func = sane_all("func");
 
+$even = 0;
+$odd = 1;
+
 print '<p class="warn">';
 print _("Administrators functions currently have minimal error checking, if any. They are fine to play with but may not act as expected if you leave fields blank, etc. Also, navigating the admin functions with the \"back\" button is highly unadvised.");
 print '</p>';
@@ -47,15 +50,12 @@ if (!$func || $func == "configure")
   print '<a href="retestconfig.php">'._("Test System Configuration").'</a>';
   print '<p class="smaller">'._("Check whether your configuration (PHP, MySQL, Savane) is in a good shape.").'</p>';
   
-  unset($i);
-  print $HTML->box_nextitem(utils_get_alt_row_color($i));
+  print $HTML->box_nextitem(utils_get_alt_row_color($even));
   
   print '<a href="group_type.php">'._("Configure Group Types").'</a>';
   print '<p class="smaller">'._("The Group Types define which features are provided to groups that belongs to the related type, what are the default values for these. There must be at least one Group Type.").'</p>';
   
-  $i++;
-  
-  print $HTML->box_nextitem(utils_get_alt_row_color($i));
+  print $HTML->box_nextitem(utils_get_alt_row_color($odd));
   print '<a href="../people/admin/">'._("Configure People Area").'</a>';
   print '<p class="smaller">'._("Here you can define skills for users to select in their Resume and type of jobs for Contribution Requests. ").'</p>';
   
@@ -85,8 +85,7 @@ if (!$func || $func == "manage")
   print '<p class="smaller">'._("This will show the list of open task related to pending registrations.");
   print '</p>';
   
-  unset($i);
-  print $HTML->box_nextitem(utils_get_alt_row_color($i));
+  print $HTML->box_nextitem(utils_get_alt_row_color($even));
 # Public info
   print '<a href="'.$GLOBALS['sys_home'].'news/approve.php?group='.$GLOBALS['sys_unix_group_name'].'">'._("Approve News").'</a>';
   print '<p class="smaller">'.sprintf(_("You can browse the list of recent news posted on the whole site. You can select some news and make them show up on the %s front page."), $GLOBALS['sys_name']).'</p>';
@@ -111,8 +110,7 @@ if (!$func || $func == "manage")
   print '<p class="smaller">'._("From there, you can see the complete list of groups and reset them (change status, etc).");
   print '</p>';
   
-  unset($i);
-  print $HTML->box_nextitem(utils_get_alt_row_color($i));
+  print $HTML->box_nextitem(utils_get_alt_row_color($even));
 # Public info
   print '<a href="userlist.php">'._("Browse Users List").'</a>';
   print '<p class="smaller">'._("From there, you can see the complete list of user and reset them (change status, email, etc).");
@@ -136,8 +134,7 @@ if (!$func || $func == "monitor")
   print '<a href="spamlist.php">'._("Monitor Spams").'</a>';
   print '<p class="smaller">'. _("Find out items flagged as spam, find out users suspected to be spammers.").'</p>';
   
-  unset($i);
-  print $HTML->box_nextitem(utils_get_alt_row_color($i));
+  print $HTML->box_nextitem(utils_get_alt_row_color($even));
   
   print '<a href="lastlogins.php">'._("Check Last Logins").'</a>';
   print '<p class="smaller">'._("Get a list of recent logins.").'</p>';

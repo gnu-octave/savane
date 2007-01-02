@@ -27,6 +27,8 @@ require "../include/pre.php";
 
 site_admin_header(array('title'=>_("Group List"),'context'=>'admgroup'));
 
+extract(sane_import('post', array('search', 'groupsearch')));
+extract(sane_import('get', array('group_name_search', 'offset', 'max_rows', 'status')));
 
 print '<h3>'._("Group List Filter").'</h3>';
 
@@ -35,13 +37,15 @@ $title_arr[]=_("Type");
 $title_arr[]=_("Number");
 $title_arr[]=_("Action");
 
+$inc = 0;
+
 print html_build_list_table_top ($title_arr);
 
 print '<tr class="'.utils_get_alt_row_color($inc++).'">';
 $res = db_query("SELECT count(*) AS count FROM groups");
 $row = db_fetch_array();
 print '<td>'._("Any").'</td>';
-print '<td>'.$row[count].'</td>';
+print '<td>'.$row['count'].'</td>';
 print '<td><a href="grouplist.php">'._("Browse").'</a></td>';
 print "</tr>\n";
 
@@ -49,7 +53,7 @@ print '<tr class="'.utils_get_alt_row_color($inc++).'">';
 $res = db_query("SELECT count(*) AS count FROM groups WHERE status='P' ");
 $row = db_fetch_array();
 print '<td>'._("Pending projects (normally, an opened task should exist about them)").'</td>';
-print '<td>'.$row[count].'</td>';
+print '<td>'.$row['count'].'</td>';
 print '<td><a href="grouplist.php?status=P">'._("Browse").'</a></td>';
 print "</tr>\n";
 
@@ -67,7 +71,7 @@ print '<tr class="'.utils_get_alt_row_color($inc++).'">';
 $res = db_query("SELECT count(*) AS count FROM groups WHERE status='D' ");
 $row = db_fetch_array();
 print '<td>'._("Deleted projects (the backend will remove the record soon)").'</td>';
-print '<td>'.$row[count].'</td>';
+print '<td>'.$row['count'].'</td>';
 print '<td><a href="grouplist.php?status=D">'._("Browse").'</a></td>';
 print "</tr>\n";
 
@@ -75,16 +79,16 @@ print "</table>\n";
 
 
 
-$MAX_ROW=100;
+$MAX_ROW = !empty($max_rows) ? $max_rows : 100;
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 
 $status_arr=array();
-$status_arr[A]=_("Active");
-$status_arr[P]=_("Pending");
-$status_arr[I]=_("Incomplete");
-$status_arr[D]=_("Deleted");
-$status_arr[M]=_("Maintenance");
+$status_arr['A']=_("Active");
+$status_arr['P']=_("Pending");
+$status_arr['I']=_("Incomplete");
+$status_arr['D']=_("Deleted");
+$status_arr['M']=_("Maintenance");
 
 print '<h3>'._("Group Search").'</h3>';
 
@@ -106,56 +110,36 @@ print '
 
 print '<h3>'._("Group List").' ';
 
-# start from root if root not passed in
-if (!$form_catroot) 
-{ $form_catroot = 1; }
-
-if (!$offset) 
+if (!$offset or !ctype_digit($offset) or $offset < 0)
 { $offset = 0; }
 
 
-if ($form_catroot == 1) 
+$where = "1";
+$msg = '';
+if (isset($group_name_search)) 
 {
-  
-  $where = "1";
-  if (isset($group_name_search)) 
-    {
-      $msg = sprintf(_("Groups that begin with %s"), $group_name_search);
-      $where = "group_name LIKE '$group_name_search%' ";
-      $search_url = "&group_name_search=$group_name_search";
-      
-    } 
-  else if ($status_arr[$status]) 
-    {
-      $msg = $status_arr[$status].' '._("Projects");
-      $where = "status='$status'";
-      $search_url = "&status=$status";
-      
-    } 
-  else if ($groupsearch) 
-    {
-      $msg = _("that match")." <strong>'" .$search. "'</strong>\n";
-      $where = "group_id LIKE '%$search%' OR unix_group_name LIKE '%$search%' OR group_name LIKE '%$search%'";
-      $search_url = "&groupsearch=1&search=".urlencode($search)."";
-      
-    }
-  
-  $res = db_query("SELECT DISTINCTROW group_name,unix_group_name,group_id,is_public,status,license "
-		  . "FROM groups WHERE $where ORDER BY group_name LIMIT $offset,".($MAX_ROW+1)) or ($feedback = db_error());
-  print "<strong>$msg</strong>\n";
-  
+  $msg = sprintf(_("Groups that begin with %s"), $group_name_search);
+  $where = "group_name LIKE '$group_name_search%' ";
+  $search_url = "&group_name_search=$group_name_search";
   
 } 
-else 
+else if (!empty($status_arr[$status]))
 {
-  $res = db_query("SELECT groups.group_name,groups.unix_group_name,groups.group_id,"
-		  . "groups.is_public,"
-		  . "groups.license,"
-		  . "groups.status "
-		  . "FROM groups,group_category "
-		  . "WHERE groups.group_id=group_category.group_id AND "
-		  . "group_category.category_id=$GLOBALS[form_catroot] ORDER BY groups.group_name");
+  $msg = $status_arr[$status].' '._("Projects");
+  $where = "status='$status'";
+  $search_url = "&status=$status";
+  
+} 
+else if ($groupsearch) 
+{
+  $msg = _("that match")." <strong>'" .$search. "'</strong>\n";
+  $where = "group_id LIKE '%$search%' OR unix_group_name LIKE '%$search%' OR group_name LIKE '%$search%'";
+  $search_url = "&groupsearch=1&search=".urlencode($search)."";
 }
+
+$res = db_query("SELECT DISTINCTROW group_name,unix_group_name,group_id,is_public,status,license "
+		. "FROM groups WHERE $where ORDER BY group_name LIMIT $offset,".($MAX_ROW+1)) or ($feedback = db_error());
+print "<strong>$msg</strong>\n";
 
 print '</h3>';
 
@@ -189,8 +173,8 @@ else
       print '<tr class="'.utils_get_alt_row_color($inc++).'">';
       print "<td><a href=\"groupedit.php?group_id=$grp[group_id]\">$grp[group_name]</a></td>";
       print "<td>$grp[unix_group_name]</td>";
-      print '<td>'.$status_arr[$grp[status]]."</td>";
-      print '<td>'.($grp[is_public]?_("yes"):_("no")).'</td>';
+      print '<td>'.$status_arr[$grp['status']]."</td>";
+      print '<td>'.($grp['is_public']?_("yes"):_("no")).'</td>';
       print "<td>$grp[license]</td>";
       
       # members

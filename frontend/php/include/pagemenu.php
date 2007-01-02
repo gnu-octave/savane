@@ -824,7 +824,7 @@ function pagemenu_siteadmin ()
 
   # If the current page shows a group edition page, add extra links
   $extralinks = '';
-  if (SUBCONTEXT == 'manage' && $GLOBALS['group_name'])
+  if (SUBCONTEXT == 'manage' && !empty($GLOBALS['group_name']))
     {
       
       $extralinks = pagemenu_submenu_entry_separator().
