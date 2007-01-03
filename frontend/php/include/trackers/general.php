@@ -1760,6 +1760,7 @@ function trackers_add_sort_criteria($criteria_list, $order, $msort)
 {
   #echo "<br />DBG \$criteria_list=$criteria_list,\$order=$order";
 
+  $found = false;
   if ($criteria_list)
     {
       $arr = explode(',',$criteria_list);

@@ -575,7 +575,7 @@ switch ($func)
 	 $changes['details']['add'] = stripslashes($comment);
 	 $changes['details']['type'] = 'None';
 	 $changed = true;
-	    
+	 
          # Add to CC list unless prefs says not to
          # (usually, this part is handled directly in functions included
          # in general.php, but here as we do a direct insert, we need
@@ -586,7 +586,7 @@ switch ($func)
 	     trackers_add_cc($item_id,
 			     $group_id,
 			     user_getid(),
-			     "-COM-"); 
+			     "-COM-");
                   # use a flag as comment, because if we 
                   # translate the string now, people will get
                   # the translation of the submitter when they
