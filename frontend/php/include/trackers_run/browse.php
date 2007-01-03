@@ -66,7 +66,7 @@ if (!$offset || $offset < 0)
 $msort = sane_get("msort");
 $sumORdet = sane_get("sumORdet");
 $order = sane_get("order");
-$printer = sane_get("order");
+$printer = sane_get("printer");
 
 $hdr = '';
 
