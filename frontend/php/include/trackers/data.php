@@ -1410,11 +1410,10 @@ function trackers_data_add_history ($field_name,
 
   # If type has a value add it into the sql statement (this is only for
   # the follow up comments (details field))
-  $fld_type = '';
-  $val_type = '';
+  $val_type = 'NULL';
   if ($type)
     {
-      $fld_type = ',type'; $val_type = ",'$type'";
+      $val_type = $type;
     }
   else
     {
@@ -1422,14 +1421,20 @@ function trackers_data_add_history ($field_name,
 	# so force it to None (100)
       if ($field_name == 'details')
 	{
-	  $fld_type = ',type'; $val_type = ",'100'";
+	  $val_type = 100;
 	}
     }
 
 
-  $sql="INSERT INTO ".$artifact."_history (bug_id,field_name,old_value,new_value,mod_by,date,spamscore,ip $fld_type) ".
-     "VALUES ('$item_id','$field_name','$old_value','$new_value','$user','".time()."','$spamscore','".$_SERVER['REMOTE_ADDR']."' $val_type)";
-  $result = db_query($sql);
+  $result = db_query_escape("
+    INSERT INTO ".$artifact."_history
+      (bug_id, field_name, old_value, new_value,
+       mod_by, date, spamscore, ip, type)
+    VALUES
+      ('%s','%s','%s','%s',
+       '%s','%s','%s','%s', %s)",
+     $item_id, $field_name, $old_value, $new_value,
+     $user, time(), $spamscore, $_SERVER['REMOTE_ADDR'], $val_type);
   
   spam_set_item_default_score($item_id, 
 			      db_insertid($result),
