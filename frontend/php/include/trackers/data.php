@@ -2186,7 +2186,6 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
   # up an appropriate default value (see bug table definition)
 
   # Extract field transitions possibilities:
-  $field_transition = array();
   $field_transition = trackers_data_get_transition($group_id);
   # We will store in an array the transition_id accepted, to check
   # other fields updates
@@ -2199,8 +2198,7 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
   # presence
   $vfl['status_id'] = '1';
   reset($vfl);
-  $vfl_cols = '';
-  $vfl_values = '';
+  $insert_fields = array();
   $field_transition_id = '';
   while (list($field,$value) = each($vfl))
     {
@@ -2266,8 +2264,7 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
 	  list($value,$ok) = utils_date_to_unixtime($value);
 	}
 
-      $vfl_cols .= ','.$field;
-      $vfl_values .= ',\''.$value.'\'';
+      $insert_fields[$field] = $value;
 
       # Keep track of the change:
       $changes[$field]['del']=
@@ -2295,24 +2292,26 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
 
 
   # Add all special fields that were not handled in the previous block
-  $fixed_cols = 'close_date,group_id,submitted_by,date,summary,details,spamscore';
-  $sql_details = htmlspecialchars($vfl['details']);
-  $fixed_values = "'0','$group_id','$user','".
-    time()."','".
-    htmlspecialchars($vfl['summary'])."','".
-    $sql_details."','".
-    $spamscore."'";
+  $insert_fields['close_date'] = 0;
+  $insert_fields['group_id'] = $group_id;
+  $insert_fields['submitted_by'] = $user;
+  $insert_fields['date'] = time();
+  $insert_fields['summary'] = htmlspecialchars($vfl['summary']);
+  $insert_fields['details'] = htmlspecialchars($vfl['details']);
+  $insert_fields['spamscore'] = $spamscore;
 
   # If not project member, save the IP
   if (!member_check(0, $group_id))
     {  
-      $fixed_cols .= ",ip";
-      $fixed_values .= ",'".$_SERVER['REMOTE_ADDR']."'";
+      $insert_fields['ip'] = $_SERVER['REMOTE_ADDR'];
     }
 
   # Actually insert the entry
-  $sql="INSERT INTO ".ARTIFACT." ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
-  $result=db_query($sql);
+  $fields = implode(',', array_keys($insert_fields)); // date,summary,...
+  $marks = implode(',', array_fill(0, count($insert_fields), '?')); // ?,?,?,...
+  // this sounds a bit overkill - prolly we'd need a ADOConnection->AutoExecute()-like instead
+  $result=db_execute("INSERT INTO ".ARTIFACT." ($fields) VALUES ($marks)",
+		     array_values($insert_fields));
   $item_id=db_insertid($result);
 
   if (!$item_id)
@@ -2608,5 +2607,3 @@ function trackers_data_count_field_value_usage ($group_id, $field, $field_value_
 {
   return db_numrows(db_query("SELECT bug_id FROM ".ARTIFACT." WHERE $field='$field_value_value_id' AND group_id='$group_id'"));
 }
-
-?>

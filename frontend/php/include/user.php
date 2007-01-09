@@ -376,9 +376,13 @@ function user_get_preference ($preference_name, $user_id=false)
   if ($user_id) 
     {
       # looking for information without being the user
-      return db_result(db_query("SELECT preference_value FROM user_preferences ".
-				"WHERE user_id='$user_id' AND preference_name='$preference_name'"),0,'preference_value');
-
+      $res = db_execute("SELECT preference_value FROM user_preferences
+			 WHERE user_id=? AND preference_name=?",
+			array($user_id, $preference_name));
+      if(db_numrows($res) > 0)
+	return db_result($res,0,'preference_value');
+      else
+	return null;
     }
 
   if (user_isloggedin()) 
@@ -396,8 +400,10 @@ function user_get_preference ($preference_name, $user_id=false)
       }
     } else {
       #we haven't returned prefs - go to the db
-      $result=db_query("SELECT preference_name,preference_value FROM user_preferences ".
-		       "WHERE user_id='".user_getid()."'");
+      $result=db_execute("SELECT preference_name,preference_value"
+			 . " FROM user_preferences"
+			 . " WHERE user_id=?",
+			 array(user_getid()));
       if (db_numrows($result) < 1) {
 	return false;
       } else {

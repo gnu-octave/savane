@@ -59,7 +59,7 @@ function db_query_escape()
 {
   $num_args = func_num_args();
   if ($num_args < 1)
-    die(_("Missing parameter"));
+    die(_("db_query_escape: Missing parameter"));
   $args = func_get_args();
 
   // Escape all params except the query itself
@@ -98,7 +98,7 @@ function db_execute($sql, $inputarr=null)
       else if ($typ == 'boolean')
 	$sql .= $v ? '1' : '0';
       else if ($typ == 'object')
-	exit("Don't due db_execute with objects.");
+	exit("Don't use db_execute with objects.");
       else if ($v === null)
 	$sql .= 'NULL';
       else
