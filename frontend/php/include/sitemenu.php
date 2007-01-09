@@ -261,16 +261,26 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
 	}      
     }
 
-  # If CONTEXT or SUBCONTEXT was set to non-existent context, the SQL will
-  # simply fail.
-  $sql = "SELECT recipe_id FROM cookbook_context2recipe WHERE (group_id='$sys_group_id' $sql_groupid) AND context_".CONTEXT."='1' AND subcontext_".SUBCONTEXT."='1' AND (audience_".AUDIENCE."='1' $sql_role)";
+  # If CONTEXT or SUBCONTEXT was set to non-existent context,
+  # the SQL should not fail - so error reporting works in other usages of db_query.
+  $result = db_query("DESCRIBE cookbook_context2recipe");
+  $valid_contexts = array();
+  while($row = mysql_fetch_array($result))
+    $valid_contexts[] = $row['Field'];
 
-  $result = @db_query($sql);
-  $rows = db_numrows($result);
-
-  # No recipe found? End here
-  if ($rows < 1)
-    { return; }
+  if (in_array('context_'.CONTEXT, $valid_contexts)
+      and in_array('subcontext_'.SUBCONTEXT, $valid_contexts))
+    {
+      $sql = "SELECT recipe_id FROM cookbook_context2recipe WHERE (group_id='$sys_group_id' $sql_groupid) AND context_".CONTEXT."='1' AND subcontext_".SUBCONTEXT."='1' AND (audience_".AUDIENCE."='1' $sql_role)";
+      
+      $result = db_query($sql);
+      $rows = db_numrows($result);
+    }
+  else
+    {
+      // No recipe found? End here
+      return;
+    }
 
   # Put a limit on the number of shown recipe to 25
   $limit = 25;
@@ -294,9 +304,13 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
 	{ $sql_itemid .= " OR "; }
       $sql_itemid .= "bug_id='".db_result($result, $i, 'recipe_id')."'";
     }
-  $sql = "SELECT bug_id,priority,summary FROM cookbook WHERE ($sql_itemid) AND resolution_id='1' $sql_privateitem ORDER BY priority DESC, summary ASC LIMIT $limit";
-  $result = db_query($sql);
-  $rows = db_numrows($result);
+
+  $rows = 0;
+  if ($sql_itemid) {
+    $sql = "SELECT bug_id,priority,summary FROM cookbook WHERE ($sql_itemid) AND resolution_id='1' $sql_privateitem ORDER BY priority DESC, summary ASC LIMIT $limit";
+    $result = db_query($sql);
+    $rows = db_numrows($result);
+  }
 
   # No recipe found? End here
   # Such test has been made before, but before we did not knew if the item

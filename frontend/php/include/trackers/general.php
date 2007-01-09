@@ -497,10 +497,14 @@ function trackers_field_box ($field_name,
 	  $field_id = trackers_data_get_field_id($field_name);
 
           # first check if group has defined transitions for this field
-	  $default_auth = db_result(db_query("SELECT transition_default_auth ".
-					     "FROM ".ARTIFACT."_field_usage ".
-					     "WHERE group_id='$group_id' AND bug_field_id='$field_id'"), 0, 'transition_default_auth');
-	  # avoid corrupted database content, if its not F, it must be A.
+	  $res = db_query("SELECT transition_default_auth ".
+			  "FROM ".ARTIFACT."_field_usage ".
+                          "WHERE group_id='$group_id' AND bug_field_id='$field_id'");
+	  $default_auth = 'A';
+	  if (db_numrows($res) > 1) {
+	    $default_auth = db_result($res, 0, 'transition_default_auth');
+	  }
+	  // avoid corrupted database content, if its not F, it must be A.
 	  if ($default_auth != "F")
 	    { $default_auth = "A"; }
 

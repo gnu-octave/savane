@@ -303,3 +303,7 @@ deb-savane-update:
 # remove CVS directories from site specific content
 	rm -rf `find $(debprefix)/share/doc/savane-update/ -type d -name ".svn"`
 
+
+test:
+# Check for syntax errors using PHP-CLI
+	-find -name "*.php" | xargs -n1 php -l | grep -v 'No syntax errors detected in'

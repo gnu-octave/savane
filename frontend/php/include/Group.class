@@ -454,9 +454,14 @@ function group_getpermissions ($group_id, $flags)
 {
   if ($flags)
     {
-      $sql = "SELECT ".$flags."_flags FROM groups_default_permissions WHERE group_id='$group_id'";
-      return db_result(db_query($sql), 0, $flags."_flags");
+      if (!preg_match('/[a-z]+/', $flags))
+	die('group_getpermissions: unvalid argument flags');
+      $res = db_execute("SELECT {$flags}_flags FROM groups_default_permissions WHERE group_id=?",
+			array($group_id));
+      if (db_numrows($res) > 0)
+	return db_result($res, 0, $flags."_flags");
     }
+  return null;
 }
 
 function group_getrestrictions ($group_id, $flags, $event=1) 

@@ -55,7 +55,7 @@ foreach ($GLOBALS as $key => $value)
 # Defines all of the Savane hosts, databases, etc.
 
 # Default values, so they cannot be found undefined in the code
-$sys_name = 'ChangeMyName';
+$sys_name = "Change This Site Name with \$sys_name";
 $sys_logo_name = 'floating.png';
 $sys_debug_on = false;
 $sys_use_google = false;

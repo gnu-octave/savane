@@ -9,6 +9,10 @@
 #  Copyright 2004-2005 (c) Elfyn McBratney <elfyn--emcb.co.uk>
 #                          Mathieu Roy <yeupou--gnu.org>
 #
+# Copyright (C) 2000-2006 John Lim (ADOdb)
+# Copyright (C) 2007  Cliss XXI (GCourrier)
+# Copyright (C) 2006, 2007  Sylvain Beucler
+#
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -66,6 +70,59 @@ function db_query_escape()
   return db_query($query);
 }
 
+/* Like ADOConnection->Execute, with variables binding emulation for
+MySQL, but simpler (not 2D-array, namely). Example:
+
+db_execute("SELECT * FROM utilisateur WHERE name=?", array("Gogol d'Algol"));
+
+Check http://phplens.com/adodb/reference.functions.execute.html and
+adodb.inc.php
+*/
+function db_execute($sql, $inputarr=null)
+{
+  if ($inputarr) {
+    $sqlarr = explode('?', $sql);
+    
+    $sql = '';
+    $i = 0;
+    //Use each() instead of foreach to reduce memory usage -mikefedyk
+    while(list(, $v) = each($inputarr)) {
+      $sql .= $sqlarr[$i];
+      // from Ron Baldwin <ron.baldwin#sourceprose.com>
+      // Only quote string types
+      $typ = gettype($v);
+      if ($typ == 'string')
+	$sql .= "'" . mysql_real_escape_string($v) . "'";
+      else if ($typ == 'double')
+	$sql .= str_replace(',','.',$v); // locales fix so 1.1 does not get converted to 1,1
+      else if ($typ == 'boolean')
+	$sql .= $v ? '1' : '0';
+      else if ($typ == 'object')
+	exit("Don't due db_execute with objects.");
+      else if ($v === null)
+	$sql .= 'NULL';
+      else
+	$sql .= $v;
+      $i += 1;
+    }
+    if (isset($sqlarr[$i])) {
+      $sql .= $sqlarr[$i];
+      if ($i+1 != sizeof($sqlarr))
+	exit("db_execute: input array does not match query: ".htmlspecialchars($sql));
+    } else if ($i != sizeof($sqlarr))
+      exit("db_execute: input array does not match query: ".htmlspecialchars($sql));
+  }
+
+#  print "<pre>";
+#  print_r($sql);
+#  print "</pre>";
+  $res = mysql_query($sql);
+  if ($res === false)
+#    throw new Exception(mysql_error());
+    exit(mysql_error());
+  return $res;
+}
+
 function db_query($qstring,$print=0) 
 {
   #	global $QUERY_COUNT;
@@ -73,9 +130,9 @@ function db_query($qstring,$print=0)
   if ($print) print "<br />Query is: $qstring<br />";
   #	if ($GLOBALS[IS_DEBUG]) $GLOBALS[G_DEBUGQUERY] .= $qstring . "<BR>\n";
   $GLOBALS['db_qhandle'] = mysql_query($qstring);
-# context-related function rely on failsafe mysql errors - to fix
-#  if (!$GLOBALS['db_qhandle'])
-#    echo mysql_error();
+  if (!$GLOBALS['db_qhandle']) {
+    die('SQL query error in [' . htmlspecialchars($qstring) . ']: ' . mysql_error());
+  }
   return $GLOBALS['db_qhandle'];
 }
 
@@ -96,7 +153,7 @@ function db_free_result($qhandle)
 
 function db_result($qhandle,$row,$field) 
 {
-  return @mysql_result($qhandle,$row,$field);
+  return mysql_result($qhandle,$row,$field);
 }
 
 function db_numfields($lhandle) 

@@ -76,9 +76,8 @@ if (db_numrows(db_query("SELECT type_id FROM group_type")) == 1) {
   print '<input type="hidden" name="rand_hash" value="'.$rand_hash.'" />';
     
   # get more site-specific content
+  $default_group_type_value = null; // can be defined in register/projecttype_short.txt
   utils_get_content("register/projecttype_short");
-  
-
   print show_group_type_box('group_type', $default_group_type_value, true);
   
   print '<br /><br />';
