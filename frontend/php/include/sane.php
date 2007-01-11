@@ -153,7 +153,20 @@ function sane_import($method, $names) {
 #        - post
 #        - cookies
 # This will escape the strings appropriately.
-function safeinput (&$string)
+
+// Beuc: I'm using another, saner approach with sane_import, where the
+// string is unquoted so that we manipulate the actual values (with
+// correct results for str_len, etc.). The escaping is done in
+// SQL-related functions, which is a good thing to do anyway. As the
+// dovecot guys put it (http://dovecot.org/doc/securecoding.txt),
+// "Don't rely on input validation. Maybe you missed something. Maybe
+// someone calls your function somewhere else where you didn't
+// originally intend it.  Maybe someone makes the input validation
+// less restrictive for some reason.  Point is, it's not an excuse to
+// cause a security hole just because input wasn't what you expected
+// it to be.". Plus, addslashes() is not meant to escape SQL strings,
+// mysql_real_escape_string() is. Short: don't use that function.
+function safeinput ($string)
 {
   # If magic_quotes is on, count on it to escape data
   if (get_magic_quotes_gpc()) 

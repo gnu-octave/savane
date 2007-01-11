@@ -25,14 +25,14 @@
 
 require '../include/pre.php';
 
-if ($_POST['group_id'])
-   { 
-   $group_id = $_POST['group_id']; 
-   }
-elseif ($_GET['group_id'])
-   { 
-   $group_id = $_GET['group_id']; 
-   }
+if (!empty($_POST['group_id']))
+{ 
+  $group_id = $_POST['group_id']; 
+}
+elseif (!empty($_GET['group_id']))
+{ 
+  $group_id = $_GET['group_id']; 
+}
 
 if (!$group_id) 
 {
@@ -56,23 +56,23 @@ if (!isset($limit))
   $limit = 10;  
 }
 
-if ($_POST['feedback'])
-   { 
-   $feedback = $_POST['feedback']; 
-   }
-elseif ($_GET['feedback'])
-   { 
-   $feedback = $_GET['feedback']; 
-   }
-   
-if ($_POST['group'])
-   { 
-   $group = $_POST['group']; 
-   }
-elseif ($_GET['group'])
-   { 
-   $group = $_GET['group']; 
-   }
+if (!empty($_POST['feedback']))
+{ 
+  $feedback = $_POST['feedback']; 
+}
+elseif (!empty($_GET['feedback']))
+{ 
+  $feedback = $_GET['feedback']; 
+}
+
+if (!empty($_POST['group']))
+{ 
+  $group = $_POST['group']; 
+}
+elseif (!empty($_GET['group']))
+{ 
+  $group = $_GET['group']; 
+}
    
 $project=project_get_object($group_id);
 if (!$project->Uses("news"))

@@ -116,11 +116,7 @@ function db_execute($sql, $inputarr=null)
 #  print "<pre>";
 #  print_r($sql);
 #  print "</pre>";
-  $res = mysql_query($sql);
-  if ($res === false)
-#    throw new Exception(mysql_error());
-    exit(mysql_error());
-  return $res;
+  return db_query($sql);
 }
 
 function db_query($qstring,$print=0) 
@@ -131,7 +127,8 @@ function db_query($qstring,$print=0)
   #	if ($GLOBALS[IS_DEBUG]) $GLOBALS[G_DEBUGQUERY] .= $qstring . "<BR>\n";
   $GLOBALS['db_qhandle'] = mysql_query($qstring);
   if (!$GLOBALS['db_qhandle']) {
-    die('SQL query error in [' . htmlspecialchars($qstring) . ']: ' . mysql_error());
+    // throw new Exception('db_query: SQL query error in ['.$qstring.']: ' . mysql_error());
+    die('db_query: SQL query error in [' . htmlspecialchars($qstring) . ']: ' . mysql_error());
   }
   return $GLOBALS['db_qhandle'];
 }

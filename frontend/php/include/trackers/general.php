@@ -1156,13 +1156,16 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
       if (!ctype_digit($email) && 
 	  strpos($email, "@"))
 	{ 
-	  $email_search = db_result(db_query("SELECT user_id FROM user WHERE email='$email' LIMIT 1"), 0, 'user_id');
-
-	  if ($email_search)
-	    {
-	      $addresses_to_skip[$email] = true;
-	      $email = $email_search; 
-	    }
+	  $res = db_query("SELECT user_id FROM user WHERE email='$email' LIMIT 1");
+	  if ($res != false) {
+	    $email_search = db_result($res, 0, 'user_id');
+	    
+	    if ($email_search)
+	      {
+		$addresses_to_skip[$email] = true;
+		$email = $email_search; 
+	      }
+	  }
 	}
       
       # Ignore if already registered

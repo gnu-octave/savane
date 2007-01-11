@@ -523,6 +523,7 @@ function my_item_list_print ($role="assignee", $openclosed="open", $condensed=fa
 
   # Go thru the group list
   ksort($items_per_groups);
+  $hide_now = false;
   while (list($current_group_id, $current_group_items) = each($items_per_groups))
     {
 

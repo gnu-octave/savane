@@ -855,7 +855,8 @@ function trackers_data_get_default_value($field, $by_field_id=false)
       $field = trackers_data_get_field_name($field);
     }
 
-  $result = db_query('describe bug '.$field);
+  $result = db_query('DESCRIBE '.ARTIFACT.' '.$field);
+  // eg: DESCRIBE bugs originator_name
   return (db_result($result,0,'Default'));
 
 }

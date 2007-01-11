@@ -271,7 +271,7 @@ if ($rows_without_history != $rows)
 
 
   $j = 1;
-  unset($content);
+  $content = '';
   $exists = FALSE;
   for ($i=0; $i<$rows; $i++)
     {
