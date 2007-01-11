@@ -195,7 +195,7 @@ function sane_all($varname)
 # (like thispage.php?arg=userinput)
 function sane_get($varname) 
 {
-  if (sane_isset($varname))
+  if (isset($_GET[$varname]))
     return safeinput($_GET[$varname]);
   else
     return '';
@@ -204,7 +204,7 @@ function sane_get($varname)
 # Function to obtain user input submitted while posting a form
 function sane_post($varname) 
 {
-  if (sane_isset($varname))
+  if (isset($_POST[$varname]))
     return safeinput($_POST[$varname]);
   else
     return '';
@@ -213,7 +213,7 @@ function sane_post($varname)
 # Function to obtain user input submitted in a cookie
 function sane_cookie($varname) 
 {
-  if (sane_isset($varname))
+  if (isset($_COOKIE[$varname]))
     return safeinput($_COOKIE[$varname]);
   else
     return '';

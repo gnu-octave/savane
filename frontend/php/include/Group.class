@@ -447,7 +447,11 @@ function group_get_result($group_id=0)
 
 function group_getid ($group_name) 
 {
-  return db_result(db_query("SELECT group_id FROM groups WHERE unix_group_name='".$group_name."'"),0,'group_id');
+  $res = db_query("SELECT group_id FROM groups WHERE unix_group_name='".$group_name."'");
+  if (db_numrows($res) > 0)
+    return db_result($res,0,'group_id');
+  else
+    return null;
 }
 
 function group_getpermissions ($group_id, $flags) 
@@ -466,22 +470,24 @@ function group_getpermissions ($group_id, $flags)
 
 function group_getrestrictions ($group_id, $flags, $event=1) 
 {
+  $flag = null;
   if ($flags)
     {
-      $sql = "SELECT ".$flags."_rflags FROM groups_default_permissions WHERE group_id='$group_id'";
-      $flag = db_result(db_query($sql), 0, $flags."_rflags");
+      $res = db_query("SELECT ".$flags."_rflags FROM groups_default_permissions WHERE group_id='$group_id'");
+      if (db_numrows($res) > 0)
+	$flag = db_result($res, 0, $flags."_rflags");
     
        # flag = (comment post restrictions)*100 + (newitem post restrictions)
        #        with post restrictions = 2 ... allow post by ANONYMOUS
        #                               = 3 ... allow post by LOGGED-IN
        #                               = 5 ... allow post by MEMBERS
 
-      if ($event == 1) 
+      if ($event == 1)
 	{ 
           # trying to post a NEW item
 	  $flag = ($flag % 100); 
 	}
-      if ($event == 2) 
+      if ($event == 2)
 	{ 
           # trying to post a COMMENT
 	  $flag = (int)($flag / 100); 

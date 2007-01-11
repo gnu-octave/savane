@@ -239,7 +239,7 @@ function user_getid($username=0)
   else 
     {
       $result = db_query("SELECT user_id FROM user WHERE user_name='$username'");
-      if ($result)
+      if ($result and db_numrows($result) > 0)
 	return db_result($result,0,"user_id");
     }
 }
