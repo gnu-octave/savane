@@ -38,28 +38,28 @@ $ENV{CVSEDITOR}="/bin/false";
 
 # Import conf options
 our $use_cvs = "0";
-our $bin_cvs = "/usr/bin/cvs";
+our $bin_cvs = "cvs";
  
 our $use_scp = "0";
-our $bin_scp = "/usr/bin/scp";
+our $bin_scp = "scp";
 our $regexp_scp = "^(scp .*-t /upload)|(scp .*-t /var/ftp)";
 
 our $use_sftp = "0";
-our $bin_sftp = "/usr/lib/sftp-server";
+our $bin_sftp = "sftp-server";
 our $regexp_sftp = "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server)";
 
 our $use_rsync = "0";
-our $bin_rsync = "/usr/bin/rsync";
+our $bin_rsync = "rsync";
 our $regexp_rsync = "^rsync --server";
 our $regexp_dir_rsync = "^(/upload)|(/var/ftp)";
 
 our $use_svn = "0";
-our $bin_svn = "/usr/bin/svnserve";
+our $bin_svn = "svnserve";
 our $regexp_svn = "^svnserve -t";
 our @prepend_args_svn = ( '-r', '/svn' );
 
 our $use_git = "0";
-our $bin_git = "/usr/bin/git-shell";
+our $bin_git = "git-shell";
 
 # Open configuration file
 if (-e "/etc/membersh-conf.pl") {
