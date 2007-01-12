@@ -1501,8 +1501,7 @@ function trackers_data_handle_update ($group_id,
 
   # Get this bug from the db
 
-  $sql="SELECT * FROM ".ARTIFACT." WHERE bug_id='$item_id'";
-  $result=db_query($sql);
+  $result=db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id=?", array($item_id));
 
   if (!((db_numrows($result) > 0) && (member_check(0,db_result($result,0,'group_id'), member_create_tracker_flag(ARTIFACT).'2'))))
     {
@@ -1523,7 +1522,7 @@ function trackers_data_handle_update ($group_id,
   # statement
   # ($changes was initialized in index, as it is used by other functions)
   reset($vfl);
-  $upd_list = '';
+  $upd_list = array();
   while (list($field,$value) = each($vfl))
     {
       # $field_transition_id needed to be reset for every field in the loop
@@ -1623,7 +1622,7 @@ function trackers_data_handle_update ($group_id,
 
 	  if ($is_text)
 	    {
-	      $upd_list .= "$field='".htmlspecialchars($value)."',";
+	      $upd_list[$field] = htmlspecialchars($value);
 	      trackers_data_add_history($field,
 					addslashes($old_value),
 					$value,
@@ -1632,7 +1631,7 @@ function trackers_data_handle_update ($group_id,
 	    }
 	  else
 	    {
-	      $upd_list .= "$field='$value',";
+	      $upd_list[$field] = $value;
 	      trackers_data_add_history($field,$old_value,$value,$item_id);
 	    }
 
@@ -1684,10 +1683,9 @@ function trackers_data_handle_update ($group_id,
       # Browse the canned responses
       while (list(,$thiscanned) = each($canned_response))
         {
-
-	  $sql="SELECT * FROM ".ARTIFACT."_canned_responses WHERE bug_canned_id='".addslashes($thiscanned)."'";
-	  $res3=db_query($sql);
-
+	  $res3 = db_execute("SELECT * FROM ".ARTIFACT."_canned_responses WHERE bug_canned_id=?".
+			     array(addslashes($thiscanned)));
+	  
 	  if ($res3 && db_numrows($res3) > 0)
 	    {
               # add a data separator
@@ -1743,7 +1741,7 @@ function trackers_data_handle_update ($group_id,
       if ($details != $previous_details)
 	{
         $change_exists = 1;
-        $upd_list .= "details='".safeinput($details)."',";
+        $upd_list['details'] = $details;
 
 	# We should use "details" but since details are used for comment
 	# (which is really nasty), we simply cant.
@@ -1777,7 +1775,7 @@ function trackers_data_handle_update ($group_id,
       $vfl['status_id'] != db_result($result,0,'status_id'))
     {
       $now=time();
-      $upd_list .= "close_date='$now',";
+      $upd_list['close_date'] = $now;
       trackers_data_add_history ('close_date',
 				 db_result($result,0,'close_date'),
 				 $now,
@@ -1823,15 +1821,12 @@ function trackers_data_handle_update ($group_id,
 
   # Finally, build the full SQL query and update the bug itself (if need be)
   dbg("UPD LIST: $upd_list");
-  if ($upd_list)
+  if (count($upd_list) > 0)
     {
-      # strip the excess comma at the end of the update field list
-      $upd_list = rtrim($upd_list, ",");
-
-      $sql="UPDATE ".ARTIFACT." SET $upd_list ".
-	 " WHERE bug_id='$item_id' AND group_id='$group_id'";
-
-      $result=db_affected_rows(db_query($sql));
+      $res = db_autoexecute(ARTIFACT, $upd_list, DB_AUTOQUERY_UPDATE,
+		     "bug_id=? AND group_id=?",
+		     array($item_id, $group_id));
+      $result=db_affected_rows($res);
 
       # Add CC (CC in case of comment would have been already entered,
       # if there is only a comment, we should not end up here)
@@ -2308,11 +2303,7 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
     }
 
   # Actually insert the entry
-  $fields = implode(',', array_keys($insert_fields)); // date,summary,...
-  $marks = implode(',', array_fill(0, count($insert_fields), '?')); // ?,?,?,...
-  // this sounds a bit overkill - prolly we'd need a ADOConnection->AutoExecute()-like instead
-  $result=db_execute("INSERT INTO ".ARTIFACT." ($fields) VALUES ($marks)",
-		     array_values($insert_fields));
+  $result=db_autoexecute(ARTIFACT, $insert_fields, DB_AUTOQUERY_INSERT);
   $item_id=db_insertid($result);
 
   if (!$item_id)

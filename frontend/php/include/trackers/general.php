@@ -497,9 +497,10 @@ function trackers_field_box ($field_name,
 	  $field_id = trackers_data_get_field_id($field_name);
 
           # first check if group has defined transitions for this field
-	  $res = db_query("SELECT transition_default_auth ".
-			  "FROM ".ARTIFACT."_field_usage ".
-                          "WHERE group_id='$group_id' AND bug_field_id='$field_id'");
+	  $res = db_execute("SELECT transition_default_auth ".
+			    "FROM ".ARTIFACT."_field_usage ".
+			    "WHERE group_id=? AND bug_field_id=?",
+			    array($group_id, $field_id));
 	  $default_auth = 'A';
 	  if (db_numrows($res) > 1) {
 	    $default_auth = db_result($res, 0, 'transition_default_auth');
@@ -508,11 +509,11 @@ function trackers_field_box ($field_name,
 	  if ($default_auth != "F")
 	    { $default_auth = "A"; }
 
-	  $sql="SELECT from_value_id,to_value_id,is_allowed,notification_list ".
-	     "FROM trackers_field_transition ".
-	     "WHERE group_id='$group_id' AND artifact='".ARTIFACT."' AND field_id='$field_id' AND (from_value_id='$checked' OR from_value_id='0')";
-
-	  $trans_result = db_query($sql);
+	  $trans_result = db_execute(
+            "SELECT from_value_id,to_value_id,is_allowed,notification_list
+	     FROM trackers_field_transition
+	     WHERE group_id=? AND artifact=? AND field_id=? AND (from_value_id=? OR from_value_id='0')",
+	    array($group_id, ARTIFACT, $field_id, $checked));
 	  $forbidden_to_id = array();
 	  $allowed_to_id = array();
 	  $rows = db_numrows($trans_result);
@@ -638,73 +639,40 @@ function trackers_extract_field_list($post_method=true)
   $vfl = array();
   $date = array();
   if ($post_method)
-    {
-      reset($_POST);
-      while ( list($key, $val) = each($_POST))
-	{
-	  if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
-	    {
-	      # Must build the date field key.
-	      $field_name = $found[1];
-	      $field_name_part = $found[2];
-
-	      # We also must increment $day and $month, because the select
-	      # start from zero
-
-	      # get what we already have
-	      list($year, $month, $day) = split("-", $vfl[$field_name]);
-	      if ($field_name_part  == 'day')
-		{ $vfl[$field_name] = "$year-$month-$val"; }
-	      elseif ($field_name_part == 'month')
-		{ $vfl[$field_name] = "$year-$val-$day"; }
-	      elseif ($field_name_part == 'year')
-		{ $vfl[$field_name] = "$val-$month-$day"; }
-	    }
-	  elseif (isset($BF_USAGE_BY_NAME[$key]) || $key == 'comment')
-	    {
-              if ($key == 'comment') {
-#               $vfl[$key] = "<pre>".$val."</pre>";
-	        $vfl[$key] = $val;
-              } else {
-                $vfl[$key] = $val;
-              }
-	    }
-	  else
-	    {
-	      dbg("Rejected key = ".$key." val = $val");
-	    }
-	}
-    }
+    $superglobal =& $_POST;
   else
+    $superglobal =& $_GET;
+
+  reset($superglobal);
+  while ( list($key, $val) = each($superglobal))
     {
-      reset($_GET);
-      while ( list($key, $val) = each($_GET))
+      $val = stripslashesgpc($val);
+      if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
 	{
-	  if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
-	    {
-	      # Must build the date field key.
-	      $field_name = $found[1];
-	      $field_name_part = $found[2];
+	  // Must build the date field key.
+	  $field_name = $found[1];
+	  $field_name_part = $found[2];
+	  
+	  // We also must increment $day and $month, because the select
+	  // start from zero
 
-	      # get what we already have
-	      list($year, $month, $day) = split("-", $vfl[$field_name]);
-	      if ($field_name_part  == 'day')
-		{ $vfl[$field_name] = "$year-$month-$val"; }
-	      elseif ($field_name_part == 'month')
-		{ $vfl[$field_name] = "$year-$val-$day"; }
-	      elseif ($field_name_part == 'year')
-		{ $vfl[$field_name] = "$val-$month-$day"; }
-	    }
-	  elseif (isset($BF_USAGE_BY_NAME[$key]) || $key == 'comment')
-	    {
-	      $vfl[$key] = $val;
-	    }
-	  else
-	    {
-	      dbg("Rejected key = ".$key." val = $val");
-	    }
+	  // get what we already have
+	  list($year, $month, $day) = split("-", $vfl[$field_name]);
+	  if ($field_name_part  == 'day')
+	    { $vfl[$field_name] = "$year-$month-$val"; }
+	  elseif ($field_name_part == 'month')
+	    { $vfl[$field_name] = "$year-$val-$day"; }
+	  elseif ($field_name_part == 'year')
+	    { $vfl[$field_name] = "$val-$month-$day"; }
 	}
-
+      elseif (isset($BF_USAGE_BY_NAME[$key]) || $key == 'comment')
+	{
+	  $vfl[$key] = $val;
+	}
+      else
+	{
+	  dbg("Rejected key = ".$key." val = $val");
+	}
     }
   return($vfl);
 }
@@ -1157,7 +1125,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
 	  strpos($email, "@"))
 	{ 
 	  $res = db_query("SELECT user_id FROM user WHERE email='$email' LIMIT 1");
-	  if ($res != false) {
+	  if ($res != false and db_numrows($res) > 0) {
 	    $email_search = db_result($res, 0, 'user_id');
 	    
 	    if ($email_search)
@@ -2503,5 +2471,3 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
  return true;
 }
 # CERN SPECIFIC (at least for now) END
-
-?>

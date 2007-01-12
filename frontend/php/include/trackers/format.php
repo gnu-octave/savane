@@ -170,6 +170,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
   reset($data);
   $i = 0;
   $j = 0;
+  $previous = false;
   $is_admin = member_check(0, $group_id, 'A');
   foreach ($data as $entry) 
     {

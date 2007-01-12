@@ -41,7 +41,7 @@ extract(sane_import('post',
   array('form_id', # anti double-post
 	// The comment/follow-up itself
 	'comment', 'additional_comment', 'canned_response',
-	'comment_type_id', # ?
+	'comment_type_id', # comment type
 	// carbon-copy
 	'add_cc', 'cc_comment',
 	// vote field
@@ -51,14 +51,16 @@ extract(sane_import('post',
 	'depends_search_only_artifact', 'depends_search_only_project',
 	'reassign_change_project_search', 'reassign_change_project',
 	'reassign_change_artifact',
+	'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support', 'dependent_on_patch',
 	// Second button 'submit but then edit this item again'
 	'submitreturn'
 	)));
 
+# Other form fields: check trackers_extract_field_list()
+
+
 // FIXME: quotation is broken with new markup feature
 $change_quotation_style = null;
-
-
 
 # Initialize the global data structure before anything else
 trackers_init($group_id);
@@ -375,11 +377,11 @@ switch ($func)
      # data control layer
      $changed |= trackers_data_handle_update($group_id,
 					     $item_id,
-					     sane_post("dependent_on_task"),
-					     sane_post("dependent_on_bugs"), # 4
-					     sane_post("dependent_on_support"),
-					     sane_post("dependent_on_patch"), # 6
-					     sane_post("canned_response"),
+					     $dependent_on_task,
+					     $dependent_on_bugs, # 4
+					     $dependent_on_support,
+					     $dependent_on_patch, # 6
+					     $canned_response,
 					     $vfl, # 8
 					     $changes,
 					     $address);
@@ -481,9 +483,11 @@ switch ($func)
        }
      else
        {
-	 unset($_POST, $_FILES, $form_id, $depends_search, $reassign_change_project_search, $add_cc, $input_file, $changed, $vfl, $details, $comment); 
-	     $nocache = 1;
-	     include '../include/trackers_run/mod.php';
+	 $_POST = $_FILES = array();
+	 $form_id = $depends_search = $reassign_change_project_search = $add_cc
+	   = $input_file = $changed = $vfl = $details = $comment = null;
+	 $nocache = 1;
+	 include '../include/trackers_run/mod.php';
        }
      
      break;
@@ -650,7 +654,8 @@ switch ($func)
 				   sane_all("item_file_id"));
 
 # unset previous settings and return to the item
-	 unset($depends_search, $reassign_change_project_search, $add_cc, $input_file, $changed, $vfl, $details); 
+	 $depends_search = $reassign_change_project_search = $add_cc
+	   = $input_file = $changed = $vfl = $details = null;
 	 include '../include/trackers_run/mod.php';
        }
      else
@@ -683,7 +688,8 @@ switch ($func)
 #	    }
 
 # unset previous settings and return to the item
-     unset($depends_search, $reassign_change_project_search, $add_cc, $input_file, $changed, $vfl, $details); 
+     $depends_search = $reassign_change_project_search = $add_cc = $input_file
+       = $changed = $vfl = $details = null;
          
 # CC may be deleted by a user without privilegies, if it is himself
      if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2'))
@@ -724,7 +730,8 @@ switch ($func)
 
 
 # unset previous settings and return to the item
-     unset($depends_search, $reassign_change_project_search, $add_cc, $input_file, $changed, $vfl, $details, $changes, $address);
+     $depends_search = $reassign_change_project_search = $add_cc = $input_file
+       = $changed = $vfl = $details = $changes = $address = null;
      include '../include/trackers_run/mod.php';
 	
      break;

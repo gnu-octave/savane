@@ -27,6 +27,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+define('DB_AUTOQUERY_INSERT', 1);
+define('DB_AUTOQUERY_UPDATE', 2);
+
 function db_connect() 
 {
   global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
@@ -70,16 +73,9 @@ function db_query_escape()
   return db_query($query);
 }
 
-/* Like ADOConnection->Execute, with variables binding emulation for
-MySQL, but simpler (not 2D-array, namely). Example:
-
-db_execute("SELECT * FROM utilisateur WHERE name=?", array("Gogol d'Algol"));
-
-Check http://phplens.com/adodb/reference.functions.execute.html and
-adodb.inc.php
-*/
-function db_execute($sql, $inputarr=null)
-{
+// Substitute '?' with one of the values in the $inputarr array,
+// properly escaped for inclusion in an SQL query
+function db_variable_binding($sql, $inputarr=null) {
   if ($inputarr) {
     $sqlarr = explode('?', $sql);
     
@@ -108,16 +104,73 @@ function db_execute($sql, $inputarr=null)
     if (isset($sqlarr[$i])) {
       $sql .= $sqlarr[$i];
       if ($i+1 != sizeof($sqlarr))
-	exit("db_execute: input array does not match query: ".htmlspecialchars($sql));
+	exit("db_variable_binding: input array does not match query: ".htmlspecialchars($sql));
     } else if ($i != sizeof($sqlarr))
-      exit("db_execute: input array does not match query: ".htmlspecialchars($sql));
+      exit("db_variable_binding: input array does not match query: ".htmlspecialchars($sql));
   }
+  return $sql;
+}
 
+/* Like ADOConnection->Execute, with variables binding emulation for
+MySQL, but simpler (not 2D-array, namely). Example:
+
+db_execute("SELECT * FROM utilisateur WHERE name=?", array("Gogol d'Algol"));
+
+Check http://phplens.com/adodb/reference.functions.execute.html and
+adodb.inc.php
+*/
+function db_execute($sql, $inputarr=null)
+{
 #  print "<pre>";
 #  print_r($sql);
 #  print "</pre>";
-  return db_query($sql);
+  return db_query(db_variable_binding($sql, $inputarr));
 }
+
+/* Like ADOConnection->AutoExecute, without ignoring non-existing
+ fields (you'll get a nice mysql_error() instead) and with a modified
+ argument list to allow variable binding in the where clause
+
+eg: 
+
+Check http://phplens.com/adodb/reference.functions.getupdatesql.html ,
+http://phplens.com/adodb/tutorial.generating.update.and.insert.sql.html
+and adodb.inc.php
+*/
+function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
+			$where_condition=false, $where_inputarr=null)
+{
+  // table name validation
+  if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]+$/', $table))
+    die("db_autoexecute: invalid table name: " . htmlspecialchars($table));
+
+  switch((string) $mode) {
+  case 'INSERT':
+  case '1':
+    $fields = implode(',', array_keys($dict)); // date,summary,...
+    $question_marks = implode(',', array_fill(0, count($dict), '?')); // ?,?,?,...
+    return db_execute("INSERT INTO $table ($fields) VALUES ($question_marks)",
+		     array_values($dict));
+    break;
+  case 'UPDATE':
+  case '2':
+    $sql_fields = '';
+    $values = array();
+    while (list($field,$value) = each($dict)) {
+      $sql_fields .= "$field=?,";
+      $values[] = $value;
+    }
+    $sql_fields = rtrim($sql_fields, ',');
+    $values = array_merge($values, $where_inputarr);
+    $where_sql = $where_clause ? "WHERE $where_clause" : '';
+    return db_execute("UPDATE $table $sql_fields $where_sql", $values);
+    break;
+  default:
+    // no default
+  }
+  die("db_autoexecute: unknown mode=$mode");
+}
+
 
 function db_query($qstring,$print=0) 
 {

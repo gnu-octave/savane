@@ -29,11 +29,11 @@
 require_directory("search");
 
 
-$sql="SELECT * FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
 $fields_per_line=2;
 $max_size=40;
 
-$result=db_query($sql);
+$result = db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+		     array($item_id, $group_id));
 
 if (db_numrows($result) > 0)
 {
@@ -403,7 +403,7 @@ if (db_numrows($result) > 0)
   
   print '<p class="noprint"><span class="preinput">';
   print _("Comment Type & Canned Response:").'</span><br />&nbsp;&nbsp;&nbsp;';
-  print trackers_field_box('comment_type_id',$comment_type_id,$group_id,'',true,'None');
+  print trackers_field_box('comment_type_id','',$group_id,'',true,'None');
     
   print '&nbsp;&nbsp;&nbsp;';
   

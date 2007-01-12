@@ -133,7 +133,9 @@ function require_directory ($module)
       $odir = opendir($dir);
       while ($file = readdir($odir))
 	{
-	  if (eregi(".*\.(php)$", $file))
+	  // - only include PHP scripts
+	  // - avoid Emacs temporary files .#filename.php
+	  if (eregi("^[^\.].*\.(php)$", $file))
 	    {
 	      require_once($dir."/".$file);
 	    }

@@ -27,11 +27,8 @@
 require '../include/pre.php';
 # not yet compliant, kind of messy: register_globals_off();
 
-$only_group_id = sane_all("only_group_id");
-$words = sane_all("words");
-$type_of_search = sane_all("type_of_search");
-$func = sane_all("func");
-$exact = sane_all("exact");
+extract(sane_import('all',
+  array('only_group_id', 'words', 'type_of_search', 'func', 'exact')));
 
 # No words? Ask for them
 if (!$words)
