@@ -22,38 +22,17 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+require_once('../include/pre.php');
 
-# FIXME: this should use register_globals_off() instead
-if ($_POST['group_id'])
-   { $group_id= $_POST['group_id'];  }
-elseif ($_GET['group_id'])
-   { $group_id = $_GET['group_id'];  }
-
-if ($_POST['post_changes'])
-   { $post_changes = $_POST['post_changes']; }
-if ($_POST['summary'])
-   { $summary = $_POST['summary']; }
-if ($_POST['details'])
-   { $details = $_POST['details']; }
-if ($_POST['feedback'])
-   { $feedback = $_POST['feedback'];  }
-elseif ($_GET['feedback'])
-   { $feedback = $_GET['feedback']; }
-if ($_POST['group'])
-   {   $group = $_POST['group']; }
-elseif ($_GET['group'])
-   { $group = $_GET['group'];  }
-if ($_POST['id'])
-   { $id = $_POST['id'];  }
-elseif ($_GET['id'])
-   { $id = $_GET['id']; }
+extract(sane_import('all',
+  array('group_id', 'group', 'id',
+	'update', 'form_id',
+	'post_changes', 'summary', 'details')));
 
 if (!group_restrictions_check($group_id, "news"))
     {
       exit_error(sprintf(_("Action Unavailable: %s"), group_getrestrictions_explained($group_id, ARTIFACT)));
     }
-
 
 if (!group_restrictions_check($group_id, "news"))
     {
@@ -65,22 +44,31 @@ if ($update)
 {
   $valid = form_check($form_id);
 
-# Insert the new item, with 5 as status: project admin
-# must moderate it.
-# There must be a title.
-
   if (!$summary)
     {
       fb(_("Title is missing"),1);
       $valid = 0;
     }
 
+  $result = false;
   if ($valid)
     {
-      $new_id=forum_create_forum($group_id,$summary,1,0);
-      $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
-	 " VALUES ('$group_id','".user_getid()."','5','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
-      $result=db_query($sql);
+      // Insert the new item, with 5 as status: project admin
+      // must moderate it.
+      // There must be a title.
+
+      $new_id = forum_create_forum($group_id,$summary,1,0);
+
+      $fields = array();
+      $fields['group_id'] = $group_id;
+      $fields['submitted_by'] = user_getid();
+      $fields['is_approved'] = 5;
+      $fields['date'] = time();
+      $fields['forum_id'] = $new_id;
+      $fields['summary'] = htmlspecialchars($summary);
+      $fields['details'] = htmlspecialchars($details);
+
+      $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_INSERT);
     }
 
   if (!$result)
@@ -89,10 +77,6 @@ if ($update)
     }
   else
     {
-#
-
-# $details needs to be keept only if there was an error
-      unset($details);
       $feedback = _("News Posted: it will need to be approved by a news manager of this project before it shows on the project front page.");
 
       form_clean($form_id);
@@ -102,7 +86,6 @@ if ($update)
 }
 
 # News must be submitted from a project page
-
 
 if (!$group_id)
 {
@@ -114,16 +97,11 @@ site_project_header(array('title'=>_("Submit News"),
 			  'group'=>$group_id,
 			  'context'=>'news'));
 
-
-if($feedback)
-{
-  print '<h3 class="warn">'.$feedback.'</h3>';
-}
-
-print '
-		<p class="warn">'._("A news manager of this project will have to review and approve the news.")."</p>\n<p>"
-		._("You may include URLs, emails, that will be made clickable, but not HTML.").'
-		</p>'.
+print '<p class="warn">'
+._("A news manager of this project will have to review and approve the news.")
+     ."</p>\n<p>"
+._("You may include URLs, emails, that will be made clickable, but not HTML.")
+     .'	</p>'.
 form_header($_SERVER['PHP_SELF'], $form_id).
 form_input("hidden", "group_id", $group_id).'
                	<span class="preinput">'._("Subject:").'</span><br/>&nbsp;&nbsp;
@@ -134,6 +112,3 @@ form_input("hidden", "group_id", $group_id).'
 form_footer();
 
 site_project_footer(array());
-
-
-?>

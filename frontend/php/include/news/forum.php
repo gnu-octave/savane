@@ -222,10 +222,19 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	/*
 		Adding forums to this group
 	*/
-	$sql="INSERT INTO forum_group_list (group_id,forum_name,is_public,description) ".
-		"VALUES ('$group_id','". htmlspecialchars($forum_name) ."','$is_public','". htmlspecialchars($description) ."')";
+	$fields = array();
+	$fields['group_id'] = $group_id;
+	$fields['forum_name'] = htmlspecialchars($forum_name);
+	$fields['is_public'] = $is_public;
+	$fields['description'] = htmlspecialchars($description);
 
-	$result=db_query($sql);
+	$result = db_autoexecute('forum_group_list',
+	  array('group_id' => $group_id,
+		'forum_name' => htmlspecialchars($forum_name),
+		'is_public' => $is_public,
+		'description' => htmlspecialchars($description)),
+	  DB_AUTOQUERY_INSERT);
+	
 	if (!$result)
         {
             " Error Adding Forum ";
@@ -234,15 +243,20 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
         {
             " Forum Added ";
         }
-	$forum_id=db_insertid($result);
+	$forum_id = db_insertid($result);
 
 	if ($create_default_message)
         {
             #set up a cheap default message
-            $result2=db_query("INSERT INTO forum ".
-                              "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-                              "VALUES ('$forum_id','100','Welcome to $forum_name',".
-                              "'Welcome to $forum_name','".time()."','0','".get_next_thread_id()."')");
+            $result2 = db_autoexecute('forum',
+              array('group_forum_id' => $forum_id,
+		    'posted_by' => 100,
+		    'subject' => 'Welcome to $forum_name',
+		    'body' => 'Welcome to $forum_name',
+		    'date' => time(),
+		    'is_followup_to' => 0,
+		    'thread_id' => get_next_thread_id()),
+	      DB_AUTOQUERY_INSERT);
         }
 	return $forum_id;
 }

@@ -1,13 +1,9 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#
-#  Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#
+# News approval, with or without superadmin privs
+# Copyright (C) 1999-2000  The SourceForge Crew
+# Copyright (C) 2002-2006  Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007  Sylvain Beucler
+# 
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -22,128 +18,64 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
 require '../include/pre.php';
 
-# FIXME: should use register_globals_off() instead
-if ($_POST['group_id'])
-   { 
-   $group_id= $_POST['group_id']; 
-   }
-elseif ($_GET['group_id'])
-   { 
-   $group_id = $_GET['group_id']; 
-   }
+extract(sane_import('all',
+  array('group_id', 'group', 'id',
+	'update', 'form_id',
+	'post_changes', 'summary', 'details',
+	'status', 'approve', 'for_group_id')));
 
-if ($_POST['post_changes'])
-   { 
-   $post_changes = $_POST['post_changes']; 
-   }
-elseif ($_GET['post_changes'])
-   { 
-   $post_changes = $_GET['post_changes']; 
-   }
-   
-if ($_POST['summary'])
-   { 
-   $summary = $_POST['summary']; 
-   }
-elseif ($_GET['summary'])
-   { 
-   $summary = $_GET['summary']; 
-   }
-   
-if ($_POST['details'])
-   { 
-   $details = $_POST['details']; 
-   }
-elseif ($_GET['details'])
-   { 
-   $details = $_GET['details']; 
-   }
+// This page can be used to manage the whole news system for a server
+// or news for a project.
+// That's why, when required, we test if group_id = sys_group_id.
 
-if ($_POST['status'])
-   { 
-   $status = $_POST['status']; 
-   }
-elseif ($_GET['status'])
-   { 
-   $status = $_GET['status']; 
-   }
-   
-if ($_POST['approve'])
-   { 
-   $approve = $_POST['approve']; 
-   }
-elseif ($_GET['approve'])
-   { 
-   $approve = $_GET['approve']; 
-   }   
-if ($_POST['for_group_id'])
-   { 
-   $for_group_id = $_POST['for_group_id']; 
-   }
-elseif ($_GET['for_group_id'])
-   { 
-   $for_group_id = $_GET['for_group_id']; 
-   }   
-if ($_POST['group'])
-   { 
-   $group = $_POST['group']; 
-   }
-elseif ($_GET['group'])
-   { 
-   $group = $_GET['group']; 
-   }      
-if ($_POST['id'])
-   { 
-   $id = $_POST['id']; 
-   }
-elseif ($_GET['id'])
-   { 
-   $id = $_GET['id']; 
-   }      
-
-# This page can be used to manage the whole news system for a server
-# or news for a project.
-# That's why, when required, we test if group_id = sys_group_id.
-
-if ($group_id && member_check(0, $group_id,'N3'))
+if ($group_id && member_check(0, $group_id, 'N3'))
 {
 
-  # Modifications are made to the database
-  # 0 = locally approved
-  # 1 = front page approved
+  // Modifications are made to the database
+  // 0 = locally approved
+  // 1 = front page approved
   if ($post_changes && $approve)
     {
       if ($group_id != $GLOBALS['sys_group_id'] &&
 	  $status != 0 && $status != 4)
 	{
-	  # Make sure that an item accepted for front page is not modified
+	  // Make sure that an item accepted for front page is not modified
 	  $status=0;
 	}
 
+      $result = false;
       if (user_is_super_user() &&
 	  $group_id == $GLOBALS['sys_group_id'])
 	{
-	  $sql="UPDATE news_bytes SET is_approved='".$status."', date='".time()."', ".
-	     "summary='".htmlspecialchars($summary)."',details='".htmlspecialchars($details)."'  WHERE id='$id' AND group_id='$for_group_id'";
+	  $fields = array('is_approved' => $status,
+                          'date' => time(),
+                          'summary' => htmlspecialchars($summary),
+                          'details' => htmlspecialchars($details));
+	  $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
+				   "id=? AND group_id=?", array($id, $for_group_id));
+
 	}
       else
 	{
 	  if ($status == 0)
 	    {
-	      $sql="UPDATE news_bytes SET is_approved='0', summary='".htmlspecialchars($summary)."', ".
-		 "details='".htmlspecialchars($details)."' WHERE id='$id' AND group_id='$group_id'";
+	      $fields = array('is_approved' => 0,
+			      'summary' => htmlspecialchars($summary),
+			      'details' => htmlspecialchars($details));
+	      $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
+				       "id=? AND group_id=?", array($id, $group_id));
 	    }
 	  elseif ($status == 4)
 	    {
-	      $sql="UPDATE news_bytes SET is_approved='4', summary='".htmlspecialchars($summary)."', ".
-		 "details='".htmlspecialchars($details)."' WHERE id='$id' AND group_id='$group_id'";
+	      $fields = array('is_approved' => 4,
+			      'summary' => htmlspecialchars($summary),
+			      'details' => htmlspecialchars($details));
+	      $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
+				       "id=? AND group_id=?", array($id, $group_id));
 	    }
 	}
-
-      $result=db_query($sql);
 
       if (!$result || db_affected_rows($result) < 1)
 	{
@@ -162,18 +94,22 @@ if ($group_id && member_check(0, $group_id,'N3'))
 
         {
            # get notification address and submitter id
-           $to = db_result(db_query("SELECT new_news_address FROM groups WHERE group_id=$group_id"), 0, 'new_news_address');
-           $from = user_getrealname(db_result(db_query("SELECT submitted_by FROM news_bytes WHERE id='$id' AND group_id='$for_group_id'"), 0, 'submitted_by'),1).' <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
+           $to = db_result(db_execute("SELECT new_news_address FROM groups WHERE group_id=?", array($group_id)),
+			   0, 'new_news_address');
 
-
-           # Run stripslashes to avoid slashes added by magic quotes and 
-           sendmail_mail($from, $to, $summary, stripslashes($details), $group_name, 'news');
+	   $res = db_execute("SELECT submitted_by FROM news_bytes WHERE id=? AND group_id=?",
+				       array($id, $for_group_id));
+	   if (db_numrows($res) > 0) {
+	     $from = user_getrealname(db_result($res, 0, 'submitted_by'),1).' <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
+	     
+	     // Run stripslashes to avoid slashes added by magic quotes and 
+	     sendmail_mail($from, $to, $summary, stripslashes($details), $group_name, 'news');
+	   }
         }
 
       # Show the list_queue
       $approve='';
       $list_queue='y';
-
     }
 
   # Begin HTML
@@ -189,17 +125,19 @@ if ($group_id && member_check(0, $group_id,'N3'))
       if (user_is_super_user()  &&
 	  $group_id == $GLOBALS['sys_group_id'])
 	{
-	  $sql="SELECT groups.unix_group_name,news_bytes.*,news_bytes.submitted_by AS submitted_by ".
-	     "FROM news_bytes,groups WHERE id='$id' ".
-	     "AND news_bytes.group_id=groups.group_id ";
+	  $result = db_execute("SELECT groups.unix_group_name,news_bytes.*,news_bytes.submitted_by AS submitted_by
+	     FROM news_bytes,groups WHERE id=?
+               AND news_bytes.group_id=groups.group_id",
+	     array($id));
 
 	}
       else
 	{
-	  $sql="SELECT *,news_bytes.submitted_by AS submitted_by FROM news_bytes WHERE id='$id' AND group_id='$group_id'";
+	  $result = db_execute("SELECT *,news_bytes.submitted_by AS submitted_by FROM news_bytes
+            WHERE id=? AND group_id=?",
+	    array($id, $group_id));
 	}
 
-      $result=db_query($sql);
       if (db_numrows($result) < 1)
 	{
 	  print '<h2 class="error">'._("No pending news").'</h2>';
@@ -285,14 +223,18 @@ if ($group_id && member_check(0, $group_id,'N3'))
       #   - if project news: it has to be proposed news (5)
       if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
 	{
-	  $sql="SELECT * FROM news_bytes WHERE (is_approved=0 OR (is_approved=5 AND group_id='$group_id')) AND date > '$old_date'";
+	  $result=db_execute("SELECT * FROM news_bytes
+            WHERE (is_approved=0 OR (is_approved=5 AND group_id=?))
+            AND date > ?",
+            array($group_id, $old_date));
 	}
       else
 	{
-	  $sql="SELECT * FROM news_bytes WHERE is_approved=5 AND date > '$old_date' AND group_id='$group_id'";
+	  $result=db_execute("SELECT * FROM news_bytes
+            WHERE is_approved=5 AND date > ? AND group_id=?",
+            array($old_date, $group_id));
 	}
 
-      $result=db_query($sql);
       $rows=db_numrows($result);
 
       if ($rows < 1)
@@ -330,14 +272,17 @@ if ($group_id && member_check(0, $group_id,'N3'))
 
       if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
 	{
-	  $sql="SELECT * FROM news_bytes WHERE (is_approved=2 OR (is_approved=4 AND group_id='$group_id')) AND date > '$old_date'";
+	  $result = db_execute("SELECT * FROM news_bytes WHERE (is_approved=2 OR
+            (is_approved=4 AND group_id=?)) AND date > ?",
+            array($group_id, $old_date));
 	}
       else
 	{
-	  $sql="SELECT * FROM news_bytes WHERE is_approved=4 AND date > '$old_date' AND group_id='$group_id'";
+	  $result = db_execute("SELECT * FROM news_bytes WHERE is_approved=4
+            AND date > ? AND group_id=?",
+            array($old_date, $group_id));
 	}
 
-      $result=db_query($sql);
       $rows=db_numrows($result);
 
       if ($rows < 1)
@@ -375,15 +320,18 @@ if ($group_id && member_check(0, $group_id,'N3'))
       # We show all approved items.
       if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
 	{
-	  $sql="SELECT * FROM news_bytes WHERE (is_approved=1 OR (is_approved=0  AND group_id='$group_id'))";
-
+	  $result=db_execute("SELECT * FROM news_bytes
+            WHERE (is_approved=1 OR (is_approved=0  AND group_id=?))", 
+            array($group_id));
 	}
       else
 	{
-	  $sql="SELECT * FROM news_bytes WHERE (is_approved=0 OR is_approved=1) AND date > '$old_date' AND group_id='$group_id'";
+	  $result=db_execute("SELECT * FROM news_bytes
+            WHERE (is_approved=0 OR is_approved=1)
+            AND date > ? AND group_id=?",
+	    array($old_date, $group_id));
 	}
 
-      $result=db_query($sql);
       $rows=db_numrows($result);
 
       if ($rows < 1)
@@ -410,13 +358,8 @@ if ($group_id && member_check(0, $group_id,'N3'))
     }
 
   site_project_footer(array());
-
 }
 else
 {
-
   exit_error(_("Action unavailable: only news managers can approve news."));
-
 }
-
-?>

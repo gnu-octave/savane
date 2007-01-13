@@ -111,22 +111,6 @@ function db_variable_binding($sql, $inputarr=null) {
   return $sql;
 }
 
-/* Like ADOConnection->Execute, with variables binding emulation for
-MySQL, but simpler (not 2D-array, namely). Example:
-
-db_execute("SELECT * FROM utilisateur WHERE name=?", array("Gogol d'Algol"));
-
-Check http://phplens.com/adodb/reference.functions.execute.html and
-adodb.inc.php
-*/
-function db_execute($sql, $inputarr=null)
-{
-#  print "<pre>";
-#  print_r($sql);
-#  print "</pre>";
-  return db_query(db_variable_binding($sql, $inputarr));
-}
-
 /* Like ADOConnection->AutoExecute, without ignoring non-existing
  fields (you'll get a nice mysql_error() instead) and with a modified
  argument list to allow variable binding in the where clause
@@ -162,8 +146,8 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
     }
     $sql_fields = rtrim($sql_fields, ',');
     $values = array_merge($values, $where_inputarr);
-    $where_sql = $where_clause ? "WHERE $where_clause" : '';
-    return db_execute("UPDATE $table $sql_fields $where_sql", $values);
+    $where_sql = $where_condition ? "WHERE $where_condition" : '';
+    return db_execute("UPDATE $table SET $sql_fields $where_sql", $values);
     break;
   default:
     // no default
@@ -171,6 +155,22 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
   die("db_autoexecute: unknown mode=$mode");
 }
 
+/* Like ADOConnection->Execute, with variables binding emulation for
+MySQL, but simpler (not 2D-array, namely). Example:
+
+db_execute("SELECT * FROM utilisateur WHERE name=?", array("Gogol d'Algol"));
+
+Check http://phplens.com/adodb/reference.functions.execute.html and
+adodb.inc.php
+*/
+function db_execute($sql, $inputarr=null)
+{
+  $expanded_sql = db_variable_binding($sql, $inputarr);
+#  print "<pre>";
+#  print_r($expanded_sql);
+#  print "</pre>";
+  return db_query($expanded_sql);
+}
 
 function db_query($qstring,$print=0) 
 {

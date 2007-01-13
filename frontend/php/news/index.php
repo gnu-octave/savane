@@ -110,5 +110,3 @@ if ($limit < news_total_number($group_id))
 }
 
 site_project_footer(array());
-
-?>
