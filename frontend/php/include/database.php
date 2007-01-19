@@ -50,9 +50,12 @@ function db_connect()
     exit;
   }
 
-  $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
+  $conn = @mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
   if (!$conn or !mysql_select_db($sys_dbname, $conn)) {
-    fb("Failed to connect to database. Please contact as soon as possible server administrators. Until this problem get fixed, you will not be able to use this site.", 1);
+    echo "Failed to connect to database: " . mysql_error() . "<br />";
+    echo "Please contact as soon as possible server administrators {$GLOBALS['sys_email_adress']}.<br />";
+    echo "Until this problem get fixed, you will not be able to use this site.";
+    exit;
   }
 }
 
