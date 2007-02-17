@@ -362,7 +362,15 @@ if (db_numrows($result) > 0)
   if (trackers_data_is_used("vote"))
     {
       print html_hidsubpart_header("votes", _("Votes"));
-      print '<p>'.sprintf(ngettext("There is %s vote so far.", "There are %s votes so far.", $votes), $votes).' '._("Votes easily highlight which items people would like to see resolved in priority, independantly of the priority of the item set by tracker managers.").'</p><p class="noprint">';
+      print '<p>'
+	._("Do you think this task is very important?")
+	.'<br />'
+	._("If so, you can click here to add your encouragement to it.")
+	.'<br />'
+	.sprintf(ngettext("This task has %s encouragement so far.",
+			  "This task has %s encouragements so far.", $votes),
+		 $votes)
+	.'</p><p class="noprint">';
 
       if (trackers_data_is_showed_on_add("vote") || member_check(user_getid(), $group_id))
         {
