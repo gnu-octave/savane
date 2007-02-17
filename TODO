@@ -18,3 +18,10 @@
 
 - Less scary CC warnings
   http://savannah.gnu.org/support/?104841
+
+- Project-wide input sanitizing.
+  Some considerations:
+  https://gna.org/bugs/?367
+
+- Clean-up themes wrt guidelines version
+  https://savannah.gnu.org/support/?105749
