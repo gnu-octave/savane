@@ -1,12 +1,10 @@
 <?php
+# Setup a minimal environment (database, configuration file...)
+#
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gna.org>
+#
 # This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#
-#  Copyright 2002-2006 (c) Mathieu Roy <yeupou--gna.org>
 #
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,37 +20,16 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# No variable beginning by $sys_ should be set so far because these
-# are system configuration from /etc conffile.
-# Normally, the code is well thought enough so it makes no real profound
-# different if some malicious user define a $sys_ variable before the
-# conffile is read: the conffile will overwrite any important variable.
-# But it is cleaner to simply unset any $sys_ variable set before we
-# read the conffile, to tighten security as soon as possible.
-# It also avoid register_globals_off() to unset by mistake these variables
-# 
-# It use strstr so it is very fast. 
-#
-# This means that it will never possible to set $sys_ outside of the conffile.
-# (which is not a problem)
-foreach ($GLOBALS as $key => $value)
-{ 
-  # Search for sys_ (conffile settings)
-  if (!strstr($key, "sys_"))
-    { continue; }
+# database abstraction
+require_once(dirname(__FILE__).'/database.php');
+# security library
+require_once(dirname(__FILE__).'/session.php');
+# user functions like get_name, logged_in, etc
+require dirname(__FILE__).'/user.php';
+# title, helper to find out appropriate info depending on the context,
+# like title
+require dirname(__FILE__).'/context.php';
 
-  # Search for int_ (internal global)
-  if (!strstr($key, "int_"))
-    { continue; }
-  
-  # Stop here otherwise, with no detail whatsoever
-  error_log("attempt to set a sys_ or int_ variable using globals, exit - ".$_SERVER['REMOTE_ADDR']." at ".$_SERVER['REQUEST_URI']);
-  exit;
-}
-
-
-
-# Defines all of the Savane hosts, databases, etc.
 
 # Default values, so they cannot be found undefined in the code
 $sys_name = "Change This Site Name with \$sys_name";
@@ -63,6 +40,7 @@ $sys_use_pamauth = false;
 $stone_age_menu = false;
 $sys_spamcheck_spamassassin = false;
 $sys_use_krb5 = false;
+$sys_upload_max = 512;
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))
@@ -95,31 +73,11 @@ else
   $sys_https_url = 'http://'.$GLOBALS['sys_default_domain'];
 }
 
-# If file upload limit was not defined in the configuration file
-# we set it arbitrarily to 1/2 MB, something that should work out of the
-# box on most systems.
-# (depends on MySQL max_allowed_packet and PHP upload_max_filesize
-if (!isset($GLOBALS['sys_upload_max']))
-{
-  $GLOBALS['sys_upload_max'] = 512;
-}
-
-
 # require_directory
 # sources (requires) all specific include files of a module from
 # the include area (all include files of a module are arranged
 # in subdirectories in the includes area, so this routine sources
 # just all of the *.php files found in the module's subdirectory).
-
-# Prevent declaration by users.
-if (isset($_GET['module']) ||
-    isset($_POST['module']) ||
-    isset($_COOKIE['module']) ||
-    isset($_SERVER['module']) ||
-    isset($_ENV['module']) ||
-    isset($_FILES['module']) ||
-    isset($_REQUEST['module']))
-{ exit(); }
 
 function require_directory ($module)
 {
@@ -178,81 +136,14 @@ function get_module_include_dir ($phpself, $true_artifact=0, $true_dir=0)
   return $guess;
 }
 
-/**************************************************************
-       Usual requires, always useful
-**************************************************************/
 
-# sanitize user input, focusing register globals set to off
-require_once(dirname(__FILE__).'/sane.php');
-
-# version info
-require_once(dirname(__FILE__).'/version.php');
-
-# i18n setup
-require_once(dirname(__FILE__).'/i18n.php');
-
-# base error library for new objects
-require_once(dirname(__FILE__).'/Error.class');
-
-# database abstraction
-require_once(dirname(__FILE__).'/database.php');
-
-# user functions like get_name, logged_in, etc
-require_once(dirname(__FILE__).'/user.php');
-
-# various utilities
-require_once(dirname(__FILE__).'/utils.php');
-
-# security library
-require_once(dirname(__FILE__).'/session.php');
-
-# theme - color scheme informations
-require_once(dirname(__FILE__).'/theme.php');
-
-# title, helper to find out appropriate info depending on the context,
-# like title
-require_once(dirname(__FILE__).'/context.php');
-
-# left-hand and top menu nav library (requires context to be set)
-require_once(dirname(__FILE__).'/sitemenu.php');
-require_once(dirname(__FILE__).'/pagemenu.php');
 
 # HTML layout class, may be overriden by the Theme class
-require_once(dirname(__FILE__).'/Layout.class');
+require dirname(__FILE__).'/Layout.class';
 
 $HTML = new Layout();
 
-# group functions like get_name, etc
-require_once(dirname(__FILE__).'/Group.class');
 
-# member functions like member_add, member_approve, etc
-require_once(dirname(__FILE__).'/member.php');
-
-# exit_error library
-require_once(dirname(__FILE__).'/exit.php');
-
-#  send mail library
-require_once(dirname(__FILE__).'/sendmail.php');
-
-# various html libs like button bar, themable
-require_once(dirname(__FILE__).'/html.php');
-require_once(dirname(__FILE__).'/markup.php');
-
-# graphics library
-require_once(dirname(__FILE__).'/graphs.php');
-
-# calendar library
-require_once(dirname(__FILE__).'/calendar.php');
-
-# forms library
-require_once(dirname(__FILE__).'/form.php');
-
-# spam filtering library
-require_once(dirname(__FILE__).'/spam.php');
-require_once(dirname(__FILE__).'/dnsbl.php');
-
-# search tools, frequently needed
-require_directory('search');
 
 /**************************************************************
        Set up proper use of UTF-8, even if the webserver does

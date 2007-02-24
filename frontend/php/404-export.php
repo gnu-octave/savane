@@ -27,6 +27,8 @@
 
 require "./include/pre.php";
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 site_header(array('title'=>_("Requested XML not Found (Error 404)")));
 
@@ -45,5 +47,3 @@ print '<p>'.sprintf(_("Otherwise, you can return to the %s%s main page%s."),
 
 
 $HTML->footer(array());
-
-?>

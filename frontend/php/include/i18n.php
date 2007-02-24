@@ -27,6 +27,7 @@
 
 # Should we use _ENV["LANG"] also?
 
+# TODO: move to init.php or init-i18n.php
 
 # Get the user's prefered language from the navigator sended headers :
 $navigatorLanguages = explode(",",getenv("HTTP_ACCEPT_LANGUAGE"));
@@ -220,4 +221,3 @@ if (!function_exists("ngettext")) {
     return $msgstr;
   }
 }
-?>

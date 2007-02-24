@@ -122,6 +122,9 @@ function stripslashesgpc($val)
 
 // Check the existence of a series of input parameters, then return an
 // array suitable for extract()
+// Ex: extract(sane_import('post',
+//       array('insert_group_name', 'rand_hash',
+//             'form_full_name', 'form_unix_name')));
 function sane_import($method, $names) {
   if ($method == 'get')
     $input_array =& $_GET;
@@ -247,18 +250,29 @@ function sane_set($varname, $value)
 }
 
 
-# Function to unregister globals on a page: this will be helpful to
-# make pages compliant with register globals set to off one by one.
-function register_globals_off ()
+# Noop function to mark a page as input-sanitized.
+# Warning: MySQL calls are not necessarily secure.
+function register_globals_off()
 {
   # This is unsecure: you can switch off existing globals
   # - unless that's the very first thing you do in the script
+  # - and it's not always the case
 #  foreach ($_REQUEST as $key => $value)
 #    { 
 #      unset($GLOBALS[$key]); 
 #    }
 }      
 
+# Tag: mysql queries are safe here
+#function mysql_is_safe() {
+#}
+# Tag: input is safe new/Beuc-style (no slashes)
+#function input_is_safe() {
+#}
+# Those tags are used by devel/sv_check_security.pl
+
+
+# To remove: use db_execute/db_autoexecute/db_query_escape instead
 function sane_mysql($string) {
   # If magic_quotes is on, count on it to escape data
   if (get_magic_quotes_gpc()) 

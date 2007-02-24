@@ -28,6 +28,20 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# version info
+require_once(dirname(__FILE__).'/version.php');
+# base error library for new objects
+require_once(dirname(__FILE__).'/Error.class');
+# left-hand and top menu nav library (requires context to be set)
+require_once(dirname(__FILE__).'/sitemenu.php');
+require_once(dirname(__FILE__).'/pagemenu.php');
+# theme - color scheme informations
+require_once(dirname(__FILE__).'/theme.php');
+# i18n setup
+require_once(dirname(__FILE__).'/i18n.php');
+# various utilities - broken_msie...
+require_once(dirname(__FILE__).'/utils.php');
+
 class Layout extends Error
 {
 
@@ -226,7 +240,7 @@ class Layout extends Error
     # W3C standards.
     # (ignore in printer mode, as we have no left and top menu and that menus
     # actually do not matter)
-    if (is_broken_msie() && !$_GET["printer"])
+    if (utils_is_broken_msie() && !$_GET["printer"])
       {
 	print '  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/internal/msie-dirtyhacks.css" />
 ';

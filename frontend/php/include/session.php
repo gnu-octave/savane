@@ -23,6 +23,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once(dirname(__FILE__).'/sane.php');
 
 $G_SESSION=array();
 $G_USER=array();
@@ -121,7 +122,7 @@ function session_login_valid($form_loginname,
       # Update unix_pw and user_pw.
       # TODO: THE KERBEROS PASSWORD SHOULD NOT BE STORED LOCALLY!!!!
       #
-      if ($GLOBALS[sys_use_krb5])
+      if ($GLOBALS['sys_use_krb5'])
 	{ $ret = krb5_login($form_loginname, $form_pw); }
 
       if($ret == KRB5_NOTOK) 

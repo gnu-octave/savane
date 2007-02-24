@@ -94,6 +94,8 @@ function theme_list ()
 }
 
 
+# TODO: move to init.php
+
 
 ##### THEME SELECTION
 ## First check if the printer mode is asked. If not, proceed to the usual
@@ -195,5 +197,3 @@ function theme_guidelines_check ($theme)
   
   return true;
 }
-
-?>

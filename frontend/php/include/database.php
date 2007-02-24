@@ -288,5 +288,3 @@ function db_createinsertinto ($result, $table, $row, $autoincrement_fieldname, $
 
   return "INSERT INTO ".$table." ($fields) VALUES ($values)";
 }	
-
-?>

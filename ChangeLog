@@ -1,3 +1,10 @@
+2007-02-24  Sylvain Beucler  <beuc@beuc.net>
+
+	* More clean-up.
+
+	* Removed outdated unused batch-processing
+	bulk_admin_users.php
+
 2007-01-02  Sylvain Beucler  <beuc@beuc.net>
 
 	* Bugfix my bugfixes.

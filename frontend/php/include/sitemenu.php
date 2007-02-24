@@ -23,6 +23,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# search tools, frequently needed
+require_directory('search');
 
 function menu_print_sidebar($params) 
 { return sitemenu($params); }

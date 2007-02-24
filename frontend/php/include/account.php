@@ -59,18 +59,14 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1, $allow
   # By default, dashes are not allowed, creating issue with mailing list name
   # and many other potential conflicts. However, it is usually convenient for
   # groups name.
-  if ($allow_dashes) {
-    $dash = "-";
-  }
+  $dash = $allow_dashes ? '-' : '';
 
   # By default, dots are not allowed. Unix systems may allow it but it 
   # is a source of confusion (for instance, a problem if you have the habit
   # to things like `chown user.group`)
   # However, it is sometimes wise to allow it, for instance if we check for
   # a mailing-list name, which is almost like an account name + dots 
-  if ($allow_dots) {
-    $dot = ".";
-  }
+  $dot = $allow_dots ? '.' : '';
   
   # no spaces
   if (strrpos($name,' ') > 0)
@@ -304,6 +300,3 @@ function account_shellselects($current)
       echo "<option ".(($current == $this_shell)?"selected ":"")."value=$this_shell>$this_shell</option>\n";
     }
 }
-
-
-?>

@@ -18,9 +18,10 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Take a look at all frontend php files and determine whether they call
-# register_globals_off() or not, so we know exactly what remains to be done
-# to have Savane working correctly with register globals set to off
+# Take a look at all frontend php files and determine whether they
+# call mysql_is_safe() or not, so we know exactly what remains to be
+# done to have Savane working correctly with register globals set to
+# off (mysql_is_safe depends on input_is_safe).
 
 use strict;
 use Cwd;
@@ -40,7 +41,7 @@ my @files = File::Find::Rule->file()
     ->name("*.php", "*.class")
     ->in("$path");
 
-print "The following PHP files does not use register_globals_off:\n";
+print "The following PHP files does not have mysql_is_safe:\n";
 my $use_count;
 foreach my $file (@files)
 {
@@ -48,14 +49,14 @@ foreach my $file (@files)
     my $line_count;
     open(FILE, "< $file");
     while (<FILE>) {
-	next if /^\#/;
-	$does_use = 1 if /register_globals_off\(\)/;
+	$does_use = 1 if /^#mysql_is_safe\(\);$/;
 	last if $does_use;
 	$line_count++;
     }
     
     # ignore the file if it is not longer than 15 lines;
-    $does_use = 1 unless $line_count > 15;
+    #$does_use = 1 unless $line_count > 15;
+    # Doesn't match anything anyway - license notices are huge ;)
 
     $use_count++ if $does_use;
     next if $does_use;
@@ -65,6 +66,9 @@ foreach my $file (@files)
 
 }
 
-print "\n".$use_count."/".scalar(@files)." files done (".int($use_count/scalar(@files)*100)."%)\n";
-print "(note that file that are supposed to be only called from include() or
-require() should not really use register_globals_off())\n";
+my $total_files = scalar(@files);
+if ($total_files > 0) {
+    print "\n".$use_count."/".$total_files." files done (".int($use_count/scalar(@files)*100)."%)\n";
+} else {
+    print "No files found in $path\n";
+}

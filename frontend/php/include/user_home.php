@@ -185,7 +185,7 @@ if (!$is_squad)
   
   if (db_result($res_user,0,'people_view_skills') != 1) 
     {
-      print _("This user deactivated his/her Resume & Skills").'.';
+      print _("This user did not enable his/her Resume & Skills").'.';
     } 
   else 
     {

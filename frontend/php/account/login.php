@@ -26,8 +26,8 @@ Header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 Header("Cache-Control: no-cache");
 Header("Cache-Control: must-revalidate");
 
-require '../include/pre.php';
-require '../include/account.php';
+require_once('../include/pre.php');
+require_once('../include/account.php');
 
 register_globals_off();
 $from_brother = sane_all('from_brother');

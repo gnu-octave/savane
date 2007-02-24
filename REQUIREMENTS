@@ -23,3 +23,9 @@
 
 
 (comes from recipe #257)
+
+
+= Optional =
+
+* Kerberos authentication support (bindings for the krb5 library):
+  http://savannah.nongnu.org/projects/phpkrb5

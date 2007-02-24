@@ -115,6 +115,3 @@ function exit_test_usesmail($group_id)
     exit_error(_("Error"),_("This Project Has Turned Off Mailing Lists"));
   }
 }
-  
-
-?>

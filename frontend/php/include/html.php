@@ -23,6 +23,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require dirname(__FILE__).'/markup.php';
+
 # display browsing/display options: should be on top of pages, after the
 # specific content/page description.
 # The form should end by #options so it the user does not have to scroll down
@@ -279,8 +281,9 @@ function html_feedback_top()
 {
   global $feedback, $ffeedback;
   # Escape the html special chars, active markup
-  $feedback = markup_basic(htmlspecialchars($feedback));
-  $ffeedback = markup_basic(htmlspecialchars($ffeedback));
+  # Ugh: -- Beuc
+  #$feedback = markup_basic(htmlspecialchars($feedback));
+  #$ffeedback = markup_basic(htmlspecialchars($ffeedback));
 
   $script_hide = 'onclick="document.getElementById(\'feedback\').style.visibility=\'hidden\'; document.getElementById(\'feedbackback\').style.visibility=\'visible\';"';
   $script_show = 'onclick="document.getElementById(\'feedback\').style.visibility=\'visible\'; document.getElementById(\'feedbackback\').style.visibility=\'hidden\';"';
@@ -308,7 +311,7 @@ function html_feedback_top()
   # Only errors
   if ($GLOBALS['ffeedback'] && !$GLOBALS['feedback'])
     {
-      print '<div id="feedback" class="feedbackerror" '.$script_hide.'><span class="feedbackerrortitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.png" class="feedbackimage" alt="'._("Error").'" /> '._("Error:").'</span>'.$GLOBALS['ffeedback'].'</div>';
+      print '<div id="feedback" class="feedbackerror" '.$script_hide.'><span class="feedbackerrortitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.png" class="feedbackimage" alt="'._("Error").'" /> '._("Error:").'</span><br/>'.$GLOBALS['ffeedback'].'</div>';
     }
 
   # Errors and success
@@ -319,12 +322,14 @@ function html_feedback_top()
     {  print '<div class="debug">DEBUG information: '.$GLOBALS['debug'].'</div>'; }
 
 
-  # We unset feedback so there will be a bottom feedback only if something
+  # We empty feedback so there will be a bottom feedback only if something
   # changed. It may confuse users, however I would find more confusing to
   # have two lookalike feedback information providing most of the time the
   # same information AND (that is the problem) sometimes more information
   # in the second one.
-  unset($GLOBALS['feedback'],$GLOBALS['ffeedback'],$GLOBALS['debug']);
+  $GLOBALS['feedback'] = '';
+  $GLOBALS['ffeedback'] = '';
+  $GLOBALS['debug'] = '';
 }
 
 ##

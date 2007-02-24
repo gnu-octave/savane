@@ -1,34 +1,52 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
+# Register an account, part 1 (part 2 is e-mail confirmation)
+
 #  Copyright 1999-2000 (c) The SourceForge Crew
-#
 #  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gna.org>
-#
+#  Copyright (C) 2007  Sylvain Beucler
+
+# This file is part of the Savane project
+
 # The Savane project is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# The Savane project is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
+# modify it under the terms of the GNU Gebneral Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The Savane project is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+# USA
 
+require_once('../include/init.php');
+require_once('../include/sane.php');
+require_once('../include/account.php');
+require_once('../include/dnsbl.php');
+require_once('../include/spam.php');
+require_once('../include/form.php');
+require_once('../include/utils.php');
+require_once('../include/html.php');
+require_once('../include/sendmail.php');
 
-require "../include/pre.php";
-require "../include/account.php";
+register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('post',
+  array('update', 'form_id',
+	'form_loginname', 'form_pw', 'form_pw2', 'form_realname', 'form_email',
+	'form_usepam')));
+
 
 # Logged users have no business here
 if (user_isloggedin())
-{ session_redirect($GLOBALS['sys_home']."my/"); }
+{
+  session_redirect($GLOBALS['sys_home'] . 'my/');
+}
 
 
 # Block here potential robots
@@ -36,109 +54,108 @@ dnsbl_check();
 # Block banned IP
 spam_bancheck();
 
-# ###### function register_valid()
-# ###### checks for valid register from form post
 
-function register_valid()
+$login_is_valid = false;
+$pw_is_valid = false;
+$email_is_valid = false;
+$realname_is_valid = false;
+
+if (!empty($update) and form_check($form_id))
+// Form is submitted
 {
-  global $G_USER;
+  // feedback included by the check function
 
-  #### Check for duplicates
-  if (!form_check($_POST['form_id']))
-    { return 0; }
-
-  ##### Make sure every parameters are given
-  if (!$_POST['form_loginname'])
+  // Login
+  if ($form_loginname == '')
     {
       fb(_("You must supply a username."),1);
-      return 0;
     }
-  if (!$_POST['form_pw'])
+  else if (!account_namevalid($form_loginname))
+    {
+      // feedback included by the check function
+    }
+  // Avoid duplicates
+  else if (db_numrows(db_execute("SELECT user_id FROM user WHERE user_name = ?",
+				 array($form_loginname))) > 0)
+    {
+      fb(_("That username already exists."),1);
+    }
+  else if (db_numrows(db_execute("SELECT group_list_id FROM mail_group_list WHERE "
+				 . "list_name = ?", array($form_loginname))) > 0)
+    {
+      fb(_("That username is blocked to avoid conflict with mailing-list addresses."),1);
+    }
+  else
+    {
+      $login_is_valid = true;
+    }
+
+  // Password
+  if ($form_pw == '')
     {
       fb(_("You must supply a password."),1);
-      return 0;
     }
-  if (!$_POST['form_email'])
+  // Password sanity checks - unless PAM is used
+  else if ($GLOBALS['sys_use_pamauth'] != "yes" and $form_usepam != 1 and $form_pw != $form_pw2)
+    {
+      fb(_("Passwords do not match."),1);
+    }
+  else if ($GLOBALS['sys_use_pamauth'] != "yes" and $form_usepam != 1 and !account_pwvalid($form_pw))
+    {
+      // feedback included by the check function
+    }
+  else
+    {
+      $pw_is_valid = true;
+    }
+
+  // E-mail
+  if (!$form_email)
     {
       fb(_("You must supply a valid email address."),1);
-      return 0;
     }
-  if (!$_POST['form_realname'])
+  else if (!account_emailvalid($form_email))
     {
-      fb(_("You must supply a non-empty real name."),1);
-      return 0;
+      // feedback included by the check function
+    }
+  else
+    {
+      $email_is_valid = true;
+    }
+
+  // Real name
+  if ($form_realname == '')
+    {
+      fb(_("You must supply a real name."),1);
+    }
+  else
+    {
+      $realname_is_valid = true;
     }
 
   # Remove quotes from the realname, we do not want to allow that but
   # it is not a blocker issue.
-  $GLOBALS['form_realname'] = strtr($_POST['form_realname'], "\'\"\,", "     ");
+  # Beuc 2007-02-24: enable quotes in realname, it's a perfect test for unsecure MySQL queries
+  # $GLOBALS['form_realname'] = strtr($_POST['form_realname'], "\'\"\,", "     ");
 
-  if ($GLOBALS['sys_use_pamauth'] != "yes" && $_POST['form_usepam'] !=1)
-    {
-      # Only do password sanity checks if user does not want
-      # to authenticate via PAM
-      if (!$_POST['form_pw'])
-	{
-	  fb(_("You must supply a password."),1);
-	  return 0;
-	}
-      if ($_POST['form_pw'] != $_POST['form_pw2'])
-	{
-	  fb(_("Passwords do not match."),1);
-	  return 0;
-	}
-      if (!account_pwvalid($_POST['form_pw']))
-	{
-	  # feedback included by the check function
-	  return 0;
-	}
-    }
-
-  if (!account_namevalid($_POST['form_loginname']))
-    {
-      # feedback included by the check function
-      return 0;
-    }
-
-
-  if (!account_emailvalid($_POST['form_email']))
-    {
-      # feedback included by the check function
-      return 0;
-    }
-
-
-  ##### Avoid duplicates
-
-  if (db_numrows(db_query("SELECT user_id FROM user WHERE "
-			  . "user_name LIKE '".addslashes($_POST[form_loginname])."'")) > 0)
-    {
-      fb(_("That username already exists."),1);
-      return 0;
-    }
-  if (db_numrows(db_query("SELECT group_list_id FROM mail_group_list WHERE "
-			  . "list_name LIKE '".addslashes($_POST[form_loginname])."'")) > 0)
-    {
-      fb(_("That username is blocked to avoid conflict with mailing-list addresses."),1);
-      return 0;
-    }
 
   ####
 
 
+  $krb5ret = '';
   if ($GLOBALS['sys_use_krb5'] == "yes")
     {
-      $krb5ret = krb5_login($_POST['form_loginname'], $_POST['form_pw']);
+      $krb5ret = krb5_login($form_loginname, $form_pw);
       if($krb5ret == -1)
 	{ # KRB5_NOTOK
 	  fb(_("phpkrb5 module failure"),1);
-	  return 0;
+	  $pw_is_valid = false;
 	}
       elseif($krb5ret == 1)
 	{ # KRB5_BAD_PASSWORD
 	    fb(sprintf(_("User is a kerberos principal but password do not match. Please use your kerberos password for the first login and then change your %s password. This is necessary to prevent someone from stealing your account name."),$GLOBALS['sys_name']),1);
 
-	  return 0;
+	  $pw_is_valid = false;
 	}
       elseif ($krb5ret == "2")
 	{
@@ -166,32 +183,36 @@ FIXME : this is broken and seems to be due to the kerberos module.
 	  */
 	}
     }
+}
 
-  # if we got this far, it must be good
+$form_is_valid = $login_is_valid and $pw_is_valid
+  and $email_is_valid and $realname_is_valid;
 
-  if ($GLOBALS['sys_use_pamauth'] == "yes" && $_POST['form_usepam']==1)
+if ($form_is_valid)
+{
+  if ($GLOBALS['sys_use_pamauth'] == "yes" && $form_usepam == 1)
     {
-      # if user chose PAM based authentication, set his encrypted
-      # password to the specified string
-      $passwd='PAM';
+      // if user chose PAM based authentication, set his encrypted
+      // password to the specified string
+      $passwd = 'PAM';
     }
   else
     {
-      $passwd=md5($_POST[form_pw]);
+      $passwd = md5($form_pw);
     }
 
-  $confirm_hash = substr(md5($session_hash . $passwd . time()),0,16);
-
-  $result=db_query("INSERT INTO user (user_name,user_pw,realname,email,add_date,"
-		   . "status,confirm_hash) "
-		   . "VALUES ('"
-		   . addslashes(strtolower($_POST[form_loginname]))."','"
-		   . addslashes($passwd)."','"
-		   . addslashes($GLOBALS[form_realname])."','"
-		   . addslashes($GLOBALS[form_email])."',"
-		   . time().","
-		   . "'P','" # status
-		   . $confirm_hash."')");
+  $confirm_hash = substr(md5(rand(0, 32768) . $passwd . time()), 0, 16);
+  $result=db_autoexecute(
+    'user',
+    array(
+      'user_name' => strtolower($form_loginname),
+      'user_pw'   => $passwd,
+      'realname'  => $form_realname,
+      'email'     => $form_email,
+      'add_date'  => time(),
+      'status'    => 'P',
+      'confirm_hash' => $confirm_hash),
+    DB_AUTOQUERY_INSERT);
 
   if (!$result)
     {
@@ -200,7 +221,7 @@ FIXME : this is broken and seems to be due to the kerberos module.
   else
     {
 
-      $GLOBALS['newuserid'] = db_insertid($result);
+      $newuserid = db_insertid($result);
 
       # clean id
       form_clean($form_id);
@@ -216,7 +237,7 @@ FIXME : this is broken and seems to be due to the kerberos module.
 	._("Enjoy the site").".\n\n"
 	. sprintf(_("-- the %s team.")."\n",$GLOBALS['sys_name']);
 
-      if ($krb5ret == KRB5_OK)
+      if ($krb5ret == 0) #KRB5_OK
 	{
 	  $message .= sprintf(_("P.S. Your kerberos password is now stored in encrypted form\nin the %s database."),$GLOBALS['sys_name']);
 	  $message .= sprintf(_("For better security we advise you\nto change your %s password as soon as possible.\n"),$GLOBALS['sys_name']);
@@ -224,38 +245,30 @@ FIXME : this is broken and seems to be due to the kerberos module.
 
 
       sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_lists_domain'],
-		    $GLOBALS['form_email'],
+		    $form_email,
 		    $GLOBALS['sys_name']." "._("Account Registration"),
 		    $message);
 
-      return 1;
+    $HTML->header(array('title'=>_("Register Confirmation")));
+
+    print '<h3>'.$GLOBALS['sys_name'].' : '._("New Account Registration Confirmation").'</h3>'
+      .sprintf(_("Congratulations. You have registered on %s "),$GLOBALS['sys_name'])
+      .sprintf(_("Your login is: %s"), '<strong>'.user_getname($newuserid).'</strong>');
+
+    print '<p>'._("You are now being sent a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account.").' <span class="warn">'._("Accounts not confirmed after two days are deleted from the database.").'</span></p>';
+
     }
 }
 
-
-# ###### first check for valid login, if so, congratulate
-
-if ($_POST['update'] && register_valid())
-{
-
-  $HTML->header(array('title'=>_("Register Confirmation")));
-
-  print '<h3>'.$GLOBALS['sys_name'].' : '._("New Account Registration Confirmation").'</h3>'
-    .sprintf(_("Congratulations. You have registered on %s "),$GLOBALS['sys_name'])
-    .sprintf(_("Your login is: %s"), '<strong>'.user_getname($newuserid).'</strong>');
-
-  print '<p>'._("You are now being sent a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account.").' <span class="warn">'._("Accounts not confirmed after two days are deleted from the database.").'</span></p>';
-
-
-}
+# not valid registration, or first time to page
 else
+
 {
-   # not valid registration, or first time to page
 
   site_header(array('title'=>_("User account registration"),'context'=>'account'));
 
 
-  print form_header($_SERVER["PHP_SELF"], $form_id);
+  print form_header($_SERVER['PHP_SELF'], $form_id);
   print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
   print form_input("text", "form_loginname", $form_loginname);
   print '<br /><span class="text">'.sprintf(_("If you have a %s account use that account name - Note that account names cannot consist of only numbers. At least one letter must be included."),$GLOBALS['sys_mail_domain']).'</span></p>';
@@ -295,5 +308,6 @@ else
 
 }
 
+
+
 $HTML->footer(array());
-?>

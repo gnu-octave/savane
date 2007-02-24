@@ -23,9 +23,20 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";    
+require_once('../include/init.php');
+require_once('../include/dnsbl.php');
+require_once('../include/spam.php');
+require_once('../include/html.php');
+require_once('../include/form.php');
+require_once('../include/exit.php');
 
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('post',
+  array('update', 'form_id',
+    'form_loginname', 'confirm_hash')));
 
 # Block here potential robots
 dnsbl_check();
@@ -39,13 +50,12 @@ if (user_isloggedin())
 
 ####### first check for valid login, if so, redirect
 
-if (sane_post("update"))
+if (!empty($update))
 {
-  $form_loginname = sane_post('form_loginname');
-   
   # first check just confirmation hash
-  $res = db_query('SELECT confirm_hash,status FROM user WHERE '
-		  .'user_name="'.$form_loginname.'" and status<>"SQD"');
+  $res = db_execute('SELECT confirm_hash,status FROM user WHERE '
+		    .'user_name=? and status<>"SQD"',
+		    array($form_loginname));
 
   if (db_numrows($res) < 1) 
     {
@@ -53,7 +63,6 @@ if (sane_post("update"))
     }
 
   $usr = db_fetch_array($res);  
-  $confirm_hash = sane_post('confirm_hash');  
   if ($confirm_hash != $usr['confirm_hash']) 
     {
       exit_error(_("Invalid confirmation hash"));
@@ -67,7 +76,7 @@ if (sane_post("update"))
 			  0, # not crypted
 			  session_issecure())) 
     {
-      $res = db_query("UPDATE user SET status='A' WHERE user_name='".sane_post('form_loginname')."'");
+      $res = db_execute("UPDATE user SET status='A' WHERE user_name=?", array($form_loginname));
       session_redirect($GLOBALS['sys_home']."account/first.php");
     }
 }

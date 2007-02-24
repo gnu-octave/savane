@@ -149,40 +149,6 @@ function show_all_users_add_list ($result, $group_id)
 
 
 
-function show_bulk_add_users ($group_id)
-{
-        print "<h3>"._("Have your file checked")."</h3>\n\n";
-
-  print _("By submitting your file here, the format of the file and each user name, etc. will be checked. No modifications will be made to the user database. Feedback will be given on screen and by email.");
-  print "
-  <br />
-
-	<form action=\"bulk_admin_users.php?action=test&group_id=".$group_id."\" method=\"post\"  enctype=\"multipart/form-data\">
-	<input type=\"HIDDEN\" name=\"action\" VALUE=\"check\" />
-  <input type=\"file\" name=\"file\" size=\"40\" />
-	<P>
-	<input type=\"submit\" name=\"Submit\" value=\""._("Submit")."\" />
-	</P>
-  </form>
-  <br />
-
-  </td></tr><tr><td class=\"boxitemalt\">
-
-  <h3>"._("Have your file executed")."</h3>\n\n";
-
-  print _("By submitting your file here, modifications will be made to the user database. Feedback will be given on screen and by email.");
-  print "
-  <br />
-
-	<form action=\"bulk_admin_users.php?action=execute&group_id=".$group_id."\" method=\"post\"  enctype=\"multipart/form-data\">
-	<input type=\"HIDDEN\" name=\"action\" VALUE=\"check\" />
-  <input type=\"file\" name=\"file\" size=\"40\" />
-	<P>
-	<input type=\"submit\" name=\"Submit\" value=\""._("Submit")."\" />
-	</P>
-  </form>";
-}
-
 # Administrative functions
 
 # Add a user to this group
@@ -284,19 +250,4 @@ if ($words) {
   show_all_users_add_list($result, $group_id);
 }
 
-
-  /*
-        	Show a form to upload a bulk-add script
-  * /
-           FIXME: deactivated until we provide user documentation.
-                 it could broke the database information
-   $HTML->box1_top(_("Upload File to Bulk-manage Users"));
-
-  show_bulk_add_users ($group_id);
-
-  $HTML->box1_bottom();
-  */
-
 site_project_footer(array());
-
-?>
