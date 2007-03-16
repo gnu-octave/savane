@@ -22,12 +22,14 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
-require_once('../include/pre.php');  # Initial db and session library, opens session
+# Initial db and session library, opens session
+require_once('../include/init.php');
+#input_is_safe();
+#mysql_is_safe();
 
 $HTML->header(array('title' => _("New Project Registration")));
 
-if (db_numrows(db_query("SELECT type_id FROM group_type")) < 1) {
+if (db_numrows(db_execute("SELECT type_id FROM group_type")) < 1) {
 	# group_type is empty; it's not prossible to register projects
 	print _("No group type has been set. Admins need to create at least one group type. They can make it so clicking on the link \"Group Type Admin\", on the Administration section of the left side menu, while logged in as admin");
 } else {

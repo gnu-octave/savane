@@ -24,7 +24,7 @@
 
 define('ARTIFACT', 'task');
 $no_redirection=1;
-require_once('../include/pre.php');
+require_once('../include/init.php');
 
 session_require(array('isloggedin' => '1'));
 
@@ -160,7 +160,7 @@ else if ($i_agree && $group_id && $rand_hash)
   $user_realname = user_getrealname(user_getid());
   $user_email = user_getemail(user_getid());
   $unix_name = group_getunixname($group_id);
-  $sql_type = db_query("SELECT name FROM group_type WHERE type_id='$group_type'");
+  $sql_type = db_execute("SELECT name FROM group_type WHERE type_id='$group_type'");
   $type = db_result($sql_type,0,'name');
   $type_base_host = $project->getTypeBaseHost();
   $type_admin_email_address = $project->getTypeAdminEmailAddress();

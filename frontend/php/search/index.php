@@ -39,16 +39,7 @@ if (!$words)
   exit;
 }
 
-# Do the search
-if ($type_of_search == "google")
-{
-  Header("Location: http://www.google.com/search?q=site:".$GLOBALS['sys_default_domain']."+$words");
-  exit;
-}
-else
-{
-  $result = search_run($words, $type_of_search);
-}
+$result = search_run($words, $type_of_search);
 
 # Print out the results
 

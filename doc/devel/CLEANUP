@@ -1,0 +1,51 @@
+Hi,
+
+Let me introduce this clean-up branch:
+
+- includes/pre.php vs. includes/init.php
+
+includes/pre.php is renamed to includes/init.php for clarity.
+
+init.php used to include a lot of PHP files that weren't always
+necessary; now we use a C-style include model, where each file
+declares which files it needs to include.
+
+pre.php and init.php co-exist so the old-style and new-style include
+can be used by respectively non-cleaned-up and new scripts.
+
+
+- Security:
+
+Previously all GET/POST variables were passed to the sane_get() /
+sane_post() / sane_all() functions, where they were backslashed if not
+already (i.e. depending on magic_quotes). That way they could be
+passed as-is to MySQL.
+
+This is actually not a good idea, because you then work with modified
+data in the code (eg: "a'b" is now "a\'b" is among others 1 character
+longer). Besides, not all values passed to MySQL come from sane_*
+functions, so there's still a risk of MySQL injection.
+
+In order to improve both correctness and security, I use another
+method:
+
+- We set register_globals=Off, then all data are manually imported
+  into the namespace using extract(sane_import(...)). This is a kind
+  of secure replacement for register_globals=On - t1he rest of the code
+  can be left unchanged.
+
+- All MySQL queries are done via ADODB-style db_execute() and
+  db_autoexecute(), plus possibly db_query_escape() -
+  cf. includes/database.php. Do _not_ using db_query anymore, which
+  assume the query is already escaped. Those new functions also use
+  mysql_real_escape_string(), which is meant for MySQL, instead of
+  sane_*'s add_slashes().
+
+Once a page is clean-up wrt input (GET/POST) or output (MySQL), we
+"tag" it with:
+
+#input_is_safe();
+#mysql_is_safe();
+  
+You can use devel/sv_check_security.pl will be able to check which
+files remains to be cleaned-up based on those tags.

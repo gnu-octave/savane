@@ -1,3 +1,11 @@
+2007-03-16  Sylvain Beucler  <beuc@beuc.net>
+
+	* docs/devel/CLEANUP: introduce clean-up methods
+
+	* frontend/php/search/index.php: removed Google-specific search,
+	after all we didn't receive funds from Google. This is becoming a
+	monopoly...
+
 2007-02-24  Sylvain Beucler  <beuc@beuc.net>
 
 	* More clean-up.

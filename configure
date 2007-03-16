@@ -1,11 +1,12 @@
 #!/bin/sh
-# This file is part of the Savane project
+# Default bootstrap configuration
 # <http://gna.org/projects/savane/>
 #
 # $Id$ 
 #
 #  Copyright 2002-2006 (c) Mathieu Roy <yeupou@gnu.org>      
 #                          Lutz Behnke <lutz.behnke@informatik.haw-hamburg.de> 
+# Copyright (C) 2007  Sylvain Beucler
 #
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -23,35 +24,10 @@
 
 ########################## CHECKS ##################################
 
-# Blocker
-item=which
-  WHICH_PATH="/bin/which /usr/bin/which /usr/local/bin/which"
-  WHICH=""
-  echo -n "checking for $item... "
-  for WHICH_TEST in $WHICH_PATH; do
-          if [ -x $WHICH_TEST ]; then
-                  if $WHICH_TEST --version 2>&1 | grep -q "GNU which"; then
-                      WHICH=$WHICH_TEST
-                      which_option="--skip-alias"
-                      echo "yes (GNU)"
-                      break
-                  else
-                      WHICH=$WHICH_TEST
-                      echo "yes (non-gnu)"
-                      break
-                  fi
-          fi
-  done  
-  if [ ! $WHICH ]; then
-          echo no
-          echo "You are encouraged to download GNU which from ftp.gnu.org"
-          exit
-  fi
-
 BLOCKER_ITEM_LIST="make bash perl sed find gettext"
 for item in $BLOCKER_ITEM_LIST; do
   echo -n "checking for $item... "
-  bin_item=`$WHICH $which_option $item 2>&1`
+  bin_item=`which $item 2>&1`
   if [ ! -x "$bin_item" ]; then echo "no" \
    && echo "Error: Unable to find $item. Please check your installation." && \
    exit ; else echo "yes" ; fi
@@ -60,7 +36,7 @@ done
 # Non-blocker
 item=mysql
   echo -n "checking for $item... "
-  item=`$WHICH $which_option $item 2>&1`
+  item=`which $item`
   # no other db support = blocker
   if [ ! -x "$item" ]; then 
       echo "no"
@@ -87,7 +63,7 @@ item=mailman
 NON_BLOCKER_ITEM_LIST="automake autoconf makeinfo gzip"
 for item in $NON_BLOCKER_ITEM_LIST; do
   echo -n "checking for $item... "
-  bin_item=`$WHICH $which_option $item 2>&1`
+  bin_item=`which $item 2>&1`
   if [ ! -x "$bin_item" ]; then 
       echo "no [may deactivate some features]"
   else 
@@ -100,23 +76,20 @@ done
 item="GNU/Linux distribution"
   echo -n "checking for $item... "
   if [ -e  "/etc/debian_version" ]; then 
-      DISTRO="debian-based"
-      WWW_SERVER_USER="www-data"
-      PERL_INC="/usr/lib/perl5"
+      # Debian-based
+      GUESS_WWW_SERVER_USER="www-data"
+      GUESS_PERL_INC="/usr/lib/perl5"
   elif [ -e "/etc/redhat-release" ]; then 
-      DISTRO="redhat-based"
-      WWW_SERVER_USER="apache"
-      PERL_INC="/usr/lib/perl5/site_perl"
+      # Fedora- or RedHat-based
+      GUESS_WWW_SERVER_USER="apache"
+      GUESS_PERL_INC="/usr/lib/perl5/site_perl"
   elif [ -e "/etc/gentoo-release" ]; then
-      DISTRO="gentoo-based"
-      WWW_SERVER_USER="apache"
+      # Gentoo-based
+      GUESS_WWW_SERVER_USER="apache"
   elif [ -e "/etc/slackware-version" ]; then
-      DISTRO="slackware-based"
-      WWW_SERVER_USER="nobody"
-  else
-      DISTRO="unable to guess"
+      # Slackware-based"
+      GUESS_WWW_SERVER_USER="nobody"
   fi
-  echo $DISTRO
   
 SV_DIR=`pwd`
 
@@ -138,34 +111,16 @@ else
     SV_DIR=`pwd`
 
 
-    if [ "$DISTRO" = "unable to guess" ]; then
-    	echo " "
-        echo "I could not identify your distribution."
-        echo "Therefore, could you please provide your"
-        echo "default web server username? "
-        echo "ex: www"
-        echo "ex: apache "
-        echo -n "[apache]"
-        read WWW_SERVER_USER
-        if [ "$WWW_SERVER_USER" = "" ]; then WWW_SERVER_USER=apache;fi
-    fi;
+    echo " "
+    echo "Default web server username? "
+    echo "ex: www"
+    echo "ex: apache "
+    echo -n "[$GUESS_WWW_SERVER_USER]"
+    read WWW_SERVER_USER
+    if [ "$WWW_SERVER_USER" = "" ]; then WWW_SERVER_USER=$GUESS_WWW_SERVER_USER;fi
     
-    echo " "
-    echo "What is the URL directory of Savane on your http server?"
-    echo "ex: for sv.gnu.org/ the answer is /"
-    echo "ex: for bla.org/savane/ the answer is /savane"
-    echo -n "[/]: "
-    read SV_URLROOT
-    if [ "$SV_URLROOT" = "" ]; then SV_URLROOT=/ ; fi
-
-    echo " "
-    echo "Where should we store configuration files?"
-    echo "Choose one of the following."
-    echo "ex: /etc/savane"
-    echo "(WARNING: if you use something else than the default setting, be sure to set SAVANE_CONF environment variable in both Apache and terminals you use, it is required for the frontend and the backend)"
-    echo -n "[/etc/savane]: " 
-    read SV_CONF
-    if [ "$SV_CONF" = "" ]; then SV_CONF=/etc/savane ; fi
+    # TODO: use --prefix, --sysconfdir...
+    SV_CONF=/etc/savane
 
     echo " "
     echo "Where should we install binaries and scripts?"

@@ -25,7 +25,7 @@
 
 # Same as 404 error but for export pages
 
-require "./include/pre.php";
+require_once('./include/init.php');
 register_globals_off();
 #input_is_safe();
 #mysql_is_safe();
