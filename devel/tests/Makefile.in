@@ -1,3 +1,0 @@
-.PHONY: tests
-tests:
-	php run_all_tests.php

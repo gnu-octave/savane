@@ -1,0 +1,313 @@
+#! @PERL@
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id: sv_cleaner.pl 6387 2006-11-20 13:07:17Z yeupou $
+#
+#  Copyright 2006      (c) Mathieu Roy <yeupou--gnu.org> 
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+##
+## This script should be used via a cronjob to pass to sa-learn ham and spam
+## so bayesian filtering is in effect.
+## 
+## Read http://wiki.apache.org/spamassassin/BayesInSpamAssassin
+## If you want to know more about this.
+##
+
+use strict;
+use Savane;
+use Savane::Trackers;
+use Getopt::Long;
+use File::Temp qw(tempfile tempdir);
+use POSIX qw(strftime);
+use Time::Local;
+use Date::Calc qw(Add_Delta_YMD Add_Delta_YMDHMS);
+
+my $script = "sv_spamcheck_scholar";
+my $logfile = "/var/log/sv_spamcheck.log";
+my $getopt;
+my $help;
+my $debug;
+my $version = GetVersion();
+
+my $nocache;
+my $validate_cache;
+my $cachedir = "/var/cache/$script";
+my $cachefile = "$cachedir/cache.pl";
+
+
+
+# get options
+eval {
+    $getopt = GetOptions("help" => \$help,
+			 "debug" => \$debug);
+};
+
+if($help) {
+    print STDERR <<EOF;
+Usage: $0 [OPTIONS] 
+  
+This script should be used via a cronjob to pass to sa-learn ham and spam
+so bayesian filtering is in effect.
+ 
+Read http://wiki.apache.org/spamassassin/BayesInSpamAssassin
+If you want to know more about this.
+
+  -h, --help                   Show this help and exit
+
+Savane version: $version
+EOF
+exit(1);
+}
+
+# Test if we should run, according to conffile
+exit unless 
+    GetConf("sys_spamcheck_spamassassin") eq "1" or
+    GetConf("sys_spamcheck_spamassassin") eq "2" or
+    GetConf("sys_spamcheck_spamassassin") eq "anonymous" or
+    GetConf("sys_spamcheck_spamassassin") eq "all";
+
+# Log: Starting logging
+open (LOG, ">>$logfile");
+print LOG strftime "[$script] %c - starting\n", localtime;
+
+# Locks: This script should not run concurrently
+AcquireReplicationLock();
+
+
+#####################################################################
+#####################################################################
+# Read cache (outside of the chroot if any)
+# $cache{tracker:item:comment} = h (ham) or s (spam)
+our %cache;
+
+# (by default, cacheformat is not set, so if it is still
+# not set after the cache is read, it means that we are in format 0)
+our $cacheformat = 0; 
+
+if (-e $cachefile && ! $nocache) {
+    # If the cache does not belongs to root, exit with error. The content of
+    # the cache could have been altered.
+    my @stat_cachedir = stat($cachedir);
+    my @stat_cachefile = stat($cachefile);
+
+    die "Strange cache ($cachefile) ownership, exiting" unless
+	($stat_cachedir[4] eq 0) and ($stat_cachedir[5] eq 0) and
+	($stat_cachefile[4] eq 0) and ($stat_cachefile[5] eq 0);
+    
+    # Otherwise, run the cache
+    do $cachefile;
+    print "DBG: cached loaded\n" if $debug;
+
+    # If cacheformat is not equal to 1, the current version, it means it must
+    # be converted but it is the previous one
+    if ($cacheformat < 1) {
+	print "Cache is not in the current format, it will be converted\n";
+	print LOG strftime "[$script] %c - Cache is not in the current format, it will be converted\n", localtime;    
+    }
+
+    print LOG strftime "[$script] %c - cache slurped\n", localtime;
+}
+
+
+#####################################################################
+#####################################################################
+# Get the list of items to study: not in the cache yet, or with a status
+# that differs from the cache
+my %to_study;
+
+# Ignore the items posted in the two last hours, because they may not flagged
+# just because they we just posted
+my ($year, $month, $day, $hour, $min, $sec) = split(",", `date +%Y,%m,%d,%H,%M,0`);
+($year,$month,$day,$hour,$min,$sec) = Add_Delta_YMDHMS($year,$month,$day,$hour,$min,$sec,
+						       0,0,0,-2,0,0);
+my $delay = timelocal($sec,$min,$hour,$day,($month-1),($year-1900));
+
+my @trackers = ("cookbook", "support", "bugs", "task", "patch");
+foreach my $tracker (@trackers) { 
+    # Take a look at items
+    foreach my $entry (GetDBLists($tracker, "date < '$delay'", "bug_id,spamscore")) {
+	my ($item_id, $spamscore) = @$entry;
+	
+	my $flag = "h";
+	$flag = "s" if $spamscore > 4;
+	
+	# Skip if unchanged
+	next if $cache{"$tracker:$item_id:0"} eq $flag;
+
+	# Otherwise, put in the list
+	$to_study{"$tracker:$item_id:0"} = $flag;
+    }
+
+    # Take a look at comments
+    foreach my $entry (GetDBLists($tracker."_history", "date < '$delay' AND field_name='details'", "bug_id,bug_history_id,spamscore")) {
+	my ($item_id, $comment_id, $spamscore) = @$entry;
+	
+	my $flag = "h";
+	$flag = "s" if $spamscore > 4;
+	
+	# Skip if unchanged
+	next if $cache{"$tracker:$item_id:$comment_id"} eq $flag;
+
+	# Otherwise, put in the list
+	$to_study{"$tracker:$item_id:$comment_id"} = $flag;
+    }
+
+}
+
+print LOG strftime "[$script] %c - database infos grabbed\n", localtime;
+
+
+#####################################################################
+#####################################################################
+# Now put the content that sa-learn must study in two mboxes
+my $ham_count= 0;
+my $spam_count = 0;
+my $hamdir = tempdir("hamXXXXXXXX", TMPDIR => 1, CLEANUP => 1);
+my $spamdir = tempdir("spamXXXXXXXX", TMPDIR => 1, CLEANUP => 1);
+my @opened_tempfiles;
+while (my($id, $flag) = each(%to_study)) {
+    my ($tracker, $item_id, $comment_id) = split(":", $id);
+
+    # Grab the database content    
+    my $sender_ip;
+    my $subject;
+    my $message;
+    my $spamscore;
+    my $uid;    
+    my $date;    
+
+    unless ($comment_id) {
+	($sender_ip, $subject, $message, $spamscore, $uid, $date) =
+	    GetDBSettings($tracker, 
+			  "bug_id='$item_id' LIMIT 1", 
+			  "ip,summary,details,spamscore,submitted_by,date");
+	
+    } else {
+	# It is a comment
+	($sender_ip, $message, $spamscore, $uid, $date) = 
+	    GetDBSettings($tracker."_history", 
+			  "bug_id='$item_id' AND field_name='details' AND bug_history_id='$comment_id' LIMIT 1", 
+			  "ip,old_value,spamscore,mod_by,date");
+	# Build a subject from scratch
+	$subject = "Comment posted by $sender_ip";
+    }
+      
+    # Set the output dir according to the flag
+    my $outdir;
+    if ($flag eq "h") {
+	$ham_count++;
+	$outdir = $hamdir;
+    } else {
+	$spam_count++;
+	$outdir = $spamdir;
+    }
+
+    my ($thishandle, $thisfile) = tempfile(UNLINK => 1, DIR => $outdir);
+    
+    print $thishandle GetTrackersContentAsMail($uid,
+					       $sender_ip,
+					       $tracker,
+					       $item_id,
+					       $comment_id,
+					       $date,
+					       $subject,
+					       $message);
+
+    # We cannot work on more than 1000 mails per run because of a limit 
+    # on the number of opened handle/tempfiles.
+    # If should not be a problem as it is unlikely that a site get more than
+    # 1000 items/comments posted in a few hours. And if ever it happens, it
+    # just a matter of increasing the cronjob frequency.
+    last if ($spam_count + $ham_count) > 1000;
+
+    # Update the cache 
+    $cache{$id} = $flag;
+}
+
+
+#####################################################################
+#####################################################################
+# Now run sa-learn
+
+# Nothing to if no file found
+if ($spam_count + $ham_count > 0) {
+    
+    print LOG strftime "[$script] %c - started sa-learn on ham ($ham_count)\n", localtime;
+    system("sa-learn", 
+	   "--ham",
+	   $hamdir);
+    print LOG strftime "[$script] %c - sa-learn on ham over\n", localtime;
+    
+    print LOG strftime "[$script] %c - started sa-learn on spam ($spam_count)\n", localtime;
+    system("sa-learn", 
+	   "--ham", 
+	   $spamdir);
+    print LOG strftime "[$script] %c - sa-learn on spam over\n", localtime;
+} else {
+    print LOG strftime "[$script] %c - no content to learn from, sa-learn skipped\n", localtime;    
+
+}
+#####################################################################
+#####################################################################
+# Write cache (outside of the chroot if any)
+#
+# If at some point cache appears to be gigantic (like 500 Mb), we'll split
+# it somehow
+
+# Check if the cache directory exists. If not, built it
+system("mkdir", "-p", $cachedir);
+
+# Always make sure mode and ownership are acceptable (overwrite)
+system("chown", "root:root", "-R", $cachedir);
+system("chmod", "o-rwx", "-R", $cachedir);
+
+# Write cache
+open(CACHE, "> $cachefile");
+print CACHE '#! @PERL@
+';
+print CACHE strftime "# %c\n", localtime;
+print CACHE '
+$cacheformat = 1;
+
+%cache = (
+';
+my $count = 0;
+while (my($id,$flag) = each(%cache)) {
+    next unless $flag;
+    print CACHE ",\n" if $count;
+    print CACHE "\t\"$id\"\t".' => "'.$flag.'"';
+    $count++;
+}
+print CACHE '
+);
+# EOF
+';
+close(CACHE);
+
+# Must be executable
+system("chmod", "u+x", $cachefile);
+
+my @stat_cachefile_updated = stat($cachefile);
+print LOG strftime "[$script] %c - cache updated (~ ".int($stat_cachefile_updated[7]/1000)." kilobytes)\n", localtime;   
+
+
+# Final exit
+print LOG strftime "[$script] %c - work finished\n", localtime;
+print LOG "[$script] ------------------------------------------------------\n";
+
+# EOF

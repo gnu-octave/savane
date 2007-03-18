@@ -49,3 +49,74 @@ Once a page is clean-up wrt input (GET/POST) or output (MySQL), we
   
 You can use devel/sv_check_security.pl will be able to check which
 files remains to be cleaned-up based on those tags.
+
+
+- Installation:
+
+In order to use proper paths (localedir,
+/usr/lib/where-should-I-put-my-perl-mod, ...) and installation methods
+(options vs. interactive prompts), I'm trying to switch the main build
+system to autotools, complemented by a classic Makefile.PL
+(ExtUtils::MakeMaker) for the Perl module.
+
+Autoconf updates frontend/php/include/ac_config.php with variables
+like localedir and VERSION. The same could be done for
+Savane::Version.
+
+'make dist' should work to make the tarballs and release-related tasks
+(check NEWS file, etc.).
+
+This also replaces a chunk of Savane-specific Makefiles with upstream
+code (Perl and .PO installation, configure prompts).
+
+Some people suggest using Module::Build instead. I think, though, that
+the fact ExtUtils::MakeMaker relies on 'make' may help with autotools
+integration (plus this is a really simple Perl package anyway).
+
+
+- Find the gettext locales:
+
+    # Without a call to bindtextdomain(), gettext() will search in
+    # libintl's default LOCALEDIR, which is set at compile time. The
+    # most common case is:
+    # $datadir/locale = $prefix/share/locale = /usr/share/locale
+
+    # However we could run on a PHP+gettext compiled with, say,
+    # prefix=/usr/local; that's why the gettext documentation
+    # recommends to always use bindtextdomain() at application
+    # initialization, using the app's LOCALEDIR (and not
+    # libintl's). This also avoid messing with /usr when installing
+    # in /usr/local.
+
+    # Check <gettext-source>/gettext-tools/examples/hello-php/ for an
+    # autoconf example. One solution is autoconfiscating the PHP app
+    # to set @localedir@; another is to use the configuration file,
+    # and default to gettext's default path (ie. don't call
+    # bindtextdomain is $sys_localedir is empty).
+
+    # We still need this variable for the .po Makefile. For that part
+    # (PO), let's use autoconf.
+
+
+- Adjust Perl path at configure time:
+
+backend/*.pl -> backend/*.in
+#!/usr/bin/perl -> #! @PERL@
+(ala cvs/contrib)
+
+
+---------- TODO ----------
+
+
+- Database:
+
+I suggest manually writing the SQL files: using MySQL's DESCRIBE loses
+a lot of specification information (such as BOOLEAN -> INTEGER, FK ->
+KEY transformation, etc) and adds a lot of default information that
+clutters the description and should more generally be ommitted, in
+case the MySQL maintainers decide to change that default for a better
+one. There was also an issue with using different versions of MySQL
+(bug7926@gna).
+
+- Tests: instance a private HTTP and MySQL daemons (eg. ports 10080
+and 13306, and perform an installation on them).

@@ -1,0 +1,250 @@
+#! @PERL@
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id: sv_cleaner.pl 6387 2006-11-20 13:07:17Z yeupou $
+#
+#  Copyright 2006      (c) Mathieu Roy <yeupou--gnu.org> 
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+##
+## This script should be used via a cronjob to check for spam in messages
+## in the queue. 
+## The more frequent the cronjob is, the less time users will have to wait.
+## Obviously, if is too frequent, this script will not be able to complete
+## his work. There is a lock so there wont be any concurrent runs.
+##
+## If you need to know what was the rules used to build the score, check
+## spamd logs (/var/log/maillog on SLC4, /var/log/mail.log on Debian).
+## The message id is in the form <tracker item_id c comment_id@domain>
+##
+
+use strict;
+use Savane;
+use Savane::Trackers;
+use Getopt::Long;
+use File::Temp qw(tempfile tempdir);
+use POSIX qw(strftime);
+use Time::Local;
+use Date::Calc qw(Add_Delta_YMD Add_Delta_YMDHMS);
+
+my $script = "sv_spamcheck_peon";
+my $logfile = "/var/log/sv_spamcheck.log";
+my $getopt;
+my $help;
+my $debug;
+my $version = GetVersion();
+# Would be clean to use date --rfc-2822, but not sure it is portable
+my $now = strftime("%r", localtime);
+
+
+# get options
+eval {
+    $getopt = GetOptions("help" => \$help,
+			 "debug" => \$debug);
+};
+
+if($help) {
+    print STDERR <<EOF;
+Usage: $0 [OPTIONS] 
+  
+This script should be used via a cronjob to check for spam in messages
+in the queue. 
+
+The more frequent the cronjob is, the less time users will have to wait.
+Obviously, if is too frequent, this script will not be able to complete
+his work. There is a lock so there wont be any concurrent runs.
+himself.
+
+If you need to know what was the rules used to build the score, check
+spamd logs (/var/log/maillog on SLC4, /var/log/mail.log on Debian).
+The message id is in the form <tracker item_id c comment_id\@domain>
+
+  -h, --help                   Show this help and exit
+
+Savane version: $version
+EOF
+exit(1);
+}
+
+# Test if we should run, according to conffile
+exit unless 
+    GetConf("sys_spamcheck_spamassassin") eq "1" or
+    GetConf("sys_spamcheck_spamassassin") eq "2" or
+    GetConf("sys_spamcheck_spamassassin") eq "anonymous" or
+    GetConf("sys_spamcheck_spamassassin") eq "all";
+
+# Log: Starting logging
+open (LOG, ">>$logfile");
+print LOG strftime "[$script] %c - starting\n", localtime;
+
+# Locks: This script should not run concurrently
+AcquireReplicationLock();
+
+# Build spamc command: add optional parameters
+my $spamc = "spamc -c";
+$spamc .= " ".GetConf("sys_spamcheck_spamassassin_options") 
+    if GetConf("sys_spamcheck_spamassassin_options");
+
+
+###********************************************************************
+###********************************************************************
+###
+### Run
+###
+###********************************************************************
+###********************************************************************
+
+foreach my $entry (GetDBLists("trackers_spamcheck_queue", "1 ORDER BY priority DESC, date ASC", "queue_id,artifact,item_id,comment_id")) {
+    my ($queue_id, $tracker, $item_id, $comment_id) = @$entry;
+    
+    # Remove the entry from the queue as soon as we start handling it, to
+    # avoid the monitor to decrement the spamscore by mistake, thinking this
+    # item was not being handled
+    my $was_deleted = DeleteDB("trackers_spamcheck_queue", "queue_id='$queue_id' LIMIT 1");
+
+    # If there was no affected rows, it means that the monitor already removed
+    # this from the queue
+    # (DBI return a kind of 0 that is true, to enable to differentiate error 
+    # from lack of affected rows, so we must test for superior to 0)
+    next unless $was_deleted > 0;
+
+    ###
+    # Extract real content
+    my $sender_ip;
+    my $subject;
+    my $message;
+    my $spamscore;
+    my $uid;    
+
+    unless ($comment_id) {
+	($sender_ip, $subject, $message, $spamscore, $uid) =
+	    GetDBSettings($tracker, 
+			  "bug_id='$item_id' LIMIT 1", 
+			  "ip,summary,details,spamscore,submitted_by");
+	
+    } else {
+	# It is a comment
+	($sender_ip, $message, $spamscore, $uid) = 
+	    GetDBSettings($tracker."_history", 
+			  "bug_id='$item_id' AND field_name='details' AND bug_history_id='$comment_id' LIMIT 1", 
+			  "ip,old_value,spamscore,mod_by");
+	# Build a subject from scratch
+	$subject = "Comment posted by $sender_ip";
+    }
+
+    
+    ###
+    # If spamscore is inferior to 5, it means that someone unflagged this
+    # item. 
+    # If so, just send the notif and end of the story, keep everything as it
+    # is
+    my $logcomment;
+    $logcomment = ", comment \#$comment_id" if $comment_id;
+    if ($spamscore < 5) {
+	SendTrackersDelayedNotification($tracker, 
+					$item_id, 
+					$comment_id, 
+					$spamscore);
+	print LOG strftime "[$script] %c - $tracker \#$item_id$logcomment: was already at $spamscore, send notif and go next\n", localtime;
+	next;
+    }
+
+
+    ###
+    # Create a fakemail so spamassassin can work
+
+    my ($tmphandle, $tmpfile) = tempfile(UNLINK => 1); 
+
+    print $tmphandle GetTrackersContentAsMail($uid,
+					      $sender_ip,
+					      $tracker,
+					      $item_id,
+					      $comment_id,
+					      $now,
+					      $subject,
+					      $message);
+
+    ###
+    # Send the fakemail to spamc
+
+    open(SPAMC, "$spamc < $tmpfile |");
+    my $checkscore;
+    while(<SPAMC>){
+	$checkscore = $1 if /^(.*)\/.*$/;
+	last if $checkscore;
+    }
+    close(SPAMC);
+    
+    ###
+    # Found out a reasonable score for the item, considering that the current
+    # score equal to default + 5.
+    #   if the score is below 0, score = 0 (-8)
+    #   if the score is between 0 and 2, unchanged (-5)
+    #   if the score is between 2 and 3, increment of one (-4)
+    #   if the score is between 3 and 5, increment of two (-3)
+    #   if the score is between 5 and 7, increment of three (-2) 
+    #   if the score is between 7 and 9, increment of four (-1)
+    #   superior to 9 , increment of five (untouched)
+    my $newscore;
+    $newscore = $spamscore - 8 if $newscore <= 0;
+    $newscore = $spamscore - 5 if $newscore > 0 && $newscore <= 2;
+    $newscore = $spamscore - 4 if $newscore > 2 && $newscore <= 3;
+    $newscore = $spamscore - 3 if $newscore > 3 && $newscore <= 5;
+    $newscore = $spamscore - 2 if $newscore > 5 && $newscore <= 7;
+    $newscore = $spamscore - 1 if $newscore > 7 && $newscore < 9;
+    $newscore = $spamscore if $newscore >= 9;
+    
+    # Log the score
+    print LOG strftime "[$script] %c - $tracker \#$item_id$logcomment: $checkscore -> $newscore\n", localtime;
+    
+    ###
+    # Update the content score (if it was update in the meantime, during the
+    # check, too bad, the change will be lost for a time, until someone else
+    # flag it. But this should not pose too much problems, so we can keep it
+    # simple)
+
+    unless ($comment_id) {
+	SetDBSettings($tracker, 
+		      "bug_id='$item_id' LIMIT 1", 
+		      "spamscore='$newscore'");
+    } else {
+	SetDBSettings($tracker."_history", 
+		      "bug_id='$item_id' AND field_name='details' AND bug_history_id='$comment_id' LIMIT 1", 
+		      "spamscore='$newscore'");
+    }
+
+    # Do the relevant insert in the scorespam table
+    # (unless the spamscore is null)
+    InsertDB("trackers_spamscore",
+	     "score,affected_user_id,reporter_user_id,artifact,item_id,comment_id",
+	     "'$newscore', '$uid', '$uid', '$tracker', '$item_id', '$comment_id'")
+	if $newscore > 0;
+
+    ###
+    # Send notifications
+    #
+    SendTrackersDelayedNotification($tracker, 
+				    $item_id, 
+				    $comment_id, 
+				    $newscore);
+}
+
+# Final exit
+print LOG strftime "[$script] %c - work finished\n", localtime;
+print LOG "[$script] ------------------------------------------------------\n";
+
+# EOF

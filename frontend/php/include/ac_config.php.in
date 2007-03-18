@@ -1,0 +1,10 @@
+<?php
+# Needed in autoconf >= 2.60 to init datarootdir
+# Cf. (autoconf.info)Changed Directory Variables
+# @datarootdir@
+
+$sys_localedir = "@localedir@";
+$savane_version = "@VERSION@";
+
+#input_is_safe();
+#mysql_is_safe();

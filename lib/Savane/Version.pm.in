@@ -3,7 +3,7 @@
 #
 # $Id$
 #
-# Copyright 2003-2004 (c) Mathieu Roy <yeupou--at--gnu.org>
+# Copyright 2003-2004 (c) Mathieu Roy <yeupou--gnu.org>
 # 
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,25 +18,25 @@
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#
 
-##
-## Basic module that load any convenient submodules.
-##
+use strict "vars";
+require Exporter;
 
-use strict;
-use Term::ANSIColor qw(:constants);
-use DBI;
-use POSIX qw(strftime);
-use File::Basename;
-use Text::Wrap qw(&wrap $columns);
+# Exports
+our @ISA = qw(Exporter);
+our @EXPORT = qw(GetVersion );
+our $version = 1;
+# For Makefile.PL
+$VERSION = '@VERSION@';
 
-# Load modules
-use Savane::Version;
-use Savane::Conf;
-use Savane::DB;
-use Savane::Locks;
-use Savane::Mail;
-use Savane::User;
-use Savane::Groups;
+# Return a configuration item
+sub GetVersion {
+    # Should be a valid release number or
+    #     SVN (toward x.x)
+    #     x.x (prerelease)
+    return "$version";
+}
 
-return "true";
+# EOF

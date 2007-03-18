@@ -25,3 +25,6 @@
 
 - Clean-up themes wrt guidelines version
   https://savannah.gnu.org/support/?105749
+
+- Old Makefiles to inspect and migrate to autotools:
+  frontend/php/images, db, devel, doc

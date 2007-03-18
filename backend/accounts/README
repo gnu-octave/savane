@@ -1,3 +1,4 @@
-Scripts in this directory allow to provide services to users that require shell accounts (SVN, CVS, Arch, etc).
+Scripts in this directory allow to provide services to users that
+require shell accounts (SVN, CVS, Arch, etc).
 
 They map Savane database account to unix accounts.

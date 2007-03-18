@@ -1,0 +1,154 @@
+#! @PERL@
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id: sv_cleaner.pl 6387 2006-11-20 13:07:17Z yeupou $
+#
+#  Copyright 2006      (c) Mathieu Roy <yeupou--gnu.org> 
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+##
+## Oversees what does sv_spamcheck_peon: if an item stays in the queue for 
+## too long, reset the score and remove it from the queue, assuming that 
+## the server cannot handle so many messages.
+##
+
+use strict;
+use Savane;
+use Savane::Trackers;
+use Getopt::Long;
+use POSIX qw(strftime);
+use Time::Local;
+use Date::Calc qw(Add_Delta_YMD Add_Delta_YMDHMS);
+
+my $script = "sv_spamcheck_monitor";
+my $logfile = "/var/log/sv_spamcheck.log";
+my $getopt;
+my $help;
+my $debug;
+my $wait = "15";
+my $version = GetVersion();
+
+# get options
+eval {
+    $getopt = GetOptions("help" => \$help,
+			 "wait=s" => \$wait,
+			 "debug" => \$debug);
+};
+
+if($help) {
+    print STDERR <<EOF;
+Usage: $0 [OPTIONS] 
+  
+Oversees what does sv_spamcheck_peon: if an item stays in the queue for 
+too long, reset the score and remove it from the queue, assuming that 
+the server cannot handle so many messages.
+
+  -h, --help                   Show this help and exit
+  -w, --wait=nn                Time, in minutes (< 60), to wait before
+                               considering an item has been in the queue
+			       for too long
+			       (Default: $wait)
+
+Savane version: $version
+EOF
+exit(1);
+}
+
+# Test if we should run, according to conffile
+exit unless 
+    GetConf("sys_spamcheck_spamassassin") eq "1" or
+    GetConf("sys_spamcheck_spamassassin") eq "2" or
+    GetConf("sys_spamcheck_spamassassin") eq "anonymous" or
+    GetConf("sys_spamcheck_spamassassin") eq "all";
+
+# Log: Starting logging
+open (LOG, ">>$logfile");
+print LOG strftime "[$script] %c - starting\n", localtime;
+
+# Locks: This script should not run concurrently
+AcquireReplicationLock();
+
+
+###********************************************************************
+###********************************************************************
+###
+### Run
+###
+###********************************************************************
+###********************************************************************
+
+# find the relevant timestamp
+my ($year, $month, $day, $hour, $min, $sec) = split(",", `date +%Y,%m,%d,%H,%M,0`);
+($year,$month,$day,$hour,$min,$sec) = Add_Delta_YMDHMS($year,$month,$day,$hour,$min,$sec,
+				       0,0,0,0,(-$wait),0);
+my $date = timelocal($sec,$min,$hour,$day,($month-1),($year-1900));
+my $count = 0;
+
+foreach my $entry (GetDBLists("trackers_spamcheck_queue", "date < '$date' ORDER BY priority DESC, date ASC", "queue_id,artifact,item_id,comment_id")) {
+    my ($queue_id, $tracker, $item_id, $comment_id) = @$entry;
+
+    # Remove the entry from the queue as soon as we start handling it, to
+    # avoid the peon to change the spamscore by mistake, thinking this
+    # item is not on his hands
+    my $was_deleted = DeleteDB("trackers_spamcheck_queue", "queue_id='$queue_id' LIMIT 1");
+
+    # If there was no affected rows, it means that the peon already handle
+    # this from the queue
+    # (DBI return a kind of 0 that is true, to enable to differentiate error 
+    # from lack of affected rows, so we must test for superior to 0)
+    next unless $was_deleted > 0;
+
+    # Count the number of entries we have to move out from the queue because
+    # the peon fail to handle them
+    $count++;
+
+    
+    # Readd 5 to the spam score
+    unless ($comment_id) {
+	SetDBSettings($tracker, 
+		      "bug_id='$item_id' LIMIT 1", 
+		      "spamscore=spamscore+5");
+    } else {
+	SetDBSettings($tracker."_history", 
+		      "bug_id='$item_id' AND field_name='details' AND bug_history_id='$comment_id' LIMIT 1", 
+		      "spamscore=spamscore+5");
+    }
+
+    ###
+    # Send notifications
+    # (write an erroneous spamscore, it does not matter)
+    SendTrackersDelayedNotification($tracker, 
+				    $item_id, 
+				    $comment_id, 
+				    "3");
+    
+}
+
+# Tell on STDOUT what was the result if > 10 (under, assume it may be 
+# occasional, no need to warn the admin)
+print "$count items/comments were removed by force from the spamc queue by sv_spam_check_monitor.
+
+It means that sv_spamcheck_peon was not able to process these within the $wait minutes delay.
+" if $count;
+
+print LOG strftime "[$script] %c - removed $count items from the queue (waited > $wait)\n", localtime;
+
+# Final exit
+print LOG strftime "[$script] %c - work finished\n", localtime;
+print LOG "[$script] ------------------------------------------------------\n";
+
+# EOF

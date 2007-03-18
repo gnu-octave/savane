@@ -25,11 +25,10 @@ require_once(dirname(__FILE__).'/database.php');
 # security library
 require_once(dirname(__FILE__).'/session.php');
 # user functions like get_name, logged_in, etc
-require dirname(__FILE__).'/user.php';
+require_once dirname(__FILE__).'/user.php';
 # title, helper to find out appropriate info depending on the context,
 # like title
-require dirname(__FILE__).'/context.php';
-
+require_once dirname(__FILE__).'/context.php';
 
 # Default values, so they cannot be found undefined in the code
 $sys_name = "Change This Site Name with \$sys_name";
@@ -41,6 +40,8 @@ $stone_age_menu = false;
 $sys_spamcheck_spamassassin = false;
 $sys_use_krb5 = false;
 $sys_upload_max = 512;
+# autoconf-based:
+require_once dirname(__FILE__).'/ac_config.php';
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))

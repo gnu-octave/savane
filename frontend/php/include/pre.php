@@ -186,7 +186,7 @@ function get_module_include_dir ($phpself, $true_artifact=0, $true_dir=0)
 require_once(dirname(__FILE__).'/sane.php');
 
 # version info
-require_once(dirname(__FILE__).'/version.php');
+require_once(dirname(__FILE__).'/ac_config.php');
 
 # i18n setup
 require_once(dirname(__FILE__).'/i18n.php');

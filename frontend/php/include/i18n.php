@@ -88,6 +88,11 @@ while (list(, $lng) = each ($navigatorLanguages)) {
 # Set the locale used by gettext() and strftime() functions :
 setlocale(LC_ALL, $locale);
 
+# Specify the .mo path; defaults to gettext's compile-time $datadir/locale otherwise
+if (!empty($sys_localedir)) {
+  bindtextdomain($domain, $sys_localedir);
+}
+
 # Gettext (i18n) configs :
 textdomain('savane');
 

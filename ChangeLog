@@ -1,4 +1,20 @@
+2007-03-17  Sylvain Beucler  <beuc@beuc.net>
+
+	* configure.ac & al.: autoconfiscation
+
+	* lib/Makefile.PL: provide Perl-style module installation. Drop
+	Savannah.pm compatibility links.
+
 2007-03-16  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/include/i18n.php: follow gettext guidelines and use
+	bindtextdomain. See the explanation in configure/INSTALLNLSDIR.
+
+	* configure: try to minimise the number of question asked
+
+	* Removed .in source css files - they are relocatable now and
+	doesn't need SV_URLROOT expanded anymore. Removed the Makefile.in
+	as well.
 
 	* docs/devel/CLEANUP: introduce clean-up methods
 

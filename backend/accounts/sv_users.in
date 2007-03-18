@@ -1,0 +1,663 @@
+#! @PERL@
+# This file is part of the Savane project
+# <http://gna.org/projects/savane/>
+#
+# $Id$
+#
+#  Copyright 2001-2006 (c) Loic Dachary <loic--gnu.org> (sv_cvs.pl)
+#                          Mathieu Roy <yeupou--gnu.org> 
+#                          Sylvain Beucler <beuc--beuc.net>
+#                          Timothee Besset <ttimo--ttimo.net>
+#
+# The Savane project is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# The Savane project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the Savane project; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+##
+## This script should be used via a cronjob to update the system
+## by reading the database about users.
+##
+## It will add create/update an account for each user that belongs
+## to a group.
+##
+## Users will all belong to the group svusers. Note that sv_groups should
+## have checked if that group exists.
+##
+## There's a special option to build gpg keyrings. If activated, it will
+## create in /home/savane-keyrings a keyring per project. 
+## This will notably used by sv_gpgcheckfiles.
+## As it is quite important for users to be able to get a list of GPG keys,
+## the successfully registered keys will be listed on a webpage page.
+##
+## WARNING: sv_groups should run first.
+##
+
+use strict;
+use Savane;
+use Getopt::Long;
+use Term::ANSIColor qw(:constants);
+use POSIX qw(strftime);
+
+# Import
+our $sys_shell;
+our $sys_cron_users;
+our $sys_userx_prefix;
+
+my $script = "sv_users";
+my $logfile = "/var/log/sv_database2system.log";
+my $lockfile = "groups-users.lock";
+my $getopt;
+my $help;
+my $debug;
+my $cron;
+my $version = GetVersion();
+
+my $useradd = "useradd";
+my $usermod = "usermod";
+my $userdel = "userdel";
+my $userx_prefix;
+
+my $gpg_is_enabled = 0;
+my $gpg_group_keyring = 0;
+
+my $min_uid = "5000";
+my $nobody_uid = "65534";
+
+# deprecated, replaced by webgroup
+my $one_group = 0;
+my $webgroup = 0;
+
+my $svusers = "svusers"; # this could be configurable, however it
+                         # does not seems very important right now.
+my $svusers_gid = getgrnam($svusers);
+
+# get options
+eval {
+    $getopt = GetOptions("help" => \$help,
+			 "debug" => \$debug,
+			 "userx-prefix=s" => \$userx_prefix,
+			 "cron" => \$cron,
+			 "useradd=s" => \$useradd,
+			 "usermod=s" => \$usermod,
+			 "userdel=s" => \$userdel,
+			 "gpg" => \$gpg_is_enabled,
+			 "gpg-group-keyring" => \$gpg_group_keyring,
+			 "webgroup" => \$webgroup,
+			 "one-group" => \$one_group);
+};
+
+if($help) {
+    print STDERR <<EOF;
+Usage: $0 [project] [OPTIONS] 
+
+Update the system to reflect the database, about users.
+Normally, sv_groups should run just before.
+
+Note that users are associated with the group $svusers.
+
+  -h, --help                   Show this help and exit
+  -d, --debug                  Do nothing, print everything
+      --cron                   Option to set when including this script
+                               in a crontab
+
+      --userx-prefix=[prefix]  Specify a prefix for user* bin
+                               For instance, for useradd.
+      --useradd=[useradd]      Specify useradd binary
+      --usermod=[usermod]      Specify usermod binary
+      --userdel=[userdel]      Specify userdel binary
+
+      --gpg                    Generate ~/.gnupg/pubring.gpg
+      --gpg-group-keyring      Add user GPG key in the groups keyrings
+                               (useful with sv_gpgcheckfiles)
+
+      --webgroup               For each projects, add users in two group,
+                               including one with the prefix web.
+                               (this was the default behavior in =< 1.0.4)
+
+Savane version: $version
+EOF
+exit(1);
+}
+
+if ($userx_prefix) {
+    $useradd = "$userx_prefix/$useradd";
+    $usermod = "$userx_prefix/$usermod";
+    $userdel = "$userx_prefix/$userdel";
+} elsif ($sys_userx_prefix) {
+    $useradd = "$sys_userx_prefix/$useradd";
+    $usermod = "$sys_userx_prefix/$usermod";
+    $userdel = "$sys_userx_prefix/$userdel";
+}
+
+# Test if we should run, according to conffile
+exit if ($cron && ! $sys_cron_users);
+
+# Log: Starting logging
+open (LOG, ">>$logfile");
+print LOG strftime "[$script] %c - starting\n", localtime;
+
+# Locks: There are several sv_db2sys scripts but they should not run
+#        concurrently.
+AcquireReplicationLock($lockfile);
+
+
+#######################################################################
+##
+## Grabbing database informations.
+## 
+## - db_user* items
+## - db_user_group items
+##
+##
+#######################################################################
+
+# db_user:
+#    Create an hash that contains users infos from the table user,
+#    as lists for each user
+#    ( @{$db_user{$user}} )
+#    Additionally, create a list of users.
+#
+#    To limit the number of request, we use only one very long SQL request. 
+my %db_user;
+my @db_users;
+foreach my $line (GetDB("user", 
+			"status='A' OR status='D'",
+			"user_name,email,realname,authorized_keys,gpg_key,status")) {
+    chomp($line);
+    my ($user, $email, $realname, $authorized_keys, $gpg_keys, $status) = split(",", $line);
+    print "DBG db: get $user <$email> from database\n" if $debug;
+    $realname =~ s/\://g;
+    $db_user{$user} = [ ($user, $email, $realname, $authorized_keys, $gpg_keys, $status) ];
+    push (@db_users, $user);
+}
+
+# db_user_group:
+#    Create an hash that contains users groups infos (which user belongs to 
+#    which group) from the table user_groups, as lists for each user
+#    ( @{$db_user_group{$user}} )
+#    We only consider active groups.
+my %db_user_group;
+foreach my $line (GetDB("user_group,groups,user", 
+			"groups.group_id=user_group.group_id AND user.user_id=user_group.user_id AND groups.status='A' AND user_group.admin_flags<>'P'",
+			"user_name,unix_group_name")) {
+    chomp($line);
+    my ($user, $group) = split(",", $line);
+
+    print "DBG db: $user is member of $group\n" if $debug;
+
+    my @groups;
+    push(@groups, $group);
+    push(@groups, "web".$group) if $webgroup;
+    push(@{$db_user_group{$user}}, @groups);
+}
+
+# db_groups:
+#
+#    We need to able to determine whether a group is related to
+#    Savane or not.
+# 
+my %db_groups;
+foreach my $group (GetGroupList(0, "unix_group_name")) {
+    $db_groups{$group} = 1;
+}
+
+print LOG strftime "[$script] %c - database infos grabbed\n", localtime;
+
+#######################################################################
+##
+## Grabbing system informations.
+## 
+## - etc_password* items
+## - etc_group* items
+##
+#######################################################################
+
+# /etc/passwd (/etc/shadow...):
+#    - Create an hash that contains users infos from these files,
+#    as lists for each user.
+#    ( @{$etc_password{$user}} )
+#    - Find what is the maximum id number known.
+#    - Additionally, create a list of users. 
+#    - To be ignored list groups that were not created by sv_users, since they
+#    do not belongs to svusers group: their account will remain untouched
+my %etc_password;
+my @etc_users;
+my %etc_password_tobeignored;
+my $etc_password_maxid = -1;
+while (my @entry = getpwent()) { 
+    # Save the uid of nobody, if found
+    if ($entry[0] eq 'nobody') { $nobody_uid = $entry[2]; }
+
+    # Ignore any user not belonging to svusers: we wont mess with accounts not
+    # created by the backend itself. We also add them in an hash, to make
+    # sure no action we be taken related to these accounts
+    if ($entry[3] ne $svusers_gid) {
+	print "DBG etc: user $entry[0] will be ignored, belongs to group $entry[3]\n" if $debug;
+	$etc_password_tobeignored{$entry[0]} = 1;
+	next;
+    }
+
+    # Ignore special users like webcvs, anoncvs and nobody
+    # The first ones are supposed to be under 5000 (min uid).
+    next if($entry[0] eq 'anoncvs' || $entry[0] eq 'webcvs' || $entry[0] eq 'nobody');
+    
+    push(@etc_users, $entry[0]);
+    $etc_password_maxid = $entry[2] > $etc_password_maxid ? $entry[2] : $etc_password_maxid;
+    
+    $etc_password{$entry[0]} = [ @entry ];
+    print "DBG etc: user $entry[0]\t\t maxid $etc_password_maxid \t group $entry[3]\n" if $debug;
+}
+$etc_password_maxid++;
+# If we did not reached the minimal uid, set it as maxid
+$etc_password_maxid = $min_uid if $min_uid > $etc_password_maxid;
+
+# /etc/group:
+#    Create an hash that contains users infos about groups,
+#    as lists for each group.
+#    ( @{$etc_group_bygroup{$group}} )
+#    Create an hash that contains users infos about groups,
+#    as lists for each user (which to which groups belongs a user).
+#    ( @{$etc_group{$user}} )
+#    Find what is the maximum id number known.
+my %etc_group_bygroup;
+my %etc_group;
+my $etc_group_maxid = -1;
+while(my @entry = getgrent()) {
+    $etc_group_bygroup{$entry[0]} = [ @entry ];  
+    
+    foreach my $user (split ' ', $entry[3]) {
+	if ($user) {
+	    print "DBG etc: user $user belongs to group $entry[0]\n" if $debug;
+	    push(@{$etc_group{$user}}, $entry[0]);
+	}
+    }
+    
+    if($entry[0] ne 'nogroup') {
+	$etc_group_maxid = $entry[2] > $etc_group_maxid ? $entry[2] : $etc_group_maxid;
+    }
+    print "DBG etc: group $entry[0]\t\t maxid $etc_group_maxid\n" if $debug;
+}
+$etc_group_maxid++; 
+
+print LOG strftime "[$script] %c - system infos grabbed\n", localtime;
+
+#######################################################################
+##
+## Doing comparisons
+##
+## - @only_in_db: users missing on the system
+## - @well_known: users on the system and in the database
+## - @to_be_remove: users marked as D, canditates for deletion
+##
+##   IMPORTANT: a user may be in @well_known but not associated to
+##          any project!
+##
+#######################################################################
+
+# Find out users only in database.
+my %seen_in_etc;
+my @only_in_db;
+my @well_known;
+foreach my $user (@etc_users) { 
+    $seen_in_etc{$user} = 1;
+}
+
+foreach my $user (@db_users) {
+    next if $user eq "None";
+    next if $user eq $etc_password_tobeignored{$user};
+    unless ($seen_in_etc{$user}) {
+	push(@only_in_db, $user);
+	print "DBG compare: $user is seen only in database\n" if $debug;
+    } else {
+	push(@well_known, $user);
+	print "DBG compare: $user is known by the database and the system\n" if $debug;
+    }
+}
+
+
+# Find out users that should be really removed: they are marked as D
+# in the database or they are not member of any group but are
+# in the database and on the system.
+# These users must be in both the database and the system.
+my @to_be_removed;
+foreach my $user (@well_known) {
+    # First test: looks for the typical case when someone is no
+    # longer member of any project: we just list
+    # Second test: looks for the marked as D users
+    if (!exists($db_user_group{$user}) || $db_user{$user}->[5] eq 'D') {
+	# Last test: check if we are not dealing with an account ignored
+	# (it should not be necessary at this point but it does not cost much)
+	push(@to_be_removed, $user) unless $etc_password_tobeignored{$user};
+    }
+}
+
+print LOG strftime "[$script] %c - comparison done\n", localtime;
+
+#######################################################################
+##
+## Finally, update the system
+##
+#######################################################################
+
+my %gpg_keyrings_to_rebuild;
+my %group_gpg_keyring;
+
+# Add users only in database, missing on the system
+foreach my $user (@only_in_db){
+    next if $etc_password_tobeignored{$user};
+
+    # We only create an account for project's members
+    if (exists($db_user_group{$user})) {
+	
+	my ($user_name, $email, $realname, $authorized_keys, $gpg_keys, $status) = @{$db_user{$user}};
+	my $home = GetUserHome($user);
+	my $groups = join ",", @{$db_user_group{$user}};
+	my $ssh_keys_count = 0;
+	my $gpg_keys_count = 0;
+	my $gpg_group_keyring_success = 0;
+
+
+	print "DBG create: $user belongs to $groups\n" if $debug;
+	unless ($debug) {
+		
+	    # Make a backup if a home user already exists
+	    system("/bin/rm", "-fr", "$home.old") if -e "$home.old";
+	    system("/bin/mv", $home, "$home.old") if -d "$home";
+	    
+	    # Build the home dir
+	    system("/bin/mkdir", "-p", $home); 
+	    mkdir("$home/.ssh"); 
+	    mkdir("$home/.gnupg"); 
+	    system("/usr/bin/touch", "$home/.savane", "$home/.ssh/authorized_keys");
+	    
+	    # Create a proper account
+	    # (this should be done after the building of the home dir,
+	    # because some versions of useradd tries foolishly to create
+	    # the user home, and fail due to missing directories in the path)
+	    system($useradd, 
+		   "-p", "*",
+		   "-u", $etc_password_maxid,
+		   "-d", $home,
+		   "-c", $realname,
+		   "-s", $sys_shell,
+		   "-g", $svusers,
+		   "-G", $groups,
+		   $user);
+	    
+	    # Add SSH public key
+	    if ($authorized_keys ne "NULL") {
+		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
+	    }
+	    
+	    # If we use GPG in some way, we need to store the ASCII file
+	    if (($gpg_keys and $gpg_keys ne "NULL") and
+		($gpg_is_enabled or $gpg_group_keyring)) {
+		UserStoreGPGKey($user, $gpg_keys);
+		
+		print "DBG create: store $user gpg" if $debug;
+	    }
+		
+	    # Add GPG key
+	    if ($gpg_keys and $gpg_keys ne "NULL" and $gpg_is_enabled) {
+		$gpg_keys_count = UserAddGPGKey($user, $gpg_keys);
+	    }
+                              
+	    # Remind that we need to add GPG key in group keyring 
+	    # (useful with sv_gpgcheckfiles)
+	    if ($gpg_keys and $gpg_keys ne "NULL" and $gpg_group_keyring) {
+		foreach my $thisgroup (@{$db_user_group{$user}}) {
+		    
+		    # Add the group to the list of update candidate, unless
+		    # already there
+		    $gpg_keyrings_to_rebuild{$thisgroup} = 1
+			unless $gpg_keyrings_to_rebuild{$thisgroup};
+		    # Store the key content
+		    push(@{$group_gpg_keyring{$thisgroup}}, $gpg_keys);
+	
+		}
+	    }
+	    
+	    # Fix modes and ownership
+	    system("/bin/chmod", "2755", $home);
+	    system("/bin/chmod", "755", "$home/.ssh", "$home/.gnupg");
+	    if (-e "$home/.ssh/authorized_keys") {
+		system("/bin/chmod", "600", "$home/.ssh/authorized_keys");
+	    }
+	    system("/bin/chown", "-R", "$user:$svusers", $home);
+	    
+	}
+	# Increment the uid for the next user, avoid the special value 
+	# attributed to nobody.
+	$etc_password_maxid++;	
+	$etc_password_maxid++ if $etc_password_maxid == $nobody_uid;
+
+	print LOG strftime "[$script] %c ---- $useradd $user ($etc_password_maxid, $email, $home, $ssh_keys_count ssh keys, $gpg_keys_count gpg) $groups\n", localtime;
+    }
+
+}
+
+print LOG strftime "[$script] %c - account creation done\n", localtime;
+
+
+# Remove users marked as D in the database.
+# This is the safest way to remove users quitting Savane.
+foreach my $user (@to_be_removed) {
+    next if $etc_password_tobeignored{$user};
+
+    print LOG strftime "[$script] %c ---- delete $user account\n", localtime;
+    print "DBG delete: $user is marked as D or no longer member of any project\n" if $debug;
+    DeleteUser($user) unless $debug;    
+
+}
+
+print LOG strftime "[$script] %c - account deletion done\n", localtime;
+
+# Update existing users.
+# These users are in the database and on the system.
+foreach my $user (@well_known) {
+    next if $etc_password_tobeignored{$user};
+
+    # Get usual infos
+    my ($user_name,
+	$email,
+	$realname,
+	$authorized_keys,
+	$gpg_keys,
+	$status) = @{$db_user{$user}};
+
+
+    # Update groups: check if the system knows all groups the user
+    # is member of.
+    # Build a list of every groups, sys + database, and compare
+    # to the sys reality. Update if different.
+    my @groups_list;
+    my @groups_list_etc = 0;
+    @groups_list = @{$db_user_group{$user}} if
+	(exists($db_user_group{$user}));
+    if (exists($etc_group{$user})) {
+	# Add the list only system groups that are not managed by Savane.
+	# We want to avoid removing system groups that have nothing to do
+	# with Savane, but we want to remove Savane groups the user is no
+	# longer member of
+	for (@{$etc_group{$user}}) {
+	    push(@groups_list, $_) unless $db_groups{$_};
+	}
+    }
+    @groups_list_etc =  @{$etc_group{$user}} if
+	(exists($etc_group{$user}));
+    
+    my %seen_before = (); # remove duplicates
+    @groups_list = grep { ! $seen_before{$_} ++ } @groups_list;
+   
+    
+    # Update groups: check if the user is removed from a group in the
+    # database.
+    if (@groups_list ne @groups_list_etc) {
+	my $groups = join(",", @groups_list);
+	
+	system($usermod,
+	       "-G", $groups,
+	       $user) unless $debug;
+
+	print LOG strftime "[$script] %c ---- update $user groups\n", localtime;
+	print "DBG update: $user belongs to \t[db+sys]\t".join(", ", @groups_list)."\t[sys]\t".join(", ", @groups_list_etc)."\n" if $debug;
+	
+    } else {
+	print "DBG update: NO UPDATE for user $user that belongs to \t[db+sys]\t".join(", ", @groups_list)."\t[sys]\t".join(", ", @groups_list_etc)."\n" if $debug;
+    }
+
+    # Update name (name, email) if not accurate.
+    my $password_realname = $etc_password{$user}->[6];
+    my $expected_realname = $realname;
+    if ($password_realname ne $expected_realname) {
+	system($usermod, "-c", $expected_realname, $user) unless $debug;
+	print LOG strftime "[$script] %c ---- update $user /etc/passwd realname\n", localtime;
+    }
+
+
+    # Make sure that the homedirectory is correct according to the
+    # configuration.
+    my $password_home = $etc_password{$user}->[7];
+    my $expected_home = GetUserHome($user);
+    if ($password_home ne $expected_home) {
+	system($usermod, "-d", $expected_home, $user) unless $debug;
+	system("/bin/mkdir", "-p", $expected_home) unless $debug;
+	system("/bin/rm", "-rf", $expected_home) unless $debug;
+	system("/bin/mv", "-f", $password_home, $expected_home) unless $debug;
+	print LOG strftime "[$script] %c ---- update $user /etc/passwd homedir\n", localtime;
+    }
+    
+    # Update SSH public keys if not accurate and only if the user
+    # got the default shell.
+    # In other cases, we do not mess with the way login rights are 
+    # managed. Example: a user who got a /bin/bash should change his
+    # key by bash login, not by web interface.
+    my $ssh_keys_count = 0;
+    if ($etc_password{$user}->[8] eq $sys_shell) {
+	print "DBG update: $user ssh key managed by sv\n" if $debug;
+	if ($authorized_keys ne GetUserSSHKeyReal($user)) {
+	    unless ($debug) {
+		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
+	    }
+	    print LOG strftime "[$script] %c ---- update $ssh_keys_count $user ssh keys\n", localtime;
+	} 
+    } 
+    
+    # If we use GPG in some way, we need to retrieve the stored the ASCII file,
+    # Check if it changed, store the new one, add the key to the list of
+    # upgrade candidates
+    if ($gpg_is_enabled or $gpg_group_keyring) {
+	my $gpg_keys_stored = UserGetStoredGPGKey($user);
+	my $keys_differs = 0;
+	$keys_differs = 1 
+	    if ((!$gpg_keys_stored && $gpg_keys && $gpg_keys ne "NULL" ) or
+		# A=0                           B=1
+		($gpg_keys_stored && (!$gpg_keys or $gpg_keys eq "NULL")) or
+		# A=1                    B=0         B=0
+		($gpg_keys_stored && $gpg_keys && $gpg_keys_stored ne $gpg_keys)
+		# A=1y                   B=1z           A!=B
+		);
+	
+	# GPG DEACTIVATED FOR NOW.
+	# Will be reactivated with the creation of a mail interface.
+	if ($gpg_is_enabled) {
+	    # Update GPG key if not accurate
+	    my $gpg_keys_count = 0;
+	    if ($gpg_keys && $gpg_keys ne "NULL") {
+		# For gpg, I have to think about. Would we accept only gpg
+		# signature complete, or fingerprints?
+		unless ($debug) {
+		    $gpg_keys_count = UserAddGPGKey($user, $gpg_keys);
+		}
+		print LOG strftime "[$script] %c ---- update $gpg_keys_count $user gpg key\n", localtime;
+	    }
+	    
+	}
+	
+	# Update of group keyrings
+	if ($gpg_group_keyring) {
+	    foreach my $thisgroup (@{$db_user_group{$user}}) {
+		
+		# Add the group to the list of update candidate, unless
+		# already there, if there were changes.
+		# Add the group to the list of update candidates if the 
+		# user joined/quitted a group.
+		if ($keys_differs or @groups_list ne @groups_list_etc) {
+		    $gpg_keyrings_to_rebuild{$thisgroup} = 1
+			unless $gpg_keyrings_to_rebuild{$thisgroup};
+		}
+		
+		
+		# Store the key content if it is something worth being
+		# registered, in any cases (other users can cause the
+		# update to be necessary, so it's irrelevant whether this
+		# peculiar user needed the update)
+		if ($gpg_keys and $gpg_keys ne "NULL" ) {
+		    push(@{$group_gpg_keyring{$thisgroup}}, $gpg_keys);
+		}
+	    }
+	}
+	
+	# Store the new key
+	UserStoreGPGKey($user, $gpg_keys)
+	    if $keys_differs;
+	print "DBG update: store $user gpg key ($gpg_keys_stored stored ne $gpg_keys new => $keys_differs)\n" 
+	    if ($debug);
+	
+    }	   
+}
+
+print LOG strftime "[$script] %c - gpg group keyrings updates done\n", localtime;
+
+
+# Build or rebuild groups GPG keyrings
+# That cannot be done before, because we cannot be sure that a keyring must
+# not be rebuilt until we reviewed all accounts.
+# While it easy to add news keys to an existing keyring, removal of keys could
+# be tricky. For that reason, we erase and rewrite all keyrings that needs
+# updates.
+#
+# Note: if someone would like to regenerate all keyrings, he could simply
+# remove all "ascii-public-key" contains in /home.
+# (maybe we should provide a switch for that)
+while (my ($group,) = each(%gpg_keyrings_to_rebuild)) {
+    my $count;
+    # Delete the current keyring
+    unlink(GetGroupGPGKeyringFile($group))
+	unless $debug;
+
+    # Add existing keys
+    foreach my $key (@{$group_gpg_keyring{$group}}) {
+	GroupAddGPGKey($group, $key)
+	    unless $debug;
+	$count++;
+    }
+
+    # Store in the database the list of registered keys
+    StoreGroupGPGKeyring($group)
+	unless $debug;
+
+    print LOG strftime "[$script] %c ---- rebuilt $group gpg keyring ($count keys)\n", localtime;
+    
+}
+
+print LOG strftime "[$script] %c - account deletion done\n", localtime;
+
+
+
+
+# Final exit
+print LOG strftime "[$script] %c - work finished\n", localtime;
+print LOG "[$script] ------------------------------------------------------\n";
+
+# END

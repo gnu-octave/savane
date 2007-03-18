@@ -1,3 +1,12 @@
+Clean-up branch - v.3.1-zeta
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[CONFIGURATION]
+
+* .mo (translation files) will be installed in /usr/local/share/locale
+  by default, and the $sys_localedir configuration variable should be
+  set accordingly. See an explanation in configure/INSTALLNLSDIR.
+
 Unreleased, Changes from 2.0 to 3.0:
 
 
