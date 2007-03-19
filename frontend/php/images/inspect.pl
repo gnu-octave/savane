@@ -8,7 +8,8 @@ sub md5sum {
     return $result;
 }
 
-my @images = split(' ', `find *.theme -type f -name "*.orig.png" | xargs -n1 basename | sort | uniq | tr '\n' ' '`);
+my @images = split(' ', `find *.theme -type f -name "*.png" | xargs -n1 basename | sort | uniq | tr '\n' ' '`);
+#my @images = split(' ', `find -name floating.png -o -name gnalogo.png -o -name icon.png -o -name point.png | xargs -n1 basename | sort | uniq | tr '\n' ' '`);
 
 #print join(',', @images);
 #print "\n";
@@ -34,7 +35,7 @@ print Dumper(%sums);
 # Display files that the same in all themes:
 foreach my $image (keys %sums) {
     my $max;
-    my $max_count = -1;
+    my $max_count = 0;
     foreach my $checksum (keys %{$sums{$image}}) {
 	my $count = scalar(@{$sums{$image}{$checksum}});
 	if ($count > $max_count) {
@@ -48,7 +49,7 @@ foreach my $image (keys %sums) {
     #   print;
     #   print "\n";
     #}
-    if (! -e "common/$image") {
+    if (! -e "common/$image" and $max_count > 1) {
 	print "cp $sums{$image}{$max}[0]/$image common\n";
 	print "svn add common/$image\n";
 	foreach my $theme (@{$sums{$image}{$max}}) {
