@@ -48,14 +48,17 @@ foreach my $image (keys %sums) {
     #   print;
     #   print "\n";
     #}
-    print "cp $sums{$image}{$max}[0]/$image common\n";
-    foreach my $theme (@{$sums{$image}{$max}}) {
-	my $file = "$theme/$image";
-	print "svn del $file\n";
-	print "ln -s ../common/$image $theme/\n";
-        print "svn add $file\n";
+    if (! -e "common/$image") {
+	print "cp $sums{$image}{$max}[0]/$image common\n";
+	print "svn add common/$image\n";
+	foreach my $theme (@{$sums{$image}{$max}}) {
+	    my $file = "$theme/$image";
+	    print "svn del $file\n";
+	    print "ln -s ../common/$image $theme/\n";
+	    print "svn add $file\n";
+	}
+	print "\n";
     }
-    print "\n";
 }
 
 # TODO: trier par nombre d'élément pour un checksum, prendre le
