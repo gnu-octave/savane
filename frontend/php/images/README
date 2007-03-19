@@ -4,3 +4,55 @@ For each usual icons, two sizes availables are prefered:
 
 The $file.png can be regenerated typing
 	make icons
+
+- Similar icons:
+
+FILES=`find -type d -name ".svn" -prune -o -print | grep -v .orig.`
+for file in $FILES; do
+    for file2 in $FILES; do
+	if [ $file != $file2 ]; then
+	    if diff -q $file $file2 >/dev/null; then
+		echo $file = $file2
+		break
+	    fi
+	fi
+    done
+done > trace.txt
+
+error.orig.png = wrong.orig.png
+=> 'error' unused in the code, now replaced by 'wrong'
+=> removing error.*.png
+
+ftp.orig.png = download.orig.png
+=> idem, 'ftp' unused and replaced by 'download', removing 'ftp'
+
+- Removing generated icons:
+
+find -name "*.orig.png" | while read file; do rm ${file%.orig.png}.png; done
+
+- Image without a .orig counterpart:
+
+find -name "*.png" | grep -v orig.png | while read image; do if [ ! -e ${image%.png}.orig.png ]; then echo $image; fi; done | xargs -n1 basename | sort | uniq
+
+blank.png
+desktop.orig-2.png
+floating.png
+gnalogo.png
+hand.right.png
+icon.png
+leaves.png
+leopard.png
+menu.png
+people.orig-2.png
+point.png
+sand.png
+steel.png
+
+- Apply a file to symlink change in SVN:
+
+for i in `svn st | awk '/^~/{print $2}'`; do
+    mv $i $i-old
+    svn del $i
+    mv $i-old $i
+    svn add $i
+done
