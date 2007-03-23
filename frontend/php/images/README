@@ -56,3 +56,16 @@ for i in `svn st | awk '/^~/{print $2}'`; do
     mv $i-old $i
     svn add $i
 done
+
+- TODO:
+
+* For:
+../DarkSlate.theme
+../Light.theme
+../OldCERN.theme
+../pllx.theme
+../Right.theme
+
+mime_types/previous.orig.png = $theme/previous.orig.png
+
+* 3 different left.orig.png - group'em!
