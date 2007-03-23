@@ -41,12 +41,21 @@ if test -z "$PERL"; then
   AC_MSG_ERROR([perl not found])
 fi
 
-AC_PATH_PROG(SV_DB, mysql)
-if test -z "$SV_DB"; then
+AC_PATH_PROG(SV_DB_CMD, mysql)
+if test -z "$SV_DB_CMD"; then
   AC_MSG_ERROR([mysql client not found])
 fi
 
-
+AC_ARG_WITH([db-name], AS_HELP_STRING([--with-db-name],
+  [name of the database (default: 'savane')]),
+  SV_DB_NAME=$withval,
+  SV_DB_NAME=savane)
+AC_ARG_WITH([db-options], AS_HELP_STRING([--with-db-options],
+  [parameters to give MySQL when initializing the database (default: empty)]),
+  SV_DB_OPTIONS=$withval)
+# Add these vars in the Makefile's:
+AC_SUBST(SV_DB_NAME)
+AC_SUBST(SV_DB_OPTIONS)
 
 # Apache
 # Perl: TODO, see how to autoconfiscate this proPERLy
@@ -130,9 +139,16 @@ AC_CONFIG_FILES(backend/misc/sv_spamcheck_scholar, [chmod +x backend/misc/sv_spa
 AC_OUTPUT
 
 echo
+
 echo "Configuration directory: " `eval echo $SV_CONF`
 echo "Guessed HTTPd/PHP user (configuration file permissions): $GUESS_WWW_SERVER_USER"
+echo "Database name: $SV_DB_NAME"
+if [ ! -z "$SV_DB_OPTIONS" ]; then
+   echo "Database options: $SV_DB_OPTIONS"
+fi
+
 echo
+
 echo "Now you can run:"
 echo "  make"
 echo "  make install"

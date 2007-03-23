@@ -21,3 +21,12 @@ EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
 	REQUIREMENTS INSTALL.verbose \
 	$(shell find debian etc devel doc update -type d -name ".svn" -prune \
 	          -o -type f ! -name "*~" -print)
+
+database:
+	$(SV_DB_CMD) $(SV_DB_OPTIONS) -e "create database $(SV_DB_NAME)"
+	for file in db/mysql/table_*.structure; do \
+		$(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < $$file ;\
+	done
+	for file in db/mysql/table_*.initvalues; do \
+		$(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < $$file ;\
+	done

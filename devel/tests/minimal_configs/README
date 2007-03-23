@@ -1,0 +1,9 @@
+If you've got Apache2 and MySQL installed, you can use these
+configuration files to easily launch throw-away test servers, that can
+be run by a non-privileged user.
+
+To test ./configure.sh, specify an alternate MySQL socket:
+
+./configure.sh \
+  --with-db-options="-S devel/tests/minimal_configs/mysqld/db/sock"
+make database
