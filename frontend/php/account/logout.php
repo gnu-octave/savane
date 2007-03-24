@@ -23,21 +23,20 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";    
-
+require_once('../include/init.php');
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 if (user_isloggedin())
 {
   # If the session was validated, we can assume that the cookie session_hash
   # is reliable
-  db_query("DELETE FROM session WHERE session_hash='".sane_cookie("session_hash")."'");
+  db_execute("DELETE FROM session WHERE session_hash=?",
+	     array($_COOKIE['session_hash']));
   session_delete_cookie('redirect_to_https');
   session_delete_cookie('session_hash');
   session_delete_cookie('session_uid');
 }
 
 session_redirect($GLOBALS['sys_home']);
-
-?>
-

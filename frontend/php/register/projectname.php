@@ -23,12 +23,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('../include/init.php');
+require_once('../include/exit.php');
+require_once('../include/account.php');
+require_once('../include/Group.class');
 
 session_require(array('isloggedin' => '1'));
-
-require('../include/account.php');
-require('../include/exit.php');
-require('../include/Group.class');
 
 extract(sane_import('post',
   array('insert_purpose', 'form_purpose', 'form_required_sw',

@@ -21,7 +21,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require_once('../include/pre.php');
+require_once('../include/init.php');
 require_once('../include/proj_email.php');
 
 # Skip admin rights check if we are dealing with the sys group

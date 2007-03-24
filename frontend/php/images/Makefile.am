@@ -1,22 +1,24 @@
-icons-stamp:
+stamp-icons:
 	for theme in *.theme mime_type; do \
-		cd $$theme ; \
-		for icon in *.orig.png; do \
-			if [ -e $$icon ]; then \
-				if [ -e `basename $$icon .orig.png`.png ]; then rm `basename $$icon .orig.png`.png; fi&& \
-				convert -resize 24x24 -background white -antialias $$icon `basename $$icon .orig.png`.png && convert -background white  $$icon  $$icon ; \
-			fi \
-		done && \
-		cd .. ;\
+	  ( \
+	    cd $$theme ; \
+	    for icon in *.orig.png; do \
+	      if [ -e $$icon ]; then \
+	        convert -resize 24x24 -background white -antialias $$icon `basename $$icon .orig.png`.png; \
+	      fi; \
+	    done \
+	  ) \
 	done
-	touch icons-stamp
+	touch stamp-icons
 
-all-local distdir-local: icons-stamp
+# Keep those separate for AM1.9 to recognize them:
+all-local: stamp-icons
+distdir-local: stamp-icons
 
 maintainer-clean-local:
 	-find -name "*.orig.png" | while read file; do \
 	  if [ -e $${file%.orig.png}.png ]; then \
-	    rm $${file%.orig.png}.png \
-          fi \
+	    rm $${file%.orig.png}.png; \
+          fi; \
         done
-	-rm -f icons-stamp
+	-rm -f stamp-icons

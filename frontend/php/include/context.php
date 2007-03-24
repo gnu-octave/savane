@@ -20,6 +20,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once(dirname(__FILE__).'/Group.class');
+
 # Guess the context of the current page
 function context_guess () 
 {

@@ -37,6 +37,7 @@ require_once(dirname(__FILE__).'/user.php');
 # title, helper to find out appropriate info depending on the context,
 # like title
 require_once(dirname(__FILE__).'/context.php');
+require_once(dirname(__FILE__).'/exit.php');
 
 # Default values, so they cannot be found undefined in the code
 $sys_name = "Change This Site Name with \$sys_name";
@@ -203,7 +204,7 @@ if (isset($GLOBALS['sys_unix_group_name']))
   $res = db_execute("SELECT group_id FROM groups WHERE unix_group_name=?",
 		    array($search_group));
   if (db_numrows($res) != 0)
-    $sys_group_id = db_result($res_grp,0,'group_id');
+    $sys_group_id = db_result($res, 0, 'group_id');
 }
 
 # determine if they're logged in

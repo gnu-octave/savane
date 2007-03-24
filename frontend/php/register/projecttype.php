@@ -24,8 +24,9 @@ $no_redirection=1;
 
 require_once('../include/init.php');
 require_once('../include/vars.php');
-session_require(array('isloggedin'=>'1'));
 require_once('../include/account.php');
+require_once('../include/exit.php');
+session_require(array('isloggedin'=>'1'));
 
 extract(sane_import('post',
   array('insert_license', 'rand_hash', 'form_license', 'form_license_other')));

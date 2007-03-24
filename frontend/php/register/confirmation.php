@@ -25,6 +25,8 @@
 define('ARTIFACT', 'task');
 $no_redirection=1;
 require_once('../include/init.php');
+require_once('../include/Group.class');
+require_once('../include/sendmail.php');
 
 session_require(array('isloggedin' => '1'));
 

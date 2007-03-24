@@ -24,7 +24,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require '../include/pre.php';
+require_once('../include/init.php');
 # not yet compliant, kind of messy: register_globals_off();
 
 extract(sane_import('all',

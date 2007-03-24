@@ -22,6 +22,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once('../include/sendmail.php');
 
 function send_new_project_email($group_id) 
 {

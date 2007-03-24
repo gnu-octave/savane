@@ -33,8 +33,8 @@ if ($update and $user_theme != "random" and $user_theme != "rotate")
     define('SV_THEME', addslashes($user_theme));
   }
 
-require "../../include/pre.php";
-require "../../include/timezones.php";
+require_once('../../include/init.php');
+require_once('../../include/timezones.php');
 
 register_globals_off();
 

@@ -30,6 +30,7 @@ $no_redirection=1;
 require_once('../include/init.php');
 require_once('../include/vars.php');
 require_once('../include/account.php');
+require_once('../include/Group.class');
 session_require(array('isloggedin' => '1'));
 
 extract(sane_import('post',

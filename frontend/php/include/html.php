@@ -23,7 +23,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require dirname(__FILE__).'/markup.php';
+require_once(dirname(__FILE__).'/markup.php');
+require_once(dirname(__FILE__).'/form.php');
 
 # display browsing/display options: should be on top of pages, after the
 # specific content/page description.

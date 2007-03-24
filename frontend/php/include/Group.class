@@ -24,6 +24,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once(dirname(__FILE__).'/Error.class');
 
 $PROJECT_OBJ=array();
 
@@ -34,7 +35,7 @@ function project_get_object($group_id)
 
   global $PROJECT_OBJ;
   if (empty($PROJECT_OBJ["_".$group_id."_"])) {
-    $PROJECT_OBJ["_".$group_id."_"]= new Project($group_id);
+    $PROJECT_OBJ["_".$group_id."_"]= new Group($group_id);
     return $PROJECT_OBJ["_".$group_id."_"];
   } else {
     return $PROJECT_OBJ["_".$group_id."_"];
