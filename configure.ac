@@ -91,7 +91,9 @@ autotools/m4/Makefile \
 backend/Makefile \
 backend/system-specific/Makefile \
 backend/system-specific/darwin/Makefile \
+etc/Makefile \
 frontend/Makefile \
+frontend/php/images/Makefile \
 lib/Makefile])
 AC_CONFIG_FILES([po/Makefile], [AM_POSTPROCESS_PO_MAKEFILE])
 
@@ -143,7 +145,7 @@ echo
 echo "Configuration directory: " `eval echo $SV_CONF`
 echo "Guessed HTTPd/PHP user (configuration file permissions): $GUESS_WWW_SERVER_USER"
 echo "Database name: $SV_DB_NAME"
-if [ ! -z "$SV_DB_OPTIONS" ]; then
+if test ! -z "$SV_DB_OPTIONS"; then
    echo "Database options: $SV_DB_OPTIONS"
 fi
 

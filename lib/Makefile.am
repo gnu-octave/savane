@@ -7,10 +7,9 @@ MANIFEST:
 install-data-local: MANIFEST
 	make -f Makefile.perl PREFIX=$(prefix) install
 
+CLEANFILES=Makefile.perl.old MANIFEST.bak Savane-*.tar.gz
 clean-local:
 	make -f Makefile.perl PREFIX=$(prefix) clean
-	-rm -f Makefile.perl.old MANIFEST.bak
-	-rm -f Savane-*.tar.gz
 
 all MANIFEST install-local clean-local: Makefile.perl
 Makefile.perl:

@@ -24,7 +24,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";  # Initial db and session library, opens session
+require_once('../include/init.php');  # Initial db and session library, opens session
 #session_require(array(isloggedin=>1));
 $HTML->header(array('title' => _("Step 1: Services and Requirements")));
 
@@ -39,5 +39,3 @@ print '</div>';
 print '</form>';
 
 $HTML->footer(array());
-?>
-

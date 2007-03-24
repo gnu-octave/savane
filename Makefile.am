@@ -6,7 +6,7 @@ AUTOMAKE_OPTIONS = gnits
 ACLOCAL_AMFLAGS = -I autotools/m4
 
 # The list of subdirectories containing Makefiles.
-SUBDIRS = backend frontend lib autotools/m4 po
+SUBDIRS = backend etc frontend lib autotools/m4 po
 
 # Additional files to be distributed.  $(shell) is not supported by
 # automake but works in this case, as long as one doesn't use '/' in
@@ -19,14 +19,13 @@ SUBDIRS = backend frontend lib autotools/m4 po
 # as they say and reference all files explicitely in EXTRA_DIST.
 EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
 	REQUIREMENTS INSTALL.verbose \
-	$(shell find debian etc devel doc update -type d -name ".svn" -prune \
-	          -o -type f ! -name "*~" -print)
+	$(shell find debian devel doc update -type d -name ".svn" -prune \
+			-o -type f ! -name "*~" -print)
 
 database:
-	$(SV_DB_CMD) $(SV_DB_OPTIONS) -e "create database $(SV_DB_NAME)"
-	for file in db/mysql/table_*.structure; do \
-		$(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < $$file ;\
-	done
-	for file in db/mysql/table_*.initvalues; do \
-		$(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME) < $$file ;\
-	done
+	( \
+	  echo "CREATE DATABASE $(SV_DB_NAME)"; \
+	  cat db/mysql/table_*.structure; \
+	  cat db/mysql/table_*.initvalues; \
+	) | $(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME)
+# TODO: create the siteadmin group here

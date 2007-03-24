@@ -24,7 +24,8 @@
 # (sys_incdir should have been secured in pre.php)
 $DNSBL = array();
 $DNSBL_INFOURL = array();
-require($GLOBALS['sys_incdir'].'/dnsbl.txt');
+if (file_exists($GLOBALS['sys_incdir'].'/dnsbl.txt'))
+     require_once($GLOBALS['sys_incdir'].'/dnsbl.txt');
 
 
 # Clever function that cleverly check who is posting data.

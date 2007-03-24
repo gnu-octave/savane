@@ -26,7 +26,7 @@ Header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 Header("Cache-Control: no-cache");
 Header("Cache-Control: must-revalidate");
 
-require_once('../include/pre.php');
+require_once('../include/init.php');
 require_once('../include/account.php');
 
 register_globals_off();

@@ -22,7 +22,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php"; 
+require_once('../include/init.php');
 session_require(array('isloggedin'=>'1'));
 $HTML->header(array('title'=>_("Step 2: Project Description and Dependencies")));
 

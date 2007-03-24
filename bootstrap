@@ -11,7 +11,7 @@ if [ "x$1" = xclean ]; then
     rm -f configure
     rm -rf autom4te.cache/
     # Generated or brought in by automake.
-    find -name "Makefile.in" | xargs rm
+    find -name "Makefile.in" | xargs -r rm
     rm -f autotools/install-sh
     rm -f autotools/missing
     exit;

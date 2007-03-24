@@ -23,7 +23,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "include/pre.php";
+require_once('include/init.php');
 register_globals_off();
 require_directory("people");
 require_directory("news");
@@ -34,18 +34,14 @@ require "include/features_boxes.php";
 # Do progressive little checks, to avoid creating to much extra load.
 # Not gettextized for now, already lot of more important strings to 
 # translate.
-if (!$GLOBALS['sys_unix_group_name'])
+if (empty($GLOBALS['sys_unix_group_name']))
 {
-  fb(_("Serious configuration problem: sys_unix_group_name is not set"), 1);
-  if (!$GLOBALS['sys_name'])
-    {
-      fb(_("Configuration problem: sys_name is not set"), 1); 
-    }
+  fb(_("Serious configuration problem: sys_unix_group_name is invalid."), 1);
 } 
 
 # Check whether the local admin group exists. This is useful only during
 # installation process.
-if ($conn && !$sys_group_id)
+if ($conn && empty($sys_group_id))
 {
   if (!user_isloggedin()) 
     {

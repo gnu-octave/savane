@@ -27,7 +27,7 @@
 # avoid pre.php looking for group_type info
 $no_redirection=1;
 
-require_once('../include/pre.php');
+require_once('../include/init.php');
 require_once('../include/vars.php');
 require_once('../include/account.php');
 session_require(array('isloggedin' => '1'));

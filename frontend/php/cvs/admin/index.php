@@ -20,8 +20,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require_once "../../include/pre.php";
-require_once "../../include/account.php";
+require_once('../../include/init.php');
+require_once('../../include/account.php');
 
 # get current information
 $res_grp = group_get_result($group_id);

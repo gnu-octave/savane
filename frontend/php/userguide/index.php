@@ -20,9 +20,10 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php"; 
-
+require_once('../include/init.php'); 
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 site_header(array());
 
@@ -42,5 +43,3 @@ if (!$file)
 print utils_read_file($GLOBALS['sys_www_topdir'].'/userguide/'.$file);
 
 $HTML->footer(array());
-
-?>

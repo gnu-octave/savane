@@ -20,15 +20,23 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+/**************************************************************
+       Set up proper use of UTF-8, even if the webserver does
+       not serve it by default
+**************************************************************/
+
+header("Content-Type: text/html; charset=utf-8");
+
+
 # database abstraction
 require_once(dirname(__FILE__).'/database.php');
 # security library
 require_once(dirname(__FILE__).'/session.php');
 # user functions like get_name, logged_in, etc
-require_once dirname(__FILE__).'/user.php';
+require_once(dirname(__FILE__).'/user.php');
 # title, helper to find out appropriate info depending on the context,
 # like title
-require_once dirname(__FILE__).'/context.php';
+require_once(dirname(__FILE__).'/context.php');
 
 # Default values, so they cannot be found undefined in the code
 $sys_name = "Change This Site Name with \$sys_name";
@@ -40,31 +48,66 @@ $stone_age_menu = false;
 $sys_spamcheck_spamassassin = false;
 $sys_use_krb5 = false;
 $sys_upload_max = 512;
+
+$sys_dbhost = 'localhost';
+$sys_dbname = 'savane';
+$sys_dbuser = 'root';
+
+$sys_incdir = '/etc/savane/content';
+$sys_themedefault = 'Emeraud';
+
+$sys_default_domain = $_SERVER['SERVER_NAME'];
+$sys_unix_group_name = 'siteadmin';
+
+#print "<pre>";
+#print_r($_SERVER);
+#print "</pre>";
+
+#$sys_mail_domain = $sys_default_domain;
+#$sys_mail_admin = "root";
+#$sys_replyto = "NO-REPLY.INVALID-ADDRESS";
+
 # autoconf-based:
-require_once dirname(__FILE__).'/ac_config.php';
+require_once(dirname(__FILE__).'/ac_config.php');
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))
-{ require getenv('SAVANE_CONF').'/.savane.conf.php'; }
+{ require_once(getenv('SAVANE_CONF').'/.savane.conf.php'); }
 elseif (getenv('SV_LOCAL_INC_PREFIX'))
-{ require getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'; }
+{ require_once(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'); }
 else
 {
   # go back to default location
-  require '/etc/savane/.savane.conf.php';
+  require_once('/etc/savane/.savane.conf.php');
 }
 
-if ($GLOBALS['sys_url_topdir'] != '/')
+// Detect where we are, unless it's explicitely specified in the
+// configuration file:
+if (empty($sys_www_topdir))
+{
+  $sys_www_topdir = getcwd();
+  $sys_url_topdir = dirname($_SERVER['SCRIPT_NAME']);
+  while ($sys_www_topdir != '/' && !file_exists("$sys_www_topdir/.topdir"))
+    {
+      // cd ..
+      $sys_www_topdir = dirname($sys_www_topdir);
+      $sys_url_topdir = dirname($sys_url_topdir);
+    }
+  if (!file_exists("$sys_www_topdir/.topdir"))
+    die("Could not find Savane's top directory (missing .topdir file)");
+}
+
+// Add a trailing slash
+$sys_home = $GLOBALS['sys_url_topdir'];
+if (!preg_match('|/$|', $GLOBALS['sys_url_topdir']))
 {
   $sys_home = $GLOBALS['sys_url_topdir'].'/';
 }
-else
-{
-  $sys_home = $GLOBALS['sys_url_topdir'];
-}
 
-# Defines the https url, if available -- no path is added since this
-# variable can be used with REQUEST_URI added.
+// Defines the https url, if available -- no path is added since this
+// variable can be used with REQUEST_URI added. It's used when we need
+// to point a https URL (cannot be expressed using a http-relative
+// path) and in e-mails.
 if (isset($GLOBALS['sys_https_host']))
 {
   $sys_https_url = 'https://'.$GLOBALS['sys_https_host'];
@@ -140,18 +183,9 @@ function get_module_include_dir ($phpself, $true_artifact=0, $true_dir=0)
 
 
 # HTML layout class, may be overriden by the Theme class
-require dirname(__FILE__).'/Layout.class';
+require_once(dirname(__FILE__).'/Layout.class');
 
 $HTML = new Layout();
-
-
-
-/**************************************************************
-       Set up proper use of UTF-8, even if the webserver does
-       not serve it by default
-**************************************************************/
-
-header("Content-Type: text/html; charset=utf-8");
 
 
 /**************************************************************
@@ -166,8 +200,10 @@ db_connect();
 if (isset($GLOBALS['sys_unix_group_name']))
 {
   $search_group = $GLOBALS['sys_unix_group_name'];
-  $res_grp = db_query("SELECT group_id FROM groups WHERE unix_group_name='$search_group'");
-  $sys_group_id = db_result($res_grp,0,'group_id');
+  $res = db_execute("SELECT group_id FROM groups WHERE unix_group_name=?",
+		    array($search_group));
+  if (db_numrows($res) != 0)
+    $sys_group_id = db_result($res_grp,0,'group_id');
 }
 
 # determine if they're logged in

@@ -230,7 +230,6 @@ class Layout extends Error
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
   <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/'.$theme.'.css" />
 ';
-    
     # We unfortunately have to maintain some browser-specifics hacks, since
     # MSIE is total crap in regards to standards. This should be an exception.
     # We should not implement non-standard things, we can only correct things

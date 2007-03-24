@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# Find identical files, so we can symlink them and gain space
 use Data::Dumper;
 use strict;
 

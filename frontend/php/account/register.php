@@ -271,7 +271,6 @@ else
   print form_header($_SERVER['PHP_SELF'], $form_id);
   print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
   print form_input("text", "form_loginname", $form_loginname);
-  print '<br /><span class="text">'.sprintf(_("If you have a %s account use that account name - Note that account names cannot consist of only numbers. At least one letter must be included."),$GLOBALS['sys_mail_domain']).'</span></p>';
 
   print '<p><span class="preinput">'._("Password:").'</span><br />&nbsp;&nbsp;';
   print form_input("password", "form_pw", $form_pw);

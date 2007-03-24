@@ -29,10 +29,3 @@ $DEVEL_STATUS = array();
 
 # sys_incdir is normally safe (see pre.php)
 require($GLOBALS['sys_incdir'].'/hashes.txt');
-
-$SHELLS = array();
-$SHELLS[1] = '/bin/bash';
-$SHELLS[2] = '/bin/sh';
-$SHELLS[3] = '/bin/ksh';
-
-?>
