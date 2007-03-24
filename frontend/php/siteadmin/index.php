@@ -22,12 +22,13 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+require_once('../include/init.php');
+register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 site_admin_header(array('title'=>_("Home"),'context'=>'admhome'));
-
-register_globals_off();
-$func = sane_all("func");
+extract(sane_import('request', array('func')));
 
 $even = 0;
 $odd = 1;
@@ -154,5 +155,3 @@ if (!$func)
 
 
 site_admin_footer(array());
-
-?>

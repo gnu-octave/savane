@@ -27,8 +27,9 @@ use strict;
 use Cwd;
 use File::Find::Rule;
 use Getopt::Long;
+use File::Basename;
 
-my $path = getcwd."/../frontend/php";
+my $path = dirname($0).'/../frontend/php';
 my $getopt;
 
 # get options

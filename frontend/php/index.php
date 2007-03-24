@@ -24,11 +24,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('include/init.php');
-register_globals_off();
 require_directory("people");
 require_directory("news");
 require_directory("stats");
-require "include/features_boxes.php";
+require_once('include/features_boxes.php');
+register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 # Check if the PHP Frontend is acceptably configured.
 # Do progressive little checks, to avoid creating to much extra load.
@@ -95,5 +97,3 @@ print '
 ';
 
 $HTML->footer(array());
-
-?>

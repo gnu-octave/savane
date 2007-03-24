@@ -23,9 +23,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";
-site_admin_header(array('title'=>_("Check Last Logins"),'context'=>'admhome'));
+require_once('../include/init.php');
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
+site_admin_header(array('title'=>_("Check Last Logins"),'context'=>'admhome'));
 
 $res_logins = db_query("SELECT session.user_id AS user_id,"
 	. "session.ip_addr AS ip_addr,"
@@ -47,6 +49,7 @@ if (db_numrows($res_logins) < 1) {
 	$title_arr[]=_("Date");
 	print html_build_list_table_top ($title_arr);
 
+	$inc=0;
 	while ($row_logins = db_fetch_array($res_logins)) {
 		print '<tr class="'.utils_get_alt_row_color($inc++).'">';
 		print "<td>$row_logins[user_name]</td>";
@@ -58,5 +61,3 @@ if (db_numrows($res_logins) < 1) {
 	print '</table>';
 }
 $HTML->footer(array());
-
-?>

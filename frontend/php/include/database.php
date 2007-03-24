@@ -73,7 +73,7 @@ function db_query_escape()
     $args[$i] = mysql_real_escape_string($args[$i]);
 
   $query = call_user_func_array('sprintf', $args);
-  return db_query($query);
+  return mysql_query($query);
 }
 
 // Substitute '?' with one of the values in the $inputarr array,
@@ -172,7 +172,7 @@ function db_execute($sql, $inputarr=null)
 #  print "<pre>";
 #  print_r($expanded_sql);
 #  print "</pre>";
-  return db_query($expanded_sql);
+  return mysql_query($expanded_sql);
 }
 
 function db_query($qstring,$print=0) 

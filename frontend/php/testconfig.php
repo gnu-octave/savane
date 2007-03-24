@@ -2,6 +2,8 @@
 
 if (function_exists("register_globals_off"))
 { register_globals_off(); }
+#input_is_safe();
+#mysql_is_safe();
 
 function return_bytes($val) 
 {
@@ -40,38 +42,34 @@ print "<body>\n";
 
 
 print "<h1>Basic PHP pre-tests for Savane installation</h1>\n";
-if (!$inside_siteadmin)
+if (empty($inside_siteadmin))
 {
   print "<p>This page should help you to check whether your installation is properly configured. Once your installation is running, you should remove this file or restrict its access, since it could give details about your setup to anybody.</p>";
 }
  
 #==============================================================================
-print "<h2>Base PHP configuration:</h2>\n";
+print "<h2>Base PHP configuration</h2>\n";
 
 # cf. http://php.net/manual/en/ini.php
 $phptags = array (
-	'register_globals' => 1,
+	'register_globals' => 0,
 	'file_uploads' => 1,
-	'magic_quotes_gpc' => 1,  # not good for perfs, but need until we are
-	                          # 100% sure that all forms are clean (using
-				  # sane_())
-#	'arg_separator.output' => '&amp;', # we don't use it, no need to worry the user
+	'magic_quotes_gpc' => 0,
 );
 
-# http://php.net/manual/en/ini.core.php#ini.register-long-arrays:
-# "This directive became available in PHP 5.0.0 and was dropped in PHP 6.0.0."
-if (ereg('^5', phpversion())) {
-  $phptags['register_long_arrays'] = 1;
-}
+// Get all php.ini values:
 $all_inis = ini_get_all();
+// Define missing constant to interpret the 'access' field
 define('PHP_INI_SYSTEM', 4);
+// Cf. http://www.php.net/manual/en/ini.core.php
 
 print "<table border=\"1\" summary=\"PHP configuration\">\n";
 print "<tr><th>PHP Tag name</th><th>Local value</th><th>Suggested/Required value</th></tr>\n";
-unset($unset);
+$unset = 0;
 ksort($phptags);
 foreach ( $phptags as $tag => $goodval ) {
-  if (htmlentities(ini_get($tag)) == htmlentities($goodval))
+  if ((htmlentities(ini_get($tag)) == htmlentities($goodval))
+      or ($goodval==0 and !(bool)ini_get($tag)))
     {
       # OK
       printf ("<tr><td>%s</td><td>%s</td><td>%s</td></tr>\n",$tag,htmlentities(ini_get($tag)),htmlentities($goodval));
@@ -127,7 +125,7 @@ if ($unset)
 
 
 #==============================================================================
-print "<h2>PHP functions:</h2>\n";
+print "<h2>PHP functions</h2>\n";
 
 $phpfunctions = array (
 	'mysql_connect' => 'You must install/configure php-mysql ! [REQUIRED]',
@@ -146,7 +144,7 @@ foreach ( $phpfunctions as $func => $comment ) {
 }
 
 #==============================================================================
-print "<h2>Apache environment vars:</h2>\n";
+print "<h2>Apache environment vars</h2>\n";
 
 $configfile = '/etc/savane/';
 
@@ -183,64 +181,66 @@ else
   include $configfile;
   $variables = array (
 	# Name  / required
-		      'sys_default_domain' => 1,
-		      'sys_https_host' => 0,
-		      'sys_dbhost' => 1,
-		      'sys_dbname' => 1,
-		      'sys_dbuser' => 1,
-		      'sys_dbpasswd' => 1,
-		      'sys_www_topdir' => 1,
-		      'sys_url_topdir' => 1,
-		      'sys_incdir' => 1,
-		      'sys_name' => 1,
-		      'sys_unix_group_name' => 1,
-		      'sys_themedefault' => 1,
-		      'sys_mail_domain' => 1,
-		      'sys_mail_admin' => 1,
-		      'sys_mail_replyto' => 1,
-		      'sys_upload_max' => 0,
+		      'sys_default_domain',
+		      'sys_https_host',
+		      'sys_dbhost',
+		      'sys_dbname',
+		      'sys_dbuser',
+		      'sys_dbpasswd',
+		      'sys_www_topdir',
+		      'sys_url_topdir',
+		      'sys_incdir',
+		      'sys_name',
+		      'sys_unix_group_name',
+		      'sys_themedefault',
+		      'sys_mail_domain',
+		      'sys_mail_admin',
+		      'sys_mail_replyto',
+		      'sys_upload_max',
 		      );
 
   print "<table border=\"1\">\n";
-  print "<tr><th>Conf variable</th><th>Current value</th><th>Is required?</th></tr>\n";
+  print "<tr><th>Conf variable</th><th>Current value</th></tr>\n";
   unset($unset);
-  foreach ( $variables as $tag => $required ) {
-    if (!$required || htmlentities($GLOBALS[$tag]))
-      {
-        # Is set
-	$value = $GLOBALS[$tag];
-	if ($tag == "sys_dbpasswd")
-	  { $value = "**************"; }
-
-	printf ("<tr><td>%s</td><td>%s</td><td>%s</td></tr>\n",$tag,htmlentities($value),$required);
-      }
+  foreach ($variables as $tag) {
+    if (isset($GLOBALS[$tag]))
+      $value = $GLOBALS[$tag];
     else
-      {
-        # Is not set, and should be set
-	printf ("<tr><td>%s</td><td class=\"unset\">%s</td><td>%s</td></tr>\n",$tag," ",$required);
-      }
+      $value = '';
+    // Is set
+    if ($tag == "sys_dbpasswd")
+      $value = "**************";
+    
+    printf ("<tr><td>%s</td><td>%s</td></tr>\n", $tag, htmlentities($value));
   }
 
   print "</table>\n";
+  print "Savane uses safe defaults values when variables are not set in the
+configuration file.";
 }
 
 
 #=============================================================================
-print "<h2>Securing PHP configuration:</h2>\n";
+print "<h2>Optional PHP configuration</h2>\n";
 
-print "The following is not required to run Savane but could enhance security of your production server. Some of these makes harder to debug an installation and, as such, should be avoided on a test installation, or if your installation is not working.";
+print "The following is not required to run Savane but could enhance security
+of your production server. Displaying errors is recommended: they may
+annoy the user with warnings but allow you to spot and report
+potentially harmful bugs (concerns about \"security\" or information
+leak are void since this is free software and the source code is
+available to all).";
 
 $phptags = array (
-	'display_errors' => '0',
+	'display_errors' => '1',
 	'log_errors' => '1',
-	'error_reporting' => E_COMPILE_ERROR|E_ERROR|E_CORE_ERROR|E_PARSE,	
+	'error_reporting' => E_ALL|E_STRICT,
 	'allow_url_fopen' => '0',
 	'disable_functions' => 'exec, passthru, popen, shell_exec, system',
 );
 
 print "<table border=\"1\">\n";
 print "<tr><th>PHP Tag name</th><th>Local value</th><th>Suggested/Required value</th></tr>\n";
-unset($unset);
+$unset = 0;
 ksort($phptags);
 foreach ( $phptags as $tag => $goodval ) {
   if (htmlentities(ini_get($tag)) == htmlentities($goodval))

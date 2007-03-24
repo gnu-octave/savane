@@ -22,19 +22,15 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
-
-site_admin_header(array('title'=>_("Home"),'context'=>'admhome'));
-
+require_once('../include/init.php');
 register_globals_off();
-
-print '<p>'.sprintf(_("The currently effective configuration file is %s."), getenv('SAVANE_CONF').'/savannah.conf').'</p>';
+#input_is_safe();
+#mysql_is_safe();
+site_admin_header(array('title'=>_("Home"),'context'=>'admhome'));
 
 # Include the /testconfig.php that can be run on 127.0.0.1
 # when Savane is not yet running itself.
 $inside_siteadmin = true;
-include "../testconfig.php";
+include('../testconfig.php');
 
 site_admin_footer(array());
-
-?>

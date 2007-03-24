@@ -105,6 +105,29 @@ backend/*.pl -> backend/*.in
 (ala cvs/contrib)
 
 
+- Tests:
+
+Instanciate a private HTTP and MySQL daemons (eg. ports 50080 + MySQL
+socket, and perform an installation on them). Configuration files are
+available in devel/tests/minimal_configs/
+
+
+- Savane configuration:
+
+In order to simplify the installation, init.php defines safe defaults
+or try to detect pertinent values (e.g. the Savane www root directory
+and URL). Currently only the mail-related options are still necessary
+(defaults to localhost?). The notion of 'required' option falls
+appart.
+
+On the backend side, a few essential questions are now specified via
+autoconf (e.g. database name). I suggest dropping the tedious
+interactive process and ask the user to edit the configuration file in
+case the default values are not satisfying (similar to OpenSSH or
+Apache2's configuration files).
+
+
+
 ---------- TODO ----------
 
 
@@ -117,6 +140,3 @@ clutters the description and should more generally be ommitted, in
 case the MySQL maintainers decide to change that default for a better
 one. There was also an issue with using different versions of MySQL
 (bug7926@gna).
-
-- Tests: instance a private HTTP and MySQL daemons (eg. ports 10080
-and 13306, and perform an installation on them).

@@ -485,7 +485,7 @@ If your site runs checks with SpamAssassin, *flagged spams will be used to impro
   else
     {
       # redirect to the trigger page
-      session_redirect($GLOBALS['sys_home']."admin/triggercreation.php?group_id=".$group_id);
+      session_redirect($GLOBALS['sys_home']."siteadmin/triggercreation.php?group_id=".$group_id);
     }
 
 }

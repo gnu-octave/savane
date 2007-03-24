@@ -21,8 +21,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";
-require  $GLOBALS['sys_www_topdir']."/include/vars.php";
+require_once('../include/init.php');
+require_once('../include/vars.php');
 require_directory("project");
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
