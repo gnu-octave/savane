@@ -8,24 +8,18 @@ ACLOCAL_AMFLAGS = -I autotools/m4
 # The list of subdirectories containing Makefiles.
 SUBDIRS = backend etc frontend lib autotools/m4 po
 
-# Additional files to be distributed.  $(shell) is not supported by
-# automake but works in this case, as long as one doesn't use '/' in
-# the expression (otherwise it's interpreted as a directory
-# name). Beware that including 'frontend/', a large directory,
-# produces a "Argument list too long" shell error). I tried using the
-# list of directories directly but then automake includes everything
-# recursively - including the .svn files that we carefully excluded,
-# as documented in (automake-1.7.info)Dist. Alternatively we could do
-# as they say and reference all files explicitely in EXTRA_DIST.
 EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
 	REQUIREMENTS INSTALL.verbose \
-	$(shell find debian devel doc update -type d -name ".svn" -prune \
-			-o -type f ! -name "*~" -print)
+	debian/ devel/ doc/ update/
 
 database:
 	( \
-	  echo "CREATE DATABASE $(SV_DB_NAME)"; \
+	  echo "CREATE DATABASE $(SV_DB_NAME);"; \
+	  echo "USE $(SV_DB_NAME);"; \
 	  cat db/mysql/table_*.structure; \
 	  cat db/mysql/table_*.initvalues; \
-	) | $(SV_DB_CMD) $(SV_DB_OPTIONS) $(SV_DB_NAME)
+	) | $(SV_DB_CMD) $(SV_DB_OPTIONS)
 # TODO: create the siteadmin group here
+
+dist-hook:
+	find $(distdir) -type d -name '.svn' -o -name '*~' | xargs -r rm -rf

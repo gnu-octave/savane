@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: savane-dev@gna.org\n"
-"POT-Creation-Date: 2007-03-18 16:25+0100\n"
+"POT-Creation-Date: 2007-03-24 17:43+0100\n"
 "PO-Revision-Date: 2006-09-29 11:22+0200\n"
 "Last-Translator: Ajuntament de Santa Coloma de Gramenet <catala-savane@grame."
 "net>\n"
@@ -59,7 +59,7 @@ msgid "Other Comments"
 msgstr "Altres comentaris"
 
 #: frontend/php/register/basicinfo.php:95
-#: frontend/php/register/projectname.php:77
+#: frontend/php/register/projectname.php:78
 msgid "Step 3: Project Name"
 msgstr "Pas 3: Nom del projecte"
 
@@ -72,7 +72,7 @@ msgid "Some required fields were left empty. Use the back button."
 msgstr "Alguns camps obligatoris no s'han omplert. Feu clic al botó Endarrere."
 
 #: frontend/php/register/license.php:76
-#: frontend/php/register/projectname.php:124
+#: frontend/php/register/projectname.php:125
 msgid "Step 4: License"
 msgstr "Pas 4: Llicència"
 
@@ -138,23 +138,23 @@ msgstr ""
 "fer clic en l'enllaç \"Administració de tipus de grups\" de la secció "
 "Administració del menú esquerre."
 
-#: frontend/php/register/projectname.php:90
+#: frontend/php/register/projectname.php:91
 msgid "Please complete both fields"
 msgstr "Ompliu els dos camps"
 
-#: frontend/php/register/projectname.php:108
-#: frontend/php/register/projectname.php:116
+#: frontend/php/register/projectname.php:109
+#: frontend/php/register/projectname.php:117
 msgid "Full Name"
 msgstr "Nom complet"
 
-#: frontend/php/register/projectname.php:111
-#: frontend/php/register/projectname.php:119
+#: frontend/php/register/projectname.php:112
+#: frontend/php/register/projectname.php:120
 #: frontend/php/siteadmin/groupedit.php:124
 #: frontend/php/siteadmin/grouplist.php:150
 msgid "System Name"
 msgstr "Nom del sistema"
 
-#: frontend/php/register/projectname.php:128
+#: frontend/php/register/projectname.php:129
 msgid "Do not click back button after this point (unless asked to)."
 msgstr ""
 "No feu clic al botó Endarrere a partir d'aquest punt (a no ser que se us "
@@ -1719,7 +1719,7 @@ msgstr "Adreça:"
 #: frontend/php/include/trackers_run/detail-sober.php:52
 #: frontend/php/include/trackers_run/detail-sober.php:78
 #: frontend/php/include/trackers/data.php:1455
-#: frontend/php/include/pre.php:348 frontend/php/include/init.php:240
+#: frontend/php/include/init.php:276 frontend/php/include/pre.php:348
 msgid "Item not found"
 msgstr "No s'ha trobat l'element"
 
@@ -2110,6 +2110,41 @@ msgstr "No hi ha cap paquet/branca o versió en línia per a %s"
 #: frontend/php/files/add.php:156
 msgid "You do not have the required privileges to access this page"
 msgstr "No teniu els privilegis necessaris per accedir a aquesta pàgina"
+
+#: frontend/php/sendmessage.php:46
+msgid "That user does not exist"
+msgstr "Aquest usuari no existeix"
+
+#: frontend/php/sendmessage.php:67
+msgid "Message Sent"
+msgstr "Missatge enviat"
+
+#: frontend/php/sendmessage.php:77
+msgid "Send a message"
+msgstr "Envia un missatge"
+
+#: frontend/php/404.php:32
+msgid "Requested Page not Found (Error 404)"
+msgstr "No s'ha trobat la pàgina sol·licitada (error 404)"
+
+#: frontend/php/404.php:35
+#, php-format
+msgid "The web page you are trying to access doesn't exist on %s."
+msgstr "La pàgina web a la qual voleu accedir no existeix a %s."
+
+#: frontend/php/404.php:36
+#, php-format
+msgid ""
+"If you think that there's a broken link on %s that must be repaired, %sfile "
+"a support request%s, mentioning the URL you tried to access (%s)."
+msgstr ""
+"Si creieu que hi ha un enllaç trencat a %s que s'ha d'arreglar, %senvieu una "
+"sol·licitud de suport%s indicant-hi l'URL al qual heu intentat accedir (%s)."
+
+#: frontend/php/404.php:42 frontend/php/404-export.php:43
+#, php-format
+msgid "Otherwise, you can return to the %s%s main page%s."
+msgstr "En cas contrari, torneu a la %spàgina principal de %s%s."
 
 #: frontend/php/search/index.php:37
 msgid "Enter your search words above."
@@ -2679,7 +2714,7 @@ msgstr "Nom d'inici de sessió:"
 #: frontend/php/project/admin/squadadmin.php:183
 #: frontend/php/project/admin/squadadmin.php:284
 #: frontend/php/include/user_home.php:135
-#: frontend/php/account/register.php:284
+#: frontend/php/account/register.php:283
 msgid "Real Name:"
 msgstr "Nom:"
 
@@ -6677,7 +6712,7 @@ msgid "Reply"
 msgstr "Respon"
 
 #: frontend/php/include/news/forum.php:156
-#: frontend/php/include/project_home.php:176 frontend/php/index.php:93
+#: frontend/php/include/project_home.php:176 frontend/php/index.php:89
 msgid "Latest News"
 msgstr "Últimes notícies"
 
@@ -7923,7 +7958,7 @@ msgstr ""
 msgid "Administer"
 msgstr "Administració:"
 
-#: frontend/php/include/dnsbl.php:70
+#: frontend/php/include/dnsbl.php:71
 #, php-format
 msgid "Your IP address is blacklisted %s"
 msgstr ""
@@ -8437,10 +8472,6 @@ msgstr "Les meves adreces d'interès"
 msgid "My Incoming Items"
 msgstr "Els meus elements nous"
 
-#: frontend/php/include/Layout.class:313
-msgid "Back to the top"
-msgstr "Torna al començament"
-
 #: frontend/php/include/sitemenu.php:52 frontend/php/include/sitemenu.php:56
 #, php-format
 msgid "Back to %s Homepage"
@@ -8641,6 +8672,10 @@ msgstr "Nou usuar"
 #: frontend/php/include/sitemenu.php:481
 msgid "Account registration form"
 msgstr "Formulari de registre de compte"
+
+#: frontend/php/include/Layout.class:312
+msgid "Back to the top"
+msgstr "Torna al començament"
 
 #: frontend/php/include/sendmail.php:151
 #, php-format
@@ -8933,6 +8968,22 @@ msgstr "La més alta"
 msgid "Error updating database"
 msgstr "Error en actualitzar la base de dades"
 
+#: frontend/php/include/init.php:337 frontend/php/include/pre.php:409
+msgid "Project not found"
+msgstr "No s'ha trobat el projecte"
+
+#: frontend/php/include/init.php:349 frontend/php/include/pre.php:421
+msgid "This project is in maintenance mode"
+msgstr "Aquest projecte es troba en mode de manteniment"
+
+#: frontend/php/include/init.php:353 frontend/php/include/pre.php:425
+msgid "Note: this project is in maintenance mode"
+msgstr "Nota: Aquest projecte es troba en mode de manteniment"
+
+#: frontend/php/include/init.php:358 frontend/php/include/pre.php:430
+msgid "This project is not in active state"
+msgstr "Aquest projecte no està actiu"
+
 #: frontend/php/include/form.php:44
 msgid "System error while creating the form, report it to admins"
 msgstr ""
@@ -9069,22 +9120,6 @@ msgstr "%s/%s"
 msgid "The total of results is zero."
 msgstr "El total de resultats és zero."
 
-#: frontend/php/include/pre.php:409 frontend/php/include/init.php:301
-msgid "Project not found"
-msgstr "No s'ha trobat el projecte"
-
-#: frontend/php/include/pre.php:421 frontend/php/include/init.php:313
-msgid "This project is in maintenance mode"
-msgstr "Aquest projecte es troba en mode de manteniment"
-
-#: frontend/php/include/pre.php:425 frontend/php/include/init.php:317
-msgid "Note: this project is in maintenance mode"
-msgstr "Nota: Aquest projecte es troba en mode de manteniment"
-
-#: frontend/php/include/pre.php:430 frontend/php/include/init.php:322
-msgid "This project is not in active state"
-msgstr "Aquest projecte no està actiu"
-
 #: frontend/php/include/user_home.php:35
 #, php-format
 msgid "%s Profile"
@@ -9122,7 +9157,7 @@ msgid "Login Name:"
 msgstr "Nom d'inici de sessió:"
 
 #: frontend/php/include/user_home.php:151
-#: frontend/php/account/register.php:287
+#: frontend/php/account/register.php:286
 msgid "Email Address:"
 msgstr "Adreça de correu electrònic:"
 
@@ -9452,7 +9487,7 @@ msgstr "La confirmació no és vàlida."
 msgid "Lost Password Login"
 msgstr "Regeneració de contrasenya"
 
-#: frontend/php/account/lostlogin.php:54 frontend/php/index.php:76
+#: frontend/php/account/lostlogin.php:54 frontend/php/index.php:72
 msgid "Welcome"
 msgstr "Benvingut"
 
@@ -9496,7 +9531,7 @@ msgid "In order to complete your registration, visit the following url:"
 msgstr "Per finalitzar el registre, visiteu aquest URL:"
 
 #: frontend/php/account/pending-resend.php:44
-#: frontend/php/account/register.php:237 frontend/php/account/first.php:37
+#: frontend/php/account/register.php:237 frontend/php/account/first.php:39
 msgid "Enjoy the site"
 msgstr "Gaudiu d'aquest lloc"
 
@@ -9729,24 +9764,15 @@ msgstr ""
 msgid "User account registration"
 msgstr "Registre del compte d'usuari"
 
-#: frontend/php/account/register.php:274
-#, php-format
-msgid ""
-"If you have a %s account use that account name - Note that account names "
-"cannot consist of only numbers. At least one letter must be included."
-msgstr ""
-"Si teniu un compte de %s, utilitzeu-ne el nom. No utilitzeu noms de compte "
-"que només continguin xifres, com a mínim cal incloure una lletra."
-
-#: frontend/php/account/register.php:276 frontend/php/account/login.php:221
+#: frontend/php/account/register.php:275 frontend/php/account/login.php:221
 msgid "Password:"
 msgstr "Contrasenya:"
 
-#: frontend/php/account/register.php:280
+#: frontend/php/account/register.php:279
 msgid "Re-type Password:"
 msgstr "Torneu a escriure la contrasenya:"
 
-#: frontend/php/account/register.php:289
+#: frontend/php/account/register.php:288
 msgid "This email address will be verified before account activation."
 msgstr ""
 "Aquesta adreça de correu electrònic es verificarà abans que s'activi el "
@@ -9795,17 +9821,17 @@ msgid "If you have questions regarding your deletion, please email %s."
 msgstr ""
 "Si teniu preguntes sobre la supressió, envieu un correu electrònic a %s."
 
-#: frontend/php/account/first.php:28
+#: frontend/php/account/first.php:30
 #, php-format
 msgid "Welcome to %s"
 msgstr "Benvingut a %s"
 
-#: frontend/php/account/first.php:30
+#: frontend/php/account/first.php:32
 #, php-format
 msgid "You are now a registered user on %s."
 msgstr "Sou un usuari registrat a %s."
 
-#: frontend/php/account/first.php:32
+#: frontend/php/account/first.php:34
 msgid ""
 "As a registered user, you can participate fully in the activities on the "
 "site."
@@ -9813,7 +9839,7 @@ msgstr ""
 "Com a usuari registrat, podeu participar en totes les activitats d'aquest "
 "lloc."
 
-#: frontend/php/account/first.php:33
+#: frontend/php/account/first.php:35
 #, php-format
 msgid ""
 "You may now post items to issue trackers in %s, sign on as a project member, "
@@ -9822,7 +9848,7 @@ msgstr ""
 "Ara ja podeu enviar elements als sistemes de seguiment de %s, registrar-vos "
 "com a membres del projecte o iniciar el vostre propi projecte."
 
-#: frontend/php/account/first.php:35
+#: frontend/php/account/first.php:37
 #, php-format
 msgid ""
 "You should take some time to read %sthe Savane User Guide%s so that you may "
@@ -10192,50 +10218,12 @@ msgstr "Els colors més populars són: %s."
 msgid "No users yet."
 msgstr ""
 
-#: frontend/php/sendmessage.php:46
-msgid "That user does not exist"
-msgstr "Aquest usuari no existeix"
-
-#: frontend/php/sendmessage.php:67
-msgid "Message Sent"
-msgstr "Missatge enviat"
-
-#: frontend/php/sendmessage.php:77
-msgid "Send a message"
-msgstr "Envia un missatge"
-
-#: frontend/php/404.php:32
-msgid "Requested Page not Found (Error 404)"
-msgstr "No s'ha trobat la pàgina sol·licitada (error 404)"
-
-#: frontend/php/404.php:35
-#, php-format
-msgid "The web page you are trying to access doesn't exist on %s."
-msgstr "La pàgina web a la qual voleu accedir no existeix a %s."
-
-#: frontend/php/404.php:36
-#, php-format
-msgid ""
-"If you think that there's a broken link on %s that must be repaired, %sfile "
-"a support request%s, mentioning the URL you tried to access (%s)."
-msgstr ""
-"Si creieu que hi ha un enllaç trencat a %s que s'ha d'arreglar, %senvieu una "
-"sol·licitud de suport%s indicant-hi l'URL al qual heu intentat accedir (%s)."
-
-#: frontend/php/404.php:42 frontend/php/404-export.php:43
-#, php-format
-msgid "Otherwise, you can return to the %s%s main page%s."
-msgstr "En cas contrari, torneu a la %spàgina principal de %s%s."
-
 #: frontend/php/index.php:39
-msgid "Serious configuration problem: sys_unix_group_name is not set"
+#, fuzzy
+msgid "Serious configuration problem: sys_unix_group_name is invalid."
 msgstr "Problema greu de configuració: sys_unix_group_name no està establert"
 
-#: frontend/php/index.php:42
-msgid "Configuration problem: sys_name is not set"
-msgstr "Problema de configuració: sys_name no està establert"
-
-#: frontend/php/index.php:58
+#: frontend/php/index.php:54
 #, php-format
 msgid ""
 "Installation incomplete: while the connection to the SQL server is ok, the "
@@ -10246,7 +10234,7 @@ msgstr ""
 "no s'ha trobat la base de dades '%s'. Creeu-la d'acord amb la documentació "
 "subministrada amb el paquet de Savane."
 
-#: frontend/php/index.php:63
+#: frontend/php/index.php:59
 msgid ""
 "Installation incomplete: you must now create for yourself a user account. "
 "Once it is done, you will have to login and register the local "
@@ -10255,7 +10243,7 @@ msgstr ""
 "Instal·lació incompleta: creeu un compte d'usuari. Després, inicieu una "
 "sessió i registreu el projecte d'administració local."
 
-#: frontend/php/index.php:69
+#: frontend/php/index.php:65
 msgid ""
 "Installation incomplete: you must now register the local administration "
 "project, select \"Register New Project\" in the left menu"
@@ -10263,7 +10251,7 @@ msgstr ""
 "Instal·lació incompleta: heu de registrar el projecte d'administració local. "
 "Per fer-ho, seleccioneu \"Registra un nou projecte\" al menú de l'esquerra."
 
-#: frontend/php/index.php:73
+#: frontend/php/index.php:69
 #, php-format
 msgid "By the way, have you checked the setup of your web server at %s?"
 msgstr "Heu comprovat la configuració del servidor web a %s?"
@@ -10287,6 +10275,16 @@ msgstr ""
 "Probablement no s'hagi generat encara o sigui obsolet. Si creieu que hi ha "
 "un enllaç trencat a %s que s'ha d'arreglar, %senvieu una sol·licitud de "
 "suport%s indicant-hi l'URL al qual heu intentat accedir (%s)."
+
+#~ msgid ""
+#~ "If you have a %s account use that account name - Note that account names "
+#~ "cannot consist of only numbers. At least one letter must be included."
+#~ msgstr ""
+#~ "Si teniu un compte de %s, utilitzeu-ne el nom. No utilitzeu noms de "
+#~ "compte que només continguin xifres, com a mínim cal incloure una lletra."
+
+#~ msgid "Configuration problem: sys_name is not set"
+#~ msgstr "Problema de configuració: sys_name no està establert"
 
 #~ msgid "To log-in, we need you to activate cookies in your web browser"
 #~ msgstr ""

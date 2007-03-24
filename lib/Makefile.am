@@ -1,19 +1,19 @@
 # Autotools -> ExtUtils::MakeMaker integration
 all:
-	make -f Makefile.perl PREFIX=$(prefix)
+	make -f Makefile.perl
 
 MANIFEST:
 	make -f Makefile.perl manifest
 install-data-local: MANIFEST
-	make -f Makefile.perl PREFIX=$(prefix) install
+	make -f Makefile.perl install
 
-CLEANFILES=Makefile.perl.old MANIFEST.bak Savane-*.tar.gz
+CLEANFILES = Savane-*.tar.gz MANIFEST MANIFEST.bak
 clean-local:
-	make -f Makefile.perl PREFIX=$(prefix) clean
+	-make -f Makefile.perl clean
+	-rm -f Makefile.perl.old
 
 all MANIFEST install-local clean-local: Makefile.perl
 Makefile.perl:
-	perl Makefile.PL
+	perl Makefile.PL PREFIX=$(prefix)
 
-# I use a non-portable $(shell) contruct here. Cf. ../Makefile.am
-EXTRA_DIST = $(shell find -name "*.pm")
+EXTRA_DIST = Makefile.PL Savane.pm Savane/

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Savane\n"
 "Report-Msgid-Bugs-To: savane-dev@gna.org\n"
-"POT-Creation-Date: 2007-03-18 16:25+0100\n"
+"POT-Creation-Date: 2007-03-24 17:43+0100\n"
 "PO-Revision-Date: 2003-09-13 12:00+0900\n"
 "Last-Translator: Yukihiro Nakai <ynakai@redhat.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
@@ -54,7 +54,7 @@ msgid "Other Comments"
 msgstr "他のコマンド"
 
 #: frontend/php/register/basicinfo.php:95
-#: frontend/php/register/projectname.php:77
+#: frontend/php/register/projectname.php:78
 #, fuzzy
 msgid "Step 3: Project Name"
 msgstr "新規プロジェクト名:"
@@ -69,7 +69,7 @@ msgid "Some required fields were left empty. Use the back button."
 msgstr ""
 
 #: frontend/php/register/license.php:76
-#: frontend/php/register/projectname.php:124
+#: frontend/php/register/projectname.php:125
 #, fuzzy
 msgid "Step 4: License"
 msgstr "他のコメント:"
@@ -139,23 +139,23 @@ msgstr ""
 "管理者としてログインして、左側のメニューの管理セクションにある\"グループタイ"
 "プ管理\"リンクをクリックするとそれをすることができます。"
 
-#: frontend/php/register/projectname.php:90
+#: frontend/php/register/projectname.php:91
 msgid "Please complete both fields"
 msgstr "両方のフィールドを埋めてください"
 
-#: frontend/php/register/projectname.php:108
-#: frontend/php/register/projectname.php:116
+#: frontend/php/register/projectname.php:109
+#: frontend/php/register/projectname.php:117
 msgid "Full Name"
 msgstr "フルネーム"
 
-#: frontend/php/register/projectname.php:111
-#: frontend/php/register/projectname.php:119
+#: frontend/php/register/projectname.php:112
+#: frontend/php/register/projectname.php:120
 #: frontend/php/siteadmin/groupedit.php:124
 #: frontend/php/siteadmin/grouplist.php:150
 msgid "System Name"
 msgstr "システム名"
 
-#: frontend/php/register/projectname.php:128
+#: frontend/php/register/projectname.php:129
 #, fuzzy
 msgid "Do not click back button after this point (unless asked to)."
 msgstr "ここからは「戻る」ボタンをクリックしないでください"
@@ -1674,7 +1674,7 @@ msgstr "電子メールアドレス"
 #: frontend/php/include/trackers_run/detail-sober.php:52
 #: frontend/php/include/trackers_run/detail-sober.php:78
 #: frontend/php/include/trackers/data.php:1455
-#: frontend/php/include/pre.php:348 frontend/php/include/init.php:240
+#: frontend/php/include/init.php:276 frontend/php/include/pre.php:348
 #, fuzzy
 msgid "Item not found"
 msgstr "ユーザIDが見つかりませんでした。"
@@ -2079,6 +2079,41 @@ msgstr "%s にそのようなパッケージ / ブランチ または バージョンはありません"
 #: frontend/php/files/add.php:156
 msgid "You do not have the required privileges to access this page"
 msgstr "このページのアクセスで必要な権限がありません"
+
+#: frontend/php/sendmessage.php:46
+#, fuzzy
+msgid "That user does not exist"
+msgstr "ユーザはSavannahに存在しません"
+
+#: frontend/php/sendmessage.php:67
+#, fuzzy
+msgid "Message Sent"
+msgstr "メッセージ"
+
+#: frontend/php/sendmessage.php:77
+msgid "Send a message"
+msgstr ""
+
+#: frontend/php/404.php:32
+msgid "Requested Page not Found (Error 404)"
+msgstr ""
+
+#: frontend/php/404.php:35
+#, php-format
+msgid "The web page you are trying to access doesn't exist on %s."
+msgstr ""
+
+#: frontend/php/404.php:36
+#, php-format
+msgid ""
+"If you think that there's a broken link on %s that must be repaired, %sfile "
+"a support request%s, mentioning the URL you tried to access (%s)."
+msgstr ""
+
+#: frontend/php/404.php:42 frontend/php/404-export.php:43
+#, fuzzy, php-format
+msgid "Otherwise, you can return to the %s%s main page%s."
+msgstr "または、%s にリンクを張ることもできます"
 
 #: frontend/php/search/index.php:37
 msgid "Enter your search words above."
@@ -2664,7 +2699,7 @@ msgstr "ログイン名:"
 #: frontend/php/project/admin/squadadmin.php:183
 #: frontend/php/project/admin/squadadmin.php:284
 #: frontend/php/include/user_home.php:135
-#: frontend/php/account/register.php:284
+#: frontend/php/account/register.php:283
 msgid "Real Name:"
 msgstr "実名:"
 
@@ -6652,7 +6687,7 @@ msgid "Reply"
 msgstr "返信"
 
 #: frontend/php/include/news/forum.php:156
-#: frontend/php/include/project_home.php:176 frontend/php/index.php:93
+#: frontend/php/include/project_home.php:176 frontend/php/index.php:89
 msgid "Latest News"
 msgstr "最新ニュース"
 
@@ -7952,7 +7987,7 @@ msgstr ""
 msgid "Administer"
 msgstr "管理"
 
-#: frontend/php/include/dnsbl.php:70
+#: frontend/php/include/dnsbl.php:71
 #, php-format
 msgid "Your IP address is blacklisted %s"
 msgstr ""
@@ -8485,11 +8520,6 @@ msgstr "ブックマーク"
 msgid "My Incoming Items"
 msgstr "パッチ"
 
-#: frontend/php/include/Layout.class:313
-#, fuzzy
-msgid "Back to the top"
-msgstr "ホームページに戻る"
-
 #: frontend/php/include/sitemenu.php:52 frontend/php/include/sitemenu.php:56
 #, fuzzy, php-format
 msgid "Back to %s Homepage"
@@ -8693,6 +8723,11 @@ msgstr "新規検索"
 #, fuzzy
 msgid "Account registration form"
 msgstr "アカウント登録"
+
+#: frontend/php/include/Layout.class:312
+#, fuzzy
+msgid "Back to the top"
+msgstr "ホームページに戻る"
 
 #: frontend/php/include/sendmail.php:151
 #, fuzzy, php-format
@@ -8993,6 +9028,25 @@ msgstr "最上位"
 msgid "Error updating database"
 msgstr "値の更新でエラー"
 
+#: frontend/php/include/init.php:337 frontend/php/include/pre.php:409
+#, fuzzy
+msgid "Project not found"
+msgstr "プロジェクト情報"
+
+#: frontend/php/include/init.php:349 frontend/php/include/pre.php:421
+#, fuzzy
+msgid "This project is in maintenance mode"
+msgstr "このプロジェクトは人を探しています"
+
+#: frontend/php/include/init.php:353 frontend/php/include/pre.php:425
+msgid "Note: this project is in maintenance mode"
+msgstr ""
+
+#: frontend/php/include/init.php:358 frontend/php/include/pre.php:430
+#, fuzzy
+msgid "This project is not in active state"
+msgstr "これは正しくない状態です"
+
 #: frontend/php/include/form.php:44
 msgid "System error while creating the form, report it to admins"
 msgstr ""
@@ -9132,25 +9186,6 @@ msgstr ""
 msgid "The total of results is zero."
 msgstr ""
 
-#: frontend/php/include/pre.php:409 frontend/php/include/init.php:301
-#, fuzzy
-msgid "Project not found"
-msgstr "プロジェクト情報"
-
-#: frontend/php/include/pre.php:421 frontend/php/include/init.php:313
-#, fuzzy
-msgid "This project is in maintenance mode"
-msgstr "このプロジェクトは人を探しています"
-
-#: frontend/php/include/pre.php:425 frontend/php/include/init.php:317
-msgid "Note: this project is in maintenance mode"
-msgstr ""
-
-#: frontend/php/include/pre.php:430 frontend/php/include/init.php:322
-#, fuzzy
-msgid "This project is not in active state"
-msgstr "これは正しくない状態です"
-
 #: frontend/php/include/user_home.php:35
 #, fuzzy, php-format
 msgid "%s Profile"
@@ -9189,7 +9224,7 @@ msgid "Login Name:"
 msgstr "ログイン名:"
 
 #: frontend/php/include/user_home.php:151
-#: frontend/php/account/register.php:287
+#: frontend/php/account/register.php:286
 #, fuzzy
 msgid "Email Address:"
 msgstr "電子メールアドレス"
@@ -9531,7 +9566,7 @@ msgstr "正しくない確認ハッシュです。"
 msgid "Lost Password Login"
 msgstr "パスワードログインの紛失"
 
-#: frontend/php/account/lostlogin.php:54 frontend/php/index.php:76
+#: frontend/php/account/lostlogin.php:54 frontend/php/index.php:72
 msgid "Welcome"
 msgstr "ようこそ"
 
@@ -9572,7 +9607,7 @@ msgid "In order to complete your registration, visit the following url:"
 msgstr "登録を完了するには、次のURLを訪問して下さい: "
 
 #: frontend/php/account/pending-resend.php:44
-#: frontend/php/account/register.php:237 frontend/php/account/first.php:37
+#: frontend/php/account/register.php:237 frontend/php/account/first.php:39
 msgid "Enjoy the site"
 msgstr "それではサイトをエンジョイしてください"
 
@@ -9809,25 +9844,16 @@ msgstr ""
 msgid "User account registration"
 msgstr " アカウント登録"
 
-#: frontend/php/account/register.php:274
-#, fuzzy, php-format
-msgid ""
-"If you have a %s account use that account name - Note that account names "
-"cannot consist of only numbers. At least one letter must be included."
-msgstr ""
-"%s のアカウントを持っていれば、そのアカウント名を使ってください - 全部が数字"
-"のアカウントは使わないようお願いします"
-
-#: frontend/php/account/register.php:276 frontend/php/account/login.php:221
+#: frontend/php/account/register.php:275 frontend/php/account/login.php:221
 msgid "Password:"
 msgstr "パスワード:"
 
-#: frontend/php/account/register.php:280
+#: frontend/php/account/register.php:279
 #, fuzzy
 msgid "Re-type Password:"
 msgstr "新規パスワード:"
 
-#: frontend/php/account/register.php:289
+#: frontend/php/account/register.php:288
 msgid "This email address will be verified before account activation."
 msgstr "このメールアドレスはアカウントの有効化の前に確認されます。"
 
@@ -9874,23 +9900,23 @@ msgstr "あなたのアカウントは削除されました。"
 msgid "If you have questions regarding your deletion, please email %s."
 msgstr "削除に関しての質問は、%s にメールを送ってください。"
 
-#: frontend/php/account/first.php:28
+#: frontend/php/account/first.php:30
 #, php-format
 msgid "Welcome to %s"
 msgstr "ようこそ %s へ"
 
-#: frontend/php/account/first.php:30
+#: frontend/php/account/first.php:32
 #, php-format
 msgid "You are now a registered user on %s."
 msgstr "%sの登録ユーザになりました。"
 
-#: frontend/php/account/first.php:32
+#: frontend/php/account/first.php:34
 msgid ""
 "As a registered user, you can participate fully in the activities on the "
 "site."
 msgstr "登録ユーザとして、サイトの活動にフルに参加できます。"
 
-#: frontend/php/account/first.php:33
+#: frontend/php/account/first.php:35
 #, fuzzy, php-format
 msgid ""
 "You may now post items to issue trackers in %s, sign on as a project member, "
@@ -9900,7 +9926,7 @@ msgstr ""
 "のバグを投稿したり、プロジェクト開発者としてサインしたり、そしてあなたのプロ"
 "ジェクトを開始することもできるようになりました。"
 
-#: frontend/php/account/first.php:35
+#: frontend/php/account/first.php:37
 #, fuzzy, php-format
 msgid ""
 "You should take some time to read %sthe Savane User Guide%s so that you may "
@@ -10249,50 +10275,11 @@ msgstr ""
 msgid "No users yet."
 msgstr ""
 
-#: frontend/php/sendmessage.php:46
-#, fuzzy
-msgid "That user does not exist"
-msgstr "ユーザはSavannahに存在しません"
-
-#: frontend/php/sendmessage.php:67
-#, fuzzy
-msgid "Message Sent"
-msgstr "メッセージ"
-
-#: frontend/php/sendmessage.php:77
-msgid "Send a message"
-msgstr ""
-
-#: frontend/php/404.php:32
-msgid "Requested Page not Found (Error 404)"
-msgstr ""
-
-#: frontend/php/404.php:35
-#, php-format
-msgid "The web page you are trying to access doesn't exist on %s."
-msgstr ""
-
-#: frontend/php/404.php:36
-#, php-format
-msgid ""
-"If you think that there's a broken link on %s that must be repaired, %sfile "
-"a support request%s, mentioning the URL you tried to access (%s)."
-msgstr ""
-
-#: frontend/php/404.php:42 frontend/php/404-export.php:43
-#, fuzzy, php-format
-msgid "Otherwise, you can return to the %s%s main page%s."
-msgstr "または、%s にリンクを張ることもできます"
-
 #: frontend/php/index.php:39
-msgid "Serious configuration problem: sys_unix_group_name is not set"
+msgid "Serious configuration problem: sys_unix_group_name is invalid."
 msgstr ""
 
-#: frontend/php/index.php:42
-msgid "Configuration problem: sys_name is not set"
-msgstr ""
-
-#: frontend/php/index.php:58
+#: frontend/php/index.php:54
 #, php-format
 msgid ""
 "Installation incomplete: while the connection to the SQL server is ok, the "
@@ -10300,20 +10287,20 @@ msgid ""
 "documentation shipped with your Savane package"
 msgstr ""
 
-#: frontend/php/index.php:63
+#: frontend/php/index.php:59
 msgid ""
 "Installation incomplete: you must now create for yourself a user account. "
 "Once it is done, you will have to login and register the local "
 "administration project"
 msgstr ""
 
-#: frontend/php/index.php:69
+#: frontend/php/index.php:65
 msgid ""
 "Installation incomplete: you must now register the local administration "
 "project, select \"Register New Project\" in the left menu"
 msgstr ""
 
-#: frontend/php/index.php:73
+#: frontend/php/index.php:69
 #, php-format
 msgid "By the way, have you checked the setup of your web server at %s?"
 msgstr ""
@@ -10334,6 +10321,14 @@ msgid ""
 "there's a broken link on %s that must be repaired, %sfile a support request%"
 "s, mentioning the URL you tried to access (%s)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "If you have a %s account use that account name - Note that account names "
+#~ "cannot consist of only numbers. At least one letter must be included."
+#~ msgstr ""
+#~ "%s のアカウントを持っていれば、そのアカウント名を使ってください - 全部が数"
+#~ "字のアカウントは使わないようお願いします"
 
 #, fuzzy
 #~ msgid "Cookies must be enabled past this point."

@@ -103,7 +103,7 @@ AC_CONFIG_FILES([lib/Savane/Version.pm])
 dnl associate the setting of the execute bit with the individual scripts
 dnl [idea from cvs-1.1.13/contrib]
 dnl AC_CONFIG_FILES(backend/accounts/sv_groups, [chmod +x backend/accounts/sv_groups])
-AC_CONFIG_FILES(backend/accounts/sv_groups)
+AC_CONFIG_FILES(backend/accounts/sv_groups, [chmod +x backend/accounts/sv_groups])
 AC_CONFIG_FILES(backend/accounts/sv_users, [chmod +x backend/accounts/sv_users])
 AC_CONFIG_FILES(backend/accounts/sv_membersh, [chmod +x backend/accounts/sv_membersh])
 AC_CONFIG_FILES(backend/export/sv_export, [chmod +x backend/export/sv_export])

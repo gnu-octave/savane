@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savane\n"
 "Report-Msgid-Bugs-To: savane-dev@gna.org\n"
-"POT-Creation-Date: 2007-03-18 16:25+0100\n"
+"POT-Creation-Date: 2007-03-24 17:43+0100\n"
 "PO-Revision-Date: 2006-11-24 15:20+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -40,7 +40,7 @@ msgid "Other Comments"
 msgstr "Övriga kommentarer"
 
 #: frontend/php/register/basicinfo.php:95
-#: frontend/php/register/projectname.php:77
+#: frontend/php/register/projectname.php:78
 msgid "Step 3: Project Name"
 msgstr "Steg 3: Projektets namn"
 
@@ -53,7 +53,7 @@ msgid "Some required fields were left empty. Use the back button."
 msgstr "Vissa nödvändiga fält lämnades blanka. Använd Bakåt-knappen."
 
 #: frontend/php/register/license.php:76
-#: frontend/php/register/projectname.php:124
+#: frontend/php/register/projectname.php:125
 msgid "Step 4: License"
 msgstr "Steg 4: Licens"
 
@@ -119,23 +119,23 @@ msgstr ""
 "under administrationssektionen i menyn på vänster sida, när du är inloggad "
 "som administratör"
 
-#: frontend/php/register/projectname.php:90
+#: frontend/php/register/projectname.php:91
 msgid "Please complete both fields"
 msgstr "Vänligen fyll i båda fälten"
 
-#: frontend/php/register/projectname.php:108
-#: frontend/php/register/projectname.php:116
+#: frontend/php/register/projectname.php:109
+#: frontend/php/register/projectname.php:117
 msgid "Full Name"
 msgstr "Hela namnet"
 
-#: frontend/php/register/projectname.php:111
-#: frontend/php/register/projectname.php:119
+#: frontend/php/register/projectname.php:112
+#: frontend/php/register/projectname.php:120
 #: frontend/php/siteadmin/groupedit.php:124
 #: frontend/php/siteadmin/grouplist.php:150
 msgid "System Name"
 msgstr "Systemnamn"
 
-#: frontend/php/register/projectname.php:128
+#: frontend/php/register/projectname.php:129
 msgid "Do not click back button after this point (unless asked to)."
 msgstr ""
 "Klicka inte på Bakåt-knappen efter denna punkt (såvida du inte uppmanas)."
@@ -1679,7 +1679,7 @@ msgstr "Adress:"
 #: frontend/php/include/trackers_run/detail-sober.php:52
 #: frontend/php/include/trackers_run/detail-sober.php:78
 #: frontend/php/include/trackers/data.php:1455
-#: frontend/php/include/pre.php:348 frontend/php/include/init.php:240
+#: frontend/php/include/init.php:276 frontend/php/include/pre.php:348
 msgid "Item not found"
 msgstr "Posten hittades inte"
 
@@ -2068,6 +2068,42 @@ msgstr "Det finns inget sådant paket / gren eller version för %s"
 #: frontend/php/files/add.php:156
 msgid "You do not have the required privileges to access this page"
 msgstr "Du har inte den behörighet som krävs för att komma åt denna sida"
+
+#: frontend/php/sendmessage.php:46
+msgid "That user does not exist"
+msgstr "Den användaren finns inte"
+
+#: frontend/php/sendmessage.php:67
+msgid "Message Sent"
+msgstr "Meddelande skickat"
+
+#: frontend/php/sendmessage.php:77
+msgid "Send a message"
+msgstr "Skicka ett meddelande"
+
+#: frontend/php/404.php:32
+msgid "Requested Page not Found (Error 404)"
+msgstr "Begärd sida hittades inte (Fel 404)"
+
+#: frontend/php/404.php:35
+#, php-format
+msgid "The web page you are trying to access doesn't exist on %s."
+msgstr "Webbsidan du försöker komma åt finns inte på %s."
+
+#: frontend/php/404.php:36
+#, php-format
+msgid ""
+"If you think that there's a broken link on %s that must be repaired, %sfile "
+"a support request%s, mentioning the URL you tried to access (%s)."
+msgstr ""
+"Om du tror att du påträffat en trasig länk på %s som måste repareras, %"
+"sskicka in en supportbegäran%s, berätta om URL:en som du försökte komma åt (%"
+"s)."
+
+#: frontend/php/404.php:42 frontend/php/404-export.php:43
+#, php-format
+msgid "Otherwise, you can return to the %s%s main page%s."
+msgstr "Annars kan du återvända till %s%s huvudsidan%s."
 
 #: frontend/php/search/index.php:37
 msgid "Enter your search words above."
@@ -2618,7 +2654,7 @@ msgstr "Inloggningsnamn för patrull:"
 #: frontend/php/project/admin/squadadmin.php:183
 #: frontend/php/project/admin/squadadmin.php:284
 #: frontend/php/include/user_home.php:135
-#: frontend/php/account/register.php:284
+#: frontend/php/account/register.php:283
 msgid "Real Name:"
 msgstr "Verkligt namn:"
 
@@ -6594,7 +6630,7 @@ msgid "Reply"
 msgstr "Svara"
 
 #: frontend/php/include/news/forum.php:156
-#: frontend/php/include/project_home.php:176 frontend/php/index.php:93
+#: frontend/php/include/project_home.php:176 frontend/php/index.php:89
 msgid "Latest News"
 msgstr "Senaste nyheter"
 
@@ -7829,7 +7865,7 @@ msgstr "Aktuellt visat projekt:"
 msgid "Administer"
 msgstr "Administrera"
 
-#: frontend/php/include/dnsbl.php:70
+#: frontend/php/include/dnsbl.php:71
 #, php-format
 msgid "Your IP address is blacklisted %s"
 msgstr "Din IP-adress är svartlistad %s"
@@ -8335,10 +8371,6 @@ msgstr "Mina bokmärken"
 msgid "My Incoming Items"
 msgstr "Mina inkommande poster"
 
-#: frontend/php/include/Layout.class:313
-msgid "Back to the top"
-msgstr "Tillbaka till toppen"
-
 #: frontend/php/include/sitemenu.php:52 frontend/php/include/sitemenu.php:56
 #, php-format
 msgid "Back to %s Homepage"
@@ -8534,6 +8566,10 @@ msgstr "Ny användare"
 #: frontend/php/include/sitemenu.php:481
 msgid "Account registration form"
 msgstr "Formulär för kontoregistrering"
+
+#: frontend/php/include/Layout.class:312
+msgid "Back to the top"
+msgstr "Tillbaka till toppen"
 
 #: frontend/php/include/sendmail.php:151
 #, php-format
@@ -8830,6 +8866,22 @@ msgstr "Högst"
 msgid "Error updating database"
 msgstr "Fel vid uppdatering av databas"
 
+#: frontend/php/include/init.php:337 frontend/php/include/pre.php:409
+msgid "Project not found"
+msgstr "Projektet hittades inte"
+
+#: frontend/php/include/init.php:349 frontend/php/include/pre.php:421
+msgid "This project is in maintenance mode"
+msgstr "Detta projekt är i underhållsläge"
+
+#: frontend/php/include/init.php:353 frontend/php/include/pre.php:425
+msgid "Note: this project is in maintenance mode"
+msgstr "Notera: detta projekt är i underhållsläge"
+
+#: frontend/php/include/init.php:358 frontend/php/include/pre.php:430
+msgid "This project is not in active state"
+msgstr "Detta projekt är inte aktivt"
+
 #: frontend/php/include/form.php:44
 msgid "System error while creating the form, report it to admins"
 msgstr ""
@@ -8965,22 +9017,6 @@ msgstr "%s/%s"
 msgid "The total of results is zero."
 msgstr "Det totala resultatet är noll."
 
-#: frontend/php/include/pre.php:409 frontend/php/include/init.php:301
-msgid "Project not found"
-msgstr "Projektet hittades inte"
-
-#: frontend/php/include/pre.php:421 frontend/php/include/init.php:313
-msgid "This project is in maintenance mode"
-msgstr "Detta projekt är i underhållsläge"
-
-#: frontend/php/include/pre.php:425 frontend/php/include/init.php:317
-msgid "Note: this project is in maintenance mode"
-msgstr "Notera: detta projekt är i underhållsläge"
-
-#: frontend/php/include/pre.php:430 frontend/php/include/init.php:322
-msgid "This project is not in active state"
-msgstr "Detta projekt är inte aktivt"
-
 #: frontend/php/include/user_home.php:35
 #, php-format
 msgid "%s Profile"
@@ -9020,7 +9056,7 @@ msgid "Login Name:"
 msgstr "Inloggningsnamn:"
 
 #: frontend/php/include/user_home.php:151
-#: frontend/php/account/register.php:287
+#: frontend/php/account/register.php:286
 msgid "Email Address:"
 msgstr "E-postadress:"
 
@@ -9345,7 +9381,7 @@ msgstr "Ogiltig bekräftelsehash."
 msgid "Lost Password Login"
 msgstr "Inloggning för förlorat lösenord"
 
-#: frontend/php/account/lostlogin.php:54 frontend/php/index.php:76
+#: frontend/php/account/lostlogin.php:54 frontend/php/index.php:72
 msgid "Welcome"
 msgstr "Välkommen"
 
@@ -9386,7 +9422,7 @@ msgid "In order to complete your registration, visit the following url:"
 msgstr "För att färdigställa din registrering, besök följande URL:"
 
 #: frontend/php/account/pending-resend.php:44
-#: frontend/php/account/register.php:237 frontend/php/account/first.php:37
+#: frontend/php/account/register.php:237 frontend/php/account/first.php:39
 msgid "Enjoy the site"
 msgstr "Ha det bra"
 
@@ -9620,24 +9656,15 @@ msgstr ""
 msgid "User account registration"
 msgstr "Registrering av användarkonto"
 
-#: frontend/php/account/register.php:274
-#, php-format
-msgid ""
-"If you have a %s account use that account name - Note that account names "
-"cannot consist of only numbers. At least one letter must be included."
-msgstr ""
-"Om du har ett konto på %s, använd det kontonamnet - Notera att kontonamn "
-"inte får innehålla endast siffror. Åtminstone en bokstav måste ingå."
-
-#: frontend/php/account/register.php:276 frontend/php/account/login.php:221
+#: frontend/php/account/register.php:275 frontend/php/account/login.php:221
 msgid "Password:"
 msgstr "Lösenord:"
 
-#: frontend/php/account/register.php:280
+#: frontend/php/account/register.php:279
 msgid "Re-type Password:"
 msgstr "Verifiera lösenord:"
 
-#: frontend/php/account/register.php:289
+#: frontend/php/account/register.php:288
 msgid "This email address will be verified before account activation."
 msgstr "Denna e-postadress kommer att valideras före kontoaktivering."
 
@@ -9684,23 +9711,23 @@ msgid "If you have questions regarding your deletion, please email %s."
 msgstr ""
 "Om du har frågor angående din borttagning, vänligen skicka e-post till %s."
 
-#: frontend/php/account/first.php:28
+#: frontend/php/account/first.php:30
 #, php-format
 msgid "Welcome to %s"
 msgstr "Välkommen till %s"
 
-#: frontend/php/account/first.php:30
+#: frontend/php/account/first.php:32
 #, php-format
 msgid "You are now a registered user on %s."
 msgstr "Du är nu en registrerad användare på %s."
 
-#: frontend/php/account/first.php:32
+#: frontend/php/account/first.php:34
 msgid ""
 "As a registered user, you can participate fully in the activities on the "
 "site."
 msgstr "Som en registrerad användare kan du deltaga i platsaktiviteterna."
 
-#: frontend/php/account/first.php:33
+#: frontend/php/account/first.php:35
 #, php-format
 msgid ""
 "You may now post items to issue trackers in %s, sign on as a project member, "
@@ -9709,7 +9736,7 @@ msgstr ""
 "Du kan nu posta saker för att följa upp saker i %s, registrera dig som en "
 "projektmedlem, eller kanske starta ditt egna projekt."
 
-#: frontend/php/account/first.php:35
+#: frontend/php/account/first.php:37
 #, php-format
 msgid ""
 "You should take some time to read %sthe Savane User Guide%s so that you may "
@@ -10073,51 +10100,12 @@ msgstr "Mest populära färgteman är: %s."
 msgid "No users yet."
 msgstr ""
 
-#: frontend/php/sendmessage.php:46
-msgid "That user does not exist"
-msgstr "Den användaren finns inte"
-
-#: frontend/php/sendmessage.php:67
-msgid "Message Sent"
-msgstr "Meddelande skickat"
-
-#: frontend/php/sendmessage.php:77
-msgid "Send a message"
-msgstr "Skicka ett meddelande"
-
-#: frontend/php/404.php:32
-msgid "Requested Page not Found (Error 404)"
-msgstr "Begärd sida hittades inte (Fel 404)"
-
-#: frontend/php/404.php:35
-#, php-format
-msgid "The web page you are trying to access doesn't exist on %s."
-msgstr "Webbsidan du försöker komma åt finns inte på %s."
-
-#: frontend/php/404.php:36
-#, php-format
-msgid ""
-"If you think that there's a broken link on %s that must be repaired, %sfile "
-"a support request%s, mentioning the URL you tried to access (%s)."
-msgstr ""
-"Om du tror att du påträffat en trasig länk på %s som måste repareras, %"
-"sskicka in en supportbegäran%s, berätta om URL:en som du försökte komma åt (%"
-"s)."
-
-#: frontend/php/404.php:42 frontend/php/404-export.php:43
-#, php-format
-msgid "Otherwise, you can return to the %s%s main page%s."
-msgstr "Annars kan du återvända till %s%s huvudsidan%s."
-
 #: frontend/php/index.php:39
-msgid "Serious configuration problem: sys_unix_group_name is not set"
+#, fuzzy
+msgid "Serious configuration problem: sys_unix_group_name is invalid."
 msgstr "Allvarligt konfigurationsproblem: sys_unix_group_name är inte inställd"
 
-#: frontend/php/index.php:42
-msgid "Configuration problem: sys_name is not set"
-msgstr "Konfigurationsproblem; sys_name inte inställd"
-
-#: frontend/php/index.php:58
+#: frontend/php/index.php:54
 #, php-format
 msgid ""
 "Installation incomplete: while the connection to the SQL server is ok, the "
@@ -10128,7 +10116,7 @@ msgstr ""
 "\"%s\" hittades inte. Skapa den enligt dokumentationen som skickades med i "
 "ditt Savane-paket"
 
-#: frontend/php/index.php:63
+#: frontend/php/index.php:59
 msgid ""
 "Installation incomplete: you must now create for yourself a user account. "
 "Once it is done, you will have to login and register the local "
@@ -10137,7 +10125,7 @@ msgstr ""
 "Installationen ej komplett: du måste nu skapa dig ett användarkonto. När det "
 "är gjort, kan du logga in och registrera ett projekt för lokal administration"
 
-#: frontend/php/index.php:69
+#: frontend/php/index.php:65
 msgid ""
 "Installation incomplete: you must now register the local administration "
 "project, select \"Register New Project\" in the left menu"
@@ -10145,7 +10133,7 @@ msgstr ""
 "Installationen ej komplett: du måste nu registrera ett projekt för lokal "
 "administration, välj \"Registrera nytt projekt\" i den vänstra menyn"
 
-#: frontend/php/index.php:73
+#: frontend/php/index.php:69
 #, php-format
 msgid "By the way, have you checked the setup of your web server at %s?"
 msgstr ""
@@ -10171,6 +10159,16 @@ msgstr ""
 "gammal. Om du tror att du påträffat en trasig länk på %s som måste "
 "repareras, %sskicka in en supportbegäran%s, berätta om URL:en du försökte "
 "komma åt (%s)."
+
+#~ msgid ""
+#~ "If you have a %s account use that account name - Note that account names "
+#~ "cannot consist of only numbers. At least one letter must be included."
+#~ msgstr ""
+#~ "Om du har ett konto på %s, använd det kontonamnet - Notera att kontonamn "
+#~ "inte får innehålla endast siffror. Åtminstone en bokstav måste ingå."
+
+#~ msgid "Configuration problem: sys_name is not set"
+#~ msgstr "Konfigurationsproblem; sys_name inte inställd"
 
 #~ msgid "To log-in, we need you to activate cookies in your web browser"
 #~ msgstr "För att logga in behöver du aktivera kakor i din webbläsare"
