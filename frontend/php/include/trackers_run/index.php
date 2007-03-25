@@ -25,6 +25,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once(dirname(__FILE__).'/../trackers/votes.php');
+
 # This page does not give access to sober mode
 $sober = false;
 

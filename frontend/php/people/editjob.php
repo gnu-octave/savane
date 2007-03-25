@@ -22,7 +22,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+require_once('../include/init.php');
 
 # pre.php defeines group to group_id, so do check, else look at request
 $group_id = $group_id ? $group_id : $_REQUST['group_id'];

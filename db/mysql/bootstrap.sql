@@ -10,16 +10,20 @@ VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3', UNIX_TIMESTAMP(NOW()), 'A',
 
 -- siteadmin project
 -- (register/*)
+-- (siteadmin/triggercreation.php)
 INSERT INTO groups
   (unix_group_name, group_name, status, is_public, type,
-   register_time, short_description)
+   register_time, short_description,
+   use_homepage, use_mail, use_cvs, use_news, use_task, use_support, use_bugs, use_download)
 VALUES
   ('siteadmin', 'Site Administration', 'A', 1, 1,
-   UNIX_TIMESTAMP(NOW()), "This project is dedicated to the administration of this site.");
+   UNIX_TIMESTAMP(NOW()), "This project is dedicated to the administration of this site.",
+   1, 1, 1, 1, 1, 1, 1, 1);
 
 -- (include/member.php)
 INSERT INTO user_group (user_id, group_id, admin_flags) VALUES (101, 101, 'A');
-
+INSERT INTO group_history(group_id,field_name,old_value,mod_by,date)
+     VALUES (101,'Added User', 'admin', 101, UNIX_TIMESTAMP(NOW()));
 
 -- We also add a specific field for the task tracker (we need to copy the None field)
 INSERT INTO task_field_value (bug_field_id, group_id, value_id, value, description, order_id, status)
@@ -203,6 +207,3 @@ If the content is an item, it is automatically set to _Locked_ so further post a
 
 If your site runs checks with SpamAssassin, *flagged spams will be used to improves bayesian filtering*.', '1');
 INSERT INTO cookbook_context2recipe (recipe_id, group_id, audience_anonymous, audience_loggedin, audience_members, audience_technicians, audience_managers, context_project, context_homepage, context_cookbook, context_download, context_support, context_bugs, context_task, context_patch, context_news, context_mail, context_cvs, context_arch, context_svn, context_my, context_stats, context_siteadmin, context_people, subcontext_browsing, subcontext_postitem, subcontext_edititem, subcontext_search, subcontext_configure ) VALUES (LAST_INSERT_ID(), 101, '0', '1', '1', '0', '0', '0', '0', '1', '0', '1', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '1');
-
--- TODO?
--- (siteadmin/triggercreation.php)

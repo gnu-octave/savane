@@ -25,7 +25,7 @@
 # in the download area. It is problematic for people that want to use
 # it without having already files in their download area
 
-require '../include/pre.php';
+require_once('../include/init.php');
 
 $project=project_get_object($group_id);
 

@@ -273,7 +273,7 @@ function show_item_list_sober ($result_arr,
   while (list($context,$context_label) = each($possible_contexts))
     {
       $seen_before = array();
-      unset($context_content);
+      $context_content = '';
       reset($possible_audiences);
       while (list($audience,$audience_label) = each($possible_audiences))
 	{
@@ -333,7 +333,7 @@ function show_item_list_sober ($result_arr,
 		    strtolower($result_arr[$thisitem_id]["summary"]);
 		}
 	      asort($thisaudience_results);
-	      unset($audience_content);
+	      $audience_content = '';
 	      while (list($thisitem_id,$summary) = each($thisaudience_results))
 		{
 		  # Ignore if not approved
@@ -351,7 +351,8 @@ function show_item_list_sober ($result_arr,
 
 		  # Detect if it is a site wide doc item. Ignore that if we
 		  # are on the site admin group
-		  unset($is_site_doc, $url_extra_arg);
+		  $is_site_doc = false;
+		  $url_extra_arg = '';
 		  if ($group_id != $sys_group_id)
 		    {
 		      if ($result_arr[$thisitem_id]["group_id"] == $sys_group_id)

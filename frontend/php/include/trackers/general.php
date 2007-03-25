@@ -660,6 +660,8 @@ function trackers_extract_field_list($post_method=true)
 	  // start from zero
 
 	  // get what we already have
+	  if (!isset($vfl[$field_name]))
+	    $vfl[$field_name] = '--';
 	  list($year, $month, $day) = split("-", $vfl[$field_name]);
 	  if ($field_name_part  == 'day')
 	    { $vfl[$field_name] = "$year-$month-$val"; }

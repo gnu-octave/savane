@@ -40,7 +40,7 @@ require_once(dirname(__FILE__).'/context.php');
 require_once(dirname(__FILE__).'/exit.php');
 
 # Default values, so they cannot be found undefined in the code
-$sys_name = "Change This Site Name with \$sys_name";
+$sys_name = "Change-This-Site-Name-with-\$sys_name";
 $sys_logo_name = 'floating.png';
 $sys_debug_on = false;
 $sys_use_google = false;

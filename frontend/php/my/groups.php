@@ -346,11 +346,17 @@ if ($words)
 
       while ($val = db_fetch_array($result_search))
 	{
-	  if (!user_is_group_member($row_user[user_id], $val[group_id]))
+	  if (!user_is_group_member($row_user['user_id'], $val['group_id']))
 	    {
-	      print '<input type="checkbox" name="form_groups_'.$val[group_id].'" /> ';
-	      print $val[group_name];
+	      print '<input type="checkbox" name="form_groups_'.$val['group_id'].'" /> ';
+	      print $val['group_name'];
 	      print '<br />';
+	    }
+	  else
+	    {
+	      print '<input type="checkbox" disabled="yes" /> ';
+	      print $val['group_name'];
+	      print ' (already a member)<br />';
 	    }
 	}
 

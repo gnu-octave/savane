@@ -735,6 +735,8 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
   $result=trackers_data_get_cc_list($item_id);
   $rows=db_numrows($result);
 
+  $out = '';
+
   # No file attached -> return now
   if ($rows <= 0)
     {

@@ -22,7 +22,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+require_once('../include/init.php');
 
 if ($group_id) {
 
@@ -32,7 +32,8 @@ if ($group_id) {
   dbg("dir:$files_dir path:$files_path");
 
   # If nothing is found, redirect on the configured area
-
+  $i = 0;
+  $content = '';
   if (!$project->CanUse("download") || $files_dir == '/' || $files_dir == '')
     { Header("Location: $files_path"); }
   else
@@ -66,7 +67,7 @@ if ($group_id) {
       $content .= '</h3>';
 
       $content .= '<p>';
-      $i=0;
+
       if (is_dir($files_dir))
 	{
 	  $package_dir = opendir($files_dir);

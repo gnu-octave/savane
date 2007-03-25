@@ -57,7 +57,7 @@ elseif ($action == "logout" && user_is_super_user())
 {
   #session_cookie('session_su', 'FALSE');
   session_delete_cookie("session_su");
-  if ($GLOBALS['sys_brother_domain'])
+  if (!empty($GLOBALS['sys_brother_domain']))
     {
       if (!$from_brother)
 	{

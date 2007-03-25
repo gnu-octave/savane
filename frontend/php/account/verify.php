@@ -104,5 +104,3 @@ print form_input("hidden", "confirm_hash", sane_all('confirm_hash'));
 print form_footer(_("Login"));
 
 site_footer(array());
-
-?>

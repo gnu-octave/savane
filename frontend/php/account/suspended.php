@@ -33,5 +33,3 @@ printf ('<p>'._("If you have questions regarding your suspension, please email %
 echo _("Inquiries through other channels will be directed to this address.").'</p>';
 
 $HTML->footer(array());
-
-?>

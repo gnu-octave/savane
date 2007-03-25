@@ -26,6 +26,7 @@
 
 
 require_once('../../include/init.php');
+require_once('../../include/project/admin.php');
 register_globals_off();
 
 $group_id = sane_all("group_id");
@@ -41,4 +42,3 @@ else
 {
   exit_permission_denied();
 }
-?>

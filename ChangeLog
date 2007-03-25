@@ -1,3 +1,14 @@
+2007-03-25  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/mail/majordomo_interface.php: removed after reading
+	proprietary license http://www.greatcircle.com/majordomo/LICENSE
+
+	* tests/minimal_configs: create a full LAMP for testing purposes.
+
+2007-03-24  Sylvain Beucler  <beuc@beuc.net>
+
+	* Continued autoconfiscation and clean-ups.
+
 2007-03-17  Sylvain Beucler  <beuc@beuc.net>
 
 	* configure.ac & al.: autoconfiscation

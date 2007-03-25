@@ -21,8 +21,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../../include/pre.php";
-
+require_once('../../include/init.php');
 register_globals_off();
 
 # Check if the user is logged in.

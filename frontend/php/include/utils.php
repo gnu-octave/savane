@@ -103,7 +103,7 @@ function utils_email ($address, $nohtml=0)
 
       # If we have < > in the address, only this content must go in the 
       # mailto
-      unset($realaddress);
+      $realaddress = null;;
       if (preg_match("/\<([\w\d\-\@\.]*)\>/", $address, $matches))
 	{ $realaddress = $matches[1]; }
 

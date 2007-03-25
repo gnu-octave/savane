@@ -48,5 +48,3 @@ printf (_("[Return to %s]"),$GLOBALS['sys_name']);
 echo '</a></p>';
 
 $HTML->footer(array());
-
-?>

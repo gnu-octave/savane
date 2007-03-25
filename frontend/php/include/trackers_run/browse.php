@@ -472,7 +472,7 @@ if ($chunksz > 150 &&
 { $chunksz = 150; }
 
 # No limit on sober output, we want all recipes
-unset($limit);
+$limit = '';
 if (!$sober)
 { $limit = " LIMIT $offset,$chunksz"; }
 

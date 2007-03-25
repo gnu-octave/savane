@@ -25,6 +25,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+require_once(dirname(__FILE__).'/../trackers/show.php');
+require_once(dirname(__FILE__).'/../trackers/format.php');
+require_once(dirname(__FILE__).'/../trackers/votes.php');
 # Need search functions.
 require_directory("search");
 
