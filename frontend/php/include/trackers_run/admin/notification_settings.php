@@ -22,7 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require_directory("project");
+require_directory('project');
+require_once(dirname(__FILE__).'/../../trackers/data.php');
 
 $is_admin_page='y';
 

@@ -527,7 +527,7 @@ function format_item_changes ($changes,$item_id,$group_id)
 
 
   # Process special cases: follow-up comments
-  if ($changes['details'])
+  if (!empty($changes['details']))
     {
       if ($out)
         { $out .= $separator; }

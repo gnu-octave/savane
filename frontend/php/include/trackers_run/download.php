@@ -26,12 +26,13 @@
 # Pre was already loaded
 register_globals_off();
 
-$file_id = sane_all("file_id");
-if (sane_isset($item_file_id)) 
-{ $file_id = sane_all("item_file_id"); }
+extract(sane_import('get', array('file_id', 'item_file_id')));
+
+# Backward compat?
+$file_id = $file_id or $item_file_id;
 
 # check if the provided file_id is a valid numerical id
-if (!$file_id || !ctype_digit($file_id))
+if (empty($file_id) or !ctype_digit($file_id))
 {
   exit_missing_param();
 }

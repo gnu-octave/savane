@@ -25,6 +25,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once(dirname(__FILE__).'/../calendar.php');
+require_once(dirname(__FILE__).'/../sendmail.php');
+require_once(dirname(__FILE__).'/data.php');
  
 # Return the file that should be included, according to the URL
 # requested. If the file start with ?, it's an index.
@@ -1352,7 +1355,7 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
   $GLOBALS['current_upload_size'] = 0;
   
   $changed = false;
-  unset($comment);
+  $comment = '';
 
   for ($i = 1; $i < 5; $i++)
     { 

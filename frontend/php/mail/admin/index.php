@@ -48,7 +48,7 @@
 ##   The field password will not contact real password, it will contain
 ##   '1' when the backend is supposed to reset it. 
 
-require "../../include/pre.php";
+require_once('../../include/init.php');
 
 register_globals_off();
 $group_id = sane_all("group_id");

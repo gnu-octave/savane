@@ -24,8 +24,8 @@
 ## NOTE: for now, squads are group specific. However, as squads reuse the
 # users code, we could easily imagine to share squads among different projects
 
-require "../../include/pre.php";
-require "../../include/account.php";
+require_once('../../include/init.php');
+require_once('../../include/account.php');
 
 register_globals_off();
 $group_id = sane_all("group_id");

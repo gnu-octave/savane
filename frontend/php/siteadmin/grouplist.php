@@ -23,7 +23,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";
+require_once('../include/init.php');
 
 site_admin_header(array('title'=>_("Group List"),'context'=>'admgroup'));
 
@@ -89,6 +89,7 @@ $status_arr['P']=_("Pending");
 $status_arr['I']=_("Incomplete");
 $status_arr['D']=_("Deleted");
 $status_arr['M']=_("Maintenance");
+$status_arr['X']=_("System internal");
 
 print '<h3>'._("Group Search").'</h3>';
 
@@ -137,8 +138,10 @@ else if ($groupsearch)
   $search_url = "&groupsearch=1&search=".urlencode($search)."";
 }
 
-$res = db_query("SELECT DISTINCTROW group_name,unix_group_name,group_id,is_public,status,license "
-		. "FROM groups WHERE $where ORDER BY group_name LIMIT $offset,".($MAX_ROW+1)) or ($feedback = db_error());
+# TODO db_execute() this $where:
+$res = db_execute("SELECT DISTINCTROW group_name,unix_group_name,group_id,is_public,status,license "
+		. "FROM groups WHERE $where ORDER BY group_name LIMIT ?,?", array($offset,$MAX_ROW+1))
+     or ($feedback = db_error());
 print "<strong>$msg</strong>\n";
 
 print '</h3>';
@@ -190,5 +193,3 @@ print '</table>';
 html_nextprev($_SERVER['PHP_SELF'].'?groupsearch=1&amp;group_name_search='.urlencode($group_name_search).'&amp;search='.urlencode($search), $rows, $rows_returned);
 
 site_admin_footer(array());
-
-?>

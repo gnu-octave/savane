@@ -142,4 +142,3 @@ else
   site_header(array('title'=>_("Local Administration Project Approved")));
   site_footer(array());
 }
-?>

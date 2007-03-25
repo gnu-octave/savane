@@ -25,8 +25,8 @@
 
 # The context of this page cannot be guessed later, we have to hardcode it
 define('CONTEXT', 'people');
-require "./include/pre.php";    
-
+require_once('include/init.php');
+require_once('include/sendmail.php');
 register_globals_off();
 
 # Extract the user name
@@ -42,8 +42,5 @@ if (db_numrows($res_user) < 1) {
 	$user_id=db_result($res_user,0,'user_id');
 
 	# now show the project page
-	include ('./include/user_home.php');
-
+	include ('include/user_home.php');
 }
-
-?>

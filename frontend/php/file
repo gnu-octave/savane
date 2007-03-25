@@ -1,8 +1,5 @@
-<?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id: download.php 5187 2005-12-01 16:22:29Z yeupou $
+<?php # -*- PHP -*-
+# Provide an url with a valid filename that browsers will use (save as...)
 #
 #  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
 #
@@ -23,7 +20,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "include/pre.php";
+require_once('include/init.php');
 register_globals_off();
 
 $file_id = sane_all("file_id");
@@ -96,5 +93,3 @@ else
 {
   exit_error(_("Couldn't find attached file")." (file #$file_id)");
 }
-
-?>

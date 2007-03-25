@@ -10,8 +10,9 @@ init.php used to include a lot of PHP files that weren't always
 necessary; now we use a C-style include model, where each file
 declares which files it needs to include.
 
-pre.php and init.php co-exist so the old-style and new-style include
-can be used by respectively non-cleaned-up and new scripts.
+This should avoid including half of the Savane code each time a page
+is served, but the main pro is to control where the code comes from,
+without functions "magically" defined.
 
 
 - Security:

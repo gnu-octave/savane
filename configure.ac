@@ -48,11 +48,11 @@ fi
 
 AC_ARG_WITH([db-name], AS_HELP_STRING([--with-db-name],
   [name of the database (default: 'savane')]),
-  SV_DB_NAME=$withval,
-  SV_DB_NAME=savane)
+  SV_DB_NAME="$withval",
+  SV_DB_NAME="savane")
 AC_ARG_WITH([db-options], AS_HELP_STRING([--with-db-options],
   [parameters to give MySQL when initializing the database (default: empty)]),
-  SV_DB_OPTIONS=$withval)
+  SV_DB_OPTIONS="$withval")
 # Add these vars in the Makefile's:
 AC_SUBST(SV_DB_NAME)
 AC_SUBST(SV_DB_OPTIONS)

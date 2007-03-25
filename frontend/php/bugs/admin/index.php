@@ -20,8 +20,6 @@
 # along with the Savane project; if not, write to the Free Software
 
 
-require "../../include/pre.php";
+require_once('../../include/init.php');
+require_once('../../include/trackers/general.php');
 include trackers_include();
-
-
-?>

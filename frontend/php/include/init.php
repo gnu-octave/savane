@@ -58,6 +58,8 @@ $sys_incdir = '/etc/savane/content';
 $sys_themedefault = 'Emeraud';
 
 $sys_default_domain = $_SERVER['SERVER_NAME'];
+if ($_SERVER['SERVER_PORT'] != 80)
+     $sys_default_domain .= ':'.$_SERVER['SERVER_PORT'];
 $sys_unix_group_name = 'siteadmin';
 
 #print "<pre>";
@@ -377,4 +379,4 @@ if (isset($group_id))
 
 # If requires/include for an artifact exists, load them all
 # In any case, set the ARTIFACT constant.
-require_directory(get_module_include_dir($_SERVER['PHP_SELF']));
+#require_directory(get_module_include_dir($_SERVER['PHP_SELF']));

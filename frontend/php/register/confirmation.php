@@ -58,8 +58,8 @@ if ($show_confirm && $rand_hash)
   $group_id = $group_id_not_yet_valid;
 
 
-  $result=db_query_escape("UPDATE groups SET type='%s' WHERE group_id='%s' AND rand_hash='__%s'",
-			  $group_type, $group_id, $rand_hash);
+  db_query_escape("UPDATE groups SET type='%s' WHERE group_id='%s' AND rand_hash='__%s'",
+		  $group_type, $group_id, $rand_hash);
 
   $result=db_query_escape("SELECT * FROM groups WHERE group_id='%s' AND rand_hash='__%s'",
 		   $group_id, $rand_hash);
@@ -516,5 +516,3 @@ else
 	     ._("Some form variables were missing.").' '
 	     .sprintf(_("If you are certain you entered everything, PLEASE report to %s including info on your browser and platform configuration."),$GLOBALS['sys_email_address']));
 }
-
-?>

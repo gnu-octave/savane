@@ -235,7 +235,7 @@ $phptags = array (
 	'log_errors' => '1',
 	'error_reporting' => E_ALL|E_STRICT,
 	'allow_url_fopen' => '0',
-	'disable_functions' => 'exec, passthru, popen, shell_exec, system',
+	'disable_functions' => 'exec,passthru,popen,shell_exec,system',
 );
 
 print "<table border=\"1\">\n";

@@ -22,10 +22,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../../include/pre.php";
-require "../../include/account.php";
+require_once('../../include/init.php');
+require_once('../../include/account.php');
 require_directory("trackers");
-
 register_globals_off();
 
 //   Previous overcomplicated code, 
@@ -202,27 +201,27 @@ print '
 
 print '<span class="preinput">'._("Send notification to me only when:").'</span><br />&nbsp;&nbsp;';
 
-unset($checked);
+$checked = '';
 if (user_get_preference("notify_unless_im_author")) { $checked = 'checked="checked"'; }
 print form_input("checkbox", "form_notifset_unless_im_author", "1", $checked).' '._("I am not the author of the item update").'<br />&nbsp;&nbsp;';
-unset($checked);
+$checked = '';
 if (user_get_preference("notify_item_closed")) { $checked = 'checked="checked"'; }
 print form_input("checkbox", "form_notifset_item_closed", "1", $checked).' '._("the item was closed").'<br />&nbsp;&nbsp;';
-unset($checked);
+$checked = '';
 if (user_get_preference("notify_item_statuschanged")) { $checked = 'checked="checked"'; }
 print form_input("checkbox", "form_notifset_item_statuschanged", "1", $checked).' '._("the item status changed").'<br />';
 
 print '<span class="preinput">'._("Do not add me in Carbon-Copy when:").'</span><br />&nbsp;&nbsp;';
-unset($checked);
+$checked = '';
 if (user_get_preference("skipcc_postcomment")) { $checked = 'checked="checked"'; }
 print form_input("checkbox", "form_skipcc_postcomment", "1", $checked).' '._("I post a comment").'<br />&nbsp;&nbsp;';
-unset($checked);
+$checked = '';
 if (user_get_preference("skipcc_updateitem")) { $checked = 'checked="checked"'; }
 print form_input("checkbox", "form_skipcc_updateitem", "1", $checked).' '._("I update a field, add dependancies, attach file, etc").'<br />';
-unset($checked);
+$checked = '';
 
 print '<span class="preinput">'._("Remove me from Carbon-Copy when:").'</span><br />&nbsp;&nbsp;';
-unset($checked);
+$checked = '';
 if (user_get_preference("removecc_notassignee")) { $checked = 'checked="checked"'; }
 print form_input("checkbox", "form_removecc_notassignee", "1", $checked).' '._("I am no longer assigned to the item").'<br />&nbsp;&nbsp;';
 

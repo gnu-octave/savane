@@ -18,6 +18,7 @@ database:
 	  echo "USE $(SV_DB_NAME);"; \
 	  cat db/mysql/table_*.structure; \
 	  cat db/mysql/table_*.initvalues; \
+	  cat db/mysql/bootstrap.sql; \
 	) | $(SV_DB_CMD) $(SV_DB_OPTIONS)
 # TODO: create the siteadmin group here
 

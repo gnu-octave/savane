@@ -140,10 +140,13 @@ if ($project->CanUse("license"))
 {
   $license = $project->getLicense();
   print '<br />'._("License:").' ';
-  if ($LICENSE_URL[$license] != "0") {
+  if (!empty($LICENSE_URL[$license])) {
     print utils_link($LICENSE_URL[$license], $LICENSE[$license]);
   } else {
-    print $LICENSE[$license];
+    if (!empty($LICENSE[$license]))
+      print $LICENSE[$license];
+    else
+      print "Unknown!";
     if ($license == "other") {
       print $project->getLicense_other();
     }

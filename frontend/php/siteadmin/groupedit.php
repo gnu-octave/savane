@@ -22,8 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
-require "../include/vars.php";
+require_once('../include/init.php');
+require_once('../include/vars.php');
 # needed for group history :
 require_directory("project");
 
@@ -43,8 +43,8 @@ if ($update || $updatefast)
   # Full details update
   if ($update) 
     {
-      $res_grp = db_query_safe("SELECT * FROM groups WHERE group_id='%s'", $group_id);
-      $res_type = db_query_safe("SELECT * FROM group_type WHERE type_id='%s'", $group_type);
+      $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
+      $res_type = db_execute("SELECT * FROM group_type WHERE type_id=?", array($group_type));
       
       
       if (db_result($res_grp,0,'status') != $form_status)

@@ -27,6 +27,7 @@
 # There are parameters that defined before, in the pages that include browse.
 # For instance, $sober is defined by the cookbook/index.php page
 
+require_once(dirname(__FILE__).'/../trackers/show.php');
 
 $preference_prefix = ARTIFACT;
 if ($sober)

@@ -21,40 +21,51 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../../include/pre.php";
-
+require_once('../../include/init.php');
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 # Check if the user is logged in.
 session_require(array('isloggedin'=>'1'));
 
 # Initialize some vars
-$trackers = array("bugs", "task", "patch", "support", "cookbook");
+$trackers = array('bugs', 'task', 'patch', 'support', 'cookbook');
 $user_id = user_getid();
 $user_email = user_getemail();
 $user_name = user_getname();
 
+
+extract(sane_import('request', array('cancel')));
+
 ########################################################################
 # Update the database
-if (sane_isset("cancel"))
+if (!empty($cancel))
 {
-  $whichgroup = sane_get("cancel");
-  reset($trackers);
+  $whichgroup = $cancel;
   foreach ($trackers as $tracker)
     {
       if ($whichgroup == 'any')
 	{
           # If it all groups, go the easy way
-	  db_query("DELETE FROM ".$tracker."_cc WHERE ".$tracker."_cc.email='$user_id' OR ".$tracker."_cc.email='$user_email' OR ".$tracker."_cc.email='$user_name'");
+	  db_execute("DELETE FROM ${tracker}_cc
+                      WHERE ${tracker}_cc.email=?
+                        OR ${tracker}_cc.email=?
+                        OR ${tracker}_cc.email=?",
+		   array($user_id, $user_email, $user_name));
 	}
       else
 	{
 	  # If we need to remove items only for a given group, we first need
 	  # to get this list of itemsps
-	  $result = db_query("SELECT bug_id FROM ".$tracker." WHERE group_id='$whichgroup'");
+	  $result = db_execute("SELECT bug_id FROM $tracker WHERE group_id=?",
+			       array($whichgroup));
 	  while ($entry = db_fetch_array($result))
 	    {
-	      db_query("DELETE FROM ".$tracker."_cc WHERE bug_id='".$entry['bug_id']."' AND (".$tracker."_cc.email='$user_id' OR ".$tracker."_cc.email='$user_email' OR ".$tracker."_cc.email='$user_name')");
+	      db_execute("DELETE FROM ${tracker}_cc
+                          WHERE bug_id=? AND (${tracker}_cc.email=?
+                            OR ${tracker}_cc.email=? OR ${tracker}_cc.email=?)",
+			 array($entry['bug_id'], $user_id, $user_email, $user_name));
 
 	    }
 	  
@@ -78,10 +89,18 @@ print '<p>'._("Here, you can cancel all mail notifications.").' '._("Beware: thi
 # Find all CC the users is registered to receive, list them per groups.
 $groups_with_cc = array();
 $groups_with_cc_gid = array();
-reset($trackers);
 foreach ($trackers as $tracker)
 {
-  $result = db_query("SELECT groups.unix_group_name,groups.group_name,".$tracker.".group_id FROM groups,".$tracker.",".$tracker."_cc WHERE groups.group_id=".$tracker.".group_id AND ".$tracker.".bug_id=".$tracker."_cc.bug_id AND (".$tracker."_cc.email='$user_id' OR ".$tracker."_cc.email='$user_email' OR ".$tracker."_cc.email='$user_name') GROUP BY groups.group_name");
+  $result = db_execute("
+SELECT groups.unix_group_name,groups.group_name,$tracker.group_id
+FROM groups,$tracker,${tracker}_cc
+WHERE groups.group_id = $tracker.group_id
+  AND $tracker.bug_id = {$tracker}_cc.bug_id
+  AND (${tracker}_cc.email = ?
+       OR ${tracker}_cc.email = ?
+       OR ${tracker}_cc.email = ?)
+GROUP BY groups.group_name",
+    array($user_id, $user_email, $user_name));
   while ($entry = db_fetch_array($result)) 
     {
       if (isset($groups_with_cc[$entry['group_id']]))
@@ -139,6 +158,3 @@ print $HTML->box_bottom();
 
 
 site_user_footer(array());
-
-
-?>

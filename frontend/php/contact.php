@@ -23,7 +23,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require('./include/pre.php');
+require('include/init.php');
+register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 $HTML->header(array('title'=>_("Contact Us")));
 

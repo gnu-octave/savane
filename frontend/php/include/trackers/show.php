@@ -24,6 +24,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once(dirname(__FILE__).'/cookbook.php');
+
 function show_item_list ($result_arr,
 			 $offset,
 			 $total_rows,
@@ -236,7 +238,8 @@ function show_item_list_sober ($result_arr,
   # Add the unset case, when the item is actually not bound to any context
   # or action
   # Build sql specific part for these
-  unset($sql_unboundcontext, $sql_unboundaudience);
+  $sql_unboundcontext = '';
+  $sql_unboundaudience = '';
   $thisarray = array_merge($possible_contexts, $impossible_contexts);
   while (list($context,) = each($thisarray))
     {

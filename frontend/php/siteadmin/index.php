@@ -28,7 +28,7 @@ register_globals_off();
 #mysql_is_safe();
 
 site_admin_header(array('title'=>_("Home"),'context'=>'admhome'));
-extract(sane_import('request', array('func')));
+extract(sane_import('get', array('func')));
 
 $even = 0;
 $odd = 1;
