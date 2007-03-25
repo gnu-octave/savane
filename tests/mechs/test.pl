@@ -1,22 +1,24 @@
 #!/usr/bin/perl
+# Test a project creation
 
 use strict;
 use warnings;
 use WWW::Mechanize;
 use Test::More qw(no_plan);
 
+$ENV{SAVANE_CONF} = '/tmp/savane/savane';
 use Savane;
 
 
 my $agent = WWW::Mechanize->new();
 
 # Login in
-$agent->get('http://localhost/savane/');
+$agent->get('http://localhost:50080/');
 $agent->follow_link(text => 'Login', n => '1');
 
 $agent->form_number(2);
-$agent->field('form_loginname', 'Beuc');
-$agent->field('form_pw', 'beuc');
+$agent->field('form_loginname', 'admin');
+$agent->field('form_pw', 'admin');
 $agent->click('login');
 
 
@@ -61,7 +63,7 @@ $agent->follow_link(text => 'Logout', n => '1');
 
 
 # Check that the project exists
-ok(GetGroupSettings('test', 'status') eq 'P', 'Check project status');
+ok(GetGroupSettings('test', 'status') eq 'P', 'Create project');
 
 # Check that the associated task was created
 # TODO

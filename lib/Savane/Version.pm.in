@@ -29,7 +29,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(GetVersion );
 our $version = 1;
 # For Makefile.PL
-$VERSION = '@VERSION@';
+my $VERSION = '@VERSION@';
 
 # Return a configuration item
 sub GetVersion {
