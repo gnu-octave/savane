@@ -21,22 +21,18 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('../../include/init.php');
+require_once('../../include/sendmail.php');
 register_globals_off();
+# should be mysql-safe, needs various input validation + !!tests!!
 
 ########################################################################
 # Preliminary checks
 # Check if the user is logged in.
 session_require(array('isloggedin'=>'1'));
 
-$item = sane_all("item");
-$update = sane_all("update");
-$newvalue = sane_all("newvalue");
-$newvaluecheck = sane_all("newvaluecheck");
-$oldvalue = sane_all("oldvalue");
-$step = sane_all("step");
-$session_hash = sane_all("session_hash");
-$confirm_hash = sane_all("confirm_hash");
-$confirm_hash = sane_all("confirm_hash");
+extract(sane_import('request',
+  array('item', 'update', 'newvalue', 'newvaluecheck', 'oldvalue', 'step',
+	'session_hash', 'confirm_hash')));
 
 if (!$item)
 {
@@ -51,7 +47,7 @@ $success = FALSE;
 # the user to use the relevant form than to reimplement everything here
 if ($item == 'delete')
 {
-  $res_check = db_query("SELECT group_id FROM user_group WHERE user_id=" . user_getid());
+  $res_check = db_execute("SELECT group_id FROM user_group WHERE user_id=?", array(user_getid()));
   if (db_numrows($res_check) != 0)
     {      
       exit_error(_("You must quit groups that your are member of before requesting account deletion. If you registered a project that was not approved or discarded yet, you must ask admins to cancel the registration"));
@@ -72,7 +68,9 @@ if ($update)
       else
 	{
 	  $newvalue = strtr($newvalue, "\'\"\,", "     ");
-	  $success = db_query("UPDATE user SET realname='$newvalue' WHERE user_id=".user_getid());
+	  $success = db_autoexecute('user', array('realname' => $newvalue),
+				    DB_AUTOQUERY_UPDATE,
+				    "user_id=?", array(user_getid()));
 	  if ($success)
 	    { fb(_("Real Name updated.")); }
 	  else
@@ -86,7 +84,9 @@ if ($update)
       if ($newvalue == 100)
 	{ $newvalue = "GMT"; }
       
-      $success = db_query("UPDATE user SET timezone='$newvalue' WHERE user_id=" . user_getid());
+      $success = db_autoexecute('user', array('timezone' => $newvalue),
+				    DB_AUTOQUERY_UPDATE,
+				    "user_id=?", array(user_getid()));
       if ($success)
 	{ fb(_("Timezone updated.")); }
       else
@@ -96,12 +96,12 @@ if ($update)
     {
       ################# password
 
-      require  "../../include/account.php";
+      require_once('../../include/account.php');
 
       $success = 1;
 
       # check against old pw
-      db_query("SELECT user_pw, status FROM user WHERE user_id=" . user_getid());
+      db_execute("SELECT user_pw, status FROM user WHERE user_id=?", array(user_getid()));
       $row_pw = db_fetch_array();
 
       # CERN_SPECIFIC: sys_use_pamauth have to be included in the
@@ -128,7 +128,9 @@ if ($update)
       if($usepam)
 	{
 	  # allow user to set authentication to be PAM based
-	  db_query("UPDATE user SET user_pw='PAM' WHERE user_id=".user_getid());
+	  $success = db_autoexecute('user', array('user_pw' => 'PAM'),
+				    DB_AUTOQUERY_UPDATE,
+				    "user_id=?", array(user_getid()));
 	}
       else
 	{
@@ -151,8 +153,9 @@ if ($update)
 	  # Update only if everything was ok before
 	  if ($success)
 	    {
-	      $success = db_query("UPDATE user SET user_pw='" . md5($newvalue) . "'  WHERE "
-				  . "user_id=" . user_getid());
+	      $success = db_autoexecute('user', array('user_pw' => md5($newvalue)),
+				        DB_AUTOQUERY_UPDATE,
+				        "user_id=?", array(user_getid()));
 	      if ($success)
 		{ fb(_("Password updated.")); }
 	      else
@@ -165,7 +168,9 @@ if ($update)
     {
       ################# GPG Key
 
-      $success = db_query("UPDATE user SET gpg_key='$newvalue' WHERE user_id=".user_getid());
+      $success = db_autoexecute('user', array('gpg_key' => $newvalue),
+			        DB_AUTOQUERY_UPDATE,
+			        "user_id=?", array(user_getid()));
       if ($success)
 	{ fb(_("GPG Key updated.")); }
       else
@@ -178,7 +183,7 @@ if ($update)
       # First step
       if (!$step)
 	{
-	  require "../../include/account.php";
+	  require_once('../../include/account.php');
 
 	  # Proceed only if it is a valid email address
 	  if (account_emailvalid($newvalue))
@@ -186,14 +191,16 @@ if ($update)
 	      
               # Build a new confirm hash
 	      $confirm_hash = substr(md5($session_hash . time()),0,16);
-	      $res_user = db_query("SELECT * FROM user WHERE user_id=".user_getid());
+	      $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
 	      if (db_numrows($res_user) < 1)
 		{ exit_error("Invalid User","That user does not exist."); }
 	      
 	      $row_user = db_fetch_array($res_user);
-	      
-	      $success = db_query("UPDATE user SET confirm_hash='$confirm_hash',email_new='$newvalue' "
-				  . "WHERE user_id='".$row_user[user_id]."'");
+	      $success = db_autoexecute('user', array('confirm_hash' => $confirm_hash,
+						      'email_new' => $newvalue),
+				        DB_AUTOQUERY_UPDATE,
+				        "user_id=?", array(user_getid()));
+
 	      
 	      
 	      if (!$success)
@@ -204,7 +211,7 @@ if ($update)
 		{
 		  fb(_("Database updated."));
 		  
-		  if ($GLOBALS['sys_https_host'])
+		  if (!empty($GLOBALS['sys_https_host']))
 		    { $url = 'https://'.$GLOBALS['sys_https_host'].$GLOBALS['sys_home'].'my/admin/change.php?item=email&update=1&confirm_hash='.$confirm_hash; }
 		  else
 		    { $url = 'http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'my/admin/change.php?item=email&update=1&confirm_hash='.$confirm_hash; }
@@ -256,26 +263,34 @@ if ($update)
 	}
       else if ($step == "confirm")
 	{
-	  $success = 1;
-	  $res_user = db_query("SELECT * FROM user WHERE confirm_hash='$confirm_hash'");
-	  if (db_numrows($res_user) > 1)
-	    {
-	      $ffeedback = (" This confirm hash exists more than once.");
-	      $success = 0;
-	    }
-	  if (db_numrows($res_user) < 1)
-	    {
-	      $ffeedback = (" Invalid confirmation hash.");
-	      $success = 0;
-	    }
+	  $success = false;
+	  
+	  if (ereg("^[a-f0-9]{16}$",$confirm_hash)) {
+	    $res_user = db_autoexecute("SELECT * FROM user WHERE confirm_hash=?",
+				       array($confirm_hash));
+	    if (db_numrows($res_user) > 1)
+	      {
+		$ffeedback = (" This confirm hash exists more than once.");
+	      }
+	    else if (db_numrows($res_user) < 1)
+	      {
+		$ffeedback = (" Invalid confirmation hash.");
+	      }
+	    else
+	      {
+		$success = true;
+	      }
+	  }
 	  if ($success)
 	    {
 	      $row_user = db_fetch_array($res_user);
-	      $success = db_query("UPDATE user SET "
-				  . "email='" . $row_user['email_new'] . "',"
-				  . "confirm_hash='none',"
-				  . "email_new='" . $row_user['email'] . "' WHERE "
-				  . "confirm_hash='$confirm_hash'");
+	      $success = db_autoexecute('user',
+		array(
+                  'email' => $row_user['email_new'],
+		  'confirm_hash' => null,
+		  'email_new' => null
+		), DB_AUTOQUERY_UPDATE,
+		"user_id=? AND confirm_hash=?", array(user_getid(), $confirm_hash));
 
 	      if ($success)
 		{ fb(_("Email address updated.")); }
@@ -287,10 +302,11 @@ if ($update)
       else if ($step == "discard")
 	{
 	  # Just remove stuff added
-	   $success = db_query("UPDATE user SET "
-			       . "confirm_hash='none',"
-			       . "email_new='' WHERE "
-			       . "confirm_hash='$confirm_hash'");
+	  $success = db_autoexecute('user', array(
+	      'confirm_hash' => null,
+	      'email_new' => null
+	    ), DB_AUTOQUERY_UPDATE,
+	    "user_id=? AND confirm_hash=?", array(user_getid(), $confirm_hash));
 	   if ($success)
 	     { fb(_("Address change process discarded.")); }
 	   else
@@ -312,15 +328,15 @@ if ($update)
 	{
           # Build a new confirm hash
 	  $confirm_hash = substr(md5($session_hash . time()),0,16);
-	  $res_user = db_query("SELECT * FROM user WHERE user_id=".user_getid());
+	  $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
 	  if (db_numrows($res_user) < 1)
 	    { exit_error("Invalid User","That user does not exist."); }
 	  
 	  $row_user = db_fetch_array($res_user);
 	  
-	  $success = db_query("UPDATE user SET confirm_hash='$confirm_hash',email_new='$newvalue' "
-			      . "WHERE user_id='".$row_user[user_id]."'");
-	      
+	  $success = db_autoexecute('user', array('confirm_hash' => $confirm_hash),
+				    DB_AUTOQUERY_UPDATE,
+				    "user_id=?", array(user_getid()));
 	  
 	  if (!$success)
 	    {
@@ -330,7 +346,7 @@ if ($update)
 	    {
 	      fb(_("Database updated."));
 	      
-	      if ($GLOBALS['sys_https_host'])
+	      if (!empty($GLOBALS['sys_https_host']))
 		{ $url = 'https://'.$GLOBALS['sys_https_host'].$GLOBALS['sys_home'].'my/admin/change.php?item=delete&update=1&confirm_hash='.$confirm_hash; }
 	      else
 		{ $url = 'http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'my/admin/change.php?item=delete&update=1&confirm_hash='.$confirm_hash; }
@@ -343,8 +359,8 @@ if ($update)
 		. $url."&step=discard\n\n"
 		. sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
 	      
-	      $success = sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_lists_domain'],
-				       $row_user[email],
+	      $success = sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_mail_domain'],
+				       $row_user['email'],
 				       $GLOBALS['sys_name'] .' '._("Verification"),
 				       $message);
 	      
@@ -363,15 +379,15 @@ if ($update)
       else if ($step == "confirm")
 	{
 	  $success = 1;
-	  $res_user = db_query("SELECT * FROM user WHERE confirm_hash='$confirm_hash'");
+	  $res_user = db_execute("SELECT * FROM user WHERE confirm_hash=?", array($confirm_hash));
 	  if (db_numrows($res_user) > 1)
 	    {
-	      $ffeedback = (" This confirm hash exists more than once.");
+	      $ffeedback = ("This confirm hash exists more than once.");
 	      $success = 0;
 	    }
 	  if (db_numrows($res_user) < 1)
 	    {
-	      $ffeedback = (" Invalid confirmation hash.");
+	      $ffeedback = ("Invalid confirmation hash.");
 	      $success = 0;
 	    }
 	  if ($success)
@@ -382,10 +398,9 @@ if ($update)
       else if ($step == "discard")
 	{
 	  # Just remove stuff added
-	   $success = db_query("UPDATE user SET "
-			       . "confirm_hash='none',"
-			       . "email_new='' WHERE "
-			       . "confirm_hash='$confirm_hash'");
+	  $success = db_autoexecute('user', array('confirm_hash' => null),
+				    DB_AUTOQUERY_UPDATE,
+				    "confirm_hash=?", array($confirm_hash));
 	   if ($success)
 	     { fb(_("Account deletion process discarded.")); }
 	   else
@@ -437,7 +452,7 @@ else if ($item == "timezone")
 {
   ################# Timezone
 
-  require "../../include/timezones.php";
+  require_once('../../include/timezones.php');
   $title = _("Change Timezone");
   $input_title = _("No matter where you live, you can see all dates and times as if it were in your neighborhood:");
   $input_specific = html_build_select_box_from_arrays ($TZs,$TZs,'newvalue',user_get_timezone(), true, 'GMT');
@@ -467,7 +482,7 @@ else if ($item == "password")
       at this site (this requires your Savannah login name to be the
       same as the AFS account name). In this case, you don't need to fill the two \"New Password\" fields. Instead, check the following box:"; 
 
-    db_query("SELECT user_pw FROM user WHERE user_id=" . user_getid());
+    db_execute("SELECT user_pw FROM user WHERE user_id=?", array(user_getid()));
     $row_pw = db_fetch_array();
     $uses_pam_auth = 0;
     if ($row_pw[user_pw] == 'PAM')
@@ -483,7 +498,7 @@ else if ($item == "gpgkey")
 {
   ################# GPG Key
 
-  $res_user = db_query("SELECT gpg_key FROM user WHERE user_id=" . user_getid());
+  $res_user = db_execute("SELECT gpg_key FROM user WHERE user_id=?", array(user_getid()));
   $row_user = db_fetch_array($res_user);
 
 
@@ -575,6 +590,3 @@ print '</form>';
 
 
 site_user_footer(array());
-
-
-?>

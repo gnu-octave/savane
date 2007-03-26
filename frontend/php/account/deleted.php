@@ -1,4 +1,6 @@
 <?php
+// Acknowledge account deletion (cf. /my/admin/change.php?item=delete)
+// 
 // Copyright 1999-2000 (c) The SourceForge Crew
 // Copyright (C) 2007  Sylvain Beucler
 // 
@@ -20,6 +22,8 @@
 
 require_once('../include/init.php');
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
 $HTML->header(array('title'=>_("Deleted Account"), 'context'=>'account'));
 

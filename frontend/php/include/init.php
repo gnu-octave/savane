@@ -66,9 +66,9 @@ $sys_unix_group_name = 'siteadmin';
 #print_r($_SERVER);
 #print "</pre>";
 
-#$sys_mail_domain = $sys_default_domain;
-#$sys_mail_admin = "root";
-#$sys_replyto = "NO-REPLY.INVALID-ADDRESS";
+$sys_mail_domain = 'localhost';
+$sys_mail_admin = get_current_user();
+$sys_replyto = "NO-REPLY.INVALID-ADDRESS";
 
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');

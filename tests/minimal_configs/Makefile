@@ -29,12 +29,15 @@ database:
 	cd ../.. && ./configure --sysconfdir=/tmp/savane --with-db-options="-S /tmp/savane/mysql/sock"
 	for i in 1 2 3 4 5; do if mysqladmin -S /tmp/savane/mysql/sock ping; then break; fi; sleep 1; done
 	cd ../.. && make database
-install: /tmp/savane start database
+install:
+	make /tmp/savane
+	make start
+	make database
 
 refresh:
 	rsync apache2/apache2.conf /tmp/savane/apache2/
 
-start: install apache2-start mysql-start
+start: apache2-start mysql-start
 apache2-start:
 	apache2 -f /tmp/savane/apache2/apache2.conf -e debug
 mysql-start:

@@ -24,9 +24,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-require "../include/pre.php";
+require_once('../include/init.php');
 
 session_require(array('isloggedin'=>'1'));
+
+
+extract(sane_import('request', array('quitting_group_id')));
+extract(sane_import('post', array('confirm')));
+
 
 # Make sure the user is actually member of the project
 if (!$pending && !member_check(0,$quitting_group_id))
@@ -98,5 +103,3 @@ else
 
   session_redirect($GLOBALS['sys_home']."my/groups.php");
 }
-
-?>
