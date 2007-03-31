@@ -1,0 +1,41 @@
+A "mech" is a test that uses WWW::Mechanize, a Perl library that
+simulate a browser for automation purposes. We use it to perform
+external tests (as opposed to internal unit testing) that mimics a
+client browser session.
+
+
+mechs/ contains the tests. Currently they create a user, confirm it by
+looking for the confirmation_hash directly in the database, create a
+project with that user, then login as admin and approve the project.
+
+It's pretty easy to break Savane when cleaning-up / "refactoring" the
+code, and PHP does not provide any kind of compiler that would check
+for the most common errors (syntax, renamed functions, etc.). Thus
+testing every Savane feature automatically is invaluable during such
+work.
+
+
+minimal_configs/ contains a Makefile that produces a complete
+Apache2/PHP5/MySQL5 environment. You need to have these server
+binaries already installed in your PATH, but everything else
+(configuration, database storage, PIDs, etc.) will run in /etc/savane/
+under the current user. No root privileges are needed. The mechs can
+then hit http://localhost:50080/ and stress-test this independant
+Savane install.
+
+Check the Makefile for target names. Mainly:
+- install: install and runs the environment
+- uninstall: stop servers and remove the environment
+- start: starts Apache2 and MySQL
+- stop: stops these servers
+- refresh: only reinstall the Apache2 configuration file
+
+You usually only need 'install' and 'uninstall'.
+
+This is meant for a limited (frontend-only) Savane installation. A
+more complete install, that would also test the backend, is a
+different story. A solution based on QEMU/UML/etc. for the
+virtualization and debootstrap/yum --base/etc. for the base system,
+which would simulate one or several independent machines, would be
+nice. Beuc has some work done (independent of Savane) on this topic,
+check with him if you're interested.
