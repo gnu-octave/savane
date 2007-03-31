@@ -233,12 +233,15 @@ function utils_cutlink ($string, $lenght=35)
   unset($help);
   # In printer mode, return as it were, because the link must be intact on
   # the printout
-  if (!sane_all("printer") && strlen($string) > $lenght)
-    { 
-      $string = substr($string, 0, $lenght)."..."; 
-      $help = ' title="'.$url.'"';
-    }
-  
+  // Disable cutting because it annoys users who can't safely
+  // copy/paste a complete paragraph with the links intact (check
+  // 105807@sv)
+  #if (!sane_all("printer") && strlen($string) > $lenght)
+  #  {
+  #    $string = substr($string, 0, $lenght)."...";
+  #    $help = ' title="'.$url.'"';
+  #  }
+
   return '<a href="'.$url.'"'.$help.'>'.$string.'</a>';
 }
 

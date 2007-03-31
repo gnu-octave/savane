@@ -441,8 +441,8 @@ function search_run ($words, $type_of_search="soft", $return_error_messages=1)
 	. "GROUP BY bug_id,summary,date,user_name "
 	. "ORDER BY ".$type_of_search.".date DESC "
 	. "LIMIT $offset,".($max_rows+1);
+    } else {
+      exit_error(_("Invalid search."));
     }
   return db_query($sql);
 }
-
-?>
