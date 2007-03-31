@@ -124,7 +124,6 @@ $agent->click('login');
 
 $agent->follow_link(text => 'Become Superuser', n => '1');
 $agent->follow_link(text => 'Pending projects', n => '1');
-print "Trying $group1_full_name\n";
 $agent->follow_link(text => "Submission of $group1_full_name", n => '1');
 $agent->follow_link(text => 'Group Administration', n => '2');
 #$agent->follow_link(n => '43'); # activate
