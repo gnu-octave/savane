@@ -1,5 +1,5 @@
 use strict;
-our ($homepage_url, $agent);
+our ($homepage_url);
 
 # New pending user
 sub register_user {
@@ -38,7 +38,7 @@ sub register_user {
 }
 
 sub confirm_user {
-    my ($user_name, $user_pass) = @_;
+    my ($agent, $user_name, $user_pass) = @_;
     my $confirm_hash = GetUserSettings($user_name, 'confirm_hash');
     $agent->get("$homepage_url/account/verify.php?confirm_hash=$confirm_hash");
     $agent->form_number(2);
