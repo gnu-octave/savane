@@ -8,51 +8,21 @@ use Test::More qw(no_plan);
 
 use Digest::MD5 qw(md5_hex);
 
+# Dev test environment
 $ENV{SAVANE_CONF} = '/tmp/savane/savane';
 use Savane;
+our $homepage_url = 'http://localhost:50080';
 
-my $homepage_url = 'http://localhost:50080';
+# Default admin credentials
+our $admin_name = 'admin';
+our $admin_pass = 'admin';
 
-my $agent = WWW::Mechanize->new();
-my $admin_name = 'admin';
-my $admin_pass = 'admin';
+# Default agent - tests can generate some more though
+our $agent = WWW::Mechanize->new();
 
-# New user
-my $user1_number = 0;
-my $user1_name = '';
-my $user1_status = '';
-do {
-    $user1_number++;
-    $user1_name = 'testuser' . $user1_number;
-    $user1_status = GetUserSettings($user1_name, 'status');
-} while (defined($user1_status));
-my $user1_pass = $user1_name;
-my $user1_realname = "Test User $user1_number";
+###################
 
-$agent->get($homepage_url);
-$agent->follow_link(text => 'New User', n => '1');
-$agent->form_number(2);
-$agent->field('form_loginname', $user1_name);
-$agent->field('form_pw', $user1_pass);
-$agent->field('form_pw2', $user1_pass);
-$agent->field('form_realname', $user1_realname . "'");
-$agent->field('form_email', $user1_name.'@localhost');
-$agent->field('website', 'http://'); # anti-spam test or sthing
-$agent->click('update');
-
-ok(GetUserSettings($user1_name, 'status') eq 'P', 'Register user');
-
-my $confirm_hash = GetUserSettings($user1_name, 'confirm_hash');
-$agent->get("$homepage_url/account/verify.php?confirm_hash=$confirm_hash");
-$agent->form_number(2);
-$agent->field('form_loginname', $user1_name);
-$agent->field('form_pw', $user1_pass);
-$agent->field('website', 'http://');
-$agent->click('update');
-
-ok(GetUserSettings($user1_name, 'status') eq 'A', 'Confirm user');
-
-
+require 'create_user.mech.pl';
 
 # Create a new project
 my $group1_number = 0;
@@ -92,7 +62,7 @@ $agent->field('form_license_other', '');
 $agent->click('Submit');
 
 $agent->form_number(2);
-# Skip recap
+# Don't touch recap
 #$agent->field('form_comments', '');
 #$agent->field('form_purpose', "'");
 #$agent->field('group_type', '1');

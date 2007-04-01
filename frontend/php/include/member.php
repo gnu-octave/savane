@@ -212,7 +212,7 @@ function member_check ($user_id=0, $group_id, $flag=0, $strict=0)
 	}
     }
   # determine whether someone is member of a project or not
-  $result = db_execute("SELECT user_id FROM user_group WHERE user_id=? AND group_id= AND admin_flags<>'P'",
+  $result = db_execute("SELECT user_id FROM user_group WHERE user_id=? AND group_id=? AND admin_flags<>'P'",
 		       array($user_id, $group_id));
   
   if (!$result || db_numrows($result) < 1)

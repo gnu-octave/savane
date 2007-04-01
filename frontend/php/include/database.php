@@ -83,38 +83,39 @@ function db_query_escape()
 // properly escaped for inclusion in an SQL query
 function db_variable_binding($sql, $inputarr=null) {
   if ($inputarr) {
-    $sqlarr = explode('?', $sql);
+    $sql_exploded = explode('?', $sql);
     
-    $sql = '';
+    $sql_expanded = '';
     $i = 0;
     //Use each() instead of foreach to reduce memory usage -mikefedyk
     while(list(, $v) = each($inputarr)) {
-      $sql .= $sqlarr[$i];
+      $sql_expanded .= $sql_exploded[$i];
       // from Ron Baldwin <ron.baldwin#sourceprose.com>
       // Only quote string types
       $typ = gettype($v);
       if ($typ == 'string')
-	$sql .= "'" . mysql_real_escape_string($v) . "'";
+	$sql_expanded .= "'" . mysql_real_escape_string($v) . "'";
       else if ($typ == 'double')
-	$sql .= str_replace(',','.',$v); // locales fix so 1.1 does not get converted to 1,1
+	$sql_expanded .= str_replace(',','.',$v); // locales fix so 1.1 does not get converted to 1,1
       else if ($typ == 'boolean')
-	$sql .= $v ? '1' : '0';
+	$sql_expanded .= $v ? '1' : '0';
       else if ($typ == 'object')
 	exit("Don't use db_execute with objects.");
       else if ($v === null)
-	$sql .= 'NULL';
+	$sql_expanded .= 'NULL';
       else
-	$sql .= $v;
+	$sql_expanded .= $v;
       $i += 1;
     }
-    if (isset($sqlarr[$i])) {
-      $sql .= $sqlarr[$i];
-      if ($i+1 != sizeof($sqlarr))
+    if (isset($sql_exploded[$i])) {
+      $sql_expanded .= $sql_exploded[$i];
+      if ($i+1 != sizeof($sql_exploded))
 	exit("db_variable_binding: input array does not match query: ".htmlspecialchars($sql));
-    } else if ($i != sizeof($sqlarr))
+    } else {
       exit("db_variable_binding: input array does not match query: ".htmlspecialchars($sql));
+    }
   }
-  return $sql;
+  return $sql_expanded;
 }
 
 /* Like ADOConnection->AutoExecute, without ignoring non-existing
@@ -181,6 +182,7 @@ adodb.inc.php
 */
 function db_execute($sql, $inputarr=null)
 {
+#    echo a; # makes xdebug produce a stacktrace
   $expanded_sql = db_variable_binding($sql, $inputarr);
 #  print "<pre>";
 #  print_r($expanded_sql);
@@ -190,6 +192,7 @@ function db_execute($sql, $inputarr=null)
 
 function db_query($qstring,$print=0) 
 {
+#    echo a; # makes xdebug produce a stacktrace
   #	global $QUERY_COUNT;
   #	$QUERY_COUNT++;
   if ($print) print "<br />Query is: $qstring<br />";

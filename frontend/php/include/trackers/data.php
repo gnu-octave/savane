@@ -1239,10 +1239,9 @@ function trackers_data_get_technicians ($group_id)
 
 
   # Get list of members
-  $members_sql =  "SELECT user.user_id AS user_id "
-     . "FROM user,user_group "
-     . "WHERE user.user_id=user_group.user_id AND user_group.group_id=$group_id ";
-  $members_res = db_query($members_sql);
+  $members_res = db_execute("SELECT user.user_id FROM user,user_group
+    WHERE user.user_id=user_group.user_id AND user_group.group_id=?",
+			    array($group_id));
   # Build the sql command
   $sql = "SELECT user_id,user_name FROM user WHERE ";
   $notfirst = FALSE;
@@ -1253,7 +1252,7 @@ function trackers_data_get_technicians ($group_id)
 	  if ($notfirst)
 	    { $sql .= " OR "; }
 	  $sql .= " user_id='".$member['user_id']."'";
-	  $notfirst = TRUE;
+	  $notfirst = true;
 	}
     }
   $sql .= " ORDER BY user_name";

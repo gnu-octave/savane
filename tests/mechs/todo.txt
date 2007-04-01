@@ -1,0 +1,34 @@
+# Request membership
+
+$agent->follow_link(text => 'My Groups', n => '1');
+$agent->form_number(2);
+$agent->field('words', 'test');
+$agent->click('Submit');
+
+$agent->form_number(3);
+$agent->tick('form_groups_103', 'on');
+$agent->field('form_message', "Hi, I'd like to be a member of your project.");
+$agent->click('update');
+
+# Remove oneself from all groups
+
+# Request account deletion
+
+$agent->follow_link(text => 'Account Configuration', n => '1');
+$agent->follow_link(text => 'Delete Account', n => '1');
+
+$agent->form_number(2);
+$agent->tick('newvalue', 'deletionconfirmed');
+$agent->click('update');
+
+# Follow confirmation mail
+my $confirm_hash = GetUserSettings($user1_name, 'confirm_hash');
+$agent->get("$frontpage_url/my/admin/change.php?item=delete&update=1&confirm_hash=$confirm_hash&step=confirm");
+
+
+#================
+
+# /my/bookmarks.php?edit=4
+# /my/bookmarks.php?add=1&url=%2F&title=%3A+Welcome
+# /my/bookmarks.php?edit=4&url='&title='
+# /my/bookmarks.php?delete=4
