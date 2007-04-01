@@ -22,6 +22,9 @@
 
 # Every mails sent should be using functions listed here.
 
+#input_is_safe();
+#mysql_is_safe();
+
 # The function that finally send the mail.
 # Every mail sent by Savannah should be using that function which
 # works like mail().
@@ -44,12 +47,6 @@ function sendmail_mail ($from,
   # Check if $delayspamcheck makes sense
   if (!$savane_project || !$savane_tracker || !$savane_item_id)
     { unset($int_delayspamcheck); }
-
-  # Make sure that users cannot insert malicious content
-  # (apart in message, which is not part of the headers)
-  $to = stripslashes($to);
-  $from = stripslashes($from);
-  $subject = stripslashes($subject);
 
   # Clean the markup
   $message = markup_textoutput($message);
@@ -210,8 +207,8 @@ function sendmail_mail ($from,
 	      
               # If we get here, we have a squad and we will store all the
               # squad members uid
-	      $sql_squad = "SELECT user_id FROM user_squad WHERE squad_id='$touid'";
-	      $result_squad = db_query($sql_squad);
+	      $result_squad = db_execute("SELECT user_id FROM user_squad WHERE squad_id=?",
+					 array($touid));
 	      if ($result_squad && db_numrows($result_squad) > 0) 
 		{
 		  while ($thisuser = db_fetch_array($result_squad))
@@ -377,8 +374,17 @@ function sendmail_mail ($from,
 	  else
 	    {
 	      # Wait to be checked for spams
-	      db_query("INSERT INTO trackers_spamcheck_queue_notification (artifact, item_id, comment_id, to_header, other_headers, subject_header, message) VALUES ('$savane_tracker', '$savane_item_id', '$savane_comment_id','".addslashes(sendmail_encode_header_content($real_to))."','".addslashes($more_headers)."','".addslashes(sendmail_encode_header_content($subject))."','".addslashes($message)."')");
-	      
+	      db_autoexecute('trackers_spamcheck_queue_notification',
+                array(
+                  'artifact' => $savane_tracker,
+		  'item_id' => $savane_item_id,
+		  'comment_id' => $savane_comment_id,
+		  'to_header' => sendmail_encode_header_content($real_to),
+		  'other_headers' => $more_headers,
+		  'subject_header' => sendmail_encode_header_content($subject),
+		  'message' => $message
+		),
+              DB_AUTOQUERY_INSERT);
 	    }
 	} 
 
@@ -393,7 +399,17 @@ function sendmail_mail ($from,
        else
 	 {
            # Wait to be checked for spams
-	   db_query("INSERT INTO trackers_spamcheck_queue_notification (artifact, item_id, comment_id, to_header, other_headers, subject_header, message) VALUES ('$savane_tracker', '$savane_item_id', '$savane_comment_id','".addslashes(sendmail_encode_header_content($user_name[$v]))."','".addslashes($more_headers)."','".addslashes(sendmail_encode_header_content($user_subject[$v]))."','".addslashes($message)."')");
+	   db_autoexecute('trackers_spamcheck_queue_notification',
+            array(
+              'artifact' => $savane_tracker,
+	      'item_id' => $savane_item_id,
+	      'comment_id' => $savane_comment_id,
+	      'to_header' => sendmail_encode_header_content($user_name[$v]),
+	      'other_headers' => $more_headers,
+	      'subject_header' => sendmail_encode_header_content($user_subject[$v]),
+	      'message' => $message
+            ),
+            DB_AUTOQUERY_INSERT);
 	 }
      }     
       
@@ -486,5 +502,3 @@ function sendmail_create_msgid ()
   mt_srand((double)microtime()*1000000);
   return date("Ymd-His", time()).".sv".user_getid().".".mt_rand(0,100000)."@".$_SERVER["HTTP_HOST"];
 }
-
-?>

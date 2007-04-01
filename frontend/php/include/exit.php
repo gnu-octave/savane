@@ -1,4 +1,6 @@
 <?php
+# Generic functions to clean exit on error
+# 
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -22,7 +24,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Generic functions to clean exit on error
+#input_is_safe();
+#mysql_is_safe();
 
 # Base function. The alternatives below should be used whenever relevant, 
 # as they may wrap this one with additional useful things

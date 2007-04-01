@@ -21,8 +21,13 @@
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- 
+
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/member.php');
+
+# Unset these globals until register_globals if off everywhere
 unset($USER_IS_SUPER_USER);
 $USER_RES=array();
 
@@ -54,8 +59,8 @@ function user_can_be_super_user()
     {
       if (user_isloggedin()) 
 	{
-	  $sql="SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='".$GLOBALS['sys_group_id']."' AND admin_flags='A'";
-	  $result=db_query($sql);
+	  $result=db_execute("SELECT * FROM user_group WHERE user_id=? AND group_id=? AND admin_flags='A'",
+			     array(user_getid(), $GLOBALS['sys_group_id']));
 	  if (!$result || db_numrows($result) < 1) 
 	    {
 	      $USER_IS_SUPER_USER=false;
@@ -105,12 +110,11 @@ function user_check_ismember($user_id, $group_id, $type=0)
 # Get the groups to which a user belongs
 function user_groups($uid) 
 {
-  $sql="SELECT * FROM user_group WHERE user_id='$uid'";
-  $result = db_query($sql);
+  $result = db_execute("SELECT * FROM user_group WHERE user_id=", array($uid));
   $arr=array();
   while ($val = db_fetch_array($result))
     {
-      array_push($arr,$val[group_id]);
+      array_push($arr,$val['group_id']);
     };   
   return $arr;
 }
@@ -118,8 +122,7 @@ function user_groups($uid)
 # Get the email of a user
 function user_get_email($uid)
 {
-  $sql="SELECT * FROM user WHERE user_id='$uid'";
-  $result = db_query($sql);
+  $result = db_execute("SELECT * FROM user WHERE user_id=?", array($uid));
   $val = db_fetch_array($result);   
   return $val['email'];
 }
@@ -191,7 +194,8 @@ function user_getname($user_id=0, $getrealname=0)
       else
 	{
 	  #fetch the user name and store it for future reference
-	  $result = db_query("SELECT user_id,user_name,realname FROM user WHERE user_id='$user_id'");
+	  $result = db_execute("SELECT user_id,user_name,realname FROM user WHERE user_id=?",
+			       array($user_id));
 	  if ($result && db_numrows($result) > 0)
 	    {
 	      if ($getrealname == 0)
@@ -295,7 +299,7 @@ function user_get_result_set($user_id)
   global $USER_RES;
   if (empty($USER_RES["_".$user_id."_"]))
     {
-      $USER_RES["_".$user_id."_"]=db_query("SELECT * FROM user WHERE user_id='$user_id'");
+      $USER_RES["_".$user_id."_"]=db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));
       return $USER_RES["_".$user_id."_"];
     } 
   else
@@ -310,7 +314,7 @@ function user_get_result_set_from_unix($user_name)
   #so it doesn't have to be fetched each time
   
   global $USER_RES;
-  $res = db_query("SELECT * FROM user WHERE user_name='$user_name'");
+  $res = db_execute("SELECT * FROM user WHERE user_name=?", array($user_name));
   $user_id = db_result($res,0,'user_id');
   $USER_RES["_".$user_id."_"] = $res;
   return $USER_RES["_".$user_id."_"];
@@ -335,11 +339,17 @@ function user_set_preference ($preference_name,$value)
   if (user_isloggedin()) 
     {
       $preference_name=strtolower(trim($preference_name));
-      $result=db_query("UPDATE user_preferences SET preference_value='$value' ".
-		       "WHERE user_id='".user_getid()."' AND preference_name='$preference_name'");
+      $result=db_autoexecute('user_preferences',
+			     array('preference_value' => $value),
+			     DB_AUTOQUERY_UPDATE,
+			     "user_id=? AND preference_name=?",
+			     array(user_getid(), $preference_name));
       if (db_affected_rows($result) < 1) {
-	$result=db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) ".
-			 "VALUES ('".user_getid()."','$preference_name','$value')");
+	$result=db_autoexecute('user_preferences',
+			       array('user_id' => user_getid(),
+				     'preference_name' => $preference_name,
+				     'preference_value' => $value),
+			       DB_AUTOQUERY_INSERT);
       }
       
 # Update the Preference cache if it was setup by a user_get_preference
@@ -356,7 +366,8 @@ function user_unset_preference ($preference_name)
   global $user_pref;
   if (user_isloggedin()) {
     $preference_name=strtolower(trim($preference_name));
-    $result=db_query("DELETE FROM user_preferences WHERE user_id='".user_getid()."' AND preference_name='$preference_name' LIMIT 1");
+    $result=db_execute("DELETE FROM user_preferences WHERE user_id=? AND preference_name=? LIMIT 1",
+		     array(user_getid(), $preference_name));
 
     # Update the Preference cache if it was setup by a user_get_preference
     if (isset($user_pref))
@@ -503,44 +514,46 @@ function user_delete ($user_id=false, $confirm_hash=false)
   # If self-destruct, the correct confirm_hash must be provided
   if (!user_is_super_user())
     {
-      $confirm_hash = " confirm_hash='$confirm_hash' AND ";
+      $confirm_hash_test = " confirm_hash=? AND ";
+      $confirm_hash_param = array($confirm_hash);
     }
   else
     {
-      unset($confirm_hash);
+      $confirm_hash_test = '';
+      $confirm_hash_param = array();
     }
 
 
-  $success = db_query("UPDATE user SET "
-		      . "user_pw='*********34344',"
-		      . "realname='-Deleted Account-',"
-		      . "status='S',"
-		      . "email='idontexist@nowhere.net',"
-		      . "confirm_hash='',"
-		      . "authorized_keys='',"
-		      . "people_view_skills='0',"
-		      . "people_resume='',"
-		      . "timezone='GMT',"
-		      . "theme='',"
-		      . "gpg_key='',"
-		      . "email_new='' WHERE "
-		      . "$confirm_hash "
-		      . "user_id='".$user_id."' LIMIT 1");
-
-  # Remove from any groups, if by any chances this was not done before
-  # (normally, an user must quit groups before being allowed to delete his
-  # account)
-  db_query("DELETE FROM user_group WHERE user_id='".$user_id."'");  
-  db_query("DELETE FROM user_squad WHERE user_id='".$user_id."'");
-
-  # Additionally, clean up sessions, remove prefs
-  db_query("DELETE FROM user_bookmarks WHERE user_id='".$user_id."'");  
-  db_query("DELETE FROM user_preferences WHERE user_id='".$user_id."'");
-  db_query("DELETE FROM user_votes WHERE user_id='".$user_id."'");
-  db_query("DELETE FROM session WHERE user_id='".$user_id."'");
+  $success = db_autoexecute('user',
+   array('user_pw' => '!',
+	 'realname' => '-Deleted Account-',
+	 'status' => 'S',
+	 'email' => 'idontexist@nowhere.net',
+	 'confirm_hash' => '',
+	 'authorized_keys' => '',
+	 'people_view_skills' => '0',
+	 'people_resume' => '',
+	 'timezone' => 'GMT',
+	 'theme' => '',
+	 'gpg_key' => '',
+	 'email_new' => ''),
+   DB_AUTOQUERY_UPDATE,
+   "$confirm_hash_query user_id=?", array_merge($confirm_hash_param), array($user_id));
   
   if ($success)
     { 
+      # Remove from any groups, if by any chances this was not done before
+      # (normally, an user must quit groups before being allowed to delete his
+      # account)
+      db_execute("DELETE FROM user_group WHERE user_id=?", array($user_id));
+      db_execute("DELETE FROM user_squad WHERE user_id=?", array($user_id));
+
+      # Additionally, clean up sessions, remove prefs
+      db_execute("DELETE FROM user_bookmarks WHERE user_id=?", array($user_id));
+      db_execute("DELETE FROM user_preferences WHERE user_id=?", array($user_id));
+      db_execute("DELETE FROM user_votes WHERE user_id=?", array($user_id));
+      db_execute("DELETE FROM session WHERE user_id=?", array($user_id));
+      
       fb(_("Account deleted.")); 
       return true;
     }
@@ -548,5 +561,3 @@ function user_delete ($user_id=false, $confirm_hash=false)
   fb(_("Failed to update the database."), 1); 
   return false;
 }
-
-?>

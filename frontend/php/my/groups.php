@@ -21,16 +21,19 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
-require_directory("search");
-require_directory("trackers");
+require_once('../include/database.php');
+require_directory('search');
+require_directory('trackers');
 
 # Make this page register global off compliant
 register_globals_off();
 
 # Obtain general user info
-$res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
+$res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
 $row_user = db_fetch_array($res_user);
 
 # Obtain approval_user_gen_email() for site specific content
@@ -41,12 +44,9 @@ utils_get_content("my/request_for_inclusion");
 ## Updates
 
 # Watchee add
-$func = sane_all("func");
+extract(sane_import('request', array('func', 'watchee_id', 'group_id')));
 if ($func)
 {
-  $watchee_id = sane_all("watchee_id");
-  $group_id = sane_all("group_id");
-
   if ($func == "delwatchee")
     {
 # Stop watching another user
@@ -78,7 +78,7 @@ if ($func)
 function send_pending_user_email($group_id, $user_id, $user_message)
 {
 
-  $res_grp = db_query("SELECT * FROM groups WHERE group_id='$group_id'");
+  $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 
   if (db_numrows($res_grp) < 1)
     {
@@ -87,9 +87,9 @@ function send_pending_user_email($group_id, $user_id, $user_message)
 
   $row_grp = db_fetch_array($res_grp);
 
-  $res_admins = db_query("SELECT user.user_name FROM user,user_group WHERE "
-			 . "user.user_id=user_group.user_id AND user_group.group_id='$group_id' AND "
-			 . "user_group.admin_flags='A'");
+  $res_admins = db_execute("SELECT user.user_name FROM user,user_group WHERE "
+			 . "user.user_id=user_group.user_id AND user_group.group_id=? AND "
+			 . "user_group.admin_flags='A'", array($group_id));
 
   if (db_numrows($res_admins) < 1)
     {
@@ -121,35 +121,35 @@ function send_pending_user_email($group_id, $user_id, $user_message)
 }
 
 # Request for inclusion
-if (sane_post("update"))
+extract(sane_import('post', array('update', 'form_id', 'form_message', 'form_groups')));
+# ($form_groups is an array)
+if ($update)
 {
-  $result_upd = db_query("SELECT group_id FROM groups WHERE status='A' AND
-            is_public='1' ORDER BY group_id");
-  $form_id = sane_post("form_id");
+  $result_upd = db_query("SELECT group_id FROM groups WHERE status='A' AND is_public='1' ORDER BY group_id");
 
   # Check for duplicates
   if (!form_check($form_id))
     { return 0; }
-  unset($form_cleaned_already);
+  $form_cleaned_already = false;
 
   while ($val = db_fetch_array($result_upd))
     {
-      if(sane_post("form_groups_$val[group_id]"))
+      if (isset($form_groups[$val['group_id']]))
 	{
           # If not in group, add user with admin_flag "P"
           # (not very sensible, but this way we avoid changing
           # the table layout)
-	  if(!member_check_pending($row_user[user_id], $val[group_id]))
+	  if(!member_check_pending($row_user['user_id'], $val['group_id']))
 	    {
-	      if(!sane_post("form_message"))
+	      if(!$form_message)
 		{
 		  fb(_("When joining you must provide a message for the administrator, a short explanation of why you want to join this/these project(s)."), 1);
 		}
 	      else
 		{
-		  if(member_add($row_user[user_id], $val[group_id], 'P'))
+		  if(member_add($row_user['user_id'], $val['group_id'], 'P'))
 		    {
-		      send_pending_user_email($val[group_id], $row_user[user_id], sane_post("form_message"));
+		      send_pending_user_email($val['group_id'], $row_user['user_id'], $form_message);
 		      if (!$form_cleaned_already)
 			{
 			  form_clean($form_id);
@@ -171,7 +171,7 @@ if (sane_post("update"))
 
 # ###### get global user and group vars
 
-$sql = "SELECT groups.group_name,"
+$result = db_execute("SELECT groups.group_name,"
 . "groups.group_id,"
 . "groups.unix_group_name,"
 . "groups.status,"
@@ -179,32 +179,30 @@ $sql = "SELECT groups.group_name,"
 . "group_history.date "
 . "FROM groups,user_group,group_history "
 . "WHERE groups.group_id=user_group.group_id "
-. "AND user_group.user_id='".user_getid()."' "
+. "AND user_group.user_id=? "
 . "AND groups.status='A' "
 . "AND (group_history.field_name='Added User' OR group_history.field_name='Approved User' OR user_group.admin_flags='P')"
 . "AND group_history.group_id=user_group.group_id "
-. "AND group_history.old_value='".user_getname()."' "
+. "AND group_history.old_value=? "
 . "GROUP BY groups.unix_group_name "
-. "ORDER BY groups.unix_group_name";
-
-$result = db_query($sql);
+. "ORDER BY groups.unix_group_name",
+		     array(user_getid(), user_getname()));
 $rows = db_numrows($result);
 
 # Alternative sql that do not use group_history, just in case this history
 # would be flawed (history usage has been inconsistent over Savane history)
-$sql_without_history = "SELECT groups.group_name,"
+$result_without_history = db_execute("SELECT groups.group_name,"
 . "groups.group_id,"
 . "groups.unix_group_name,"
 . "groups.status,"
 . "user_group.admin_flags "
 . "FROM groups,user_group "
 . "WHERE groups.group_id=user_group.group_id "
-. "AND user_group.user_id='".user_getid()."' "
+. "AND user_group.user_id=? "
 . "AND groups.status='A' "
 . "GROUP BY groups.unix_group_name "
-. "ORDER BY groups.unix_group_name";
-
-$result_without_history = db_query($sql_without_history);
+. "ORDER BY groups.unix_group_name",
+				   array(user_getid()));
 $rows_without_history = db_numrows($result_without_history);
 
 if ($rows_without_history != $rows)
@@ -311,7 +309,7 @@ print '
 
 </div><!-- end boxitem -->';
 
-$words = sane_all("words");
+extract(sane_import('request', array('words')));
 if ($words)
 {
   # Avoid to big search by asking for more than 1 characters.
@@ -348,7 +346,7 @@ if ($words)
 	{
 	  if (!user_is_group_member($row_user['user_id'], $val['group_id']))
 	    {
-	      print '<input type="checkbox" name="form_groups_'.$val['group_id'].'" /> ';
+	      print '<input type="checkbox" name="form_groups['.$val['group_id'].']" /> ';
 	      print $val['group_name'];
 	      print '<br />';
 	    }
@@ -497,7 +495,7 @@ for ($i=0; $i<$rows; $i++)
   if (db_result($result,$i,'admin_flags') == 'P')
     {
       $content .= '<li class="'.utils_get_alt_row_color($j).'">';
-      $content .= '<span class="trash"><a href="../my/quitproject.php?quitting_group_id='. db_result($result,$i,'group_id').'&amp;pending=1">'.
+      $content .= '<span class="trash"><a href="../my/quitproject.php?quitting_group_id='. db_result($result,$i,'group_id').'">'.
 	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" alt="'._("Discard this request?").'" /></a></span>';
 
       $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'. db_result($result,$i,'unix_group_name') .'/">'.db_result($result,$i,'group_name').'</a><br />&nbsp;</li>';

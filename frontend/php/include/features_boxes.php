@@ -22,6 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 function show_features_boxes()
 {
@@ -132,16 +134,15 @@ function show_newest_projects($group_type, $limit)
   # Shows only projects that were added in the last trimester
   $since = mktime(0,0,0,(date("m")-2));
 
-  $sql =	"SELECT group_id,unix_group_name,group_name,register_time FROM groups " .
-     "WHERE is_public=1 AND status='A' AND type=$group_type AND register_time>='$since' " .
-     "ORDER BY register_time DESC LIMIT $limit";
-  $res_newproj = db_query($sql);
+  $res_newproj = db_execute("SELECT group_id,unix_group_name,group_name,register_time FROM groups
+WHERE is_public=1 AND status='A' AND type=? AND register_time >= ?
+ORDER BY register_time DESC LIMIT ?", array($group_type, $since, $limit));
   if (!db_numrows($res_newproj))
     { return false; }
 
   $base_url = '';
-  $sql_type = "SELECT type_id,base_host FROM group_type WHERE type_id=$group_type";
-  $res_newproj_type = db_query($sql_type);
+  $res_newproj_type = db_execute("SELECT type_id,base_host FROM group_type WHERE type_id=?",
+				 array($group_type));
   $row_newproj_type = db_fetch_array($res_newproj_type);
   if ($row_newproj_type['base_host'])
     {
@@ -174,9 +175,7 @@ function show_votes ($limit=10)
 
   while (list(,$tracker) = each($trackers))
     {
-      $sql = "SELECT bug_id,group_id,summary,vote FROM $tracker WHERE vote >=35 AND privacy=1 AND status_id=1 ORDER BY vote DESC LIMIT $limit";
-
-      $result=db_query($sql);
+      $result=db_execute("SELECT bug_id,group_id,summary,vote FROM $tracker WHERE vote >=35 AND privacy=1 AND status_id=1 ORDER BY vote DESC LIMIT ?", array($limit));
       $rows=db_numrows($result);
       $results = 0;
       if ($result && $rows > 0)
@@ -230,7 +229,7 @@ function show_votes ($limit=10)
 	'<a href="'.$GLOBALS['sys_home'].$tracker.'/?'.$item_id.'">'.
 	$prefix .' #'.$item_id.'</a>'.
 	_(": ").'&nbsp;'.
-	'<a href="'.$GLOBALS['sys_home'].$tracker.'/?'.$item_id.'">'.stripslashes($item_summary[$thisitem]).'</a>,'.
+	'<a href="'.$GLOBALS['sys_home'].$tracker.'/?'.$item_id.'">'.$item_summary[$thisitem].'</a>,'.
 	'&nbsp;'.sprintf(ngettext("%s vote", "%s votes", $vote), $vote).
        # not enough space!
        #', '.group_getname($item_group_id[$thisitem]).
@@ -240,6 +239,3 @@ function show_votes ($limit=10)
 
   return $return;
 }
-
-
-?>

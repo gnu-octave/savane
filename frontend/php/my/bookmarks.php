@@ -22,11 +22,18 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
-require "../include/pre.php";
+require_once('../include/init.php');
+require_once('../include/sane.php');
+require_once('../include/html.php');
+require_once('../include/my/bookmarks.php');
 
 site_user_header(array('context'=>'bookmark'));
 
+extract(sane_import('get', array('add', 'delete')));
+extract(sane_import('request', array('edit', 'url', 'title')));
 
 if ($add && $url)
 {
@@ -48,13 +55,13 @@ if ($edit)
   else
     {
       # No url and title? Print the form
-      $result = db_query("SELECT * from user_bookmarks where "
-			 . "bookmark_id='".addslashes($edit)."' and user_id='".user_getid()."'");
+      $result = db_execute("SELECT * from user_bookmarks WHERE bookmark_id=? AND user_id=?",
+			   array($edit, user_getid()));
       if ($result) 
 	{
 	  # Result found? Really print (only) the form 
-	  $title = stripslashes(db_result($result,0,'bookmark_title'));
-	  $url = stripslashes(db_result($result,0,'bookmark_url'));
+	  $title = db_result($result,0,'bookmark_title');
+	  $url = db_result($result,0,'bookmark_url');
 	  
 	  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
 	  print '<span class="preinput">'._("Title:").'</span>';
@@ -63,7 +70,7 @@ if ($edit)
 	  print '<span class="preinput">'._("Address:").'</span>';
 	  print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="url" value="'.$url.'" size="50" />';
 
-	  print '<input type="hidden" name="edit" value="'.addslashes($edit).'" /></p>';
+	  print '<input type="hidden" name="edit" value="'.$edit.'" /></p>';
 	  print '<p><input type="submit" name="update" value="'._("Update").'" /></p>';
 print '</form>';
 
@@ -76,8 +83,9 @@ print '</form>';
     }
 }
 
-$result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
-		   "user_id='". user_getid() ."' ORDER BY bookmark_title");
+$result = db_execute("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks
+                      WHERE user_id=? ORDER BY bookmark_title",
+		     array(user_getid()));
 $rows=db_numrows($result);
 if (!$result || $rows < 1)
 {
@@ -103,8 +111,4 @@ else
   print $HTML->box_bottom(1);
 }
 
-
 site_user_footer(array());
-
-?>
-

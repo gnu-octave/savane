@@ -1,4 +1,7 @@
 <?php
+# Attempt to replace HTML_graphs.php with something more spartian, efficient
+# and w3c-compliant.
+# 
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -20,8 +23,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Attempt to replace HTML_graphs.php with someone more spartian, efficient
-# and w3c compliant.
+#input_is_safe();
+#mysql_is_safe();
 
 # It can accept db result directy or an array.
 # Total must be an array too, if provided
@@ -96,9 +99,9 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
 
 
 	  if ($percent_width > 25)
-	    { unset($class); }
+	    { $class = ''; }
 	  else
-	    { $class="closed"; }
+	    { $class = 'closed'; }
 
 
 	  print '<tr style="width: 50%;">'.
@@ -117,5 +120,3 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
       print '</p>';
     }
 }
-
-?>

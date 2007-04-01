@@ -22,15 +22,20 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+require_once('../include/init.php');
+require_once('../include/account.php');
+require_once('../include/sane.php');
+
+#input_is_safe();
+#mysql_is_safe();
+
+register_globals_off();
+
 Header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 Header("Cache-Control: no-cache");
 Header("Cache-Control: must-revalidate");
 
-require_once('../include/init.php');
-require_once('../include/account.php');
-
-register_globals_off();
-$from_brother = sane_all('from_brother');
+extract(sane_import('request', array('from_brother')));
 
 # Block here potential robots
 # 2006-12-04, yeupou: allows them to login, so they can post on trackers of
@@ -39,7 +44,7 @@ $from_brother = sane_all('from_brother');
 # legit cases even if they are blacklisted.
 # They wont be able to use savane normally but only to post on the project
 # they are member of. The way to go for them is to ask their IP to be delisted,
-# not from us to maintain another list of exceptions. If they cant, it is sad*
+# not from us to maintain another list of exceptions. If they cant, it is sad
 # but we cannot encourage this because it would defeat the whole purpose of
 # DNSbl, while DNSbl seems to be the only truly effective way to get rid of
 # spams.
@@ -50,15 +55,10 @@ if (user_isloggedin() && !$from_brother)
 { session_redirect($GLOBALS['sys_home']."my/"); }
 
 # Input checks
-$form_loginname = sane_all("form_loginname");
-$form_pw = sane_all("form_pw");
-$cookie_for_a_year = sane_all("cookie_for_a_year");
-$stay_in_ssl = sane_all("stay_in_ssl");
-$brotherhood = sane_all("brotherhood");
-$uri = sane_all("uri");
-$login = sane_all("login");
-$cookie_test = sane_all("cookie_test");
-
+extract(sane_import('request',
+  array('form_loginname', 'form_pw', 'cookie_for_a_year',
+	'stay_in_ssl', 'brotherhood',
+	'uri', 'login', 'cookie_test')));
 
 if (isset($GLOBALS['sys_https_host']) && !session_issecure())
 {
@@ -81,14 +81,13 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
     }
 }
 
-if (sane_all("login"))
+if (!empty($login))
 {
   if ($from_brother) 
   {
-    $session_uid  = sane_get("session_uid");
+    extract(sane_import('get', array('session_uid', 'session_hash')));
     if (!ctype_digit($session_uid))
       { exit("Invalid session_uid"); }
-    $session_hash = sane_get("session_hash");
     if (!ctype_alnum($session_hash))
       { exit("Invalid session_hash"); }
   }
@@ -172,13 +171,14 @@ if (isset($session_hash))
 {
    # Nuke their old session securely. 
    session_delete_cookie('session_hash');
-   db_query("DELETE FROM session WHERE session_hash='$session_hash' AND user='$user_id'");
+   db_execute("DELETE FROM session WHERE session_hash=? AND user=?",
+	      array($session_hash, $user_id));
 }
 
 
 site_header(array('title'=>_("Login")));
 
-if (sane_all("login") && !$success)
+if (!empty($login) && !$success)
 {
 
   if ("Account Pending" == $feedback)
@@ -262,5 +262,4 @@ print '<div class="center"><input type="submit" name="login" value="'._("Login")
 print '</form>';
 
 $HTML->footer(array());
-
-?>
+print_r($_COOKIE);

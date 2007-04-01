@@ -25,13 +25,16 @@
 
 
 require_once('../include/init.php');
+require_once('../include/session.php');
+require_once('../include/sane.php');
 
 session_require(array('isloggedin'=>'1'));
 
 
 extract(sane_import('request', array('quitting_group_id')));
-extract(sane_import('post', array('confirm')));
+extract(sane_import('post', array('confirm', 'cancel')));
 
+$pending = member_check_pending(user_getid(), $quitting_group_id);
 
 # Make sure the user is actually member of the project
 if (!$pending && !member_check(0,$quitting_group_id))
@@ -69,17 +72,17 @@ else
   
   # Mail the changes so the admins know what happened
   # unless it is a request for inclusion cancelled
-  if ($pending)
+  if (!$pending)
     {
       $res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "
 			    . "WHERE user_group.user_id=user.user_id AND user_group.group_id=$quitting_group_id AND "
 			    . "user_group.admin_flags = 'A'");
-      
+      $to = '';
       while ($row_admin = db_fetch_array($res_admin)) 
 	{
 	  $to .= "$row_admin[email],";
 	}
-      if ($to) 
+      if ($to != '')
 	{
 	  $to = substr($to,0,-1);
 	  $message = "This message is being sent to notify the administrator(s) of".	"\nproject ".group_getname($quitting_group_id)." that ".user_getname(0,1)." <".user_getname().">\n".
@@ -89,14 +92,14 @@ else
 	{
           # No admin? The project is admin orphan, it will require the assistance
           # of site admins
-	  $to = $GLOBALS[sys_mail_admin]."@".$GLOBALS[sys_mail_domain];
+	  $to = $GLOBALS['sys_mail_admin']."@".$GLOBALS['sys_mail_domain'];
 	  $message = "This message is being sent to notify the site administrator(s)\n".
 	    "that the last administrator of the project ".group_getname($quitting_group_id)." (".user_getname(0,1)." <".user_getname().">)\n".
 	"has chosen to remove him/herself from the project.\n\n".
 	"As result, the project is administrator-orphan.\n";
 	}
       
-      $from = $GLOBALS[sys_mail_replyto]."@".$GLOBALS[sys_mail_domain];
+      $from = $GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'];
       $subject = user_getname(0,1)." quitted the project ".group_getname($quitting_group_id);
       sendmail_mail($from,$to,$subject,$message);
     }

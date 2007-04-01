@@ -26,6 +26,9 @@
 ##    markup_rich() for formatting excepting headers
 ##    markup_full() for full formatting, including headers
 
+#input_is_safe();
+#mysql_is_safe();
+
 
 ## Will tell the user what is the level of markup available in a uniformized
 # way. 
@@ -125,8 +128,9 @@ function markup_full($text, $allow_headings=true)
 
   $quoted_text = false;
   $verbatim = false;
+  extract(sane_import('request', array('printer')));
   foreach ($lines as $index => $line)
-    {      
+    {
 
       # the verbatim tags are not allowed to be nested, because
       # they are translated to HTML <textarea> (<pre> in printer mode),
@@ -147,7 +151,7 @@ function markup_full($text, $allow_headings=true)
           # empty the context stack
 	  $line = join("\n", $context_stack);
 
-	  if (!sane_all("printer")) 
+	  if (empty($printer))
 	    { $context_stack = array('</textarea>'); }
 	  else
 	    { $context_stack = array('</pre>'); }
@@ -170,7 +174,7 @@ function markup_full($text, $allow_headings=true)
           $context_stack = array();
 
           #array_pop($result); # no longer useful since we bufferize verbatim
-	  if (!sane_all("printer")) 
+	  if (empty($printer))
 	    {
 	      # Limit the textarea to 20 lines
 	      if ($verbatim_buffer_linecount > 20)
@@ -742,5 +746,3 @@ function _markup_inline($line)
 
   return $line;
 }
-
-?>

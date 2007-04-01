@@ -23,16 +23,28 @@
 
 # Later, this page will provide per group and per group type statistics.
 
-require "../include/pre.php";
+#input_is_safe();
+#mysql_is_safe();
+
+require_once('../include/init.php');
+require_once('../include/sane.php');
+require_once('../include/stats/general.php');
+require_once('../include/calendar.php');
+require_once('../include/graphs.php');
 
 register_globals_off();
+
+extract(sane_import('get',
+  array('update', 'since_month', 'since_day', 'since_year',
+	          'until_month', 'until_day', 'until_year')));
 
 site_header(array('title'=>"Statistics"));
 
 ######################## BETWEEN TWO DATES
 
-if (!sane_get("update"))
+if (empty($update))
 {
+  # Replace since_ and util_ parameters
   $since_month = date("m")-1;
   $since_day = date("d");
   $since_year = date("Y");
@@ -49,14 +61,6 @@ else
   # If the user selected date, assume he speaks of completed days
   $hour = 0;
   $min = 0;
-
-  $since_month = sane_get("since_month");
-  $since_day = sane_get("since_day");
-  $since_year = sane_get("since_year");
-
-  $until_month = sane_get("until_month");
-  $until_day = sane_get("until_day");
-  $until_year = sane_get("until_year");
 }
 
 $since = mktime($hour,$min,0,$since_month, $since_day, $since_year);
@@ -108,8 +112,10 @@ print '&nbsp;&nbsp;- '.sprintf(ngettext("%s new project", "%s new projects", $co
 
 print '</p><p>'._("New users and new groups / total:");
 graphs_build($content,0,0,$total);
-unset($content,$total);
 
+
+$content = array();
+$total = 0;
 
 $total_patch = stats_getitems("patch");
 $total_task = stats_getitems("task");
@@ -127,11 +133,11 @@ print '</p>
 $content = array();
 $content_total = array();
 
+$total_open = 0;
 if ($total_support > 0)
 {
   $count = stats_getitems("support", 0, "date>='$since' AND date<='$until'");
   $total = $count;
-  $total_open = 0;
   $count_open = stats_getitems("support", 3, "date>='$since' AND date<='$until'");
   $total_open += $count_open;
 
@@ -373,7 +379,7 @@ if ($count_users)
 
   // Print the most popular theme
   arsort($popular_themes);
-  unset($themes);
+  $themes = '';
   while (list($theme,$percent) = each($popular_themes))
     {
       if ($themes)
@@ -391,5 +397,3 @@ print '
 </p>';
 
 site_footer(0);
-
-?>

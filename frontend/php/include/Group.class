@@ -24,6 +24,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/Error.class');
 
 $PROJECT_OBJ=array();
@@ -61,7 +64,7 @@ class Group extends Error
     {
       $this->Error();
       $this->group_id=$id;
-      $this->db_result=db_query("SELECT * FROM groups WHERE group_id='$id'");
+      $this->db_result=db_execute("SELECT * FROM groups WHERE group_id=?", array($id));
       if (db_numrows($this->db_result) < 1)
 	{
 	  #function in class we extended
@@ -75,7 +78,7 @@ class Group extends Error
 	  // find group_type informations
 	  $type = $this->data_array['type'];
 	  $this->type_id = $type;
-	  $this->db_type_result = db_query("SELECT * FROM group_type WHERE type_id='$type'");
+	  $this->db_type_result = db_execute("SELECT * FROM group_type WHERE type_id=?", array($type));
 	  if (db_numrows($this->db_type_result) < 1) 
 	    {
 	      // fuction in class we extended                         
@@ -448,7 +451,7 @@ function group_get_result($group_id=0)
 
 function group_getid ($group_name) 
 {
-  $res = db_query("SELECT group_id FROM groups WHERE unix_group_name='".$group_name."'");
+  $res = db_query("SELECT group_id FROM groups WHERE unix_group_name=?", array($group_name));
   if (db_numrows($res) > 0)
     return db_result($res,0,'group_id');
   else
@@ -459,7 +462,7 @@ function group_getpermissions ($group_id, $flags)
 {
   if ($flags)
     {
-      if (!preg_match('/[a-z]+/', $flags))
+      if (!preg_match('/^[a-z]+$/', $flags))
 	die('group_getpermissions: unvalid argument flags');
       $res = db_execute("SELECT {$flags}_flags FROM groups_default_permissions WHERE group_id=?",
 			array($group_id));
@@ -474,7 +477,9 @@ function group_getrestrictions ($group_id, $flags, $event=1)
   $flag = null;
   if ($flags)
     {
-      $res = db_query("SELECT ".$flags."_rflags FROM groups_default_permissions WHERE group_id='$group_id'");
+      if (!preg_match('/^[a-z]+$/', $flags))
+	die('group_getrestrictions: unvalid argument flags');
+      $res = db_execute("SELECT $flags_rflags FROM groups_default_permissions WHERE group_id=?", array($group_id));
       if (db_numrows($res) > 0)
 	$flag = db_result($res, 0, $flags."_rflags");
     
@@ -603,23 +608,25 @@ function group_restrictions_check ($group_id, $artifact, $event=1)
 
 function group_get_history ($group_id=false) 
 {
-  $sql="select group_history.field_name,group_history.old_value,group_history.date,user.user_name ".
-     "FROM group_history,user ".
-     "WHERE group_history.mod_by=user.user_id ".
-     "AND group_id='$group_id' ORDER BY group_history.date DESC";
-  return db_query($sql);
-}	       
+  return db_execute("SELECT group_history.field_name,group_history.old_value,group_history.date,user.user_name
+FROM group_history,user
+WHERE group_history.mod_by = user.user_id
+AND group_id = ? ORDER BY group_history.date DESC", array($group_id));
+}
 	
+/*      
+  Handle the insertion of history for these parameters
+*/
 function group_add_history ($field_name,$old_value,$group_id) 
 {
-  /*      
-		handle the insertion of history for these parameters
-  */
-	
-  $sql="insert into group_history(group_id,field_name,old_value,mod_by,date) ".
-     "VALUES ('$group_id','$field_name','$old_value','". user_getid() ."','".time()."')";
-  return db_query($sql);
-}	       
+  return db_autoexecute('group_history',
+    array('group_id' => $group_id,
+	  'field_name' => $field_name,
+	  'old_value' => $old_value,
+	  'mod_by' => user_getid(),
+	  'date' => time()),
+    DB_AUTOQUERY_INSERT);
+}
 
 
 
@@ -675,12 +682,15 @@ function group_set_preference ($group_id, $preference_name, $value)
   if (user_ismember($group_id,'A')) 
     {
       $preference_name=strtolower(trim($preference_name));
-      $result=db_query("UPDATE group_preferences SET preference_value='$value' ".
-		       "WHERE group_id='$group_id' AND preference_name='$preference_name'");
+      $result=db_execute("UPDATE group_preferences SET preference_value=? WHERE group_id=? AND preference_name=?",
+			 array($value, $group_id, $preference_name));
       if (db_affected_rows($result) < 1) 
 	{
-	  $result=db_query("INSERT INTO group_preferences (group_id,preference_name,preference_value) ".
-			   "VALUES ('$group_id','$preference_name','$value')");
+	  $result=db_autoexecute('group_preferences',
+				 array('group_id' => $group_id,
+				       'preference_name' => $preference_name,
+				       'preference_value' => $value),
+				 DB_AUTOQUERY_INSERT);
 	}
       return true;
       
@@ -697,8 +707,8 @@ function group_get_preference ($group_id, $preference_name)
     
     $preference_name=strtolower(trim($preference_name));
     
-    $result=db_query("SELECT preference_value FROM group_preferences ".
-		     "WHERE group_id='$group_id' AND preference_name='$preference_name'");
+    $result=db_execute("SELECT preference_value FROM group_preferences WHERE group_id=? AND preference_name=?",
+		       array($group_id, $preference_name));
     if (db_numrows($result) < 1) 
       { return false;	} 
     else

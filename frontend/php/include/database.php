@@ -27,6 +27,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 define('DB_AUTOQUERY_INSERT', 1);
 define('DB_AUTOQUERY_UPDATE', 2);
 
@@ -118,11 +121,13 @@ function db_variable_binding($sql, $inputarr=null) {
  fields (you'll get a nice mysql_error() instead) and with a modified
  argument list to allow variable binding in the where clause
 
-eg: 
+This allows hopefully more reable lengthy INSERT and UPDATE queries.
 
 Check http://phplens.com/adodb/reference.functions.getupdatesql.html ,
 http://phplens.com/adodb/tutorial.generating.update.and.insert.sql.html
 and adodb.inc.php
+
+eg: 
 
 $success = db_autoexecute('user', array('realname' => $newvalue),
 		          DB_AUTOQUERY_UPDATE,
@@ -166,6 +171,10 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
 MySQL, but simpler (not 2D-array, namely). Example:
 
 db_execute("SELECT * FROM utilisateur WHERE name=?", array("Gogol d'Algol"));
+
+'db_autoexecute' replaces '?' with the matching parameter, taking its
+type into account (int -> int, string -> quoted string, float ->
+canonical representation, etc.)
 
 Check http://phplens.com/adodb/reference.functions.execute.html and
 adodb.inc.php
@@ -279,10 +288,10 @@ function db_createinsertinto ($result, $table, $row, $autoincrement_fieldname, $
                   # Replace another field
 		  if ($fieldname == $replace_fieldname)
 		    {
-		      $values .= "'".$replace_value."'";
+		      $values .= "'".mysql_real_escape_string($replace_value)."'";
 		}
 		  else
-		    { $values .= "'".db_result($result, $row, $fieldname)."'"; }
+		    { $values .= "'".mysql_real_escape_string(db_result($result, $row, $fieldname))."'"; }
 		}
 	    }
     }

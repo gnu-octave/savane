@@ -51,7 +51,11 @@ Output:
   # Compare with preferences, update preference if not equal
   $pref_name = 'my_hide_'.$role.$group_id;
   $old_pref_value = user_get_preference($pref_name);
-  list(,$old_count) = explode("|", $old_pref_value);
+  $old_count = 0;
+  $arr = explode('|', $old_pref_value);
+  if (!empty($arr[1])) {
+    $old_count = $arr[1];
+  }
   $pref_value = "$hide|$count";
   if ($old_pref_value != $pref_value)
     {
@@ -594,5 +598,3 @@ function my_item_list_print ($role="assignee", $openclosed="open", $condensed=fa
       
     }
 }
-
-?>

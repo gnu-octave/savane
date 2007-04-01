@@ -20,6 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/Group.class');
 
 # Guess the context of the current page
@@ -105,6 +108,8 @@ function context_guess_from_url ($page, $dontset=false)
 	}
     }
 
+  extract(sane_import('request', array('func')));
+
   # Same with site administration part  
   if ($context == "siteadmin")
   {
@@ -128,9 +133,9 @@ function context_guess_from_url ($page, $dontset=false)
 	  $subcontext = "monitor";
 	  return context_set($context, $subcontext, $dontset);
 	}
-      if (sane_isset("func"))
+      if (isset($func))
 	{
-	  $subcontext = sane_all("func");
+	  $subcontext = $func;
 	}
       return context_set($context, $subcontext, $dontset);
     }
@@ -147,28 +152,28 @@ function context_guess_from_url ($page, $dontset=false)
   # we are for sure in trackers pages.
   if (defined('ARTIFACT') && $context != "admin") 
     {
-      if (sane_all("func") == "additem")
+      if ($func == 'additem')
 	{ 
-	  $subcontext = "postitem"; 
+	  $subcontext = 'postitem';
 	  return context_set($context, $subcontext, $dontset);
 	}
-      if (sane_all("func") == "detailitem")
+      if ($func == 'detailitem')
 	{ 
-	  $subcontext = "edititem"; 
+	  $subcontext = 'edititem'; 
 	  return context_set($context, $subcontext, $dontset);
 	}
-      if (sane_all("func") == "search")
+      if ($func == 'search')
 	{ 
-	  $subcontext = "search"; 
+	  $subcontext = 'search';
 	  return context_set($context, $subcontext, $dontset);
 	}
     }
 
   # If we are in admin pages, we need to go deeped to find the appropriate
   # main context
-  if ($context == "admin")
+  if ($context == 'admin')
     {
-      $subcontext = "configure";
+      $subcontext = 'configure';
 
       # If ARTIFACT has been defined, we are in a tracker configuration for
       # sure.

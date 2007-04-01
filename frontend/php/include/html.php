@@ -23,6 +23,10 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
+require_once(dirname(__FILE__).'/sane.php');
 require_once(dirname(__FILE__).'/markup.php');
 require_once(dirname(__FILE__).'/form.php');
 
@@ -56,7 +60,9 @@ EOF;
   $ret .= '
   <script type="text/javascript">';
   
-  if (sane_all("boxoptionwanted") != 1)
+  extract(sane_import('request', array('boxoptionwanted')));
+
+  if ($boxoptionwanted != 1)
     {
       $ret .= '
     document.write(\'<span onclick="'.addslashes($script_hide).'" id="boxoptionslinkhide" style="display: none"><span class="minusorplus">(-)</span>'.htmlspecialchars($legend, ENT_QUOTES).'</span>\');
@@ -76,7 +82,7 @@ EOF;
   </noscript>
 </legend>';
 
-  if (sane_all("boxoptionwanted") != 1)
+  if ($boxoptionwanted != 1)
     {
       $ret .= '
 <script type="text/javascript">
@@ -1106,5 +1112,3 @@ function html_member_explain_roles ()
   print _("Project Admins can manage members, configure the trackers, post jobs, and add mailing-list. They actually also have manager rights on every tracker and are allowed to read private items.");
   print '<p>';
 }
-
-?>

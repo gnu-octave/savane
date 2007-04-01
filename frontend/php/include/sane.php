@@ -130,6 +130,8 @@ function sane_import($method, $names) {
     $input_array =& $_GET;
   else if ($method == 'post')
     $input_array =& $_POST;
+  else if ($method == 'cookie')
+    $input_array =& $_COOKIE;
   else
     $input_array =& $_REQUEST;
 
@@ -270,15 +272,3 @@ function register_globals_off()
 #function input_is_safe() {
 #}
 # Those tags are used by devel/sv_check_security.pl
-
-
-# To remove: use db_execute/db_autoexecute/db_query_escape instead
-function sane_mysql($string) {
-  # If magic_quotes is on, count on it to escape data
-  if (get_magic_quotes_gpc()) 
-    {
-      $string = stripslashes($string);
-    } 
-  return mysql_real_escape_string($string);
-}
-

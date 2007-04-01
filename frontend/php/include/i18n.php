@@ -1,4 +1,6 @@
 <?php
+# Configure locale using browser preferences, via gettext and strftime
+# 
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -21,13 +23,13 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Description : This script is used to configure the locale using if possible
-# the user's navigator preferences. The locale is used by gettext and strftime
-# functions.
+#input_is_safe();
+#mysql_is_safe();
 
 # Should we use _ENV["LANG"] also?
 
-# TODO: move to init.php or init-i18n.php
+// TODO: move to init.php or init-i18n.php - this file doesn't define
+// functions are is part of the initialization phase
 
 # Get the user's prefered language from the navigator sended headers :
 $navigatorLanguages = explode(",",getenv("HTTP_ACCEPT_LANGUAGE"));

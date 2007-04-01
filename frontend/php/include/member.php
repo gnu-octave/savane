@@ -20,6 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # Add or update a user to/in a group
 # status is the 'admin_flags', can be pending or admin
 function member_add ($user_id, $group_id, $status='') 
@@ -27,10 +30,12 @@ function member_add ($user_id, $group_id, $status='')
   
   if(!member_check($user_id,$group_id) || user_is_super_user())
     {
-      $sql = "INSERT INTO user_group (user_id, group_id, admin_flags) VALUES ($user_id, $group_id, '$status')";
-
-      $result = db_query($sql);
-      if ($result) 
+      $result = db_autoexecute('user_group',
+        array('user_id' => $user_id,
+	      'group_id' => $group_id,
+	      'admin_flags' => $status),
+	DB_AUTOQUERY_INSERT);
+      if ($result)
 	{ 
 	  # add different history item if the addition is in pending status
 	  if ($status != "P" && $status != 'SQD')
@@ -58,8 +63,8 @@ function member_add ($user_id, $group_id, $status='')
 # Approve a pending user for a group
 function member_approve ($user_id, $group_id)
 {
-  $sql = "UPDATE user_group SET admin_flags='' WHERE user_id='$user_id' AND group_id='$group_id'";
-  $result = db_query($sql);
+  $result = db_execute("UPDATE user_group SET admin_flags='' WHERE user_id=? AND group_id=?",
+		       array($user_id, $group_id));
   if ($result) 
     { group_add_history('Approved User',user_getname($user_id),$group_id); }
   return $result;
@@ -68,10 +73,13 @@ function member_approve ($user_id, $group_id)
 function member_remove ($user_id, $group_id) 
 {
   # Find out if it is a squad
-  $admin_flags = db_result(db_query("SELECT admin_flags FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'"), 0, 'admin_flags');
+  $admin_flags = db_result(db_execute("SELECT admin_flags FROM user_group WHERE user_id=? AND group_id=?",
+				      array($user_id, $group_id)),
+			   0, 'admin_flags');
 
-  $sql = "DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'";
-  $result = db_query($sql);
+  $sql = "";
+  $result = db_execute("DELETE FROM user_group WHERE user_id=? AND group_id=?",
+		       array($user_id, $group_id));
   if ($result) 
     { 
       if ($admin_flags != 'SQD')
@@ -79,20 +87,20 @@ function member_remove ($user_id, $group_id)
 	  group_add_history('Removed User',user_getname($user_id),$group_id); 
 	  # If it is not a squad, make sure the user is no longer associated
 	  # to squads of the group
-	  db_query("DELETE FROM user_squad WHERE user_id='$user_id' AND group_id='$group_id'");
+	  db_execute("DELETE FROM user_squad WHERE user_id=? AND group_id=?",
+		     array($user_id, $group_id));
 	}
       else
 	{ 
 	  group_add_history('Deleted Squad',user_getname($user_id),$group_id); 
           # If it is a squad, it means that we also mark the user account as 
           # shutdowned
-	  db_query("UPDATE user SET "
-		   . "realname='-Deleted Squad-',"
-		   . "status='S'"
-		   . " WHERE user_id='".$user_id."'");
+	  db_execute("UPDATE user SET realname='-Deleted Squad-', status='S'
+		      WHERE user_id=?", array($user_id));
 	  # We also  make sure no user is any longer associated
           # to the squad
-	  db_query("DELETE FROM user_squad WHERE squad_id='$user_id' AND group_id='$group_id'");
+	  db_execute("DELETE FROM user_squad WHERE squad_id=? AND group_id=?",
+		     array($user_id, $group_id));
 	}
     }
 
@@ -103,15 +111,18 @@ function member_remove ($user_id, $group_id)
 function member_squad_add ($user_id, $squad_id, $group_id) 
 {
   # First check if user is not already in
-  $result = db_query("SELECT user_id FROM user_squad WHERE user_id='$user_id' AND squad_id='$squad_id' AND group_id='$group_id'");
+  $result = db_execute("SELECT user_id FROM user_squad WHERE user_id=? AND squad_id=? AND group_id=?",
+		       array($user_id, $squad_id, $group_id));
   if (db_numrows($result)) 
     { return false; }
   
   
   # If we get here, we need to do an insert
-  $sql = "INSERT INTO user_squad (user_id, squad_id, group_id) VALUES ($user_id, $squad_id, $group_id)";
-
-  $result = db_query($sql);
+  $result = db_autoexecute('user_squad',
+			   array('user_id' => $user_id,
+				 'squad_id' => $squad_id,
+				 'group_id' => $group_id),
+			   DB_AUTOQUERY_INSERT);
   if ($result) 
     { 
       group_add_history('Added User to Squad '.user_getname($squad_id),
@@ -126,12 +137,13 @@ function member_squad_add ($user_id, $squad_id, $group_id)
 function member_squad_remove ($user_id, $squad_id, $group_id) 
 {
   # First check if user is in
-  $result = db_query("SELECT user_id FROM user_squad WHERE user_id='$user_id' AND squad_id='$squad_id' AND group_id='$group_id'");
+  $result = db_execute("SELECT user_id FROM user_squad WHERE user_id=? AND squad_id=? AND group_id=?",
+		       array($user_id, $squad_id, $group_id));
   if (!db_numrows($result)) 
     { return false; }
   
-  $sql = "DELETE FROM user_squad WHERE user_id='$user_id' AND squad_id='$squad_id' AND group_id='$group_id'";
-  $result = db_query($sql);
+  $result = db_query("DELETE FROM user_squad WHERE user_id=? AND squad_id=? AND group_id=?",
+		     array($user_id, $squad_id, $group_id));
   if ($result) 
     { 
       group_add_history('Removed User From Squad '.user_getname($squad_id),
@@ -152,8 +164,11 @@ function member_getpermissions ($group_id, $flags, $user_id=0)
     }
   if ($flags)
     {
-      $sql = "SELECT ".$flags."_flags FROM user_group WHERE group_id='$group_id' AND user_id='$user_id'";
-      return db_result(db_query($sql), 0, $flags."_flags");
+      if (!preg_match('/^[a-z]+$/', $flags))
+	die('group_getpermissions: unvalid argument flags');
+      return db_result(db_execute("SELECT ".$flags."_flags FROM user_group WHERE group_id=? AND user_id=?",
+				  array($group_id, $user_id)),
+		       0, $flags."_flags");
     }
 }
 
@@ -197,7 +212,8 @@ function member_check ($user_id=0, $group_id, $flag=0, $strict=0)
 	}
     }
   # determine whether someone is member of a project or not
-  $result = db_query("SELECT user_id FROM user_group WHERE user_id='$user_id' AND group_id='$group_id' AND admin_flags<>'P'");
+  $result = db_execute("SELECT user_id FROM user_group WHERE user_id=? AND group_id= AND admin_flags<>'P'",
+		       array($user_id, $group_id));
   
   if (!$result || db_numrows($result) < 1)
     {
@@ -280,7 +296,8 @@ function member_check_pending ($user_id=0, $group_id)
 {
   if (!$user_id) { $user_id = user_getid(); }
 
-  $result = db_query("SELECT user_id FROM user_group WHERE user_id='$user_id' AND group_id='$group_id' AND admin_flags='P'");
+  $result = db_execute("SELECT user_id FROM user_group WHERE user_id=? AND group_id=? AND admin_flags='P'",
+		       array($user_id, $group_id));
 
   if (db_numrows($result)) 
     { return true; }
@@ -293,7 +310,8 @@ function member_check_squad ($user_id=0, $group_id)
 {
   if (!$user_id) { $user_id = user_getid(); }
 
-  $result = db_query("SELECT user_id FROM user_group WHERE user_id='$user_id' AND group_id='$group_id' AND admin_flags='SQD'");
+  $result = db_execute("SELECT user_id FROM user_group WHERE user_id=? AND group_id=? AND admin_flags='SQD'",
+		       array($user_id, $group_id));
 
   if (db_numrows($result)) 
     { return true; }
@@ -339,7 +357,7 @@ function member_check_private ($user_id=0, $group_id)
 
   # determine whether someone is member allowed to read private date
   # of a project or not
-  if (db_numrows(db_query("SELECT user_id FROM user_group WHERE user_id='$user_id' AND group_id='$group_id' AND admin_flags<>'P' AND privacy_flags='1'")))
+  if (db_numrows(db_execute("SELECT user_id FROM user_group WHERE user_id=? AND group_id=? AND admin_flags<>'P' AND privacy_flags='1'", array($user_id, $group_id))))
     {
       return true;
     }

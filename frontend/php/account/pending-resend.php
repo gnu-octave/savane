@@ -1,17 +1,17 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
+# Resend the confirmation hash to a pending (not yet validated) user
+# 
 # Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright (C) 2007  Sylvain Beucler
 #
-# The Savane project is free software; you can redistribute it and/or
+# This file is part of Savane.
+# 
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -19,19 +19,25 @@
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-#
-#
-#
+# Copyright 1999-2000 (c) The SourceForge Crew
 
-require "../include/pre.php";    
+require_once('../include/init.php');
+require_once('../include/database.php');
+require_once('../include/dnsbl.php');
+require_once('../include/spam.php');
+require_once('../include/sane.php');
+
+#input_is_safe();
+#mysql_is_safe();
 
 # Block here potential robots
 dnsbl_check();
 # Block banned IP
 spam_bancheck();
 
-$res_user = db_query("SELECT * FROM user WHERE user_name='$form_user'");
+extract(sane_import('get', array('form_user')));
+
+$res_user = db_execute("SELECT * FROM user WHERE user_name=?", array($form_user));
 $row_user = db_fetch_array($res_user);
 
 # only mail if pending
@@ -45,7 +51,7 @@ if ($row_user['status'] == 'P') {
     . sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
 	
 	
-  sendmail_mail($GLOBALS['sys_replyto'] . "@".$GLOBALS['sys_lists_domain'],
+  sendmail_mail($GLOBALS['sys_mail_replyto'] . "@".$GLOBALS['sys_lists_domain'],
 		$row_user['email'],
 		$GLOBALS['sys_name'] . " " . _("Account Registration"),
 		$message);
@@ -62,5 +68,3 @@ if ($row_user['status'] == 'P') {
 }
 
 $HTML->footer(array());
-
-?>

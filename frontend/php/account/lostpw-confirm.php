@@ -23,9 +23,18 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+require_once('../include/init.php');
+require_once('../include/sane.php');
+require_once('../include/session.php');
+require_once('../include/sendmail.php');
 
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
+
+
+extract(sane_import('post', array('form_loginname')));
+
 
 # Logged users have no business here
 if (user_isloggedin())
@@ -36,14 +45,12 @@ dnsbl_check();
 # Block banned IP
 spam_bancheck();
 
-$form_loginname = sane_post("form_loginname");
-
 # CERN_SPECIFIC: here we also have a speech about AFS which must not be
 # hardcoded
 if ($GLOBALS['sys_use_pamauth'] == "yes") {
-  db_query("SELECT user_pw FROM user WHERE user_name='$form_loginname'");
+  db_execute("SELECT user_pw FROM user WHERE user_name=?", array($form_loginname));
   $row_pw = db_fetch_array();
-  if ($row_pw[user_pw] == 'PAM') {
+  if ($row_pw['user_pw'] == 'PAM') {
     $HTML->header(array('title'=>"Lost Password Confirmation"));
     print "<p>This account uses an AFS password. <strong>You cannot change your
            AFS password via Savane</strong>. Contact the AFS managers.";
@@ -51,13 +58,13 @@ if ($GLOBALS['sys_use_pamauth'] == "yes") {
     exit;
   }
 }
-# CERN_SPECIFIC
+# /CERN_SPECIFIC
 
-$confirm_hash = md5(sane_post("session_hash") . strval(time()) . strval(rand()));
+$confirm_hash = md5(strval(time()) . strval(rand()));
 
 ########################
 # Account check
-$res_user = db_query("SELECT * FROM user WHERE user_name='$form_loginname' AND status='A'");
+$res_user = db_execute("SELECT * FROM user WHERE user_name=? AND status='A'", array($form_loginname));
 if (db_numrows($res_user) < 1)
 {
   exit_error(_("Invalid User"), _("This account does exist or has not been activated"));
@@ -70,13 +77,13 @@ $row_user = db_fetch_array($res_user);
 # per hour.
 # By default, we set it to one
 $notifications_max = 1;
-unset($email_notifications);
+$email_notifications = 0;
 
-$res_emails = db_query("SELECT count FROM user_lostpw WHERE user_id='".$row_user['user_id']."' and DAYOFYEAR(date) = DAYOFYEAR(CURRENT_DATE) AND HOUR(DATE) = HOUR(NOW())");
+$res_emails = db_execute("SELECT count FROM user_lostpw WHERE user_id=? and DAYOFYEAR(date) = DAYOFYEAR(CURRENT_DATE) AND HOUR(DATE) = HOUR(NOW())", array($row_user['user_id']));
 
 if (db_numrows($res_emails) < 1)
 {
-  $row_emails = 0;
+  $email_notifications = 0;
 }
 else
 {
@@ -89,8 +96,7 @@ if ($email_notifications == 0)
   # This would be made empty by itself. We could have the login form
   # to remove old request.
   # But sv_cleaner will take care of it.
-  $sql = "INSERT INTO user_lostpw VALUES ('".$row_user['user_id']."', CURRENT_TIMESTAMP, 1)";
-  db_query($sql);
+  db_execute("INSERT INTO user_lostpw VALUES (?, CURRENT_TIMESTAMP, 1)", array($row_user['user_id']));
 }
 else
 {
@@ -100,26 +106,25 @@ else
     }
   else
     {
-      $sql = "UPDATE user_lostpw SET
-			    	count = count + 1
-			    WHERE
-			    	user_id = '".$row_user['user_id']."' and DAYOFYEAR(DATE) = DAYOFYEAR(CURRENT_DATE)
-	                        and HOUR(DATE) = HOUR(NOW())";
-      db_query($sql);
+      db_execute("UPDATE user_lostpw SET count = count + 1
+                  WHERE user_id = ? AND DAYOFYEAR(DATE) = DAYOFYEAR(CURRENT_DATE)
+	                            AND HOUR(DATE) = HOUR(NOW())",
+		 array($row_user['user_id']));
     }
 }
 
 
 # If we get here, it is OK to continue
 
-db_query("UPDATE user SET confirm_hash='$confirm_hash' WHERE user_id=$row_user[user_id]");
+db_execute("UPDATE user SET confirm_hash=? WHERE user_id=?",
+	   array($confirm_hash, $row_user['user_id']));
 
 $message = sprintf(_("Someone (presumably you) on the %s site requested a password change through email verification."),$GLOBALS['sys_default_domain']);
 $message .= ' ';
 $message .= _("If this was not you, this could pose a security risk for the system.")."\n\n";
 $message .= sprintf(_("The request came from %s"),gethostbyaddr($_SERVER['REMOTE_ADDR']))."\n";
-$message .= '(IP: '.$_SERVER['REMOTE_ADDR'].' port: '.$GLOBALS['REMOTE_PORT'].")\n";
-$message .= _("with").' '.$GLOBALS['HTTP_USER_AGENT']."\n\n";
+$message .= '(IP: '.$_SERVER['REMOTE_ADDR'].' port: '.$_SERVER['REMOTE_PORT'].")\n";
+$message .= _("with").' '.$_SERVER['HTTP_USER_AGENT']."\n\n";
 $message .= _("If you requested this verification, visit this URL\nto change your password:")."\n\n";
 $message .= $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."account/lostlogin.php?confirm_hash=".$confirm_hash."\n\n";
 # FIXME: There should be a discard procedure
@@ -134,8 +139,8 @@ $message_for_admin =
 . "Someone is maybe trying to steal a user account.\n\n"
 . "The user affected is ".$form_loginname."\n\n"
 . "The request comes from ".gethostbyaddr($_SERVER['REMOTE_ADDR'])." "
-. "(IP: ".$_SERVER['REMOTE_ADDR']." port: ".$GLOBALS['REMOTE_PORT'].") "
-. "with ".$GLOBALS['HTTP_USER_AGENT']."\n\n"
+. "(IP: ".$_SERVER['REMOTE_ADDR']." port: ".$_SERVER['REMOTE_PORT'].") "
+. "with ".$_SERVER['HTTP_USER_AGENT']."\n\n"
 . "Date:"
 . gmdate('D, d M Y H:i:s \G\M\T')
      . "\n";
@@ -162,5 +167,3 @@ print '<p>'._("Follow the instructions in the email to change your account passw
 ;
 
 $HTML->footer(array());
-
-?>

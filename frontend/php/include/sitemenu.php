@@ -224,7 +224,7 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
 	  if ($page_title)
 	    { $bookmark_title .= urlencode(_(": ").$page_title); }
 	    
-	    $HTML->menu_entry($GLOBALS['sys_home'].'my/bookmarks.php?add=1&amp;url='.urlencode($GLOBALS['REQUEST_URI']).'&amp;title='.$bookmark_title,
+	    $HTML->menu_entry($GLOBALS['sys_home'].'my/bookmarks.php?add=1&amp;url='.urlencode($_SERVER['REQUEST_URI']).'&amp;title='.$bookmark_title,
 			      _("Bookmark It"),
 			      1,
 			      _("Add this page to my bookmarks"));

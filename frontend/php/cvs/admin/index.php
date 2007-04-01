@@ -19,6 +19,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
 require_once('../../include/account.php');
@@ -43,10 +45,10 @@ if (isset($_POST['log_accum'])) {
   foreach ($_POST['remove'] as $hook_id => $ignored) {
     if (!ctype_digit($hook_id.''))
       exit_error(_("Non-numeric hook id") . ": [" . htmlspecialchars($hook_id) . "]");
-    $query = "DELETE cvs_hooks, cvs_hooks_log_accum FROM cvs_hooks, cvs_hooks_log_accum
-              WHERE cvs_hooks.id = cvs_hooks_log_accum.hook_id AND group_id='$group_id' AND id='$hook_id'\n";
-#    echo $query;
-    db_query($query) or die(mysql_error());
+    db_query("DELETE cvs_hooks, cvs_hooks_log_accum FROM cvs_hooks, cvs_hooks_log_accum
+              WHERE cvs_hooks.id = cvs_hooks_log_accum.hook_id
+                AND group_id=? AND id=?",
+	     array($group_id, $hook_id)) or die(mysql_error());
   }
   foreach ($_POST['id'] as $hook_id => $ignored) {
     // Input validation
@@ -84,39 +86,39 @@ if (isset($_POST['log_accum'])) {
 
       if ($hook_id == 'new') {
 	// New entry
-	$query = "INSERT INTO
-                    cvs_hooks (group_id, repo_name, match_type, dir_list, hook_name, needs_refresh)
-                  VALUES ($group_id,
-                          '" . sane_mysql($repo_name) . "',
-                          '" . sane_mysql($match_type) . "',
-                          " . (!isset($dir_list) ? 'NULL' : "'".sane_mysql($dir_list)."'") . ",
-                          'log_accum',
-                          1)";
-	db_query($query) or die(mysql_error());
+	db_autoexecute('cvs_hooks',
+	  array(
+            'group_id' => $group_id,
+            'repo_name' => $repo_name,
+            'match_type' => $match_type,
+            'dir_list' => (!isset($dir_list) ? null : $dir_list),
+            'hook_name' => 'log_accum',
+            'needs_refresh' => 1),
+          DB_AUTOQUERY_INSERT) or die(mysql_error());
 	$new_hook_id = mysql_insert_id();
-	$query = "INSERT INTO
-                    cvs_hooks_log_accum (hook_id, branch, emails_notif, enable_diff, emails_diff)
-                  VALUES ($new_hook_id,
-                          " . (!isset($branch) ? 'NULL' : "'".sane_mysql($branch)."'") . ",
-                          '" . sane_mysql($emails_notif) . "',
-                          '" . sane_mysql($enable_diff) . "',
-                          " . (!isset($emails_diff) ? 'NULL' : "'".sane_mysql($emails_diff)."'") . ")";
-	db_query($query) or die(mysql_error());
+	db_autoexecute('cvs_hooks_log_accum',
+          array('hook_id' => $new_hook_id,
+		'branch' => (!isset($branch) ? null : $branch),
+		'emails_notif' => $emails_notif,
+		'enable_diff' => $enable_diff,
+		'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
+	  DB_AUTOQUERY_INSERT) or die(mysql_error());
       } else {
 	// Update existing entry
-	$query = "UPDATE cvs_hooks, cvs_hooks_log_accum SET
-                    repo_name='" . sane_mysql($repo_name) . "',
-                    match_type='" . sane_mysql($match_type) . "',
-                    dir_list=" . (!isset($dir_list) ? 'NULL' : "'".sane_mysql($dir_list)."'") . ",
-                    hook_name='log_accum',
-                    needs_refresh=1,
-                    branch=" . (!isset($branch) ? 'NULL' : "'".sane_mysql($branch)."'") . ",
-                    emails_notif='" . sane_mysql($emails_notif) . "',
-                    enable_diff='" . sane_mysql($enable_diff) . "',
-                    emails_diff=" . (!isset($emails_diff) ? 'NULL' : "'".sane_mysql($emails_diff)."'") . "
-                  WHERE cvs_hooks.id = cvs_hooks_log_accum.hook_id AND group_id=$group_id AND id=$hook_id\n";
-#	echo $query;
-	db_query($query) or die(mysql_error());
+	db_query('cvs_hooks, cvs_hooks_log_accum',
+	  array(
+	    'repo_name' => $repo_name,
+	    'match_type' => $match_type,
+	    'dir_list' => (!isset($dir_list) ? null : $dir_list),
+	    'hook_name' => 'log_accum',
+	    'needs_refresh' => 1,
+	    'branch' => (!isset($branch) ? null : $branch),
+	    'emails_notif' => $emails_notif,
+	    'enable_diff' => $enable_diff,
+	    'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
+          DB_AUTOQUERY_UPDATE,
+          "cvs_hooks.id = cvs_hooks_log_accum.hook_id AND group_id=? AND id=?",
+	  array($group_id, $hook_id)) or die(mysql_error());
       }
     }
   }
@@ -144,20 +146,19 @@ echo "</ul>";
 
 $hook = 'log_accum';
 // Show the project's log_accum hooks
-$query = "
+$result =  db_execute("
 SELECT hook_id, repo_name, match_type, dir_list, hook_name, needs_refresh,
 	branch, emails_notif, enable_diff, emails_diff
 FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
-WHERE group_id = '$group_id'
-";
+WHERE group_id = ?", array($group_id));
 
 echo "<h2>log_accum</h2>";
 echo "<h3>Current notifications</h3>";
 echo "<form action='{$_SERVER['PHP_SELF']}?group=$group' method='post'>";
 echo "<table>";
 echo html_build_list_table_top(array('X', 'Repository', 'Match type', 'Module list', 'Only branch', 'Notification to', 'Diff?', 'Separate diffs to', 'Updated?'));
-$result =  db_query($query);
+
 while ($row = mysql_fetch_assoc($result)) {
   $cur= $row['hook_id'];
   echo "<tr>\n";
@@ -235,20 +236,19 @@ echo "<input type='submit' name='log_accum' value='$caption' />
 
 $hook = 'cia';
 // Show the project's log_accum hooks
-$query = "
+$result =  db_execute("
 SELECT repo_name, match_type, dir_list, hook_name, needs_refresh,
 	project_account
 FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
-WHERE group_id = '$group_id'
-";
+WHERE group_id = ?", array($group_id));
 
 echo "<h2>cia (in progress)</h2>";
 echo "<h3>Current CIA notifications</h3>";
 echo "<form action={$_SERVER['PHP_SELF']}>";
 echo "<table>";
 echo html_build_list_table_top(array('X', 'Repository', 'Match type', 'Module list', 'CIA Project', 'Updated?'));
-$result =  db_query($query);
+
 while ($row = mysql_fetch_assoc($result)) {
   echo "<tr>";
   echo "<td>";

@@ -20,6 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/dnsbl.php');
 require_once(dirname(__FILE__).'/spam.php');
 
@@ -41,7 +44,11 @@ function form_header ($action, $form_id=false, $method="post", $extra=false)
       mt_srand((double)microtime()*1000000);
       $form_id=md5(mt_rand(0,1000000));
     }
-  $result = db_query("INSERT INTO form (form_id,timestamp,user_id) VALUES ('$form_id','".time()."','".user_getid()."')");
+  $result = db_autoexecute('form',
+    array('form_id' => $form_id,
+	  'timestamp' => time(),
+	  'user_id' => user_getid()),
+    DB_AUTOQUERY_INSERT);
   if (db_affected_rows($result) != 1)
     { fb(_("System error while creating the form, report it to admins"), 1); }
   
@@ -142,7 +149,8 @@ function form_check ($form_id)
   # Now, the check will remove the id. If the remove fail, it means that
   # the form id no longer exists and then we exit. We will have only one
   # SQL request, reducing as much as possible delays.
-  $success = db_affected_rows(db_query("DELETE FROM form WHERE user_id='".user_getid()."' AND form_id='".safeinput($form_id)."'"));
+  $success = db_affected_rows(db_execute("DELETE FROM form WHERE user_id=? AND form_id=?",
+					 array(user_getid(), $form_id)));
   if (!$success)
     {
       fb(_("Duplicate Post: this form was already submitted."),1);
@@ -174,8 +182,8 @@ function form_clean ($form_id)
 # dumbuser-compliant
 function form_check_nobot ()
 {
-  $trap = sane_all("website");
-  if ($trap != "" && $trap != "http://")
+  extract(sane_import('request', array('website')));
+  if ($website != "" && $website != "http://")
     {
       # Not much explanation on the reject, since we are hunting spammers
       exit_log("filled the spam trap special field");
@@ -183,7 +191,3 @@ function form_check_nobot ()
     }  
   return 1;
 }
-
-
-
-?>

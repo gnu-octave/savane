@@ -24,23 +24,22 @@
 
 require_once('include/init.php');
 require_once('include/sendmail.php');
-register_globals_off();
 
-$touser = sane_all("touser");
-$fromuser = sane_all("fromuser");
-$send_mail = sane_all("send_mail");
-$subject = sane_all("subject");
-$body = sane_all("body");
-$freedback = sane_all("feedback");
+register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('request',
+  array('touser', 'fromuser', 'send_mail', 'subject', 'body', 'feedback')));
 
 if (user_isloggedin()) 
 {
 
-
   if ($touser) 
     {
       # Search infos in the database about the user
-      $result=db_query("SELECT email,user_name FROM user WHERE user_id='$touser' AND (status='A' OR status='SQD')");
+      $result=db_execute("SELECT email,user_name FROM user WHERE user_id=? AND (status='A' OR status='SQD')",
+			 array($touser));
       if (!$result || db_numrows($result) < 1) 
 	{
 	  exit_error(_('That user does not exist'));
@@ -63,7 +62,7 @@ if (user_isloggedin())
       else 
 	{
 	  # Let sendmail_mail() figuring out real email addresses
-	  sendmail_mail($fromuser, $touser, $subject, stripslashes($body));
+	  sendmail_mail($fromuser, $touser, $subject, $body);
 	  $HTML->header(array('title'=>_('Message Sent')));
 	  print html_feedback_top($GLOBALS['feedback']);
 	  $HTML->footer(array());

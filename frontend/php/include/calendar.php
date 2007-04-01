@@ -21,6 +21,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 function calendar_month_name ($month)
 {
   switch ($month) 
@@ -123,5 +126,3 @@ function calendar_selectbox ($level, $checked_val='xxaz', $inputname=false)
 					   $checked_val,
 					   0);
 }
-
-?>

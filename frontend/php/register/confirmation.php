@@ -22,6 +22,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 define('ARTIFACT', 'task');
 $no_redirection=1;
 require_once('../include/init.php');
@@ -162,7 +165,7 @@ else if ($i_agree && $group_id && $rand_hash)
   $user_realname = user_getrealname(user_getid());
   $user_email = user_getemail(user_getid());
   $unix_name = group_getunixname($group_id);
-  $sql_type = db_execute("SELECT name FROM group_type WHERE type_id='$group_type'");
+  $sql_type = db_execute("SELECT name FROM group_type WHERE type_id=?", array($group_type));
   $type = db_result($sql_type,0,'name');
   $type_base_host = $project->getTypeBaseHost();
   $type_admin_email_address = $project->getTypeAdminEmailAddress();
@@ -267,13 +270,13 @@ While this item will be useful to track the registration process, *approving or 
 
       
       # We add the default recipes grabbed from update/1.3/
-      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Getting back lost password', '".addslashes("If you lose your password simply visit the login page and click \"Lost Your Password?\". 
+      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Getting back lost password', '".mysql_real_escape_string("If you lose your password simply visit the login page and click \"Lost Your Password?\". 
 
 A confirmation mail will be sent to the address we have on file for you. Then, load the URL in the email to reset your password.")."', '1')");
       $item_id = db_insertid($query);
       db_query("INSERT INTO cookbook_context2recipe (recipe_id, group_id, audience_anonymous , audience_loggedin , audience_members , audience_technicians , audience_managers , context_project , context_homepage , context_cookbook , context_download , context_support , context_bugs , context_task , context_patch , context_news , context_mail , context_cvs , context_arch , context_svn , context_my , context_stats , context_siteadmin , context_people , subcontext_browsing , subcontext_postitem , subcontext_edititem , subcontext_search , subcontext_configure ) VALUES ('$item_id', '$group_id', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0', '0')");
 
-      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Why log in?', '".addslashes("The log-in mechanism used in these webpages is just a simple way of keeping track of users who work in projects hosted in this site. When a user logs in, she/he is conducted to a personal page that lists the projects she/he is collaborating with and any pending tasks that she/he might have.
+      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Why log in?', '".mysql_real_escape_string("The log-in mechanism used in these webpages is just a simple way of keeping track of users who work in projects hosted in this site. When a user logs in, she/he is conducted to a personal page that lists the projects she/he is collaborating with and any pending tasks that she/he might have.
 
 If you are involved in any project, if you do not intend to post items on the site, you don't need to log in since it will make no difference. 
 If you want to register a project of your own to be hosted in this site, you must first log in, because every project must have at least one administrator and we need to know your user name to make you the administrator of the project.
@@ -285,14 +288,14 @@ If you lost your password, read recipe #$item_id.")."', '1')");
       db_query("INSERT INTO cookbook_context2recipe (recipe_id, group_id, audience_anonymous , audience_loggedin , audience_members , audience_technicians , audience_managers , context_project , context_homepage , context_cookbook , context_download , context_support , context_bugs , context_task , context_patch , context_news , context_mail , context_cvs , context_arch , context_svn , context_my , context_stats , context_siteadmin , context_people , subcontext_browsing , subcontext_postitem , subcontext_edititem , subcontext_search , subcontext_configure ) VALUES ('$item_id', '$group_id', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0', '0')");
 
 
-      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Delays on update', '".addslashes("Several function related to mail aliases, external services access (SVN, CVS...), user additions, group member changes, CVS, etc, are performed via a cronjob on a regular basis. 
+      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Delays on update', '".mysql_real_escape_string("Several function related to mail aliases, external services access (SVN, CVS...), user additions, group member changes, CVS, etc, are performed via a cronjob on a regular basis. 
 
 Changes made on the web site may appear to be live but will not take effect until the next cron update.")."', '1')");
       $item_id = db_insertid($query);
       db_query("INSERT INTO cookbook_context2recipe (recipe_id, group_id, audience_anonymous , audience_loggedin , audience_members , audience_technicians , audience_managers , context_project , context_homepage , context_cookbook , context_download , context_support , context_bugs , context_task , context_patch , context_news , context_mail , context_cvs , context_arch , context_svn , context_my , context_stats , context_siteadmin , context_people , subcontext_browsing , subcontext_postitem , subcontext_edititem , subcontext_search , subcontext_configure ) VALUES ('$item_id', '$group_id', '0', '1', '1', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '1')");
 
       # We add the default recipes grabbed from update/3.0/
-      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Markup Reminder', '".addslashes("Savane provides a markup langage that enables you to format text you post in items or items comments. HTML is not allowed for security reasons.
+      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '5', '1', '100', '100', '100', '1133253163', 'Markup Reminder', '".mysql_real_escape_string("Savane provides a markup langage that enables you to format text you post in items or items comments. HTML is not allowed for security reasons.
 
 
 = Basic Text Tags =
@@ -389,7 +392,7 @@ This tag diverges from the verbatim tag in the sense that it will not cause the 
       db_query("INSERT INTO cookbook_context2recipe (recipe_id, group_id, audience_anonymous , audience_loggedin , audience_members , audience_technicians , audience_managers , context_project , context_homepage , context_cookbook , context_download , context_support , context_bugs , context_task , context_patch , context_news , context_mail , context_cvs , context_arch , context_svn , context_my , context_stats , context_siteadmin , context_people , subcontext_browsing , subcontext_postitem , subcontext_edititem , subcontext_search , subcontext_configure ) VALUES ('$item_id', '$group_id', '1', '1', '1', '0', '0', '1', '0', '1', '0', '1', '1', '1', '1', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '1', '0', '1')");	       
 
 
-      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '3', '1', '100', '100', '100', '1133253163', 'Fighting Spam', '".addslashes("Savane provides several ways to protect trackers from spam.
+      $query = db_query("INSERT INTO cookbook (group_id, status_id , severity , privacy , category_id , submitted_by , assigned_to , date , summary , details , resolution_id) VALUES ('$group_id', '3', '3', '1', '100', '100', '100', '1133253163', 'Fighting Spam', '".mysql_real_escape_string("Savane provides several ways to protect trackers from spam.
 
 = Preventing Spam =
 

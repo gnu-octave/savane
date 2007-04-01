@@ -5,6 +5,7 @@
 # $Id$
 #
 #  Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright (C) 2007  Sylvain Beucler
 # 
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,28 +21,35 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
-function bookmark_add ($bookmark_url, $bookmark_title="") 
+function bookmark_add ($bookmark_url, $bookmark_title='')
 {
   if (!$bookmark_title) 
     { $bookmark_title = $bookmark_url; }
   
-  $result = db_query("INSERT into user_bookmarks (user_id, bookmark_url, ".
-		     "bookmark_title) values ('".user_getid()."', '".addslashes($bookmark_url)."', ".
-		     "'".addslashes($bookmark_title)."');");
+  $result = db_autoexecute('user_bookmarks',
+    array('user_id' => user_getid(),
+	  'bookmark_url' => $bookmark_url,
+	  'bookmark_title' => $bookmark_title),
+    DB_AUTOQUERY_INSERT);
   if (!$result) 
     { print db_error(); }
 }
 
-function bookmark_edit ($bookmark_id, $bookmark_url, $bookmark_title) 
+function bookmark_edit ($bookmark_id, $bookmark_url, $bookmark_title)
 {
-  db_query("UPDATE user_bookmarks SET bookmark_url='".addslashes($bookmark_url)."', "
-	   ."bookmark_title='".addslashes($bookmark_title)."' where bookmark_id='".addslashes($bookmark_id)."' AND user_id='". user_getid() ."'");
+  db_autoexecute('user_bookmarks',
+    array('bookmark_url' => $bookmark_url,
+	  'bookmark_title' => $bookmark_title),
+    DB_AUTOQUERY_UPDATE,
+    "bookmark_id=? AND user_id=?",
+    array($bookmark_id, user_getid()));
 }
 
-function bookmark_delete ($bookmark_id) 
+function bookmark_delete ($bookmark_id)
 {
-  db_query("DELETE from user_bookmarks WHERE bookmark_id='".addslashes($bookmark_id)."'and user_id='".user_getid()."'");
+  db_execute("DELETE from user_bookmarks WHERE bookmark_id=? AND user_id=?",
+	     array($bookmark_id, user_getid()));
 }
-
-?>

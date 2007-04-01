@@ -21,9 +21,11 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-function stats_get_generic($sql) 
+#input_is_safe();
+#mysql_is_safe();
+
+function stats_get_generic($res_count)
 {
-  $res_count = db_query($sql);
   if (db_numrows($res_count) > 0) 
     {
       $row_count = db_fetch_array($res_count);
@@ -47,7 +49,7 @@ function stats_getprojects_bytype_active($type_id)
 
 function stats_getprojects_pending() 
 {
-  return stats_get_generic("SELECT count(*) AS count FROM groups WHERE status='P'");
+  return stats_get_generic(db_query("SELECT count(*) AS count FROM groups WHERE status='P'"));
 }
 
 function stats_getprojects_total() 
@@ -57,42 +59,63 @@ function stats_getprojects_total()
 
 function stats_getprojects($type_id="", $is_public="",$period="") 
 {
+  $params = array();
   if ($type_id)
-    { $type_id = " AND type='$type_id'"; }
+    {
+      $type_id = " AND type=?";
+      array_push($params, $type_id);
+    }
   if ($is_public != "")
-    { $is_public = " AND is_public='$is_public'"; }
+    {
+      $is_public = " AND is_public=?";
+      array_push($params, $is_public);
+    }
   if ($period)
-    { $period = " AND $period"; }
+    {
+      $period = " AND ?";
+      array_push($params, $period);
+    }
 
-  return stats_get_generic("SELECT count(*) AS count FROM groups WHERE status='A' $type_id $is_public $period");
+  return stats_get_generic(
+    db_execute("SELECT count(*) AS count FROM groups WHERE status='A' $type_id $is_public $period", $params));
 }
 
 function stats_getusers($period="") 
 {
+  $param = array();
   if ($period)
-    { $period = " AND $period"; }
+    {
+      $period = " AND ?";
+      $param = array($period);
+    }
 
-  return stats_get_generic("SELECT count(*) AS count FROM user WHERE status='A' $period");
+  return stats_get_generic(
+    db_execute("SELECT count(*) AS count FROM user WHERE status='A' $period", $param));
 }
 
 function stats_getitems($tracker, $only_open="",$period="")
 {
+  $params = array();
   if ($only_open)
-    { $only_open = " AND status_id='$only_open'"; }
-  else
-    { unset($only_open); }
+    {
+      $only_open = " AND status_id=?";
+      array_push($params, $only_open);
+    }
 
   if ($period)
-    { $period = " AND $period"; }
+    {
+      $period = " AND ?";
+      array_push($params, $period);
+    }
   
  
-  return stats_get_generic("SELECT count(*) AS count FROM $tracker WHERE group_id<>'100' AND spamscore < 5 $only_open $period");
+  return stats_get_generic(
+    db_execute("SELECT count(*) AS count FROM $tracker WHERE group_id<>'100' AND spamscore < 5 $only_open $period",
+	       $params));
 }
 
 function stats_getthemeusers($theme="") 
 {
-  return stats_get_generic("SELECT count(*) AS count FROM user WHERE status='A' AND theme='$theme'");
+  return stats_get_generic(db_execute("SELECT count(*) AS count FROM user WHERE status='A' AND theme=?",
+				      array($theme)));
 }
-
-
-?>

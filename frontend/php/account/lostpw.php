@@ -24,6 +24,9 @@
 
 require_once('../include/init.php');
 
+#input_is_safe();
+#mysql_is_safe();
+
 # Logged users have no business here
 if (user_isloggedin())
 { session_redirect($GLOBALS['sys_home']."my/"); }
@@ -44,12 +47,10 @@ print '<p>'._("The form below will email a URL to the email address we have on f
 print '<p class="warn">'._("This will work only if your account was already successfully registered and activated. Note that accounts that are not activated within the three days next to their registration are automatically deleted.").'</p>';
 
 print '<form action="lostpw-confirm.php" method="post">';
-print '<p><input type="hidden" name="form_user" value="'.$form_user.'" /><span class="preinput"> &nbsp;&nbsp;';
+print '<p><span class="preinput"> &nbsp;&nbsp;';
 print _("Login Name:");
 print ' &nbsp;&nbsp;</span><input type="text" name="form_loginname" /> &nbsp;&nbsp;';
 print '<input type="submit" name="send" value="'._("Send lost password hash").'" /></p>';
 print '</form>';
 
 $HTML->footer(array());
-
-?>

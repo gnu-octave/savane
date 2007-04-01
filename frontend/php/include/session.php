@@ -188,20 +188,27 @@ function session_login_valid($form_loginname,
   return true;
 }
 
+// TODO: support IPv6 in general
 function session_checkip($oldip,$newip) 
 {
-  $eoldip = explode(".",$oldip);
-  $enewip = explode(".",$newip);
+  $eoldip = explode('.', $oldip);
+  $enewip = explode('.', $newip);
   
-  # ## require same class b subnet
-  if (($eoldip[0]!=$enewip[0])||($eoldip[1]!=$enewip[1])) 
-    {
-      return 0;
-    } 
-  else 
+  // require same class b subnet
+  if ((isset($eoldip[0]) and isset($enewip[0]) and $eoldip[0] == $enewip[0])
+  and (isset($eoldip[1]) and isset($enewip[1]) and $eoldip[1] == $enewip[1]))
     {
       return 1;
     }
+  else if ($eoldip == $enewip) 
+    {
+      // Somehow the IP addresses match even if they don't have a
+      // valid dot-explosed form (eg "::1")
+      return 1;
+    }
+
+  // IP addresses doesn't match 
+  return 0;
 }
 
 function session_issecure() 
@@ -474,4 +481,13 @@ function session_exists($uid, $hash) {
 			     . "user_id = '".$uid."' and session_hash='".$hash."'")) == 1);
 }
 
-?>
+
+function session_logout() {
+  # If the session was validated, we can assume that the cookie session_hash
+  # is reliable
+  db_execute("DELETE FROM session WHERE session_hash=?",
+	     array($_COOKIE['session_hash']));
+  session_delete_cookie('redirect_to_https');
+  session_delete_cookie('session_hash');
+  session_delete_cookie('session_uid');
+}

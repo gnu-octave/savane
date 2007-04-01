@@ -2,6 +2,7 @@ Hi,
 
 Let me introduce this clean-up branch:
 
+
 - includes/pre.php vs. includes/init.php
 
 includes/pre.php is renamed to includes/init.php for clarity.
@@ -13,6 +14,19 @@ declares which files it needs to include.
 This should avoid including half of the Savane code each time a page
 is served, but the main pro is to control where the code comes from,
 without functions "magically" defined.
+
+
+- include/require/include_once/require_once
+
+Let's only use 'require_once' to load code:
+
+ * require: if using 'include', then not finding the code is not a
+ fatal error, while it is.
+
+ * once: if the code is required or included twice, PHP will issue an
+ error about redefined functions.
+
+This matches C's "#include" + "#ifndef _MYFILE_H_".
 
 
 - Security:
@@ -52,7 +66,7 @@ You can use devel/sv_check_security.pl will be able to check which
 files remains to be cleaned-up based on those tags.
 
 
-- Installation:
+- Autoconfiscation:
 
 In order to use proper paths (localedir,
 /usr/lib/where-should-I-put-my-perl-mod, ...) and installation methods
@@ -61,18 +75,21 @@ system to autotools, complemented by a classic Makefile.PL
 (ExtUtils::MakeMaker) for the Perl module.
 
 Autoconf updates frontend/php/include/ac_config.php with variables
-like localedir and VERSION. The same could be done for
-Savane::Version.
+like localedir and VERSION. Similarly Autoconf updates
+lib/Savane/Version.pm.
 
 'make dist' should work to make the tarballs and release-related tasks
-(check NEWS file, etc.).
+(check NEWS file, etc.). I don't think we can support the case where
+the build directory is different than the source directory though.
 
 This also replaces a chunk of Savane-specific Makefiles with upstream
 code (Perl and .PO installation, configure prompts).
 
 Some people suggest using Module::Build instead. I think, though, that
-the fact ExtUtils::MakeMaker relies on 'make' may help with autotools
+the fact ExtUtils::MakeMaker relies on 'make' helps with autotools
 integration (plus this is a really simple Perl package anyway).
+
+See also "configuration" below.
 
 
 - Find the gettext locales:
@@ -103,14 +120,13 @@ integration (plus this is a really simple Perl package anyway).
 
 backend/*.pl -> backend/*.in
 #!/usr/bin/perl -> #! @PERL@
-(ala cvs/contrib)
+(à la cvs/contrib)
 
 
 - Tests:
 
 Instanciate a private HTTP and MySQL daemons (eg. ports 50080 + MySQL
-socket, and perform an installation on them). Configuration files are
-available in devel/tests/minimal_configs/
+socket, and perform an installation on them). Cf. tests/MECHS
 
 
 - Savane configuration:
@@ -127,6 +143,11 @@ interactive process and ask the user to edit the configuration file in
 case the default values are not satisfying (similar to OpenSSH or
 Apache2's configuration files).
 
+
+To ease the installation, a default 'admin' user and a default
+'siteadmin' project are created. They can be renamed / removed later
+if needed, but at least this doesn't force the user to fakely register
+a first project which a special handling. Cf. db/mysql/bootstrap.sql.
 
 
 ---------- TODO ----------

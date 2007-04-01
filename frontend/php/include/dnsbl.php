@@ -20,6 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # Import the list of dnsbl to check
 # (sys_incdir should have been secured in pre.php)
 $DNSBL = array();
@@ -27,6 +30,7 @@ $DNSBL_INFOURL = array();
 if (file_exists($GLOBALS['sys_incdir'].'/dnsbl.txt'))
      require_once($GLOBALS['sys_incdir'].'/dnsbl.txt');
 
+require_once(dirname(__FILE__).'/session.php');
 
 # Clever function that cleverly check who is posting data.
 function dnsbl_check() 
@@ -62,7 +66,7 @@ function dnsbl_check()
 	  # If logged-in, kill the session
 	  if (user_isloggedin())
 	    {
-	      db_query("DELETE FROM session WHERE session_hash='".sane_cookie("session_hash")."'");
+	      session_logout();
 	    }
 	  
 	  # Log error
@@ -72,5 +76,3 @@ function dnsbl_check()
 	}
     }
 }
-
-?>

@@ -225,7 +225,7 @@ if ($update)
 		    . $url."&step=discard\n\n"
 		    . sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
 		  
-		  $success = sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_lists_domain'],
+		  $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_lists_domain'],
 					   $newvalue,
 					   $GLOBALS['sys_name'] .' '._("Verification"),
 					   $message);
@@ -241,7 +241,7 @@ if ($update)
 	      # on.
 	      # The next step is probably to print the mail change request
 	      # on account/ with the possibility to discard
-		  sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_lists_domain'],
+		  sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_lists_domain'],
 				$row_user[email],
 				$GLOBALS['sys_name'] .' '._("Verification"),
 				$warning_message);
@@ -359,7 +359,7 @@ if ($update)
 		. $url."&step=discard\n\n"
 		. sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
 	      
-	      $success = sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_mail_domain'],
+	      $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
 				       $row_user['email'],
 				       $GLOBALS['sys_name'] .' '._("Verification"),
 				       $message);

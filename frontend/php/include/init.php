@@ -25,7 +25,7 @@
        not serve it by default
 **************************************************************/
 
-header("Content-Type: text/html; charset=utf-8");
+header('Content-Type: text/html; charset=utf-8');
 
 
 # database abstraction
@@ -68,7 +68,7 @@ $sys_unix_group_name = 'siteadmin';
 
 $sys_mail_domain = 'localhost';
 $sys_mail_admin = get_current_user();
-$sys_replyto = "NO-REPLY.INVALID-ADDRESS";
+$sys_mail_replyto = "NO-REPLY.INVALID-ADDRESS";
 
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');
@@ -270,7 +270,7 @@ user_guess();
 # group_id
 if (!isset($group_id) && !isset($group_name) && isset($item_id))
 {
-  $result = db_query("SELECT group_id FROM ".ARTIFACT." WHERE bug_id='$item_id'");
+  $result = db_execute("SELECT group_id FROM ".ARTIFACT." WHERE bug_id=?", array($item_id));
   if (db_numrows($result))
     {  
       sane_set("group_id", db_result($result,0,'group_id')); }
@@ -296,7 +296,8 @@ if (!isset($group_id) && !isset($group_name) && isset($item_id))
 # (FIXME: in the future it could follow the naming scheme of trackers)
 if (!isset($group_id) && !isset($group_name) && isset($forum_id))
 {
-  $result = db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='$forum_id'");
+  $result = db_execute("SELECT group_id FROM forum_group_list WHERE group_forum_id=?",
+		       array($forum_id));
   if ($result)
     {  sane_set("group_id", db_result(($result),0,'group_id')); }
 }
@@ -306,7 +307,8 @@ if (!isset($group_id) && !isset($group_name) && isset($forum_id))
 # (FIXME: in the future it could follow the naming scheme of trackers)
 if (!isset($group_id) && !isset($group_name) && isset($msg_id))
 {
-  $result = db_query("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id='$msg_id'");
+  $result = db_execute("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id=?",
+		       array($msg_id));
   if ($result)
     {  sane_set("group_id", db_result(($result),0,'group_id')); }
 }
@@ -316,13 +318,15 @@ if (!isset($group_id) && !isset($group_name) && isset($msg_id))
 unset($res_grp);
 if (isset($group) && !isset($group_id))
 {
-  $res_grp = db_query("SELECT group_id,status FROM groups WHERE unix_group_name='$group'");
+  $res_grp = db_execute("SELECT group_id,status FROM groups WHERE unix_group_name=?",
+			array($group));
   sane_set("group_id", db_result($res_grp,0,'group_id'));
   sane_set("group_name", $group);
 }
 elseif (isset($group_id))
 {
-  $res_grp = db_query("SELECT unix_group_name,status FROM groups WHERE group_id='$group_id'");
+  $res_grp = db_execute("SELECT unix_group_name,status FROM groups WHERE group_id=?",
+			array($group_id));
   sane_set("group_name", db_result($res_grp,0,'unix_group_name'));
 }
 
@@ -332,7 +336,8 @@ if (isset($group_id))
 {
   if (!$res_grp)
     {
-      $res_grp = db_query("SELECT unix_group_name,status FROM groups WHERE group_id='$group_id'");
+      $res_grp = db_execute("SELECT unix_group_name,status FROM groups WHERE group_id=?",
+			    array($group_id));
     }
   # Check if the group truly exists
   if (!db_numrows($res_grp))

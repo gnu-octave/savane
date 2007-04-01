@@ -28,6 +28,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # base error library for new objects
 require_once(dirname(__FILE__).'/Error.class');
 # left-hand and top menu nav library (requires context to be set)
@@ -370,5 +373,3 @@ class Layout extends Error
 # It is in pagemenu.php
 
 }
-
-?>
