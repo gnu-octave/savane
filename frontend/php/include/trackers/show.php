@@ -60,17 +60,17 @@ function show_item_list ($result_arr,
       if ($offset > 0)
 	{
 	  $nav_bar .=
-	     '<span class="xsmall"><a href="'.$url.'&amp;offset=0#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/first.png" border="0" alt="'._("Begin").'" />'._("Begin").'</a>'.
+	     '<span class="xsmall"><a href="'.$url.'&amp;offset=0#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/first.png" border="0" alt="'._("Begin").'" />'._("Begin").'</a>'.
 	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
 	     '<a href="'.$url.'&amp;offset='.($offset-$chunksz).
-	     '#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/previous.png" border="0" alt="'._("Previous Results").'" />'._("Previous Results").'</a></span>';
+	     '#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/previous.png" border="0" alt="'._("Previous Results").'" />'._("Previous Results").'</a></span>';
 	}
       else
 	{
 	  $nav_bar .=
-	     '<span class="xsmall"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/firstgrey.png" border="0" alt="'._("Begin").'" /><em>'._("Begin").'</em>'.
+	     '<span class="xsmall"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/firstgrey.png" border="0" alt="'._("Begin").'" /><em>'._("Begin").'</em>'.
 	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
-	     '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/previousgrey.png" border="0" alt="'._("Previous Results").'" /><em>'._("Previous Results").'</em></span>';
+	     '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/previousgrey.png" border="0" alt="'._("Previous Results").'" /><em>'._("Previous Results").'</em></span>';
 	}
     }
 
@@ -98,16 +98,16 @@ function show_item_list ($result_arr,
 
 	  $nav_bar .=
 	     '<span class="xsmall"><a href="'.$url.'&amp;offset='.($offset+$chunksz).
-	     '#results">'._("Next Results").'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/next.png" border="0" alt="'._("Next Results").'" /></a>'.
+	     '#results">'._("Next Results").'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/next.png" border="0" alt="'._("Next Results").'" /></a>'.
 	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
 	     '<a href="'.$url.'&amp;offset='.($offset_end).
-	     '#results">'._("End").'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/last.png" border="0" alt="'._("End").'" /></a></span>';
+	     '#results">'._("End").'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/last.png" border="0" alt="'._("End").'" /></a></span>';
 	}
       else
 	{
-	  $nav_bar .= '<span class="xsmall"><em>'._("Next Results").'</em><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/nextgrey.png" border="0" alt="'._("Next Results").'" />'.
+	  $nav_bar .= '<span class="xsmall"><em>'._("Next Results").'</em><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/nextgrey.png" border="0" alt="'._("Next Results").'" />'.
 	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
-	     '<em>'._("End").'</em><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/lastgrey.png" border="0" alt="'._("End").'" /></span>';
+	     '<em>'._("End").'</em><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/lastgrey.png" border="0" alt="'._("End").'" /></span>';
 	}
     }
   $nav_bar .= '</h3>';
@@ -622,7 +622,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
  	      print markup_basic($value_id);
 	    }
 
-           print '</td><td class="smaller" align="center"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/next.png" border="0" alt="=>" /></td><td class="smaller" align="left">';
+           print '</td><td class="smaller" align="center"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/next.png" border="0" alt="=>" /></td><td class="smaller" align="left">';
 	  # New value
 	  if (trackers_data_is_select_box($field))
 	    {

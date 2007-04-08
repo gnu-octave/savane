@@ -333,7 +333,7 @@ if ($forum_id)
       if ($offset != 0)
 	{
 	  $ret_val .= '<a href="javascript:history.back()">
-				<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/previous.png" height="24" width="24" border="0" align="middle" />'
+				<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/previous.png" height="24" width="24" border="0" align="middle" />'
                                 .'<strong>'._('Previous Messages').'</strong></a>';
 	}
       else
@@ -346,7 +346,7 @@ if ($forum_id)
 	{
 	  $ret_val .= '<a href="'.$GLOBALS['sys_home'].'forum/forum.php?max_rows='.$max_rows.'&amp;style='.$style.'&amp;offset='.($offset+$i).'&amp;forum_id='.$forum_id.'">
 				<strong>'
-                                ._('Next Messages').'</strong><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/next.png" height="24" width="24" border="0" align="middle" /></a>';
+                                ._('Next Messages').'</strong><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/next.png" height="24" width="24" border="0" align="middle" /></a>';
 	}
       else
 	{
