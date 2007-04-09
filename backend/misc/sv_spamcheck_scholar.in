@@ -255,7 +255,7 @@ if ($spam_count + $ham_count > 0) {
     
     print LOG strftime "[$script] %c - started sa-learn on spam ($spam_count)\n", localtime;
     system("sa-learn", 
-	   "--ham", 
+	   "--spam", 
 	   $spamdir);
     print LOG strftime "[$script] %c - sa-learn on spam over\n", localtime;
 } else {

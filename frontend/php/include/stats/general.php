@@ -60,58 +60,65 @@ function stats_getprojects_total()
 function stats_getprojects($type_id="", $is_public="",$period="") 
 {
   $params = array();
+  $type_id_sql = '';
+  $is_public_sql = '';
+  $period_sql = '';
   if ($type_id)
     {
-      $type_id = " AND type=?";
+      $type_id_sql = " AND type=?";
       array_push($params, $type_id);
     }
   if ($is_public != "")
     {
-      $is_public = " AND is_public=?";
+      $is_public_sql = " AND is_public=?";
       array_push($params, $is_public);
     }
   if ($period)
     {
-      $period = " AND ?";
+      $period_sql = " AND ?";
       array_push($params, $period);
     }
 
   return stats_get_generic(
-    db_execute("SELECT count(*) AS count FROM groups WHERE status='A' $type_id $is_public $period", $params));
+    db_execute("SELECT count(*) AS count FROM groups WHERE status='A' $type_id_sql $is_public_sql $period_sql",
+	       $params));
 }
 
 function stats_getusers($period="") 
 {
   $param = array();
+  $period_sql = '';
   if ($period)
     {
-      $period = " AND ?";
+      $period_sql = " AND ?";
       $param = array($period);
     }
 
   return stats_get_generic(
-    db_execute("SELECT count(*) AS count FROM user WHERE status='A' $period", $param));
+    db_execute("SELECT count(*) AS count FROM user WHERE status='A' $period_sql", $param));
 }
 
 function stats_getitems($tracker, $only_open="",$period="")
 {
   $params = array();
+  $only_open_sql = '';
+  $period_sql = '';
   if ($only_open)
     {
-      $only_open = " AND status_id=?";
+      $only_open_sql = " AND status_id=?";
       array_push($params, $only_open);
     }
 
   if ($period)
     {
-      $period = " AND ?";
+      $period_sql = " AND ?";
       array_push($params, $period);
     }
   
  
   return stats_get_generic(
-    db_execute("SELECT count(*) AS count FROM $tracker WHERE group_id<>'100' AND spamscore < 5 $only_open $period",
-	       $params));
+    db_execute("SELECT count(*) AS count FROM $tracker WHERE group_id<>'100' AND spamscore < 5"
+	       . " $only_open_sql $period_sql", $params));
 }
 
 function stats_getthemeusers($theme="") 

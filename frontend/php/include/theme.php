@@ -163,14 +163,17 @@ if (isset($_COOKIE['SV_THEME']))
       $cookie_theme = sane_cookie('SV_THEME');
 
       # look for invalid / outdated cookies
+      // TODO; stop using a constant for SV_THEME
       if (!file_exists($GLOBALS['sys_www_topdir']."/css/".$cookie_theme.".css"))
 	{
-	  define('SV_THEME', $GLOBALS['sys_themedefault']);
+	  if (!defined('SV_THEME')) // defined by the /my/admin/ page
+	    define('SV_THEME', $GLOBALS['sys_themedefault']);
 	  setcookie("SV_THEME", 'SV_THEME', time() + 60*60*24*365, $GLOBALS['sys_url_topdir']);
 	}
       else
 	{
-	  define('SV_THEME', $cookie_theme);
+	  if (!defined('SV_THEME')) // defined by the /my/admin/ page
+	    define('SV_THEME', $cookie_theme);
 	}
     }
 } 

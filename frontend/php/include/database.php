@@ -82,11 +82,12 @@ function db_query_escape()
 // Substitute '?' with one of the values in the $inputarr array,
 // properly escaped for inclusion in an SQL query
 function db_variable_binding($sql, $inputarr=null) {
-  $sql_expanded = '';
+  $sql_expanded = $sql;
   if ($inputarr) {
     $sql_exploded = explode('?', $sql);
     
     $i = 0;
+    $sql_expanded = '';
     //Use each() instead of foreach to reduce memory usage -mikefedyk
     while(list(, $v) = each($inputarr)) {
       $sql_expanded .= $sql_exploded[$i];
@@ -144,9 +145,25 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
   switch((string) $mode) {
   case 'INSERT':
   case '1':
-    $fields = implode(',', array_keys($dict)); // date,summary,...
-    $question_marks = implode(',', array_fill(0, count($dict), '?')); // ?,?,?,...
-    return db_execute("INSERT INTO $table ($fields) VALUES ($question_marks)",
+    // Quote fields to avoid problem with reserved words (bug #8898@gna)
+    // TODO: do connections with ANSI_QUOTES mode and use the standard
+    // "'" field delimiter
+    $first = true;
+    foreach (array_keys($dict) as $field)
+      {
+	if ($first)
+	  {
+	    $fields = "`$field`";
+	    $first = false;
+	  }
+	else 
+	  {
+	    $fields .= ",`$field`";
+	  }
+      }
+    // $fields = `date`,`summary`,...
+    $question_marks = implode(',', array_fill(0, count($dict), '?')); // ?,?,...
+    return db_execute("INSERT INTO `$table` ($fields) VALUES ($question_marks)",
 		     array_values($dict));
     break;
   case 'UPDATE':
@@ -154,13 +171,13 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
     $sql_fields = '';
     $values = array();
     while (list($field,$value) = each($dict)) {
-      $sql_fields .= "$field=?,";
+      $sql_fields .= "`$field`=?,";
       $values[] = $value;
     }
     $sql_fields = rtrim($sql_fields, ',');
     $values = array_merge($values, $where_inputarr);
     $where_sql = $where_condition ? "WHERE $where_condition" : '';
-    return db_execute("UPDATE $table SET $sql_fields $where_sql", $values);
+    return db_execute("UPDATE `$table` SET $sql_fields $where_sql", $values);
     break;
   default:
     // no default
@@ -184,9 +201,9 @@ function db_execute($sql, $inputarr=null)
 {
 #    echo a; # makes xdebug produce a stacktrace
   $expanded_sql = db_variable_binding($sql, $inputarr);
-#  print "<pre>";
+#  print "<pre>[";
 #  print_r($expanded_sql);
-#  print "</pre>";
+#  print "</pre>]";
   return mysql_query($expanded_sql);
 }
 
@@ -246,7 +263,7 @@ function db_fetch_array($qhandle = 0)
   if ($qhandle) {
     return mysql_fetch_array($qhandle);
   } else {
-    if ($GLOBALS['db_qhandle']) {
+    if (isset($GLOBALS['db_qhandle'])) {
       return mysql_fetch_array($GLOBALS['db_qhandle']);
     } else {
       return (array());

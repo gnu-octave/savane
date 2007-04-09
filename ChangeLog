@@ -1,4 +1,13 @@
+2007-04-09  Mathieu Roy
+	
+	* backend/misc/sv_spamcheck_scholar.in: gix bug causing spamcheck
+	scholar to use --ham instead of --spam (bug #8897).
+
 2007-04-09  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/include/database.php(db_autoexecute): adapt fix
+	from Mathieu, "Escape fields name with ` `, sometimes necessary
+	with MySQL 5 because plenty of name are reserved (bug #8898)."
 
 	* frontend/php/images: big clean-up, replaces duplicate images by
 	symlinks, symlinks identical themes, grouped icons by similar

@@ -28,6 +28,7 @@
 require_once(dirname(__FILE__).'/../calendar.php');
 require_once(dirname(__FILE__).'/../sendmail.php');
 require_once(dirname(__FILE__).'/data.php');
+require_once(dirname(__FILE__).'/format.php');
  
 # Return the file that should be included, according to the URL
 # requested. If the file start with ?, it's an index.
