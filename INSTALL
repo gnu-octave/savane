@@ -1,19 +1,41 @@
-	./configure
+Testing
+~~~~~~~
+
+If you want to give a quick try at the web interface:
+
+	cd tests/minimal_configs/
+	make install
+
+Then point your browser at http://localhost:50080/
+That's all!
+
+You need 'apache2', 'mysqld_safe' and 'mysql' binaries in your
+PATH. They will be used with alternate configuration files to create a
+non-privileged testing environment, and will not impact your other
+Apache or MySQL installations.
+
+
+Complete install
+~~~~~~~~~~~~~~~~
+
+	# Configure system paths [1]
+	./configure.sh
 	# build what need to be built
 	make
 	# log as superuser
 	su
 	# create the database
 	make database
-	# create the configuration file
-	make conf
+	# create the configuration file (WIP)
+	# make conf
+	emacs /etc/savane/savane.conf.pl
 	# install the backend scripts and the translation files
 	make install
 
 	
-	# OR do all of the above all at once
-	./configure
-	su -c "make savane"
+	# OR do all of the above all at once (WIP)
+	#./configure
+	#su -c "make savane"
 
 Then, you must plug Savane into Apache. Exemple if you want to install Savane
 at yourdomain/savane: 
@@ -73,3 +95,13 @@ If you use the backend, read also etc/README.
 	# http://127.0.0.1/savane/testconfig.php
 
 (please read carefully INSTALL.verbose for a more complete guide)
+
+
+Notes
+~~~~~
+
+[1] If you checked out Savane directly from the repository (instead of
+downloading a release tarball), you first need to install the
+autotools (Autoconf and Automake), and bootstrap the build system:
+
+	./boostrap

@@ -10,7 +10,7 @@ SUBDIRS = backend etc frontend lib autotools/m4 po
 
 EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
 	REQUIREMENTS INSTALL.verbose \
-	debian/ devel/ doc/ update/
+	db debian devel doc update tests
 
 database:
 	( \
