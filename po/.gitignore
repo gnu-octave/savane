@@ -1,3 +1,7 @@
 *.mo
+*.gmo
 *.pyc
+stamp-po
 Makefile
+Makefile.in
+savane.pot

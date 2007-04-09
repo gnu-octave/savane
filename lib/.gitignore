@@ -1,2 +1,6 @@
 *.bak
 Makefile
+Makefile.in
+pm_to_blib
+blib
+Makefile.perl

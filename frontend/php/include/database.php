@@ -82,10 +82,10 @@ function db_query_escape()
 // Substitute '?' with one of the values in the $inputarr array,
 // properly escaped for inclusion in an SQL query
 function db_variable_binding($sql, $inputarr=null) {
+  $sql_expanded = '';
   if ($inputarr) {
     $sql_exploded = explode('?', $sql);
     
-    $sql_expanded = '';
     $i = 0;
     //Use each() instead of foreach to reduce memory usage -mikefedyk
     while(list(, $v) = each($inputarr)) {

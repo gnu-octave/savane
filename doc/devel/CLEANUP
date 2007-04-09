@@ -150,6 +150,28 @@ if needed, but at least this doesn't force the user to fakely register
 a first project which a special handling. Cf. db/mysql/bootstrap.sql.
 
 
+- Images:
+
+I used symlinks as much as possible (to replace duplicate images and
+factor out themes that use the same set of images), and tried to group
+icons when they form a 'family' or consistent set. I also removed old
+unused icons (ftp->download, error->wrong), the 'transparent'
+pseudo-theme (replaced by the groups of icons). The images size is
+appreciably reduced from 6.9M/12M to 1.6M/2.3M (without/with generated
+smaller icons) which makes it much smoother to checkout the repository
+over SVN.
+
+To spot the identical images, I first wrote a script that sorted icons
+by checksum and listed the ones that were used the most. I then
+visually checked each theme to spot the files that were binary
+different yet actually identical (usually only the meta-data
+differed).
+
+It should be easier now to create a new theme by picking up and mixing
+the different sets of icon families: 'arrows', 'bool', 'contexts',
+'misc' and 'roles'.
+
+
 ---------- TODO ----------
 
 

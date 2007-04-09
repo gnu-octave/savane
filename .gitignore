@@ -1,4 +1,9 @@
 Makefile
+Makefile.in
+aclocal.m4
+configure
 configure.cache
-build-stamp
+config.log
+config.status
 www
+

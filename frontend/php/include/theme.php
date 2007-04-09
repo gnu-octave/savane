@@ -106,14 +106,14 @@ if (sane_all('printer') == 1) {
   return true;
 }
 
-if (isset($_COOKIES['SV_THEME'])) 
+if (isset($_COOKIE['SV_THEME'])) 
 {
   # the user selected a theme
-  if ($_COOKIES['SV_THEME'] == 'random')
+  if ($_COOKIE['SV_THEME'] == 'random')
     {
       # the user selected random theme
       # we set randomly a theme and a cookie for a day
-      if (isset($_COOKIES['SV_THEME_RANDOM'])) 
+      if (isset($_COOKIE['SV_THEME_RANDOM'])) 
 	{	  
 	  define('SV_THEME', sane_cookie('SV_THEME_RANDOM'));
 	} 
@@ -127,10 +127,10 @@ if (isset($_COOKIES['SV_THEME']))
 	  define('SV_THEME', $random_theme);
 	}
     } 
-  elseif ($_COOKIES['SV_THEME'] == 'rotate')
+  elseif ($_COOKIE['SV_THEME'] == 'rotate')
     {
       # the user want a rotation between themes
-      if (isset($_COOKIES['SV_THEME_ROTATE'])) 
+      if (isset($_COOKIE['SV_THEME_ROTATE'])) 
 	{	    
 	  define('SV_THEME', sane_cookie('SV_THEME_ROTATE'));
 	} 
@@ -140,7 +140,7 @@ if (isset($_COOKIES['SV_THEME']))
 	  
 	  # we get a number and set a cookie with this number
 	  # if this number exist, +1 to his value
-	  if (!isset($_COOKIES['SV_THEME_ROTATE_NUMERIC'])) 
+	  if (!isset($_COOKIE['SV_THEME_ROTATE_NUMERIC'])) 
 	    { $num = '0'; } 
 	  else 
 	    {

@@ -479,7 +479,7 @@ function group_getrestrictions ($group_id, $flags, $event=1)
     {
       if (!preg_match('/^[a-z]+$/', $flags))
 	die('group_getrestrictions: unvalid argument flags');
-      $res = db_execute("SELECT $flags_rflags FROM groups_default_permissions WHERE group_id=?", array($group_id));
+      $res = db_execute("SELECT {$flags}_rflags FROM groups_default_permissions WHERE group_id=?", array($group_id));
       if (db_numrows($res) > 0)
 	$flag = db_result($res, 0, $flags."_rflags");
     

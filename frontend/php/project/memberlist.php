@@ -41,7 +41,7 @@ if ((!$group_id) && $form_grp)
 			       'group'=>$group_id,
 			       'context'=>'people'));
 
-     
+$checked = '';
 if ($detailed)
 { $checked = " selected=\"selected\""; }
 # I18N
@@ -140,20 +140,20 @@ function specific_print_role ($row, $title)
 $i = 1;
 while ($row_memb=db_fetch_array($res_memb))
 {
-  if ($row_memb[admin_flags] != 'P')
+  if ($row_memb['admin_flags'] != 'P')
     {
       $i++;
       $color = utils_get_alt_row_color($i);
-      if ($row_memb[admin_flags] == 'A')
+      if ($row_memb['admin_flags'] == 'A')
 	{ $color = "boxhighlight"; }
 
       print "\n\t<tr class=\"".$color."\">\n";
       print "\t\t";
 
       # Realname
-      if ($row_memb[admin_flags] == 'A')
+      if ($row_memb['admin_flags'] == 'A')
 	{
-	  if ($group_id != $GLOBALS[sys_group_id])
+	  if ($group_id != $GLOBALS['sys_group_id'])
 	    {
 	      $icon = "project-admin";
 	      $icon_alt = _("Project Administrator");
@@ -164,7 +164,7 @@ while ($row_memb=db_fetch_array($res_memb))
 	      $icon_alt = _("Site Administrator");
 	    }
 	}
-      else if ($row_memb[admin_flags] == 'SQD')
+      else if ($row_memb['admin_flags'] == 'SQD')
 	{
 	  $icon = "people";
 	  $icon_alt = _("Squad");   
@@ -175,13 +175,13 @@ while ($row_memb=db_fetch_array($res_memb))
 	  $icon_alt = _("Project Member");      
 	}
       
-      print "\t\t".'<td><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" class="icon" /></span></td><td>'.utils_user_link($row_memb[user_name], $row_memb[realname])."</td>\n";
+      print "\t\t".'<td><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" class="icon" /></span></td><td>'.utils_user_link($row_memb['user_name'], $row_memb['realname'])."</td>\n";
 
       # Role
       if ($detailed)
 	{
 	  print "\t\t<td align=\"middle\">";
-	  if ($row_memb[admin_flags] == 'A')
+	  if ($row_memb['admin_flags'] == 'A')
 	    {
 	      # No details if it is an admin
 	      print _("project admin");
@@ -190,11 +190,11 @@ while ($row_memb=db_fetch_array($res_memb))
 	    {
 	      # Print only not by default role.
 
-	      specific_print_role($row_memb[support_flags], _("support tracker"));
-	      specific_print_role($row_memb[bugs_flags], _("bug tracker"));
-	      specific_print_role($row_memb[task_flags], _("task tracker"));
-	      specific_print_role($row_memb[patch_flags], _("patch tracker"));
-	      specific_print_role($row_memb[news_flags], _("news tracker"));
+	      specific_print_role($row_memb['support_flags'], _("support tracker"));
+	      specific_print_role($row_memb['bugs_flags'], _("bug tracker"));
+	      specific_print_role($row_memb['task_flags'], _("task tracker"));
+	      specific_print_role($row_memb['patch_flags'], _("patch tracker"));
+	      specific_print_role($row_memb['news_flags'], _("news tracker"));
 
 	    }
 	  print "</td>\n";
@@ -241,5 +241,3 @@ if ($project->getGPGKeyring())
 
 
 site_project_footer(array());
-
-?>
