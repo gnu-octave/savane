@@ -1,5 +1,5 @@
 stamp-icons:
-	for theme in *.theme mime_type; do \
+	for theme in *.theme mime_type common/arrows?; do \
 	  ( \
 	    cd $$theme ; \
 	    for icon in *.orig.png; do \
@@ -11,7 +11,8 @@ stamp-icons:
 	done
 	touch stamp-icons
 
-# Keep those separate for AM1.9 to recognize them:
+# Keep those separate for AM1.9 to recognize them
+# (ie not the "all-local distdir-local: stamp-icons" one-liner)
 all-local: stamp-icons
 distdir-local: stamp-icons
 

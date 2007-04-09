@@ -5,6 +5,10 @@ For each usual icons, two sizes availables are prefered:
 The $file.png can be regenerated typing
 	make icons
 
+AFAIK, the icons come from the GNOME and KDE projects, and are free as
+in freedom.
+
+
 - Similar icons:
 
 FILES=`find -type d -name ".svn" -prune -o -print | grep -v .orig.`
@@ -26,9 +30,21 @@ error.orig.png = wrong.orig.png
 ftp.orig.png = download.orig.png
 => idem, 'ftp' unused and replaced by 'download', removing 'ftp'
 
+
 - Removing generated icons:
 
 find -name "*.orig.png" | while read file; do rm ${file%.orig.png}.png; done
+
+
+- Visually check icons:
+
+find -name www.orig.png -type f | while read file; do gqview $file& done
+
+
+- All the versions of an image in a single directory, suitable for cross-theme comparison:
+
+find `find .. -maxdepth 1 -type d` -maxdepth 1 -name "*.png" -type f | while read i; do ln -s $i `basename $i | sed 's/.png$//'`-`echo $i | perl -p -e 's,../([^/]*)/.*,$1,'`.png; done
+
 
 - Image without a .orig counterpart:
 
@@ -57,6 +73,20 @@ for i in `svn st | awk '/^~/{print $2}'`; do
     svn add $i
 done
 
+- Groups:
+
+  * Arrows
+
+  * Roles
+
+- Factor mime_types
+
+- Rename arrows with a more descriptive name
+$ ls -d */arrows|xargs -n1 readlink|sort |uniq -c
+     15 ../common/arrows1
+      6 ../common/arrows2
+      5 ../common/arrows3
+
 - TODO:
 
 * For:
@@ -66,6 +96,5 @@ done
 ../pllx.theme
 ../Right.theme
 
-mime_types/previous.orig.png = $theme/previous.orig.png
 
-* 3 different left.orig.png - group'em!
+- Make both Savannah's and Savanedu's floating.png transparent and merge the 2 image directories
