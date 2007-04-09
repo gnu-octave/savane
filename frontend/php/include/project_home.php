@@ -208,7 +208,7 @@ if ($GLOBALS['sys_group_id'] == $group_id)
       print $HTML->box_nextitem(utils_get_alt_row_color($even));
 
       print utils_link($GLOBALS['sys_home'].'task/?group='.$GLOBALS['sys_unix_group_name'].'&amp;category_id=1&amp;status_id=1&amp;set=custom',
-		       html_image("admin.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Server Admin"))).'&nbsp;'._("Pending Projects List"));
+		       html_image("contexts/admin.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Server Admin"))).'&nbsp;'._("Pending Projects List"));
       $registration_count = number_format(stats_getprojects_pending());
       print " (";
       printf(ngettext("%s registration pending", "%s registrations pending", $registration_count), "<strong>$registration_count</strong>");
@@ -226,7 +226,7 @@ if (member_check(0, $group_id, 'A'))
   print $HTML->box_nextitem(utils_get_alt_row_color($odd));
 
   print utils_link($GLOBALS['sys_home'].'project/admin/?group='.$group_name,
-		  html_image("main.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Admin Page"))).'&nbsp;'._("Project Main Administration Page"));
+		  html_image("contexts/main.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Admin Page"))).'&nbsp;'._("Project Main Administration Page"));
   print $HTML->box_bottom();
   print '<br />';
 }
@@ -258,7 +258,7 @@ if ($project->Uses("homepage")
     && $project->getUrl("homepage") != '')
 {
   print utils_link($project->getUrl("homepage"),
-		   html_image("www.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Homepage"))).'&nbsp;'._("Project Homepage"));
+		   html_image("misc/www.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Homepage"))).'&nbsp;'._("Project Homepage"));
   $i++;
 }
 
@@ -270,7 +270,7 @@ if($project->Uses("download"))
   # the pointer is always the filelist, this page will handle redirect
   # appropriately in case that no download area is here
   print utils_link($project->getArtifactUrl("files"),
-		   html_image("download.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Filelist')).'&nbsp;'._("Download Area"));
+		   html_image("contexts/download.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Filelist')).'&nbsp;'._("Download Area"));
   $i++;
 }
 
@@ -282,14 +282,14 @@ specific_makesep();
 if (!$project->Uses("extralink_documentation"))
 {
   print utils_link($project->getArtifactUrl("cookbook"),
-		   html_image("man.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Docs"))).'&nbsp;'._("Docs"));
+		   html_image("contexts/man.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Docs"))).'&nbsp;'._("Docs"));
   $i++;
 }
 else
 {
   # The project have an external doc? Print it first. See pagemenu.php
   # for explanations about this
-  print html_image("man.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Docs"))).'&nbsp;'._("Docs");
+  print html_image("contexts/man.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Docs"))).'&nbsp;'._("Docs");
 
   print '<br /> &nbsp; - '.utils_link($project->getUrl("extralink_documentation"), _("Browse docs (External to Savane)"));
   print '<br /> &nbsp; - '.utils_link($project->getArtifactUrl("cookbook"), _("Browse the cookbook"));
@@ -301,7 +301,7 @@ else
 # Memberlist
 specific_makesep();
 print utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group_name,
-	 html_image("people.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Memberlist')).'&nbsp;'._("Project Memberlist"));
+	 html_image("contexts/people.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Memberlist')).'&nbsp;'._("Project Memberlist"));
 print " (";
 printf(ngettext("%s member", "%s members", $membersnum['count']), "<strong>{$membersnum['count']}</strong>");
 print ")";
@@ -311,7 +311,7 @@ if ($project->getGPGKeyring())
 {
   specific_makesep();
   print utils_link($GLOBALS['sys_home'].'project/memberlist-gpgkeys.php?group='.$group_name,
-		   html_image("keys.png",array('width'=>'24', 'height'=>'24', 'alt'=>'GPG Keyring')).'&nbsp;'._("Project Members GPG Keyring"));
+		   html_image("contexts/keys.png",array('width'=>'24', 'height'=>'24', 'alt'=>'GPG Keyring')).'&nbsp;'._("Project Members GPG Keyring"));
   $i++;
 
 }
@@ -341,7 +341,7 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
     $url = $project->getArtifactUrl("support");
 
     print utils_link($url,
-		     html_image("help.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Tech Support Manager"))).'&nbsp;'._("Tech Support Manager"));
+		     html_image("contexts/help.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Tech Support Manager"))).'&nbsp;'._("Tech Support Manager"));
 
     if (group_get_artifact_url("support", 0) == $url)
       {
@@ -375,7 +375,7 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
     $url = $project->getArtifactUrl("forum");
 
     print utils_link($url,
-		     html_image("help.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Public Forum"))).'&nbsp;'._("Public Forum"));
+		     html_image("contexts/help.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Public Forum"))).'&nbsp;'._("Public Forum"));
 
     if (group_get_artifact_url("forum", 0) == $url)
       {
@@ -407,7 +407,7 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
       $url = $project->getArtifactUrl("mail");
 
       print utils_link($url,
-		       html_image("mail.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Mailing Lists"))).'&nbsp;'._("Mailing Lists"));
+		       html_image("contexts/mail.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Mailing Lists"))).'&nbsp;'._("Mailing Lists"));
       $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
       $row_count = db_fetch_array($res_count);
       print " (";
@@ -422,7 +422,7 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
   if (people_project_jobs_rows($group_id) != 0) {
     specific_makesep();
     print utils_link($GLOBALS['sys_home'].'people/?group='.$group_name,
-		     html_image("people.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("People"))).'&nbsp;'._("This project is looking for people"));
+		     html_image("contexts/people.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("People"))).'&nbsp;'._("This project is looking for people"));
 
     $job_count = people_project_jobs_rows($group_id);
 
@@ -458,7 +458,7 @@ if ($project->Uses("patch") ||
     {
       $url = $project->getArtifactUrl("svn");
 
-      html_image("cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Arch'));
+      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Arch'));
       print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Subversion Repository").'</a>';
 
       if ($project->Uses("svn") && $project->getUrl("svn_viewcvs") != 'http://' && $project->getUrl("svn_viewcvs") != '')
@@ -477,7 +477,7 @@ if ($project->Uses("patch") ||
       specific_makesep();
       $url = $project->getArtifactUrl("arch");
 
-      html_image("cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Arch'));
+      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Arch'));
       print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: GNU Arch Repository").'</a>';
 
       if ($project->Uses("arch") && $project->getUrl("arch_viewcvs") != 'http://' && $project->getUrl("arch_viewcvs") != '')
@@ -497,7 +497,7 @@ if ($project->Uses("patch") ||
       specific_makesep();
       $url = $project->getArtifactUrl("cvs");
 
-      html_image("cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'CVS'));
+      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'CVS'));
       print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: CVS Repository").'</a>';
       if ($project->Uses("cvs") && $project->getUrl("cvs_viewcvs") != 'http://' && $project->getUrl("cvs_viewcvs") != '')
 	{
@@ -519,7 +519,7 @@ if ($project->Uses("patch") ||
     $url = $project->getArtifactUrl("bugs");
 
     print utils_link($url,
-		     html_image("bug.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Bug Tracking"))).'&nbsp;'._("Bug Tracker"));
+		     html_image("contexts/bug.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Bug Tracking"))).'&nbsp;'._("Bug Tracker"));
 
     if (group_get_artifact_url("bugs", 0) == $url)
       {
@@ -549,7 +549,7 @@ if ($project->Uses("patch") ||
     $url = $project->getArtifactUrl("task");
 
     print utils_link($url,
-		     html_image("task.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Task Manager"))).'&nbsp;'._("Task Manager"));
+		     html_image("contexts/task.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Task Manager"))).'&nbsp;'._("Task Manager"));
 
     if (group_get_artifact_url("task", 0) == $url)
       {
@@ -579,7 +579,7 @@ if ($project->Uses("patch") ||
     $url = $project->getArtifactUrl("patch");
 
     print utils_link($url,
-		     html_image("patch.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Patch Manager"))).'&nbsp;'._("Patch Manager"));
+		     html_image("contexts/patch.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Patch Manager"))).'&nbsp;'._("Patch Manager"));
 
 
     if (group_get_artifact_url("patch", 0) == $url)

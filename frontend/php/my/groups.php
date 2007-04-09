@@ -260,7 +260,7 @@ else
 	  print '</td>'.
 	    '<td><a href="'.$_SERVER['PHP_SELF'].'?func=delwatchee&amp;group_id='.db_result($result_w,$i,'group_id').'&amp;watchee_id='.db_result($result_w, $i, 'watchee_id').
 	    '" onClick="return confirm(\''._("Stop watching this user?").'\')">'.
-	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Stop watching this user?").'" /></a></td></tr>';
+	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Stop watching this user?").'" /></a></td></tr>';
 	}
       print '</table>';
 
@@ -401,7 +401,7 @@ else
 	  $content .= '<li class="'.utils_get_alt_row_color($j).'">';
 	  $content .= '<span class="trash"><a href="../my/quitproject.php?quitting_group_id='. db_result($result,$i,'group_id').
 	    '">'.
-	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" alt="'._("Quit this project?").'" /></a><br /></span>';
+	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Quit this project?").'" /></a><br /></span>';
 
 	  $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'. db_result($result,$i,'unix_group_name') .'/">'.db_result($result,$i,'group_name').'</a><br />';
 	  $date_joined = db_result($result, $i, 'date');
@@ -448,7 +448,7 @@ else
 	  $content .= '<li class="'.utils_get_alt_row_color($j).'">';
 	  $content .= '<span class="trash"><a href="../my/quitproject.php?quitting_group_id='. db_result($result,$i,'group_id').
 	    '">'.
-	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" alt="'._("Quit this project?").'" /></a></span>';
+	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Quit this project?").'" /></a></span>';
 
 	  $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'. db_result($result,$i,'unix_group_name') .'/">'.db_result($result,$i,'group_name').'</a><br />';
 	  $date_joined = db_result($result, $i, 'date');
@@ -496,7 +496,7 @@ for ($i=0; $i<$rows; $i++)
     {
       $content .= '<li class="'.utils_get_alt_row_color($j).'">';
       $content .= '<span class="trash"><a href="../my/quitproject.php?quitting_group_id='. db_result($result,$i,'group_id').'">'.
-	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" alt="'._("Discard this request?").'" /></a></span>';
+	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Discard this request?").'" /></a></span>';
 
       $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'. db_result($result,$i,'unix_group_name') .'/">'.db_result($result,$i,'group_name').'</a><br />&nbsp;</li>';
       $exists=1;

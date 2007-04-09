@@ -175,7 +175,7 @@ while ($row_memb=db_fetch_array($res_memb))
 	  $icon_alt = _("Project Member");      
 	}
       
-      print "\t\t".'<td><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.$icon.'.png" alt="'.$icon_alt.'" class="icon" /></span></td><td>'.utils_user_link($row_memb[user_name], $row_memb[realname])."</td>\n";
+      print "\t\t".'<td><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" class="icon" /></span></td><td>'.utils_user_link($row_memb[user_name], $row_memb[realname])."</td>\n";
 
       # Role
       if ($detailed)

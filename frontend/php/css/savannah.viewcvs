@@ -101,7 +101,7 @@ table {
 
 /* classic box */
 .boxtable { width: 99%; vertical-align: top; border-spacing: 1px; border: 0; }
-.boxtitle { background-image: url("/images/savannah.theme/leopard.png"); background-color: #eddb5a; font-weight: bold; text-transform: capitalize; color: #000000; }
+.boxtitle { background-image: url("../images/savannah.theme/leopard.png"); background-color: #eddb5a; font-weight: bold; text-transform: capitalize; color: #000000; }
 .boxtitlealt { border: thin solid #333333; background-color: #f4d495; font-weight: bold; text-transform: capitalize; color: #000000; }
 .boxitem { background-color: #fff9e0; color: #333333; }
 .boxitemalt { background-color: #ffffff;  color: #333333; }

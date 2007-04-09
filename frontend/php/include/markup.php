@@ -63,7 +63,7 @@ function markup_info($level, $additionnal_string=false)
       $text .= " "._("Check the Markup Reminder in Related Recipes for a description of these tags.");
     }
 
-  return '<span class="smaller">('.utils_help('<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/edit.png" border="0" class="icon" alt="'.$string.'" />'.$string, 
+  return '<span class="smaller">('.utils_help('<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/edit.png" border="0" class="icon" alt="'.$string.'" />'.$string, 
 		    $text,
 		    true).$additionnal_string.')</span>';
 }

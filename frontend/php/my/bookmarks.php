@@ -100,9 +100,9 @@ else
         {
           print '<li class="'.utils_get_alt_row_color($i).'">';
 	  print '<span class="trash"><a href="?edit='.db_result($result,$i,'bookmark_id').'">'.
-	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/edit.png" alt="'._("Edit this bookmark").'" /></a>'.
+	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/edit.png" alt="'._("Edit this bookmark").'" /></a>'.
 	    '<a href="?delete='.db_result($result,$i,'bookmark_id').'">'.
-	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" alt="'._("Delete this bookmark").'" /></a></span>';
+	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Delete this bookmark").'" /></a></span>';
 	  print '<a href="'.db_result($result,$i,'bookmark_url').'">'.
             stripslashes(db_result($result,$i,'bookmark_title')).'</a> ';
 	  print '<br /><span class="smaller">'.stripslashes(db_result($result,$i,'bookmark_url'));

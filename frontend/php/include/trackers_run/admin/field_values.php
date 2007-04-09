@@ -543,7 +543,7 @@ if ($group_id && user_ismember($group_id,'A'))
 		      print '<td align="center">---------</td>'
 			.'<td align="center">--------</td>';
 		    }
-                  print '<td align="center">'.utils_link($_SERVER['PHP_SELF'].'?group='.$group_name.'&amp;func=deltransition&amp;transition_id='.$transition['transition_id'].'&amp;list_value=1&amp;field='.$field, '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Delete this transition?").'" />').'</td>';
+                  print '<td align="center">'.utils_link($_SERVER['PHP_SELF'].'?group='.$group_name.'&amp;func=deltransition&amp;transition_id='.$transition['transition_id'].'&amp;list_value=1&amp;field='.$field, '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Delete this transition?").'" />').'</td>';
                   print '</tr>';
                 }
 
@@ -702,7 +702,7 @@ if ($group_id && user_ismember($group_id,'A'))
 		db_result($result, $i, 'title').'</A></TD>'.
 		'<td>'.substr(db_result($result, $i, 'body'),0,360).'...'.
 		'<td>'.db_result($result, $i, 'order_id').'<td class="center"><a href="'.$_SERVER['PHP_SELF'].'?delete_canned=1&amp;item_canned_id='.
-		db_result($result, $i, 'bug_canned_id').'&amp;group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Delete this canned answer?").'" />
+		db_result($result, $i, 'bug_canned_id').'&amp;group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Delete this canned answer?").'" />
 		</a></td></tr>';
 	    }
 	  print '</table>';

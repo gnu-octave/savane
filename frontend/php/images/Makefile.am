@@ -1,5 +1,6 @@
 stamp-icons:
-	for theme in *.theme mime_type common/arrows?; do \
+	for theme in *.theme mime_type common/arrows*/ common/bool*/	\
+	             common/contexts*/ common/misc*/ common/roles*/; do \
 	  ( \
 	    cd $$theme ; \
 	    for icon in *.orig.png; do \

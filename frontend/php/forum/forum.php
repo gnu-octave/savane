@@ -284,7 +284,7 @@ if ($forum_id)
 	      $ret_val .= '
 					<TR class="'. utils_get_alt_row_color($total_rows) .'"><TD><A HREF="'.$GLOBALS['sys_home'].'forum/message.php?msg_id='.
 		 db_result($result, $i, 'msg_id').'">'.
-		 '<IMG SRC="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/mail.png" BORDER=0 HEIGHT=12 WIDTH=12> ';
+		 '<IMG SRC="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/mail.png" BORDER=0 HEIGHT=12 WIDTH=12> ';
 	      /*
 
 	      See if this message is new or not

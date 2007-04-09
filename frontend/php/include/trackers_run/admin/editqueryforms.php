@@ -437,7 +437,7 @@ else
 	      print '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.
 		'&amp;delete_report=1&amp;report_id='.$arr['report_id'].
 		'&amp;rep_name='.$arr['name'].'">'.
-		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" /></A>';
+		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" /></A>';
 	    }
 
 	  print '</td></tr>';

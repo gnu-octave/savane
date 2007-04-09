@@ -244,7 +244,7 @@ li.topmenuitemsubmenu:hover {
 }
 
 .boxtitle  {	
-	background-image: url("/images/Savannah.theme/leopard.png");
+	background-image: url("../images/Savannah.theme/leopard.png");
 	background-color: #eddb5a;
 	border: thin outset #641212;
 	color: #000000;

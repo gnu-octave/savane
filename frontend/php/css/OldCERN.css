@@ -241,7 +241,7 @@ li.topmenuitemsubmenuseparator {
   font-size: smaller;
 }
 .menuitem:before {
-        content: url("/images/CERN.theme/point.png")" ";
+        content: url("../images/CERN.theme/point.png");
 }
 
 .relatedrecipesitem { 

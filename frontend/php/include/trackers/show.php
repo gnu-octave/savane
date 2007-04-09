@@ -799,7 +799,7 @@ function show_dependent_item ($item_id, $dependson=0)
 	{
 	  print '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_dependancy&amp;item_id='.$item_id.'&amp;item_depends_on='.$current_item_id.
 	    '&amp;item_depends_on_artifact='.$tracker.'">'.
-	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" alt="'._("Delete this dependancy?").'" class="icon" /></a></span>';
+	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Delete this dependancy?").'" class="icon" /></a></span>';
 	}
 	  
       # Link to the item
@@ -807,7 +807,7 @@ function show_dependent_item ($item_id, $dependson=0)
    	<a href="'.$link_to_item.'" class="block">';
       
       # Show the item type with an icon
-      print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.utils_get_tracker_icon($tracker).'.png" class="icon" alt="'.$tracker.'" /> ';
+      print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/'.utils_get_tracker_icon($tracker).'.png" class="icon" alt="'.$tracker.'" /> ';
       
       # Print summary only if the item is not private
       # Check privacy right (dont care about the tracker specific

@@ -74,7 +74,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
     }
 
 print '
-<h2 class="toptitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.context_icon().'.orig.png" width="48" height="48" alt="'.context_icon().'" class="pageicon" />';
+<h2 class="toptitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/'.context_icon().'.orig.png" width="48" height="48" alt="'.context_icon().'" class="pageicon" />';
   $title = context_title();
   if ($title)
     { print $title; }

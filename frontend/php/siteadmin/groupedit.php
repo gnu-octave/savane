@@ -102,9 +102,9 @@ utils_get_content("admin/groupedit_intro");
 
 # MODIFICATORS SHORTCUTS
 print '<h3>'._("Registration Management Shortcuts").'</h3>';
-print '<a href="'.$_SERVER['PHP_SELF'].'?status=A&amp;updatefast=1&amp;group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/ok.orig.png" alt="'._("Approve").'" /></a>&nbsp;&nbsp;&nbsp;';
-print '<a href="'.$_SERVER['PHP_SELF'].'?status=D&amp;updatefast=1&amp;group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.orig.png" alt="'._("Discard").'" /></a>&nbsp;&nbsp;&nbsp;';
-print '<a href="triggercreation.php?group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/preferences.orig.png" alt="'._("Send New Project Instruction Email and Trigger Project Creation (should be done only once)").'" /></a>';
+print '<a href="'.$_SERVER['PHP_SELF'].'?status=A&amp;updatefast=1&amp;group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.orig.png" alt="'._("Approve").'" /></a>&nbsp;&nbsp;&nbsp;';
+print '<a href="'.$_SERVER['PHP_SELF'].'?status=D&amp;updatefast=1&amp;group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.orig.png" alt="'._("Discard").'" /></a>&nbsp;&nbsp;&nbsp;';
+print '<a href="triggercreation.php?group_id='.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/preferences.orig.png" alt="'._("Send New Project Instruction Email and Trigger Project Creation (should be done only once)").'" /></a>';
 
 # MODIFICATORS
 print '<form action="'.$_SERVER['PHP_SELF'].'" method="POST">';

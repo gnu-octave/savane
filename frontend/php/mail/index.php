@@ -69,7 +69,7 @@ if ($group_id)
       else
 	{ unset($default_pointer); }
 
-      print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/mail.png" border="0" alt="" /> <a href="'.$default_pointer.'">'.$list.'</a> ';
+      print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/mail.png" border="0" alt="" /> <a href="'.$default_pointer.'">'.$list.'</a> ';
       
       # Description
       print '&nbsp;&nbsp;<em>'.db_result($result, $j, 'description').'</em>';

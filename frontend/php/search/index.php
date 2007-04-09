@@ -192,7 +192,7 @@ else if ($type_of_search == "people")
       for ( $i = 0; $i < $rows; $i++ )
 	{
 	  print	"<tr class=\"". html_get_alt_row_color($i) ."\"><td><a href=\"".$GLOBALS['sys_home']."forum/message.php?msg_id="
-	    . db_result($result, $i, "msg_id")."\"><img src=\"".$GLOBALS['sys_home']."images/msg.png\" border=0 height=12 width=10 /> "
+	    . db_result($result, $i, "msg_id")."\"><img src=\"".$GLOBALS['sys_home']."images/contexts/mail.png\" border=0 height=12 width=10 /> "
 	    . db_result($result, $i, "subject")."</a></td>"
 	    . "<td>".db_result($result, $i, "user_name")."</td>"
 	    . "<td>".utils_format_date(db_result($result,$i,"date"))."</td></tr>\n";

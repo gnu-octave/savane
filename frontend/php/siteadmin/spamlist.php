@@ -136,8 +136,8 @@ else
       print '<tr class="'.utils_get_alt_row_color($i).'">';
       print '<td width="25%">'.utils_user_link($entry['user_name'], $entry['realname']).'</td>';
       print '<td width="5%" class="center">'.$entry['spamscore'].'</td>';
-      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?ban_user='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" alt="'._("Ban user").'" />').'</td>';
-      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?wash_user='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/ok.png" alt="'._("Wash score").'" />').'</td>';
+      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?ban_user='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Ban user").'" />').'</td>';
+      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?wash_user='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'._("Wash score").'" />').'</td>';
       print '<td width="30%">'.$incriminated_content.'</td>';
       print '<td width="30%">'.$flagged_by.'</td>';	
       print '</tr>';
@@ -186,7 +186,7 @@ else
 	{ print ', '; }
 
       print utils_link($_SERVER['PHP_SELF'].'?wash_ip='.$entry['ip'].'#ip_results',
-		       $entry['ip'].' <img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/ok.png" alt="'._("Wash IP").'" />');
+		       $entry['ip'].' <img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'._("Wash IP").'" />');
       
     }
   print '</div>';

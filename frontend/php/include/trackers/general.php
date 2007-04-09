@@ -1816,7 +1816,7 @@ function trackers_criteria_list_to_text($criteria_list, $url)
 	  $morder = htmlspecialchars($morder);
 
 	  $arr_text[] = '<a href="'.$url.'&amp;morder='.$morder.'#results">'.
-	     trackers_data_get_label($attr).'</a><img class="icon" src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.
+	     trackers_data_get_label($attr).'</a><img class="icon" src="'.$GLOBALS['sys_home'].'images/arrows/'.SV_THEME.'.theme/'.
 	     ((substr($crit, -1) == '>') ? 'down' : 'up').
 	     '.png" border="0" />';
 	}

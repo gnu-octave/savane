@@ -68,7 +68,7 @@ echo '<H3>Discussion Forums</H3>
 
 for ($j = 0; $j < $rows; $j++) { 
 	echo '<A HREF="'.$GLOBALS['sys_home'].'forum/forum.php?forum_id='.db_result($result, $j, 'group_forum_id').'">'.
-		'<IMG SRC="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/directory.png" HEIGHT=24 WIDTH=24 BORDER=0> &nbsp;'.
+		'<IMG SRC="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/directory.png" HEIGHT=24 WIDTH=24 BORDER=0> &nbsp;'.
 		db_result($result, $j, 'forum_name').'</A> ';
 	//message count
 	echo '('.db_result(db_query("SELECT count(*) FROM forum WHERE group_forum_id='".db_result($result, $j, 'group_forum_id')."'"),0,0).' msgs)';

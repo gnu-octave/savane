@@ -140,9 +140,9 @@ elseif ($func == "digestget")
       # Show if the item is closed with an icon
       unset($icon);
       if (db_result($result, 0, 'status_id') != 1)
-	{ $icon = '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/ok.png" border="0" alt="'._("Closed Item").'" />'; }
+	{ $icon = '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" border="0" alt="'._("Closed Item").'" />'; }
       else
-	{ $icon = '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/wrong.png" border="0" alt="'._("Open Item").'" />'; }
+	{ $icon = '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" border="0" alt="'._("Open Item").'" />'; }
 
       print '<div class="'. utils_get_alt_row_color($i) .'">';
       print '<span class="large"><span class="'.utils_get_priority_color(db_result($result,0,'priority'), db_result($result,0,'status_id')).'">'.$icon.'&nbsp; '.utils_link("?func=detailitem&amp;item_id=".$item, ARTIFACT.' #'.$item).': &nbsp;'.$summary.' &nbsp;</span></span><br /><br />';

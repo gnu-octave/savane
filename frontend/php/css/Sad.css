@@ -106,7 +106,7 @@ ul.topmenuitemsubmenu {
  *
  **********************************************************************/
 
-.boxtitle { background-color: #cfd0d5; background-image: url("/images/Sad.theme/steel.png"); font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; }
+.boxtitle { background-color: #cfd0d5; background-image: url("../images/Sad.theme/steel.png"); font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; }
 .boxitem {  background-color: #e9ecef; text-align: left; color: #333333; }
 .boxoptions {  background-color: #e9ecef; text-align: left; color: #333333; }
 .boxitemalt { text-align: left; color: #333333; }

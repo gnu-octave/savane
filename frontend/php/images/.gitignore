@@ -1,2 +1,4 @@
 .xvpics
 Makefile
+Makefile.in
+stamp-icons

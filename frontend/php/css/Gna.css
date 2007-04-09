@@ -196,7 +196,7 @@ hr {
 /*
 cannot be used with item links as blocks
 .menuitem:before {
-	content: url("/images/Gna.theme/point.png")" ";
+	content: url("../images/Gna.theme/point.png");
 }
 
 */

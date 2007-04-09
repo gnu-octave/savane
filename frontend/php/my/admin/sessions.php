@@ -109,7 +109,7 @@ while ($row = db_fetch_array($res))
   if (sane_cookie("session_hash") != $row['session_hash'])
     {
       print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dsession_hash='.$dsession_hash.'&amp;dip_addr='.$row['ip_addr'].'&amp;dtime='.$row['time'],
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Kill this session").'" />');
+		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Kill this session").'" />');
     }
   else
     { print _("Current session"); }
@@ -130,7 +130,7 @@ if ($i > 3)
   print $HTML->box_nextitem(utils_get_alt_row_color($i));
   print '<span class="trash">';
   print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dkeep_one=1',
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Kill all sessions").'" />');
+		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Kill all sessions").'" />');
   print '</span>'; 
   print '<em>'._("All sessions apart from the current one").'</em><br />&nbsp;';
 

@@ -724,7 +724,7 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
 	      $morder == "$field>")
 	    {
 	      $lbl_list[] = trackers_data_get_label($field).' '.
-		'<img class="icon" src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.((substr($morder, -1) == '>') ? 'down' : 'up').
+		'<img class="icon" src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/'.((substr($morder, -1) == '>') ? 'down' : 'up').
 		'.png" border="0" />';
 	      $morder_icon_is_set = 1;
 	    }
@@ -749,7 +749,7 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
 	      $crit == "$field>")
 	    {
 	      $lbl_list[] = trackers_data_get_label($field).' '.
-		'<img class="icon" src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.((substr($crit, -1) == '>') ? 'down' : 'up').
+		'<img class="icon" src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/'.((substr($crit, -1) == '>') ? 'down' : 'up').
 		'.png" border="0" />';
 
 	      # If we found a criteria, go deal with the next column

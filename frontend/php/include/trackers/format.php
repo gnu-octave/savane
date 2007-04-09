@@ -163,7 +163,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
       $jumpto_text = _("Jump to the original submission");
       if (ARTIFACT == "cookbook")
 	{ $jumpto_text = _("Jump to the recipe preview"); }
-      print '<p class="center"><span class="xsmall">(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bottom.png" class="icon" alt="'.$jumpto_text.'" /> '.$jumpto_text.'</a>)</span></p>';
+      print '<p class="center"><span class="xsmall">(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/bottom.png" class="icon" alt="'.$jumpto_text.'" /> '.$jumpto_text.'</a>)</span></p>';
     }
 
   # Loop throuh the follow-up comments and format them
@@ -252,7 +252,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 
 	      if ($is_admin)
 		{
-		  $out .= '<br /><br />(<a name="spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.$_SERVER['PHP_SELF'].'?func=unflagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/ok.png" class="icon" alt="'._("Unflag as spam").'" />'._("Unflag as spam").'</a>)';
+		  $out .= '<br /><br />(<a name="spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.$_SERVER['PHP_SELF'].'?func=unflagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" class="icon" alt="'._("Unflag as spam").'" />'._("Unflag as spam").'</a>)';
 		}
 
 	      $out .= '</td></tr>';
@@ -445,12 +445,12 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	  
 	  if ($icon)
 	    {
-	      $out .= '<br /><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.$icon.'.png" alt="'.$icon_alt.'" /></span>';
+	      $out .= '<br /><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" /></span>';
 	    }
 	  
 	  if ($poster_id != 100 && array_key_exists($poster_id, $assignees_id))
 	    {
-	      $out .= '<span class="help" title="'._("In charge of this item.").'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/assignee.png" alt="'._("In charge of this item.").'" /></span>';
+	      $out .= '<span class="help" title="'._("In charge of this item.").'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/assignee.png" alt="'._("In charge of this item.").'" /></span>';
 	    }
 
 	  # If not a member of the project, allow to mark as spam
@@ -466,7 +466,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
               # Surround by two line breaks, to keep that link clearly 
 	      # separated from 
 	      # anything else, to avoid clicks by error
-	      $out .= '<br /><br />(<a title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.$_SERVER['PHP_SELF'].'?func=flagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" class="icon" alt="'._("Flag as spam").'" />'._("Flag as spam").'</a>)<br /><br />';
+	      $out .= '<br /><br />(<a title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.$_SERVER['PHP_SELF'].'?func=flagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Flag as spam").'" />'._("Flag as spam").'</a>)<br /><br />';
 	    }
 	  
 	  $out .= '</td></tr>';
@@ -666,7 +666,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
 	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2') && !$sober)
 	    {
 	      $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_file&amp;item_id='.$item_id.'&amp;item_file_id='.$item_file_id.'">'.
-		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
+		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 
 
@@ -839,7 +839,7 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	      (user_getname(user_getid()) == db_result($result, $i, 'user_name') ))
             {
 $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_cc&amp;item_id='.$item_id.'&amp;item_cc_id='.$item_cc_id.'">'.
-		 '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
+		 '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 	  else
             {

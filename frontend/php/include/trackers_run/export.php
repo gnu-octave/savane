@@ -397,7 +397,7 @@ else
 
 	 print '<span class="trash">';
 	 print utils_link($_SERVER['PHP_SELF'].'?update=1&amp;delete='.db_result($res_export, $i, 'export_id').'&amp;group='.$group_name,
-			  '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Remove this job").'" />');
+			  '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Remove this job").'" />');
 	 print '</span>';
 
 	 $status = _("Pending");

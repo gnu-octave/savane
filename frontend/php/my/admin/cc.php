@@ -131,7 +131,7 @@ foreach ($groups_with_cc as $thisunixname => $thisname)
 
   print '<span class="trash">';
   print utils_link($_SERVER['PHP_SELF'].'?cancel='.$groups_with_cc_gid[$thisunixname],
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Cancel CC for this group").'" />');
+		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Cancel CC for this group").'" />');
   print '</span>';
   
   # I18N
@@ -148,7 +148,7 @@ if ($i > 3)
   print $HTML->box_nextitem(utils_get_alt_row_color($i));
  print '<span class="trash">';
   print utils_link($_SERVER['PHP_SELF'].'?cancel=any',
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/trash.png" border="0" alt="'._("Cancel All CC").'" />');
+		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Cancel All CC").'" />');
   print '</span>';
   print '<em>'.sprintf(_("All Carbon-Copies over %s"), $GLOBALS['sys_name']).'</em><br />&nbsp;';
 

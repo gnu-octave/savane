@@ -584,7 +584,7 @@ function my_item_list_print ($role="assignee", $openclosed="open", $condensed=fa
               # Print directly, to avoid putting too much things in memory
 	      print '<div class="'.utils_get_priority_color($item_data['priority'][$thisitem], $openclosed).'">'.
 		'<a href="'.$GLOBALS['sys_home'].$tracker.'/?'.$current_item_id.'" class="block">'.
-		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.$icon.'.png" class="icon" alt="'.$tracker.'" /> '.
+		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/'.$icon.'.png" class="icon" alt="'.$tracker.'" /> '.
 		stripslashes($item_data['summary'][$thisitem]).
 		'&nbsp;<span class="xsmall">('.$prefix .' #'.$current_item_id.', '.$status.')</span></a></div>';
 	      
