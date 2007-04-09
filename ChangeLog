@@ -2,7 +2,10 @@
 
 	* frontend/php/images: big clean-up, replaces duplicate images by
 	symlinks, symlinks identical themes, grouped icons by similar
-	sets, removed old unused icons (ftp->download, error->wrong)
+	sets, removed old unused icons (ftp->download, error->wrong),
+	removed pseudo-theme 'transparent' (replaced by groups of
+	icons). The images size is appreciably reduced from 6.9M/12M to
+	1.6M/2.3M (without/with generated smaller icons).
 
 2007-03-25  Sylvain Beucler  <beuc@beuc.net>
 
