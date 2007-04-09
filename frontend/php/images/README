@@ -98,3 +98,9 @@ $ ls -d */arrows|xargs -n1 readlink|sort |uniq -c
 
 
 - Make both Savannah's and Savanedu's floating.png transparent and merge the 2 image directories
+
+- Rename contexts1 -> contexts-Savannah
+         arrows1 -> arrows-Savannah
+         arrows3 -> arrows-alt
+         bool1 -> bool-Savannah
+or maybe s/Savannah/default/ and then Savannah -'ln-s'-> default
