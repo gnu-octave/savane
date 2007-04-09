@@ -312,7 +312,7 @@ class Layout extends Error
   {
     print '
   <p class="backtotop">
-  '.utils_link("#top", '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/top.orig.png" border="0" alt="'._("Back to the top").'" />').'
+  '.utils_link("#top", '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/top.orig.png" border="0" alt="'._("Back to the top").'" />').'
   </p>';
 
 # yeupou--gnu.org 2005-09-16:

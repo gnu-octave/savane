@@ -1,3 +1,9 @@
+2007-04-09  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/images: big clean-up, replaces duplicate images by
+	symlinks, symlinks identical themes, grouped icons by similar
+	sets, removed old unused icons (ftp->download, error->wrong)
+
 2007-03-25  Sylvain Beucler  <beuc@beuc.net>
 
 	* frontend/php/mail/majordomo_interface.php: removed after reading

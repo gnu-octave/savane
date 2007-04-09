@@ -407,5 +407,3 @@ function context_icon ()
     default: return 'main'; break;
     }
 }
-      
-?>
