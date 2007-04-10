@@ -1,3 +1,10 @@
+2007-04-10  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/people/viewjob.php: fix bad link to the project,
+	replaced /project/?group_id= by /projects/$unix_group_name. We
+	need to check why project/?group_id=XXX doesn't work anymore
+	though (task #6723@sv)
+
 2007-04-09  Mathieu Roy
 	
 	* backend/misc/sv_spamcheck_scholar.in: gix bug causing spamcheck

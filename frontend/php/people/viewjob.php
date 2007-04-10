@@ -37,7 +37,7 @@ if ($group_id && $job_id)
 
 
   #for security, include group_id
-  $sql="SELECT groups.group_name,groups.type,people_job_category.name AS category_name,".
+  $sql="SELECT groups.group_name,groups.type,groups.unix_group_name,people_job_category.name AS category_name,".
      "people_job_status.name AS status_name,people_job.title,".
      "people_job.description,people_job.date,user.user_name,user.user_id ".
      "FROM people_job,groups,people_job_status,people_job_category,user ".
@@ -60,7 +60,7 @@ if ($group_id && $job_id)
 		<h2 class=toptitle>';
       print db_result($result,0,'category_name');
 
-      print  ' '._("wanted for").' <a href="'.$GLOBALS['sys_home'].'project/?group_id='. $group_id .'">'. db_result($result,0,'group_name') .'</a></h2>'.
+      print  ' '._("wanted for").' <a href="'.$GLOBALS['sys_home'].'projects/'.  db_result($result,0,'unix_group_name') .'">'. db_result($result,0,'group_name') .'</a></h2>'.
 	'<p><span class="preinput">'._("Submitted By:").'</span> <a href="'.$GLOBALS['sys_home'].'users/'. db_result($result,0,'user_name') .'">'. db_result($result,0,'user_name').'</a><br />'.
 	'<span class="preinput">'._("Date:").'</span>'. utils_format_date(db_result($result,0,'date')) .'<br />'.
 	'<span class="preinput">'._("Status:").'</span> '. db_result($result,0,'status_name').'</p>';
