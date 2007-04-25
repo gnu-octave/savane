@@ -1,24 +1,21 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#
-#  Copyright 2004-2005 (c) Elfyn McBratney <elfyn--emcb.co.uk>
-#                          Mathieu Roy <yeupou--gnu.org>
-#
-# Copyright (C) 2000-2006 John Lim (ADOdb)
+# Database access wrappers, with quoting/escaping
+# 
+# Copyright (C) 1999-2000  The SourceForge Crew
+# Copyright (C) 2004-2005  Elfyn McBratney <elfyn--emcb.co.uk>
+# Copyright (C) 2004-2005  Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2000-2006  John Lim (ADOdb)
 # Copyright (C) 2007  Cliss XXI (GCourrier)
 # Copyright (C) 2006, 2007  Sylvain Beucler
 #
-# The Savane project is free software; you can redistribute it and/or
+# This file is part of Savane.
+# 
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -37,7 +34,6 @@ function db_connect()
 {
   global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
 
-
   // Test the presence of php-mysql - you get a puzzling blank page
   // when it's not installed
   if (!extension_loaded('mysql')) {
@@ -46,10 +42,11 @@ function db_connect()
       <li>Debian-based: <code>aptitude install php4-mysql</code>
         or <code>aptitude install php5-mysql</code></li>
       <li>Fedora Core: <code>yum install php-mysql</code></li>
-      <li>Check the <a href='{$GLOBALS['sys_url_topdir']}/testconfig.php'>configuration
-        page</a> and the <a href='http://php.net/mysql'>PHP website</a>
-        for more information.</li>
     </ul>";
+    echo "Check the <a href='{$GLOBALS['sys_url_topdir']}/testconfig.php'>configuration
+          page</a> and the <a href='http://php.net/mysql'>PHP website</a> for
+          more information.<br />";
+    echo "Once the extension is installed, please restart Apache.";
     exit;
   }
 

@@ -1,0 +1,51 @@
+-- SCM hooks (cf. frontend/php/cvs/admin/index.php)
+
+DROP TABLE cvs_hooks;
+DROP TABLE cvs_hooks_log_accum;
+
+CREATE TABLE cvs_hooks (
+  id int PRIMARY KEY auto_increment,
+  group_id int NOT NULL,
+  repo_name ENUM ('sources', 'web') NOT NULL default 'sources',
+  match_type enum ('ALL', 'dir_list', 'DEFAULT') DEFAULT 'ALL',
+  dir_list text,
+  hook_name varchar(255),
+  needs_refresh boolean NOT NULL default 0,
+
+  INDEX idx_needs_refresh (needs_refresh),
+  CONSTRAINT FOREIGN KEY (group_id) REFERENCES groups (group_id)
+);
+
+CREATE TABLE cvs_hooks_log_accum (
+  hook_id int PRIMARY KEY,
+  branches text,
+  emails_notif text NOT NULL,
+  enable_diff boolean NOT NULL default 1,
+  emails_diff text,
+
+  CONSTRAINT FOREIGN KEY (hook_id) REFERENCES cvs_hooks (id)
+);
+
+DROP TABLE cvs_hooks_cia;
+CREATE TABLE cvs_hooks_cia (
+  hook_id int PRIMARY KEY,
+  project_account text NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (hook_id) REFERENCES cvs_hooks (id)
+);
+
+
+TRUNCATE cvs_hooks;
+TRUNCATE cvs_hooks_log_accum;
+TRUNCATE cvs_hooks_cia;
+
+
+CREATE TABLE git_repos (
+  group_id int NOT NULL,
+  name varchar(255) NOT NULL,
+  description varchar(255) NOT NULL,
+  -- forks, subrepos, pull url...
+
+  PRIMARY KEY (group_id, scm, name),
+  CONSTRAINT FOREIGN KEY (group_id) REFERENCES groups (group_id)
+);

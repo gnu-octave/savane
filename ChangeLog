@@ -1,3 +1,12 @@
+2007-04-11  Sylvain Beucler  <beuc@beuc.net>
+
+	* Fix URLs broken by the brutal comments conversion (s,//,#,) that
+	somebody did once.
+
+	* Removed comment about brother websites (it does work with
+	Kerberos now, and I don't foresee any unpredictable behavior if
+	the user never logged-in to the brother website).
+
 2007-04-10  Sylvain Beucler  <beuc@beuc.net>
 
 	* frontend/php/people/viewjob.php: fix bad link to the project,

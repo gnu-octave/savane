@@ -101,7 +101,7 @@ function session_login_valid($form_loginname,
   #
   # authentication method: PAM based
   # this requires the 'pam_auth' php extension from
-  # http:#www.math.ohio-state.edu/~ccunning/pam_auth.html
+  # http://www.math.ohio-state.edu/~ccunning/pam_auth.html
   #
   if($usr['user_pw'] == 'PAM') 
     {

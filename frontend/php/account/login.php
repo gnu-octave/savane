@@ -253,9 +253,6 @@ if (!empty($GLOBALS['sys_brother_domain']))
 
   print '<p><input type="checkbox" name="brotherhood" value="1" '.$checked.'/><span class="preinput">';
   printf (_("Login also in %s").'</span><br />', $GLOBALS['sys_brother_domain']);
-  print '<span class="text">';
-  printf (_("Do not use this if you are using kerberos. Do not use this until you already successfully logged in on %s, the result would be unpredictable."), $GLOBALS['sys_brother_domain']);
-  print '</span>';
 }
 
 print '<div class="center"><input type="submit" name="login" value="'._("Login").'" tabindex="1" /></div>';

@@ -67,9 +67,9 @@ if (isset($_POST['log_accum'])) {
 	unset($dir_list);
       else if ($dir_list == '' or preg_match('/[[:space:]]/', $dir_list) or !preg_match("/^(([a-zA-Z0-9_.+-\/]+)(,|$))+/", $dir_list))
 	exit_error(_("Invalid directories list"));
-      $branch = $_POST['branch'][$hook_id];
-      if ($branch == '')
-	unset($branch);
+      $branches = $_POST['branches'][$hook_id];
+      if ($branches == '')
+	unset($branches);
       $enable_diff = '0';
       if (isset($_POST['enable_diff'][$hook_id]))
 	$enable_diff = $_POST['enable_diff'][$hook_id];
@@ -98,7 +98,7 @@ if (isset($_POST['log_accum'])) {
 	$new_hook_id = mysql_insert_id();
 	db_autoexecute('cvs_hooks_log_accum',
           array('hook_id' => $new_hook_id,
-		'branch' => (!isset($branch) ? null : $branch),
+		'branches' => (!isset($branches) ? null : $branches),
 		'emails_notif' => $emails_notif,
 		'enable_diff' => $enable_diff,
 		'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
@@ -112,7 +112,7 @@ if (isset($_POST['log_accum'])) {
 	    'dir_list' => (!isset($dir_list) ? null : $dir_list),
 	    'hook_name' => 'log_accum',
 	    'needs_refresh' => 1,
-	    'branch' => (!isset($branch) ? null : $branch),
+	    'branches' => (!isset($branches) ? null : $branches),
 	    'emails_notif' => $emails_notif,
 	    'enable_diff' => $enable_diff,
 	    'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
@@ -148,7 +148,7 @@ $hook = 'log_accum';
 // Show the project's log_accum hooks
 $result =  db_execute("
 SELECT hook_id, repo_name, match_type, dir_list, hook_name, needs_refresh,
-	branch, emails_notif, enable_diff, emails_diff
+	branches, emails_notif, enable_diff, emails_diff
 FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
 WHERE group_id = ?", array($group_id));
@@ -157,7 +157,7 @@ echo "<h2>log_accum</h2>";
 echo "<h3>Current notifications</h3>";
 echo "<form action='{$_SERVER['PHP_SELF']}?group=$group' method='post'>";
 echo "<table>";
-echo html_build_list_table_top(array('X', 'Repository', 'Match type', 'Module list', 'Only branch', 'Notification to', 'Diff?', 'Separate diffs to', 'Updated?'));
+echo html_build_list_table_top(array('X', 'Repository', 'Match type', 'Module list', 'Branch filter', 'Notification to', 'Diff?', 'Separate diffs to', 'Updated?'));
 
 while ($row = mysql_fetch_assoc($result)) {
   $cur= $row['hook_id'];
@@ -175,7 +175,7 @@ while ($row = mysql_fetch_assoc($result)) {
 					 "match_type[$cur]", $row['match_type'], 0);
   echo "</td>\n";
   echo "<td><input type='text' name='dir_list[$cur]' value='{$row['dir_list']}' /></td>\n";
-  echo "<td><input type='text' name='branch[$cur]' value='{$row['branch']}' /></td>\n";
+  echo "<td><input type='text' name='branches[$cur]' value='{$row['branches']}' /></td>\n";
   echo "<td><input type='text' name='emails_notif[$cur]' value='{$row['emails_notif']}' /></td>\n";
   echo "<td>";
   echo html_build_checkbox("enable_diff[$cur]", $row['enable_diff']);
@@ -223,10 +223,10 @@ echo "Optional alternate list of mails to send diffs separately to (eg: him@doma
   If empty, the diffs will be included with the commit notifications:<br />";
 echo "<input type='text' name='emails_diff[new]' value='{$row['emails_diff']}' />\n";
 echo "</li><li>";
-echo "Filter by branch: you will be notified only of this branch's commits.<br />
+echo "Filter by branch: you will be notified only of these branches' commits, separated by commas.<br />
   Enter <i>HEAD</i> if you only want trunk (non-branch) commits.<br />
   Leave blank if you want to get notifications for all commits (default):<br/>";
-echo "<input type='text' name='branch[new]' value='{$row['branch']}' />";
+echo "<input type='text' name='branches[new]' value='{$row['branches']}' />";
 echo "</li></ol>";
 echo "<input type='hidden' name='id[new]' value='new' />";
 $caption = _('Add');
