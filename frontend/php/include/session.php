@@ -23,6 +23,45 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+
+// - A note on cookies -
+// 
+// A feature is to set the cookies for the domain and subdomains.
+// This allows to reuse authentication in subdomains. Check
+// frontend/perl for an example.
+// 
+// Setting the domain is a little bit tricky. Tests:
+// 
+// Domain: .cookies.com
+// - request-host=cookies.com (some konqueror versions, firefox)
+// - request-host=*.cookies.com (w3m, links, konqueror, firefox)
+// This is the cleanest form, but the RFC is ambiguous in this
+// particular case.
+// 
+// Domain: cookies.com
+// - request-host=cookies.com (w3m, links, konqueror, firefox)
+// - request-host=*.cookies.com (w3m, links, konqueror, firefox)
+// This form lacks the leading dot, but the RFC says this should be
+// accepted. This is what works best.
+// 
+// 
+// Domain: localhost
+// - All such cookies are rejected because there's no embedded dot
+// 
+// Domain: .local (rfc2965)
+// - Doesn't work because PHP uses v1 cookies and not v2:
+// 
+// Conclusion: we set the domain only for non-local request-hosts, and
+// we use the form without the leading dot.
+// 
+// Refs:
+// http://wp.netscape.com/newsref/std/cookie_spec.html (?)
+// http://www.ietf.org/rfc/rfc2109.txt (obsoleted by 2965)
+// http://www.ietf.org/rfc/rfc2965.txt (status: proposed standard)
+// https://gna.org/support/?func=detailitem&item_id=886 (pb with local domains)
+// https://gna.org/bugs/?6694 (first discussion, some mistakes in Beuc's comments)
+// https://savannah.gnu.org/task/?6800 (don't use a leading dot)
+
 require_once(dirname(__FILE__).'/sane.php');
 
 $G_SESSION=array();
@@ -231,10 +270,11 @@ function session_cookie($name, $value, $cookie_for_a_year=0, $secure=0)
 
   $path = $GLOBALS['sys_home'];
 
-  # If we're using a real domain name, enable subdomain matching.
-  # $domain needs an embedded dot otherwise the cookie won't be
-  # accepted (eg 'localhost', cf. bug #6694 and rfc2109)
-  $domain = '.' . $GLOBALS['sys_default_domain'];
+  // If we're using a real domain name, enable subdomain matching.
+  // $domain needs an embedded dot otherwise the cookie won't be
+  // accepted (eg 'localhost'). See explanation at the top of this
+  // file)
+  $domain = $GLOBALS['sys_default_domain'];
   if (!eregi('[a-z0-9-]\.[a-z0-9-]', $domain))
       $domain = '';
 
@@ -249,7 +289,7 @@ function session_delete_cookie($n)
   $expiration = time() - 3600; # in the past
   $path = $GLOBALS['sys_home'];
   # specify domain? - cf. session_cookie ^^^
-  $domain = '.' . $GLOBALS['sys_default_domain'];
+  $domain = $GLOBALS['sys_default_domain'];
   if (!eregi('[a-z0-9-]\.[a-z0-9-]', $domain))
       $domain = '';
   setcookie($n, '', $expiration, $path, $domain);

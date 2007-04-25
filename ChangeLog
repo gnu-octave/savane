@@ -1,3 +1,8 @@
+2007-04-25  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/include/session.php: Fix the cookies explicit
+	domain so it works with all browsers, and document it.
+
 2007-04-11  Sylvain Beucler  <beuc@beuc.net>
 
 	* Fix URLs broken by the brutal comments conversion (s,//,#,) that
