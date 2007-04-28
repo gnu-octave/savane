@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Savane; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-# Add a tailing '###' in table user, field authorized_keys
 
 # This script will copy files from old deprecated "task_file" an alike tables
 # into trackers_file

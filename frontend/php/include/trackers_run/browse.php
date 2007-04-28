@@ -783,13 +783,34 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
 
 }
 
+if ($history_search) {
+  list($unix_history_date,$ok) = utils_date_to_unixtime($history_date);
+  if ($history_event == "modified") {
+    $from = $from.', '.ARTIFACT.'_history ';
+    $where = $where.'AND '.ARTIFACT.'_history.bug_id = '.ARTIFACT.'.bug_id ';
+    $where .= ' AND '.ARTIFACT.'_history.date >= '.$unix_history_date.' ';
+    if ($history_field != '0') {
+      $where .= ' AND '.ARTIFACT."_history.field_name = '".$history_field."' ";
+    }
+  } else {
+    $from = $from.' LEFT JOIN '.ARTIFACT.'_history ON (('.ARTIFACT.'_history.bug_id = '.ARTIFACT.'.bug_id ) AND ('.ARTIFACT.'_history.date >= '.$unix_history_date.') ';
+    if ($history_field != '0') {
+      $from .= 'AND ('.ARTIFACT."_history.field_name = '".$history_field."')) ";
+    } else {
+      $from .= ') ';
+    }
+    $where .= ' AND '.ARTIFACT.'_history.bug_id IS NULL';
+  }
+}
+
 /* ==================================================
     Run 2 queries : one to count the total number of results, and the second
     one with the LIMIT argument. It is faster than selecting all
     rows (without LIMIT) because when the number of bugs is large it takes
-    time to transfer all the results from the server to the client. It is also faster
-    than using the SQL_CALC_FOUND_ROWS/FOUND_ROWS() capabilities of
-    MySQL
+    time to transfer all the results from the server to the client.
+    It is also faster than using the SQL_CALC_FOUND_ROWS/FOUND_ROWS()
+    capabilities of MySQL
+
   ================================================== */
 $sql_count = "$select_count $from $where";
 $result_count = db_query($sql_count);
@@ -797,77 +818,18 @@ $totalrows = db_result($result_count,0,'count');
 
 $sql = "$select $from $where $order_by $limit";
 
-# If additional constraint history_event is modified, this result will be
-# replaced, and so we dont have to run this sql
-if (!$history_search || $history_event != "modified") 
-{
-  $result = db_query($sql);
-}
+## print "SQL=".$sql."\n";
 
-# Additional constraint
- $history_arr = array();
-if ($history_search) 
-{
-  list($unix_history_date,$ok) = utils_date_to_unixtime($history_date);
-
-  # Do 2nd sql query (on history) as long as MINUS is not supported by mysql
-  $select_hist = $select;
-  $from_hist = $from.', '.ARTIFACT.'_history ';
-  $where_hist = $where.'AND '.ARTIFACT.'_history.bug_id = '.ARTIFACT.'.bug_id ';
-  $where_hist .= ' AND '.ARTIFACT.'_history.date >= '.$unix_history_date.' ';
-  if ($history_field != '0') 
-    {
-      $where_hist .= 'AND '.ARTIFACT."_history.field_name = '".$history_field."' ";
-    }
-  $sql_history_without_limit = "$select_hist $from_hist $where_hist $order_by";
-  $sql_history = "$sql_history_without_limit $limit";
-  $result_history = db_query($sql_history);
-
-  # If the even is "modified", we replace the original sql results.
-  # Otherwise, we build up a list of result to substract
-  if ($history_event == "modified")
-    {
-      $result = $result_history;
-
-      # In this case, we must recount the total number of results, 
-      # because we wont be able substract results 
-      # (like we do for the history event "unmodified") 
-      # from the total count as we have a completely different sql
-      $totalrows = db_numrows(db_query($sql_history_without_limit));
-    }
-  else
-    {
-      $rows_history = db_numrows($result_history);
-      $history_arr = array();
-      
-      for ($i=0; $i < $rows_history; $i++) 
-	{
-          # Store the entry to be removed later
-	  $hist_bug_id = db_result($result_history, $i, 'bug_id');
-	  $history_arr[$hist_bug_id] = 1;
-	}
-    }
-}
+$result = db_query($sql);
 
 # Build the array that will be given to the function that make the item
 # list. We cannot simply return the SQL results, since we have to remove
-# some entries from the list first:
-#      - private items if necessary
-#      - items depending on the additional constraint
-#
-# $totalrows must be set accordingly
+# private items if necessary and set $totalrows accordingly
 $result_array = array();
 while ($thisarray = db_fetch_array($result))
 {
   # Get the id
   $thisitem_id = $thisarray['bug_id'];
-
-  # Check if we must ignore it due to history additional constraint
-  if (!empty($history_arr[$thisitem_id]))
-    { 
-      $totalrows--;
-      continue; 
-    }  
 
   # Do not show private item, apart to technician level members
   # and submitter

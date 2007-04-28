@@ -320,8 +320,10 @@ if (isset($group) && !isset($group_id))
 {
   $res_grp = db_execute("SELECT group_id,status FROM groups WHERE unix_group_name=?",
 			array($group));
-  sane_set("group_id", db_result($res_grp,0,'group_id'));
-  sane_set("group_name", $group);
+  if (db_numrows($res_grp) > 0) {
+    sane_set("group_id", db_result($res_grp,0,'group_id'));
+    sane_set("group_name", $group);
+  }
 }
 elseif (isset($group_id))
 {

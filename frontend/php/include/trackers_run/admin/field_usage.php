@@ -356,7 +356,8 @@ if ($group_id && user_ismember($group_id,'A')) {
       $hdr = html_build_list_table_top ($title_arr);
 
       # Build HTML ouput for  Used fields first and Unused field second
-      $iu=$in=$inc=0;
+      $iu = $in = $inc = 0;
+      $hu = $hn = $hnc = '';
       while ( $field_name = trackers_list_all_fields() )
 	{
 

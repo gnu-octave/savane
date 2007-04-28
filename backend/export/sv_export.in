@@ -38,7 +38,6 @@ our $sys_name;
 our $sys_https_host;
 our $sys_default_domain;
 our $sys_url_topdir;
-our $dbd;
 
 # Configure
 my $script = "sv_export";
@@ -465,9 +464,10 @@ while (my ($key, $value) = each(%jobs)) {
                     my $i = 0;
                     my $nb_of_fields = scalar @{$history_hash{$id}{$d}};
                     while ($i < $nb_of_fields) {
+                        my $h_f = $history_hash{$id}{$d}[$i]{'field'};
 			$writer->startTag("field");
 
-                        $label = $tr_fields_project{$history_hash{$id}{$d}[$i]{'field'}}{'label'};
+                        $label = $tr_fields_project{$h_f}{'label'};
 
 			$label =~ s/\s/_/g;
 
@@ -475,13 +475,29 @@ while (my ($key, $value) = each(%jobs)) {
 			$writer->characters($label);
 			$writer->endTag("field_name");
 			
-			$writer->startTag("old_value");
-			$writer->characters($history_hash{$id}{$d}[$i]{'old_value'});
-			$writer->endTag("old_value");
+           $writer->startTag("old_value");
+           if ($tr_fields_project{$h_f}{'display_type'} eq 'SB') {
+             if (($h_f eq 'submitted_by') || ($h_f eq 'assigned_to')) {
+               $writer->characters($history_hash{$id}{$d}[$i]{'old_value'});
+             } else {
+               $writer->characters($tr_fields_values{$tr_fields_project{$h_f}{'id'}}{$history_hash{$id}{$d}[$i]{'old_value'}});
+             }
+           } else {
+             $writer->characters($history_hash{$id}{$d}[$i]{'old_value'});
+           }
+           $writer->endTag("old_value");
 
-			$writer->startTag("new_value");
-			$writer->characters($history_hash{$id}{$d}[$i]{'new_value'});
-			$writer->endTag("new_value");
+           $writer->startTag("new_value");
+           if ($tr_fields_project{$h_f}{'display_type'} eq 'SB') {
+             if (($h_f eq 'submitted_by') || ($h_f eq 'assigned_to')) {
+               $writer->characters($history_hash{$id}{$d}[$i]{'new_value'});
+             } else {
+               $writer->characters($tr_fields_values{$tr_fields_project{$h_f}{'id'}}{$history_hash{$id}{$d}[$i]{'new_value'}});
+             }
+           } else {
+             $writer->characters($history_hash{$id}{$d}[$i]{'new_value'});      
+           }
+           $writer->endTag("new_value");
 
 			$writer->startTag("modified_by");
 			$writer->characters($history_hash{$id}{$d}[$i]{'mod_by'});
