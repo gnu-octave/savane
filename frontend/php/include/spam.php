@@ -20,6 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # First, initialize some globals var: conffile allows two vals for 
 # admin conveniency.
 if (!empty($GLOBALS['sys_spamcheck_spamassassin']))

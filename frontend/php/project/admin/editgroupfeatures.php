@@ -20,14 +20,30 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
 require_once('../../include/sane.php');
 session_require(array('group' => $group_id,
 		      'admin_flags' => 'A'));
 
-extract(sane_import('request', array(
-  'update')));
+extract(sane_import('post', array(
+  'update',  'feedback', 'group',
+  'use_cvs', 'use_arch', 'use_svn',
+  'use_bugs', 'use_support', 'use_patch', 'use_task',
+  'use_mail', 'use_download',
+  'use_homepage', 'use_extralink_documentation', 
+  'use_news',
+  'use_forum', // ?
+  'url_cvs', 'url_cvs_viewcvs', 'url_cvs_viewcvs_homepage',
+  'url_arch', 'url_arch_viewcvs',
+  'url_svn', 'url_svn_viewcvs',
+  'url_bugs','url_patch','url_task','url_support',
+  'url_mail', 'url_download', 'dir_download', // ?
+  'url_homepage',
+  'url_forum',
+  'url_extralink_documentation')));
 # If this was a submission, make updates
 if ($update)
 {
@@ -100,7 +116,7 @@ if ($update)
 		 "dir_download",
 		 "url_extralink_documentation");
 
-  unset($upd_list);
+  $upd_list = array();
   while (list(,$field) = each($cases))
     {
       $field_name = substr($field, 4, strlen($field));
@@ -121,7 +137,7 @@ if ($update)
 	  if ($type == "use" ||
 	      ($type == "use" && $field_name == "extralink_documentation" && $project->CanModifyUrl("extralink_documentation")))
 	    {
-	      $upd_list .= $field."='".$$field."', ";
+	      $upd_list[$field] = $$field;
 	    }
 	  elseif ($type == "url")
 	    {
@@ -132,27 +148,25 @@ if ($update)
 
 	      if ($project->CanModifyUrl($field_name))
 		{
-		  $upd_list .= $field."='".$$field."', ";
+		  $upd_list[$field] = $$field;
 		}
 	    }
 	  elseif ($type == "dir" && $field == "dir_download" && $project->CanUse("download") && $project->CanModifyDir("download_dir"))
 	    {
-	      $upd_list .= $field."='".$$field."', ";
+	      $upd_list[$field] = $$field;
 	    }
 	}
     }
 
   if ($upd_list)
     {
-      $upd_list = rtrim($upd_list, ", ");
+      $result = db_autoexecute('groups',
+			       $upd_list,
+			       DB_AUTOQUERY_UPDATE,
+			       "group_id=?",
+			       array($group_id));
 
-      $sql = "UPDATE groups SET "
-	 .$upd_list
-	 ." WHERE group_id=$group_id";
-
-      $result = db_numrows(db_query($sql));
-
-      if ($result > 0)
+      if ($result == true)
 	{ 
 	  session_redirect($_SERVER['PHP_SELF']."?group=$group_name&feedback=".rawurlencode(_("Update failed.")));
 	}
@@ -163,7 +177,6 @@ if ($update)
 	  # we force reloading the page with a redirection
 	  session_redirect($_SERVER['PHP_SELF']."?group=$group_name&feedback=".rawurlencode(_("Update successful.")));
 	}
-
     }
   else
     { 
