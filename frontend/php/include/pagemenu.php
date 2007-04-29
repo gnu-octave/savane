@@ -23,17 +23,14 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 # Note about submenus: they should always contain a verb, enlightening the
 #  action they permit to do
 # The related pages the submenus point to should have title that are the
 # same as the submenu, or almost
 
-
-# Disallow anyone to mess with the submenu content used with the stone age
-# menu
-unset($GLOBALS['stone_age_menu_submenu_content'],
-      $GLOBALS['stone_age_menu_lastcontext']);
 
 # Menu specific to the current page: group if group page, my if my pages etc
 function pagemenu ($params)

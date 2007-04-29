@@ -22,6 +22,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 register_globals_off();
 require_directory("my");
 
@@ -71,18 +74,17 @@ if (!$is_suspended)
   #    very active developers
   #  - ignore private items
 
-  $sql = "SELECT groups.group_name,"
-    . "groups.group_id,"
-    . "groups.unix_group_name,"
-    . "groups.status "
-    . "FROM groups,user_group "
-    . "WHERE groups.group_id=user_group.group_id "
-    . "AND user_group.user_id='".user_getid()."' "
-    . "AND groups.status='A' "
-    . "GROUP BY groups.unix_group_name "
-    . "ORDER BY groups.unix_group_name";
-
-  $result = db_query($sql);
+  $result = db_execute("SELECT groups.group_name,"
+		       . "groups.group_id,"
+		       . "groups.unix_group_name,"
+		       . "groups.status "
+		       . "FROM groups,user_group "
+		       . "WHERE groups.group_id=user_group.group_id "
+		       . "AND user_group.user_id=? "
+		       . "AND groups.status='A' "
+		       . "GROUP BY groups.unix_group_name "
+		       . "ORDER BY groups.unix_group_name",
+		       array(user_getid()));
   $rows = db_numrows($result);
   $usergroups = array();
   $usergroups_groupid = array();
@@ -220,42 +222,40 @@ if (!$is_suspended)
   print $HTML->box_top(_("Project/Group Information"),'',1);
 # now get listing of groups for that user
 
-  $sql = "SELECT groups.group_name,"
-    . "groups.group_id,"
-    . "groups.unix_group_name,"
-    . "groups.status,"
-    . "user_group.admin_flags, "
-    . "group_history.date "
-    . "FROM groups,user_group,group_history "
-    . "WHERE groups.group_id=user_group.group_id "
-    . "AND user_group.user_id='".$user_id."' "
-    . "AND groups.status='A' "
-    . "AND groups.is_public='1' "
-    . "AND (group_history.field_name='Added User' OR group_history.field_name='Approved User' OR user_group.admin_flags='P')"
-    . "AND group_history.group_id=user_group.group_id "
-    . "AND group_history.old_value='".db_result($res_user,0,'user_name')."' "
-    . "GROUP BY groups.unix_group_name "
-    . "ORDER BY groups.unix_group_name";
-
-  $result = db_query($sql);
+  $result = db_execute("SELECT groups.group_name,"
+		       . "groups.group_id,"
+		       . "groups.unix_group_name,"
+		       . "groups.status,"
+		       . "user_group.admin_flags, "
+		       . "group_history.date "
+		       . "FROM groups,user_group,group_history "
+		       . "WHERE groups.group_id=user_group.group_id "
+		       . "AND user_group.user_id=? "
+		       . "AND groups.status='A' "
+		       . "AND groups.is_public='1' "
+		       . "AND (group_history.field_name='Added User' OR group_history.field_name='Approved User' OR user_group.admin_flags='P')"
+		       . "AND group_history.group_id=user_group.group_id "
+		       . "AND group_history.old_value=? "
+		       . "GROUP BY groups.unix_group_name "
+		       . "ORDER BY groups.unix_group_name",
+		       array($user_id, db_result($res_user,0,'user_name')));
   $rows = db_numrows($result);
 
 # Alternative sql that do not use group_history, just in case this history
 # would be flawed (history usage has been inconsistent over Savane history)
-$sql_without_history = "SELECT groups.group_name,"
-  . "groups.group_id,"
-  . "groups.unix_group_name,"
-  . "groups.status,"
-  . "user_group.admin_flags "
-  . "FROM groups,user_group "
-  . "WHERE groups.group_id=user_group.group_id "
-  . "AND user_group.user_id='".$user_id."' "
-  . "AND groups.status='A' "
-  . "AND groups.is_public='1' "
-  . "GROUP BY groups.unix_group_name "
-  . "ORDER BY groups.unix_group_name";
-
-$result_without_history = db_query($sql_without_history);
+$result_without_history = db_execute("SELECT groups.group_name,"
+				     . "groups.group_id,"
+				     . "groups.unix_group_name,"
+				     . "groups.status,"
+				     . "user_group.admin_flags "
+				     . "FROM groups,user_group "
+				     . "WHERE groups.group_id=user_group.group_id "
+				     . "AND user_group.user_id=? "
+				     . "AND groups.status='A' "
+				     . "AND groups.is_public='1' "
+				     . "GROUP BY groups.unix_group_name "
+				     . "ORDER BY groups.unix_group_name",
+				     array($user_id));
 $rows_without_history = db_numrows($result_without_history);
 
 // The history is often broken, as soon as you have an old install or
@@ -315,19 +315,17 @@ if ($rows_without_history != $rows)
       print "<br />\n";
       print $HTML->box_top(_("Members"),'',1);
 
-      $sql = "SELECT user.user_name, user.realname, user.user_id FROM user,user_squad "
-	. "WHERE user.user_id=user_squad.user_id "
-	. "AND user_squad.squad_id='".$user_id."' "
-	. "GROUP BY user.user_name ";
-
-      $result = db_query($sql);
+      $result = db_execute("SELECT user.user_name, user.realname, user.user_id FROM user,user_squad "
+			   . "WHERE user.user_id=user_squad.user_id "
+			   . "AND user_squad.squad_id=? "
+			   . "GROUP BY user.user_name ",
+			   array($user_id));
       $rows = db_numrows($result);
 
       $j = 1;
       unset($content);
       for ($i=0; $i<$rows; $i++)
 	{
-
 	  $content .= '<li class="'.utils_get_alt_row_color($j).'">';
 	  $content .= utils_user_link(db_result($result,$i,'user_name'),
 				      db_result($result,$i,'realname'));

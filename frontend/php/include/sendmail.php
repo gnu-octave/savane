@@ -1,4 +1,6 @@
 <?php
+# Every mails sent should be using functions listed here.
+# 
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -19,8 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-# Every mails sent should be using functions listed here.
 
 #input_is_safe();
 #mysql_is_safe();

@@ -23,6 +23,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 // - A note on cookies -
 // 
@@ -87,8 +89,8 @@ function session_login_valid($form_loginname,
       return false;
     }
   
-  $resq = db_query("SELECT user_id,user_pw,status FROM user WHERE "
-		   . "user_name = '$form_loginname'");
+  $resq = db_execute("SELECT user_id,user_pw,status FROM user WHERE "
+		     . "user_name=?", array($form_loginname));
   if (!$resq || db_numrows($resq) < 1) 
     {
       fb(_('Invalid User Name'), 1);
@@ -180,7 +182,8 @@ function session_login_valid($form_loginname,
 	  return false;
 	}
       $md5_pw = md5($form_pw);
-      db_query("UPDATE user SET user_pw = '$md5_pw' WHERE user_id = ".$usr['user_id']);
+      db_execute("UPDATE user SET user_pw=? WHERE user_id=?",
+		 array($md5_pw, $usr['user_id']));
     }
   else if($usr['user_pw'] == 'SSH') 
     {
@@ -258,7 +261,9 @@ function session_issecure()
 
 function session_needsstayinssl()    
 {
-  return db_result(db_query("SELECT stay_in_ssl FROM session WHERE session_hash='$GLOBALS[session_hash]'"), 0, 'stay_in_ssl');
+  return db_result(db_execute("SELECT stay_in_ssl FROM session WHERE session_hash=?",
+			      array($GLOBALS['session_hash'])),
+		   0, 'stay_in_ssl');
 }
 
 # Define a cookie, just for session or for a year, https-only or not
@@ -313,13 +318,14 @@ function session_require_test($req)
     }
   if ($req['group']) 
     {
-      $query = "SELECT user_id FROM user_group WHERE user_id=" . user_getid()
-	 . " AND group_id=$req[group]";
+      $query = "SELECT user_id FROM user_group WHERE user_id=? AND group_id=?";
+      $params = array(user_getid(), $req['group']);
       if ($req['admin_flags']) 
 	{
-	  $query .= " AND admin_flags = '$req[admin_flags]'";
+	  $query .= " AND admin_flags=?";
+	  $params[] = $req['admin_flags'];
 	}
-      if ((db_numrows(db_query($query)) < 1) || !$req['group']) 
+      if ((db_numrows(db_execute($query, $params)) < 1) || !$req['group']) 
 	{
 	  return false;
 	}
@@ -353,13 +359,15 @@ function session_require($req)
   
   if (!empty($req['group']))
     {
-      $query = "SELECT user_id FROM user_group WHERE user_id=".user_getid()." AND group_id='{$req['group']}'";
+      $query = "SELECT user_id FROM user_group WHERE user_id=? AND group_id=?";
+      $params = array(user_getid(), $req['group']);
       if (!empty($req['admin_flags']))
 	{
-	  $query .= " AND admin_flags='$req[admin_flags]'";	
+	  $query .= " AND admin_flags=?";	
+	  $params[] = $req['admin_flags'];
 	}
       
-      if (!db_numrows(db_query($query))) 
+      if (!db_numrows(db_execute($query, $params))) 
 	{
 	  exit_permission_denied();
 	}
@@ -397,7 +405,7 @@ function session_setglobals($user_id)
   
   if ($user_id > 0) 
     {
-      $result=db_query("SELECT user_id,user_name FROM user WHERE user_id='$user_id'");
+      $result=db_execute("SELECT user_id,user_name FROM user WHERE user_id=?", array($user_id));
       if (!$result || db_numrows($result) < 1) 
 	{
 	  #echo db_error();
@@ -427,16 +435,22 @@ function session_set_new($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
     $pre_hash = time() . rand() . $_SERVER['REMOTE_ADDR'] . microtime();
     $GLOBALS['session_hash'] = md5($pre_hash);
   } 
-  while (db_numrows(db_query("SELECT session_hash FROM session WHERE session_hash='$GLOBALS[session_hash]'")) > 0);
+  while (db_numrows(db_execute("SELECT session_hash FROM session WHERE session_hash=?",
+			       array($GLOBALS['session_hash']))) > 0);
   
   # make new session entries into db
-  db_query("INSERT INTO session (session_hash, ip_addr, time, user_id, stay_in_ssl) VALUES ('".addslashes($GLOBALS['session_hash'])."','".addslashes($_SERVER['REMOTE_ADDR'])."'," . time() . ",'$user_id','$stay_in_ssl')");
+  db_autoexecute('session', array('session_hash' => $GLOBALS['session_hash'],
+				  'ip_addr' => $_SERVER['REMOTE_ADDR'],
+				  'time' => time(),
+				  'user_id' => $user_id,
+				  'stay_in_ssl' => $stay_in_ssl),
+		 DB_AUTOQUERY_INSERT);
   
   # set global
-  $res=db_query("SELECT * FROM session WHERE session_hash='$GLOBALS[session_hash]'");
+  $res=db_execute("SELECT * FROM session WHERE session_hash=?", array($GLOBALS['session_hash']));
   if (db_numrows($res) > 1) 
     {
-      db_query("DELETE FROM session WHERE session_hash='$GLOBALS[session_hash]'");
+      db_execute("DELETE FROM session WHERE session_hash=?", array($GLOBALS['session_hash']));
       exit_error("ERROR","ERROR - two people had the same hash - backarrow and re-login. It should never happen again");
     } 
   else 
@@ -449,7 +463,8 @@ function session_set_new($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
   # kill the others sessions
   if (user_get_preference("keep_only_one_session"))
     {
-      db_query("DELETE FROM session WHERE session_hash<>'$GLOBALS[session_hash]' AND user_id='$user_id'");
+      db_execute("DELETE FROM session WHERE session_hash<>? AND user_id=?", 
+		 array($GLOBALS['session_hash'], $user_id));
     }
 
   session_set_new_cookies($user_id, $cookie_for_a_year, $stay_in_ssl);
@@ -481,11 +496,11 @@ function session_set()
   $id_is_good = 0;
   
   # here also check for good hash, set if new session is needed
-  $session_hash = sane_cookie("session_hash");
-  $session_uid = sane_cookie("session_uid");
+  extract(sane_import('cookie', array('session_hash', 'session_uid')));
   if ($session_hash && $session_uid) 
     {
-      $result=db_query("SELECT * FROM session WHERE session_hash='".$session_hash."' AND user_id='".$session_uid."'");
+      $result=db_execute("SELECT * FROM session WHERE session_hash=? AND user_id=?",
+			 array($session_hash, $session_uid));
       $G_SESSION = db_fetch_array($result);
     
       # does hash exist?
@@ -511,22 +526,22 @@ function session_set()
 
 function session_count ($uid) 
 {
-  return db_numrows(db_query("SELECT ip_addr FROM session WHERE "
-			     . "user_id = '".$uid."'"));
- 
+  return db_numrows(db_execute("SELECT ip_addr FROM session WHERE user_id=?",
+			       array($uid)));
 }
 
 function session_exists($uid, $hash) {
-  return (db_numrows(db_query("SELECT NULL FROM session WHERE "
-			     . "user_id = '".$uid."' and session_hash='".$hash."'")) == 1);
+  return (db_numrows(db_execute("SELECT NULL FROM session WHERE user_id=? AND session_hash=?",
+				array($uid, $hash))) == 1);
 }
 
 
 function session_logout() {
   # If the session was validated, we can assume that the cookie session_hash
   # is reliable
+  extract(sane_import('cookie', array('session_hash')));
   db_execute("DELETE FROM session WHERE session_hash=?",
-	     array($_COOKIE['session_hash']));
+	     array($session_hash));
   session_delete_cookie('redirect_to_https');
   session_delete_cookie('session_hash');
   session_delete_cookie('session_uid');

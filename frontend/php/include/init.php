@@ -220,7 +220,7 @@ if (user_isloggedin())
   putenv('TZ='.user_get_timezone());
 
   # Find out if the stone age menu is required
-  if (user_get_preference("stone_age_menu"))
+  if (user_get_preference('stone_age_menu'))
     { $GLOBALS['stone_age_menu'] = 1; }
 } else {
   # Set default timezone - avoid PHP warning
@@ -331,6 +331,10 @@ elseif (isset($group_id))
 			array($group_id));
   sane_set("group_name", db_result($res_grp,0,'unix_group_name'));
 }
+
+# See also $group_name definition in sane.php
+# TODO: don't deal with such variables sitewide, don't use several names
+
 
 # If group_id is defined, we are on a project page, we have several checks
 # to make

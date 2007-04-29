@@ -42,7 +42,7 @@ my @files = File::Find::Rule->file()
     ->name("*.php", "*.class")
     ->in("$path");
 
-print "The following PHP files does not have mysql_is_safe:\n";
+print "The following PHP files do not have mysql_is_safe:\n";
 my $use_count;
 foreach my $file (@files)
 {

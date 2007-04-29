@@ -23,10 +23,13 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_directory("people");
 require_directory("news");
 require_directory("stats");
-require $GLOBALS['sys_www_topdir']."/include/vars.php";
+require_once(dirname(__FILE__).'/vars.php');
 
 
 # if we are at wrong url, redirect
@@ -36,17 +39,17 @@ if (strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0 && $proj
   exit;
 }
 
-sane_set("group_name", $project->getUnixName());
+$group_name = $project->getUnixName();
 
 site_project_header(array());
 
 # ########################### Members of this project
 # (little box on the right)
 
-$res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname "
-		      . "FROM user,user_group "
-		      . "WHERE user_group.user_id=user.user_id AND user_group.group_id=$group_id AND "
-		      . "user_group.admin_flags = 'A'");
+$res_admin = db_execute("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname "
+			. "FROM user,user_group "
+			. "WHERE user_group.user_id=user.user_id AND user_group.group_id=? AND "
+			. "user_group.admin_flags = 'A'", array($group_id));
 
 
 print '
@@ -68,7 +71,7 @@ if ($adminsnum > 0)
   }
 
 #count of developers on this project
-$membersnum = db_fetch_array(db_query("SELECT COUNT(*) AS count FROM user_group WHERE group_id=$group_id AND admin_flags<>'P' AND admin_flags<>'SQD'"));
+$membersnum = db_fetch_array(db_execute("SELECT COUNT(*) AS count FROM user_group WHERE group_id=? AND admin_flags<>'P' AND admin_flags<>'SQD'", array($group_id)));
 print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
 printf(ngettext("%s member", "%s members", $membersnum['count']),'<strong>'.$membersnum['count'].'</strong>');
 
@@ -346,13 +349,14 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
     if (group_get_artifact_url("support", 0) == $url)
       {
 
-	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id AND status_id != 3");
+	$res_count = db_execute("SELECT count(*) AS count FROM support WHERE group_id=? AND status_id != 3",
+				array($group_id));
 	$row_count = db_fetch_array($res_count);
 
 
         print " (";
         printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id");
+	$res_count = db_execute("SELECT count(*) AS count FROM support WHERE group_id=?", array($group_id));
 	$row_count = db_fetch_array($res_count);
 	print ', ';
         printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
@@ -380,15 +384,15 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
     if (group_get_artifact_url("forum", 0) == $url)
       {
 
-	$res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
-			      . "forum_group_list.group_id=$group_id AND forum.group_forum_id=forum_group_list.group_forum_id "
-			      . "AND forum_group_list.is_public=1");
+	$res_count = db_execute("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
+				. "forum_group_list.group_id=? AND forum.group_forum_id=forum_group_list.group_forum_id "
+				. "AND forum_group_list.is_public=1", array($group_id));
 	$row_count = db_fetch_array($res_count);
 	print " (";
         printf(ngettext("%s message in", "%s messages in", $row_count['count']), "<strong>{$row_count['count']}</strong>");
 
-	$res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
-			      . "AND is_public=1");
+	$res_count = db_execute("SELECT count(*) AS count FROM forum_group_list WHERE group_id=? "
+				. "AND is_public=1", array($group_id));
 	$row_count = db_fetch_array($res_count);
 
         print " ";
@@ -408,7 +412,8 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
 
       print utils_link($url,
 		       html_image("contexts/mail.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Mailing Lists"))).'&nbsp;'._("Mailing Lists"));
-      $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
+      $res_count = db_execute("SELECT count(*) AS count FROM mail_group_list WHERE group_id=? AND is_public=1",
+			      array($group_id));
       $row_count = db_fetch_array($res_count);
       print " (";
       printf(ngettext("%s public mailing-list", "%s public mailing-lists", $row_count['count']), "<strong>{$row_count['count']}</strong>");
@@ -524,12 +529,14 @@ if ($project->Uses("patch") ||
     if (group_get_artifact_url("bugs", 0) == $url)
       {
 
-	$res_count = db_query("SELECT count(*) AS count FROM bugs WHERE group_id=$group_id AND status_id != 3");
+	$res_count = db_execute("SELECT count(*) AS count FROM bugs WHERE group_id=? AND status_id != 3",
+				array($group_id));
 	$row_count = db_fetch_array($res_count);
 
         print " (";
         printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-	$res_count = db_query("SELECT count(*) AS count FROM bugs WHERE group_id=$group_id");
+        $res_count = db_execute("SELECT count(*) AS count FROM bugs WHERE group_id=?",
+				array($group_id));
 	$row_count = db_fetch_array($res_count);
 	print ', ';
         printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
@@ -554,12 +561,14 @@ if ($project->Uses("patch") ||
     if (group_get_artifact_url("task", 0) == $url)
       {
 
-	$res_count = db_query("SELECT count(*) AS count FROM task WHERE group_id=$group_id AND status_id != 3");
+	$res_count = db_execute("SELECT count(*) AS count FROM task WHERE group_id=? AND status_id != 3", 
+	  array($group_id));
 	$row_count = db_fetch_array($res_count);
 
 	print " (";
         printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-	$res_count = db_query("SELECT count(*) AS count FROM task WHERE group_id=$group_id");
+        $res_count = db_execute("SELECT count(*) AS count FROM task WHERE group_id=?",
+	  array($group_id));
 	$row_count = db_fetch_array($res_count);
 	print ', ';
         printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
@@ -584,12 +593,14 @@ if ($project->Uses("patch") ||
 
     if (group_get_artifact_url("patch", 0) == $url)
       {
-	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id AND status_id != 3");
+	$res_count = db_execute("SELECT count(*) AS count FROM patch WHERE group_id=? AND status_id != 3",
+	  array($group_id));
 	$row_count = db_fetch_array($res_count);
 
         print " (";
         printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id");
+	$res_count = db_execute("SELECT count(*) AS count FROM patch WHERE group_id=?",
+	  array($group_id));
 	$row_count = db_fetch_array($res_count);
 	print ', ';
         printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");

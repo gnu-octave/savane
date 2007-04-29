@@ -20,6 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # Valid timezones for PHP from php.net, except the ones of the category
 # others that seems to be duplicates for theses ones. We can expect people
 # to know in which country/city they are. Knowning if they are at GMT+3 or 
@@ -481,5 +484,3 @@ $TZs[]='US/Mountain';
 $TZs[]='US/Pacific';
 $TZs[]='US/Pacific-New';
 $TZs[]='US/Samoa';
-
-?>

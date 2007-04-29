@@ -24,6 +24,9 @@
 # database the setting, so someone using another computer can easily
 # remember the theme he previously chose.
 
+#input_is_safe();
+#mysql_is_safe();
+
 # Jump to the next theme available and set cookie appropriately
 function theme_rotate_jump($num) 
 {
@@ -100,7 +103,8 @@ function theme_list ()
 ##### THEME SELECTION
 ## First check if the printer mode is asked. If not, proceed to the usual
 ## theme selection
-if (sane_all('printer') == 1) {
+extract(sane_import('request', array('printer')));
+if ($printer == 1) {
   define('SV_THEME', 'printer');
   define('PRINTER', 1);
   return true;
@@ -115,7 +119,7 @@ if (isset($_COOKIE['SV_THEME']))
       # we set randomly a theme and a cookie for a day
       if (isset($_COOKIE['SV_THEME_RANDOM'])) 
 	{	  
-	  define('SV_THEME', sane_cookie('SV_THEME_RANDOM'));
+	  define('SV_THEME', $_COOKIE['SV_THEME_RANDOM']);
 	} 
       else 
 	{
@@ -132,7 +136,7 @@ if (isset($_COOKIE['SV_THEME']))
       # the user want a rotation between themes
       if (isset($_COOKIE['SV_THEME_ROTATE'])) 
 	{	    
-	  define('SV_THEME', sane_cookie('SV_THEME_ROTATE'));
+	  define('SV_THEME', $_COOKIE['SV_THEME_ROTATE']);
 	} 
       else 
 	{
@@ -144,7 +148,7 @@ if (isset($_COOKIE['SV_THEME']))
 	    { $num = '0'; } 
 	  else 
 	    {
-	      $num = sane_cookie('SV_THEME_ROTATE_NUMERIC')+1;
+	      $num = $_COOKIE['SV_THEME_ROTATE_NUMERIC']+1;
 	      # if the num is a value superior of the number of themes
 	      # we reset to 0
 	      if ($num==count($theme)) 
@@ -160,7 +164,7 @@ if (isset($_COOKIE['SV_THEME']))
   else 
     {
       # the user picked a particular theme
-      $cookie_theme = sane_cookie('SV_THEME');
+      $cookie_theme = $_COOKIE['SV_THEME'];
 
       # look for invalid / outdated cookies
       // TODO; stop using a constant for SV_THEME

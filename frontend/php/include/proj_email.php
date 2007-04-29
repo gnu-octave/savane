@@ -22,11 +22,15 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require_once('../include/sendmail.php');
+#input_is_safe();
+#mysql_is_safe();
+
+require_once(dirname(__FILE__).'/sendmail.php');
 
 function send_new_project_email($group_id) 
 {
-  $res_grp = db_query("SELECT * FROM groups WHERE group_id='$group_id'");
+  $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?",
+			array($group_id));
 
   if (db_numrows($res_grp) < 1) {
     echo ("Group [ $group_id ] does not exist. Shame on you, sysadmin.");
@@ -34,9 +38,9 @@ function send_new_project_email($group_id)
 
   $row_grp = db_fetch_array($res_grp);
 
-  $res_admins = db_query("SELECT user.user_name,user.email FROM user,user_group WHERE "
-			 . "user.user_id=user_group.user_id AND user_group.group_id='$group_id' AND "
-			 . "user_group.admin_flags='A'");
+  $res_admins = db_execute("SELECT user.user_name,user.email FROM user,user_group WHERE "
+			   . "user.user_id=user_group.user_id AND user_group.group_id=? AND "
+			   . "user_group.admin_flags='A'", array($group_id));
 
   if (db_numrows($res_admins) < 1) {
     echo ("Group [ $group_id ] does not seem to have any administrators.");
@@ -55,5 +59,3 @@ function send_new_project_email($group_id)
     
   }
 }
-
-?>

@@ -20,6 +20,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 # The point of this library is to reach the point where Savane will 
 # no longer needs register globals set to on.
@@ -27,6 +29,9 @@
 # This library will:
 #            - do sanitization checks
 #            - provide functions to access user input in a sane way
+
+// Beuc: we only need sane_import. Check doc/devel/CLEANUP where I
+// explain this cleaner approach.
 
 
 ###########################################################

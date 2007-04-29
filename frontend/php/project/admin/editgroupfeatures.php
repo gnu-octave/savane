@@ -22,9 +22,12 @@
 
 
 require_once('../../include/init.php');
+require_once('../../include/sane.php');
 session_require(array('group' => $group_id,
 		      'admin_flags' => 'A'));
 
+extract(sane_import('request', array(
+  'update')));
 # If this was a submission, make updates
 if ($update)
 {

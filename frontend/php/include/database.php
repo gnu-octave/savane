@@ -81,6 +81,11 @@ function db_query_escape()
 function db_variable_binding($sql, $inputarr=null) {
   $sql_expanded = $sql;
   if ($inputarr) {
+    if (!is_array($inputarr))
+      die("db_variable_binding: \$inputarr is not an array. Query is: <code>"
+	  . htmlspecialchars($sql) . "</code>, \$inputarr is <code>"
+	  . print_r($inputarr, 1) . "</code>");
+
     $sql_exploded = explode('?', $sql);
     
     $i = 0;

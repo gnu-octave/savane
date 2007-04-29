@@ -41,7 +41,9 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
     { $reporter_user_id = user_getid(); }
 
   # Check if the reported havent flagged the incriminated comment already
-  $result = db_query("SELECT id FROM trackers_spamscore WHERE item_id='$item_id' AND artifact='".ARTIFACT."' AND comment_id='$comment_id' AND reporter_user_id='$reporter_user_id'");
+  $result = db_execute("SELECT id FROM trackers_spamscore WHERE item_id=?
+                          AND artifact=? AND comment_id=? AND reporter_user_id=?",
+		       array($item_id, ARTIFACT, $comment_id, $reporter_user_id));
   if (db_numrows($result))
     {
       fb(_("You already flagged this comment"), 1);
@@ -55,11 +57,15 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
     {
       # It is important to mention the field_name, to avoid malicious attempt
       # to mess with any other part of history, like svncommit entries.
-      $affected_user_id = db_result(db_query("SELECT mod_by FROM ".ARTIFACT."_history WHERE bug_history_id='$comment_id' AND field_name='details' AND bug_id='$item_id'"), 0, 'mod_by');
+      $affected_user_id = db_result(db_execute("SELECT mod_by FROM ".ARTIFACT."_history WHERE bug_history_id=? AND field_name='details' AND bug_id=?",
+					       array($comment_id, $item_id)),
+				    0, 'mod_by');
     }
   else
     {
-      $affected_user_id = db_result(db_query("SELECT submitted_by FROM ".ARTIFACT." WHERE bug_id='$item_id'"), 0, 'submitted_by');
+      $affected_user_id = db_result(db_execute("SELECT submitted_by FROM ".ARTIFACT." WHERE bug_id=?",
+					       array($item_id)),
+				    0, 'submitted_by');
     }
 
   # Affected user may be 100 (anonymous) or anything else but 0
@@ -79,7 +85,14 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
     }
   
   # Feed the spamscore table
-  db_query("INSERT INTO trackers_spamscore (score,affected_user_id,reporter_user_id,artifact,item_id,comment_id) VALUES ('$score', '$affected_user_id', '$reporter_user_id', '".ARTIFACT."', '$item_id', '$comment_id')");
+  db_autoexecute('trackers_spamscore',
+		 array('score' => $score,
+		       'affected_user_id' => $affected_user_id,
+		       'reporter_user_id' => $reporter_user_id,
+		       'artifact' => ARTIFACT,
+		       'item_id' => $item_id,
+		       'comment_id' => $comment_id),
+		 DB_AUTOQUERY_INSERT);
   
   # Compute the score of the item 
   $newscore = spam_get_item_score($item_id, ARTIFACT, $comment_id);
@@ -94,20 +107,31 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
   # Update the item spamscore fields
   if ($comment_id)
     {
-      db_query("UPDATE ".ARTIFACT."_history SET spamscore='$newscore' WHERE bug_history_id='$comment_id' AND field_name='details' AND bug_id='$item_id'");
+      db_execute("UPDATE ".ARTIFACT."_history SET spamscore=?
+                  WHERE bug_history_id=? AND field_name='details'
+                    AND bug_id=?",
+		 array($newscore, $comment_id, $item_id));
     }
   else
     {
       # Get the current summary
-      $summary = db_result(db_query("SELECT summary FROM ".ARTIFACT." WHERE bug_id='$item_id'"), 0, 'summary');
-      unset($discussion_lock);
+      $summary = db_result(db_execute("SELECT summary FROM ".ARTIFACT." WHERE bug_id=?",
+				      array($item_id)),
+			   0, 'summary');
+      $discussion_lock = '';
       if ($newscore > 4)
 	{ 
 	  $summary = '[SPAM] '.$summary; 
-	  $discussion_lock = ",discussion_lock='1' ";
+	  $discussion_lock = array('discussion_lock' => 1);
 	}
       
-      db_query("UPDATE ".ARTIFACT." SET spamscore='$newscore',summary='$summary'$discussion_lock WHERE bug_id='$item_id'");
+      db_autoquery(ARTIFACT,
+		   array_merge(array('spamscore' => $newscore,
+				     'summary' => $summary),
+			       $discussion_lock),
+		   DB_AUTOQUERY_UPDATE,
+		   'WHERE bug_id=?',
+		   array($item_id));
     }
 
   fb(sprintf(_("Flagged (+%s, total spamscore: %s)"), $score, $newscore));
@@ -144,7 +168,8 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
   $userscore = spam_get_user_score($affected_user_id);
 
   # Update the user spamscore field
-  db_query("UPDATE user SET spamscore='$userscore' WHERE user_id='$affected_user_id'");
+  db_execute("UPDATE user SET spamscore=? WHERE user_id=?",
+	     array($userscore, $affected_user_id));
 
   # No feedback about this last part, one user spamscore is the kind of info
   # that belongs to site admins territory.
@@ -161,16 +186,25 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
 function spam_unflag ($item_id, $comment_id, $tracker, $group_id) 
 {
   # update the spamscore table
-  db_query("UPDATE trackers_spamscore SET score='0' WHERE item_id='$item_id' AND comment_id='$comment_id' AND artifact='$tracker' AND group_id='$group_id'");
+  db_execute("UPDATE trackers_spamscore SET score=0
+              WHERE item_id=? AND comment_id=? AND artifact=? AND group_id=?",
+	     array($item_id, $comment_id, $tracker, $group_id));
   
+  if (!ctype_alnum($tracker))
+    die("Invalid tracker name: " . htmlspecialchars($tracker));
+
   # Update the item spamscore fields
   if ($comment_id)
     {
-      db_query("UPDATE ".$tracker."_history SET spamscore='0' WHERE bug_history_id='$comment_id' AND field_name='details' AND bug_id='$item_id'");
+      db_execute("UPDATE ".$tracker."_history SET spamscore=0
+                  WHERE bug_history_id=? AND field_name='details' AND bug_id=?",
+		 array($comment_id, $item_id));
     }
   else
     {
-      db_query("UPDATE $tracker SET spamscore='0' WHERE bug_id='$item_id' AND group_id='$group_id'");
+      db_execute("UPDATE $tracker SET spamscore=0
+                  WHERE bug_id=? AND group_id=?",
+		 array($item_id, $group_id));
     }
 
 }
@@ -188,12 +222,14 @@ function spam_get_user_score ($user_id=0, $set_by_user_id=0)
     { return 3; }      
 
   $set_by_user_id_sql = '';
-  if ($set_by_user_id)
-    $set_by_user_id_sql = " AND reporter_user_id='$set_by_user_id'";
+  if ($set_by_user_id) {
+    $set_by_user_id_sql = " AND reporter_user_id=?";
+    $set_by_user_id_params = array($set_by_user_id);
+  }
   
   # We cannot do a count because it does not allow us to use GROUP BY
   $userscore = 0;
-  $result = db_query("SELECT score FROM trackers_spamscore WHERE affected_user_id='$user_id' $set_by_user_id_sql GROUP BY reporter_user_id");
+  $result = db_execute("SELECT score FROM trackers_spamscore WHERE affected_user_id=? $set_by_user_id_sql GROUP BY reporter_user_id", array_merge(array($user_id), $set_by_user_id_params));
   while ($entry = db_fetch_array($result))
     {
       $userscore++;
@@ -205,7 +241,8 @@ function spam_get_user_score ($user_id=0, $set_by_user_id=0)
 # Return the total score of an item
 function spam_get_item_score ($item_id, $tracker, $comment_id)
 {
-  $result = db_query("SELECT score FROM trackers_spamscore WHERE item_id='$item_id' AND artifact='$tracker' AND comment_id='$comment_id'");
+  $result = db_execute("SELECT score FROM trackers_spamscore WHERE item_id=? AND artifact=? AND comment_id=?",
+		       array($item_id, $tracker, $comment_id));
   $newscore = 0;
   while ($entry = db_fetch_array($result))
     {
@@ -236,7 +273,13 @@ function spam_set_item_default_score ($item_id, $comment_id, $tracker, $score, $
   # affected user: we want to set the default score for the item, not to 
   # increment the user spamscore.
   # We mark the user as reporter, so it is clear where do come from the flag
-  db_query("INSERT INTO trackers_spamscore (score,reporter_user_id,artifact,item_id,comment_id) VALUES ('$score', '$user_id', '".$tracker."', '$item_id', '$comment_id')");
+  db_autoexecute('trackers_spamscore',
+		 array('score' => $score,
+		       'reporter_user_id' => $user_id,
+		       'artifact' => $tracker,
+		       'item_id' => $item_id,
+		       'comment_id' => $comment_id),
+		 DB_AUTOQUERY_INSERT);
   
   fb(sprintf(_("Spam score of your post set to %s"), $score), 1);
 
@@ -245,6 +288,9 @@ function spam_set_item_default_score ($item_id, $comment_id, $tracker, $score, $
 # Put an item or a comment in temporary queue
 function spam_add_to_spamcheck_queue ($item_id, $comment_id, $tracker, $group_id, $current_score)
 {
+  if (!ctype_alnum($tracker))
+    die("Invalid tracker name: " . htmlspecialchars($tracker));
+
   # Useless if already considered as spam
   if ($GLOBALS['int_probablyspam'])
     { return false; }
@@ -276,7 +322,8 @@ function spam_add_to_spamcheck_queue ($item_id, $comment_id, $tracker, $group_id
     { $priority++; }
 
   # Fill the queue
-  db_query("INSERT INTO trackers_spamcheck_queue (artifact,item_id,comment_id,priority,date) VALUES ('$tracker', '$item_id', '$comment_id', '$priority', '$date')");
+  db_execute("INSERT INTO trackers_spamcheck_queue (artifact,item_id,comment_id,priority,date) VALUES (?, ?, ?, ?, ?)",
+	     array($tracker, $item_id, $comment_id, $priority, $date));
 
   # We change only the item spamscore field, not the spamscore table:
   # it means that if any user unflag the item, it will be as if
@@ -285,11 +332,14 @@ function spam_add_to_spamcheck_queue ($item_id, $comment_id, $tracker, $group_id
   # can skip this spam queue check - members, etc)
   if ($comment_id)
     {
-      $result = db_query("UPDATE ".$tracker."_history SET spamscore='$newscore' WHERE bug_history_id='$comment_id' AND field_name='details' AND bug_id='$item_id'");
+      $result = db_execute("UPDATE ".$tracker."_history SET spamscore=?
+                            WHERE bug_history_id=? AND field_name='details' AND bug_id=?",
+			   array($newscore, $comment_id, $item_id));
     }
   else
     {
-      $result = db_query("UPDATE ".$tracker." SET spamscore='$newscore' WHERE bug_id='$item_id' AND group_id='$group_id'");
+      $result = db_execute("UPDATE ".$tracker." SET spamscore=? WHERE bug_id=? AND group_id=?",
+			   array($newscore, $item_id, $group_id));
     }
 
   if (db_affected_rows($result))
@@ -315,13 +365,17 @@ function spam_banip ($item_id, $comment_id, $tracker)
   # * content posted during the last 6 hours
   $since =  mktime((date("H")-6),date("i"));
 
+  if (!ctype_alnum($tracker))
+    die("Invalid tracker name: " . htmlspecialchars($tracker));
+
   if ($comment_id)
     {
-      $result = db_query("SELECT ip FROM ".$tracker."_history WHERE bug_history_id='$comment_id' AND field_name='details' AND bug_id='$item_id' AND mod_by='100' AND date>='$since' LIMIT 1");
+      $result = db_execute("SELECT ip FROM ".$tracker."_history WHERE bug_history_id=? AND field_name='details' AND bug_id=? AND mod_by='100' AND date>=? LIMIT 1", array($comment_id, $item_id, $since));
     }
   else
     {
-      $result = db_query("SELECT ip FROM ".$tracker." WHERE bug_id='$item_id' AND submitted_by='100' AND date>='$since' LIMIT 1");
+      $result = db_execute("SELECT ip FROM ".$tracker." WHERE bug_id=? AND submitted_by='100' AND date>=? LIMIT 1",
+			   array($item_id, $since));
     }
   
   $ip = db_result($result, 0, 'ip');
@@ -332,7 +386,10 @@ function spam_banip ($item_id, $comment_id, $tracker)
 
   # Now set up the ban
   $until =  mktime((date("H")+6),date("i"));
-  db_query("INSERT INTO trackers_spamban (ip,date) VALUES ('$ip', '$until')");
+  db_autoexecute('trackers_spamban',
+		 array('ip' => $ip,
+		       'date' => $until),
+		 DB_AUTOQUERY_INSERT);
   fb("Poster IP is banned for a few hours");
   return true;
 }
@@ -347,7 +404,7 @@ function spam_bancheck ()
 
   # Get db content
   $ip = $_SERVER['REMOTE_ADDR'];
-  $result = db_query("SELECT date FROM trackers_spamban WHERE ip='$ip'");
+  $result = db_execute("SELECT date FROM trackers_spamban WHERE ip=?", array($ip));
 
   # Return if not found
   if (!db_numrows($result))
@@ -363,6 +420,3 @@ function spam_bancheck ()
   # Finally, block here
   exit_error(_("Your IP address was banned for several hours due to spam reports incriminating it. In the meantime, if you log in, you can work around this ban. You should investigate about probable cause of spam reports incriminating your IP"));
 }
-
-
-?>

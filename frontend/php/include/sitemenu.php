@@ -23,6 +23,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/html.php');
 # search tools, frequently needed
 require_directory('search');
@@ -237,10 +240,12 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   # And it is hard to find a place elsewhere where it would not be really nasty
   $sql_role = '';
   $sql_groupid = '';
+  $params_groupid = array();
   if ($group_id)
     {
       # We are on a group page
-      $sql_groupid = "OR group_id='$group_id'"; 
+      $sql_groupid = "OR group_id=?"; 
+      $params_groupid = array($group_id);
     }
   if (defined('ARTIFACT') && AUDIENCE == 'members')
     {
@@ -274,9 +279,8 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   if (in_array('context_'.CONTEXT, $valid_contexts)
       and in_array('subcontext_'.SUBCONTEXT, $valid_contexts))
     {
-      $sql = "SELECT recipe_id FROM cookbook_context2recipe WHERE (group_id='$sys_group_id' $sql_groupid) AND context_".CONTEXT."='1' AND subcontext_".SUBCONTEXT."='1' AND (audience_".AUDIENCE."='1' $sql_role)";
-      
-      $result = db_query($sql);
+      $result = db_execute("SELECT recipe_id FROM cookbook_context2recipe WHERE (group_id=? $sql_groupid) AND context_".CONTEXT."='1' AND subcontext_".SUBCONTEXT."='1' AND (audience_".AUDIENCE."='1' $sql_role)",
+			   array_merge(array($sys_group_id), $params_groupid));
       $rows = db_numrows($result);
     }
   else
@@ -289,8 +293,9 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   $limit = 25;
   
   # Build a sql to obtain summaries
-  $sql_itemid = '';
   $sql_privateitem = '';
+  $sql_itemid = '';
+  $params_itemid = array();
   # Check whether the user is authorized to read private items for the active
   # project, if there is an active project
   if ($group_id)
@@ -305,13 +310,13 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
     {
       if ($sql_itemid)
 	{ $sql_itemid .= " OR "; }
-      $sql_itemid .= "bug_id='".db_result($result, $i, 'recipe_id')."'";
+      $sql_itemid .= "bug_id=?";
+      $params_itemid[] = db_result($result, $i, 'recipe_id');
     }
 
   $rows = 0;
   if ($sql_itemid) {
-    $sql = "SELECT bug_id,priority,summary FROM cookbook WHERE ($sql_itemid) AND resolution_id='1' $sql_privateitem ORDER BY priority DESC, summary ASC LIMIT $limit";
-    $result = db_query($sql);
+    $result = db_execute("SELECT bug_id,priority,summary FROM cookbook WHERE ($sql_itemid) AND resolution_id='1' $sql_privateitem ORDER BY priority DESC, summary ASC LIMIT ?", array_merge($params_itemid, array($limit)));
     $rows = db_numrows($result);
   }
 
