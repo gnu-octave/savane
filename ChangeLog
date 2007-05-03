@@ -1,3 +1,8 @@
+2007-04-30  Mathieu Roy
+
+	* backend/accounts/sv_membersh.in: in openssh v4, sftp-server is
+	in /usr/lib/openssh instead of /usr/lib
+
 2007-04-25  Sylvain Beucler  <beuc@beuc.net>
 
 	* frontend/php/include/session.php: Fix the cookies explicit

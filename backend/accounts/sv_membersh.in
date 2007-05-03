@@ -46,7 +46,7 @@ our $regexp_scp = "^(scp .*-t /upload)|(scp .*-t /var/ftp)";
 
 our $use_sftp = "0";
 our $bin_sftp = "sftp-server";
-our $regexp_sftp = "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server)";
+our $regexp_sftp = "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server|/usr/lib/openssh/sftp-server)";
 
 our $use_rsync = "0";
 our $bin_rsync = "rsync";
