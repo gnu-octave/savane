@@ -73,7 +73,7 @@ function db_query_escape()
     $args[$i] = mysql_real_escape_string($args[$i]);
 
   $query = call_user_func_array('sprintf', $args);
-  return mysql_query($query);
+  return db_query($query);
 }
 
 // Substitute '?' with one of the values in the $inputarr array,
@@ -203,23 +203,43 @@ function db_execute($sql, $inputarr=null)
 {
 #    echo a; # makes xdebug produce a stacktrace
   $expanded_sql = db_variable_binding($sql, $inputarr);
-#  print "<pre>[";
-#  print_r($expanded_sql);
-#  print "</pre>]";
-  return mysql_query($expanded_sql);
+  return db_query($expanded_sql);
 }
 
 function db_query($qstring,$print=0) 
 {
-#    echo a; # makes xdebug produce a stacktrace
-  #	global $QUERY_COUNT;
-  #	$QUERY_COUNT++;
-  if ($print) print "<br />Query is: $qstring<br />";
-  #	if ($GLOBALS[IS_DEBUG]) $GLOBALS[G_DEBUGQUERY] .= $qstring . "<BR>\n";
+  // echo a; // makes xdebug produce a stacktrace
+
+  // Store query for recap display
+  if ($GLOBALS['sys_debug_on']) {
+    $GLOBALS['debug_query_count']++;
+    $backtrace = debug_backtrace();
+    $outside = null;
+    foreach ($backtrace as $step) {
+      if ($step['file'] != __FILE__) {
+	$outside = $step;
+	break;
+      }
+    }
+    // strip installation prefix
+    $relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '', $outside['file']);
+    $location = "$relative_path:{$outside['line']}";
+    array_push($GLOBALS['debug_queries'], array($qstring, $location));
+  }
+
+  if ($print)
+    {
+      print "<pre>[";
+      print_r($qstring);
+      print "</pre>]";
+    }
+
   $GLOBALS['db_qhandle'] = mysql_query($qstring);
   if (!$GLOBALS['db_qhandle']) {
     // throw new Exception('db_query: SQL query error in ['.$qstring.']: ' . mysql_error());
-    die('db_query: SQL query error in [' . htmlspecialchars($qstring) . ']: ' . mysql_error());
+    die('db_query: SQL query error in ['
+	. htmlspecialchars($qstring) . ']: '
+	. mysql_error());
   }
   return $GLOBALS['db_qhandle'];
 }

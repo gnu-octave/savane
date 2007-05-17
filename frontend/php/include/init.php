@@ -120,6 +120,40 @@ else
   $sys_https_url = 'http://'.$GLOBALS['sys_default_domain'];
 }
 
+
+// Debug initialization
+if ($sys_debug_on == true) {
+  // Initialize the variable (avoid later warnings)
+  $GLOBALS['debug'] = '';
+  $GLOBALS['debug_query_count'] = 0;
+  $GLOBALS['debug_queries'] = array();
+
+  function debug_dump() {
+    print '<pre>';
+    print '<hr />';
+    print utils_size_readable(memory_get_usage(false)) . '/' . utils_size_readable(memory_get_peak_usage(false))
+      . ' now/peak memory usage<br />';
+    print utils_size_readable(memory_get_usage(true))  . '/' . utils_size_readable(memory_get_peak_usage(true))
+      . ' now/peak real memory usage<br />';
+    print '<hr />';
+
+    // SQL queries counter:
+    print "{$GLOBALS['debug_query_count']} database queries used:<br/>";
+    foreach($GLOBALS['debug_queries'] as $query_data) {
+      list($query, $location) = $query_data;
+      print "$query [$location]<br />";
+    }
+    print '<hr />';
+
+    // All debug messages:
+    if ($GLOBALS['debug'])
+      print 'DEBUG information:<br />'.$GLOBALS['debug'];
+    print '</pre>';
+  }
+  register_shutdown_function("debug_dump");
+}
+
+
 # require_directory
 # sources (requires) all specific include files of a module from
 # the include area (all include files of a module are arranged

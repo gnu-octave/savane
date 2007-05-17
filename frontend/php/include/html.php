@@ -325,10 +325,6 @@ function html_feedback_top()
   if ($GLOBALS['ffeedback'] && $GLOBALS['feedback'])
     {  print '<div id="feedback" class="feedbackerrorandsuccess" '.$script_hide.'><span class="feedbackerrorandsuccesstitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" class="feedbackimage" alt="'._("Some Errors").'" /> '._("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.$GLOBALS['ffeedback'].'</div>'; }
 
-  if ($GLOBALS['sys_debug_on'] && $GLOBALS['debug'])
-    {  print '<div class="debug">DEBUG information: '.$GLOBALS['debug'].'</div>'; }
-
-
   # We empty feedback so there will be a bottom feedback only if something
   # changed. It may confuse users, however I would find more confusing to
   # have two lookalike feedback information providing most of the time the
@@ -336,7 +332,6 @@ function html_feedback_top()
   # in the second one.
   $GLOBALS['feedback'] = '';
   $GLOBALS['ffeedback'] = '';
-  $GLOBALS['debug'] = '';
 }
 
 ##

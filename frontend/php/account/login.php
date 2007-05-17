@@ -259,4 +259,3 @@ print '<div class="center"><input type="submit" name="login" value="'._("Login")
 print '</form>';
 
 $HTML->footer(array());
-print_r($_COOKIE);

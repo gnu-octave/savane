@@ -1,3 +1,8 @@
+2007-05-13  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/include/init.php: Grouped debug output at the
+	bottom of the page, in a more concise format.
+
 2007-04-30  Mathieu Roy
 
 	* backend/accounts/sv_membersh.in: in openssh v4, sftp-server is
@@ -26,7 +31,7 @@
 
 2007-04-09  Mathieu Roy
 	
-	* backend/misc/sv_spamcheck_scholar.in: gix bug causing spamcheck
+	* backend/misc/sv_spamcheck_scholar.in: fix bug causing spamcheck
 	scholar to use --ham instead of --spam (bug #8897).
 
 2007-04-09  Sylvain Beucler  <beuc@beuc.net>
