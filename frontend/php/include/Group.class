@@ -297,7 +297,7 @@ class Group extends Error
       # And it can be justified anyway to keep a value entered already.
       # The best would be the software to list conflicting cases to sysadmin.
       if (empty($this->data_array['url_'.$artifact]))
-	{ return $GLOBALS['sys_home'].$artifact.'/?group='.sane_all("group_name"); }
+	{ return $GLOBALS['sys_home'].$artifact.'/?group='.$this->getUnixName(); }
       else 
 	{ return $this->data_array['url_'.$artifact]; }
     }
@@ -666,11 +666,11 @@ function group_get_artifact_url ($artifact, $hostname=1)
 	  else 
 	    { $host = $_SERVER['HTTP_HOST']; }
 	  
-	  return "http://".$host.$GLOBALS['sys_home'].$artifact.'/?group='.sane_all("group_name");
+	  return "http://".$host.$GLOBALS['sys_home'].$artifact.'/?group='.$GLOBALS['project']->getUnixName();
 	}
       else
 	{
-	  return $GLOBALS['sys_home'].$artifact.'/?group='.sane_all("group_name");
+	  return $GLOBALS['sys_home'].$artifact.'/?group='.$GLOBALS['project']->getUnixName();
 	}
     }
 

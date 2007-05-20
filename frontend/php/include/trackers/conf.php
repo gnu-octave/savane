@@ -1,4 +1,5 @@
 <?php
+# Functions related to trackers configuration
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -21,6 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 # This page should store function related to trackers configuration
 # (some of these are in general/data and should be moved here)
@@ -39,6 +42,9 @@
 # writing the smartest code, so we still have a chance)
 function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 {
+  if (!ctype_alnum($artifact))
+    die("Invalid artifact name: " . htmlspecialchars($artifact));
+
   if (!$artifact || !$group_id || !$from_group_id)
     {
       # case that should never happen
@@ -50,48 +56,41 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 	     $artifact));
 
 # Copy the notification settings
-  $res_groups_from_group = db_query("SELECT * FROM groups WHERE group_id='$from_group_id'");
-  $sql = "UPDATE groups SET ".
-     "new_".$artifact."_address='".db_result($res_groups_from_group,
-					     0,
-					     "new_".$artifact."_address")."', ".
-     $artifact."_glnotif='".db_result($res_groups_from_group,
-				      0,
-				      $artifact."_glnotif")."', ".
-     "send_all_".$artifact."='".db_result($res_groups_from_group,
-					  0,
-					  "send_all_".$artifact)."', ".
-     $artifact."_private_exclude_address='".db_result($res_groups_from_group,
-						       0,
-						       $artifact."_private_excluded_address")."' ".
-     "WHERE group_id='$group_id'";
+  $res_groups_from_group = db_execute("SELECT * FROM groups WHERE group_id=?", array($from_group_id));
+  $rows = db_fetch_array($res_groups_from_group);
+  $res = db_autoexecute('groups',
+			array("new_$artifact_address" => $rows["new_{$artifact}_address"],
+			      "$artifact_glnotif" => $rows["{$artifact}_glnotif"],
+			      "send_all_$artifact" => $rows["send_all_{$artifact}"],
+			      "$artifact_private_exclude_address" => $rows["{$artifact}_private_excluded_address"]),
+			DB_AUTOQUERY_UPDATE,
+			"WHERE group_id=?", array($group_id));
 
-  if (db_affected_rows(db_query($sql)))
+  if (db_affected_rows($res))
     {  fb(_("Notification settings copied")); }
 
   # Delete currently set field usage and field values
   # Copy the field usage and field values of the other project
-  $sql = "DELETE FROM ".$artifact."_field_value WHERE group_id='$group_id'";
-  if (db_affected_rows(db_query($sql)))
+  if (db_affected_rows(db_execute("DELETE FROM {$artifact}_field_value WHERE group_id = ?", array($group_id))))
     {  fb(_("Previous field values deleted")); }
-  $sql = "DELETE FROM ".$artifact."_field_usage WHERE group_id='$group_id'";
-  if (db_affected_rows(db_query($sql)))
+  if (db_affected_rows(db_execute("DELETE FROM {$artifact}_field_usage WHERE group_id = ?", array($group_id))))
     {  fb(_("Previous field usage deleted")); }
 
-  $result_field_usage_from_group = db_query("SELECT * FROM ".$artifact."_field_usage WHERE group_id='$from_group_id'");
+  $result_field_usage_from_group = db_execute("SELECT * FROM {$artifact}_field_usage WHERE group_id=?",
+					      array($from_group_id));
   $z = 0;
   unset($itemsdone);
   while ($thisone = db_fetch_array($result_field_usage_from_group))
       {
 
-	$sql = db_createinsertinto($result_field_usage_from_group,
+	$res = db_createinsertinto($result_field_usage_from_group,
 				   $artifact."_field_usage",
 				   $z,
 				   "none",
 				   "group_id",
 				   $group_id);
 
-        if (db_affected_rows(db_query($sql)))
+        if (db_affected_rows($res))
 	  {  $itemsdone .= "#".$thisone['bug_field_id']." "; }
 
 	$z++;
@@ -100,20 +99,21 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
     { fb(sprintf(_("Field values %s copied"), $itemsdone)); }
 
 
-  $result_field_value_from_group = db_query("SELECT * FROM ".$artifact."_field_value WHERE group_id='$from_group_id'");
+  $result_field_value_from_group = db_execute("SELECT * FROM ".$artifact."_field_value WHERE group_id=?",
+					      array($from_group_id));
   $z = 0;
   unset($itemsdone);
   while ($thisone = db_fetch_array($result_field_value_from_group))
       {
 
-	$sql = db_createinsertinto($result_field_value_from_group,
+	$res = db_createinsertinto($result_field_value_from_group,
 				   $artifact."_field_value",
 				   $z,
 				   "bug_fv_id",
 				   "group_id",
 				   $group_id);
 
-        if (db_affected_rows(db_query($sql)))
+        if (db_affected_rows($res))
 	  {  $itemsdone .= "#".$thisone['bug_fv_id']." "; }
 
 	$z++;
@@ -124,24 +124,25 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 
   # Delete currently set canned responses
   # Copy the canned responses of the other project
-  $sql = "DELETE FROM ".$artifact."_canned_responses WHERE group_id='$group_id'";
-  if (db_affected_rows(db_query($sql)))
+  if (db_affected_rows(db_execute("DELETE FROM ".$artifact."_canned_responses WHERE group_id=?",
+				  array($group_id))))
     {  fb(_("Previous canned responses deleted")); }
 
-  $result_canned_from_group = db_query("SELECT * FROM ".$artifact."_canned_responses WHERE group_id='$from_group_id'");
+  $result_canned_from_group = db_execute("SELECT * FROM ".$artifact."_canned_responses WHERE group_id=?",
+					 array($from_group_id));
   $z = 0;
   unset($itemsdone);
   while ($thisone = db_fetch_array($result_canned_from_group))
       {
 
-	$sql = db_createinsertinto($result_canned_from_group,
+	$res = db_createinsertinto($result_canned_from_group,
 				   $artifact."_canned_responses",
 				   $z,
 				   "bug_canned_id",
 				   "group_id",
 				   $group_id);
 
-        if (db_affected_rows(db_query($sql)))
+        if (db_affected_rows($res))
 	  {  $itemsdone .= "#".$thisone['bug_canned_id']." "; }
 
 	$z++;
@@ -151,49 +152,50 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 
   # Delete currently set query forms
   # Copy the query forms of the other project
-  $res_queryforms = db_query("SELECT * FROM ".$artifact."_report WHERE group_id='$group_id'");
-  $sql = "DELETE FROM ".$artifact."_report WHERE group_id='$group_id'";
-  if (db_affected_rows(db_query($sql)))
+  $res_queryforms = db_execute("SELECT * FROM ".$artifact."_report WHERE group_id=?",
+			       array($group_id));
+  if (db_affected_rows(db_execute("DELETE FROM ".$artifact."_report WHERE group_id=?",
+				  array($group_id))))
     {  fb(_("Previous query forms deleted")); }
   while ($thisone = db_fetch_array($res_queryforms))
     {
       # Not verbose
-      db_query("DELETE FROM ".$artifact."_report_field WHERE report_id='".$thisone['report_id']."'");
+      db_execute("DELETE FROM ".$artifact."_report_field WHERE report_id=?",
+		 array($thisone['report_id']));
     }
 
-  $result_queryforms_from_group = db_query("SELECT * FROM ".$artifact."_report WHERE group_id='$from_group_id'");
+  $result_queryforms_from_group = db_execute("SELECT * FROM ".$artifact."_report WHERE group_id=?",
+					     array($from_group_id));
   $z = 0;
   unset($itemsdone);
   while ($thisone = db_fetch_array($result_queryforms_from_group))
       {
 	# Copy the report
-	$sql = db_createinsertinto($result_queryforms_from_group,
+	$res = db_createinsertinto($result_queryforms_from_group,
 				   $artifact."_report",
 				   $z,
 				   "report_id",
 				   "group_id",
 				   $group_id);
-	$thisone_id = db_insertid(db_query($sql));
+	$thisone_id = db_insertid($res);
         if ($thisone_id)
 	  {
 	    $itemsdone .= "#".$thisone['report_id']." ";
 
             # Copy the info related to the report in report_field
-	    $result_thisqueryforms_from_group = db_query("SELECT * FROM ".$artifact."_report_field WHERE report_id='".$thisone['report_id']."'");
+	    $result_thisqueryforms_from_group = db_execute("SELECT * FROM ".$artifact."_report_field WHERE report_id=?",
+							   array($thisone['report_id']));
 	    $y = 0;
 	    while ($thisonequery = db_fetch_array($result_thisqueryforms_from_group))
 	      {
-		$sql = db_createinsertinto($result_thisqueryforms_from_group,
-					   $artifact."_report_field",
-					   $y,
-					   "none",
-					   "report_id",
-					   $thisone_id);
-
 		# Silent: if we list even these insert, the feedback will
 		# be unreadable, too long
-		db_query($sql);
-
+		db_createinsertinto($result_thisqueryforms_from_group,
+				    $artifact."_report_field",
+				    $y,
+				    "none",
+				    "report_id",
+				    $thisone_id);
 		$y++;
 	      }
 
@@ -207,49 +209,50 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 
   # Delete current set transitions
   # Copy the transition of the other project
-  $res_transitions= db_query("SELECT * FROM trackers_field_transition WHERE group_id='$group_id' AND artifact='$artifact'");
-  $sql = "DELETE FROM trackers_field_transition WHERE group_id='$group_id' AND artifact='$artifact'";
-  if (db_affected_rows(db_query($sql)))
+  $res_transitions= db_execute("SELECT * FROM trackers_field_transition WHERE group_id=? AND artifact=?",
+			       array($group_id, $artifact));
+  if (db_affected_rows(db_execute("DELETE FROM trackers_field_transition WHERE group_id=? AND artifact=?",
+				  array($group_id, $artifact))))
     {  fb(_("Previous field transitions deleted")); }
   while ($thisone = db_fetch_array($res_transitions))
     {
       # Not verbose
-      db_query("DELETE FROM trackers_field_transition_other_field_update WHERE transition_id='".$thisone['transition_id']."'");
+      db_execute("DELETE FROM trackers_field_transition_other_field_update WHERE transition_id=?",
+		 array($thisone['transition_id']));
     }
 
-  $result_transitions_from_group = db_query("SELECT * FROM trackers_field_transition WHERE artifcat='$artifact' AND group_id='$from_group_id'");
+  $result_transitions_from_group = db_execute("SELECT * FROM trackers_field_transition WHERE artifcat=? AND group_id=?",
+					      array($artifact, $from_group_id));
   $z = 0;
   unset($itemsdone);
   while ($thisone = db_fetch_array($result_transitions_from_group))
       {
 	# Copy the report
-	$sql = db_createinsertinto($result_transitions_from_group,
+	$res = db_createinsertinto($result_transitions_from_group,
 				   "trackers_field_transition",
 				   $z,
 				   "transition_id",
 				   "group_id",
 				   $group_id);
-	$thisone_id = db_insertid(db_query($sql));
+	$thisone_id = db_insertid($res);
         if ($thisone_id)
 	  {
 	    $itemsdone .= "#".$thisone['transition_id']." ";
 
             # Copy the info related to the report in report_field
-	    $result_thistransitions_from_group = db_query("SELECT * FROM trackers_field_transition_other_field_update  WHERE transition_id='".$thisone['transition_id']."'");
+	    $result_thistransitions_from_group = db_execute("SELECT * FROM trackers_field_transition_other_field_update
+              WHERE transition_id=?", array($thisone['transition_id']));
 	    $y = 0;
 	    while ($thisonequery = db_fetch_array($result_thistransitions_from_group))
 	      {
-		$sql = db_createinsertinto($result_thistransitions_from_group,
-					   "trackers_field_transition_other_field_update",
-					   $y,
-					   "other_field_update_id",
-					   "report_id",
-					   $thisone_id);
-
 		# Silent: if we list even these insert, the feedback will
 		# be unreadable, too long
-		db_query($sql);
-
+		db_createinsertinto($result_thistransitions_from_group,
+				    "trackers_field_transition_other_field_update",
+				    $y,
+				    "other_field_update_id",
+				    "report_id",
+				    $thisone_id);
 		$y++;
 	      }
 
@@ -270,14 +273,16 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 
 function conf_form ($group_id, $artifact)
 {
+  if (!ctype_alnum($artifact))
+    die("Invalid artifact name: " . htmlspecialchars($artifact));
 
-  $result = db_query("SELECT groups.group_name,"
-		     . "groups.group_id "
-		     . "FROM groups,user_group "
-		     . "WHERE groups.group_id=user_group.group_id "
-		     . "AND user_group.user_id='". user_getid() ."' "
-		     . "AND groups.status='A' "
-		     . "AND groups.use_".$artifact."='1'");
+  $result = db_execute("SELECT groups.group_name,groups.group_id
+		       FROM groups,user_group
+		       WHERE groups.group_id=user_group.group_id
+		         AND user_group.user_id = ?
+		         AND groups.status = 'A'
+		         AND groups.use_{$artifact} = '1'",
+		       array(user_getid()));
 
   $vals = array();
   $texts = array();
@@ -313,5 +318,3 @@ function conf_form ($group_id, $artifact)
     }
 
 }
-
-?>

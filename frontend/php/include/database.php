@@ -110,12 +110,20 @@ function db_variable_binding($sql, $inputarr=null) {
 	$sql_expanded .= $v;
       $i += 1;
     }
+
+    $match = true;
     if (isset($sql_exploded[$i])) {
       $sql_expanded .= $sql_exploded[$i];
       if ($i+1 != sizeof($sql_exploded))
-	exit("db_variable_binding: input array does not match query: ".htmlspecialchars($sql));
+	$match = false;
     } else {
-      exit("db_variable_binding: input array does not match query: ".htmlspecialchars($sql));
+      $match = false;
+    }
+    if (!$match) {
+      exit("db_variable_binding: input array does not match query: <pre>"
+	   .htmlspecialchars($sql)
+	   ."<br />"
+	   .print_r($inputarr, true));
     }
   }
   return $sql_expanded;
@@ -309,37 +317,31 @@ function db_error()
 # field + replacing another field value (like group_id)
 function db_createinsertinto ($result, $table, $row, $autoincrement_fieldname, $replace_fieldname='zxry', $replace_value='axa')
 {
-  unset($fields,$values);
+  $fields = array();
   for ($i = 0; $i < db_numfields($result); $i++) 
     { 
       $fieldname = db_fieldname($result, $i);
-      # Create the sql by ignoring the autoincremental id
+      // Create the sql by ignoring the autoincremental id
       if ($fieldname != $autoincrement_fieldname)
+	{
+	  // If the value is empty
+	  if (db_result($result, $row, $fieldname) != NULL)
 	    {
-	      # If the value is empty
-	      if (db_result($result, $row, $fieldname) != NULL)
+	      // Replace another field
+	      if ($fieldname == $replace_fieldname)
 		{
-		  
-		  if ($fields)
-		    { 
-		      $fields .= ",";
-		      $values .= ",";
-		    }
-
-		  $fields .= $fieldname; 
-                  # Replace another field
-		  if ($fieldname == $replace_fieldname)
-		    {
-		      $values .= "'".mysql_real_escape_string($replace_value)."'";
+		  $fields[$fieldname] = $replace_value;
 		}
-		  else
-		    { $values .= "'".mysql_real_escape_string(db_result($result, $row, $fieldname))."'"; }
+	      else
+		{
+		  $fields[$fieldname] = db_result($result, $row, $fieldname);
 		}
 	    }
+	    }
     }
-  # No fields? Ignore
-  if (!$fields)
+  // No fields? Ignore
+  if (count($fields) == 0)
     { return 0; }
 
-  return "INSERT INTO ".$table." ($fields) VALUES ($values)";
-}	
+  return db_autoexecute($table, $fields, DB_AUTOQUERY_INSERT);
+}

@@ -21,16 +21,18 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 # Get an array of fields that should be updated on field transitions
 function trackers_transition_get_update($group_id)
 {
   $field_transition = array();
-  $field_transition_sql = "SELECT transition_id,field_id,from_value_id,to_value_id,is_allowed,notification_list ".
-     "FROM trackers_field_transition ".
-     "WHERE group_id='".$group_id."' AND artifact='".ARTIFACT."' ";
-  
-  $field_transition_result = db_query($field_transition_sql);
+  $field_transition_result = db_execute(
+    "SELECT transition_id,field_id,from_value_id,to_value_id,is_allowed,notification_list
+     FROM trackers_field_transition
+     WHERE group_id=? AND artifact=?",
+    array($group_id, ARTIFACT));
   if ($field_transition_result && db_numrows($field_transition_result) > 0) 
     {
       while ($this_transition = db_fetch_array($field_transition_result)) 
@@ -64,7 +66,10 @@ function trackers_transition_get_update($group_id)
 # No such transition, no update planned? Return false
 function trackers_transition_get_other_field_update ($transition_id)
 {
-  $result = db_query("SELECT update_field_name,update_value_id FROM trackers_field_transition_other_field_update WHERE transition_id='".$transition_id."'");
+  $result = db_execute("SELECT update_field_name,update_value_id
+      FROM trackers_field_transition_other_field_update
+      WHERE transition_id=?",
+    array($transition_id));
   if (!db_numrows($result))
     { return false; }
 
@@ -82,7 +87,9 @@ function trackers_transition_update_other_field ($transition_id, $field_name, $v
     {
       # We do not set LIMIT 1: if there were several entries for the same transition and 
       # field name, it was a bug anyway.
-      if (db_affected_rows(db_query("DELETE FROM trackers_field_transition_other_field_update WHERE transition_id='$transition_id' AND update_field_name='$field_name'")) > 0)
+      if (db_affected_rows(db_execute("DELETE FROM trackers_field_transition_other_field_update
+              WHERE transition_id=? AND update_field_name=?",
+            array($transition_id, $field_name))) > 0)
 	{ 
 	  fb(_("Other Field update deleted")); 
 	  return true;
@@ -95,18 +102,29 @@ function trackers_transition_update_other_field ($transition_id, $field_name, $v
       fb("other $transition_id, $field_name, $value_id", 1);
   # Otherwise, we first check if there is such "other field update configured" and do
   # INSERT or UPDATE accordingly
-  $id = db_result(db_query("SELECT other_field_update_id FROM trackers_field_transition_other_field_update WHERE transition_id='$transition_id' AND update_field_name='$field_name' LIMIT 1"),
-		  0,
-		  'other_field_update_id');
+  $id = db_result(db_execute(
+      "SELECT other_field_update_id FROM trackers_field_transition_other_field_update
+       WHERE transition_id=? AND update_field_name=? LIMIT 1",
+      array($transition_id, $field_name)),
+    0,
+    'other_field_update_id');
   if ($id)
     { 
-      $sql = "UPDATE trackers_field_transition_other_field_update SET update_value_id='$value_id' WHERE other_field_update_id='$id'";
+      $sql_res = db_execute(
+	"UPDATE trackers_field_transition_other_field_update
+         SET update_value_id=? WHERE other_field_update_id=?",
+	array($value_id, $id));
     }
   else
     {
-      $sql = "INSERT INTO trackers_field_transition_other_field_update (transition_id,update_field_name,update_value_id) VALUES ('$transition_id','$field_name','$value_id')";
+      $sql_res = db_autoexecute('trackers_field_transition_other_field_update',
+        array (
+	  'transition_id' => $transition_id,
+	  'update_field_name' => $field_name,
+	  'update_value_id' => $value_id
+        ), DB_AUTOQUERY_INSERT);
     }
-  if (db_affected_rows(db_query($sql)))
+  if (db_affected_rows($sql_res))
     { 
       fb_dbsuccess(); 
       return true;
@@ -164,7 +182,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array, $chang
 	}
 
       # Now update fields
-      unset($upd_list);
+      $upd_list = array();
       $exists = false;
       while (list($field,$value) = each($toupdate))
 	{
@@ -180,7 +198,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array, $chang
 		{
 		  fb(sprintf(_("Automatic update of %s due to transitions settings"),trackers_data_get_label($field)));
 		}
-	      $upd_list .= "$field='$value',";
+	      $upd_list[$field] = $value;
 	      $exists = true;
 	    }
 	}
@@ -188,14 +206,10 @@ function trackers_transition_update_item ($item_id, $transition_id_array, $chang
       if ($exists)
 	{
 	  # Update database silently, we may have no rows to update
-	  db_query("UPDATE ".ARTIFACT." SET ".trim($upd_list, ",")." WHERE bug_id='$item_id'");
-	  
+	  db_autoexecute(ARTIFACT, $upd_list, DB_AUTOQUERY_UPDATE,
+			 "WHERE bug_id=?", array($item_id));
 	}
-	  
-
     }
 
   return true;
 }
-
-?>

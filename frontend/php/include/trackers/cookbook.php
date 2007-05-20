@@ -20,6 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 ##
 # This will return an array of possible values, like
 #      anonymous, logged-in...
@@ -157,7 +160,8 @@ function cookbook_build_form ($which="audience")
   # and we want to previous results from the database
   if ($item_id)
     {
-      $result = db_query("SELECT * FROM cookbook_context2recipe WHERE recipe_id='$item_id' AND group_id='$group_id' LIMIT 1");
+      $result = db_execute("SELECT * FROM cookbook_context2recipe WHERE recipe_id=? AND group_id=? LIMIT 1",
+			   array($item_id, $group_id));
     }
 
   unset($content);
@@ -173,7 +177,7 @@ function cookbook_build_form ($which="audience")
       # was reprovided to the user because he forgot mandatory fields
       if ($previous_form_bad_fields)
 	{
-	  if (sane_post("recipe_".$which."_".$field) == true)
+	  if ($_POST["recipe_".$which."_".$field] == true)
 	    { $checked = ' checked="checked"'; }
 	  else
 	    { unset($checked); }
@@ -283,7 +287,7 @@ function cookbook_handle_update($item_id, $group_id)
   global $change_exists;
 
   ## Pass thru all the available/configurable fields
-  unset($cookbook_upd_list);
+  $cookbook_upd_list = array();
 
   # Find out the targetted audience
   $audience_cases = array();
@@ -291,9 +295,9 @@ function cookbook_handle_update($item_id, $group_id)
   while(list($field,) = each($possiblevalues))
     {
       $value = 0;
-      if (sane_post("recipe_audience_".$field))
+      if ($_POST["recipe_audience_".$field])
 	{ $value = 1; }
-      $cookbook_upd_list .= "audience_$field='$value',";
+      $cookbook_upd_list["audience_$field"] = $value;
     }
 
   # Find out the targetted context (feature)
@@ -302,9 +306,9 @@ function cookbook_handle_update($item_id, $group_id)
   while(list($field,) = each($possiblevalues))
     {
       $value = 0;
-      if (sane_post("recipe_context_".$field))
+      if ($_POST["recipe_context_".$field])
 	{ $value = 1; }
-      $cookbook_upd_list .= "context_$field='$value',";
+      $cookbook_upd_list["context_$field"] = $value;
     }
 
 
@@ -314,22 +318,27 @@ function cookbook_handle_update($item_id, $group_id)
   while(list($field,) = each($possiblevalues))
     {
       $value = 0;
-      if (sane_post("recipe_subcontext_".$field))
+      if ($_POST["recipe_subcontext_".$field])
 	{ $value = 1; }
-      $cookbook_upd_list .= "subcontext_$field='$value',";
+      $cookbook_upd_list["subcontext_$field"] = $value;
     }
 
   # Create from scratch a row, to be able to do a simple update afterwards
-  if (!db_numrows(db_query("SELECT context_id FROM cookbook_context2recipe WHERE recipe_id='$item_id' AND group_id='$group_id' LIMIT 1")))
+  if (!db_numrows(db_execute("SELECT context_id FROM cookbook_context2recipe WHERE recipe_id=? AND group_id=? LIMIT 1",
+			     array($item_id, $group_id))))
     {
-      db_query("INSERT INTO cookbook_context2recipe (recipe_id,group_id) VALUES ('$item_id','$group_id')");
+      db_autoexecute('cookbook_context2recipe',
+		     array('recipe_id' => $item_id,
+			   'group_id' => $group_id),
+		     DB_AUTOQUERY_INSERT);
     }
 
   # Now do an update
-  $cookbook_upd_list = rtrim($cookbook_upd_list, ",");
-  $sql="UPDATE cookbook_context2recipe SET $cookbook_upd_list ".
-    " WHERE recipe_id='$item_id' AND group_id='$group_id'";
-  $result=db_affected_rows(db_query($sql));
+  $result = db_affected_rows(db_autoexecute('cookbook_context2recipe',
+					    $cookbook_upd_list,
+					    DB_AUTOQUERY_UPDATE,
+					    "WHERE recipe_id=? AND group_id=?",
+					    array($item_id, $group_id)));
 
   # If there was affected rows, it means we did an update
   # (ignoring the very unusual case where the SQL would fail)
@@ -344,6 +353,3 @@ function cookbook_handle_update($item_id, $group_id)
 
     }
 }
-
-
-?>

@@ -20,13 +20,16 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # Count the remaining votes of a given user
 function trackers_votes_user_remains_count ($user_id)
 {
   $total = 100;
   
-  $sql = "SELECT howmuch FROM user_votes WHERE user_id='$user_id'";
-  $result = db_query($sql);
+  $result = db_execute("SELECT howmuch FROM user_votes WHERE user_id = ?",
+		       array($user_id));
 
   if (db_numrows($result)) 
     {
@@ -51,8 +54,8 @@ function trackers_votes_user_giventoitem_count ($user_id, $tracker, $item_id)
 {
   $total = 0;
   
-  $sql = "SELECT howmuch FROM user_votes WHERE user_id='$user_id' AND tracker='$tracker' AND item_id='$item_id' LIMIT 1";
-  $result = db_query($sql);
+  $result = db_execute("SELECT howmuch FROM user_votes WHERE user_id=? AND tracker=? AND item_id=? LIMIT 1",
+		       array($user_id, $tracker, $item_id));
 
   if (db_numrows($result)) 
     {
@@ -73,6 +76,9 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
       return false;
     }
 
+  if (!ctype_alnum($tracker))
+    die("Invalid tracker name: " . htmlspecialchars($tracker));
+
   # If the tracker is undefined, use the constant,
   if (!$tracker)
     {
@@ -82,7 +88,8 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
   # If group_id is not known, we guess it
   if (!$group_id)
     {
-      $res_getgroupid = db_query("SELECT group_id FROM ".$tracker." WHERE bug_id='$item_id'");
+      $res_getgroupid = db_execute("SELECT group_id FROM ".$tracker." WHERE bug_id=?",
+				   array($item_id));
       $group_id = db_result($res_getgroupid, 0, 'group_id');
     }
   
@@ -96,10 +103,13 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
       $registered_vote = trackers_votes_user_giventoitem_count(user_getid(), $tracker, $item_id);
       if ($registered_vote)
 	{
-	  db_query("DELETE FROM user_votes WHERE user_id='".user_getid()."' AND tracker='".$tracker."' AND item_id='$item_id' LIMIT 1");
-	  $res_get = db_query("SELECT vote FROM ".$tracker." WHERE bug_id='$item_id' AND group_id='$group_id'");
+	  db_execute("DELETE FROM user_votes WHERE user_id=? AND tracker=? AND item_id=? LIMIT 1",
+		     array(user_getid(), $tracker, $item_id));
+	  $res_get = db_execute("SELECT vote FROM ".$tracker." WHERE bug_id=? AND group_id=?",
+				array($item_id, $group_id));
 	  $real_new_vote = db_result($res_get, 0, 'vote') - $registered_vote;
-	  db_query("UPDATE ".$tracker." SET vote='$real_new_vote' WHERE bug_id='$item_id' AND group_id='$group_id'");
+	  db_execute("UPDATE ".$tracker." SET vote=? WHERE bug_id=? AND group_id=?",
+		     array($real_new_vote, $item_id, $group_id));
 	  
 	  fb(_("Vote erased"));
 	}
@@ -133,9 +143,13 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
       # in the user_votes table
       if (!$registered_vote)
 	{
-	  $sql = "INSERT INTO user_votes ".
-	    "(user_id,tracker,item_id,howmuch) ".
-	    "VALUES ('".user_getid()."','".$tracker."','$item_id','$new_vote')";	  
+	  $res_insert = db_autoexecute('user_votes',
+            array(
+ 	      'user_id' => user_getid(),
+              'tracker' => $tracker,
+	      'item_id' => $item_id,
+	      'howmuch' => $new_vote
+            ), DB_AUTOQUERY_INSERT);	  
 
           # Add in CC
           # workaround for stupid function that require a 
@@ -148,10 +162,11 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
 	}
       else
 	{
-	  $sql = "UPDATE user_votes SET howmuch='$new_vote' WHERE ".
-	    "user_id='".user_getid()."' AND tracker='".$tracker."' AND item_id='$item_id'";	  
+	  $res_insert = db_execute("UPDATE user_votes SET howmuch=?
+              WHERE user_id=? AND tracker=? AND item_id=?",
+	    array($new_vote, user_getid(), $tracker, $item_id));
 	}
-      $res_insert = db_query($sql);
+
       if (db_affected_rows($res_insert) < 1)
 	{ 
 	  # In case of problem, kept unmodified the item proper info
@@ -160,9 +175,11 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
 	}
       
       # Add the new vote to the item proper info table
-      $res_get = db_query("SELECT vote FROM ".$tracker." WHERE bug_id='$item_id' AND group_id='$group_id'");
+      $res_get = db_execute("SELECT vote FROM ".$tracker." WHERE bug_id=? AND group_id=?",
+			    array($item_id, $group_id));
       $real_new_vote = db_result($res_get, 0, 'vote') + $diff_vote;
-      $res_update = db_query("UPDATE ".$tracker." SET vote='$real_new_vote' WHERE bug_id='$item_id' AND group_id='$group_id'");
+      $res_update = db_execute("UPDATE ".$tracker." SET vote=? WHERE bug_id=? AND group_id=?",
+			       array($real_new_vote, $item_id, $group_id));
       if (db_affected_rows($res_update) < 1)
 	{ 
 	  # In case of problem, kept unmodified the item proper info
@@ -177,5 +194,3 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
       return true;
     }
 }
-
-?>

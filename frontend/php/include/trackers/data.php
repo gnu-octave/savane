@@ -1529,7 +1529,7 @@ function trackers_data_handle_update ($group_id,
       # and $field_transition_accepted filled only if $field_transition_id
       # is not empty (otherwise transition automatic updates risk to be
       # done by error if a transition is defined for any field!)
-      unset($field_transition_id);
+      $field_transition_id = '';
 
       # skip over special fields  except for summary which in this
       # particular case can be processed normally

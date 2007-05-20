@@ -22,6 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 # Show hidden or visible a list of items depending on user prefs
 # Set prefs if a changed was asked
@@ -89,15 +91,16 @@ function my_is_hidden ($role, $group_id)
     { $old_hide = 0; }
 
   # Extract url arguments
-  $asked_to_hide_group = sane_get("hide_group_id");
-  $asked_to_hide_role = sane_isset("hide_$role");
+  $args = sane_import('get', array("hide_group_id", "hide_$role"));
+  $asked_to_hide_group = $args["hide_group_id"];
+  $asked_to_hide_role = isset($args["hide_$role"]);
 
   # The user asked to change something for this role and this group,
   # return exactly what he asked for
   if ($asked_to_hide_group == $group_id && 
       $asked_to_hide_role)
     {
-      return sane_get("hide_$role");
+      return $args["hide_$role"];
     }
 
   # No related change, return the pref
@@ -167,18 +170,16 @@ function my_item_list ($role="assignee", $threshold="5", $openclosed="open", $ui
       $trackers = array("support", "bugs", "task", "cookbook", "patch");
       while (list(, $currenttracker) = each($trackers))
 	{
-	  unset($sql);
-
 	  # Create the SQL request
-	  $sql = my_item_list_buildsql($currenttracker, $currentrole, $threshold, $openclosed, $uid);
+	  $sql_result = my_item_list_buildsql($currenttracker, $currentrole, $threshold, $openclosed, $uid);
 
 	  # Ignores if not able to produce a SQL (maybe because the user
 	  # have no relevant rights, whatever)
-	  if (!$sql)
+	  if (!$sql_result)
 	    { continue; }
 
 	  # Feed the hashes that contains data
-	  my_item_list_extractdata($sql, $currenttracker);
+	  my_item_list_extractdata($sql_result, $currenttracker);
 
 	}
 
@@ -191,6 +192,9 @@ function my_item_list ($role="assignee", $threshold="5", $openclosed="open", $ui
 # Build sql request depending on what we are looking for
 function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $openclosed="open", $uid=false) {
   global $item_data, $group_data, $sql_limit, $usergroups, $usergroups_groupid, $items_per_groups, $usersquads;
+
+  if (!ctype_alnum($tracker))
+    die("Invalid tracker name: " . htmlspecialchars($tracker));
 
   # status: 1 = open, 3 = closed
   if ($openclosed == "open") 
@@ -234,35 +238,45 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
       ## Items listing in My Items:
       ##      assigned to and posted by
       $select = 'SELECT '.$tracker.'.bug_id,'.$tracker.'.date,'.$tracker.'.priority,'.$tracker.'.resolution_id,'.$tracker.'.summary,groups.group_id,groups.group_name,groups.unix_group_name ';
+      $select_params = array();
       $from = 'FROM '.$tracker.',groups ';
+      $from_params = array();
       $where = 'WHERE groups.group_id='.$tracker.'.group_id '.
-	'AND '.$tracker.'.status_id='.$openclosed.' '.
-	'AND ('.$tracker.'.priority >= '.$threshold.' OR  '.$tracker.'.date > '.$new_date_limit.') '.$showprivate;
+	'AND '.$tracker.'.status_id=? '.
+	'AND ('.$tracker.'.priority >= ? OR  '.$tracker.'.date > ?) '.$showprivate;
+      $where_params = array($openclosed, $threshold, $new_date_limit);
 
       if ($role == "assignee")
 	{
-	  $where .= 'AND ('.$tracker.'.assigned_to='.$uid.' '; 
+	  $where .= 'AND ('.$tracker.'.assigned_to=? '; 
+	  $where_params[] = $uid;
 
           # If the user is member of squads, add them now
 	  reset($usersquads);
 	  foreach ($usersquads as $squad_id) 
-	    { $where .= 'OR '.$tracker.'.assigned_to='.$squad_id.' '; }	    
+	    {
+	      $where .= 'OR '.$tracker.'.assigned_to=? ';
+	      $where_params[] = $squad_id;
+	    }
 
 	  $where .= ' ) ';
 
 	}
       else
 	{
-          # If the submitter is also the owner, we ll show it in
+          # If the submitter is also the owner, we'll show it in
 	  # the assigned
           # list, which matters more than the fact he is submitter
-	  $where .= 'AND '.$tracker.'.assigned_to<>'.$uid.' AND '.$tracker.'.submitted_by='.$uid.' ';
+	  $where .= 'AND '.$tracker.'.assigned_to<>? AND '.$tracker.'.submitted_by=? ';
+	  $where_params[] = $uid;
+	  $where_params[] = $uid;
 	}
       
 
       # 1. Restrict to groups the users belongs to  
       # 2. Do a simple SQL count if the group is supposed to be hidden
       $restrict_to_groups = '';
+      $restrict_to_groups_params = array();
       reset($usergroups_groupid);
       while (list(,$current_group_id) = each($usergroups_groupid))
 	{
@@ -276,7 +290,8 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 	      if ($restrict_to_groups)
 		{ $restrict_to_groups .= ' OR '; }
               # Group is not supposed to be hidden
-	      $restrict_to_groups .= ' '.$tracker.'.group_id="'.$current_group_id.'" ';
+	      $restrict_to_groups .= ' '.$tracker.'.group_id=? ';
+	      $restrict_to_groups_params[] = $current_group_id;
 	    }      
 	  else
 	    {
@@ -287,7 +302,13 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 	      
 	      # This group is supposed to be hidden, just do a count; do it 
 	      # now.
-	      $rows = db_numrows(db_query('SELECT count('.$tracker.'.bug_id) as count '.$from.' '.$where.' AND '.$tracker.'.group_id="'.$current_group_id.'" GROUP BY bug_id LIMIT '.$sql_limit));
+	      $rows = db_numrows(db_execute('SELECT count('.$tracker.'.bug_id) AS count
+                  $from
+                  $where
+                  AND '.$tracker.'.group_id=?
+                  GROUP BY bug_id LIMIT ?'),
+                array_merge($from_params, $where_params,
+                            array($current_group_id, $sql_limit)));
 
 	      # Feed the array so it nows exactly how many items we have
 	      # (array_fill exists only in PHP 4.2)
@@ -302,21 +323,22 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 		{
 		  if ($restrict_to_groups)
 		    { $restrict_to_groups .= ' AND '; }
-		  $restrict_to_groups .= ' '.$tracker.'.group_id<>"'.$current_group_id.'" ';
+		  $restrict_to_groups .= ' '.$tracker.'.group_id<>? ';
+                  $restrict_to_groups_params[] = $current_group_id;
 		}
 	    }
 	}
 
       # No SQL if not at least one project is not in hidden mode
       if (!$restrict_to_groups && $role == "assignee")
-	{ return; }
+	{ return false; }
 
       if ($restrict_to_groups)
 	{ $restrict_to_groups = ' AND ('.$restrict_to_groups.') '; }
 
       # Complete the SQL
       $sql = $select.' '.$from.' '.$where.' '.$restrict_to_groups.' GROUP BY bug_id ORDER BY '.$tracker.'.date  DESC ';
-
+      $sql_params = array_merge($select_params, $from_params, $where_params, $restrict_to_groups_params);
     }
   else
     {
@@ -328,12 +350,14 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 	{
 	  
 	  $select = 'SELECT '.$tracker.'.bug_id,'.$tracker.'.date,'.$tracker.'.priority,'.$tracker.'.resolution_id,'.$tracker.'.summary,groups.group_id,groups.group_name,groups.unix_group_name ';
+          $select_params = array();
 	  $from = ' FROM '.$tracker.',groups ';
+          $from_params = array();
 	  $where = 'WHERE groups.group_id='.$tracker.'.group_id '.
 	    'AND '.$tracker.'.status_id=1 '.
-	    'AND '.$tracker.'.date > '.$new_date_limit.' '.
+	    'AND '.$tracker.'.date > ? '.
 	    'AND '.$tracker.'.assigned_to=100 ';
-	  
+	  $where_params = array($new_date_limit);
 	}
       else if ($role == "newlyassigned")
 	{
@@ -372,15 +396,24 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 	    { */
 	  
 	  $select = 'SELECT '.$tracker.'.bug_id,'.$tracker.'.date,'.$tracker.'.priority,'.$tracker.'.resolution_id,'.$tracker.'.summary,groups.group_id,groups.group_name,groups.unix_group_name ';
+          $select_params = array();
 	  $from = ' FROM '.$tracker.',groups ';
-	  $where = ' WHERE groups.group_id='.$tracker.'.group_id AND '.$tracker.'.status_id='.$openclosed.' AND ('.$tracker.'.assigned_to='.$uid;
+          $from_params = array();
+	  $where = ' WHERE groups.group_id='.$tracker.'.group_id AND '.$tracker.'.status_id=? AND ('
+            .$tracker.'.assigned_to=?';
+          $where_params = array($openclosed, $uid);
 
           # If the user is member of squads, add them now
 	  reset($usersquads);
 	  foreach ($usersquads as $squad_id) 
-	    { $where .= ' OR '.$tracker.'.assigned_to='.$squad_id; }	  
+	    {
+              $where .= ' OR '.$tracker.'.assigned_to = ?';
+              $where_params[] = $squad_id;
+            }
 	  
-	  $where .= ') AND ('.$tracker.'.date > '.$new_date_limit.' AND '.$tracker.'.submitted_by<>'.$uid.') ';
+	  $where .= ') AND ('.$tracker.'.date > ? AND '.$tracker.'.submitted_by<>?) ';
+          $where_params[] = $new_date_limit;
+          $where_params[] = $uid;
 
 	      /*   } */
 
@@ -411,13 +444,20 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 	      if ($restrict_to_groups) 
 		{ $restrict_to_groups .= "OR "; }
 
-	      $restrict_to_groups .= " $tracker.group_id='".$current_group_id."' ";
+	      $restrict_to_groups .= " $tracker.group_id= ? ";
+              $restrict_to_groups_params[] = $current_group_id;
 	    }
 	  else
 	    {
 	      # This group is supposed to be hidden, just do a count; do it 
 	      # now.
-	      $rows = db_numrows(db_query('SELECT count('.$tracker.'.bug_id) as count '.$from.' '.$where.' AND '.$tracker.'.group_id="'.$current_group_id.'" GROUP BY bug_id LIMIT '.$sql_limit));
+	      $rows = db_numrows(db_execute("SELECT count(".$tracker.".bug_id) AS count
+			$from
+			$where
+			AND ".$tracker.".group_id = ?
+			GROUP BY bug_id LIMIT ?",
+                array_merge($from_params, $where_params,
+                            array($current_group_id, $sql_limit))));
 
 	      # Feed the array so it nows exactly how many items we have
 	      # (array_fill exists only in PHP 4.2)
@@ -435,39 +475,40 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 
       # No SQL if not at least one project is not in hidden mode
       if (!$restrict_to_groups)
-	{ return; }
+	{ return false; }
 
       # Complete the SQL
       $sql = $select.' '.$from.' '.$where.' AND ('.$restrict_to_groups.') GROUP BY bug_id ORDER BY '.$tracker.'.date,'.$tracker.'.bug_id DESC ';
-      
+      $sql_params = array_merge($select_params, $from_params, $where_params, $restrict_to_groups_params);
     }
 
   # Return the sql
-  return $sql." LIMIT ".$sql_limit;
+  $sql = $sql." LIMIT ?";
+  $sql_params[] = $sql_limit;
+  return db_execute($sql, $sql_params);
 }
 
 # Extract items data from database, put in hashes
-function my_item_list_extractdata ($sql, $tracker) {
+function my_item_list_extractdata ($sql_result, $tracker) {
   global $item_data, $group_data, $items_per_groups, $sql_limit, $maybe_missed_rows;
 
   # Run the query
-  $result=db_query($sql);
-  $rows=db_numrows($result);
+  $rows=db_numrows($sql_result);
 
   # Record for later if we maybe missed items
   if ($sql_limit <= $rows)
     { $maybe_missed_rows = 1; }
 
   # If there are results, grab data
-  if ($result && $rows > 0)
+  if ($sql_result && $rows > 0)
     {
       $items_exist = 1;
       for ($j=0; $j<$rows; $j++)
 	{
           # Create item unique name beginning by the date to ease
 	  # sorting
-	  $thisitem = db_result($result, $j, 'date').'.'.$tracker.'#'.db_result($result,$j,'bug_id');
-	  $thisgroup = db_result($result,$j,'group_id');
+	  $thisitem = db_result($sql_result, $j, 'date').'.'.$tracker.'#'.db_result($sql_result,$j,'bug_id');
+	  $thisgroup = db_result($sql_result,$j,'group_id');
 	      
 	  # Associate to the group
           # (ignore if it was already done)	      
@@ -484,12 +525,12 @@ function my_item_list_extractdata ($sql, $tracker) {
 	      && array_key_exists($thisitem, $item_data['item_id']))
 	    { continue; }
 	  
-	  $item_data['item_id'][$thisitem] = db_result($result,$j,'bug_id');
+	  $item_data['item_id'][$thisitem] = db_result($sql_result,$j,'bug_id');
 	  $item_data['tracker'][$thisitem] = $tracker;
-	  $item_data['date'][$thisitem] = db_result($result,$j,'date');
-	  $item_data['priority'][$thisitem] = db_result($result,$j,'priority');
-	  $item_data['status'][$thisitem] = db_result($result,$j,'resolution_id');
-	  $item_data['summary'][$thisitem] = db_result($result,$j,'summary');
+	  $item_data['date'][$thisitem] = db_result($sql_result,$j,'date');
+	  $item_data['priority'][$thisitem] = db_result($sql_result,$j,'priority');
+	  $item_data['status'][$thisitem] = db_result($sql_result,$j,'resolution_id');
+	  $item_data['summary'][$thisitem] = db_result($sql_result,$j,'summary');
 	}
     }
 
@@ -577,7 +618,11 @@ function my_item_list_print ($role="assignee", $openclosed="open", $condensed=fa
 				    $group_data))
 		{
 		  $group_data[$current_group_id.$tracker.$item_data['status'][$thisitem]] =
-		    db_result(db_query("SELECT value FROM ".$tracker."_field_value WHERE bug_field_id='108' AND (group_id='".$current_group_id."' OR group_id='100') AND value_id='".$item_data['status'][$thisitem]."' ORDER BY bug_fv_id DESC LIMIT 1"), 0, 'value');
+		    db_result(db_execute("SELECT value FROM ".$tracker."_field_value
+                        WHERE bug_field_id='108' AND (group_id = ? OR group_id='100')
+                        AND value_id = ? ORDER BY bug_fv_id DESC LIMIT 1",
+                        array($current_group_id, $item_data['status'][$thisitem])),
+                      0, 'value');
 		}
 	      $status = $group_data[$current_group_id.$tracker.$item_data['status'][$thisitem]];
 	      

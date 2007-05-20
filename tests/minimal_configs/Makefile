@@ -24,7 +24,7 @@ PATH:=$(PATH):/usr/local/sbin:/usr/sbin:/sbin
 	mysql_install_db --no-defaults --pid-file=pid --socket=sock --skip-networking --datadir=/tmp/savane/mysql
 	-mkdir /tmp/savane/savane
 	echo '<?php $$sys_dbhost=":/tmp/savane/mysql/sock";' > /tmp/savane/savane/.savane.conf.php
-	echo '#$sys_debug_on=true;' >> /tmp/savane/savane/.savane.conf.php
+	echo '#$$sys_debug_on=true;' >> /tmp/savane/savane/.savane.conf.php
         echo 'our $sys_dbparams="mysql_socket=/tmp/savane/mysql/sock";' > /tmp/savane/savane/savane.conf.pl
 database:
 	cd ../.. && ./configure --sysconfdir=/tmp/savane --with-db-options="-S /tmp/savane/mysql/sock"

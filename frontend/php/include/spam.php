@@ -225,6 +225,7 @@ function spam_get_user_score ($user_id=0, $set_by_user_id=0)
     { return 3; }      
 
   $set_by_user_id_sql = '';
+  $set_by_user_id_params = array();
   if ($set_by_user_id) {
     $set_by_user_id_sql = " AND reporter_user_id=?";
     $set_by_user_id_params = array($set_by_user_id);
