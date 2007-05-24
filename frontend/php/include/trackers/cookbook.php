@@ -337,7 +337,7 @@ function cookbook_handle_update($item_id, $group_id)
   $result = db_affected_rows(db_autoexecute('cookbook_context2recipe',
 					    $cookbook_upd_list,
 					    DB_AUTOQUERY_UPDATE,
-					    "WHERE recipe_id=? AND group_id=?",
+					    "recipe_id=? AND group_id=?",
 					    array($item_id, $group_id)));
 
   # If there was affected rows, it means we did an update

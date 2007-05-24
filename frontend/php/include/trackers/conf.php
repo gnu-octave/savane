@@ -64,7 +64,7 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 			      "send_all_$artifact" => $rows["send_all_{$artifact}"],
 			      "$artifact_private_exclude_address" => $rows["{$artifact}_private_excluded_address"]),
 			DB_AUTOQUERY_UPDATE,
-			"WHERE group_id=?", array($group_id));
+			"group_id=?", array($group_id));
 
   if (db_affected_rows($res))
     {  fb(_("Notification settings copied")); }

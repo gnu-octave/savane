@@ -143,7 +143,7 @@ eg:
 
 $success = db_autoexecute('user', array('realname' => $newvalue),
 		          DB_AUTOQUERY_UPDATE,
-			  "WHERE user_id=?", array(user_getid()));
+			  "user_id=?", array(user_getid()));
 */
 function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
 			$where_condition=false, $where_inputarr=null)

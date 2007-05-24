@@ -48,6 +48,9 @@ function trackers_data_get_all_fields ($group_id=false,$reload=false)
 
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME, $AT_START;
 
+  if (!ctype_alnum(ARTIFACT))
+    die("Invalid ARTIFACT name: " . htmlspecialchars(ARTIFACT));
+
 # Do nothing if already set and reload not forced
   if (isset($BF_USAGE_BY_ID) && !$reload)
     {
@@ -78,16 +81,14 @@ function trackers_data_get_all_fields ($group_id=false,$reload=false)
     }
 
 # Then select  all project specific entries
-  $sql='SELECT  '.ARTIFACT.'_field.bug_field_id, field_name, display_type, '.
+  $res_project = db_execute('SELECT  '.ARTIFACT.'_field.bug_field_id, field_name, display_type, '.
     'display_size,label, description,scope,required,empty_ok,keep_history,special, custom, '.
     'group_id, use_it, show_on_add, show_on_add_members, place, custom_label,'.
     'custom_description,custom_display_size,custom_empty_ok,custom_keep_history '.
     'FROM '.ARTIFACT.'_field,  '.ARTIFACT.'_field_usage '.
-    'WHERE group_id='.$group_id.
-    ' AND  '.ARTIFACT.'_field.bug_field_id= '.ARTIFACT.'_field_usage.bug_field_id ';
-
-
-  $res_project = db_query($sql);
+    'WHERE group_id=?'.
+    ' AND  '.ARTIFACT.'_field.bug_field_id= '.ARTIFACT.'_field_usage.bug_field_id ',
+			    array($group_id));
 
 # And override entries in the default array
   while ($field_array = db_fetch_array($res_project))
@@ -114,14 +115,17 @@ function trackers_data_get_all_fields ($group_id=false,$reload=false)
 function trackers_data_get_item_group($item_id)
 {
   return  db_result(
-		    db_query("SELECT group_id FROM ".ARTIFACT." WHERE bug_id='$item_id'"),
+		    db_execute("SELECT group_id FROM ".ARTIFACT." WHERE bug_id=?", array($item_id)),
 		    0,
 		    'group_id');
 }
 
 function &trackers_data_get_notification_settings($group_id, $tracker_name)
 {
-  $result = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+  if (!ctype_alnum($tracker_name))
+    die("Invalid tracker name: " . htmlspecialchars($tracker_name));
+
+  $result = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
   if (db_numrows($result) < 1)
     {
       exit_no_group();
@@ -139,14 +143,13 @@ function &trackers_data_get_notification_settings($group_id, $tracker_name)
 #          one day to generic names since they apply to bugs but also to suuports,tasks,
 #          and patch related tables. For now these fileds are called bug_xxx whatever
 #          the service related tables. Too much work to make all the changes in the code.
-  $sql="SELECT ".$tracker_name."_field_value.bug_fv_id,".$tracker_name."_field_value.value,".$tracker_name."_field_value.email_ad,".$tracker_name."_field_value.send_all_flag ".
+  $result=db_execute("SELECT ".$tracker_name."_field_value.bug_fv_id,".$tracker_name."_field_value.value,".$tracker_name."_field_value.email_ad,".$tracker_name."_field_value.send_all_flag ".
     "FROM ".$tracker_name."_field, ".$tracker_name."_field_value ".
-    "WHERE ".$tracker_name."_field_value.group_id='$group_id' ".
-    "AND ".$tracker_name."_field.field_name='$cat_field_name' ".
+    "WHERE ".$tracker_name."_field_value.group_id=? ".
+    "AND ".$tracker_name."_field.field_name=? ".
     "AND ".$tracker_name."_field_value.bug_field_id=".$tracker_name."_field.bug_field_id ".
-    "AND ".$tracker_name."_field_value.status!='H'";
-
-  $result=db_query($sql);
+    "AND ".$tracker_name."_field_value.status!='H'",
+		     array($group_id, $cat_field_name));
   $settings['nb_categories']=db_numrows($result);
   $settings['category'] = array();
   for ($i=0; $i < $settings['nb_categories'] ; $i++) {
@@ -263,12 +266,14 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
 			}
 
 # set global notification info for this group
-  $res_gl=db_query("UPDATE groups SET "
-		   .$tracker_name."_glnotif='$notif_value', "
-		   ."send_all_".$tracker_name."='$send_all_changes', "
-		   ."new_".$tracker_name."_address=".($new_item_address? "'$new_item_address' " : "''").", "
-		   .$private_exclude_address_name.'='.($private_exclude_address? "'$private_exclude_address' " : "''")
-		   . " WHERE group_id=$group_id");
+  $res_gl = db_autoexecute('groups',
+    array(
+      $tracker_name."_glnotif" => $notif_value,
+      "send_all_".$tracker_name => $send_all_changes,
+      "new_".$tracker_name."_address" => ($new_item_address ? $new_item_address : ''),
+      $private_exclude_address_name => ($private_exclude_address ? $private_exclude_address : '')
+    ), DB_AUTOQUERY_UPDATE,
+    "group_id=?", array($group_id));
   if (!$res_gl)
     { $local_feedback .= _("groups table Update failed.").' '.db_error(); }
 
@@ -287,10 +292,11 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
       $current_send_all_name = $tracker_name."_cat_".$i."_send_all_flag";
       $current_send_all_flag = $GLOBALS[$current_send_all_name];
 
-      $res_cat=db_query("UPDATE ".$tracker_name."_field_value SET "
-			."email_ad='$current_email', "
-			."send_all_flag='$current_send_all_flag' "
-			." WHERE bug_fv_id=$current_fv_id");
+      $res_cat=db_autoquery($tracker_name."_field_value",
+        array('email_ad' => $current_email,
+	      'send_all_flag' => $current_send_all_flag),
+        DB_AUTOQUERY_UPDATE,
+	"bug_fv_id=?", array($current_fv_id));
       if ($res_cat) {
         $ok++;
       } else {
@@ -311,11 +317,13 @@ function trackers_data_get_item_notification_info($item_id, $artifact, $updated)
   $emailad = "";
   $sendemail = 0;
 # Get group information bur new entity notification settings
-  $sql="SELECT groups.$artifact"."_glnotif, groups.send_all_"."$artifact, groups.new_"."$artifact"."_address ".
+  $result = db_execute(
+    "SELECT groups.$artifact"."_glnotif, groups.send_all_"."$artifact,
+     groups.new_"."$artifact"."_address ".
     "FROM "."$artifact, groups ".
-    "WHERE "."$artifact.bug_id='$item_id' ".
-    "AND groups.group_id="."$artifact.group_id";
-  $result=db_query($sql);
+    "WHERE "."$artifact.bug_id=? ".
+    "AND groups.group_id=?",
+    array($item_id, $artifact.group_id));
 
   $glnotif = db_result($result,0,$artifact."_glnotif");
   $glsendall = db_result($result,0,"send_all_".$artifact);
@@ -323,15 +331,14 @@ function trackers_data_get_item_notification_info($item_id, $artifact, $updated)
   if ($glnotif != 1) {   # if not 'global only'
 			   $cat_field_name = "category_id";
 
-  $sql="SELECT "."$artifact"."_field_value.email_ad, "."$artifact"."_field_value.send_all_flag ".
+  $result = db_execute("SELECT "."$artifact"."_field_value.email_ad, "."$artifact"."_field_value.send_all_flag ".
     "FROM "."$artifact"."_field_value, "."$artifact"."_field, $artifact ".
-    "WHERE "."$artifact.bug_id='$item_id' ".
-    "AND "."$artifact"."_field.field_name='$cat_field_name' ".
+    "WHERE "."$artifact.bug_id = ? ".
+    "AND "."$artifact"."_field.field_name = ? ".
     "AND "."$artifact"."_field_value.bug_field_id="."$artifact"."_field.bug_field_id ".
     "AND "."$artifact"."_field_value.group_id="."$artifact.group_id ".
-    "AND "."$artifact"."_field_value.value_id="."$artifact.category_id";
-
-  $result=db_query($sql);
+    "AND "."$artifact"."_field_value.value_id="."$artifact.category_id",
+		     array($item_id, $cat_field_name));
   $rows=db_numrows($result);
   if ($rows > 0) {
     $sendallflag = db_result($result, 0, 'send_all_flag');
@@ -403,8 +410,7 @@ function trackers_data_get_all_report_fields($group_id=false,$report_id=100)
   */
 
   # Build the list of fields involved in this report
-  $sql = "SELECT * FROM ".ARTIFACT."_report_field WHERE report_id='".safeinput($report_id)."'";
-  $res = db_query($sql);
+  $res = db_execute("SELECT * FROM ".ARTIFACT."_report_field WHERE report_id=?", array($report_id));
 
   while ($arr = db_fetch_array($res))
     {
@@ -458,11 +464,13 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false, $ch
 	{
 	  if ($checked)
 	    {
-	      $status_cond = "AND  (status IN ('A','P') OR value_id='$checked') ";
+	      $status_cond = "AND  (status IN ('A','P') OR value_id=?) ";
+	      $status_cond_params = array($checked);
 	    }
 	  else
 	    {
 	      $status_cond = "AND  status IN ('A','P') ";
+	      $status_cond_params = array();
 	    }
 	}
 
@@ -485,21 +493,23 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false, $ch
       # values in any case, whatever the group specific values may be.
 
       # Look for project specific values first
-      $sql="SELECT value_id,value,bug_fv_id,bug_field_id,group_id,description,order_id,status ".
-	 "FROM ".ARTIFACT."_field_value ".
-	 "WHERE group_id=$group_id AND bug_field_id=$field_id ".
-	 $status_cond." ORDER BY order_id,value ASC";
-      $res_value = db_query($sql);
+      $res_value = db_execute("SELECT value_id,value,bug_fv_id,bug_field_id,group_id,description,order_id,status ".
+			      "FROM ".ARTIFACT."_field_value ".
+			      "WHERE group_id=? AND bug_field_id=$? ".
+			      $status_cond." ORDER BY order_id,value ASC",
+			      array_merge(array($group_id, field_id),
+					  $status_cond_params));
       $rows=db_numrows($res_value);
 
       # If no specific value for this group then look for default values
       if ($rows == 0)
 	{
-	  $sql="SELECT value_id,value,bug_fv_id,bug_field_id,group_id,description,order_id,status ".
-	     "FROM ".ARTIFACT."_field_value ".
-	     "WHERE group_id=100 AND bug_field_id=$field_id ".
-	     $status_cond." ORDER BY order_id,value ASC";
-	  $res_value = db_query($sql);
+	  $res_value = db_execute("SELECT value_id,value,bug_fv_id,bug_field_id,group_id,description,order_id,status ".
+				  "FROM ".ARTIFACT."_field_value ".
+				  "WHERE group_id=100 AND bug_field_id=? ".
+				  $status_cond." ORDER BY order_id,value ASC",
+				  array_merge(array($field_id), 
+					      $status_cond_params));
 	  $rows=db_numrows($res_value);
 	}
     }
@@ -514,10 +524,9 @@ function trackers_data_use_field_predefined_values ($field, $group_id)
   # If no entry in the database for the relevant field value belong to the
   # group, then it uses default values (fallback)
   $field_id = trackers_data_get_field_id($field);
-  $sql="SELECT bug_fv_id FROM ".ARTIFACT."_field_value ".
-             "WHERE group_id=".$group_id." AND bug_field_id=$field_id";
 
-  $result = db_query($sql);
+  $result = db_execute("SELECT bug_fv_id FROM ".ARTIFACT."_field_value ".
+    "WHERE group_id=? AND bug_field_id=?", array($group_id, $field_id));
   return db_numrows($result);
 }
 
@@ -875,9 +884,9 @@ function trackers_data_get_max_value_id($field, $group_id, $by_field_id=false)
       $field_id = trackers_data_get_field_id($field);
     }
 
-  $sql="SELECT max(value_id) as max FROM ".ARTIFACT."_field_value ".
-     "WHERE bug_field_id='$field_id' AND group_id='$group_id' ";
-  $res = db_query($sql);
+  $res = db_execute("SELECT max(value_id) as max FROM ".ARTIFACT."_field_value ".
+		    "WHERE bug_field_id=? AND group_id=?",
+		    array($field_id, $group_id));
   $rows = db_numrows($res);
 
   # If no max value found then it means it's the first value for this field
@@ -904,9 +913,9 @@ function trackers_data_is_value_set_empty($field, $group_id, $by_field_id=false)
     {
       $field_id = trackers_data_get_field_id($field);
     }
-  $sql="SELECT value_id FROM ".ARTIFACT."_field_value ".
-     "WHERE bug_field_id='$field_id' AND group_id='$group_id' ";
-  $res = db_query($sql);
+  $res = db_execute("SELECT value_id FROM ".ARTIFACT."_field_value ".
+                    "WHERE bug_field_id=? AND group_id=?",
+                    array($field_id, $group_id));
   $rows=db_numrows($res);
 
   return (($rows<=0));
@@ -931,9 +940,9 @@ function trackers_data_copy_default_values($field, $group_id, $by_field_id=false
     {
 
       # First delete the exisiting value if any
-      $sql="DELETE FROM ".ARTIFACT."_field_value ".
-	 "WHERE bug_field_id='$field_id' AND group_id='$group_id' ";
-      $res = db_query($sql);
+      $res = db_execute("DELETE FROM ".ARTIFACT."_field_value ".
+			"WHERE bug_field_id=? AND group_id=?",
+			array($field_id, $group_id));
 
       # Second insert default values (if any) from group 'None'
       # Rk: The target table of the INSERT statement cannot appear in
@@ -941,10 +950,10 @@ function trackers_data_copy_default_values($field, $group_id, $by_field_id=false
       # in ANSI SQL to SELECT . So do it by hand !
       #
 
-      $sql = "SELECT value_id,value,description,order_id,status ".
-	 "FROM ".ARTIFACT."_field_value ".
-	 "WHERE bug_field_id='$field_id' AND group_id='100'";
-      $res = db_query($sql);
+      $res = db_execute("SELECT value_id,value,description,order_id,status ".
+                        "FROM ".ARTIFACT."_field_value ".
+                        "WHERE bug_field_id=? AND group_id=100",
+                        array($field_id));
       $rows = db_numrows($res);
 
       for ($i=0; $i<$rows; $i++)
@@ -957,11 +966,17 @@ function trackers_data_copy_default_values($field, $group_id, $by_field_id=false
 	  $status  = db_result($res,$i,'status');
 
 
-	  $sql="INSERT INTO ".ARTIFACT."_field_value ".
-	     "(bug_field_id,group_id,value_id,value,description,order_id,status) ".
-	     "VALUES ('$field_id','$group_id','$value_id','$value','$description','$order_id','$status')";
-	  #print "<BR>DBG - $sql";
-	  $res_insert = db_query($sql);
+	  // print "<BR>DBG - $sql";
+	  $res_insert = db_autoexecute(ARTIFACT."_field_value",
+            array(
+              'bug_field_id' => $field_id,
+              'group_id' => $group_id,
+              'value_id' => $value_id,
+              'value' => $value,
+              'description' => $description,
+              'order_id' => $order_id,
+              'status' => $status
+            ), DB_AUTOQUERY_INSERT);
 
 	  if (db_affected_rows($res_insert) < 1)
 	    {
@@ -996,8 +1011,7 @@ function trackers_data_get_field_value ($item_fv_id)
       Get all the columns associated to a given field value
   */
 
-  $sql = "SELECT * FROM ".ARTIFACT."_field_value WHERE bug_fv_id='$item_fv_id'";
-  $res = db_query($sql);
+  $res = db_execute("SELECT * FROM ".ARTIFACT."_field_value WHERE bug_fv_id=?", array($item_fv_id));
   return($res);
 }
 
@@ -1008,8 +1022,9 @@ function trackers_data_is_default_value ($item_fv_id)
       it is a so called default value.
   */
 
-  $sql = "SELECT bug_field_id,value_id FROM ".ARTIFACT."_field_value WHERE bug_fv_id='$item_fv_id' AND group_id='100'";
-  $res = db_query($sql);
+  $res = db_execute("SELECT bug_field_id,value_id FROM ".ARTIFACT."_field_value
+                     WHERE bug_fv_id = ? AND group_id=100",
+                    array($item_fv_id));
 
   return ( (db_numrows($res) >= 1) ? $res : false);
 }
@@ -1061,10 +1076,16 @@ function trackers_data_create_value ($field, $group_id, $value, $description,$or
 	}
 
 
-      $sql = "INSERT INTO ".ARTIFACT."_field_value ".
-	 "(bug_field_id,group_id,value_id,value,description,order_id,status) ".
-	 "VALUES ('$field_id','$group_id','$value_id','$value','$description','$order_id','$status')";
-      db_query($sql);
+      db_autoexecute(ARTIFACT."_field_value",
+        array(
+          'bug_field_id' => $field_id,
+	  'group_id' => $group_id,
+          'value_id' => $value_id,
+          'value' => $value,
+          'description' => $description,
+          'order_id' => $order_id,
+          'status' => $status
+	), DB_AUTOQUERY_INSERT);
 
       if (db_affected_rows($result) < 1)
 	{
@@ -1104,19 +1125,24 @@ function trackers_data_update_value ($item_fv_id,$field,$group_id,$value,$descri
       trackers_data_copy_default_values($field,$group_id);
 
       $arr = db_fetch_array($res);
-      $where_cond = 'bug_field_id='.$arr['bug_field_id'].
-	 ' AND value_id='.$arr['value_id']." AND group_id='$group_id' ";
+      $where_cond = "bug_field_id = ? AND value_id = ? AND group_id = ?";
+      $where_cond_params = array($arr['bug_field_id'], $arr['value_id'], $group_id);
     }
   else
     {
-      $where_cond = "bug_fv_id='$item_fv_id' AND group_id<>'100'";
+      $where_cond = "bug_fv_id=? AND group_id<>100";
+      $where_cond_params = array($item_fv_id);
     }
 
   # Now perform the value update
-  $sql = "UPDATE ".ARTIFACT."_field_value ".
-     "SET value='$value',description='$description',order_id='$order_id',status='$status' ".
-     "WHERE $where_cond";
-  $result = db_query($sql);
+  $result = db_autoquery(ARTIFACT."_field_value",
+    array(
+     'value' => $value,
+     'description' => $description,
+     'order_id' => $order_id,
+     'status' => $status
+    ), DB_AUTOQUERY_UPDATE,
+    "$where_cond", $where_cond_params);
 
   #print "<BR>DBG - $sql";
 
@@ -1141,9 +1167,9 @@ function trackers_data_reset_usage($field_name,$group_id)
   $field_id = trackers_data_get_field_id($field_name);
   if ($group_id != 100)
     {
-      $sql = "DELETE FROM ".ARTIFACT."_field_usage ".
-	 "WHERE group_id='$group_id' AND bug_field_id='$field_id'";
-      db_query($sql);
+      db_execute("DELETE FROM ".ARTIFACT."_field_usage ".
+	 "WHERE group_id=? AND bug_field_id=?",
+		 array($group_id, $field_id));
       fb(_("Field value successfully reset to defaults."));
 
     }
@@ -1191,30 +1217,47 @@ function trackers_data_update_usage($field_name,
   #    }
 
   # See if this field usage exists in the table for this project
-  $sql = 'SELECT bug_field_id FROM '.ARTIFACT.'_field_usage '.
-     "WHERE bug_field_id='$field_id' AND group_id='$group_id'";
-  $result = db_query($sql);
+  $result = db_execute("SELECT bug_field_id FROM ".ARTIFACT."_field_usage ".
+		       "WHERE bug_field_id=? AND group_id=?",
+		       array($field_id, $group_id));
   $rows = db_numrows($result);
 
   # if it does exist then update it else insert a new usage entry for this field.
   if ($rows)
     {
-      $sql = 'UPDATE '.ARTIFACT.'_field_usage '.
-	 "SET use_it='$use_it',show_on_add='$show_on_add',".
-	 "show_on_add_members='$show_on_add_members',place='$rank', ".
-	 "custom_label=$lbl,  custom_description=$desc,".
-	 "custom_display_size=$disp_size,  custom_empty_ok=$empty,".
-	 "custom_keep_history=$keep_hist, ".
-	 "transition_default_auth='$transition_default_auth' ".
-	 "WHERE bug_field_id='$field_id' AND group_id='$group_id'";
-      $result = db_query($sql);
+      $result = db_autoexecute(ARTIFACT.'_field_usage',
+        array(
+	 'use_it' => $use_it,
+	 'show_on_add' => $show_on_add,
+	 'show_on_add_members' => $show_on_add_members,
+	 'place' => $rank,
+	 'custom_label' => $lbl,
+	 'custom_description' => $desc,
+	 'custom_display_size' => $disp_size,
+	 'custom_empty_ok' => $empty,
+	 'custom_keep_history' => $keep_hist,
+	 'transition_default_auth' => $transition_default_auth
+        ), DB_AUTOQUERY_UPDATE,
+	"bug_field_id=? AND group_id=?",
+	array($field_id, $group_id));
     }
   else
     {
-      $sql = 'INSERT INTO '.ARTIFACT.'_field_usage '.
-	 "VALUES ('$field_id','$group_id','$use_it','$show_on_add',".
-	 "'$show_on_add_members','$rank',$lbl,$desc,$disp_size,$empty,$keep_hist,'$transition_default_auth')";
-      $result = db_query($sql);
+      $result = db_autoexecute(ARTIFACT.'_field_usage',
+        array(
+	  'bug_field_id' => $field_id,
+	  'group_id' => $group_id,
+	  'use_it' => $use_it,
+	  'show_on_add' => $show_on_add,
+	  'show_on_add_members' => $show_on_add_members,
+	  'place' => $rank,
+	  'custom_label' => $lbl,
+	  'custom_description' => $desc,
+	  'custom_display_size' => $disp_size,
+	  'custom_empty_ok' => $empty,
+	  'custom_keep_history' => $keep_hist,
+	  'transition_default_auth' => $transition_default_auth
+        ), DB_AUTOQUERY_INSERT);
     }
 
   if (db_affected_rows($result) < 1)
@@ -1244,6 +1287,7 @@ function trackers_data_get_technicians ($group_id)
 			    array($group_id));
   # Build the sql command
   $sql = "SELECT user_id,user_name FROM user WHERE ";
+  $params = array();
   $notfirst = FALSE;
   while ($member = db_fetch_array($members_res))
     {
@@ -1251,12 +1295,13 @@ function trackers_data_get_technicians ($group_id)
 	{
 	  if ($notfirst)
 	    { $sql .= " OR "; }
-	  $sql .= " user_id='".$member['user_id']."'";
+	  $sql .= " user_id=?";
+	  $params[] = $member['user_id'];
 	  $notfirst = true;
 	}
     }
   $sql .= " ORDER BY user_name";
-  return db_query($sql);
+  return db_execute($sql, $params);
 }
 
 # Get transitions valid for a given tracker as an array
@@ -1268,12 +1313,11 @@ function trackers_data_get_transition ($group_id)
 
 function trackers_data_get_submitters ($group_id=false)
 {
-  $sql="SELECT DISTINCT user.user_id,user.user_name ".
+  return db_execute("SELECT DISTINCT user.user_id,user.user_name ".
      "FROM user,".ARTIFACT." ".
      "WHERE user.user_id=".ARTIFACT.".submitted_by ".
-     "AND ".ARTIFACT.".group_id='$group_id' ".
-     "ORDER BY user.user_name";
-  return db_query($sql);
+     "AND ".ARTIFACT.".group_id=? ".
+     "ORDER BY user.user_name", array($group_id));
 }
 
 function trackers_data_get_items ($group_id=false, $artifact)
@@ -1281,12 +1325,11 @@ function trackers_data_get_items ($group_id=false, $artifact)
   /*
 		Get the items for this project
   */
-  $sql="SELECT bug_id,summary ".
+  return db_execute("SELECT bug_id,summary ".
      "FROM ".$artifact." ".
-     "WHERE group_id='".$group_id."'".
-     " AND status_id <> '3' ".
-     " ORDER BY bug_id DESC LIMIT 100";
-  return db_query($sql);
+     "WHERE group_id=?".
+     " AND status_id <> 3 ".
+     " ORDER BY bug_id DESC LIMIT 100", array($group_id));
 }
 
 function trackers_data_get_dependent_items ($item_id=false, $artifact, $notin=false)
@@ -1294,22 +1337,25 @@ function trackers_data_get_dependent_items ($item_id=false, $artifact, $notin=fa
   /*
 		Get the list of ids this is dependent on
   */
-  $sql="SELECT is_dependent_on_item_id FROM ".ARTIFACT."_dependencies WHERE item_id='$item_id' AND is_dependent_on_item_id_artifact='".$artifact."' ";
+  $sql="SELECT is_dependent_on_item_id FROM ".ARTIFACT."_dependencies WHERE item_id=? AND is_dependent_on_item_id_artifact=?";
+  $sql_params = array($item_id, $artifact);
   if ($notin)
     {
-      $sql .= ' AND is_dependent_on_item_id NOT IN ('. join(',',$notin).')';
+      $sql .= ' AND is_dependent_on_item_id NOT IN ('
+	. implode(',', array_fill(0, count($dict), '?'))
+	. ')'; # ?,?,?,...
+      $sql_params = array_merge($sql_params, $notin);
     }
-  #  print $sql; #DBG
-  return db_query($sql);
+  return db_execute($sql, $sql_params);
 }
 
 function trackers_data_get_valid_bugs ($group_id=false,$item_id='')
 {
-  $sql="SELECT bug_id,summary ".
+  return db_execute("SELECT bug_id,summary ".
      "FROM ".ARTIFACT." ".
-     "WHERE group_id='$group_id' ".
-     "AND bug_id <> '$item_id' AND ".ARTIFACT.".resolution_id <> '2' ORDER BY bug_id DESC LIMIT 200";
-  return db_query($sql);
+     "WHERE group_id=? ".
+     "AND bug_id <> ? AND ".ARTIFACT.".resolution_id <> 2 ORDER BY bug_id DESC LIMIT 200",
+    array($group_id, $item_id));
 }
 
 
@@ -1320,9 +1366,9 @@ function trackers_data_get_followups ($item_id=false, $rorder=false)
   else
     { $rorder = "ASC"; }
 
-  $sql="SELECT DISTINCT ".ARTIFACT."_history.bug_history_id,".ARTIFACT."_history.field_name,".ARTIFACT."_history.old_value,".ARTIFACT."_history.spamscore,".ARTIFACT."_history.new_value,".ARTIFACT."_history.date,user.user_name,user.realname,user.user_id,".ARTIFACT."_field_value.value AS comment_type ".
+  return db_execute("SELECT DISTINCT ".ARTIFACT."_history.bug_history_id,".ARTIFACT."_history.field_name,".ARTIFACT."_history.old_value,".ARTIFACT."_history.spamscore,".ARTIFACT."_history.new_value,".ARTIFACT."_history.date,user.user_name,user.realname,user.user_id,".ARTIFACT."_field_value.value AS comment_type ".
      "FROM ".ARTIFACT."_history,".ARTIFACT."_field_value,".ARTIFACT."_field,".ARTIFACT.",user ".
-     "WHERE ".ARTIFACT."_history.bug_id='$item_id' ".
+     "WHERE ".ARTIFACT."_history.bug_id = ? ".
      "AND (".ARTIFACT."_history.field_name = 'details' OR ".ARTIFACT."_history.field_name = 'svncommit') ".
      "AND ".ARTIFACT."_history.mod_by=user.user_id ".
      "AND ".ARTIFACT."_history.bug_id=".ARTIFACT.".bug_id ".
@@ -1330,47 +1376,49 @@ function trackers_data_get_followups ($item_id=false, $rorder=false)
      "AND ".ARTIFACT."_field_value.bug_field_id = ".ARTIFACT."_field.bug_field_id ".
      "AND (".ARTIFACT."_field_value.group_id = ".ARTIFACT.".group_id OR ".ARTIFACT."_field_value.group_id = '100') ".
      "AND  ".ARTIFACT."_field.field_name = 'comment_type_id' ".
-     "ORDER BY ".ARTIFACT."_history.date $rorder";
-
-  return db_query($sql);
+     "ORDER BY ".ARTIFACT."_history.date $rorder",
+		    array($item_id));
 }
 
 function trackers_data_get_commenters($item_id)
 {
-  $sql="SELECT DISTINCT mod_by FROM ".ARTIFACT."_history ".
-     "WHERE ".ARTIFACT."_history.bug_id='$item_id' ".
-     "AND ".ARTIFACT."_history.field_name = 'details' ";
-  return db_query($sql);
+  return db_execute("SELECT DISTINCT mod_by FROM ".ARTIFACT."_history ".
+     "WHERE ".ARTIFACT."_history.bug_id = ? ".
+     "AND ".ARTIFACT."_history.field_name = 'details'",
+		    array($item_id));
 }
 
 function trackers_data_get_history ($item_id=false)
 {
-  $sql="select ".ARTIFACT."_history.field_name,".ARTIFACT."_history.old_value,".ARTIFACT."_history.date,".ARTIFACT."_history.type,user.user_name,".ARTIFACT."_history.new_value ".
+  return db_execute("SELECT ".ARTIFACT."_history.field_name,".ARTIFACT."_history.old_value,".ARTIFACT."_history.date,".ARTIFACT."_history.type,user.user_name,".ARTIFACT."_history.new_value ".
      "FROM ".ARTIFACT."_history,user ".
      "WHERE ".ARTIFACT."_history.mod_by=user.user_id ".
      "AND ".ARTIFACT."_history.field_name <> 'details' ".
      "AND ".ARTIFACT."_history.field_name <> 'svncommit' ".
-     "AND bug_id='$item_id' ORDER BY ".ARTIFACT."_history.date DESC";
-  return db_query($sql);
+     "AND bug_id = ? ORDER BY ".ARTIFACT."_history.date DESC",
+		    array($item_id));
 }
 
 function trackers_data_get_attached_files ($item_id=false, $order='DESC')
 {
-  $sql="SELECT file_id,filename,filesize,filetype,description,date,user.user_name ".
+  if ($order != 'DESC' and $order != 'ASC')
+    die("trackers_data_get_attached_files: invalid \$order '".htmlescape($order)."')");
+
+  return db_execute("SELECT file_id,filename,filesize,filetype,description,date,user.user_name ".
      "FROM trackers_file,user ".
      "WHERE submitted_by=user.user_id ".
-     "AND artifact='".ARTIFACT."' ".
-     "AND item_id='$item_id' ORDER BY date $order";
-  return db_query($sql);
+     "AND artifact = ? ".
+     "AND item_id = ? ORDER BY date $order",
+		    array(ARTIFACT, $item_id));
 }
 
 function trackers_data_get_cc_list ($item_id=false)
 {
-  $sql="SELECT bug_cc_id,".ARTIFACT."_cc.email,".ARTIFACT."_cc.added_by,".ARTIFACT."_cc.comment,".ARTIFACT."_cc.date,user.user_name ".
+  return db_execute("SELECT bug_cc_id,".ARTIFACT."_cc.email,".ARTIFACT."_cc.added_by,".ARTIFACT."_cc.comment,".ARTIFACT."_cc.date,user.user_name ".
      "FROM ".ARTIFACT."_cc,user ".
      "WHERE added_by=user.user_id ".
-     "AND bug_id='$item_id' ORDER BY date DESC";
-  return db_query($sql);
+     "AND bug_id = ? ORDER BY date DESC",
+		    array($item_id));
 }
 
 function trackers_data_add_history ($field_name,
@@ -1427,15 +1475,18 @@ function trackers_data_add_history ($field_name,
     }
 
 
-  $result = db_query_escape("
-    INSERT INTO ".$artifact."_history
-      (bug_id, field_name, old_value, new_value,
-       mod_by, date, spamscore, ip, type)
-    VALUES
-      ('%s','%s','%s','%s',
-       '%s','%s','%s','%s', %s)",
-     $item_id, $field_name, $old_value, $new_value,
-     $user, time(), $spamscore, $_SERVER['REMOTE_ADDR'], $val_type);
+  $result = db_autoquery($artifact."_history",
+    array(
+      'bug_id' => $item_id,
+      'field_name' => $field_name,
+      'old_value' => $old_value,
+      'new_value' => $new_value,
+      'mod_by' => $user,
+      'date' => time(),
+      'spamscore' => $spamscore,
+      'ip' => $_SERVER['REMOTE_ADDR'],
+      'type' => $val_type
+    ), DB_AUTOQUERY_INSERT);
   
   spam_set_item_default_score($item_id, 
 			      db_insertid($result),
@@ -1907,8 +1958,7 @@ function trackers_data_reassign_item ($item_id,
       # each others. Simply erase previous information could cause data loss.
 
       # Fetch all the information
-      $sql = "SELECT * FROM ".ARTIFACT." WHERE bug_id='".$item_id."'";
-      $res_data = db_query($sql);
+      $res_data = db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id = ?", array($item_id));
       $row_data = db_fetch_array($res_data);
 
       # Duplicate the report
@@ -1922,21 +1972,21 @@ function trackers_data_reassign_item ($item_id,
 	}
 
       # move item
-      $result = db_query("INSERT INTO ".$reassign_change_artifact.
-			 " (group_id,status_id,date,severity,submitted_by,summary,details,priority,planned_starting_date,planned_close_date,percent_complete,originator_email)".
-			 " VALUES ".
-			 "(".$new_group_id.",'".
-			 "1','".
-			 $now."','".
-			 $row_data['severity']."','".
-			 $row_data['submitted_by']."','".
-			 addslashes($row_data['summary'])."','".
-			 addslashes($row_data['details'])."','".
-			 $row_data['priority']."','".
-			 $row_data['planned_starting_date']."','".
-			 $row_data['planned_close_date']."','".
-			 $row_data['percent_complete']."','".
-                         $row_data['originator_email']."')");
+      $result = db_autoexecute($reassign_change_artifact,
+        array(
+          'group_id' => $new_group_id,
+	  'status_id' => 1,
+	  'date' => $now,
+	  'severity' => $row_data['severity'],
+	  'submitted_by' => $row_data['submitted_by'],
+	  'summary' => $row_data['summary'],
+	  'details' => $row_data['details'],
+	  'priority' => $row_data['priority'],
+	  'planned_starting_date' => $row_data['planned_starting_date'],
+	  'planned_close_date' => $row_data['planned_close_date'],
+	  'percent_complete' => $row_data['percent_complete'],
+	  'originator_email' => $row_data['originator_email']
+	  ), DB_AUTOQUERY_INSERT);
 
       if (!$result)
 	{
@@ -1975,22 +2025,19 @@ function trackers_data_reassign_item ($item_id,
 				1);
 
       # Duplicate the comments
-      $sql = "SELECT * FROM ".ARTIFACT."_history WHERE bug_id='".$item_id."' AND type='100'";
-      $res_history = db_query($sql);
+      $res_history = db_execute("SELECT * FROM ".ARTIFACT."_history WHERE bug_id=? AND type=100",
+				array($item_id));
       while ($row_history = db_fetch_array($res_history))
 	{
-	  $sql = "INSERT INTO ".$reassign_change_artifact."_history ".
-	     "(bug_id,field_name,old_value,mod_by,date,type) ".
-	     "VALUES ".
-	     "('".$new_item_id."','".
-	     $row_history['field_name']."','".
-	     addslashes($row_history['old_value'])."','".
-	     $row_history['mod_by']."','".
-	     $row_history['date']."','".
-	     $row_history['type']."')";
-
-	  $result = db_query($sql);
-
+	  $result = db_autoexecute($reassign_change_artifact."_history",
+            array(
+              'bug_id' => $new_item_id,
+	      'field_name' => $row_history['field_name'],
+	      'old_value' => $row_history['old_value'],
+	      'mod_by' => $row_history['mod_by'],
+	      'date' => $row_history['date'],
+	      'type' => $row_history['type']
+	    ), DB_AUTOQUERY_INSERT);
 	  if (!$result)
 	    {
 	      fb(_("Unable to duplicate a comment  from the original item report information."), 1);
@@ -2000,8 +2047,7 @@ function trackers_data_reassign_item ($item_id,
       # Add a comment giving every original information
       $comment = "This item has been reassigned from the project ".group_getname($row_data['group_id'])." ".ARTIFACT." tracker to your tracker.\n\nThe original report is still available at ".ARTIFACT." #$item_id\n\nFollowing are the information included in the original report:\n\n";
 
-      $sql  = "SHOW COLUMNS FROM ".ARTIFACT;
-      $res_show = db_query($sql);
+      $res_show = db_query("SHOW COLUMNS FROM ".ARTIFACT);
       $list = array();
       while ($row_show = db_fetch_array($res_show))
 	{
@@ -2027,17 +2073,15 @@ function trackers_data_reassign_item ($item_id,
 
       # Make sure there is no \' remaining
       $comment = ereg_replace("'", " ", $comment);
-      $sql = "INSERT INTO ".$reassign_change_artifact."_history ".
-	 "(bug_id,field_name,old_value,mod_by,date,type)".
-	 " VALUES ".
-	 "('".$new_item_id."',".
-	 "'details',".
-	 "'".addslashes($comment)."',".
-	 "'".user_getid()."',".
-	 "'".$now."',".
-	 "'100')";
-
-      $result = db_query($sql);
+      $result = db_autoexecute($reassign_change_artifact."_history",
+        array(
+          'bug_id' => $new_item_id,
+          'field_name' => 'details',
+          'old_value' => $comment,
+          'mod_by' => user_getid(),
+          'date' => $now,
+          'type' => 100
+	), DB_AUTOQUERY_INSERT);
 
       if (!$result)
 	{
@@ -2048,8 +2092,14 @@ function trackers_data_reassign_item ($item_id,
       # In case of attached files, we simply reassign the file to another
       # item. This could avoid wasting too much disk space as file are expected
       # to be much bigger than CC list and alike.
-      $sql = "UPDATE trackers_file SET item_id='".$new_item_id."', artifact='".$reassign_change_artifact."' WHERE item_id='".$item_id."' AND artifact='".ARTIFACT."'";
-      $result = db_query($sql);
+      $result = db_autoexecute("trackers_file",
+	array(
+          'item_id' => $new_item_id,
+	  'artifact' => $reassign_change_artifact
+        ), DB_AUTOQUERY_UPDATE,
+	"WHERE item_id=? AND artifact=?",
+	array($item_id, ARTIFACT));
+
       if (!$result)
 	{
 	  fb(sprintf(_("Unable to duplicate an attached file (%s) from the original item report information."), $row_attachment['filename']), 1);
@@ -2057,20 +2107,17 @@ function trackers_data_reassign_item ($item_id,
 	}
 
       # Duplicate CC List
-      $sql = "SELECT * FROM ".ARTIFACT."_cc WHERE bug_id='".$item_id."'";
-      $res_cc = db_query($sql);
+      $res_cc = db_execute("SELECT * FROM ".ARTIFACT."_cc WHERE bug_id=?", array($item_id));
       while ($row_cc = db_fetch_array($res_cc))
 	{
-	  $sql = "INSERT INTO ".$reassign_change_artifact."_cc ".
-	     "(bug_id,email,added_by,comment,date) ".
-	     "VALUES ".
-	     "('".$new_item_id."','".
-	     $row_cc['email']."','".
-	     $row_cc['added_by']."','".
-	     addslashes($row_cc['comment'])."','".
-	     $row_cc['date']."')";
-
-	  $result = db_query($sql);
+	  $result = db_autoexecute($reassign_change_artifact."_cc",
+	    array(
+	      'bug_id' => $new_item_id,
+	      'email' => $row_cc['email'],
+	      'added_by' => $row_cc['added_by'],
+	      'comment' => $row_cc['comment'],
+	      'date' => $row_cc['date']
+            ), DB_AUTOQUERY_INSERT);
 
 	  if (!$result)
 	    {
@@ -2080,7 +2127,17 @@ function trackers_data_reassign_item ($item_id,
 
       # Update data of the original to make sure people dont get confused
       # Close the original item
-      $result = db_query("UPDATE ".ARTIFACT." SET status_id='3',close_date='".$now."',summary='Reassigned to another tracker [was: ".addslashes($row_data['summary'])."]',details='<p class=\"warn\">THIS ITEM WAS REASSIGNED TO ".strtoupper(utils_get_tracker_prefix($reassign_change_artifact)).' #'.$new_item_id.".</p> ".addslashes($row_data['details'])."' WHERE bug_id='".$item_id."'");
+      $result = db_autoexecute(ARTIFACT,
+        array(
+          'status_id' => 3,
+	  'close_date' => $now,
+	  'summary' => "Reassigned to another tracker [was: {$row_data['summary']}]",
+	  'details' => '<p class=\"warn\">THIS ITEM WAS REASSIGNED TO '
+	    .strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
+	    .' #'.$new_item_id
+	    .'</p> '.$row_data['details']
+        ), DB_AUTOQUERY_UPDATE,
+        "WHERE bug_id=?", array($item_id));
       trackers_data_add_history('close_date',$now,$now,$item_id);      
 
       if (!$result)
@@ -2094,16 +2151,18 @@ function trackers_data_reassign_item ($item_id,
       
       # Finally put an extra comment so people dont get confused
       # (it is not important, so run the sql without checks)
-      $sql = "INSERT INTO ".ARTIFACT."_history ".
-	 "(bug_id,field_name,old_value,mod_by,date,type)".
-	 " VALUES ".
-	 "('".$item_id."',".
-	 "'details',".
-	 "'<p class=\"warn\">THIS ITEM WAS REASSIGNED TO ".strtoupper(utils_get_tracker_prefix($reassign_change_artifact)).' #'.$new_item_id.".</p><p>Please, do not post any new comments to this item.</p>',".
-	 "'".user_getid()."',".
-	 "'".$now."',".
-	 "'100')";
-      db_query($sql);
+      db_autoexecute(ARTIFACT."_history",
+        array(
+	  'bug_id' => $item_id,
+	  'field_name' => 'details',
+	  'old_value' => '<p class=\"warn\">THIS ITEM WAS REASSIGNED TO '
+	    .strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
+	    .' #'.$new_item_id.'</p>'
+	    .'<p>Please, do not post any new comments to this item.</p>',
+	  'mod_by' => user_getid(),
+	  'date' => $now,
+	  'type' => 100
+	), DB_AUTOQUERY_INSERT);
 
       # Now send the notification (this must be done here, because we got
       # here the proper new id, etc)
@@ -2126,10 +2185,14 @@ function trackers_data_update_dependent_items ($depends_on, $item_id, $artifact)
   global $feedback,$ffeedback;
 
   # Check if the dependency does not already exists.
-  $sql = "SELECT item_id FROM ".ARTIFACT."_dependencies WHERE item_id='".$item_id."' AND is_dependent_on_item_id='".$depends_on."' AND is_dependent_on_item_id_artifact='".$artifact."'";
+  $result = db_execute("SELECT item_id FROM ".ARTIFACT."_dependencies
+     WHERE item_id=?
+     AND is_dependent_on_item_id=?
+     AND is_dependent_on_item_id_artifact=?",
+    array($item_id, $depends_on, $artifact));
 
   # If there is no dependency know, insert it.
-  if (!db_numrows(db_query($sql)))
+  if (!db_numrows($result))
     {
       $sql="INSERT INTO ".ARTIFACT."_dependencies VALUES ('$item_id','$depends_on', '$artifact')";
       $result=db_query($sql);
