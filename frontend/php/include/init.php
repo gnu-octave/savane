@@ -72,6 +72,9 @@ $sys_mail_replyto = "NO-REPLY.INVALID-ADDRESS";
 
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');
+# Backward compatibility for PHP4
+if (version_compare(PHP_VERSION, '5.0', '<')) require_once(dirname(__FILE__).'/php4.php');
+# if (version_compare(PHP_VERSION, '4.3', '<')) die("PHP 4.3 is required");
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))
@@ -143,15 +146,42 @@ if ($sys_debug_on == true) {
       list($query, $location) = $query_data;
       print "$query [$location]<br />";
     }
+
+    print '<hr />';
+    print 'GET:<br />';
+    print_r($_GET);
+
+    print '<hr />';
+    print 'POST:<br />';
+    print_r($_POST);
+
+    print '<hr />';
+    print 'COOKIE:<br />';
+    print_r($_COOKIE);
+
+    print '<hr />';
+    print 'FILES:<br />';
+    print_r($_FILES);
+
+# Useless, only prints 'debug_dump()'...
+# We need to die_debug() func or something
+#    print '<hr />';
+#    print 'Stacktrace:<br />';
+#    print_r(debug_backtrace());
+
     print '<hr />';
 
     // All debug messages:
     if ($GLOBALS['debug'])
       print 'DEBUG information:<br />'.$GLOBALS['debug'];
+
     print '</pre>';
   }
   register_shutdown_function("debug_dump");
 }
+
+// Stop an failed assertion
+assert_options(ASSERT_BAIL, 1);
 
 
 # require_directory

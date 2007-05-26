@@ -22,7 +22,7 @@
 */
 
 
-/* GUIDELINES VERSION FOLLOWED: 1.12 */
+/* GUIDELINES VERSION FOLLOWED: 1.17 */
 
 @import "internal/base.css";
 
@@ -56,12 +56,12 @@ a:active {
 
 
 .unavailable { 
-	color: #c1c1b0; 
-	text-decoration: none; 
+	color: #c1c1b0 !important; 
+	text-decoration: none !important;
 }
 .unavailable:hover { 
 	text-decoration: line-through; 
-	color: #c1c1b0; 
+	color: #c1c1b0 !important; 
 }
 
 
@@ -175,15 +175,47 @@ h5 {
 	padding: 0;
 }
 
-.topmenuitem { 
+.topmenuitemmainitem { 
         color: white;
 	margin-left: 15%;
 	padding-left: 1%;
 	background-color: #369;
 	border: thin outset #369;
 }
-.topmenuitem a { color: white; }
-.topmenuitem a:hover { color: #FC0; }
+.topmenuitemmainitem a { color: white; }
+.topmenuitemmainitem a:hover { color: #FC0; }
+
+ul.topmenuitemsubmenu {
+        background-color: #F4FFFE;
+        border: thin solid #0869bc;
+}
+
+ul.topmenuitemsubmenu li {
+        background-color: #F4FFFE;
+        border: 0;
+        border-bottom: solid thin #E4EEED;
+        border-left: 0.5em solid #B0B0B0;
+}
+
+ul.topmenuitemsubmenu li a { color: gray }
+
+li.topmenuitemsubmenu:hover {
+        background-color: #cef0f0; 
+        color: black;
+        border-left: 0.5em solid #0869bc;
+}
+
+li.topmenuitemsubmenu a:hover {
+        color: black;
+        /* all this is in theory redundant but necessary for MSIE */
+        background-color: #b3e2e3;
+        text-decoration: none;
+}
+
+li.topmenuitemsubmenuseparator {
+        background-color: #b3e2e3;
+}
+
 
 .tabs { 
 	color: green; 

@@ -1179,13 +1179,17 @@ function utils_is_valid_filename ($file)
     }
 }
 
-# alias
+# add debugging information
 function util_debug ($msg)
 {
-  dbg($msg);
+  if ($GLOBALS['sys_debug_on'])
+    {
+      $backtrace = debug_backtrace(); // stacktrace
+      $GLOBALS['debug'] .= "(" . $backtrace[1]['function'] . ") $msg<br />";
+    }
 }
 
-# add debugging information
+# alias
 function dbg ($msg)
 {
   if ($GLOBALS['sys_debug_on'])
@@ -1204,6 +1208,18 @@ function temp_dbg($msg) {
   print '</pre>';
 }
 
+
+# die with debug information
+function util_die($msg) {
+  if ($GLOBALS['sys_debug_on'])
+    {
+      print '<pre>';
+      print "<strong>Fatal error:</strong> $msg<br />";
+      debug_print_backtrace();
+      print '</pre>';
+    }
+  die();
+}
 
 # alias
 function util_feedback ($msg, $error=0)

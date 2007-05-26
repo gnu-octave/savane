@@ -25,6 +25,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/../calendar.php');
 require_once(dirname(__FILE__).'/../sendmail.php');
 require_once(dirname(__FILE__).'/data.php');
@@ -650,7 +653,6 @@ function trackers_extract_field_list($post_method=true)
   reset($superglobal);
   while ( list($key, $val) = each($superglobal))
     {
-      $val = stripslashesgpc($val);
       if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
 	{
 	  // Must build the date field key.
@@ -769,8 +771,8 @@ function trackers_check_empty_fields($field_array, $new_item=true)
 	    {
 	      # Save that information for further mandatory checks,
 	      # to avoid avoid a SQL request per field checked
-	      $submitter_sql = "SELECT submitted_by FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
-	      $submitter_res = db_query($submitter_sql);
+	      $submitter_res = db_execute("SELECT submitted_by FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+					  array($item_id, $group_id));
 	      $mandatorycheck_submitter_id = db_result($submitter_res,0,'submitted_by');
 	    }
 
@@ -1064,7 +1066,9 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
   # changed the assignee, the new assignee is the current assignee.
   # The previous assignee may or may not receive updates, if he update the 
   # item (if so, he is in CC)
-  $assignee_uid = db_result(db_query("SELECT assigned_to from ".ARTIFACT." WHERE bug_id='$item_id'"), 0, 'assigned_to');
+  $assignee_uid = db_result(db_execute("SELECT assigned_to from ".ARTIFACT." WHERE bug_id=?",
+				     array($item_id)),
+			    0, 'assigned_to');
   # assignee to 100 == unassigned 
   if ($assignee_uid != "100" && 
       !array_key_exists($assignee_uid, $addresses_to_skip))
@@ -1073,8 +1077,8 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
   # Now go through the CC list: 
   # (automatically added CC will be in numerical
   # form and email = added_by)
-  $sql = "SELECT email,added_by FROM ".ARTIFACT."_cc WHERE bug_id='$item_id' GROUP BY email LIMIT 150";
-  $result = db_query($sql);
+  $result = db_execute("SELECT email,added_by FROM ".ARTIFACT."_cc WHERE bug_id=? GROUP BY email LIMIT 150",
+		       array($item_id));
   $rows = db_numrows($result);
   for ($i=0; $i < $rows; $i++)
     {
@@ -1130,7 +1134,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
       if (!ctype_digit($email) && 
 	  strpos($email, "@"))
 	{ 
-	  $res = db_query("SELECT user_id FROM user WHERE email='$email' LIMIT 1");
+	  $res = db_execute("SELECT user_id FROM user WHERE email=? LIMIT 1", array($email));
 	  if ($res != false and db_numrows($res) > 0) {
 	    $email_search = db_result($res, 0, 'user_id');
 	    
@@ -1201,9 +1205,10 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
   if (!$artifact)
     { $artifact = ARTIFACT; }
 
-  $sql="SELECT * from $artifact WHERE bug_id='$item_id'";
+  if (!ctype_alnum($artifact))
+    die('trackers_mail_followup: invalid artifact <em>' . html_escape($artifact) . '</em>');
 
-  $result = db_query($sql);
+  $result = db_execute("SELECT * from $artifact WHERE bug_id=?", array($item_id));
   $bug_href = "http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']."$artifact/?$item_id";
   
   if ($result && db_numrows($result) > 0)
@@ -1323,7 +1328,10 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
   $exclude_list = '';
   if (db_result($result,0,'privacy') == '2')
     {
-      $exclude_list = db_result(db_query("SELECT ".$artifact."_private_exclude_address FROM groups WHERE group_id='$group_id'"),0, $artifact."_private_exclude_address");
+      $exclude_list = db_result(db_execute("SELECT ".$artifact."_private_exclude_address
+                                            FROM groups WHERE group_id=?",
+					   array($group_id)),
+				0, $artifact."_private_exclude_address");
 
     }
   
@@ -1360,26 +1368,30 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
   $changed = false;
   $comment = '';
 
+  $filenames = array();
   for ($i = 1; $i < 5; $i++)
+    $filenames[] = "input_file$i";
+  $files = sane_import('files', $filenames);
+  extract(sane_import('post', array('file_description')));
+  foreach ($files as $file)
     { 
-      if (!sane_upload("input_file$i", "tmp_name"))
+      if ($file['error'] != UPLOAD_ERR_OK)
 	{ continue; }
 
       $file_id = trackers_attach_file($item_id,
 				      $group_id,
-				      sane_upload("input_file$i", "tmp_name"),
-				      sane_upload("input_file$i", "name"),
-				      sane_upload("input_file$i", "type"),			 
-				      sane_upload("input_file$i", "size"),
-				      sane_post("file_description"),
+				      $file['tmp_name'],
+				      $file['name'],
+				      $file['type'],
+				      $file['size'],
+				      $file_description,
 				      $changes);
       if ($file_id)
 	{ 
 	  $comment .= "file #$file_id, "; 
-	  $changes['attach'.$i]['name'] = sane_upload("input_file$i", "name");
-	  $changes['attach'.$i]['size'] = sane_upload("input_file$i", "size");	  
+	  $changes['attach'.$i]['name'] = $file['name'];
+	  $changes['attach'.$i]['size'] = $file['size'];	  
 	}
-      
     }
 
   if ($comment)
@@ -1453,7 +1465,7 @@ function trackers_attach_file($item_id,
     fb(sprintf(_("File %s not attached: the allowed upload size is %s kilobytes, after escaping characters as required. This file size is %s kilobytes."), $input_file_name, $GLOBALS['sys_upload_max'], $filesize).$current_upload_size_comment, 1);
     return false;
   }
-  $data = addslashes(fread($data, filesize($input_file))); 
+  $data = fread($data, filesize($input_file));
   $filesize = round(strlen($data) / 1024);
   $uploadsize = $filesize + $current_upload_size;
   if ($uploadsize > $GLOBALS['sys_upload_max'])
@@ -1465,11 +1477,18 @@ function trackers_attach_file($item_id,
   # Update the upload count value (before the actual database insert, safer)
   $GLOBALS['current_upload_size'] = $uploadsize;
 
-  $sql = 'INSERT into trackers_file (item_id,artifact,submitted_by,date,description, file,filename,filesize,filetype) '.
-     "VALUES ($item_id,'".ARTIFACT."',$user_id,'".time()."','".htmlspecialchars($file_description).
-     "','$data','$input_file_name','$input_file_size','$input_file_type')";
-
-  $res = db_query($sql);
+  $res = db_autoexecute('trackers_file',
+    array(
+      'item_id' => $item_id,
+      'artifact' => ARTIFACT,
+      'submitted_by' => $user_id,
+      'date' => time(),
+      'description' => htmlspecialchars($file_description),
+      'file' => $data,
+      'filename' => $input_file_name,
+      'filesize' => $input_file_size,
+      'filetype' => $input_file_type
+    ), DB_AUTOQUERY_INSERT);
 
   if (!$res)
     {
@@ -1515,16 +1534,21 @@ function trackers_attach_file($item_id,
 
 function trackers_exist_cc($item_id,$cc)
 {
-  $sql = "SELECT bug_cc_id FROM ".ARTIFACT."_cc WHERE bug_id='$item_id' AND email='$cc'";
-  $res = db_query($sql);
+  $res = db_execute("SELECT bug_cc_id FROM ".ARTIFACT."_cc WHERE bug_id=? AND email=?",
+		    array($item_id, $cc));
   return (db_numrows($res) >= 1);
 }
 
 function trackers_insert_cc($item_id,$cc,$added_by,$comment,$date)
 {
-  $sql = "INSERT INTO ".ARTIFACT."_cc (bug_id,email,added_by,comment,date) ".
-     "VALUES ('$item_id','$cc','$added_by','".htmlspecialchars($comment)."','$date')";
-  $res = db_query($sql);
+  $res = db_autoexecute(ARTIFACT."_cc",
+    array(
+      'bug_id' => $item_id,
+      'email' => $cc,
+      'added_by' => $added_by,
+      'comment' => htmlspecialchars($comment),
+      'date' => $date
+    ), DB_AUTOQUERY_INSERT);
 
   # Store the change in history only if the CC was a manual add, not a direct
   # effect of another action
@@ -1582,7 +1606,7 @@ function trackers_delete_cc($group_id=false,$item_id=false,$item_cc_id=false)
   
 
   # Extract data about the CC
-  $res1 = db_query("SELECT * from ".ARTIFACT."_cc WHERE bug_cc_id='$item_cc_id'");
+  $res1 = db_execute("SELECT * from ".ARTIFACT."_cc WHERE bug_cc_id=?", array($item_cc_id));
   if (!db_numrows($res1))
     {
       # No result? Stop here silently (assume that someone tried to remove
@@ -1628,7 +1652,7 @@ function trackers_delete_cc($group_id=false,$item_id=false,$item_cc_id=false)
     }
 
   # Now delete the CC address
-  $res2 = db_query("DELETE FROM ".ARTIFACT."_cc WHERE bug_cc_id='$item_cc_id'");
+  $res2 = db_execute("DELETE FROM ".ARTIFACT."_cc WHERE bug_cc_id=?", array($item_cc_id));
   if (!$res2)
     {
       fb(_("Failed to remove CC"), 1);
@@ -1661,7 +1685,8 @@ function trackers_delete_cc_by_user ($item_id, $user_id)
     { return false; }
 
   # Now try to remove
-  $result = db_query("DELETE  FROM ".ARTIFACT."_cc WHERE bug_id='$item_id' AND (email='$user_id' OR email='".user_getname($user_id)."' OR email='".user_getemail($user_id)."')");
+  $result = db_execute("DELETE  FROM ".ARTIFACT."_cc WHERE bug_id=? AND (email=? OR email=? OR email=?)",
+		       array($item_id, $user_id, user_getname($user_id), user_getemail($user_id)));
 
   # Return the success or failure
   return (db_numrows($res) >= 1);
@@ -1679,7 +1704,7 @@ function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on, $ite
 
   if (member_check(0,$group_id, member_create_tracker_flag(ARTIFACT).'1'))
     {
-      $result = db_query("DELETE FROM ".ARTIFACT."_dependencies WHERE item_id='$item_id' AND is_dependent_on_item_id='$item_depends_on' AND is_dependent_on_item_id_artifact='$item_depends_on_artifact'");
+      $result = db_execute("DELETE FROM ".ARTIFACT."_dependencies WHERE item_id=? AND is_dependent_on_item_id=? AND is_dependent_on_item_id_artifact=?", array($item_id, $item_depends_on, $item_depends_on_artifact));
     }
 
   if (!$result)
@@ -1830,7 +1855,7 @@ function trackers_build_match_expression($field, &$to_match)
 {
 
   # First get the field type
-  $res = db_query("SHOW COLUMNS FROM ".ARTIFACT." LIKE '$field'");
+  $res = db_execute("SHOW COLUMNS FROM ".ARTIFACT." LIKE ?", array($field));
   $type = db_result($res,0,'Type');
 
   #echo "<br />DBG '$field' field type = $type";
@@ -1969,7 +1994,12 @@ function trackers_delete_file($group_id=false,$item_id=false,$item_file_id=false
 # register a msg id for an item update notification
 function trackers_register_msgid ($msgid, $artifact, $item_id)
 {
-  return db_affected_rows(db_query("INSERT INTO trackers_msgid (msg_id,artifact,item_id) VALUES ('$msgid','$artifact','$item_id')"));
+  return db_affected_rows(db_autoexecute("trackers_msgid",
+    array(
+      'msg_id' => $msgid,
+      'artifact' => $artifact,
+      'item_id' => $item_id
+    ), DB_AUTOQUERY_INSERT));
 }
 
 # Get a list, separated  a msg id for an item update notification
@@ -1978,7 +2008,8 @@ function trackers_get_msgid ($artifact, $item_id, $latest="")
   if ($latest)
     { $latest = "ORDER BY id DESC LIMIT 1"; }
 
-  $result = db_query("SELECT msg_id FROM trackers_msgid WHERE artifact='$artifact' AND item_id='$item_id' $latest");
+  $result = db_execute("SELECT msg_id FROM trackers_msgid WHERE artifact=? AND item_id=? $latest",
+		       array($artifact, $item_id));
   $list = '';
   while ($id = db_fetch_array($result))
     {
@@ -2454,7 +2485,7 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
       # If the item is private, take into account the exclude-list
       if (db_result($result,0,'privacy') == '2')
         {
-           $exclude_list = db_result(db_query("SELECT ".ARTIFACT."_private_exclude_address FROM groups WHERE group_id='$group_id'"),0, ARTIFACT."_private_exclude_address");
+           $exclude_list = db_result(db_execute("SELECT ".ARTIFACT."_private_exclude_address FROM groups WHERE group_id=?", array($group_id)), 0, ARTIFACT."_private_exclude_address");
 
         }
 

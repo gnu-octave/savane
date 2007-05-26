@@ -426,7 +426,7 @@ switch ($func)
        {
 	 trackers_votes_update($item_id,
 			       $group_id,
-			       sane_post("new_vote"));		      
+			       sane_post("new_vote"));
        }
 	    	    	    
      # Now handle notification, after all necessary actions has been 

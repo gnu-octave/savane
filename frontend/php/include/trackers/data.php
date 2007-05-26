@@ -26,6 +26,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/../trackers/transition.php');
  
 /*
@@ -122,8 +125,7 @@ function trackers_data_get_item_group($item_id)
 
 function &trackers_data_get_notification_settings($group_id, $tracker_name)
 {
-  if (!ctype_alnum($tracker_name))
-    die("Invalid tracker name: " . htmlspecialchars($tracker_name));
+  assert('ctype_alnum($tracker_name)');
 
   $result = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
   if (db_numrows($result) < 1)
@@ -292,7 +294,7 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
       $current_send_all_name = $tracker_name."_cat_".$i."_send_all_flag";
       $current_send_all_flag = $GLOBALS[$current_send_all_name];
 
-      $res_cat=db_autoquery($tracker_name."_field_value",
+      $res_cat=db_autoexecute($tracker_name."_field_value",
         array('email_ad' => $current_email,
 	      'send_all_flag' => $current_send_all_flag),
         DB_AUTOQUERY_UPDATE,
@@ -318,12 +320,12 @@ function trackers_data_get_item_notification_info($item_id, $artifact, $updated)
   $sendemail = 0;
 # Get group information bur new entity notification settings
   $result = db_execute(
-    "SELECT groups.$artifact"."_glnotif, groups.send_all_"."$artifact,
-     groups.new_"."$artifact"."_address ".
-    "FROM "."$artifact, groups ".
-    "WHERE "."$artifact.bug_id=? ".
-    "AND groups.group_id=?",
-    array($item_id, $artifact.group_id));
+    "SELECT groups.{$artifact}_glnotif, groups.send_all_{$artifact},
+     groups.new_{$artifact}_address ".
+    "FROM {$artifact}, groups ".
+    "WHERE {$artifact}.bug_id=? ".
+    "AND groups.group_id={$artifact}.group_id",
+    array($item_id));
 
   $glnotif = db_result($result,0,$artifact."_glnotif");
   $glsendall = db_result($result,0,"send_all_".$artifact);
@@ -458,6 +460,7 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false, $ch
   else
     {
       $status_cond = '';
+      $status_cond_params = array();
 
       # If only active field
       if ($active_only)
@@ -495,9 +498,9 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false, $ch
       # Look for project specific values first
       $res_value = db_execute("SELECT value_id,value,bug_fv_id,bug_field_id,group_id,description,order_id,status ".
 			      "FROM ".ARTIFACT."_field_value ".
-			      "WHERE group_id=? AND bug_field_id=$? ".
+			      "WHERE group_id=? AND bug_field_id=? ".
 			      $status_cond." ORDER BY order_id,value ASC",
-			      array_merge(array($group_id, field_id),
+			      array_merge(array($group_id, $field_id),
 					  $status_cond_params));
       $rows=db_numrows($res_value);
 
@@ -1135,7 +1138,7 @@ function trackers_data_update_value ($item_fv_id,$field,$group_id,$value,$descri
     }
 
   # Now perform the value update
-  $result = db_autoquery(ARTIFACT."_field_value",
+  $result = db_autoexecute(ARTIFACT."_field_value",
     array(
      'value' => $value,
      'description' => $description,
@@ -1475,7 +1478,7 @@ function trackers_data_add_history ($field_name,
     }
 
 
-  $result = db_autoquery($artifact."_history",
+  $result = db_autoexecute($artifact."_history",
     array(
       'bug_id' => $item_id,
       'field_name' => $field_name,
@@ -1499,7 +1502,7 @@ function trackers_data_add_history ($field_name,
   # Useless if already considered to be spam.
   if ($spamscore < 5)
     {  
-      $result = db_query("SELECT group_id FROM $artifact WHERE bug_id='$item_id'");
+      $result = db_execute("SELECT group_id FROM $artifact WHERE bug_id=?", array($item_id));
       if (db_numrows($result))
 	$group_id = db_result($result,0,'group_id');
       else
@@ -2194,8 +2197,12 @@ function trackers_data_update_dependent_items ($depends_on, $item_id, $artifact)
   # If there is no dependency know, insert it.
   if (!db_numrows($result))
     {
-      $sql="INSERT INTO ".ARTIFACT."_dependencies VALUES ('$item_id','$depends_on', '$artifact')";
-      $result=db_query($sql);
+      $result=db_autoexecute(ARTIFACT."_dependencies",
+        array(
+	  'item_id' => $item_id,
+	  'is_dependent_on_item_id' => $depends_on,
+	  'is_dependent_on_item_id_artifact' => $artifact
+	  ), DB_AUTOQUERY_INSERT);
       if (!$result)
 	{
 	  fb(_("Error inserting dependency"), 1);
@@ -2449,20 +2456,20 @@ function trackers_data_get_value($field,$group_id,$value_id,$by_field_id=false)
       }
 
   # Look for project specific values first...
-  $sql="SELECT * FROM ".ARTIFACT."_field_value ".
-     "WHERE  bug_field_id='$field_id' AND group_id='$group_id' ".
-     "AND value_id='$value_id'";
-  $result=db_query($sql);
+  $result=db_execute("SELECT * FROM ".ARTIFACT."_field_value ".
+     "WHERE  bug_field_id=? AND group_id=? ".
+     "AND value_id=?",
+     array($field_id, $group_id,
+	   $value_id));
   if ($result && db_numrows($result) > 0)
     {
       return db_result($result,0,'value');
     }
 
   # ... if it fails, look for system wide default values (group_id=100)...
-  $sql="SELECT * FROM ".ARTIFACT."_field_value ".
-     "WHERE  bug_field_id='$field_id' AND group_id='100' ".
-     "AND value_id='$value_id'";
-  $result=db_query($sql);
+  $result=db_execute("SELECT * FROM ".ARTIFACT."_field_value ".
+     "WHERE  bug_field_id=? AND group_id=100 ".
+     "AND value_id=?", array($field_id, $value_id));
   if ($result && db_numrows($result) > 0)
     {
       return db_result($result,0,'value');
@@ -2478,11 +2485,12 @@ function trackers_data_get_canned_responses ($group_id)
   /*
       Show defined and site-wide responses
   */
-  $sql="SELECT bug_canned_id,title,body,order_id FROM ".ARTIFACT."_canned_responses WHERE ".
-     "(group_id='$group_id' OR group_id='0') ORDER BY order_id ASC";
-
   # return handle for use by select box
-  return db_query($sql);
+  return db_execute("SELECT bug_canned_id,title,body,order_id FROM "
+		    .ARTIFACT."_canned_responses WHERE ".
+		    "(group_id=? OR group_id=0) "
+		    ."ORDER BY order_id ASC",
+		    array($group_id));
 }
 
 function trackers_data_get_reports($group_id, $user_id=100, $sober=false)
@@ -2506,7 +2514,8 @@ function trackers_data_get_reports($group_id, $user_id=100, $sober=false)
 #  if (!$user_id || ($user_id == 100))
 #    {
 
- $sql .= "(group_id=$group_id AND scope='P') OR scope='$system_scope' ORDER BY scope DESC , report_id ASC ";
+ $sql .= "(group_id=? AND scope='P') OR scope=? ORDER BY scope DESC , report_id ASC ";
+ $sql_params = array($group_id, $system_scope);
 
   # OUTDATED: currently personal query forms are deactivated in the code
 #    }  else
@@ -2516,44 +2525,41 @@ function trackers_data_get_reports($group_id, $user_id=100, $sober=false)
 #      }
 # print "DBG sql report = $sql";
 
-  return db_query($sql);
+  return db_execute($sql, $sql_params);
 }
 
 function trackers_data_get_notification($user_id)
 {
-  $sql = "SELECT role_id,event_id,notify FROM trackers_notification WHERE user_id='$user_id'";
-  return db_query($sql);
+  return db_execute("SELECT role_id,event_id,notify FROM trackers_notification WHERE user_id=?",
+		    array($user_id));
 }
 
 function trackers_data_get_notification_with_labels($user_id)
 {
-  $sql = 'SELECT role_label,event_label,notify FROM trackers_notification_role, trackers_notification_event, trackers_notification '.
-     "WHERE trackers_notification.role_id=trackers_notification_role.role_id AND trackers_notification.event_id=trackers_notification_event.event_id AND user_id='$user_id'";
-  return db_query($sql);
+  return db_execute('SELECT role_label,event_label,notify FROM trackers_notification_role, trackers_notification_event, trackers_notification '.
+     "WHERE trackers_notification.role_id=trackers_notification_role.role_id AND trackers_notification.event_id=trackers_notification_event.event_id AND user_id=?", array($user_id));
 }
 
 function trackers_data_get_notification_roles()
 {
-  $sql = 'SELECT * FROM trackers_notification_role ORDER BY rank ASC;';
-  return db_query($sql);
+  return db_query('SELECT * FROM trackers_notification_role ORDER BY rank ASC');
 }
 
 function trackers_data_get_notification_events()
 {
-  $sql = 'SELECT * FROM trackers_notification_event ORDER BY rank ASC;';
-  return db_query($sql);
+  return db_query('SELECT * FROM trackers_notification_event ORDER BY rank ASC');
 }
 
 function trackers_data_delete_notification($user_id)
 {
-  $sql = "DELETE FROM trackers_notification WHERE user_id='$user_id'";
-  return db_query($sql);
+  return db_execute("DELETE FROM trackers_notification WHERE user_id=?", array($user_id));
 }
 
 function trackers_data_insert_notification($user_id, $arr_roles, $arr_events,$arr_notification)
 {
 
   $sql = 'INSERT INTO  trackers_notification (user_id,role_id,event_id,notify) VALUES ';
+  $sql_params = array();
 
   $num_roles = count($arr_roles);
   $num_events = count($arr_events);
@@ -2562,37 +2568,41 @@ function trackers_data_insert_notification($user_id, $arr_roles, $arr_events,$ar
       $role_id = $arr_roles[$i]['role_id'];
       for ($j=0; $j<$num_events; $j++)
 	{
-	  $event_id = $arr_events[$j]['event_id'];
-	  $sql .= "('$user_id','$role_id','$event_id','".$arr_notification[$role_id][$event_id]."'),";
+	  $sql .= "(?,?,?,?),";
+	  $sql_params[] = $user_id;
+	  $sql_params[] = $role_id;
+	  $sql_params[] = $arr_events[$j]['event_id'];
+	  $sql_params[] = $arr_notification[$role_id][$event_id];
 	}
     }
   $sql = substr($sql,0,-1); # remove extra comma at the end
-  return db_query($sql);
+  return db_execute($sql, $sql_params);
 }
 
 function trackers_data_get_watchers($user_id)
 {
-  $sql = "SELECT user_id,group_id FROM trackers_watcher WHERE watchee_id='$user_id'";
-  return db_query($sql);
+  return db_execute("SELECT user_id,group_id FROM trackers_watcher WHERE watchee_id=?", array($user_id));
 }
 
 function trackers_data_get_watchees($user_id)
 {
-  $sql = "SELECT watchee_id,group_id FROM trackers_watcher WHERE user_id='$user_id'";
-  return db_query($sql);
+  return db_execute("SELECT watchee_id,group_id FROM trackers_watcher WHERE user_id=?", array($user_id));
 }
 
 function trackers_data_insert_watchees($user_id, $arr_watchees)
 {
   # No longer really used
   $sql = 'INSERT INTO trackers_watcher (user_id,watchee_id) VALUES ';
+  $sql_params = array();
   $num_watchees = count($arr_watchees);
   for ($i=0; $i<$num_watchees; $i++)
     {
-      $sql .= "('$user_id','".$arr_watchees[$i]."'),";
+      $sql .= "(?,?),";
+      $sql_params[] = $user_id;
+      $sql_params[] = $arr_watchees[$i];
     }
   $sql = substr($sql,0,-1); # remove extra comma at the end
-  return db_query($sql);
+  return db_execute($sql, $sql_params);
 }
 
 
@@ -2603,9 +2613,12 @@ function trackers_data_add_watchees ($user_id, $watchee_id, $group_id)
       # Only accept the request from a member of the project
       # Note that a user can trick the URL to watch himself
       # It has no consequences, so we do not care.
-      $sql = 'INSERT INTO trackers_watcher (user_id,watchee_id,group_id) VALUES '.
-	 "('$user_id','$watchee_id','$group_id')";
-      return db_query($sql);
+      return db_autoexecute('trackers_watcher',
+        array(
+          'user_id' => $user_id,
+	  'watchee_id' => $watchee_id,
+	  'group_id' => $group_id
+	), DB_AUTOQUERY_INSERT);
     }
   else
     {
@@ -2616,22 +2629,25 @@ function trackers_data_add_watchees ($user_id, $watchee_id, $group_id)
 
 function trackers_data_delete_watchees ($user_id, $watchee_id, $group_id)
 {
-  $sql = "DELETE FROM trackers_watcher WHERE user_id='$user_id' AND watchee_id='$watchee_id' AND group_id='$group_id'";
-  return db_query($sql);
+  return db_autoexecute("DELETE FROM trackers_watcher WHERE user_id=? AND watchee_id=? AND group_id=?",
+			array($user_id, $watchee_id, $group_id));
 }
 
 
 function trackers_data_is_watched ($user_id, $watchee_id, $group_id)
 {
-  $sql = "SELECT watchee_id FROM trackers_watcher WHERE user_id='$user_id' AND watchee_id='$watchee_id' AND group_id='$group_id'";
-  return db_result(db_query($sql),0,'watchee_id');
+  $result = db_execute("SELECT watchee_id FROM trackers_watcher
+     WHERE user_id=? AND watchee_id=? AND group_id=?",
+    array($user_id, $watchee_id, $group_id));
+  return db_result($result, 0, 'watchee_id');
 }
 
 
 function trackers_data_delete_file($group_id, $item_id, $item_file_id)
 {
   # Make sure the attachment belongs to the group
-  $res = db_query("SELECT bug_id from ".ARTIFACT." WHERE bug_id=$item_id AND group_id=$group_id");
+  $res = db_execute("SELECT bug_id from ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+		    array($item_id, $group_id));
   if (db_numrows($res) <= 0)
     {
       sprintf(_("Item #%s doesn't belong to project"), $item_id);
@@ -2639,7 +2655,8 @@ function trackers_data_delete_file($group_id, $item_id, $item_file_id)
     }
 
   # Now delete the attachment
-  $result = db_query("DELETE FROM trackers_file WHERE item_id='$item_id' AND file_id='$item_file_id'");
+  $result = db_execute("DELETE FROM trackers_file WHERE item_id=? AND file_id=?",
+		       array($item_id, $item_file_id));
   if (!$result)
     {
       "Error deleting attachment #$item_file_id: ".db_error($res);
@@ -2660,5 +2677,8 @@ function trackers_data_delete_file($group_id, $item_id, $item_file_id)
 
 function trackers_data_count_field_value_usage ($group_id, $field, $field_value_value_id)
 {
-  return db_numrows(db_query("SELECT bug_id FROM ".ARTIFACT." WHERE $field='$field_value_value_id' AND group_id='$group_id'"));
+  if (!preg_match('/^[a-z0-9_]$/', $field))
+    die('trackers_data_count_field_value_usage: invalid $field <em>' . html_escape($field) . '</em>');
+  return db_numrows(db_execute("SELECT bug_id FROM ".ARTIFACT." WHERE $field=? AND group_id=?",
+			       array($field_value_value_id, $group_id)));
 }

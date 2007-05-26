@@ -193,8 +193,7 @@ function spam_unflag ($item_id, $comment_id, $tracker, $group_id)
               WHERE item_id=? AND comment_id=? AND artifact=? AND group_id=?",
 	     array($item_id, $comment_id, $tracker, $group_id));
   
-  if (!ctype_alnum($tracker))
-    die("Invalid tracker name: " . htmlspecialchars($tracker));
+  assert('ctype_alnum($tracker)');
 
   # Update the item spamscore fields
   if ($comment_id)
@@ -292,8 +291,7 @@ function spam_set_item_default_score ($item_id, $comment_id, $tracker, $score, $
 # Put an item or a comment in temporary queue
 function spam_add_to_spamcheck_queue ($item_id, $comment_id, $tracker, $group_id, $current_score)
 {
-  if (!ctype_alnum($tracker))
-    die("Invalid tracker name: " . htmlspecialchars($tracker));
+  assert('ctype_alnum($tracker)');
 
   # Useless if already considered as spam
   if ($GLOBALS['int_probablyspam'])
@@ -369,8 +367,7 @@ function spam_banip ($item_id, $comment_id, $tracker)
   # * content posted during the last 6 hours
   $since =  mktime((date("H")-6),date("i"));
 
-  if (!ctype_alnum($tracker))
-    die("Invalid tracker name: " . htmlspecialchars($tracker));
+  assert('ctype_alnum($tracker)');
 
   if ($comment_id)
     {

@@ -1,3 +1,7 @@
+2007-05-26  Rudy Gevaert <Rudy.Gevaert@UGent.be>
+
+	* Update UGent.css (bug #9201@gna)
+
 2007-05-13  Sylvain Beucler  <beuc@beuc.net>
 
 	* frontend/php/include/init.php: Grouped debug output at the

@@ -25,6 +25,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 
 function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_to=false,$quoted=false)
 {
@@ -39,7 +42,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
   $i = 0;
   
   # Get original submission
-  $result = db_query("SELECT user.user_id,user.user_name,user.realname,".ARTIFACT.".date,".ARTIFACT.".details,".ARTIFACT.".spamscore FROM ".ARTIFACT.",user WHERE  ".ARTIFACT.".submitted_by=user.user_id AND ".ARTIFACT.".bug_id='$item_id' AND ".ARTIFACT.".group_id='$group_id' LIMIT 1");
+  $result = db_execute("SELECT user.user_id,user.user_name,user.realname,".ARTIFACT.".date,".ARTIFACT.".details,".ARTIFACT.".spamscore FROM ".ARTIFACT.",user WHERE  ".ARTIFACT.".submitted_by=user.user_id AND ".ARTIFACT.".bug_id=? AND ".ARTIFACT.".group_id=? LIMIT 1", array($item_id, $group_id));
   $entry = db_fetch_array($result);
   $data[$i]['user_id'] = $entry['user_id'];
   $data[$i]['user_name'] = $entry['user_name'];
@@ -147,17 +150,17 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
   $assignees_id[$assignee_id] = true;  
   if (member_check_squad($assignee_id, $group_id))
     {
-      $sql_assignee_squad = "SELECT user_id FROM user_squad WHERE squad_id='".$assignee_id."' and group_id='".$group_id."'";
-      $result_assignee_squad = db_query($sql_assignee_squad);
+      $result_assignee_squad = db_execute("SELECT user_id FROM user_squad WHERE squad_id=? and group_id=?",
+					  array($assignee_id, $group_id));
       while ($row_assignee_squad = db_fetch_array($result_assignee_squad))
 	{
-	  $assignees_id[$row_assignee_squad['user_id']] = true;  
+	  $assignees_id[$row_assignee_squad['user_id']] = true;
 	}
     }
 
   # Provide a shortcut to the original submission, if more than 5 comments
   # and not in reversed order
-  if (!$ascii && !sane_all("printer") 
+  if (!$ascii && empty($_REQUEST['printer'])
       && $max_entries > 5 && !$user_pref_fromoldertonewer)
     {
       $jumpto_text = _("Jump to the original submission");
@@ -210,6 +213,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
       else
 	{ $comment_number = $i; }
 
+      extract(sane_import('get', array('func', 'comment_internal_id')));
       # Handle spam special cases here
       if ($is_spam)
 	{
@@ -217,7 +221,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	  # warning
 	  # (not if the item was just flagged)
 	  if ($entry['comment_internal_id'] < 1 &&
-	      sane_get("func") != "flagspam")
+	      $func != "flagspam")
 	    {
 	      fb(_("This item as been reported to be a spam"), 1);
 	    }
@@ -228,15 +232,15 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	    { $spammer_user_name = _("an anonymous"); }
 
 	  # If we are in printer mode, simply skip if
-	  if (sane_all("printer"))
+	  if (!empty($_REQUEST['printer']))
 	    { continue; }
 
 	  $class = utils_get_alt_row_color($j);
 
 	  # The admin may actually want to see the incriminated item
 	  # The submitter too
-	  if ((sane_get("func") == "viewspam" &&
-	      sane_get("comment_internal_id") == $entry['comment_internal_id']) ||
+	  if (($func == "viewspam" &&
+	      $comment_internal_id == $entry['comment_internal_id']) ||
 	      ($entry['user_id'] != 100 && user_getid() == $entry['user_id']))
 	    {
 	      # Should the item content, without making links, with no markup
@@ -461,7 +465,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	      user_isloggedin() && 
 	      !$icon && 
 	      $poster_id != user_getid() &&
-	      !sane_all("printer"))	    
+	      empty($_REQUEST['printer']))
 	    {
               # Surround by two line breaks, to keep that link clearly 
 	      # separated from 
@@ -587,6 +591,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
 {
 
   global $sys_datefmt, $HTML;
+  $out = '';
 
   # ASCII must not be translated
 
@@ -865,5 +870,3 @@ $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delet
   return($out);
 
 }
-
-?>

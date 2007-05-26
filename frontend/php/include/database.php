@@ -65,7 +65,7 @@ function db_query_escape()
 {
   $num_args = func_num_args();
   if ($num_args < 1)
-    die(_("db_query_escape: Missing parameter"));
+    util_die(_("db_query_escape: Missing parameter"));
   $args = func_get_args();
 
   // Escape all params except the query itself
@@ -150,7 +150,7 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
 {
   // table name validation
   if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]+$/', $table))
-    die("db_autoexecute: invalid table name: " . htmlspecialchars($table));
+    util_die("db_autoexecute: invalid table name: " . htmlspecialchars($table));
 
   switch((string) $mode) {
   case 'INSERT':

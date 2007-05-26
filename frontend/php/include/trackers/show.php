@@ -24,6 +24,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/cookbook.php');
 
 function show_item_list ($result_arr,
@@ -243,10 +246,14 @@ function show_item_list_sober ($result_arr,
   $thisarray = array_merge($possible_contexts, $impossible_contexts);
   while (list($context,) = each($thisarray))
     {
-      $sql_unboundcontext .= "AND context_$context='0' ";
+      if (!ctype_alnum($context)) die('show_item_list_sober: invalid context <em>'.html_escape($context).'</em>');
+      $sql_unboundcontext .= "AND context_$context=0 ";
     }
   while (list($audience,) = each($possible_audiences))
-    { $sql_unboundaudience .= "AND audience_$audience='0' "; }
+    {
+      if (!ctype_alnum($audience)) die('show_item_list_sober: invalid audience <em>'.html_escape($audience).'</em>');
+      $sql_unboundaudience .= "AND audience_$audience=0 ";
+    }
 
   # Built for scratch two groups of audiences possible for this page:
   # group members and non-group members
@@ -261,8 +268,8 @@ function show_item_list_sober ($result_arr,
 
   # Build sql specific part to group audiences between:
   #   project members / non project members
-  $sql_nonmembers = "AND (audience_anonymous='1' OR audience_loggedin='1')";
-  $sql_members = "AND (audience_members='1' OR audience_technicians='1' OR audience_managers='1')";
+  $sql_nonmembers = "AND (audience_anonymous=1 OR audience_loggedin=1)";
+  $sql_members = "AND (audience_members=1 OR audience_technicians=1 OR audience_managers=1)";
   #$sql_everybody = $sql_nonmembers." ".$sql_members;
 
   unset($sql_privateitem);
@@ -272,11 +279,13 @@ function show_item_list_sober ($result_arr,
   reset($possible_contexts);
   while (list($context,$context_label) = each($possible_contexts))
     {
+      if (!ctype_alnum($context)) die('show_item_list_sober: invalid context <em>'.html_escape($context).'</em>');
       $seen_before = array();
       $context_content = '';
       reset($possible_audiences);
       while (list($audience,$audience_label) = each($possible_audiences))
 	{
+	  if (!ctype_alnum($audience)) die('show_item_list_sober: invalid audience <em>'.html_escape($audience).'</em>');
           # Get recipes contextual data
 	  # (no limit argument, expecting people not to use terrible scales)
 
@@ -297,25 +306,26 @@ function show_item_list_sober ($result_arr,
 	  if ($audience != 'unbound' && $context != 'unbound')
 	    {
 	      # Normal case, binds for both context and audience
-	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id='$group_id' OR group_id='$sys_group_id') AND context_$context='1' $sql_audience";
+	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id=? OR group_id=?) AND context_$context=1 $sql_audience";
 	    }
 	  else if ($audience == 'unbound' && $context != 'unbound')
 	    {
 	      # Bind only for the context
-	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id='$group_id' OR group_id='$sys_group_id') AND context_$context='1' $sql_unboundaudience";
+	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id=? OR group_id=?) AND context_$context='1' $sql_unboundaudience";
 	    }
 	  else if ($context == 'unbound' && $audience != 'unbound')
 	    {
 	      # Bind only for the audience
-	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id='$group_id' OR group_id='$sys_group_id') $sql_audience $sql_unboundcontext";
+	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id=? OR group_id=?) $sql_audience $sql_unboundcontext";
 	    }
 	  else if ($context == 'unbound' && $audience == 'unbound')
 	    {
 	      # Not binded at all
-	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id='$group_id' OR group_id='$sys_group_id') $sql_unboundcontext $sql_unboundaudience";
+	      $sql_context = "SELECT * FROM cookbook_context2recipe WHERE (group_id=? OR group_id=?) $sql_unboundcontext $sql_unboundaudience";
 	    }
 
-	  $result_context = db_query($sql_context);
+	  $sql_context_params = array($group_id, $sys_group_id);
+	  $result_context = db_execute($sql_context, $sql_context_params);
 	  $result_rows = db_numrows($result_context);
 
 	  if ($result_rows)
@@ -709,20 +719,20 @@ function show_dependent_item ($item_id, $dependson=0)
 	  $sql = "SELECT ".$art.".bug_id,".$art.".date,".$art.".summary,".$art.".status_id,".$art.".resolution_id,".$art.".group_id,".$art.".priority,".$art.".privacy,".$art.".submitted_by ".
 	     " FROM ".$art.",".$art."_dependencies ".
 	     " WHERE ".$art.".bug_id=".$art."_dependencies.item_id ".
-	     " AND ".$art."_dependencies.is_dependent_on_item_id='$item_id'".
-	     " AND ".$art."_dependencies.is_dependent_on_item_id_artifact='".ARTIFACT."' ORDER by ".$art.".bug_id";
+	     " AND ".$art."_dependencies.is_dependent_on_item_id = ?".
+	     " AND ".$art."_dependencies.is_dependent_on_item_id_artifact = ? ORDER by ".$art.".bug_id";
+	  $res_all = db_execute($sql, array($item_id, ARTIFACT));
 	}
       else
 	{
 	  $sql = "SELECT ".$art.".bug_id,".$art.".date,".$art.".summary,".$art.".status_id,".$art.".resolution_id,".$art.".group_id,".$art.".priority,".$art.".privacy,".$art.".submitted_by".
 	     " FROM ".$art.",".ARTIFACT."_dependencies ".
 	     " WHERE ".$art.".bug_id=".ARTIFACT."_dependencies.is_dependent_on_item_id ".
-	     " AND ".ARTIFACT."_dependencies.item_id='$item_id'".
-	     " AND ".ARTIFACT."_dependencies.is_dependent_on_item_id_artifact='".$art."' ORDER by ".$art.".bug_id ";
-
+	     " AND ".ARTIFACT."_dependencies.item_id = ?".
+	     " AND ".ARTIFACT."_dependencies.is_dependent_on_item_id_artifact = ? ORDER by ".$art.".bug_id ";
+	  $res_all = db_execute($sql, array($item_id, $art));
 	}
       
-      $res_all = db_query($sql);
       $numrows_all = db_numrows($res_all);
       for ($i=0; $i < $numrows_all; $i++)
 	{
@@ -786,7 +796,7 @@ function show_dependent_item ($item_id, $dependson=0)
 			    $dstatus))
 	{
 	  $dstatus[$current_group_id.$tracker.$content[$key]['resolution_id']] = 
-	    db_result(db_query("SELECT value FROM ".$tracker."_field_value WHERE bug_field_id='108' AND (group_id='".$group_id."' OR group_id='100') AND value_id='".$content[$key]['resolution_id']."' ORDER BY bug_fv_id DESC LIMIT 1"), 0, 'value');
+	    db_result(db_execute("SELECT value FROM ".$tracker."_field_value WHERE bug_field_id='108' AND (group_id=? OR group_id=100) AND value_id=? ORDER BY bug_fv_id DESC LIMIT 1", array($group_id, $content[$key]['resolution_id'])), 0, 'value');
 	}
       $status = $dstatus[$current_group_id.$tracker.$content[$key]['resolution_id']];
       
@@ -882,6 +892,3 @@ function show_dependent_item ($item_id, $dependson=0)
   print rtrim($content, ', ').'.</p>';
 
 }
-
-
-?>

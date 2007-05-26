@@ -67,7 +67,7 @@ function trackers_votes_user_giventoitem_count ($user_id, $tracker, $item_id)
 
 
 # Update the database: add / update votes
-function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
+function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=null)
 {
   # Vote must be simple integer
   if (!ctype_digit($new_vote))
@@ -76,14 +76,13 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=0)
       return false;
     }
 
-  if (!ctype_alnum($tracker))
-    die("Invalid tracker name: " . htmlspecialchars($tracker));
-
   # If the tracker is undefined, use the constant,
   if (!$tracker)
     {
       $tracker = ARTIFACT;
     }
+
+  assert('ctype_alnum($tracker)');
 
   # If group_id is not known, we guess it
   if (!$group_id)

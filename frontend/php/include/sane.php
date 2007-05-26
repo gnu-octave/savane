@@ -119,9 +119,7 @@ if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
 # Return the input as-is, without unwanted magic_quotes_gpc effect
 function stripslashesgpc($val)
 {
-  if (get_magic_quotes_gpc()) 
-    return stripslashes($val);
-  return $val;
+
 }
 
 
@@ -137,19 +135,63 @@ function sane_import($method, $names) {
     $input_array =& $_POST;
   else if ($method == 'cookie')
     $input_array =& $_COOKIE;
+  else if ($method == 'files')
+    $input_array =& $_FILES;
   else
     $input_array =& $_REQUEST;
 
   $values = array();
   foreach ($names as $input_name) {
-    if (isset($input_array[$input_name])) {
-      $values[$input_name] = stripslashesgpc($input_array[$input_name]);
-    } else {
-      $values[$input_name] = null;
-    }
+    if (isset($input_array[$input_name]))
+      {
+	if (get_magic_quotes_gpc())
+	  {
+	    $values[$input_name] = sane_nomagic($input_array[$input_name], $method);
+	  } else {
+	    $values[$input_name] = $input_array[$input_name];
+	  }
+      }
+    else
+      {
+	$values[$input_name] = null;
+      }
   }
 
   return $values;
+}
+
+// Cancel the effect of magic_quotes_gpc
+// Technically is would be more efficient to edit arrays in place but
+// PHP seems to suck at that, syntax-wise
+function sane_nomagic($arg, $method) {
+  if (is_array($arg))
+    { // array
+      $arr =& $arg;
+      $arr_nomagic = array();
+      if ($method == 'files' and array_key_exists('tmp_name', $_arg))
+	{ // this is a file entry
+	  // convert only a few entry - especially _not_ 'tmp_name'
+	  $arr_nomagic['name']  = sane_nomagic($arr['name'], $method);
+	  $arr_nomagic['type']  = sane_nomagic($arr['type'], $method);
+	  $arr_nomagic['size']  = $arr['size'];
+	  $arr_nomagic['error'] = $arr['error'];
+	  $arr_nomagic['tmp_name'] = $arr['tmp_name'];
+	}
+      else
+	{ // recursively convert the array
+	  // (can be either an array of files or a regular array of values)
+	  $arr_nomagic = array();
+	  foreach ($arr as $key => $val)
+	    {
+	      $ret_val[$key] = sane_nomagic($val, $method);
+	    }
+	}
+      return $arr_nomagic;
+    }
+  else
+    { // scalar
+      return stripslashes($arg);
+    }
 }
 
 # Backward security function. This will sanitize input already passed via
@@ -236,7 +278,7 @@ function sane_isset($varname)
 }
 
 
-# Function to obtain user input submitted in a cookie
+# Function to obtain info related to a file upload
 function sane_upload($varname, $subvarname=false) 
 {
   if (!$subvarname)
