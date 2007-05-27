@@ -246,12 +246,12 @@ function show_item_list_sober ($result_arr,
   $thisarray = array_merge($possible_contexts, $impossible_contexts);
   while (list($context,) = each($thisarray))
     {
-      if (!ctype_alnum($context)) die('show_item_list_sober: invalid context <em>'.html_escape($context).'</em>');
+      if (!ctype_alnum($context)) util_die('show_item_list_sober: invalid context <em>'.htmlspecialchars($context).'</em>');
       $sql_unboundcontext .= "AND context_$context=0 ";
     }
   while (list($audience,) = each($possible_audiences))
     {
-      if (!ctype_alnum($audience)) die('show_item_list_sober: invalid audience <em>'.html_escape($audience).'</em>');
+      if (!ctype_alnum($audience)) util_die('show_item_list_sober: invalid audience <em>'.htmlspecialchars($audience).'</em>');
       $sql_unboundaudience .= "AND audience_$audience=0 ";
     }
 
@@ -279,13 +279,13 @@ function show_item_list_sober ($result_arr,
   reset($possible_contexts);
   while (list($context,$context_label) = each($possible_contexts))
     {
-      if (!ctype_alnum($context)) die('show_item_list_sober: invalid context <em>'.html_escape($context).'</em>');
+      if (!ctype_alnum($context)) util_die('show_item_list_sober: invalid context <em>'.htmlspecialchars($context).'</em>');
       $seen_before = array();
       $context_content = '';
       reset($possible_audiences);
       while (list($audience,$audience_label) = each($possible_audiences))
 	{
-	  if (!ctype_alnum($audience)) die('show_item_list_sober: invalid audience <em>'.html_escape($audience).'</em>');
+	  if (!ctype_alnum($audience)) util_die('show_item_list_sober: invalid audience <em>'.htmlspecialchars($audience).'</em>');
           # Get recipes contextual data
 	  # (no limit argument, expecting people not to use terrible scales)
 

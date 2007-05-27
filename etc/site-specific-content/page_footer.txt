@@ -1,5 +1,5 @@
 <!-- Footer added to each page -->
-Copyright (C) 2006 Hum, I should look in
+Copyright (C) 2007 &nbsp;MySelf - Hum, I should look in
 savane/etc/site-specific-content and fit this to my needs
 <br />
 Verbatim copying and distribution of this entire article is permitted in any medium, provided this notice is preserved.

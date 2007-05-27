@@ -82,7 +82,7 @@ function db_variable_binding($sql, $inputarr=null) {
   $sql_expanded = $sql;
   if ($inputarr) {
     if (!is_array($inputarr))
-      die("db_variable_binding: \$inputarr is not an array. Query is: <code>"
+      util_die("db_variable_binding: \$inputarr is not an array. Query is: <code>"
 	  . htmlspecialchars($sql) . "</code>, \$inputarr is <code>"
 	  . print_r($inputarr, 1) . "</code>");
 
@@ -192,7 +192,7 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
   default:
     // no default
   }
-  die("db_autoexecute: unknown mode=$mode");
+  util_die("db_autoexecute: unknown mode=$mode");
 }
 
 /* Like ADOConnection->Execute, with variables binding emulation for
@@ -245,9 +245,9 @@ function db_query($qstring,$print=0)
   $GLOBALS['db_qhandle'] = mysql_query($qstring);
   if (!$GLOBALS['db_qhandle']) {
     // throw new Exception('db_query: SQL query error in ['.$qstring.']: ' . mysql_error());
-    die('db_query: SQL query error in ['
-	. htmlspecialchars($qstring) . ']: '
-	. mysql_error());
+    util_die('db_query: SQL query error ' .
+	     '<em>'.mysql_error().'</em> in ['
+	     . htmlspecialchars($qstring) . ']');
   }
   return $GLOBALS['db_qhandle'];
 }

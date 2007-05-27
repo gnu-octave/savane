@@ -244,8 +244,8 @@ function utils_cutlink ($string, $lenght=35)
   #    $string = substr($string, 0, $lenght)."...";
   #    $help = ' title="'.$url.'"';
   #  }
-
-  return '<a href="'.$url.'"'.$help.'>'.$string.'</a>';
+  # return '<a href="'.$url.'"'.$help.'>'.$string.'</a>';
+  return '<a href="'.$url.'">'.$string.'</a>';
 }
 
 

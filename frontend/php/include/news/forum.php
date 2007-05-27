@@ -22,6 +22,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 function forum_show_a_nested_message ($result,$row=0)
 {
 	/*
@@ -41,7 +44,7 @@ function forum_show_a_nested_message ($result,$row=0)
 	if ($g_id == $GLOBALS['sys_group_id'])
         {
             $f_id =  db_result($result,$row,'group_forum_id');
-            $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id='$f_id'");
+            $gr = db_execute("SELECT group_id FROM news_bytes WHERE forum_id=?", array($f_id));
             $g_id = db_result($gr,0,'group_id');
         }
 
@@ -68,11 +71,9 @@ function forum_show_a_nested_message ($result,$row=0)
 function forum_show_nested_messages ($thread_id, $msg_id) {
 	global $total_rows,$sys_datefmt;
 
-	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id  ".
-		"FROM forum,user,forum_group_list WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='$msg_id'  AND forum_group_list.group_forum_id = forum.group_forum_id ".
-		"ORDER BY forum.date ASC;";
-
-	$result=db_query($sql);
+	$result = db_execute("SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id  ".
+		"FROM forum,user,forum_group_list WHERE forum.thread_id = ? AND user.user_id=forum.posted_by AND forum.is_followup_to = ? AND forum_group_list.group_forum_id = forum.group_forum_id ".
+		"ORDER BY forum.date ASC", array($thread_id, $msg_id));
 	$rows=db_numrows($result);
 
 	$ret_val='';
@@ -123,8 +124,7 @@ function forum_header($params)
 	if ($forum_id)
         {
             # Show this news item at the top of the page
-            $sql="SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
-            $result=db_query($sql);
+            $result=db_execute("SELECT * FROM news_bytes WHERE forum_id=?", array($forum_id));
 
             # if the result is empty, this is not a news item, but a forum.
             if (!$result || db_numrows($result) < 1)
@@ -208,7 +208,7 @@ function forum_header($params)
         print ' | <A HREF="'.$GLOBALS['sys_home'].'forum/admin/?group_id='.$group_id.'">Admin</A></strong>';
       }
 	*/
-	print '</P>';
+	print '</strong></P>';
 }
 
 # Backward compatibility
@@ -265,8 +265,7 @@ function get_forum_name($id){
 	/*
 		Takes an ID and returns the corresponding forum name
 	*/
-	$sql="SELECT forum_name FROM forum_group_list WHERE group_forum_id='$id'";
-	$result=db_query($sql);
+        $result = db_execute("SELECT forum_name FROM forum_group_list WHERE group_forum_id=?", array($id));
 	if (!$result || db_numrows($result) < 1)
         {
             return "Not Found";
@@ -287,14 +286,12 @@ function show_thread($thread_id,$et=0)
 	*/
 	global $total_rows,$sys_datefmt,$is_followup_to,$subject,$forum_id,$current_message;
 
-	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
-		"FROM forum,user WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' ".
-		"ORDER BY forum.msg_id DESC;";
-
-	$result=db_query($sql);
+	$result = db_execute("SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
+		"FROM forum,user WHERE forum.thread_id=? AND user.user_id=forum.posted_by AND forum.is_followup_to=0 ".
+		"ORDER BY forum.msg_id DESC", array($thread_id));
 
 	$total_rows=0;
-
+	$ret_val = '';
 	if (!$result || db_numrows($result) < 1)
         {
             return 'Broken Thread';
@@ -364,13 +361,13 @@ function show_submessages($thread_id, $msg_id, $level,$et=0)
 	*/
 	global $total_rows,$sys_datefmt,$forum_id,$current_message;
 
-	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
-		"FROM forum,user WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='$msg_id' ".
-		"ORDER BY forum.msg_id ASC;";
-
-	$result=db_query($sql);
+	$result = db_execute("SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
+		"FROM forum,user WHERE forum.thread_id = ? ".
+		"AND user.user_id=forum.posted_by AND forum.is_followup_to = ? ".
+		"ORDER BY forum.msg_id ASC", array($thread_id, $msg_id));
 	$rows=db_numrows($result);
 
+	$ret_val = '';
 	if ($result && $rows > 0) {
         /*   US changed treatment of background color. Messages belonging to the same thread get the same background color as the first
                message of that threat
@@ -466,8 +463,8 @@ function get_forum_saved_date($forum_id)
         }
 	else
         {
-            $sql="SELECT save_date FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id='$forum_id';";
-            $result = db_query($sql);
+	    $result = db_execute("SELECT save_date FROM forum_saved_place WHERE user_id=? AND forum_id=?",
+				 array(user_getid(), $forum_id));
             if ($result && db_numrows($result) > 0)
                 {
                     $forum_saved_date=db_result($result,0,'save_date');
@@ -497,11 +494,13 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
                 }
 
             #see if that message has been posted already for all the idiots that double-post
-            $res3=db_query("SELECT * FROM forum ".
-                           "WHERE is_followup_to='$is_followup_to' ".
-                           "AND subject='".  htmlspecialchars($subject) ."' ".
-                           "AND group_forum_id='$group_forum_id' ".
-                           "AND posted_by='". user_getid() ."'");
+            $res3=db_execute("SELECT * FROM forum ".
+			     "WHERE is_followup_to=? ".
+			     "AND subject=? ".
+			     "AND group_forum_id=? ".
+			     "AND posted_by=?",
+			     array($is_followup_to, htmlspecialchars($subject),
+				   $group_forum_id, user_getid()));
 
             if (db_numrows($res3) > 0)
                 {
@@ -523,7 +522,8 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
                     if ($is_followup_to)
                         {
                             #increment the parent's followup count if necessary
-                            $res2=db_query("SELECT * FROM forum WHERE msg_id='$is_followup_to' AND thread_id='$thread_id' AND group_forum_id='$group_forum_id'");
+                            $res2=db_execute("SELECT * FROM forum WHERE msg_id=? AND thread_id=? AND group_forum_id=?",
+                                             array($is_followup_to, $thread_id, $group_forum_id));
                             if (db_numrows($res2) > 0)
                                 {
                                     if (db_result($result,0,'has_followups') > 0)
@@ -533,7 +533,9 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
                                     else
                                         {
                                             #mark the parent with followups as an optimization later
-                                            db_query("UPDATE forum SET has_followups='1' WHERE msg_id='$is_followup_to' AND thread_id='$thread_id' AND group_forum_id='$group_forum_id'");
+                                            db_execute("UPDATE forum SET has_followups='1' WHERE msg_id=?
+                                                        AND thread_id=? AND group_forum_id=?",
+                                                       array($is_followup_to, $thread_id, $group_forum_id));
                                         }
                                 }
                             else
@@ -548,10 +550,16 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
                         }
                 }
 
-            $sql="INSERT INTO forum (group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-                "VALUES ('$group_forum_id', '".user_getid()."', '".htmlspecialchars($subject)."', '".htmlspecialchars($body)."', '".time()."','$is_followup_to','$thread_id')";
-
-            $result=db_query($sql);
+            $result = db_autoexecute('forum',
+              array(
+                'group_forum_id' => $group_forum_id,
+                'posted_by' => user_getid(),
+                'subject' => htmlspecialchars($subject),
+                'body' => htmlspecialchars($body),
+                'date' => time(),
+                'is_followup_to' => $is_followup_to,
+                'thread_id' => $thread_id
+              ), DB_AUTOQUERY_INSERT);
 
             if (!$result)
                 {
@@ -596,7 +604,6 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
             print '<input type="hidden" name="post_message" value="y" />';
             print '<input type="HIDDEN" name="forum_id" value="'.$forum_id.'" />';
             print '<input type="HIDDEN" name="thread_id" value="'.$thread_id.'" />';
-            print '<input type="HIDDEN" name="msg_id" value="'.$is_followup_to.'" />';
             print '<input type="HIDDEN" name="is_followup_to" value="'.$is_followup_to.'" />';
             print '<table><tr><td><strong>'._("Subject").':</td><td>';
             print '<input type="TEXT" name="subject" value="'.$subject.'" size="60" maxlength="45" />';
@@ -631,25 +638,22 @@ function handle_monitoring($forum_id,$msg_id)
 		If someone is, it sends them the message in email format
 	*/
 
-	$sql="SELECT user.email from forum_monitored_forums,user ".
-		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id'";
-
-	$result=db_query($sql);
+	$result=db_execute("SELECT user.email from forum_monitored_forums,user ".
+			   "WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id=?",
+			   array($forum_id));
 	$rows=db_numrows($result);
 
 	if ($result && $rows > 0)
         {
             $tolist=implode(result_column_to_array($result),', ');
 
-            $sql="SELECT groups.unix_group_name,user.user_name,forum_group_list.forum_name,user.email,user.realname,".
+	    $result = db_execute("SELECT groups.unix_group_name,user.user_name,forum_group_list.forum_name,user.email,user.realname,".
                 "forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
                 "FROM forum,user,forum_group_list,groups ".
                 "WHERE user.user_id=forum.posted_by ".
                 "AND forum_group_list.group_forum_id=forum.group_forum_id ".
                 "AND groups.group_id=forum_group_list.group_id ".
-                "AND forum.msg_id='$msg_id'";
-
-            $result = db_query ($sql);
+                "AND forum.msg_id=?", array($msg_id));
 
             if ($result && db_numrows($result) > 0)
                 {
@@ -787,8 +791,8 @@ function recursive_delete($msg_id,$forum_id)
             return 0;
         }
 
-	$sql="SELECT msg_id FROM forum WHERE is_followup_to='$msg_id' AND group_forum_id='$forum_id'";
-	$result=db_query($sql);
+	$result=db_execute("SELECT msg_id FROM forum WHERE is_followup_to=? AND group_forum_id=?",
+			   array($msg_id, $forum_id));
 	$rows=db_numrows($result);
 	$count=1;
 
@@ -796,8 +800,8 @@ function recursive_delete($msg_id,$forum_id)
         {
             $count += recursive_delete(db_result($result,$i,'msg_id'),$forum_id);
         }
-	$sql="DELETE FROM forum WHERE msg_id='$msg_id' AND group_forum_id='$forum_id'";
-	$toss=db_query($sql);
+	$toss = db_execute("DELETE FROM forum WHERE msg_id=? AND group_forum_id=?",
+			   array($msg_id, $forum_id));
 
 	return $count;
 }
@@ -806,5 +810,3 @@ function recursive_delete($msg_id,$forum_id)
 function validate_forum_name ($forum_name) {
     return (ereg('^[a-zA-Z0-9\-]+$',$forum_name));
 }
-
-?>

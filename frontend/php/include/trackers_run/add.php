@@ -25,6 +25,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 extract(sane_import('request',
   array('form_id')));
@@ -39,7 +41,7 @@ $fields_per_line=2;
 $max_size=40;
 
 # First display the message preamble
-$res_preamble = db_query("SELECT ".ARTIFACT."_preamble FROM groups WHERE group_id=$group_id");
+$res_preamble = db_execute("SELECT ".ARTIFACT."_preamble FROM groups WHERE group_id=?", array($group_id));
 
 $preamble = db_result($res_preamble,0,ARTIFACT.'_preamble');
 if ($preamble)

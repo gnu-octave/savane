@@ -22,6 +22,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 function news_new_subbox($row)
 {
   return $row > 1 ? '</div><div class="'.utils_get_alt_row_color($row).'">' : '';
@@ -41,10 +44,14 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
   # We want the total number of news
   $news_total=news_total_number($group_id);
 
+
+  $params = array();
+
   # We fetch news item for that group
   if ($group_id != $GLOBALS['sys_group_id'])
     {
-      $wclause="news_bytes.group_id='$group_id' AND news_bytes.is_approved <> 4 AND news_bytes.is_approved <> 5";
+      $wclause="news_bytes.group_id=? AND news_bytes.is_approved <> 4 AND news_bytes.is_approved <> 5";
+      $params[] = $group_id;
     }
   else
     {
@@ -59,18 +66,20 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
      "ORDER BY date DESC";
 
   $sql .= " LIMIT ";
-
   if ($start_from != 0 && $start_from != "no" && $start_from != "nolinks")
     {
-      $sql .= "$start_from,$news_total";
+      $sql .= "?,?";
+      $params[] = $start_from;
+      $params[] = $news_total;
     }
   else
     {
-      $sql .= "$limit";
+      $sql .= "?";
+      $params[] = $limit;
     }
 
-  $result=db_query($sql);
-  $rows=db_numrows($result);
+  $result = db_execute($sql, $params);
+  $rows = db_numrows($result);
   $return = '';
 
   if (!$result || $rows < 1)
@@ -82,7 +91,8 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
       for ($i=0; $i<$rows; $i++)
 	{
 	  # We want the number of message in this forum
-	  $tres_count = db_query("SELECT group_forum_id FROM forum WHERE group_forum_id='". db_result($result,$i,'forum_id') ."'");
+	  $tres_count = db_execute("SELECT group_forum_id FROM forum WHERE group_forum_id=?",
+				   array(db_result($result,$i,'forum_id')));
 	  $trow_count = db_numrows($tres_count);
 	  if ($show_summaries != "false")
 	    {
@@ -179,17 +189,19 @@ function news_total_number($group_id)
   # We want the total number of news for a group
   if ($group_id != $GLOBALS['sys_group_id'])
     {
-      $wclause="news_bytes.group_id='$group_id' AND news_bytes.is_approved <> 4 AND news_bytes.is_approved <> 5";
+      $wclause="news_bytes.group_id=? AND news_bytes.is_approved <> 4 AND news_bytes.is_approved <> 5";
+      $params = array($group_id);
     }
   else
     {
       $wclause='news_bytes.is_approved=1';
+      $params = array();
     }
   $sql="SELECT count(*) FROM user,news_bytes,groups ".
      "WHERE $wclause ".
      "AND user.user_id=news_bytes.submitted_by ".
      "AND news_bytes.group_id=groups.group_id ";
-  return db_result(db_query($sql),0,0);
+  return db_result(db_execute($sql, $params),0,0);
 }
 
 
@@ -198,8 +210,7 @@ function get_news_name($id)
   /*
 		Takes an ID and returns the corresponding forum name
   */
-  $sql="SELECT summary FROM news_bytes WHERE id='$id'";
-  $result=db_query($sql);
+  $result = db_execute("SELECT summary FROM news_bytes WHERE id=?", array($id));
   if (!$result || db_numrows($result) < 1)
     {
       return _("Not found");

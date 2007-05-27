@@ -23,14 +23,18 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('../include/init.php');
+require_once('../include/sane.php');
+require_once('../include/people/general.php');
 
-# pre.php defeines group to group_id, so do check, else look at request
-$group_id = $group_id ? $group_id : $_REQUST['group_id'];
+#input_is_safe();
+#mysql_is_safe();
 
-# Get the rest from REQUEST
-$title = $_REQUEST['title'];
-$description = $_REQUEST['description'];
-$category_id = $_REQUEST['category_id'];
+extract(sane_import('request', array('job_id')));
+extract(sane_import('post',
+  array(
+    'add_job', 'update_job', 'add_to_job_inventory', 'update_job_inventory', 'delete_from_job_inventory',
+    'title', 'description', 'status_id', 'category_id',
+    'job_inventory_id', 'skill_id', 'skill_level_id', 'skill_year_id')));
    
 if ($group_id && (user_ismember($group_id, 'A'))) {
 
@@ -42,9 +46,15 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
       #required info
       exit_error(_("error - missing info"),_("Fill in all required fields"));
     }
-    $sql="INSERT INTO people_job (group_id,created_by,title,description,date,status_id,category_id) ".
-       "VALUES ('$group_id','". user_getid() ."','$title','$description','".time()."','1','$category_id')";
-    $result=db_query($sql);
+    $result = db_autoexecute('people_job',
+      array('group_id' => $group_id,
+	    'created_by' => user_getid(),
+	    'title' => $title,
+	    'description' => $description,
+	    'date' => time(),
+	    'status_id' => 1,
+	    'category_id' => $category_id,
+      ), DB_AUTOQUERY_INSERT);
     if (!$result || db_affected_rows($result) < 1) {
       fb(_("JOB insert FAILED"));
       print db_error();
@@ -62,9 +72,15 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
       exit_error(_("error - missing info"),_("Fill in all required fields"));
     }
 
-    $sql="UPDATE people_job SET title='$title',description='$description',status_id='$status_id',category_id='$category_id' ".
-       "WHERE job_id='$job_id' AND group_id='$group_id'";
-    $result=db_query($sql);
+    $result=db_autoexecute('people_job',
+      array(
+        'title' => $title,
+	'description' => $description,
+	'status_id' => $status_id,
+	'category_id' => $category_id,
+	), DB_AUTOQUERY_UPDATE,
+      "job_id=? AND group_id=?",
+      array($job_id, $group_id));
     if (!$result || db_affected_rows($result) < 1) {
       fb(_("JOB update FAILED"));
       print db_error();
@@ -98,9 +114,13 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
     }
 
     if (people_verify_job_group($job_id,$group_id)) {
-      $sql="UPDATE people_job_inventory SET skill_level_id='$skill_level_id',skill_year_id='$skill_year_id' ".
-	 "WHERE job_id='$job_id' AND job_inventory_id='$job_inventory_id'";
-      $result=db_query($sql);
+      $result = db_autoexecute('people_job_inventory',
+        array(
+          'skill_level_id' => $skill_level_id,
+	  'skill_year_id' => $skill_year_id,
+	  ), DB_AUTOQUERY_UPDATE,
+       "job_id= AND job_inventory_id=?",
+       array($job_id, $job_inventory_id));
       if (!$result || db_affected_rows($result) < 1) {
 	fb(_("JOB skill update FAILED"));
 	print db_error();
@@ -121,8 +141,8 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
     }
 
     if (people_verify_job_group($job_id,$group_id)) {
-      $sql="DELETE FROM people_job_inventory WHERE job_id='$job_id' AND job_inventory_id='$job_inventory_id'";
-      $result=db_query($sql);
+      $result = db_execute("DELETE FROM people_job_inventory WHERE job_id=? AND job_inventory_id=?",
+			   array($job_id, $job_inventory_id));
       if (!$result || db_affected_rows($result) < 1) {
 	fb(_("JOB skill delete FAILED"));
 	print db_error();
@@ -132,7 +152,6 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
     } else {
       fb(_("JOB skill delete failed - wrong project_id"));
     }
-
   }
 
   /*
@@ -145,8 +164,8 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
     site_project_header(array('title'=>_("Edit a job for your project"),'group'=>$group_id,'context'=>'ahome'));
 
     #for security, include group_id
-    $sql="SELECT * FROM people_job WHERE job_id='$job_id' AND group_id='$group_id'";
-    $result=db_query($sql);
+    $result=db_execute("SELECT * FROM people_job WHERE job_id=? AND group_id=?",
+		       array($job_id, $group_id));
     if (!$result || db_numrows($result) < 1) {
       print db_error();
       fb(_("POSTING fetch FAILED"));
@@ -181,7 +200,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 
       #now show the list of desired skills
       print '<P>'.people_edit_job_inventory($job_id,$group_id);
-      print '<P><FORM ACTION="'.$GLOBALS['sys_home'].'people/" METHOD="POST"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Finished"></FORM>';
+      print '<p>[<a href="/people">Back to jobs listing</a>]</p>';
 
     }
   } else {
@@ -206,5 +225,3 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
     exit_permission_denied();
   }
 }
-
-?>

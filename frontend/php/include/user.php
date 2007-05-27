@@ -339,26 +339,27 @@ function user_set_preference ($preference_name,$value)
   if (user_isloggedin()) 
     {
       $preference_name=strtolower(trim($preference_name));
-      $result=db_autoexecute('user_preferences',
-			     array('preference_value' => $value),
-			     DB_AUTOQUERY_UPDATE,
-			     "user_id=? AND preference_name=?",
-			     array(user_getid(), $preference_name));
-      if (db_affected_rows($result) < 1) {
+      if (db_numrows(db_execute("SELECT NULL FROM user_preferences WHERE user_id=? AND preference_name=?",
+				array(user_getid(), $preference_name))) > 0)
+	$result=db_autoexecute('user_preferences',
+			       array('preference_value' => $value),
+			       DB_AUTOQUERY_UPDATE,
+			       "user_id=? AND preference_name=?",
+			       array(user_getid(), $preference_name));
+      else
 	$result=db_autoexecute('user_preferences',
 			       array('user_id' => user_getid(),
 				     'preference_name' => $preference_name,
 				     'preference_value' => $value),
 			       DB_AUTOQUERY_INSERT);
-      }
       
 # Update the Preference cache if it was setup by a user_get_preference
       if (isset($user_pref)) 
 	{ $user_pref[$preference_name] = $value; }
       
-    return true;
-    
-    } 
+      return true;
+    }
+
   return false;
 }
 function user_unset_preference ($preference_name) 

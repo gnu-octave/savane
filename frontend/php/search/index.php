@@ -28,7 +28,7 @@ require_once('../include/init.php');
 # not yet compliant, kind of messy: register_globals_off();
 
 extract(sane_import('all',
-  array('only_group_id', 'words', 'type_of_search', 'func', 'exact')));
+  array('only_group_id', 'type', 'words', 'type_of_search', 'func', 'exact')));
 
 # No words? Ask for them
 if (!$words)
@@ -282,5 +282,3 @@ if ($group_id)
 html_nextprev($nextprev_url,$rows,$rows_returned);
 
 site_footer(Array());
-
-?>

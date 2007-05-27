@@ -25,11 +25,12 @@
 
 require_once('../include/init.php');
 register_globals_off();
+require_once('../include/people/general.php');
 
-$group_id = sane_all("group_id");
-$group_name = sane_all("group_name");
-$category_id = sane_all("category_id");
-$type_id = sane_all("type_id");
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('get', array('group_id', 'group_name', 'category_id', 'type_id')));
 
 if ($group_id)
 {

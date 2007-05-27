@@ -2678,7 +2678,7 @@ function trackers_data_delete_file($group_id, $item_id, $item_file_id)
 function trackers_data_count_field_value_usage ($group_id, $field, $field_value_value_id)
 {
   if (!preg_match('/^[a-z0-9_]$/', $field))
-    die('trackers_data_count_field_value_usage: invalid $field <em>' . html_escape($field) . '</em>');
+    util_die('trackers_data_count_field_value_usage: invalid $field <em>' . htmlspecialchars($field) . '</em>');
   return db_numrows(db_execute("SELECT bug_id FROM ".ARTIFACT." WHERE $field=? AND group_id=?",
 			       array($field_value_value_id, $group_id)));
 }

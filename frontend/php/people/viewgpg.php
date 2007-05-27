@@ -22,15 +22,19 @@
 
 require_once('../include/init.php');
 register_globals_off();
-$user_id = sane_all("user_id");
+extract(sane_import('get', array('user_id')));
+
+#input_is_safe();
+#mysql_is_safe();
 
 # Check whether the user exists
 if (!$user_id)
 {
   exit_error(_("User not found."));
 }
-$sql="SELECT * FROM user WHERE user_id='$user_id'";
-$result=db_query($sql);
+$result = db_execute("SELECT user_name,gpg_key FROM user WHERE user_id=?",
+		     array($user_id));
+
 if (!$result || db_numrows($result) < 1)
 {
   exit_error(_("User not found."));
@@ -47,5 +51,3 @@ header('Content-Type: application/pgp-keys');
 header('Content-Disposition: filename='.db_result($result, 0, 'user_name').'-key.gpg');
 header('Content-Description: GPG Key of the user '.db_result($result, 0, 'user_name'));
 print db_result($result,0,'gpg_key');
-
-?>

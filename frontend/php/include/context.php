@@ -352,7 +352,7 @@ function context_title ()
 
 #	case 'admin': $title = _("Site Administration"); break;
   
-  if ($group_id)
+  if (isset($group_id))
     {
       $project = project_get_object($group_id);
       # I18N

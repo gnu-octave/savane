@@ -133,9 +133,7 @@ socket, and perform an installation on them). Cf. tests/MECHS
 
 In order to simplify the installation, init.php defines safe defaults
 or try to detect pertinent values (e.g. the Savane www root directory
-and URL). Currently only the mail-related options are still necessary
-(defaults to localhost?). The notion of 'required' option falls
-appart.
+and URL). The notion of 'required' option falls apart.
 
 On the backend side, a few essential questions are now specified via
 autoconf (e.g. database name). I suggest dropping the tedious
@@ -148,6 +146,11 @@ To ease the installation, a default 'admin' user and a default
 'siteadmin' project are created. They can be renamed / removed later
 if needed, but at least this doesn't force the user to fakely register
 a first project which a special handling. Cf. db/mysql/bootstrap.sql.
+
+
+Also, old "backward-compatible" configuration variables aliases that
+seemed to date from the SourceForge days were removed and replaced in
+the code.
 
 
 - Images:
@@ -184,3 +187,15 @@ clutters the description and should more generally be ommitted, in
 case the MySQL maintainers decide to change that default for a better
 one. There was also an issue with using different versions of MySQL
 (bug7926@gna).
+
+
+------ Misc Changes -----
+
+- Disable cutting URLs in trackers and project descriptions because it
+  annoys users who can't safely copy/paste a complete paragraph with
+  the links intact (check 105807@sv)
+
+- Stop removing the web cvs links when the 'homepage' option does not
+  match the group type default URL - there're too many false positives
+  including aliases and exceptions, this brings lots of support
+  requests about missing webcvs links and instructions.

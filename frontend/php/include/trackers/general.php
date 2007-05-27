@@ -1206,7 +1206,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
     { $artifact = ARTIFACT; }
 
   if (!ctype_alnum($artifact))
-    die('trackers_mail_followup: invalid artifact <em>' . html_escape($artifact) . '</em>');
+    util_die('trackers_mail_followup: invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
 
   $result = db_execute("SELECT * from $artifact WHERE bug_id=?", array($item_id));
   $bug_href = "http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']."$artifact/?$item_id";
@@ -1466,11 +1466,11 @@ function trackers_attach_file($item_id,
     return false;
   }
   $data = fread($data, filesize($input_file));
-  $filesize = round(strlen($data) / 1024);
+  $filesize = round(filesize($input_file) / 1024);
   $uploadsize = $filesize + $current_upload_size;
   if ($uploadsize > $GLOBALS['sys_upload_max'])
     {
-      fb(sprintf(_("File %s not attached: the allowed upload size is %s kilobytes, after escaping characters as required. This file size is %s kilobytes."), $input_file_name, $GLOBALS['sys_upload_max'], $filesize).$current_upload_size_comment, 1);
+      fb(sprintf(_("File %s not attached: the allowed upload size is %s kilobytes. This file size is %s kilobytes."), $input_file_name, $GLOBALS['sys_upload_max'], $filesize).$current_upload_size_comment, 1);
       return false;
     }
 

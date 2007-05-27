@@ -33,7 +33,7 @@ require_once(dirname(__FILE__).'/vars.php');
 
 
 # if we are at wrong url, redirect
-if (strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())
+if (!$sys_debug_nobasehost && strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())
 {
   header ("Location: http".(session_issecure()?'s':'')."://".$project->getTypeBaseHost().$_SERVER['PHP_SELF']);
   exit;

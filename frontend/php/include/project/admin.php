@@ -22,7 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
+#input_is_safe();
+#mysql_is_safe();
 
 # Nicely html-formatted output of this group's audit trail
 
@@ -76,10 +77,10 @@ function show_grouphistory ($group_id)
 
 function project_admin_registration_info ($row_grp)
 {
-  $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname, user.email AS email "
+  $res_admin = db_execute("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname, user.email AS email "
 			. "FROM user,user_group "
-			. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$row_grp['group_id']." AND "
-			. "user_group.admin_flags = 'A'");
+			. "WHERE user_group.user_id=user.user_id AND user_group.group_id=? AND "
+			. "user_group.admin_flags = 'A'", array($row_grp['group_id']));
 
 
   print '<p><span class="preinput">'._("Project Admins").':</span><br /> ';

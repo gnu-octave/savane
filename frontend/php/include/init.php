@@ -42,8 +42,6 @@ require_once(dirname(__FILE__).'/exit.php');
 # Default values, so they cannot be found undefined in the code
 $sys_name = "Change-This-Site-Name-with-\$sys_name";
 $sys_logo_name = 'floating.png';
-$sys_debug_on = false;
-$sys_use_google = false;
 $sys_use_pamauth = false;
 $stone_age_menu = false;
 $sys_spamcheck_spamassassin = false;
@@ -69,6 +67,13 @@ $sys_unix_group_name = 'siteadmin';
 $sys_mail_domain = 'localhost';
 $sys_mail_admin = get_current_user();
 $sys_mail_replyto = "NO-REPLY.INVALID-ADDRESS";
+
+// Debug
+// Print debug information before exiting:
+$sys_debug_on = false;
+// Prevent redirections like sv.gnu.org -> sv.nongnu.org
+$sys_debug_nobasehost = false;
+
 
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');
@@ -164,10 +169,10 @@ if ($sys_debug_on == true) {
     print_r($_FILES);
 
 # Useless, only prints 'debug_dump()'...
-# We need to die_debug() func or something
-#    print '<hr />';
-#    print 'Stacktrace:<br />';
-#    print_r(debug_backtrace());
+# Check util_die() maybe.
+    #print '<hr />';
+    #print 'Stacktrace:<br />';
+    #print_r(debug_backtrace());
 
     print '<hr />';
 
@@ -180,7 +185,9 @@ if ($sys_debug_on == true) {
   register_shutdown_function("debug_dump");
 }
 
-// Stop an failed assertion
+// Stop an failed assertion.  We don't use much assertions though,
+// because you can't provide additional feedback for debugging (like
+// the value of the invalid variable). Check util_die() instead.
 assert_options(ASSERT_BAIL, 1);
 
 
@@ -362,7 +369,7 @@ if (!isset($group_id) && !isset($group_name) && isset($forum_id))
 {
   $result = db_execute("SELECT group_id FROM forum_group_list WHERE group_forum_id=?",
 		       array($forum_id));
-  if ($result)
+  if ($result && db_numrows($result) > 0)
     {  sane_set("group_id", db_result(($result),0,'group_id')); }
 }
 
@@ -441,7 +448,7 @@ if (isset($group_id))
   # check if we are on the correct page
   # (you can avoid it with $no_redirection=1)
   # if getTypeBaseHost() = "", we use the default host
-  if (isset($group_id) && empty($no_redirection))
+  if (isset($group_id) && empty($no_redirection) && !$sys_debug_nobasehost)
     {
       $project = project_get_object($group_id);
       if (strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())

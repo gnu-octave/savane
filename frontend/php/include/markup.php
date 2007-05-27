@@ -147,7 +147,8 @@ function markup_full($text, $allow_headings=true)
       if (preg_match('/([+]verbatim[+])/', $line) and !$verbatim)
         {
           $verbatim = 1;  
-	  unset($verbatim_buffer, $verbatim_buffer_linecount);
+	  $verbatim_buffer = '';
+	  $verbatim_buffer_linecount = 0;
           # empty the context stack
 	  $line = join("\n", $context_stack);
 
@@ -187,14 +188,15 @@ function markup_full($text, $allow_headings=true)
 		}
 	      else
 		{		  
-		  $result[] = '<textarea class="verbatim" readonly="readonly" rows="'.$verbatim_buffer_linecount.'" cols="55">'.$verbatim_buffer.'</textarea>';
+		  $result[] = '<textarea class="verbatim" readonly="readonly" rows="'.$verbatim_buffer_linecount.'" cols="80">'.$verbatim_buffer.'</textarea>';
 		}
 	    }
 	  else
 	    {
 	      $result[] = '<pre class="verbatim">'.$verbatim_buffer.'</pre>';
 	    }
-	  unset($verbatim_buffer, $verbatim_buffer_linecount);
+	  $verbatim_buffer = '';
+	  $verbatim_buffer_linecount = 0;
 	  
 	  # Jump to the next line, assuming that we can ignore the rest of the
 	  # line

@@ -22,10 +22,15 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+require_once('../include/init.php');
+require_once('../include/sane.php');
+require_once('../include/news/forum.php');
+require_once('../include/news/general.php');
 register_globals_off();
+#input_is_safe();
+#mysql_is_safe();
 
-$msg_id = sane_all("msg_id");
+extract(sane_import('request', array('msg_id')));
 
 if ($msg_id) {
  
@@ -39,7 +44,7 @@ if ($msg_id) {
 	$thread_id=db_result($result,0,'thread_id');
 	$forum_name=db_result($result,0,'forum_name');
 
-	forum_header(array('title'=>db_result($result,0,'subject')));
+	forum_header(array('title'=>db_result($result,0,'forum_name')));
 
 	print "<p>";
 
@@ -94,5 +99,3 @@ if ($msg_id) {
 }
 
 forum_footer(array()); 
-
-?>

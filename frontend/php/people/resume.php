@@ -24,15 +24,18 @@
 
 
 require_once('../include/init.php');
+require_once('../include/people/general.php');
 register_globals_off();
 
-$user_id = sane_all("user_id");
+#input_is_safe();
+#mysql_is_safe();
 
-if (!$user_id)
+extract(sane_import('get', array('user_id')));
+
+if ($user_id == null)
 { exit_missing_param(); }
 
-$sql="SELECT * FROM user WHERE user_id='$user_id'";
-$result=db_query($sql);
+$result=db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));
   
 if (!$result || (db_numrows($result) < 1))
 {
@@ -45,11 +48,11 @@ else if (db_result($result,0,'people_view_skills') != 1)
 }
 
 
-site_header(array('title'=>sprintf(_("%s Resume & Skills"),db_result($result, $i, 'realname')),
+site_header(array('title'=>sprintf(_("%s Resume & Skills"),db_result($result, 0, 'realname')),
 		  'context'=>'people'));
 
 
-print '<p>'.sprintf(_("Follows Resume & Skills of %s."), utils_user_link(db_result($result, $i, 'user_name'),db_result($result, $i, 'realname'))).'</p>';
+print '<p>'.sprintf(_("Follows Resume & Skills of %s."), utils_user_link(db_result($result, 0, 'user_name'),db_result($result, 0, 'realname'))).'</p>';
 # we get site-specific content
 utils_get_content("people/viewprofile");
 

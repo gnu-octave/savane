@@ -32,3 +32,10 @@
 - 'submitted by' not exported by sv_export - is the following commit
   necessary, and should it be also applied to table 'support'?
   http://svn.gna.org/viewcvs/savane?rev=6499&view=rev
+
+- The configure script could check if the necessary perl modules are
+  installed
+  https://gna.org/bugs/?7975
+
+- Create /var/lock/savane when needed
+  http://gna.org/bugs/?9200

@@ -25,8 +25,8 @@
 require_once('../include/init.php');
 require_once('../include/people/general.php');
 
-# pre.php defeines group to group_id, so do check, else look at request
-$group_id = $group_id ? $group_id : $_REQUST['group_id'];
+#input_is_safe();
+#mysql_is_safe();
 
 if ($group_id && (user_ismember($group_id, 'A'))) {
 
@@ -73,4 +73,3 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
     exit_permission_denied();
   }
 }
-?>

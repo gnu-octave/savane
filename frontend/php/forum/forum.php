@@ -20,12 +20,31 @@
 // along with the Savane project; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
-require "../include/pre.php";
+require_once('../include/init.php');
+require_once('../include/sane.php');
+require_once('../include/database.php');
+require_once('../include/news/forum.php');
+require_once('../include/news/general.php');
 require_directory("trackers");
+
+extract(sane_import('request', array('forum_id')));
+extract(sane_import('get', array('offset', 'style', 'max_rows', 'set')));
+extract(sane_import('post',
+  array(
+    'post_message', // flag
+    'subject', 'body', // content
+    'is_followup_to', // reply to which msg?
+    'thread_id', // new or existing thread (ie call from message.php)?
+    )));
 
 if ($forum_id)
 {
+  // Final output:
+  $ret_val = '';
+
   /*
 		if necessary, insert a new message into the forum
   */
@@ -105,7 +124,10 @@ if ($forum_id)
   /*
 		Set up navigation vars
   */
-  $result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
+  $result=db_execute("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=?",
+		     array($forum_id));
+  if (db_numrows($result) == 0)
+    exit_error(_("This forum ID doesn't exist."));
   $group_id=db_result($result,0,'group_id');
   $forum_name=db_result($result,0,'forum_name');
 
@@ -132,6 +154,7 @@ if ($forum_id)
     }
 
   //now set up the query
+  $threading_sql = '';
   if ($style == 'nested' || $style== 'threaded' )
     {
       //the flat and 'no comments' view just selects the most recent messages out of the forum
@@ -139,11 +162,9 @@ if ($forum_id)
       $threading_sql='AND forum.is_followup_to=0';
     }
 
-  $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id  ".
-     "FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id ".
-     "ORDER BY forum.date DESC LIMIT $offset,".($max_rows+1);
-
-  $result=db_query($sql);
+  $result = db_execute("SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id  ".
+     "FROM forum,user,forum_group_list WHERE forum.group_forum_id = ? AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id ".
+     "ORDER BY forum.date DESC LIMIT ?,?", array($forum_id, $offset, $max_rows+1));
   $rows=db_numrows($result);
 
 
@@ -156,7 +177,7 @@ if ($forum_id)
   if (!$result || $rows < 1)
     {
       //empty forum
-      $ret_val .= 'No Messages in '.$forum_name .'<P>'. db_error();
+      $ret_val .= 'No messages in <em>'.$forum_name .'</em><P>'. db_error();
     }
   else
     {
@@ -219,10 +240,12 @@ if ($forum_id)
 				<FORM ACTION="'. $_SERVER['PHP_SELF'] .'" METHOD="get">
 				<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
 				<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="'.$forum_id.'">
-				<TR><TD><span class="smaller">'. $forum_popup .
-	 '</span></TD><TD><span class="smaller">'. $options_popup .
-	 '</span></TD><TD><span class="smaller">'. $max_row_popup .
-	 '</span></TD><TD><span class="smaller"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Change View"></span></TD></TR></TABLE></FORM>';
+				<TR>'.
+         // '<TD><span class="smaller">'. $forum_popup . '</span></TD>'.
+         '<TD><span class="smaller">'. $options_popup . '</span></TD>'.
+	 '<TD><span class="smaller">'. $max_row_popup . '</span></TD>'.
+         '<TD><span class="smaller"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Change View"></span></TD>'.
+	 '</TR></TABLE></FORM>';
 
       if ($style == 'nested')
 	{
@@ -370,5 +393,3 @@ else
   print '<H1>Error - choose a forum first</H1>';
   forum_footer(array());
 }
-
-?>
