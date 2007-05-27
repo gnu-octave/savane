@@ -70,7 +70,7 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
     {
       $sql .= "?,?";
       $params[] = $start_from;
-      $params[] = $news_total;
+      $params[] = intval($news_total);
     }
   else
     {

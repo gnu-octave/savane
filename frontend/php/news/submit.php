@@ -23,11 +23,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('../include/init.php');
+require_once('../include/news/forum.php');
 
-extract(sane_import('all',
-  array('group_id', 'group', 'id',
-	'update', 'form_id',
-	'post_changes', 'summary', 'details')));
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('post',
+  array('form_id',
+	'update',
+	'summary', 'details')));
 
 if (!group_restrictions_check($group_id, "news"))
     {
@@ -87,7 +91,7 @@ if ($update)
 
 # News must be submitted from a project page
 
-if (!$group_id)
+if (empty($group_id))
 {
   exit_no_group();
 }

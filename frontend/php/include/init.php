@@ -400,7 +400,8 @@ elseif (isset($group_id))
 {
   $res_grp = db_execute("SELECT unix_group_name,status FROM groups WHERE group_id=?",
 			array($group_id));
-  sane_set("group_name", db_result($res_grp,0,'unix_group_name'));
+  if (db_numrows($res_grp) > 0)
+    sane_set("group_name", db_result($res_grp,0,'unix_group_name'));
 }
 
 # See also $group_name definition in sane.php

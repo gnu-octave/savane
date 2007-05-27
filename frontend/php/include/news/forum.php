@@ -160,7 +160,7 @@ function forum_header($params)
 <div class="indexcenter">
 ';
 
-		    print '<h3>'.html_anchor(db_result($result,0,'summary'), "content").'</h3>';
+		    print "<h3><a href='forum.php?forum_id=$forum_id'>".db_result($result,0,'summary')."</a></h3>";
                     print '<p><em>'.sprintf(_("Item posted by %s on %s."),
                         utils_user_link(user_getname(db_result($result,0,'submitted_by')),
                         user_getrealname(db_result($result,0,'submitted_by'))),

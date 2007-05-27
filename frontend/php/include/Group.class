@@ -134,10 +134,14 @@ class Group extends Error
   # (all takes an argument)
 
   function getTypeUrl($artifact) 
-    { return utils_makereal($this->type_data_array['url_'.$artifact]); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  $this->type_data_array['url_'.$artifact]);
+    }
 
   function getTypeDir($artifact) 
-    { return utils_makereal($this->type_data_array['dir_'.$artifact]); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  $this->type_data_array['dir_'.$artifact]);
+    }
   
   function CanUse($artifact) 
     { 
@@ -172,29 +176,46 @@ class Group extends Error
   function getTypeMailingListHost() 
     {  return $this->type_data_array['mailing_list_host']; }
   
+
   function getTypeMailingListListinfoUrl($list="%LIST") 
-    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_listinfo'], "%LIST", $list)); }
-  
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_listinfo']));
+    }
+
   function getTypeMailingListArchivesUrl($list="%LIST") 
-    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_archives'], "%LIST", $list)); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_archives']));
+    }
   
   function getTypeMailingListArchivesPrivateUrl($list="%LIST") 
-    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_archives_private'], "%LIST", $list)); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_archives_private']));
+    }
 
   function getTypeMailingListAdminUrl($list="%LIST") 
-    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_admin'], "%LIST", $list)); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_admin']));
+    }
 
   function getTypeMailingListSubscribeUrl($list="%LIST") 
-    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_subscribe'], "%LIST", $list)); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_subscribe']));
+    }
 
   function getTypeMailingListUnsubscribeUrl($list="%LIST") 
-    { return utils_makereal(utils_makereal($this->type_data_array['url_mailing_list_unsubscribe'], "%LIST", $list)); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_unsubscribe']));
+    }
 
   function getTypeMailingListAddress($list="%LIST") 
-    { return utils_makereal(utils_makereal($this->type_data_array['mailing_list_address'], "%LIST", $list)); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%LIST", $list, $this->type_data_array['mailing_list_address']));
+    }
 
   function getTypeMailingListFormat($list="%NAME") 
-    { return utils_makereal(utils_makereal($this->type_data_array['mailing_list_format'], "%NAME", $list)); }
+    { return ereg_replace("%PROJECT", $this->getName(),
+			  ereg_replace("%NAME", $list, $this->type_data_array['mailing_list_format']));
+    }
 
   function canuseForum() 
     {
@@ -249,7 +270,7 @@ class Group extends Error
     { return strtolower($this->data_array['unix_group_name']); }
 
   function getPublicName() 
-    { return $this->data_array['group_name']; }
+    { if (isset($this->data_array['group_name'])) return $this->data_array['group_name']; return "[Deleted group]"; }
 
   # alias
   function getName() 

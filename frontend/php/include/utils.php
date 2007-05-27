@@ -64,15 +64,6 @@ function utils_check_path ($path)
     }
 }
 
-# In a string, replace %PROJECT by the group_name
-# (useful for group type configuration)
-function utils_makereal ($data, $string="%PROJECT", $replacement=0)
-{
-  if (!$replacement)
-    { $replacement = $GLOBALS['group_name']; }
-  return ereg_replace($string, $replacement, $data);
-}
-
 # Add unavailable css class to a link if required
 function utils_link ($url, $title, $defaultclass=0, $available=1, $help=0, $extra='')
 {
@@ -1195,7 +1186,16 @@ function dbg ($msg)
   if ($GLOBALS['sys_debug_on'])
     {
       $backtrace = debug_backtrace(); // stacktrace
-      $GLOBALS['debug'] .= "(" . $backtrace[1]['function'] . ") $msg<br />";
+      $location = '';
+      if (isset($backtrace[1]))
+	{
+	  $location = $backtrace[1]['function'];
+	}
+      else {
+	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '', $backtrace[0]['file']);
+	$location = "$relative_path:{$backtrace[0]['line']}";
+      }
+      $GLOBALS['debug'] .= "(" . $location . ") $msg<br />";
     }
 }
 

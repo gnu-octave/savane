@@ -2639,7 +2639,9 @@ function trackers_data_is_watched ($user_id, $watchee_id, $group_id)
   $result = db_execute("SELECT watchee_id FROM trackers_watcher
      WHERE user_id=? AND watchee_id=? AND group_id=?",
     array($user_id, $watchee_id, $group_id));
-  return db_result($result, 0, 'watchee_id');
+  if (db_numrows($result))
+    return db_result($result, 0, 'watchee_id');
+  return null;
 }
 
 

@@ -26,6 +26,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../include/init.php');
 require_directory("trackers");
 
@@ -77,7 +80,7 @@ if ($detailed)
 # list members
 if (!$detailed)
 {
-  $sql =  "SELECT user.user_name AS user_name, "
+  $res_memb = db_execute("SELECT user.user_name AS user_name, "
      . "user.user_id AS user_id,"
      . "user.realname AS realname, "
      . "user.add_date AS add_date, "
@@ -85,12 +88,12 @@ if (!$detailed)
      . "user_group.admin_flags AS admin_flags, "
      . "user.email AS email "
      . "FROM user,user_group "
-     . "WHERE user.user_id=user_group.user_id AND user_group.group_id=$group_id  AND user_group.admin_flags <> 'P' "
-     . "ORDER BY user.user_name ";
+     . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
+     . "ORDER BY user.user_name ", array($group_id));
 }
 else
 {
-  $sql =  "SELECT user.user_name AS user_name, "
+  $res_memb = db_execute("SELECT user.user_name AS user_name, "
      . "user.user_id AS user_id,"
      . "user.realname AS realname, "
      . "user.add_date AS add_date, "
@@ -103,8 +106,8 @@ else
      . "user_group.support_flags AS support_flags, "
      . "user.email AS email "
      . "FROM user,user_group "
-     . "WHERE user.user_id=user_group.user_id AND user_group.group_id=$group_id  AND user_group.admin_flags <> 'P' "
-     . "ORDER BY user.user_name";
+     . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
+     . "ORDER BY user.user_name", array($group_id));
 }
 
 
@@ -124,8 +127,6 @@ if (user_ismember($group_id))
 }
 
 echo html_build_list_table_top ($title_arr);
-
-$res_memb = db_query($sql);
 
 
 

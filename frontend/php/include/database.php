@@ -103,7 +103,7 @@ function db_variable_binding($sql, $inputarr=null) {
       else if ($typ == 'boolean')
 	$sql_expanded .= $v ? '1' : '0';
       else if ($typ == 'object')
-	exit("Don't use db_execute with objects.");
+	util_die("Don't use db_execute with objects.");
       else if ($v === null)
 	$sql_expanded .= 'NULL';
       else

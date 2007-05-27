@@ -22,55 +22,22 @@
 require_once('../include/init.php');
 require_once('../include/news/general.php');
 
-if (!empty($_POST['group_id']))
-{ 
-  $group_id = $_POST['group_id']; 
-}
-elseif (!empty($_GET['group_id']))
-{ 
-  $group_id = $_GET['group_id']; 
-}
+#input_is_safe();
+#mysql_is_safe();
 
 if (!$group_id) 
 {
   $group_id = $GLOBALS['sys_group_id'];
 }
 
-# yeupou--gnu.org 2004-09-06: the following simply break the form, see 
-# bug #703.
-#
-#if ($_POST['limit'])
-#   { 
-#   $limit= $_POST['limit']; 
-#   }
-#elseif ($_GET['limit'])
-#   { 
-#   $group_id = $_GET['limit']; 
-#   }
-   
-if (!isset($limit)) 
-{ 
-  $limit = 10;  
-}
+extract(sane_import('request', array('feedback', 'limit')));
 
-if (!empty($_POST['feedback']))
-{ 
-  $feedback = $_POST['feedback']; 
-}
-elseif (!empty($_GET['feedback']))
-{ 
-  $feedback = $_GET['feedback']; 
-}
 
-if (!empty($_POST['group']))
-{ 
-  $group = $_POST['group']; 
-}
-elseif (!empty($_GET['group']))
-{ 
-  $group = $_GET['group']; 
-}
-   
+if (isset($limit))
+     $limit = intval($limit);
+else
+     $limit = 10;
+
 $project=project_get_object($group_id);
 if (!$project->Uses("news"))
 { exit_error(_("This project has turned off the news tool.")); }
@@ -85,8 +52,8 @@ $form_opening = '<form action="'. $_SERVER['PHP_SELF'] .'#options" method="get">
 # I18N
 # %s is an input field
 $form = sprintf(_("Print summaries for the %s latest news."), '<input type="text" name="limit" size="4" value="'.$limit.'" />');
-if ($group_name)
-{ $form .= '<input type="hidden" name="group" value="'.$group_name.'" />'; }
+if (isset($group))
+{ $form .= '<input type="hidden" name="group" value="'.$group.'" />'; }
 $form_submit = '<input class="bold" type="submit" value="'._("Apply").'"  />';
 
 print html_show_displayoptions($form, $form_opening, $form_submit);

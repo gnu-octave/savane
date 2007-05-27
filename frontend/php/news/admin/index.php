@@ -21,19 +21,24 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('../../include/init.php');
+require_once('../../include/sane.php');
+
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('post', array('update', 'form_news_address')));
 
 if ($group_id && user_ismember($group_id,'A'))
 {
   $grp=project_get_object($group_id);
 
-  if (!$project->Uses("news"))
+  if (!$grp->Uses("news"))
     { exit_error(_("Error"),_("This Project Has Turned Off News Tracker")); }
   
   if ($update) 
     { 
-      db_query("UPDATE groups SET "
-	       ."new_news_address=".($form_news_address? "'$form_news_address' " : "''")
-	       . " WHERE group_id=$group_id");
+      db_execute("UPDATE groups SET new_news_address=? WHERE group_id=?",
+		 array($form_news_address, $group_id));
       fb("Updated");
     }
   
@@ -42,7 +47,7 @@ if ($group_id && user_ismember($group_id,'A'))
 
   print '<p>'._("You can view/change all of this tracker configuration from here.").'</p>';
   
-  $res_grp = db_query("SELECT new_news_address FROM groups WHERE group_id=$group_id");
+  $res_grp = db_execute("SELECT new_news_address FROM groups WHERE group_id=?", array($group_id));
   $row_grp = db_fetch_array($res_grp);
   
   
@@ -62,6 +67,3 @@ else
 {
   exit_permission_denied();
 }
-
-
-?>

@@ -19,6 +19,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('../include/init.php');
+require_once('../include/sendmail.php');
+
+#input_is_safe();
+#mysql_is_safe();
 
 extract(sane_import('all',
   array('group_id', 'group', 'id',
@@ -196,7 +200,7 @@ if ($group_id && member_check(0, $group_id, 'N3'))
 		<textarea name="details" ROWS="20" COLS="65" WRAP="SOFT">'.db_result($result,0,'details').'</textarea><p>';
       print '<p>'.sprintf (_("Note: If this item is on the %s home page and you edit it, it will be removed from the home page."),$GLOBALS['sys_name']).'</p>';
       print '<div class="center">
-		<input type="submit" name="submit" value="'._("submit").'" /></div>
+		<input type="submit" name="submit" value="'._("Submit").'" /></div>
 		</form>';
 
       print '<h3>'._("Preview:").'</h3>'.markup_full(db_result($result,0,'details'));
