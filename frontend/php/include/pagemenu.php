@@ -430,11 +430,7 @@ function pagemenu_group ()
 				   _("List existing Mailing Lists")).
 	    pagemenu_submenu_entry_separator().
 	    pagemenu_submenu_entry('<strong>'._("Configure:").'</strong>',
-				   $GLOBALS['sys_home'].'mail/admin/?group='.$project->getUnixName()).
-	    pagemenu_submenu_entry(_("Add"),
-				   $GLOBALS['sys_home'].'mail/admin/?add_list=1&amp;group='.$project->getUnixName()).
-	    pagemenu_submenu_entry(_("Edit"),
-				   $GLOBALS['sys_home'].'mail/admin/?change_status=1&amp;group='.$project->getUnixName());
+				   $GLOBALS['sys_home'].'mail/admin/?group='.$project->getUnixName());
 	  pagemenu_submenu_content($ret);
 	}
       pagemenu_submenu_end();

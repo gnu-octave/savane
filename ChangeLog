@@ -1,3 +1,9 @@
+2007-05-27  Sylvain Beucler  <beuc@beuc.net>
+
+	* Merged addition and modification screen for mailing lists
+
+	* Removed Savannah-specific unused bits in mail/admin/index.php
+
 2007-05-26  Rudy Gevaert <Rudy.Gevaert@UGent.be>
 
 	* Update UGent.css (bug #9201@gna)

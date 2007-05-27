@@ -1176,7 +1176,16 @@ function util_debug ($msg)
   if ($GLOBALS['sys_debug_on'])
     {
       $backtrace = debug_backtrace(); // stacktrace
-      $GLOBALS['debug'] .= "(" . $backtrace[1]['function'] . ") $msg<br />";
+      $location = '';
+      if (isset($backtrace[1]))
+	{
+	  $location = $backtrace[1]['function'];
+	}
+      else {
+	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '', $backtrace[0]['file']);
+	$location = "$relative_path:{$backtrace[0]['line']}";
+      }
+      $GLOBALS['debug'] .= "(" . $location . ") $msg<br />";
     }
 }
 

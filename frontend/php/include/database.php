@@ -120,7 +120,7 @@ function db_variable_binding($sql, $inputarr=null) {
       $match = false;
     }
     if (!$match) {
-      exit("db_variable_binding: input array does not match query: <pre>"
+      util_die("db_variable_binding: input array does not match query: <pre>"
 	   .htmlspecialchars($sql)
 	   ."<br />"
 	   .print_r($inputarr, true));

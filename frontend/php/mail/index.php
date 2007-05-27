@@ -22,6 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
 
@@ -39,8 +41,7 @@ if ($group_id)
   else 
     { $public_flag='1'; }
   
-  $sql="SELECT * FROM mail_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag) ORDER BY list_name ASC";
-  $result = db_query ($sql);
+  $result = db_execute("SELECT * FROM mail_group_list WHERE group_id=? AND is_public IN ($public_flag) ORDER BY list_name ASC", array($group_id));
   $rows = db_numrows($result); 
   
   if (!$result || $rows < 1) 
@@ -75,12 +76,12 @@ if ($group_id)
       print '&nbsp;&nbsp;<em>'.db_result($result, $j, 'description').'</em>';
       print '<p class="smaller">';
 
-      unset($previoustextexists);
+      $previoustextexists = false;
       if ($is_public && $project->getTypeMailingListArchivesUrl($list) && $project->getTypeMailingListArchivesUrl($list) != "http://")
 	{
 	  if ($previoustextexists)
 	    { print '<br />'; }
-	  $previoustextexists = 1;
+	  $previoustextexists = true;
 
 	  # Pointer to archives
 	  print sprintf(_("To see the collection of prior posting to the list, visit the %s%s archives%s"),'<a href="'.$project->getTypeMailingListArchivesUrl($list).'">', $list, '</a>.');
@@ -90,7 +91,7 @@ if ($group_id)
 	{
 	  if ($previoustextexists)
 	    { print '<br />'; }
-	  $previoustextexists = 1;
+	  $previoustextexists = true;
 
 	  # Pointer to archives
 	  print sprintf(_("To see the collection of prior posting to the list, visit the %s%s archives%s (authorization required)."),'<a href="'.$project->getTypeMailingListArchivesPrivateUrl($list).'">', $list, '</a>');
@@ -100,7 +101,7 @@ if ($group_id)
 	{
 	  if ($previoustextexists)
 	    { print '<br />'; }
-	  $previoustextexists = 1;
+	  $previoustextexists = true;
 
 	  # Address
 	  print sprintf(_("To post a message to all the list members, write to %s"), utils_email($project->getTypeMailingListAddress($list)));
@@ -121,7 +122,7 @@ if ($group_id)
 
 	  if ($previoustextexists)
 	    { print '<br />'; }
-	  $previoustextexists = 1;
+	  $previoustextexists = true;
 
 	    print sprintf(_("You can subscribe to the list by submitting %sthis message%s"),'<a href="'.$project->getTypeMailingListSubscribeUrl($list).'">','</a>.');
 	  }
@@ -129,7 +130,7 @@ if ($group_id)
 
 	  if ($previoustextexists)
 	    { print '<br />'; }
-	  $previoustextexists = 1;
+	  $previoustextexists = true;
 
 	    print sprintf(_("You can unsubscribe to the list by submitting %sthis message%s"),'<a href="'.$project->getTypeMailingListUnsubscribeUrl($list).'">','</a>.');
 	  }
@@ -138,7 +139,7 @@ if ($group_id)
 	{
 	  if ($previoustextexists)
 	    { print '<br />'; }
-	  $previoustextexists = 1;
+	  $previoustextexists = true;
 
 	  print sprintf(_("You can (un)subscribe to the list by following instructions on the %slist information page%s"),'<a href="'.$project->getTypeMailingListListinfoUrl($list).'">','</a>.');
 	}
@@ -147,7 +148,7 @@ if ($group_id)
 	{
 	  if ($previoustextexists)
 	    { print '<br />'; }
-	  $previoustextexists = 1;
+	  $previoustextexists = true;
 
 	  # Admin interface
 	  print sprintf(_("Project administrators could use the %sadministrative interface%s to manage the list."),'<a href="'.$project->getTypeMailingListAdminUrl($list).'">','</a>').'</dd>';
@@ -163,5 +164,3 @@ else
 {
   exit_no_group();
 }
-
-?>
