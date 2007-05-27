@@ -8,7 +8,8 @@
 #
 #  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
-#
+# Copyright (C) 2007  Sylvain Beucler
+# 
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -23,6 +24,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
 # not yet compliant, kind of messy: register_globals_off();
@@ -57,7 +60,8 @@ if ($type_of_search == "soft")
       # Only one result? Redirect, but only if this is the first
       # page to be displayed. Otherwise, if the last page contains
       # just one row, the user will be redirected.
-      $res_type = db_query("SELECT base_host FROM group_type WHERE type_id=".db_result($result, 0, 'type'));
+      $res_type = db_execute("SELECT base_host FROM group_type WHERE type_id=?",
+			     array(db_result($result, 0, 'type')));
       $project = db_result($result, 0, 'unix_group_name');
       if (db_result($res_type, 0, 'base_host'))
 	{ $host = db_result($res_type, 0, 'base_host'); }
@@ -84,7 +88,8 @@ if ($type_of_search == "soft")
 
       for ( $i = 0; $i < $rows; $i++ )
 	{
-	  $res_type = db_query("SELECT base_host,name FROM group_type WHERE type_id=".db_result($result, $i, 'type'));
+	  $res_type = db_execute("SELECT base_host,name FROM group_type WHERE type_id=?",
+				 array(db_result($result, $i, 'type')));
 
       if (db_result($res_type, 0, 'base_host'))
 	{ $host = db_result($res_type, 0, 'base_host'); }

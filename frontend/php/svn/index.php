@@ -5,6 +5,7 @@
 # $Id$
 #
 #  Copyright 2005      (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007  Sylvain Beucler
 #
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,10 +23,15 @@
 
 require_once('../include/init.php');
 
+#input_is_safe();
+#mysql_is_safe();
+
 if (!$group_id)
 {
   exit_no_group();
 }
+
+$project = project_get_object($group_id);
 
 if (!$project->Uses("svn") && !$project->UsesForHomepage("svn"))
 {
@@ -74,6 +80,3 @@ print '<h2>'.sprintf(_("Getting a Copy of the %s Repository"),$type).'</h2>';
 utils_get_content("svn/index");
 
 site_project_footer(array());
-
-
-?>
