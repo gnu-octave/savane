@@ -307,5 +307,3 @@ print html_build_select_box_from_array($frequency,
 print '<br />'.form_footer(_("Update"));
 
 site_user_footer(array());
-
-?>

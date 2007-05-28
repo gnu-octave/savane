@@ -36,10 +36,10 @@ require_once(dirname(__FILE__).'/Error.class');
 # left-hand and top menu nav library (requires context to be set)
 require_once(dirname(__FILE__).'/sitemenu.php');
 require_once(dirname(__FILE__).'/pagemenu.php');
-# theme - color scheme informations
-require_once(dirname(__FILE__).'/theme.php');
 # i18n setup
 require_once(dirname(__FILE__).'/i18n.php');
+# theme - color scheme informations
+require_once(dirname(__FILE__).'/theme.php');
 # various utilities - broken_msie...
 require_once(dirname(__FILE__).'/utils.php');
 

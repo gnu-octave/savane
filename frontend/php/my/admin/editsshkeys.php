@@ -22,19 +22,25 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../../include/init.php');
 require_once('../../include/account.php');
 session_require(array('isloggedin' => 1));
 
-$update = isset($_REQUEST['update']) ? $_REQUEST['update'] : '';
+extract(sane_import('post', array('update', 'keys', 'form_authorized_keys')));
+
 if ($update)
 {
-  unset($keys);
+  $keys = '';
   # Build the key string
   # Key limit is set to 25
   for ($i = 0; $i < 25; $i++)
     {
-      $thiskey = stripslashesgpc($_POST['form_authorized_keys'][$i]);
+      if (!isset($form_authorized_keys[$i]))
+	continue;
+      $thiskey = $form_authorized_keys[$i];
       # Remove useless blank spaces
       $thiskey = trim($thiskey);
       # Remove line breaks
@@ -47,8 +53,8 @@ if ($update)
     }
 
   # Update the database
-  $success = db_query("UPDATE user SET authorized_keys='" . mysql_real_escape_string($keys)
-		      . "' WHERE user_id=" . user_getid());
+  $success = db_execute("UPDATE user SET authorized_keys = ? WHERE user_id = ?",
+			array($keys, user_getid()));
   
   if ($success)
     { fb(_("Keys registered")); }
@@ -58,7 +64,8 @@ if ($update)
 else
 {
   # Grab keys from the database
-  $res_keys = db_query("SELECT authorized_keys FROM user WHERE user_id=".user_getid());
+  $res_keys = db_execute("SELECT authorized_keys FROM user WHERE user_id = ?",
+			 array(user_getid()));
   $row_keys = db_fetch_array($res_keys);
 
   $form_authorized_keys = split("###", $row_keys['authorized_keys'], 25);

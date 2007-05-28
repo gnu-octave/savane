@@ -20,20 +20,23 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
-require '../include/pre.php';
+require_once('../include/init.php');
 require_directory("trackers");
 
 register_globals_off();
+
+extract(sane_import('post', array('submit', 'new_votes')));
 
 if (user_isloggedin())
 {
   $remaining_votes = trackers_votes_user_remains_count(user_getid());
 
-  if (sane_post("submit"))
+  if ($submit)
     {
-      $sql = "SELECT vote_id,tracker,item_id FROM user_votes WHERE user_id='".user_getid()."' ORDER BY howmuch DESC , item_id ASC LIMIT 100 ";
-      $result = db_query($sql);
+      $result = db_execute("SELECT vote_id,tracker,item_id FROM user_votes WHERE user_id = ? ORDER BY howmuch DESC, item_id ASC LIMIT 100", array(user_getid()));
       unset($count);
       
       # Build a list of votes to update: we must proceed in two step because
@@ -42,14 +45,16 @@ if (user_isloggedin())
       $new_votes_list_item_id = array();
       $new_votes_list_tracker = array();
 
+      $count = 0;
       while ($row = db_fetch_array($result)) 
 	{
-	  $new_vote = "new_vote_$row[vote_id]";
-	  $new_vote = sane_post($new_vote);
+	  if(!isset($new_votes[$row['vote_id']]))
+	    continue;
+	  $new_vote = $new_votes[$row['vote_id']];
 	  $count = $count + $new_vote;
-	  $new_votes_list[$row[vote_id]] = $new_vote;
-	  $new_votes_list_item_id[$row[vote_id]] = $row[item_id];
-	  $new_votes_list_tracker[$row[vote_id]] = $row[tracker];
+	  $new_votes_list[$row['vote_id']] = $new_vote;
+	  $new_votes_list_item_id[$row['vote_id']] = $row['item_id'];
+	  $new_votes_list_tracker[$row['vote_id']] = $row['tracker'];
 	}
       
       if ($count > 100)
@@ -86,22 +91,24 @@ if (user_isloggedin())
       
       print '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
       
-      $sql = "SELECT * FROM user_votes WHERE user_id='".user_getid()."' ORDER BY howmuch DESC , item_id ASC LIMIT 100 ";
-      $result = db_query($sql);
+      $result = db_execute("SELECT * FROM user_votes WHERE user_id = ? ORDER BY howmuch DESC, item_id ASC LIMIT 100",
+			   array(user_getid()));
       
-      while ($row=db_fetch_array($result))
+      while($row = db_fetch_array($result))
 	{
-	  $sql = "SELECT summary,vote,status_id,priority,group_id FROM ".$row['tracker']." WHERE bug_id='".$row['item_id']."' LIMIT 1 ";
-	  $res_item = db_query($sql);
+	  if (!ctype_alnum($row['tracker'])) util_die("Invalid tracker name: <em>{$row['tracker']}</em>");
+	  $res_item = db_execute("SELECT summary,vote,status_id,priority,group_id ".
+				 "FROM ".$row['tracker']." WHERE bug_id=? LIMIT 1",
+				 array($row['item_id']));
 	  
 	  $prefix = utils_get_tracker_prefix($row['tracker']);
 	  $icon = utils_get_tracker_icon($row['tracker']);
 	  
 	  print '<div class="'.utils_get_priority_color(db_result($res_item, 0, 'priority'), db_result($res_item, 0, 'status_id')).'">'.
-	    '<input type="text" name="new_vote_'.$row['vote_id'].'" size="3" maxlength="3" value="'.$row['howmuch'].'" /> / '.($row['howmuch']+$remaining_votes).
+	    '<input type="text" name="new_votes['.$row['vote_id'].']" size="3" maxlength="3" value="'.$row['howmuch'].'" /> / '.($row['howmuch']+$remaining_votes).
 	    '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$GLOBALS['sys_home'].$row['tracker'].'/?func=detailitem&amp;item_id='.$row['item_id'].'">'.
 	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/'.$icon.'.png" class="icon" alt="'.$row['tracker'].'" />'.
-	    ' '.stripslashes(db_result($res_item, 0, 'summary')).', '.sprintf(ngettext("%s vote", "%s votes", db_result($res_item, 0, 'vote')), db_result($res_item, 0, 'vote')).'&nbsp;<span class="xsmall">('.$prefix .' #'.$row['item_id'].', '.group_getname(db_result($res_item, 0, 'group_id')).')</span></div>';
+	    ' '.stripslashes(db_result($res_item, 0, 'summary')).', '.sprintf(ngettext("%s vote", "%s votes", db_result($res_item, 0, 'vote')), db_result($res_item, 0, 'vote')).'&nbsp;<span class="xsmall">('.$prefix .' #'.$row['item_id'].', '.group_getname(db_result($res_item, 0, 'group_id')).')</span></a></div>';
 	  
 	  
 	}

@@ -27,9 +27,13 @@
 #input_is_safe();
 #mysql_is_safe();
 
+require_once(dirname(__FILE__).'/utils.php');
+
 # Jump to the next theme available and set cookie appropriately
-function theme_rotate_jump($num) 
+function theme_rotate_jump() 
 {
+  extract(sane_import('cookie', array('SV_THEME_ROTATE_NUMERIC')));
+  $num = intval($SV_THEME_ROTATE_NUMERIC);
 
   utils_get_content("forbidden_theme");
   $theme = theme_list();

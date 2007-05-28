@@ -22,9 +22,15 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../../include/init.php');
 
-if (user_ismember(1,'A')) 
+extract(sane_import('request', array('people_cat', 'people_skills')));
+extract(sane_import('post', array('post_changes', 'cat_name', 'skill_name')));
+
+if (user_ismember(1,'A'))
 {
 
   if ($post_changes) 
@@ -36,8 +42,7 @@ if (user_ismember(1,'A'))
       if ($people_cat) 
 	{
 
-	  $sql="INSERT INTO people_job_category (name) VALUES ('$cat_name')";
-	  $result=db_query($sql);
+	  $result = db_execute("INSERT INTO people_job_category (name) VALUES (?)", array($cat_name));
 	  if (!$result) 
 	    {
 	      print db_error();
@@ -50,8 +55,7 @@ if (user_ismember(1,'A'))
       else if ($people_skills) 
 	{
 
-	  $sql="INSERT INTO people_skill (name) VALUES ('$skill_name')";
-	  $result=db_query($sql);
+	  $result=db_execute("INSERT INTO people_skill (name) VALUES (?)", array($skill_name));
 	  if (!$result) 
 	    {
 	      print db_error();
@@ -107,8 +111,7 @@ if ($people_cat)
   /*
 			List of possible categories for this group
   */
-  $sql="select category_id,name from people_job_category";
-  $result=db_query($sql);
+  $result = db_query("SELECT category_id,name FROM people_job_category");
   print "<P>";
   if ($result && db_numrows($result) > 0) 
     {
@@ -153,8 +156,7 @@ else if ($people_skills)
   /*
 			List of possible people_groups for this group
   */
-  $sql="select skill_id,name from people_skill";
-  $result=db_query($sql);
+  $result = db_query("SELECT skill_id,name FROM people_skill");
   print "<p>";
   if ($result && db_numrows($result) > 0) 
     {
@@ -167,7 +169,7 @@ else if ($people_skills)
     }
 		
   print '<p><h3>'._("Add a new skill:").'</h3></p>';
-  print '<p>;
+  print '<p>
 		<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 		<input type="hidden" name="people_skills" value="y" />
 		<input type="hidden" name="post_changes" value="y" /></p>';

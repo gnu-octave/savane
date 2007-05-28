@@ -165,5 +165,3 @@ people_edit_skill_inventory(user_getid());
 
 
 site_user_footer(array());
-
-?>

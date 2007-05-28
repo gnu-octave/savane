@@ -20,6 +20,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
 require_once('../include/my/general.php');
@@ -40,18 +42,16 @@ if (user_isloggedin())
 
   # Get the list of projects the user is member of
 
-  $sql = "SELECT groups.group_name,"
+  $result = db_execute("SELECT groups.group_name,"
     . "groups.group_id,"
     . "groups.unix_group_name,"
     . "groups.status "
     . "FROM groups,user_group "
     . "WHERE groups.group_id=user_group.group_id "
-    . "AND user_group.user_id='".user_getid()."' "
+    . "AND user_group.user_id = ? "
     . "AND groups.status='A' "
     . "GROUP BY groups.unix_group_name "
-    . "ORDER BY groups.unix_group_name";
-
-  $result = db_query($sql);
+    . "ORDER BY groups.unix_group_name", array(user_getid()));
   $rows = db_numrows($result);
   $usergroups = array();
   $usergroups_groupid = array();
@@ -69,10 +69,7 @@ if (user_isloggedin())
     { $nogroups = 1; }
 
   # Get the list of squads the user is member of
-  $sql = "SELECT squad_id FROM user_squad "
-    . "WHERE user_id='".user_getid()."'";
-
-  $result = db_query($sql);
+  $result = db_execute("SELECT squad_id FROM user_squad WHERE user_id=?", array(user_getid()));
   $rows = db_numrows($result);
   $usersquads = array();
   if ($result && $rows > 0)
@@ -108,14 +105,16 @@ if (user_isloggedin())
   unset($rows);
   # Build an sql request that will fetch any relevant news
   $sql = "SELECT group_id,date,id,summary FROM news_bytes ".
-    "WHERE date > '$new_date_limit' AND is_approved='5' AND (";
+    "WHERE date > ? AND is_approved='5' AND (";
+  $params = array($new_date_limit);
   $previous = 0;
   while (list($group, $groupname) = each ($usergroups))
     {
       if (member_check(0, $usergroups_groupid[$group],'N3'))
 	{
 	  if ($previous) { $sql .= "OR "; }
-	  $sql .= "group_id='".$usergroups_groupid[$group]."' ";
+	  $sql .= "group_id=? ";
+	  $params[] = $usergroups_groupid[$group];
 	  $previous = 1;
 	}
     }
@@ -126,7 +125,7 @@ if (user_isloggedin())
   $result = NULL;
   if ($previous)
     {
-      $result = db_query($sql);
+      $result = db_execute($sql, $params);
       $rows = db_numrows($result);
     }
 
@@ -151,14 +150,16 @@ if (user_isloggedin())
   reset($usergroups_groupid);
   # Build an sql request that will fetch any relevant news
   $sql = "SELECT group_id,date,forum_id,summary FROM news_bytes ".
-    "WHERE date > '$new_date_limit' AND (is_approved='0' OR is_approved='1') AND (group_id='".$GLOBALS['sys_group_id']."' ";
+    "WHERE date > ? AND (is_approved='0' OR is_approved='1') AND (group_id=? ";
+  $params = array($new_date_limit, $GLOBALS['sys_group_id']);
   while (list($group, $groupname) = each ($usergroups))
     {
-      $sql .= "OR group_id='".$usergroups_groupid[$group]."' ";
+      $sql .= "OR group_id=? ";
+      $params[] = $usergroups_groupid[$group];
     }
   $sql .= ") ORDER BY date DESC";
 
-  $result = db_query($sql);
+  $result = db_execute($sql, $params);
   $rows = db_numrows($result);
   if ($result && $rows > 0)
     {

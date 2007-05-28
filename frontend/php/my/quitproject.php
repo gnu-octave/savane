@@ -23,10 +23,13 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
 require_once('../include/session.php');
 require_once('../include/sane.php');
+require_once('../include/sendmail.php');
 
 session_require(array('isloggedin'=>'1'));
 
@@ -68,15 +71,16 @@ print '<div class="center"><input type="submit" name="confirm" value="'._("Confi
 }
 else
 {
-  member_remove(user_getid(), sane_all("quitting_group_id"));
+  member_remove(user_getid(), $quitting_group_id);
   
   # Mail the changes so the admins know what happened
   # unless it is a request for inclusion cancelled
   if (!$pending)
     {
-      $res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "
-			    . "WHERE user_group.user_id=user.user_id AND user_group.group_id=$quitting_group_id AND "
-			    . "user_group.admin_flags = 'A'");
+      $res_admin = db_execute("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name "
+			      . "FROM user,user_group "
+			      . "WHERE user_group.user_id=user.user_id AND user_group.group_id = ? AND "
+			      . "user_group.admin_flags = 'A'", array($quitting_group_id));
       $to = '';
       while ($row_admin = db_fetch_array($res_admin)) 
 	{

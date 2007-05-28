@@ -22,15 +22,26 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # we need to define the theme before loading the pre.php init script,
 # otherwise the page needs to be reloaded for the change to take effect.
 # see bug #1987
-$update = isset($_REQUEST['update'])? $_REQUEST['update'] : '';
-$user_theme = isset($_REQUEST['user_theme']) ? $_REQUEST['user_theme'] : '';
+require_once('../../include/sane.php');
+extract(sane_import('request', array('feedback')));
+extract(sane_import('post',
+  array(
+    'update',
+    'form_keep_only_one_session',
+    'form_timezone', 'user_theme', 'theme_rotate_jump',
+    'form_reverse_comments_order', 'form_stone_age_menu', 'form_nonfixed_feedback',
+    'form_use_bookmarks', 'form_email_hide',
+    )));
 
 if ($update and $user_theme != "random" and $user_theme != "rotate")
   {
-    define('SV_THEME', addslashes($user_theme));
+    define('SV_THEME', $user_theme);
   }
 
 require_once('../../include/init.php');
@@ -38,59 +49,50 @@ require_once('../../include/timezones.php');
 
 register_globals_off();
 
-$feedback = sane_all("feedback");
-
 #######################
 ####################### UPDATE DATABASE
 
 session_require(array('isloggedin'=>1));
 
-if (sane_post("update"))
+if ($update)
 {
   # Update theme
-  $user_theme = sane_post("user_theme");
-  $theme_rotate_jump = sane_post("theme_rotate_jump");
   
   if ($user_theme == "Default")
     { $user_theme = ""; }
 
   if ($theme_rotate_jump == "1")
     {
-      theme_rotate_jump($theme_rotate_numeric);
+      theme_rotate_jump();
     }
-  else
-    {
-      setcookie("SV_THEME", $user_theme, time() + 60*60*24*365, $GLOBALS['sys_url_topdir']);
-    }
-
+  setcookie("SV_THEME", $user_theme, time() + 60*60*24*365, $GLOBALS['sys_url_topdir']);
 
   # Update the rest
-  $form_email_hide = sane_post("form_email_hide");
-  $form_timezone = sane_post("form_timezone");
   if ($form_timezone == 100)
     { $form_timezone = "GMT"; }
 
-  $success = db_query("UPDATE user SET "
-		      . "email_hide='" . ($form_email_hide?"1":"0")."', "
-		      . "theme='".$user_theme."', "
-		      . "timezone='".$form_timezone."' WHERE "
-		      . "user_id=" . user_getid());
-
+  $success = db_autoexecute('user',
+    array(
+      'email_hide' => ($form_email_hide ? "1" : "0"),
+      'theme' => $user_theme,
+      'timezone' => $form_timezone,
+    ), DB_AUTOQUERY_UPDATE,
+    "user_id=?", array(user_getid()));
 
   # Integrated bookmarks
-  if (sane_post("form_use_bookmarks") == "1")
+  if ($form_use_bookmarks == "1")
     { user_set_preference("use_bookmarks", 1); }
   else
     { user_unset_preference("use_bookmarks"); }
 
   # Relative position feedback
-  if (sane_post("form_nonfixed_feedback") == "1")
+  if ($form_nonfixed_feedback == "1")
     { user_set_preference("nonfixed_feedback", 1); }
   else
     { user_unset_preference("nonfixed_feedback"); }
 
   # Stone Age menu
-  if (sane_post("form_stone_age_menu") == "1")
+  if ($form_stone_age_menu == "1")
     { 
       user_set_preference("stone_age_menu", 1);
       # Too late for the stone age menu to be effective
@@ -101,13 +103,13 @@ if (sane_post("update"))
 
 
   # Reversed comment order
-  if (sane_post("form_reverse_comments_order") == "1")
+  if ($form_reverse_comments_order == "1")
     { user_set_preference("reverse_comments_order", 1); }
   else
     { user_unset_preference("reverse_comments_order"); }
 
   # Keep only one session comment order
-  if (sane_post("form_keep_only_one_session") == "1")
+  if ($form_keep_only_one_session == "1")
     { user_set_preference("keep_only_one_session", 1); }
   else
     { user_unset_preference("keep_only_one_session"); }
@@ -132,7 +134,7 @@ site_user_header(array('context'=>'account'));
 
 
 # get global user vars
-$res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
+$res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
 $row_user = db_fetch_array($res_user);
 
 print '<p>'._("You can view/change all of your account features from here.").'</p>';
@@ -317,7 +319,6 @@ print ' '._("Theme");
 if ("rotate"==$row_user['theme'])
 {
   print '<br /><input type="checkbox" name="theme_rotate_jump" value="1" /> '._("Jump to the next theme").'';
-  print '<input type="hidden" name="theme_rotate_numeric" value="'. $_COOKIE['SV_THEME_ROTATE_NUMERIC'] .'" />';
 }
 print '<p class="smaller">'._("Not satisfied with the default color theme of the interface?").'</p>';
 
@@ -365,4 +366,3 @@ print '<span class="clearr" /><p class="center"><input type="submit" name="updat
 print '</form>';
 
 $HTML->footer(array());
-?>

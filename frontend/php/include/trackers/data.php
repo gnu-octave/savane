@@ -627,7 +627,15 @@ function trackers_data_is_showed_on_result($field)
 function trackers_data_is_showed_on_add($field, $by_field_id=false)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['show_on_add'] & 1: $BF_USAGE_BY_NAME[$field]['show_on_add'] & 1);
+  $by_id = isset($BF_USAGE_BY_ID[$field]['show_on_add'])
+    ? $BF_USAGE_BY_ID[$field]['show_on_add']
+    : null;
+  $by_id = $by_id & 1;
+  $by_val = isset($BF_USAGE_BY_NAME[$field]['show_on_add'])
+    ? $BF_USAGE_BY_NAME[$field]['show_on_add']
+    : null;
+  $by_val = $by_val & 1;
+  return $by_field_id ? $by_id : $by_val;
 }
 
 # return a TRUE value if non logged in users should be able to

@@ -140,6 +140,3 @@ print $HTML->box_bottom();
 
 
 site_user_footer(array());
-
-
-?>

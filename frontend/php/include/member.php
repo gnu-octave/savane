@@ -73,11 +73,14 @@ function member_approve ($user_id, $group_id)
 function member_remove ($user_id, $group_id) 
 {
   # Find out if it is a squad
-  $admin_flags = db_result(db_execute("SELECT admin_flags FROM user_group WHERE user_id=? AND group_id=?",
-				      array($user_id, $group_id)),
-			   0, 'admin_flags');
+  $result = db_execute("SELECT admin_flags FROM user_group WHERE user_id=? AND group_id=?",
+		       array($user_id, $group_id));
+  if (db_numrows($result) == 0)
+    return false;
 
-  $sql = "";
+  $admin_flags = db_result($result, 0, 'admin_flags');
+
+  $sql = '';
   $result = db_execute("DELETE FROM user_group WHERE user_id=? AND group_id=?",
 		       array($user_id, $group_id));
   if ($result) 
