@@ -22,6 +22,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../../include/init.php');
 require_directory("people");
 
@@ -32,17 +35,11 @@ if ( ! user_isloggedin())
   exit_not_logged_in();
 }
 
-$update_profile = sane_post("update_profile");
-$people_resume = sane_post("people_resume");
-$people_view_skills = sane_post("people_view_skills");
-
-$add_to_skill_inventory = sane_post("add_to_skill_inventory");
-$update_skill_inventory = sane_post("update_skill_inventory");
-$delete_from_skill_inventory = sane_post("delete_from_skill_inventory");
-$skill_id = sane_post("skill_id");
-$skill_level_id = sane_post("skill_level_id");
-$skill_year_id = sane_post("skill_year_id");
-$skill_inventory_id = sane_post("skill_inventory_id");
+extract(sane_import('post',
+  array('update_profile', 'people_resume', 'people_view_skills',
+	'add_to_skill_inventory', 'update_skill_inventory',
+	'delete_from_skill_inventory', 'skill_id', 'skill_level_id',
+	'skill_year_id', 'skill_inventory_id')));
 
 if ($update_profile) 
 {
@@ -53,9 +50,8 @@ if ($update_profile)
   else 
     {
       $people_resume = utils_unconvert_htmlspecialchars($people_resume);
-      $sql="UPDATE user SET people_view_skills='$people_view_skills',people_resume='$people_resume' ".
-	 "WHERE user_id='".user_getid()."'";
-      $result=db_query($sql);
+      $result = db_execute("UPDATE user SET people_view_skills=?, people_resume=? ".
+	 "WHERE user_id=?", array($people_view_skills, $people_resume, user_getid()));
       if (!$result || db_affected_rows($result) < 1) 
 	{
 	  fb(_("Update failed"), 1);
@@ -87,9 +83,9 @@ else if ($update_skill_inventory)
     } 
   else 
     {
-      $sql="UPDATE people_skill_inventory SET skill_level_id='$skill_level_id',skill_year_id='$skill_year_id' ".
-	 "WHERE user_id='". user_getid() ."' AND skill_inventory_id='$skill_inventory_id'";
-      $result=db_query($sql);
+      $result = db_execute("UPDATE people_skill_inventory SET skill_level_id=?,skill_year_id=? ".
+	 "WHERE user_id=? AND skill_inventory_id=?",
+	 array($skill_level_id, $skill_year_id, user_getid(), $skill_inventory_id));
       
       if (!$result || db_affected_rows($result) < 1) 
 	{
@@ -107,8 +103,8 @@ else if ($update_skill_inventory)
       exit_error(_("Missing information: Fill in all required fields"));
     }
 
-  $sql="DELETE FROM people_skill_inventory WHERE user_id='". user_getid() ."' AND skill_inventory_id='$skill_inventory_id'";
-  $result=db_query($sql);
+  $result = db_execute("DELETE FROM people_skill_inventory WHERE user_id=? AND skill_inventory_id=?",
+		       array(user_getid(), $skill_inventory_id));
   if (!$result || db_affected_rows($result) < 1) 
     {
       fb(_("User Skill Delete failed"),1);
@@ -130,9 +126,8 @@ print '<p>'._("Details about your experience and skills may be of interest to ot
 
 
 
-$sql="SELECT * FROM user WHERE user_id='". user_getid() ."'";
-$result=db_query($sql);
-if (!$result || db_numrows($result) < 1) 
+$result = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
+if (!$result || db_numrows($result) < 1)
 {
   exit_error(_("No such user"));
 }

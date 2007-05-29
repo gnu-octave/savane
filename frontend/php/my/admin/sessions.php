@@ -20,6 +20,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
 register_globals_off();
@@ -27,26 +29,24 @@ register_globals_off();
 # Check if the user is logged in.
 session_require(array('isloggedin'=>'1'));
 
+extract(sane_import('get',
+  array('func', 'dsession_hash', 'dip_addr', 'dtime', 'dkeep_one')));
+extract(sane_import('cookie', array('session_hash')));
+
 
 ########################################################################
 # Update the database
-if (sane_get("func") == "del")
+if ($func == 'del')
 {
-  $dsession_hash = sane_get("dsession_hash");
-  $dip_addr = sane_get("dip_addr");
-  $dtime = sane_get("dtime");
-  $dkeep_one = sane_get("dkeep_one");
-  
   if ($dsession_hash && $dip_addr && $dtime)
     {
       # Delete one session
       $dsession_hash = substr($dsession_hash, 0, 6)."%";
-      $sql = "DELETE FROM session WHERE session_hash like '$dsession_hash' "
-	 . " AND ip_addr='$dip_addr'"
-	 . " AND time='$dtime'"
-	 . " AND user_id='".user_getid()."'"
-	 . " LIMIT 1";
-      if (db_query($sql))
+      if (db_execute("DELETE FROM session "
+            . " WHERE session_hash like ? AND ip_addr=? "
+	    . " AND time=? AND user_id=? LIMIT 1",
+            array($dsession_hash, $dip_addr,
+		  $dtime, user_getid())))
 	{ fb(_("Old session deleted")); }
       else
 	{ fb(_("Failed to delete old session"), 1); }
@@ -54,11 +54,10 @@ if (sane_get("func") == "del")
   else if ($dkeep_one) 
     {
       # Delete all sessions apart from the current one
-      $session_hash = sane_cookie("session_hash");
-      $sql = "DELETE FROM session WHERE session_hash<>'$session_hash' "
-	. " AND user_id='".user_getid()."'";
-
-      if (db_query($sql))
+      
+      if (db_execute("DELETE FROM session "
+            . " WHERE session_hash<>? AND user_id=?",
+	    array($session_hash, user_getid())))
 	{ fb(_("Old sessions deleted")); }
       else
 	{ fb(_("Failed to delete old sessions"), 1); }
@@ -79,9 +78,9 @@ site_user_header(array('title'=>_("Manage sessions"),
 
 
 
-$res = db_query("SELECT session_hash,ip_addr,time FROM session WHERE "
-		 . "user_id = '".user_getid()."' "
-		 . "ORDER BY time DESC");
+$res = db_execute("SELECT session_hash,ip_addr,time FROM session WHERE "
+		  . "user_id = ? "
+		  . "ORDER BY time DESC", array(user_getid()));
 
 if (db_numrows($res) < 1)
 {
@@ -106,7 +105,7 @@ while ($row = db_fetch_array($res))
 
   # Do not incitate users to kill their own session
   print '<span class="trash">';
-  if (sane_cookie("session_hash") != $row['session_hash'])
+  if ($session_hash != $row['session_hash'])
     {
       print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dsession_hash='.$dsession_hash.'&amp;dip_addr='.$row['ip_addr'].'&amp;dtime='.$row['time'],
 		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Kill this session").'" />');

@@ -122,8 +122,9 @@ if (isset($_COOKIE['SV_THEME']))
       # the user selected random theme
       # we set randomly a theme and a cookie for a day
       if (isset($_COOKIE['SV_THEME_RANDOM'])) 
-	{	  
-	  define('SV_THEME', $_COOKIE['SV_THEME_RANDOM']);
+	{
+	  if (!defined('SV_THEME'))
+	    define('SV_THEME', $_COOKIE['SV_THEME_RANDOM']);
 	} 
       else 
 	{
@@ -132,15 +133,17 @@ if (isset($_COOKIE['SV_THEME']))
 	  $num = mt_rand(0,count($theme)-1);
 	  $random_theme = $theme[$num];
 	  setcookie('SV_THEME_RANDOM', $random_theme, time() + 60*60*24, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);
-	  define('SV_THEME', $random_theme);
+	  if (!defined('SV_THEME'))
+	    define('SV_THEME', $random_theme);
 	}
     } 
   elseif ($_COOKIE['SV_THEME'] == 'rotate')
     {
       # the user want a rotation between themes
-      if (isset($_COOKIE['SV_THEME_ROTATE'])) 
-	{	    
-	  define('SV_THEME', $_COOKIE['SV_THEME_ROTATE']);
+      if (isset($_COOKIE['SV_THEME_ROTATE']))
+	{
+	  if (!defined('SV_THEME'))
+	    define('SV_THEME', $_COOKIE['SV_THEME_ROTATE']);
 	} 
       else 
 	{
@@ -162,7 +165,8 @@ if (isset($_COOKIE['SV_THEME']))
 	  # we associate this number with a theme
 	  $rotate_theme = $theme[$num];
 	  setcookie('SV_THEME_ROTATE', $rotate_theme, time() + 60*60*24, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);
-	  define('SV_THEME', $rotate_theme);
+	  if (!defined('SV_THEME'))
+	    define('SV_THEME', $rotate_theme);
 	}
     } 
   else 

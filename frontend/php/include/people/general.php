@@ -479,8 +479,8 @@ function people_add_to_skill_inventory($skill_id,$skill_level_id,$skill_year_id)
   if (user_isloggedin())
     {
       #check if they've already added this skill
-      $result = db_autoexecute("SELECT * FROM people_skill_inventory WHERE user_id=? AND skill_id=?",
-                               array(user_getid(), $skill_id));
+      $result = db_execute("SELECT * FROM people_skill_inventory WHERE user_id=? AND skill_id=?",
+                           array(user_getid(), $skill_id));
       if (!$result || db_numrows($result) < 1)
 	{
 	  #skill not already in inventory

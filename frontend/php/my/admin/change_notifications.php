@@ -7,7 +7,8 @@
 #  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
 #
 #  Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#
+# Copyright (C) 2007  Sylvain Beucler
+# 
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -22,10 +23,26 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../../include/init.php');
 require_once('../../include/account.php');
 require_directory("trackers");
 register_globals_off();
+
+extract(sane_import('post',
+  array('update',
+	'form_notifset_unless_im_author',
+	'form_notifset_item_closed',
+	'form_notifset_item_statuschanged',
+	'form_skipcc_postcomment',
+	'form_skipcc_updateitem',
+	'form_removecc_notassignee',
+	'form_frequency',
+	'form_subject_line',
+	)));
+
 
 //   Previous overcomplicated code, 
 //   see task #4080 and task #3632
@@ -72,7 +89,7 @@ register_globals_off();
     The form has been submitted - update the database
  ================================================== */
 
-if (sane_post("update"))
+if ($update)
 {
 //   Previous overcomplicated code, 
 //   see task #4080 and task #3632
@@ -100,32 +117,32 @@ if (sane_post("update"))
 
   ######### Item Notif exceptions
   $success = false;
-  if (sane_post("form_notifset_unless_im_author"))
+  if ($form_notifset_unless_im_author)
     { $success += user_set_preference("notify_unless_im_author", 1); }
   else
     { $success += user_unset_preference("notify_unless_im_author"); }
 
-  if (sane_post("form_notifset_item_closed"))
+  if ($form_notifset_item_closed)
     { $success += user_set_preference("notify_item_closed", 1); }
   else
     { $success += user_unset_preference("notify_item_closed"); }
   
-  if (sane_post("form_notifset_item_statuschanged"))
+  if ($form_notifset_item_statuschanged)
     { $success += user_set_preference("notify_item_statuschanged", 1); }
   else
     { $success += user_unset_preference("notify_item_statuschanged"); }
 
-  if (sane_post("form_skipcc_postcomment"))
+  if ($form_skipcc_postcomment)
     { $success += user_set_preference("skipcc_postcomment", 1); }
   else
     { $success += user_unset_preference("skipcc_postcomment"); }
 
-  if (sane_post("form_skipcc_updateitem"))
+  if ($form_skipcc_updateitem)
     { $success += user_set_preference("skipcc_updateitem", 1); }
   else
     { $success += user_unset_preference("skipcc_updateitem"); }
   
-  if (sane_post("form_removecc_notassignee"))
+  if ($form_removecc_notassignee)
     { $success += user_set_preference("removecc_notassignee", 1); }
   else
     { $success += user_unset_preference("removecc_notassignee"); }
@@ -138,7 +155,7 @@ if (sane_post("update"))
 
 
   ######### Reminder
-  if (user_set_preference("batch_frequency", sane_post("form_frequency")))
+  if (user_set_preference("batch_frequency", $form_frequency))
     { fb(_("Successfully Updated Reminder Settings")); }
   else
     { fb(_("Failed to Update Reminder Setting"), 1); }
@@ -155,11 +172,11 @@ if (sane_post("update"))
   # First test content: to avoid people entering white space and being in
   # trouble at a later point, first check if we can find something else than
   # white space
-  $form_subject_line = sane_post("form_subject_line");
+  $form_subject_line = $form_subject_line;
   if (preg_replace("/ /", "", $form_subject_line))
     {
       # Some characters cannot be allowed
-      if (strspn($form_subject_line,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_[]()&יטא=$ש*:!,;?./%$ <>|") == strlen($form_subject_line))
+      if (strspn($form_subject_line,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_[]()&יטא=$ש*:!,;?./%$ <>|') == strlen($form_subject_line))
 	{
 	  user_set_preference("subject_line", $form_subject_line);
 	  fb(_("Successfully configured subject line"));
