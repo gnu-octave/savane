@@ -20,11 +20,13 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+#input_is_safe();
+#mysql_is_safe();
+
+require_once('../include/init.php');
 
 site_project_header(array('group'=>$group_id,
 			  'context'=>'searchingroup'));
-
 
 # Ideally, we would like to do a real site wide search, which mean being able 
 # to do a search without selecting a given tracker.
@@ -41,5 +43,3 @@ print '<p>'.sprintf(_("With the following form, you can perform a search in the 
 print '<p>'.search_box('', '', 45).'</p>';
 
 site_project_footer(array());
-
-?>

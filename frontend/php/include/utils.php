@@ -405,19 +405,19 @@ function utils_fileextension($filename)
 {
 
   $ext = substr(basename($filename), strrpos(basename($filename),".") + 1);
-  if ($ext==gz || $ext==bz2)
+  if ($ext=='gz' || $ext=='bz2')
     {
       $ext = substr(basename($filename), strrpos(basename($filename),".") - 3);
     }
-  if ($ext==rpm)
+  if ($ext=='rpm')
     {
       $long_ext = _("rpm package");
     }
-  if ($ext==deb)
+  if ($ext=='deb')
     {
       $long_ext = _("debian package");
     }
-  if ($ext==deb || $ext==rpm)
+  if ($ext=='deb' || $ext=='rpm')
     {
       $arch_type = substr(basename($filename), strrpos(basename($filename),".") - 3);
       if ($arch_type == "src.".$ext)

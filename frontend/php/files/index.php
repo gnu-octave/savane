@@ -22,18 +22,45 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+/* If your downloads are in /srv/download/%PROJECT, you can have this
+script display your releases automatically by using the following
+directory structure:
+
+/srv/download/myproject/
+/srv/download/myproject/package1.ext/
+/srv/download/myproject/package1.ext/0.1a/
+/srv/download/myproject/package1.ext/0.1a/release1.tar.gz
+/srv/download/myproject/package1.ext/0.1a/release2.tar.gz
+/srv/download/myproject/package1.ext/0.1a/README
+/srv/download/myproject/package1.ext/1.2/
+/srv/download/myproject/package1.ext/0.1a/release1.tar.gz
+/srv/download/myproject/package1.ext/0.1a/release2.tar.gz
+/srv/download/myproject/package1.ext/0.1a/...
+/srv/download/myproject/package1.ext/.../
+/srv/download/myproject/package2.ext/
+/srv/download/myproject/package2.ext/0.5/.../
+/srv/download/myproject/....ext/
+*/
+
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../include/init.php');
 
-if ($group_id) {
+extract(sane_import('get', array('thread_max', 'highlight', 'thread_show')));
 
+if ($group_id) {
+  $project = project_get_object($group_id);
   $files_dir = $project->getDir("download");
   $files_path = $project->getUrl("download");
 
   dbg("dir:$files_dir path:$files_path");
 
   # If nothing is found, redirect on the configured area
+  $empty = true;
   $i = 0;
   $content = '';
+
   if (!$project->CanUse("download") || $files_dir == '/' || $files_dir == '')
     { Header("Location: $files_path"); }
   else
@@ -78,9 +105,10 @@ if ($group_id) {
 	      $lfile=strlen($package_name)-$lext;
 	      if(@is_dir($files_dir."/".$package_name) && substr($package_name,$lfile,$lext)==$ext)
 		{
+		  $empty = false;
 		  /* we create a box for each package */
 		  $content .= $HTML->box1_top(ereg_replace(".pkg","",$package_name), 0);
-		  $version_array = ""; /* initialise array for version listing */
+		  $version_array = array();
 		  $content .= '<tr><td><table width="100%">'."\n";
 
 		  $i=0;
@@ -102,7 +130,6 @@ if ($group_id) {
 		    { rsort($version_array); }
 		  for ($x = 0; $x <$version_max; $x++)
 		    {
-
 		      /* we create a row for each version */
 		      $content .= '<tr class="';
 		      if ($highlight==$version_array[$x]) {
@@ -113,8 +140,8 @@ if ($group_id) {
 			{
 			  $this_row_color = utils_get_alt_row_color($i);
 			}
-		      /* if > $thread_max, we dont show any package details */
-		      /* if = $thead_show, we show package details */
+		      /* if > $thread_max, we dont show any package release details */
+		      /* if = $thead_show, we show package release details */
 		      if ($thread_max < $x && $thread_show != $package_name.$x)
 			{
 			  $content .= $this_row_color.'"><td>&nbsp;&nbsp;</td><td width="55%" class="bold"><a href="'.$_SERVER['PHP_SELF'].'?group_id='.$group_id.'&amp;thread_show='.$package_name.$x.'#'.ereg_replace(".pkg","",$package_name).$version_array[$x].'" name="'.ereg_replace(".pkg","",$package_name).$version_array[$x].'">';
@@ -125,7 +152,7 @@ if ($group_id) {
 			{
 			  $content .= $this_row_color.'"><td>&nbsp;&nbsp;</td><td width="55%" class="bold"><a name="'.ereg_replace(".pkg","",$package_name).$version_array[$x].'"></a>';
 			  $content .= $version_array[$x];
-			  $file_array = ""; /* initialise array for files  */
+			  $file_array = array();
 			  $content .=  '</td><td width="15%" class="center">&nbsp;</td><td width="15%" class="center">&nbsp;</td><td width="15%" class="center">&nbsp;</td></tr>'."\n";
 
 			  /* create an array of files */
@@ -178,7 +205,7 @@ if ($group_id) {
 
   # ################################### REDIRECT IF NO RESULTS
 
-  if (!$i)
+  if ($empty)
     {
       Header("Location: $files_path");
     }
@@ -199,5 +226,3 @@ else
   exit_no_group();
 
 }
-
-?>

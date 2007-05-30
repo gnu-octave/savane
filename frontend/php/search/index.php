@@ -60,15 +60,7 @@ if ($type_of_search == "soft")
       # Only one result? Redirect, but only if this is the first
       # page to be displayed. Otherwise, if the last page contains
       # just one row, the user will be redirected.
-      $res_type = db_execute("SELECT base_host FROM group_type WHERE type_id=?",
-			     array(db_result($result, 0, 'type')));
-      $project = db_result($result, 0, 'unix_group_name');
-      if (db_result($res_type, 0, 'base_host'))
-	{ $host = db_result($res_type, 0, 'base_host'); }
-      else
-	{ $host = $_SERVER['HTTP_HOST']; }
-
-      Header("Location: http".(session_issecure()?'s':'')."://".$host.$GLOBALS['sys_home']."projects/$project");
+      Header("Location: ../projects/$project");
     }
   else
     {
@@ -88,21 +80,16 @@ if ($type_of_search == "soft")
 
       for ( $i = 0; $i < $rows; $i++ )
 	{
-	  $res_type = db_execute("SELECT base_host,name FROM group_type WHERE type_id=?",
+	  $res_type = db_execute("SELECT name FROM group_type WHERE type_id=?",
 				 array(db_result($result, $i, 'type')));
-
-      if (db_result($res_type, 0, 'base_host'))
-	{ $host = db_result($res_type, 0, 'base_host'); }
-      else
-	{ $host = $_SERVER['HTTP_HOST']; }
-
-      print	'<tr class="'. html_get_alt_row_color($i).'"><td><a href="http'.(session_issecure()?'s':'')."://".$host.$GLOBALS['sys_home']."projects/".db_result($result, $i, 'unix_group_name')."/\">"
-	. db_result($result, $i, 'group_name').'</a></td>'
-	. '<td>'.db_result($result,$i,'short_description').'</td>'
-	. '<td>'.db_result($res_type, 0, 'name')."</td></tr>\n";
+	  
+	  print	'<tr class="'. html_get_alt_row_color($i).'"><td><a href="../projects/'.db_result($result, $i, 'unix_group_name').'">'
+	    . db_result($result, $i, 'group_name').'</a></td>'
+	    . '<td>'.db_result($result,$i,'short_description').'</td>'
+	    . '<td>'.db_result($res_type, 0, 'name')."</td></tr>\n";
 	}
       print "</table>\n";
-
+      
       print '<p> Note that <strong>private</strong> projects are not shown on this page </p>';
     }
 

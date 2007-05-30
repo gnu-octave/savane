@@ -20,10 +20,13 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../include/init.php');
 require_once('../include/trackers/general.php');
 
-$item_id = sane_all("item_id");
+extract(sane_import('get', array('item_id', 'func')));
 
 # If no group id is set, there is an error.
 # The group is was supposed to be set by the system, so it is a system error
@@ -38,12 +41,12 @@ $project=project_get_object($group_id);
 if (defined('PRINTER'))
 { $printer = 1; }
 
-switch (sane_all("func"))
+switch ($func)
 {
  case 'search':
    {
      # Form to do a search on the item database
-     include '../include/trackers_run/search.php';
+     require('../include/trackers_run/search.php');
      break;
    }
    
@@ -55,7 +58,7 @@ switch (sane_all("func"))
      # The call to register_globals_off here push us to put back var 
      # initialization of things coming from user input
      register_globals_off(); 
-     include '../include/trackers_run/detail-sober.php';
+     require('../include/trackers_run/detail-sober.php');
      break;
    }
 
@@ -63,9 +66,7 @@ switch (sane_all("func"))
    {
      # Show browse but ask it to be sober
      $sober = 1;
-     include '../include/trackers_run/browse.php';
+     require('../include/trackers_run/browse.php');
      break;
    }
 }
-
-?>

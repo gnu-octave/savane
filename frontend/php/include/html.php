@@ -700,6 +700,7 @@ function html_select_permission_box ($artifact, $row, $level="member")
 {
   # If $row['user_id'] does not exists, we havent got a row but simple value
   # and it means that we are about to modify per group default
+  $num = '';
   if ($level == "type")
     {
       $value = $row;
@@ -748,7 +749,7 @@ function html_select_permission_box ($artifact, $row, $level="member")
 
   if (!$value && $level == "group")
     {
-      $value = group_gettypepermissions($GLOBALS[group_id], $artifact);
+      $value = group_gettypepermissions($GLOBALS['group_id'], $artifact);
       print '<br />('.
 	(($value == 9)?_("None"):"").
 	(($value == 1)?_("Technician"):"").
@@ -813,7 +814,7 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0, 
 
   if (!$value && $level == "group" && $event == 1)
     {
-      $value = group_gettyperestrictions($GLOBALS[group_id], $artifact);
+      $value = group_gettyperestrictions($GLOBALS['group_id'], $artifact);
       print '<br />('.
 	(($value == 5)?_("Project Member"):"").
 	(($value == 3)?_("Logged-in User"):"").

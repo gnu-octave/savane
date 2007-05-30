@@ -1,3 +1,10 @@
+2007-05-29  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/search/index.php: removed base_host support. The
+	redirection is usually be done in the /project page itself, and
+	this prevents going out from test installs to real servers without
+	notice (when using $sys_debug_nobasehost).
+
 2007-05-27  Sylvain Beucler  <beuc@beuc.net>
 
 	* Merged addition and modification screen for mailing lists

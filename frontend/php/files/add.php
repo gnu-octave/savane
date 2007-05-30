@@ -20,12 +20,19 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 # FIXME: this page wont show up if there is nothing for the filelist
 # in the download area. It is problematic for people that want to use
 # it without having already files in their download area
 
 require_once('../include/init.php');
+
+extract(sane_import('get', array('pkg', 'version',
+  'input_file1', 'input_file2', 'input_file3', 'input_file4',
+  'input_file5', 'input_file6', 'input_file7', 'input_file8',
+  'input_file9', 'submit_command_list')));
 
 $project=project_get_object($group_id);
 
@@ -75,7 +82,7 @@ if ($group_id) {
 
 
     echo '<h2>'._("Getting a command list to upload the files:").'</h2>';
-    echo '<form action="'. $_SERVER['PHP_SELF'] .'#list" method="post">
+    echo '<form action="'. $_SERVER['PHP_SELF'] .'#list" method="get">
 <table>';
     echo '<input type="hidden" name="group_id" value="'.$group_id.'" />';
     echo '<tr><td>'._("Package / Branch:").' </td><td><input type="text" name="pkg" value="'.$pkg.'" size="20" maxlength="30" /> ('._("ex: the project name, or stable / unstable").')</td></tr>';
@@ -126,7 +133,7 @@ scp_command($input_file9,$scp_dir,$pkg,$version);
    }
  }
 
-if ($submit_last_release){
+if (isset($submit_last_release)) {
   echo '<a name="list"></a>';
   if(file_exists($files_dir."/".$pkg.".pkg/".$version)) {
 	$latest_release_is_file = $files_dir."/".$pkg.".pkg/LATEST_RELEASE_IS";

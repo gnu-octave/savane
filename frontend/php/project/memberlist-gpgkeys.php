@@ -20,8 +20,15 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php";
+#input_is_safe();
+#mysql_is_safe();
 
+require_once('../include/init.php');
+
+extract(sane_import('get', array('download')));
+
+
+$project=project_get_object($group_id);
 $keyring = $project->getGPGKeyring();
 
 if (!$keyring) {
@@ -39,16 +46,14 @@ if (!$download) {
   print '<p>'.sprintf(_("You can %sdownload the keyring%s and import it with the command %s"), '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.'&amp;download=1">', '</a>', '<em>gpg --import &lt;file&gt;</em>').'</p>';
 
   site_project_footer(array());
+
 } else {
 
 # Download the keyring
-  $sql="SELECT keyring FROM groups_gpg_keyrings WHERE unix_group_name='$group_name' LIMIT 1";
-  $result=db_query($sql);
+  $result = db_execute("SELECT keyring FROM groups_gpg_keyrings WHERE unix_group_name=? LIMIT 1", array($group_name));
 
   header('Content-Type: application/pgp-keys');
   header('Content-Disposition: filename='.$group_name.'-keyring.gpg');
   header('Content-Description: GPG Keyring of the project '.$group_name);
   print db_result($result,0,'keyring');
-
 }
-?>

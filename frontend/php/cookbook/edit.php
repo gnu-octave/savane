@@ -20,9 +20,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # This page will behave like index does for most trackers
-require "../include/pre.php";
+require_once('../include/pre.php');
 include trackers_bastardinclude("index");
-
-
-?>

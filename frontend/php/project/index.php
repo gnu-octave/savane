@@ -24,10 +24,11 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "../include/pre.php"; 
+#input_is_safe();
+#mysql_is_safe();
+
+require_once('../include/init.php'); 
 
 register_globals_off();
 
-header ("Location: ".$GLOBALS['sys_home']."projects/".$group_name."/");
-
-?>
+header ("Location: ".$GLOBALS['sys_home']."projects/".$group_name);
