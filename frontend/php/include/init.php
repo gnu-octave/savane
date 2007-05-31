@@ -67,6 +67,7 @@ $sys_unix_group_name = 'siteadmin';
 $sys_mail_domain = 'localhost';
 $sys_mail_admin = get_current_user();
 $sys_mail_replyto = "NO-REPLY.INVALID-ADDRESS";
+$sys_email_adress="$sys_mail_admin@$sys_mail_domain";
 
 // Debug
 // Print debug information before exiting:

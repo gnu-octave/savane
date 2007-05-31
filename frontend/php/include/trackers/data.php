@@ -242,17 +242,24 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
 # and get their values
 
   $notif_scope_name = $tracker_name."_notif_scope";
-  $notif_scope = $GLOBALS[$notif_scope_name];
   $new_item_address_name = $tracker_name."_new_item_address";
-  $new_item_address = $GLOBALS[$new_item_address_name];
   $send_all_changes_name = $tracker_name."_send_all_changes";
-  $send_all_changes = $GLOBALS[$send_all_changes_name];
   $nb_categories_name = $tracker_name."_nb_categories";
-  $nb_categories = $GLOBALS[$nb_categories_name];
   $private_exclude_address_name = $tracker_name."_private_exclude_address";
-  $private_exclude_address = $GLOBALS[$private_exclude_address_name];
 
-  if (isset($GLOBALS[$notif_scope_name])) {
+  $in = sane_import('post', array($notif_scope_name,
+				  $new_item_address_name,
+				  $send_all_changes_name,
+				  $nb_categories_name,
+				  $private_exclude_address_name));
+
+  $notif_scope = $in[$notif_scope_name];
+  $new_item_address = $in[$new_item_address_name];
+  $send_all_changes = $in[$send_all_changes_name];
+  $nb_categories = $in[$nb_categories_name];
+  $private_exclude_address = $in[$private_exclude_address_name];
+
+  if (isset($notif_scope)) {
     if ($notif_scope != "global") {
       if ($notif_scope == "category") {
         $notif_value = 0;
@@ -283,16 +290,20 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
   if ($nb_categories > 0) {
     for ($i=0; $i<$nb_categories; $i++) {
       $current_fv_name = $tracker_name."_cat_".$i."_bug_fv_id";
-      $current_fv_id = $GLOBALS[$current_fv_name];
       $current_email_name = $tracker_name."_cat_".$i."_email";
-      $current_email = $GLOBALS[$current_email_name];
+      $current_send_all_name = $tracker_name."_cat_".$i."_send_all_flag";
+      $in = sane_import('post', array($current_fv_name,
+				      $current_email_name,
+				      $current_send_all_name));
+
+      $current_fv_id = $in[$current_fv_name];
+      $current_email = $in[$current_email_name];
 #      if ($current_email && !validate_email($current_email))
 #        {
 #          $local_feedback .= _("[".$tracker_name."]  notification address: ".$current_email." appeared Invalid");
 #          $current_email='';
 #        }
-      $current_send_all_name = $tracker_name."_cat_".$i."_send_all_flag";
-      $current_send_all_flag = $GLOBALS[$current_send_all_name];
+      $current_send_all_flag = $in[$current_send_all_name];
 
       $res_cat=db_autoexecute($tracker_name."_field_value",
         array('email_ad' => $current_email,

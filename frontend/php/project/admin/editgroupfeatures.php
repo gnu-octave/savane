@@ -342,5 +342,3 @@ $HTML->box1_bottom();
 print form_footer();
 
 site_project_footer(array());
-
-?>

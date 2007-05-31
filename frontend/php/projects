@@ -23,6 +23,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # The context of this page cannot be guessed later, we have to hardcode it
 define('CONTEXT', 'project');
 require_once('include/init.php');
@@ -32,7 +35,7 @@ register_globals_off();
 # Extract the group name
 $pathinfo = basename(ereg_replace("\?.*", "", $_SERVER['REQUEST_URI']));
 
-$res_grp=db_query("SELECT * FROM groups WHERE unix_group_name='".safeinput($pathinfo)."'");
+$res_grp=db_execute("SELECT * FROM groups WHERE unix_group_name=?", array($pathinfo));
 
 
 # group was not found
@@ -51,6 +54,5 @@ if (db_numrows($res_grp) < 1) {
 	$project=new Project($group_id);
 
 	# now show the project page
-	include ('./include/project_home.php');
-
+	require('include/project_home.php');
 }

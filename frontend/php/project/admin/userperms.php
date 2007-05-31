@@ -30,6 +30,8 @@ require_once('../../include/init.php');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
+extract(sane_import('post', array('update')));
+
 # Internal function to determine if a squad permission must override user perm
 # or not
 #  * If user got lower rights, we override, because we assume that user has
@@ -87,6 +89,8 @@ function _compare_perms ($squad_perm, $user_perm)
   return $user_perm;
 }
 
+$project = project_get_object($group_id);
+
 if ($update)
 {
   # ##### Update members permissions
@@ -94,7 +98,7 @@ if ($update)
 
 
   # Get the members list, taking first the squads
-  $res_dev = db_query("select user_id,admin_flags FROM user_group WHERE group_id=$group_id AND admin_flags<>'P' ORDER BY admin_flags DESC");
+  $res_dev = db_execute("SELECT user_id,admin_flags FROM user_group WHERE group_id=? AND admin_flags<>'P' ORDER BY admin_flags DESC", array($group_id));
 
   # Save the squads permissions to override users permissions if necessary
   $squad_permissions = array();
@@ -281,9 +285,9 @@ if ($update)
   $news_flags="news_user_";
 
   # If the group entry do not exists, create it
-  if (!db_result(db_query("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id='$group_id'"), 0, "groups_default_permissions_id"))
+  if (!db_result(db_execute("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id=?", array($group_id)), 0, "groups_default_permissions_id"))
     {
-      db_query("INSERT INTO groups_default_permissions (group_id) VALUES ($group_id)");
+      db_execute("INSERT INTO groups_default_permissions (group_id) VALUES (?)", array($group_id));
     }
 
   # Update the table
@@ -397,6 +401,7 @@ form_input("hidden", "group", $group_name);
 ########################### POSTING RESTRICTIONS
 # Exists also in trackers config (missing for news).
 
+$i = 0;
 $title_arr=array();
 $title_arr[]=_("Applies when ...");
 if ($project->Uses("support")) 
@@ -611,6 +616,8 @@ else
 
   # a function for this specific stuff that do not require generalization
 
+  $reprinttitle = 0;
+  $i = 0;
   while ($row = db_fetch_array($result))
    {
      $i++;
@@ -726,6 +733,8 @@ else
 
   # a function for this specific stuff that do not require generalization
 
+  $reprinttitle = 0;
+  $i = 0;
   while ($row = db_fetch_array($result))
    {
      $i++;

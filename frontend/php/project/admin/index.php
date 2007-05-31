@@ -23,6 +23,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
 require_once('../../include/account.php');
@@ -59,7 +61,7 @@ print $HTML->box_top(_("Features"));
 print '<a href="editgroupfeatures.php?group='.$group_name.'">'._("Select Features").'</a>';
 print '<p class="smaller">'._("Define which features you want to use for this project.").'</p>';
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
 # Feature-specific configuration
@@ -70,10 +72,10 @@ $features = array("cookbook" => _("Cookbook"),
 		  "patch" => _("Patch Tracker"),
 		  "news" => _("News Manager"),
 		  "mail" => _("Mailing Lists"));
-unset($link);
+$link = '';
 while (list($case, $name) = each($features))
 {
-  if ($project->Uses($case) || $case == "cookbook")
+  if ($case == "cookbook" || $project->Uses($case))
     {
       $link .= '<a href="../../'.$case.'/admin/?group='.$group_name.'">'.$name.'</a>, ';
     }
@@ -114,7 +116,7 @@ print '<a href="editgroupinfo.php?group='.$group_name.'">'._("Edit Public Inform
 print '<p class="smaller">'.sprintf(_("Your current short description is: %s"), db_result($res_grp,0,'short_description'));
 print '</p>';
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 # Public info
 print '<a href="history.php?group='.$group_name.'">'._("Show History").'</a>';
@@ -125,7 +127,7 @@ print $HTML->box_bottom();
 
 print '<br />';
 
-unset($i);
+$i = 0;
 ###############################
 print $HTML->box_top(_('Members'));
 
@@ -133,7 +135,7 @@ print $HTML->box_top(_('Members'));
 print '<a href="useradmin.php?group='.$group_name.'">'._("Manage Members").'</a>';
 print '<p class="smaller">'. _("Add, remove members, approve or reject requests for inclusion.").'</p>';
 
-unset($i);
+$i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 # Create/Delete Squad, add members to squads
 print '<a href="squadadmin.php?group='.$group_name.'">'._("Manage Squads").'</a>';
@@ -166,5 +168,3 @@ print html_splitpage(3);
 ###############################
 
 site_project_footer(array());
-
-?>

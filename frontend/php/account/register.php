@@ -167,16 +167,16 @@ FIXME : this is broken and seems to be due to the kerberos module.
         we did not changed anything about that and we get 2 as return
         for any name.
 
-	  if($_POST['form_loginname']."@".$GLOBALS['sys_lists_domain'])
+	  if($_POST['form_loginname']."@".$GLOBALS['sys_mail_domain'])
 	    {
 	      $GLOBALS['register_error'] = sprintf(_("User %s is a known mail alias and cannot be used. If you own this alias (%s@%s) please create a another user (for instance xx%s) and ask %s@%s to rename it to %s."),
 						   $_POST['form_loginname'],
 						   $_POST['form_loginname'],
 
-						   $GLOBALS['sys_lists_domain'],
+						   $GLOBALS['sys_mail_domain'],
 						   $_POST['form_loginname'],
 						   $GLOBALS['sys_admin_list'],
-						   $GLOBALS['sys_lists_domain'],
+						   $GLOBALS['sys_mail_domain'],
 						   $_POST['form_loginname']);
 	      return 0;
 	    }
@@ -244,7 +244,7 @@ if ($form_is_valid)
 	}
 
 
-      sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_lists_domain'],
+      sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_mail_domain'],
 		    $form_email,
 		    $GLOBALS['sys_name']." "._("Account Registration"),
 		    $message);

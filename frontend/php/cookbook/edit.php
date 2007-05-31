@@ -24,5 +24,5 @@
 #mysql_is_safe();
 
 # This page will behave like index does for most trackers
-require_once('../include/pre.php');
+require_once('../include/init.php');
 include trackers_bastardinclude("index");

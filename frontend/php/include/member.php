@@ -23,12 +23,14 @@
 #input_is_safe();
 #mysql_is_safe();
 
+require_once(dirname(__FILE__).'/database.php');
+
 # Add or update a user to/in a group
 # status is the 'admin_flags', can be pending or admin
 function member_add ($user_id, $group_id, $status='') 
 {
   
-  if(!member_check($user_id,$group_id) || user_is_super_user())
+  if (!member_check($user_id,$group_id))
     {
       $result = db_autoexecute('user_group',
         array('user_id' => $user_id,
@@ -145,8 +147,8 @@ function member_squad_remove ($user_id, $squad_id, $group_id)
   if (!db_numrows($result)) 
     { return false; }
   
-  $result = db_query("DELETE FROM user_squad WHERE user_id=? AND squad_id=? AND group_id=?",
-		     array($user_id, $squad_id, $group_id));
+  $result = db_execute("DELETE FROM user_squad WHERE user_id=? AND squad_id=? AND group_id=?",
+		       array($user_id, $squad_id, $group_id));
   if ($result) 
     { 
       group_add_history('Removed User From Squad '.user_getname($squad_id),

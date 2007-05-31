@@ -20,16 +20,20 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../../include/init.php');
 require_directory("trackers");
 
+extract(sane_import('post', array('update', 'from_group_id', 'artifact')));
 if ($group_id && user_ismember($group_id,'A'))
 {
   
   # Initialize global bug structures
   if ($update && $from_group_id != 100)
     {
-      trackers_conf_copy(addslashes($group_id), $artifact, addslashes($from_group_id));
+      trackers_conf_copy($group_id, $artifact, $from_group_id);
     }
   
   site_project_header(array('context'=>'ahome','group'=>$group_id,'title'=>_("Copy Configuration")));
@@ -54,6 +58,3 @@ else
   else
     { exit_permission_denied(); }
 }
-
-
-?>

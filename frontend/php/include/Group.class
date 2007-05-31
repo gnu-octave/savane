@@ -703,15 +703,21 @@ function group_set_preference ($group_id, $preference_name, $value)
   if (user_ismember($group_id,'A')) 
     {
       $preference_name=strtolower(trim($preference_name));
-      $result=db_execute("UPDATE group_preferences SET preference_value=? WHERE group_id=? AND preference_name=?",
-			 array($value, $group_id, $preference_name));
-      if (db_affected_rows($result) < 1) 
+      $result = db_execute("SELECT NULL FROM group_preferences WHERE group_id=? AND preference_name=?",
+			   array($group_id, $preference_name));
+      if (db_numrows($result) < 1) 
 	{
-	  $result=db_autoexecute('group_preferences',
-				 array('group_id' => $group_id,
-				       'preference_name' => $preference_name,
-				       'preference_value' => $value),
-				 DB_AUTOQUERY_INSERT);
+	  $result = db_autoexecute('group_preferences',
+				   array('group_id' => $group_id,
+					 'preference_name' => $preference_name,
+					 'preference_value' => $value),
+				   DB_AUTOQUERY_INSERT);
+	}
+      else
+	{
+	  $result = db_execute("UPDATE group_preferences SET preference_value=? "
+			       . " WHERE group_id=? AND preference_name=?",
+			       array($value, $group_id, $preference_name));
 	}
       return true;
       

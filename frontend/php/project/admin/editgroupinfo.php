@@ -24,12 +24,15 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
+require_once('../../include/vars.php');
 register_globals_off();
-$group_id = sane_all("group_id");
 
-require $GLOBALS['sys_www_topdir']."/include/vars.php";
+extract(sane_import('post', array('update',
+  'form_group_name', 'form_shortdesc', 'form_longdesc', 'form_devel_status')));
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -37,21 +40,20 @@ if (sane_post("update"))
 {
   group_add_history ('Changed Public Info','',$group_id);
 
-  $sql = 'UPDATE groups SET '
-    ."group_name='".htmlspecialchars(sane_post("form_group_name"))."',"
-    ."short_description='".htmlspecialchars(sane_post("form_shortdesc"))."',"
-    ."long_description='".sane_post("form_longdesc")."',"
-    
-    ."devel_status='".sane_post("form_devel_status")."' "
-    ."WHERE group_id=$group_id";
-
-  $result = db_query($sql);
+  $result = db_autoexecute('groups',
+    array(
+      'group_name' => htmlspecialchars($form_group_name),
+      'short_description' => htmlspecialchars($form_shortdesc),
+      'long_description' => $form_longdesc,
+      'devel_status' => $form_devel_status,
+    ), DB_AUTOQUERY_UPDATE,
+    "group_id=?", array($group_id));
   if (!$result)
     { fb(_("Update failed."), 1); }
 }
 
 # update info for page
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 if (db_numrows($res_grp) < 1)
 {
   exit_no_group();
@@ -114,5 +116,3 @@ if ($project->CanUse("devel_status"))
 print form_footer();
 
 site_project_footer(array());
-
-?>

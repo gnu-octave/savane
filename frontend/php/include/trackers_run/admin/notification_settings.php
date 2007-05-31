@@ -27,6 +27,8 @@ require_once(dirname(__FILE__).'/../../trackers/data.php');
 
 $is_admin_page='y';
 
+extract(sane_import('post', array('submit')));
+
 /*  ==================================================
     Check access permission
  ================================================== */
@@ -129,5 +131,3 @@ print '
 </form>';
 
 trackers_footer(array());
-
-?>

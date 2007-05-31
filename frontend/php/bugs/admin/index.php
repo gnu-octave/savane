@@ -19,6 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
 require_once('../../include/trackers/general.php');

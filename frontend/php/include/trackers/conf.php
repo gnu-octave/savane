@@ -52,17 +52,16 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
       return 0;
     }
   fb(sprintf(_("Start copying configuration of group #%s %s tracker"),
-	     $from_group_id,
-	     $artifact));
+	     $from_group_id, $artifact));
 
 # Copy the notification settings
   $res_groups_from_group = db_execute("SELECT * FROM groups WHERE group_id=?", array($from_group_id));
   $rows = db_fetch_array($res_groups_from_group);
   $res = db_autoexecute('groups',
-			array("new_$artifact_address" => $rows["new_{$artifact}_address"],
-			      "$artifact_glnotif" => $rows["{$artifact}_glnotif"],
-			      "send_all_$artifact" => $rows["send_all_{$artifact}"],
-			      "$artifact_private_exclude_address" => $rows["{$artifact}_private_excluded_address"]),
+			array("new_{$artifact}_address" => $rows["new_{$artifact}_address"],
+			      "{$artifact}_glnotif" => $rows["{$artifact}_glnotif"],
+			      "send_all_{$artifact}" => $rows["send_all_{$artifact}"],
+			      "{$artifact}_private_exclude_address" => $rows["{$artifact}_private_exclude_address"]),
 			DB_AUTOQUERY_UPDATE,
 			"group_id=?", array($group_id));
 
@@ -79,7 +78,7 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
   $result_field_usage_from_group = db_execute("SELECT * FROM {$artifact}_field_usage WHERE group_id=?",
 					      array($from_group_id));
   $z = 0;
-  unset($itemsdone);
+  $itemsdone = '';
   while ($thisone = db_fetch_array($result_field_usage_from_group))
       {
 
@@ -102,7 +101,7 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
   $result_field_value_from_group = db_execute("SELECT * FROM ".$artifact."_field_value WHERE group_id=?",
 					      array($from_group_id));
   $z = 0;
-  unset($itemsdone);
+  $itemsdone = '';
   while ($thisone = db_fetch_array($result_field_value_from_group))
       {
 
@@ -131,7 +130,7 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
   $result_canned_from_group = db_execute("SELECT * FROM ".$artifact."_canned_responses WHERE group_id=?",
 					 array($from_group_id));
   $z = 0;
-  unset($itemsdone);
+  $itemsdone = '';
   while ($thisone = db_fetch_array($result_canned_from_group))
       {
 
@@ -167,7 +166,7 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
   $result_queryforms_from_group = db_execute("SELECT * FROM ".$artifact."_report WHERE group_id=?",
 					     array($from_group_id));
   $z = 0;
-  unset($itemsdone);
+  $itemsdone = '';
   while ($thisone = db_fetch_array($result_queryforms_from_group))
       {
 	# Copy the report
@@ -221,10 +220,10 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 		 array($thisone['transition_id']));
     }
 
-  $result_transitions_from_group = db_execute("SELECT * FROM trackers_field_transition WHERE artifcat=? AND group_id=?",
+  $result_transitions_from_group = db_execute("SELECT * FROM trackers_field_transition WHERE artifact=? AND group_id=?",
 					      array($artifact, $from_group_id));
   $z = 0;
-  unset($itemsdone);
+  $itemsdone = '';
   while ($thisone = db_fetch_array($result_transitions_from_group))
       {
 	# Copy the report
@@ -286,12 +285,12 @@ function conf_form ($group_id, $artifact)
 
   $vals = array();
   $texts = array();
-  unset($found);
+  $found = false;
   while ($thisgroup = db_fetch_array($result))
     {
       $vals[] = $thisgroup['group_id'];
       $texts[] = $thisgroup['group_name'];
-      $found = 1;
+      $found = true;
     }
 
 

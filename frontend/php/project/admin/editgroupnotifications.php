@@ -21,13 +21,24 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
-require_once('../include/vars.php');
+require_once('../../include/vars.php');
 
 require_directory("trackers");
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+
+extract(sane_import('post', array('update',
+  'form_news_address',
+  'form_frequency',
+# CERN SPECIFIC BEGIN
+  'notif_content',
+# CERN SPECIFIC END
+)));
+# Other imports in trackers_data_*
 
 if ($update)
 {
@@ -39,17 +50,18 @@ if ($update)
   $res_new = trackers_data_post_notification_settings($group_id, "task");
   $res_new = trackers_data_post_notification_settings($group_id, "patch");
   $res_new = trackers_data_post_notification_settings($group_id, "cookbook");
-  db_query("UPDATE groups SET "
-	   ."new_news_address=".($form_news_address? "'".safeinput($form_news_address)."' " : "''")
-	   . " WHERE group_id=$group_id");
+  db_execute("UPDATE groups SET "
+	     ."new_news_address=?"
+	     . " WHERE group_id=?",
+	     array($form_news_address ? $form_news_address : '', $group_id));
 
  
   # CERN SPECIFIC (at least for now) BEGIN
   ######### Notification content
 
-  if ($sys_default_domain == "savannah.cern.ch" || $sys_debug_cerntest)
+  if ($sys_default_domain == "savannah.cern.ch" || !empty($sys_debug_cerntest))
     {
-      if (group_set_preference($group_id, "notif_content", safeinput($notif_content)))
+      if (group_set_preference($group_id, "notif_content", $notif_content))
 	{ fb(_("Successfully updated notification content settings")); }
       else
 	{ fb(_("Failed to update notification content settings"), 1); } 
@@ -58,7 +70,7 @@ if ($update)
 
 
   ######### Reminder
-  if (group_set_preference($group_id, "batch_frequency", safeinput($form_frequency)))
+  if (group_set_preference($group_id, "batch_frequency", $form_frequency))
     { fb(_("Successfully Updated Reminder Settings")); }
   else
     { fb(_("Failed to Update Reminder Setting"), 1); }
@@ -74,7 +86,7 @@ if ($update)
 }
 
 # update info for page
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 if (db_numrows($res_grp) < 1)
 {
   exit_no_group();
@@ -121,7 +133,7 @@ print '<br /><br />';
 # CERN SPECIFIC (at least for now) BEGIN
 # As it is CERN specific, it will not be translated, as LCG Savannah is
 # in english only.
-if ($sys_default_domain == "savannah.cern.ch" || $sys_debug_cerntest)
+if ($sys_default_domain == "savannah.cern.ch" || !empty($sys_debug_cerntest))
 {
   print '<h3>'."Notification Email Content".'</h3>';
   print '<p>'."The notification emails include the last change [minimum] (standard of upstream Savane), but can also append the item overview [average] and possibly all the followup comments [maximum] (traditional LCG Savannah).".'</p>';
@@ -159,5 +171,3 @@ print '
 ';
 
 site_project_footer(array());
-
-?>

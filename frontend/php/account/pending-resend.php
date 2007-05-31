@@ -51,7 +51,7 @@ if ($row_user['status'] == 'P') {
     . sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
 	
 	
-  sendmail_mail($GLOBALS['sys_mail_replyto'] . "@".$GLOBALS['sys_lists_domain'],
+  sendmail_mail($GLOBALS['sys_mail_replyto'] . "@".$GLOBALS['sys_mail_domain'],
 		$row_user['email'],
 		$GLOBALS['sys_name'] . " " . _("Account Registration"),
 		$message);

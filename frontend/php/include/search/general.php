@@ -316,7 +316,8 @@ function search_failed ()
 //   or (field2 LIKE '%kw1%' and/or field2 LIKE '%kw2%' ...)
 //   ...)"
 // + matching parameters array, suitable for db_execute()
-function search_keywords_in_fields($keywords, $fields, $and_or) {
+// $and_or <=> 'AND'/'OR' <=> all/any word
+function search_keywords_in_fields($keywords, $fields, $and_or='OR') {
   $allfields_sql_bits = array();
   $allfields_sql_params = array();
   foreach ($fields as $field)

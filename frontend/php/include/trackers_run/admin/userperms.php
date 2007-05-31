@@ -25,6 +25,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 ###
 ### WARNING: whenever you modify this page, you should modify 
 ###   project/admin/userperms.php as well
@@ -34,13 +37,16 @@ $is_admin_page='y';
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
+extract(sane_import('post', array('update',
+  ARTIFACT.'_restrict_event1', ARTIFACT.'_restrict_event2')));
+
 if ($update)  
 {
 
   # If the group entry does not exist, create it
-  if (!db_result(db_query("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id='$group_id'"), 0, "groups_default_permissions_id"))
+  if (!db_result(db_execute("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id=?", array($group_id)), 0, "groups_default_permissions_id"))
     {
-      db_query("INSERT INTO groups_default_permissions (group_id) VALUES ($group_id)"); 
+      db_execute("INSERT INTO groups_default_permissions (group_id) VALUES (?)", array($group_id)); 
     }
   
   # ##### Update posting restrictions
@@ -50,15 +56,13 @@ if ($update)
   if (!$flags)
     { 
       # if equal to 0, manually set to NULL, since 0 have a different meaning
-      $flags = 'NULL';
+      $flags = NULL;
     }
 
   # Update the table
-  $sql = 'UPDATE groups_default_permissions SET ' 
-     .ARTIFACT."_rflags=".$flags." "
-     ."WHERE group_id='$group_id'";
-
-  $result = db_query($sql);
+  $result = db_execute('UPDATE groups_default_permissions SET ' 
+		       .ARTIFACT."_rflags=? "
+		       ."WHERE group_id=?", array($flags, $group_id));
   
   if ($result) 
     {
@@ -94,6 +98,4 @@ print html_select_restriction_box(ARTIFACT, group_getrestrictions($group_id, ART
 print '
 <p align="center"><input type="submit" name="update" value="'._("Update Permissions").'" /></p></form>';
 
-trackers_footer(array())
-
-?>
+trackers_footer(array());

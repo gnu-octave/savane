@@ -400,6 +400,7 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$table=true)
 		Optionally takes a second array of links for the titles
   */
   GLOBAL $HTML;
+  $return = '';
 
   if ($table)
     {
