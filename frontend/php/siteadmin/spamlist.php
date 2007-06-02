@@ -20,6 +20,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
 
@@ -27,7 +29,9 @@ register_globals_off();
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 ###### See if we were asked to perform anything
-$ban_user_id = sane_get("ban_user");
+extract(sane_import('get', array('ban_user_id', 'wash_user_id', 'wash_ip';
+				 'max_rows', 'offset')));
+
 if ($ban_user_id)
 {
   if (!user_exists($ban_user_id))
@@ -38,7 +42,6 @@ if ($ban_user_id)
     }
 }
 
-$wash_user_id = sane_get("wash_user");
 if ($wash_user_id)
 {
   if (!user_exists($wash_user_id))
@@ -46,22 +49,22 @@ if ($wash_user_id)
   else
     {
       # Update the user spamscore field
-      db_query("UPDATE user SET spamscore='0' WHERE user_id='$wash_user_id'");
+      db_execute("UPDATE user SET spamscore='0' WHERE user_id=?", array($wash_user_id));
 
       # Previous comment flagged as spam will stay as such.
       # We just changed the affected user id that it wont affect this guy
       # any more.
       # We assume that message flagged as spam really were.
       # (we may change that in the future, depending on user experience)
-      db_query("UPDATE trackers_spamscore SET affected_user_id='100' WHERE affected_user_id='$wash_user_id'");      
+      db_execute("UPDATE trackers_spamscore SET affected_user_id='100' WHERE affected_user_id=?",
+		 array($wash_user_id));      
       
     }
 }
 
-$wash_ip = sane_get("wash_ip");
 if ($wash_ip)
 {
-  db_query("DELETE FROM trackers_spamban WHERE ip='$wash_ip'");
+  db_execute("DELETE FROM trackers_spamban WHERE ip=?", array($wash_ip));
 }
 
 
@@ -80,15 +83,18 @@ $title_arr[]=_("Wash score");
 $title_arr[]=_("Incriminated content");
 $title_arr[]=_("Flagged by");
 
-$max_rows = 50;
-if (sane_isset("users_max_rows"))
-{ $max_rows = sane_get("users_max_rows"); }
-$offset = 0;
-if (sane_isset("users_offset"))
-{ $offset = sane_get("users_offset"); }
+if (!isset($max_rows))
+{ $max_rows = 50; }
+else
+{ $max_rows = intval($max_rows); }
+     
+if (!isset($offset))
+{ $offset = 0; }
+else
+{ $offset = intval($offset); }
 
-$result = db_query("SELECT user_name,realname,user_id,spamscore FROM user WHERE status='A' AND spamscore > 0 ORDER BY spamscore DESC LIMIT $offset,".($max_rows+1));
-if (!db_numrows($result)) 
+$result = db_execute("SELECT user_name,realname,user_id,spamscore FROM user WHERE status='A' AND spamscore > 0 ORDER BY spamscore DESC LIMIT ?,?", array($offset,($max_rows+1));
+if (!db_numrows($result))
 {
   print '<p>'._("No suspects found").'</p>';
 } 
@@ -96,7 +102,7 @@ else
 {
   print html_build_list_table_top($title_arr);
   
-  unset($i);
+  $i = 0;
   while ($entry = db_fetch_array($result)) 
     {
       $i++;
@@ -108,9 +114,9 @@ else
       if ($i > $max_rows)
 	{ break; }
 
-      $res_score = db_query("SELECT trackers_spamscore.artifact,trackers_spamscore.item_id,trackers_spamscore.comment_id,user.user_name FROM trackers_spamscore,user WHERE trackers_spamscore.affected_user_id='".$entry['user_id']."' AND user.user_id=trackers_spamscore.reporter_user_id LIMIT 50");
-      unset($flagged_by);
-      unset($incriminated_content);
+      $res_score = db_execute("SELECT trackers_spamscore.artifact,trackers_spamscore.item_id,trackers_spamscore.comment_id,user.user_name FROM trackers_spamscore,user WHERE trackers_spamscore.affected_user_id=? AND user.user_id=trackers_spamscore.reporter_user_id LIMIT 50", array($entry['user_id']));
+      $flagged_by = '';
+      $incriminated_content = '';
       $seen_before = array();
       while ($entry_score = db_fetch_array($res_score))
 	{
@@ -136,8 +142,8 @@ else
       print '<tr class="'.utils_get_alt_row_color($i).'">';
       print '<td width="25%">'.utils_user_link($entry['user_name'], $entry['realname']).'</td>';
       print '<td width="5%" class="center">'.$entry['spamscore'].'</td>';
-      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?ban_user='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Ban user").'" />').'</td>';
-      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?wash_user='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'._("Wash score").'" />').'</td>';
+      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?ban_user_id='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Ban user").'" />').'</td>';
+      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?wash_user_id='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'._("Wash score").'" />').'</td>';
       print '<td width="30%">'.$incriminated_content.'</td>';
       print '<td width="30%">'.$flagged_by.'</td>';	
       print '</tr>';
@@ -154,14 +160,8 @@ print '<p>&nbsp;</p>';
 print '<h3>'.html_anchor(_("Banned IPs"), "ip_results").'</h3>';
 print '<p>'._("Follow the list of IPs that are currently banned because content their owner posted was flagged as spam. This ban affect only anonymous users and do not prevent them to log in. IPs are automatically removed by a cronjob from this list after a few hours delay but, from here, you can force the removal to be done instantly.").'</p>';
 
-$max_rows = 50;
-if (sane_isset("ip_max_rows"))
-{ $max_rows = sane_get("ip_max_rows"); }
-$offset = 0;
-if (sane_isset("ip_offset"))
-{ $offset = sane_get("ip_offset"); }
-
-$result = db_query("SELECT ip FROM trackers_spamban WHERE 1 GROUP BY ip ORDER BY ip LIMIT $offset,".($max_rows+1));
+$result = db_execute("SELECT ip FROM trackers_spamban WHERE 1 GROUP BY ip ORDER BY ip LIMIT ?,?",
+		     array($offset,$max_rows+1));
 if (!db_numrows($result)) 
 {
   print '<p>'._("No IP banned").'</p>';
@@ -170,7 +170,7 @@ else
 {
   print '<div class="box"><div class="boxtitle">'._("IPs").'</div><div class="boxitem">';
   
-  unset($i);
+  $i = 0;
   while ($entry = db_fetch_array($result)) 
     {
       $i++;
@@ -217,5 +217,3 @@ else
 #print '</table>';
 
 $HTML->footer(array());
-
-?>

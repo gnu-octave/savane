@@ -20,24 +20,29 @@
 // along with the Savane project; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
-require "../include/pre.php";    
-require  $GLOBALS['sys_www_topdir']."/include/account.php";
+require_once('../include/init.php');    
+require_once('../include/account.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
+
+extract(sane_import('request', array('user_id')));
+extract(sane_import('post', array('update')));
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
 function register_valid()	
 {
-	global $form_user;
+  global $update, $user_id;
 
-	if (!$GLOBALS["Update"]) {
+	if (!$update) {
 		return 0;
 	}
 	
 	// check against old pw
-	db_query("SELECT user_pw FROM user WHERE user_id=$form_user");
+	db_execute("SELECT user_pw FROM user WHERE user_id=?", array($user_id));
 
 	if (!$GLOBALS['form_pw']) {
 		$GLOBALS['register_error'] = "You must supply a password.";
@@ -52,53 +57,35 @@ function register_valid()
 	}
 	
 	// if we got this far, it must be good
-	db_query("UPDATE user SET user_pw='" . md5($GLOBALS['form_pw']) . "',"
-		. "unix_pw='" . account_genunixpw($GLOBALS['form_pw']) . "' WHERE "
-		. "user_id=" . $form_user);
+	db_autoexecute('user', array('user_pw' => md5($GLOBALS['form_pw']),
+				     'unix_pw' => account_genunixpw($GLOBALS['form_pw'])),
+		       DB_AUTOQUERY_UPDATE, "user_id=?", array($user_id));
 	return 1;
 }
 
 // ###### first check for valid login, if so, congratulate
 
 if (register_valid()) {
-	$HTML->header(array(title=>"Change Password"));
+	$HTML->header(array('title' => "Change Password"));
 ?>
 <p><strong>Savannah Change Confirmation</strong>
 <p>Congratulations, genius. You have managed to change this user's password.
 <p>You should now <a href="/admin/userlist.php">Return to UserList</a>.
 <?php
-// This file is part of the Savane project
-// <http://gna.org/projects/savane/>
-//
-// $Id$
-//
 } else { // not valid registration, or first time to page
-	$HTML->header(array(title=>"Change Password"));
+	$HTML->header(array('title' => "Change Password"));
 
 ?>
 <p><strong>Savannah Password Change</strong>
-<?php
-// This file is part of the Savane project
-// <http://gna.org/projects/savane/>
-//
-// $Id$
-// if ($register_error) print "<p>$register_error"; ?>
 <form action="user_changepw.php" method="post">
 <p>New Password:
 <br /><input type="password" name="form_pw" />
 <p>New Password (repeat):
 <br /><input type="password" name="form_pw2" />
-<INPUT type=hidden name="form_user" value="<?php print $form_user; ?>">
-<p><input type="submit" name="Update" value="Update" />
+<INPUT type=hidden name="user_id" value="<?php print $user_id; ?>">
+<p><input type="submit" name="update" value="Update" />
 </form>
 
 <?php
-// This file is part of the Savane project
-// <http://gna.org/projects/savane/>
-//
-// $Id$
-//
 }
 $HTML->footer(array());
-
-?>

@@ -22,6 +22,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
 
@@ -113,6 +115,8 @@ print '<h3>'._("Group List").' ';
 
 if (!$offset or !ctype_digit($offset) or $offset < 0)
 { $offset = 0; }
+else
+{ $offset = intval($offset); }
 
 
 $where = "1";
@@ -181,7 +185,7 @@ else
       print "<td>$grp[license]</td>";
       
       # members
-      $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$grp[group_id]");
+      $res_count = db_execute("SELECT user_id FROM user_group WHERE group_id=?", array($grp['group_id']));
       print "<td>" . db_numrows($res_count) . "</td>";
       
       print "</tr>\n";
@@ -190,6 +194,6 @@ else
 
 print '</table>';
 
-html_nextprev($_SERVER['PHP_SELF'].'?groupsearch=1&amp;group_name_search='.urlencode($group_name_search).'&amp;search='.urlencode($search), $rows, $rows_returned);
+html_nextprev('?groupsearch=1&amp;group_name_search='.urlencode($group_name_search).'&amp;search='.urlencode($search), $rows, $rows_returned);
 
 site_admin_footer(array());

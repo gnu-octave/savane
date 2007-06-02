@@ -20,12 +20,17 @@
 // along with the Savane project; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
-require "../include/pre.php";    
-require  $GLOBALS['sys_www_topdir']."/include/account.php";
+require_once('../include/init.php');
+require_once('../include/account.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>'Admin: User Info'));
+
+extract(sane_import('request', array('user_id', 'action')));
+extract(sane_import('post', array('admin_flags', 'email')));
 
 // user remove from group
 if ($action=='remove_user_from_group') {
@@ -33,7 +38,8 @@ if ($action=='remove_user_from_group') {
 		Remove this user from this group
 	*/
 
-	$result = db_query("DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
+	$result = db_execute("DELETE FROM user_group WHERE user_id=? AND group_id=?",
+			     array($user_id, $group_id));
 	if (!$result || db_affected_rows($result) < 1) {
 		' Error Removing User ';
 		echo db_error();
@@ -46,9 +52,9 @@ if ($action=='remove_user_from_group') {
 		Update the user/group entry
 	*/
 
-	$result = db_query("UPDATE user_group SET admin_flags='$admin_flags' "
-		. "WHERE user_id=$user_id AND "
-		. "group_id=$group_id");
+	$result = db_execute("UPDATE user_group SET admin_flags=? "
+		. "WHERE user_id=? AND "
+		. "group_id=?", array($admin_flags, $user_id, $group_id));
 	if (!$result || db_affected_rows($result) < 1) {
 		' Error Updating User_group ';
 		echo db_error();
@@ -62,7 +68,8 @@ if ($action=='remove_user_from_group') {
 		Update the user
 	*/
 
-	$result=db_query("UPDATE user SET email='$email' WHERE user_id=$user_id");
+	$result=db_execute("UPDATE user SET email=? WHERE user_id=?",
+			   array($email, $user_id));
 	if (!$result || db_affected_rows($result) < 1) {
 		' Error Updating User ';
 		echo db_error();
@@ -74,7 +81,8 @@ if ($action=='remove_user_from_group') {
 	/*
 		Add this user to a group
 	*/
-	$result=db_query("INSERT INTO user_group (user_id,group_id) VALUES ($user_id,$group_id)");
+	$result=db_execute("INSERT INTO user_group (user_id, group_id) VALUES (?, ?)",
+			   array($user_id, $group_id));
 	if (!$result || db_affected_rows($result) < 1) {
 		' Error adding User to group ';
 		echo db_error();
@@ -84,7 +92,7 @@ if ($action=='remove_user_from_group') {
 }
 
 // get user info
-$res_user = db_query("SELECT * FROM user WHERE user_id=$user_id");
+$res_user = db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));
 $row_user = db_fetch_array($res_user);
 
 ?>
@@ -97,7 +105,7 @@ Account Info:
 <INPUT type="hidden" name="user_id" value="<?php print $user_id; ?>">
 
 <P>
-<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user[email]; ?>" SIZE="25" MAXLENGTH="55">
+<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo htmlspecialchars($row_user['email']); ?>" SIZE="25" MAXLENGTH="55">
 
 <P>
 <INPUT type="submit" name="Update_Unix" value="Update">
@@ -111,22 +119,17 @@ Account Info:
 &nbsp;
 
 <?php
-// This file is part of the Savane project
-// <http://gna.org/projects/savane/>
-//
-// $Id$
-//
 /*
 	Iterate and show groups this user is in
 */
-$res_cat = db_query("SELECT groups.group_name AS group_name, "
+$res_cat = db_execute("SELECT groups.group_name AS group_name, "
 	. "groups.group_id AS group_id, "
 	. "user_group.admin_flags AS admin_flags FROM "
-	. "groups,user_group WHERE user_group.user_id=$user_id AND "
-	. "groups.group_id=user_group.group_id");
+	. "groups,user_group WHERE user_group.user_id=? AND "
+	. "groups.group_id=user_group.group_id", array($user_id));
 
 	while ($row_cat = db_fetch_array($res_cat)) {
-		print ("<br /><hr><strong>" . group_getname($row_cat[group_id]) . "</strong> "
+		print ("<br /><hr><strong>" . group_getname($row_cat['group_id']) . "</strong> "
 			. "<a href=\"usergroup.php?user_id=$user_id&action=remove_user_from_group&group_id=$row_cat[group_id]\">"
 			. "[Remove User from Group]</a>");
 		// editing for flags
@@ -134,11 +137,11 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 		<INPUT type="hidden" name="action" value="update_user_group">
 		<input name="user_id" type="hidden" value="<?php print $user_id; ?>">
-		<input name="group_id" type="hidden" value="<?php print $row_cat[group_id]; ?>">
+		<input name="group_id" type="hidden" value="<?php print $row_cat['group_id']; ?>">
 		<br />
 		Admin Flags: 
 		<BR>
-		<input type="text" name="admin_flags" value="<?php print $row_cat[admin_flags]; ?>">
+		<input type="text" name="admin_flags" value="<?php print htmlspecialchars($row_cat['admin_flags'], ENT_QUOTES); ?>">
 		<BR>
 		<input type="submit" name="Update_Group" value="Update" />
 		</form>
@@ -172,5 +175,3 @@ Add User to Group (group_id):
 //
 html_feedback_bottom($feedback);
 $HTML->footer(array());
-
-?>

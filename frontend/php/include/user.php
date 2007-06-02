@@ -539,7 +539,7 @@ function user_delete ($user_id=false, $confirm_hash=false)
 	 'gpg_key' => '',
 	 'email_new' => ''),
    DB_AUTOQUERY_UPDATE,
-   "$confirm_hash_query user_id=?", array_merge($confirm_hash_param), array($user_id));
+   "$confirm_hash_test user_id=?", array_merge($confirm_hash_param, array($user_id)));
   
   if ($success)
     { 

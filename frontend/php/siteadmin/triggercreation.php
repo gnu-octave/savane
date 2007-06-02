@@ -20,6 +20,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../include/init.php');
 require_once('../include/proj_email.php');
@@ -33,12 +35,12 @@ if ($GLOBALS['sys_group_id'] != $group_id)
 #   If a project can use a feature for its group type, assume he would
 #   use it by default
 #   Exception: the patch tracker is deprecated, so it is ignored.
-$group_type = db_result(db_query("SELECT type FROM groups WHERE group_id=$group_id"),0,'type');
-$res_type = db_query("SELECT * FROM group_type WHERE type_id=$group_type");
+$group_type = db_result(db_execute("SELECT type FROM groups WHERE group_id=?", array($group_id)),0,'type');
+$res_type = db_execute("SELECT * FROM group_type WHERE type_id=?", array($group_type));
 $user_id = user_getid();
 
 $to_update = array("homepage", "download", "cvs", "forum","mailing_list","task","news","support","bug");
-$upd_list = '';
+$upd_list = array();
 while (list(,$field) = each($to_update))
 {
   # bug = bugs, mailing_list = mail
@@ -51,17 +53,13 @@ while (list(,$field) = each($to_update))
   $field = 'use_'.$field;
 
   fb(sprintf(_("%s will be set to %s"),$field, $value));
-  $upd_list .= "$field='$value',";
+  $upd_list[$field] = $value;
 }
 
 if ($upd_list)
 {
-  # strip the excess comma at the end of the update field list
-  $upd_list = substr($upd_list,0,-1);
-  
-  $sql="UPDATE groups SET $upd_list ".
-     " WHERE group_id='$group_id'";
-  $result=db_affected_rows(db_query($sql));
+  $result=db_affected_rows(db_autoexecute('groups', $upd_list, DB_AUTOQUERY_UPDATE,
+					  "group_id=?", array($group_id)));
 
   if (!$result)
     { 
@@ -81,12 +79,12 @@ if ($upd_list)
 # configuration to be already done if at some point the tracker gets activated,
 # if it is not the case by default.
 $to_update = '';
-$upd_list = '';
+$upd_list = array();
 
 # Build the notification list
-$res_admins = db_query("SELECT user.user_name FROM user,user_group WHERE "
-		       . "user.user_id=user_group.user_id AND user_group.group_id='$group_id' AND "
-		       . "user_group.admin_flags='A'");
+$res_admins = db_execute("SELECT user.user_name FROM user,user_group WHERE "
+			 . "user.user_id=user_group.user_id AND user_group.group_id=? AND "
+			 . "user_group.admin_flags='A'", array($group_id));
 if (db_numrows($res_admins) > 0)
 {
   $admin_list = '';
@@ -98,21 +96,17 @@ if (db_numrows($res_admins) > 0)
   $to_update = array("news", "support", "task", "bugs", "patch", "cookbook");
   while (list(,$field) = each($to_update))
     {
-      $upd_list .= "new_".$field."_address='$admin_list',";
+      $upd_list["new_".$field."_address"] = $admin_list;
       if ($field != "news")
 	{
-	  $upd_list .= "send_all_".$field."='$value',";
+	  $upd_list["send_all_".$field] = $value;
 	}
     }
 }
 if ($upd_list)
 {
   # strip the excess comma at the end of the update field list
-  $upd_list = substr($upd_list,0,-1);
-  
-  $sql="UPDATE groups SET $upd_list ".
-     " WHERE group_id='$group_id'";
-  $result=db_affected_rows(db_query($sql));
+  $result=db_affected_rows(db_autoexecute('groups', $upd_list, DB_AUTOQUERY_UPDATE, "group_id=?", array($group_id)));
 
   if (!$result)
     { 

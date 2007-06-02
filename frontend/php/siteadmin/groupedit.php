@@ -22,6 +22,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../include/init.php');
 require_once('../include/vars.php');
 # needed for group history :
@@ -64,19 +67,24 @@ if ($update || $updatefast)
 	  group_add_history ('unix_group_name',db_result($res_grp,0,'unix_group_name'),$group_id);
 	}
       
-      db_query_escape(
-       "UPDATE groups SET
-          is_public=%s, status='%s', license='%s', type='%s', unix_group_name='%s',
-          dir_arch='%s', dir_svn='%s', dir_cvs='%s', dir_homepage='%s', dir_download='%s'
-        WHERE group_id=%s",
-       $form_public, $form_status, $form_license, $group_type, $form_name,
-       $form_dir_arch, $form_dir_svn, $form_dir_cvs, $form_dir_homepage, $form_dir_download,
-       $group_id);
-      
+      db_autoexecute('groups',
+        array(
+	  'is_public' => $form_public,
+	  'status' => $form_status,
+	  'license' => $form_license,
+	  'type' => $group_type,
+	  'unix_group_name' => $form_name,
+	  'dir_arch' => $form_dir_arch,
+	  'dir_svn' => $form_dir_svn,
+	  'dir_cvs' => $form_dir_cvs,
+	  'dir_homepage' => $form_dir_homepage,
+	  'dir_download' => $form_dir_download,
+	), DB_AUTOQUERY_UPDATE,
+        "group_id=?", array($group_id));
     }
   if ($updatefast) 
     {
-      db_query_escape("UPDATE groups SET status='%s' WHERE group_id=%s", $status, $group_id);
+      db_execute("UPDATE groups SET status=? WHERE group_id=?", array($status, $group_id));
     }
       
   fb(_("Updating Project Info"));
@@ -84,7 +92,7 @@ if ($update || $updatefast)
 
 
 # get current information
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 
 site_admin_header(array('title'=>_("Group List"),'context'=>'admgroup'));
 
@@ -233,4 +241,3 @@ utils_get_content("admin/groupedit_outro");
 
 
 site_admin_footer(array());
-?>
