@@ -25,12 +25,12 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once('../../include/init.php');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-
-extract(sane_import('post', array('update')));
 
 # Internal function to determine if a squad permission must override user perm
 # or not
@@ -89,12 +89,15 @@ function _compare_perms ($squad_perm, $user_perm)
   return $user_perm;
 }
 
+extract(sane_import('post', array('update')));
 $project = project_get_object($group_id);
 
 if ($update)
 {
   # ##### Update members permissions
-  unset($feedback_able, $feedback_unable, $feedback_squad_override);
+  $feedback_able = null;
+  $feedback_unable = null;
+  $feedback_squad_override = null;
 
 
   # Get the members list, taking first the squads
@@ -119,83 +122,99 @@ if ($update)
 	}
 
 
+      $bugs_flags="bugs_user_{$row_dev['user_id']}";
+      $task_flags="task_user_{$row_dev['user_id']}";
+      $patch_flags="patch_user_{$row_dev['user_id']}";
+      $support_flags="support_user_{$row_dev['user_id']}";
+      $cookbook_flags="cookbook_user_{$row_dev['user_id']}";
+      $news_flags="news_user_{$row_dev['user_id']}";
+
+      $admin_flags="admin_user_{$row_dev['user_id']}";
+      $privacy_flags="privacy_user_{$row_dev['user_id']}";
+
+      $permissions = sane_import('post', array(
+        $bugs_flags,
+	$task_flags,
+	$patch_flags,
+	$support_flags,
+	$cookbook_flags,
+	$news_flags,
+	$admin_flags,
+	$privacy_flags,));
+
       # admin are not allowed to turn off their own admin flag
       # it is too dangerous -- set it back to 'A'
-      $admin_flags="admin_user_$row_dev[user_id]";
       if (user_getid() == $row_dev['user_id'])
 	{
-	  $$admin_flags='A';
+	  $permissions[$admin_flags] = 'A';
 	}
       # squads flag cannot be changed, squads should not be turned into normal
       # users
       if ($row_dev['admin_flags'] == 'SQD')
 	{ 
-	  $$admin_flags='SQD'; 
+	  $permissions[$admin_flags] = 'SQD'; 
 	  $is_squad = true;
 	}
- 
+      if ($permissions[$admin_flags] == null)
+	{ 
+	  $permissions[$admin_flags] = '';
+	}
+
 
       # If someone is made admin, he got automatically the right to read
       # private items
-      $privacy_flags="privacy_user_$row_dev[user_id]";
-      if ($$admin_flags == "A")
-	{ $$privacy_flags='1'; }
-
-      $bugs_flags="bugs_user_$row_dev[user_id]";
-      $task_flags="task_user_$row_dev[user_id]";
-      $patch_flags="patch_user_$row_dev[user_id]";
-      $support_flags="support_user_$row_dev[user_id]";
-      $cookbook_flags="cookbook_user_$row_dev[user_id]";
-      $news_flags="news_user_$row_dev[user_id]";
+      if ($permissions[$admin_flags] == "A")
+	{ $permissions[$privacy_flags] = '1'; }
 
       if ($is_squad)
 	{
 	  # If it is a squad, save every setting even if useless, it cost
 	  # nothing
 	  $squad_id = $row_dev['user_id'];
-	  $squad_permissions[$squad_id.'bugs'] = $$bugs_flags;
-	  $squad_permissions[$squad_id.'task'] = $$task_flags;
-	  $squad_permissions[$squad_id.'patch'] = $$patch_flags;
-	  $squad_permissions[$squad_id.'support'] = $$support_flags;
-	  $squad_permissions[$squad_id.'cookbook'] = $$cookbook_flags;
-	  $squad_permissions[$squad_id.'news'] = $$news_flags;
-	  $squad_permissions[$squad_id.'privacy'] = $$privacy_flags;	  
+	  $squad_permissions[$squad_id.'bugs'] = $permissions[$bugs_flags];
+	  $squad_permissions[$squad_id.'task'] = $permissions[$task_flags];
+	  $squad_permissions[$squad_id.'patch'] = $permissions[$patch_flags];
+	  $squad_permissions[$squad_id.'support'] = $permissions[$support_flags];
+	  $squad_permissions[$squad_id.'cookbook'] = $permissions[$cookbook_flags];
+	  $squad_permissions[$squad_id.'news'] = $permissions[$news_flags];
+	  $squad_permissions[$squad_id.'privacy'] = $permissions[$privacy_flags];
 	}
       else
 	{
 	  # If it is not a squad, we then have to check if the user is 
-	  # member of any squad, and if he his, we have to check which
+	  # member of any squad, and if he is, we have to check which
 	  # setting must be kept (see _compare_perms comments) 
-	  $result_user_squads = db_query("SELECT squad_id FROM user_squad WHERE user_id='".$row_dev['user_id']."' AND group_id='".safeinput($group_id)."'");
+	  $result_user_squads = db_execute("SELECT squad_id FROM user_squad WHERE user_id=? AND group_id=?",
+					   array($row_dev['user_id'], $group_id));
 	  if (db_numrows($result_user_squads))
 	    {
 	      while ($thissquad = db_fetch_array($result_user_squads)) 
 		{
 		  $GLOBALS['did_squad_override'] = false;
-		  $$bugs_flags = 
+		  $out[$bugs_flags] = 
 		    _compare_perms($squad_permissions[$thissquad['squad_id'].'bugs'], 
-				   $$bugs_flags);
-		  $$task_flags = 
+				   $permissions[$bugs_flags]);
+		  $out[$task_flags] = 
 		    _compare_perms($squad_permissions[$thissquad['squad_id'].'task'], 
-				   $$task_flags);
+				   $permissions[$task_flags]);
 		  
-		  $$patch_flags = 
+		  $out[$patch_flags] = 
 		    _compare_perms($squad_permissions[$thissquad['squad_id'].'patch'], 
-				   $$patch_flags);
-		  $$support_flags = 
+				   $permissions[$patch_flags]);
+		  $out[$support_flags] = 
 		    _compare_perms($squad_permissions[$thissquad['squad_id'].'support'], 
-				   $$support_flags);
-		  $$cookbook_flags = 
+				   $permissions[$support_flags]);
+		  $out[$cookbook_flags] = 
 		    _compare_perms($squad_permissions[$thissquad['squad_id'].'cookbook'], 
-				   $$cookbook_flags);
-		  $$news_flags = 
+				   $permissions[$cookbook_flags]);
+		  $out[$news_flags] = 
 		    _compare_perms($squad_permissions[$thissquad['squad_id'].'news'], 
-				   $$news_flags);
+				   $permissions[$news_flags]);
 
-		  if ($squad_permissions[$thissquad['squad_id'].'privacy'] > $$privacy_flags)
+		  if ($squad_permissions[$thissquad['squad_id'].'privacy'] > $permissions[$privacy_flags])
 		    { 
 		      $GLOBALS['did_squad_override'] = true;
-		      $$privacy_flags = 
+		      $permissions[$privacy_flags] = 
 			$squad_permissions[$thissquad['squad_id'].'privacy'];
 		    }
 
@@ -208,35 +227,38 @@ if ($update)
 	  
 	}
 
-      $sql = 'UPDATE user_group SET '
-	."admin_flags='".safeinput($$admin_flags)."',"
-	."privacy_flags='".safeinput($$privacy_flags)."',"
-	."cookbook_flags=".safeinput($$cookbook_flags).",";
+      $fields_values = array(
+	'admin_flags' => $permissions[$admin_flags],
+	'privacy_flags' => $permissions[$privacy_flags],
+	'cookbook_flags' => $permissions[$cookbook_flags],
+      );
 
       if ($project->Uses("bugs")) 
 	{
-	  $sql .= "bugs_flags=".safeinput($$bugs_flags).",";
+	  $fields_values['bugs_flags'] = $permissions[$bugs_flags];
 	}
       if ($project->Uses("news")) 
 	{
-	  $sql .= "news_flags=".safeinput($$news_flags).",";
+	  $fields_values['news_flags'] = $permissions[$news_flags];
 	}
       if ($project->Uses("task")) 
 	{
-	  $sql .= "task_flags=".safeinput($$task_flags).",";
+	  $fields_values['task_flags'] = $permissions[$task_flags];
 	}
       if ($project->Uses("patch")) 
 	{
-	  $sql .= "patch_flags=".safeinput($$patch_flags).",";
+	  $fields_values['patch_flags'] = $permissions[$patch_flags];
 	}
       if ($project->Uses("support")) 
 	{
-	  $sql .= "support_flags=".safeinput($$support_flags).",";
+	  $fields_values['support_flags'] = $permissions[$support_flags];
 	}
-      $sql = rtrim($sql, ",");
-      $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
 
-      $result = db_query($sql);
+      $result = db_autoexecute('user_group',
+	$fields_values,
+        DB_AUTOQUERY_UPDATE,
+        "user_id=? AND group_id=?",
+	array($row_dev['user_id'], $group_id));
 
       # Notice any change, yell on error, keep silent if no changes was 
       # necessary (if db_affected_rows works normally, which does not seems
@@ -277,12 +299,14 @@ if ($update)
 
   # ##### Update group default permissions
 
-  $bugs_flags="bugs_user_";
-  $task_flags="task_user_";
-  $patch_flags="patch_user_";
-  $support_flags="support_user_";
-  $cookbook_flags="cookbook_user_";
-  $news_flags="news_user_";
+  extract(sane_import('post', array(
+    'bugs_user_',
+    'task_user_',
+    'patch_user_',
+    'support_user_',
+    'cookbook_user_',
+    'news_user_',
+  )));
 
   # If the group entry do not exists, create it
   if (!db_result(db_execute("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id=?", array($group_id)), 0, "groups_default_permissions_id"))
@@ -291,33 +315,33 @@ if ($update)
     }
 
   # Update the table
-  $sql = 'UPDATE groups_default_permissions SET '
-    ."cookbook_flags=".safeinput($$cookbook_flags).",";
+  $fields_values = array('cookbook_flags' => $cookbook_user_);
   
   if ($project->Uses("bugs")) 
     {
-      $sql .= "bugs_flags=".safeinput($$bugs_flags).",";
+      $fields_values['bugs_flags'] = $bugs_user_;
     }
   if ($project->Uses("news")) 
     {
-      $sql .= "news_flags=".safeinput($$news_flags).",";
+      $fields_values['news_flags'] = $news_user_;
     }
   if ($project->Uses("task")) 
     {
-      $sql .= "task_flags=".safeinput($$task_flags).",";
+      $fields_values['task_flags'] = $task_user_;
     }
   if ($project->Uses("patch")) 
     {
-      $sql .= "patch_flags=".safeinput($$patch_flags).",";
+      $fields_values['patch_flags'] = $patch_user_;
     }
   if ($project->Uses("support")) 
     {
-      $sql .= "support_flags=".safeinput($$support_flags).",";
+      $fields_values['support_flags'] = $support_user_;
     }
-  $sql = rtrim($sql, ",");
-  $sql .= " WHERE group_id='$group_id'";
 
-  $result = db_query($sql);
+  $result = db_autoexecute('groups_default_permissions',
+    $fields_values,
+    DB_AUTOQUERY_UPDATE,
+    "group_id=?", array($group_id));
 
   if ($result && db_affected_rows($result))
     {
@@ -332,33 +356,30 @@ if ($update)
 
   # ##### Update posting restrictions
   # (if equal to 0, manually set to NULL, since 0 have a different meaning)
-  $newitem_restrict_event1 = "bugs_restrict_event1";
-  $newitem_restrict_event2 = "bugs_restrict_event2";
-  $bugs_flags = ($$newitem_restrict_event2)*100 + $$newitem_restrict_event1;
+  extract(sane_import('post', array(
+    'bugs_restrict_event1',     'bugs_restrict_event2',
+    'task_restrict_event1',     'task_restrict_event2',
+    'support_restrict_event1',  'support_restrict_event2',
+    'patch_restrict_event1',    'patch_restrict_event2',
+    'cookbook_restrict_event1', 'cookbook_restrict_event2',
+    'news_restrict_event1')));
+  $bugs_flags = ($bugs_restrict_event2)*100 + $bugs_restrict_event1;
   if (!$bugs_flags)
     { $bugs_flags = 'NULL'; }
 
-  $newitem_restrict_event1 = "task_restrict_event1";
-  $newitem_restrict_event2 = "task_restrict_event2";
-  $task_flags = ($$newitem_restrict_event2)*100 + $$newitem_restrict_event1;
+  $task_flags = ($task_restrict_event2)*100 + $task_restrict_event1;
   if (!$task_flags)
     { $task_flags = 'NULL'; }
 
-  $newitem_restrict_event1 = "support_restrict_event1";
-  $newitem_restrict_event2 = "support_restrict_event2";
-  $support_flags = ($$newitem_restrict_event2)*100 + $$newitem_restrict_event1;
+  $support_flags = ($support_restrict_event2)*100 + $support_restrict_event1;
   if (!$support_flags)
     { $support_flags = 'NULL'; }
 
-  $newitem_restrict_event1 = "patch_restrict_event1";
-  $newitem_restrict_event2 = "patch_restrict_event2";
-  $patch_flags = ($$newitem_restrict_event2)*100 + $$newitem_restrict_event1;
+  $patch_flags = ($patch_restrict_event2)*100 + $patch_restrict_event1;
   if (!$patch_flags)
     { $patch_flags = 'NULL'; }
 
-  $newitem_restrict_event1 = "cookbook_restrict_event1";
-  $newitem_restrict_event2 = "cookbook_restrict_event2";
-  $cookbook_flags = ($$newitem_restrict_event2)*100 + $$newitem_restrict_event1;
+  $cookbook_flags = ($cookbook_restrict_event2)*100 + $cookbook_restrict_event1;
   if (!$cookbook_flags)
     { $cookbook_flags = 'NULL'; }
 
@@ -367,17 +388,16 @@ if ($update)
     { $news_flags = 'NULL'; }
 
   # Update the table
-  $sql = 'UPDATE groups_default_permissions SET '
-    ."bugs_rflags=".safeinput($bugs_flags).","
-    ."news_rflags=".safeinput($news_flags).","
-    ."cookbook_rflags=".safeinput($cookbook_flags).","
-    ."task_rflags=".safeinput($task_flags).", "
-    ."patch_rflags=".safeinput($patch_flags).", "
-    ."support_rflags=".safeinput($support_flags)." "
-    ."WHERE group_id='$group_id'";
-
-  
-  $result = db_query($sql);
+  $result = db_autoexecute('groups_default_permissions',
+    array(
+      'bugs_rflags' => $bugs_flags,
+      'news_rflags' => $news_flags,
+      'cookbook_rflags' => $cookbook_flags,
+      'task_rflags' => $task_flags,
+      'patch_rflags' => $patch_flags,
+      'support_rflags' => $support_flags,
+    ), DB_AUTOQUERY_UPDATE,
+    "group_id=?", array($group_id));
   
   if ($result && db_affected_rows($result))
     {
@@ -556,7 +576,7 @@ print '  </tr>
 ########################### PER SQUADS
 
 # Get squads list
-$sql = "select user.user_name AS user_name,"
+$result = db_execute("SELECT user.user_name AS user_name,"
 . "user.realname AS realname, "
 . "user.user_id AS user_id, "
 . "user_group.admin_flags, "
@@ -568,10 +588,9 @@ $sql = "select user.user_name AS user_name,"
 . "user_group.patch_flags, "
 . "user_group.news_flags, "
 . "user_group.support_flags "
-. "FROM user,user_group WHERE "
-. "user.user_id=user_group.user_id AND user_group.group_id=$group_id AND user_group.admin_flags='SQD'"
-. "ORDER BY user.user_name";
-$result = db_query($sql);
+. "FROM user JOIN user_group ON user.user_id=user_group.user_id "
+. "WHERE user_group.group_id = ? AND user_group.admin_flags='SQD' "
+. "ORDER BY user.user_name", array($group_id));
 
 print '<p>&nbsp;</p>';
 print '<h3>'._("Permissions per squad").'</h3>';
@@ -582,7 +601,6 @@ if (!$result || db_numrows($result) < 1)
 }
 else
 {
-
   $title_arr=array();
   $title_arr[]=_("Squad");
   $title_arr[]=_("General Rights");
@@ -673,7 +691,7 @@ else
 
 ########################### PER MEMBERS
 
-$sql = "select user.user_name AS user_name,"
+$result = db_execute("SELECT user.user_name AS user_name,"
 . "user.realname AS realname, "
 . "user.user_id AS user_id, "
 . "user_group.admin_flags, "
@@ -685,10 +703,9 @@ $sql = "select user.user_name AS user_name,"
 . "user_group.patch_flags, "
 . "user_group.news_flags, "
 . "user_group.support_flags "
-. "FROM user,user_group WHERE "
-. "user.user_id=user_group.user_id AND user_group.group_id=$group_id AND user_group.admin_flags<>'P' AND user_group.admin_flags<>'SQD'"
-. "ORDER BY user.user_name";
-$result = db_query($sql);
+. "FROM user JOIN user_group ON user.user_id=user_group.user_id "
+. "WHERE user_group.group_id = ? AND user_group.admin_flags<>'P' AND user_group.admin_flags<>'SQD' "
+. "ORDER BY user.user_name", array($group_id));
 
 print '<p>&nbsp;</p>';
 print '<h3>'._("Permissions per member").'</h3>';
@@ -802,5 +819,3 @@ else
 }
 
 site_project_footer(array());
-
-?>
