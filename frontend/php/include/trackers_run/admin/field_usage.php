@@ -22,8 +22,20 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 $is_admin_page='y';
+
+extract(sane_import('request', array('field', 'update_field')));
+extract(sane_import('post', array(
+  'post_changes', 'submit', 'reset',
+  'label', 'description',
+  'status', 'keep_history', 'mandatory_flag', 'place',
+  'form_transition_default_auth',
+  'show_on_add_members', 'show_on_add', 'show_on_add_nologin',
+  'n1', 'n2',
+)));
 
 if ($group_id && user_ismember($group_id,'A')) {
 
@@ -38,9 +50,9 @@ if ($group_id && user_ismember($group_id,'A')) {
 
       if ($submit)
 	{
+	  $display_size = null;
 	  if (isset($n1) && isset($n2))
 	    { $display_size = "$n1/$n2"; }
-
 
 	  if (!trackers_data_is_required($field))
 	    {
@@ -59,7 +71,6 @@ if ($group_id && user_ismember($group_id,'A')) {
 	      $show_on_add_members = trackers_data_is_showed_on_add_members($field);
 	      $show_on_add = trackers_data_is_showed_on_add($field);
 	      $show_on_add_nologin = trackers_data_is_showed_on_add_nologin($field);
-	      
 	    }
 
 	  # the additional possibility of differently treating non project
@@ -117,7 +128,7 @@ if ($group_id && user_ismember($group_id,'A')) {
       <h2>'
 	._("Field Label:").' ';
 
-      unset($closetag);
+      $closetag = '';
       if (trackers_data_is_select_box($field))
 	{
 	  # Only selectboxes can have values configured
@@ -194,7 +205,9 @@ if ($group_id && user_ismember($group_id,'A')) {
  	}
 
       print '<span class="preinput">'._("On new item submission, present this field to:").' </span>';
-      unset($checkbox_members, $checkbox_loggedin, $checkbox_anonymous);
+      $checkbox_members = '';
+      $checkbox_loggedin = '';
+      $checkbox_anonymous = '';
       if (!trackers_data_is_required($field))
 	{
           # Some fields require specific treatment
@@ -311,8 +324,10 @@ if ($group_id && user_ismember($group_id,'A')) {
       # Only select boxes have transition management
       if (trackers_data_is_select_box($field))
 	{
-	  
-	  $transition_default_auth = db_result(db_query("SELECT transition_default_auth FROM ".ARTIFACT."_field_usage WHERE group_id='$group_id' AND bug_field_id='".trackers_data_get_field_id($field)."'"), 0, 'transition_default_auth');
+	  $transition_default_auth = '';
+	  $result = db_execute("SELECT transition_default_auth FROM ".ARTIFACT."_field_usage WHERE group_id=? AND bug_field_id=?", array($group_id, trackers_data_get_field_id($field)));
+	  if (db_numrows($result) > 0)
+	    $transition_default_auth = db_result($result, 0, 'transition_default_auth');
 	  
 	  print "\n\n<p>&nbsp;</p><h3>"._("By default, transitions (from one value to another) are:").'</h3>';
 	  print '&nbsp;&nbsp;&nbsp;<input type="radio" name="form_transition_default_auth" value="A" '.(($transition_default_auth!='F')?' checked="checked"':'').' /> '._("Allowed").'<br />&nbsp;&nbsp;&nbsp;<input type="radio" name="form_transition_default_auth" value="F" '.(($transition_default_auth=='F')?'checked="checked"':'').' /> '._("Forbidden");
@@ -462,5 +477,3 @@ if ($group_id && user_ismember($group_id,'A')) {
     }
 
 }
-
-?>

@@ -26,6 +26,25 @@
 
 $is_admin_page='y';
 
+extract(sane_import('request', array(
+  'func', 'update_value',
+  'field', 'fv_id',
+  'create_canned', 'update_canned', 'item_canned_id',
+)));
+extract(sane_import('get', array(
+  'list_value',
+  'delete_canned',
+  'transition_id',
+)));
+extract(sane_import('post', array(
+  'post_changes',
+  'create_value',
+  'title', 'description', 'order_id',
+  'body',
+  'by_field_id', 'from', 'to', 'allowed', 'mail_list',
+  'status',
+)));
+
 if ($group_id && user_ismember($group_id,'A'))
 {
 # Initialize global bug structures
@@ -36,8 +55,8 @@ if ($group_id && user_ismember($group_id,'A'))
 
   if ($func == "deltransition")
     {
-      $sql="DELETE FROM trackers_field_transition WHERE transition_id = '".addslashes($transition_id)."' LIMIT 1";
-      $result=db_query($sql);
+      $result = db_execute("DELETE FROM trackers_field_transition WHERE transition_id = ? LIMIT 1",
+			   array($transition_id));
       if (!$result)
 	{
 	  fb(_("Error deleting transition"),1);
@@ -127,11 +146,11 @@ if ($group_id && user_ismember($group_id,'A'))
 	    }
 	}
 # Delete Response
-      else if ($_GET['delete_canned'] == '1')
+      else if ($delete_canned == '1')
 	{
-	  $sql="DELETE FROM ".ARTIFACT."_canned_responses ".
-	    "WHERE group_id='".addslashes($group_id)."' AND bug_canned_id='".addslashes($item_canned_id)."'";
-	  $result=db_query($sql);
+	  $result = db_execute("DELETE FROM ".ARTIFACT."_canned_responses ".
+	    "WHERE group_id=? AND bug_canned_id=?",
+            array($group_id, $item_canned_id));
 	  if (!$result) {
 	    fb(_("Error deleting canned bug response"),1);
 	  }
@@ -234,9 +253,10 @@ if ($group_id && user_ismember($group_id,'A'))
 
 # Display the list of values in 2 blocks : active first
 # Hidden second
+	      $ha = '';
+	      $hh = '';
 	      while ( $fld_val = db_fetch_array($result) )
 		{
-
 		  $item_fv_id = $fld_val['bug_fv_id'];
 		  $status = $fld_val['status'];
 		  $value_id = $fld_val['value_id'];
@@ -254,7 +274,7 @@ if ($group_id && user_ismember($group_id,'A'))
 # Show the value ID only for system wide fields which
 # value id are fixed and serve as a guide.
 		  if (!$is_project_scope)
-		    !$html .='<td>'.$value_id.'</td>';
+		    $html .='<td>'.$value_id.'</td>';
 
 # The permanent values cant be modified (No link)
 		  if ($status == 'P')
@@ -500,7 +520,7 @@ if ($group_id && user_ismember($group_id,'A'))
                   }
 
 		  print '<tr class="'.utils_altrow($z).'">';
-		  if ($val_label[$transition['from_value_id']])
+		  if (!empty($val_label[$transition['from_value_id']]))
 		    {
 		      print '<td align="center">'.$val_label[$transition['from_value_id']].'</td>';
 		    }
@@ -560,11 +580,13 @@ if ($group_id && user_ismember($group_id,'A'))
                      <form action="'.$_SERVER['PHP_SELF'].'#registered" method="post">
                      <input type="hidden" name="post_transition_changes" value="y" />
                      <input type="hidden" name="list_value" value="y" />
-                     <input type="hidden" name="tracker_name" value="'.ARTIFACT.'" />
                      <input type="hidden" name="field" value="'.$field.'" />
                      <input type="hidden" name="group_id" value="'.$group_id.'" />';
 
-	  if (db_result(db_query("SELECT transition_default_auth FROM ".ARTIFACT."_field_usage WHERE group_id='$group_id' AND bug_field_id='".trackers_data_get_field_id($field)."'"), 0, 'transition_default_auth') == "F")
+	  $result = db_execute("SELECT transition_default_auth FROM ".ARTIFACT."_field_usage "
+			       ." WHERE group_id=? AND bug_field_id=?",
+			       array($group_id, trackers_data_get_field_id($field)));
+	  if (db_numrows($result) > 0 and db_result($result, 0, 'transition_default_auth') == "F")
 	    {
               $transition_for_field = _("By default, for this field, the transitions not registered are forbidden. This setting can be changed when managing this field usage.");
 	    }

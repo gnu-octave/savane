@@ -612,7 +612,18 @@ function trackers_data_do_keep_history($field, $by_field_id=false)
 function trackers_data_is_required($field, $by_field_id=false)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
-  return($by_field_id ? $BF_USAGE_BY_ID[$field]['required']: $BF_USAGE_BY_NAME[$field]['required']);
+  if ($by_field_id)
+    {
+      return isset($BF_USAGE_BY_ID[$field]['required'])
+	? $BF_USAGE_BY_ID[$field]['required']
+	: null;
+    }
+  else
+    {
+      return isset($BF_USAGE_BY_NAME[$field]['required'])
+	? $BF_USAGE_BY_NAME[$field]['required']
+	: null;
+    }
 }
 
 function trackers_data_is_used($field, $by_field_id=false)
@@ -740,7 +751,9 @@ function trackers_data_get_field_name($field_id)
 function trackers_data_get_field_id($field_name)
 {
   global $BF_USAGE_BY_NAME;
-  return($BF_USAGE_BY_NAME[$field_name]['bug_field_id']);
+  return isset($BF_USAGE_BY_NAME[$field_name]['bug_field_id'])
+    ? $BF_USAGE_BY_NAME[$field_name]['bug_field_id']
+    : null;
 }
 
 function trackers_data_get_group_id($field, $by_field_id=false)
@@ -1100,7 +1113,7 @@ function trackers_data_create_value ($field, $group_id, $value, $description,$or
 	}
 
 
-      db_autoexecute(ARTIFACT."_field_value",
+      $result = db_autoexecute(ARTIFACT."_field_value",
         array(
           'bug_field_id' => $field_id,
 	  'group_id' => $group_id,
@@ -1231,14 +1244,18 @@ function trackers_data_update_usage($field_name,
 
   # if it's a custom field then take label into account else store NULL
   #    if (trackers_data_is_custom($field_name))  {
-  $lbl = isset($label) ? "'$label'" : 'NULL';
-  $desc = isset($description) ? "'$description'" : 'NULL';
-  $disp_size = isset($display_size) ? "'$display_size'" : 'NULL';
-  $empty = isset($empty_ok) ? "'$empty_ok'" : 'NULL';
-  $keep_hist = isset($keep_history) ? "'$keep_history'" : 'NULL';
+  $lbl = isset($label) ? $label : null;
+  $desc = isset($description) ? $description : null;
+  $disp_size = isset($display_size) ? $display_size : null;
+  $empty = isset($empty_ok) ? $empty_ok : null;
+  $keep_hist = isset($keep_history) ? $keep_history : null;
   #    }  else    {
   #	$lbl = $desc = $disp_size = $empty = $keep_hist = "NULL";
   #    }
+
+  if (!isset($show_on_add)) $show_on_add = 0;
+  if (!isset($show_on_add_members)) $show_on_add_members = 0;
+  if (!isset($transition_default_auth)) $transition_default_auth = '';
 
   # See if this field usage exists in the table for this project
   $result = db_execute("SELECT bug_field_id FROM ".ARTIFACT."_field_usage ".
@@ -2096,7 +2113,7 @@ function trackers_data_reassign_item ($item_id,
 	}
 
       # Make sure there is no \' remaining
-      $comment = ereg_replace("'", " ", $comment);
+      #$comment = ereg_replace("'", " ", $comment);
       $result = db_autoexecute($reassign_change_artifact."_history",
         array(
           'bug_id' => $new_item_id,
@@ -2700,7 +2717,7 @@ function trackers_data_delete_file($group_id, $item_id, $item_file_id)
 
 function trackers_data_count_field_value_usage ($group_id, $field, $field_value_value_id)
 {
-  if (!preg_match('/^[a-z0-9_]$/', $field))
+  if (!preg_match('/^[a-z0-9_]+$/', $field))
     util_die('trackers_data_count_field_value_usage: invalid $field <em>' . htmlspecialchars($field) . '</em>');
   return db_numrows(db_execute("SELECT bug_id FROM ".ARTIFACT." WHERE $field=? AND group_id=?",
 			       array($field_value_value_id, $group_id)));
