@@ -25,13 +25,19 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__) . '/../trackers/show.php');
 
-$sql="SELECT * FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
+extract(sane_import('request', array('item_id', 'printer')));
+
 $fields_per_line=2;
 $max_size=40;
 
-$result=db_query($sql);
+$result = db_execute($sql = "SELECT * FROM ".ARTIFACT
+		     ." WHERE bug_id=? AND group_id=?",
+		     array($item_id, $group_id));
 
 if (db_numrows($result) > 0)
 {
@@ -244,7 +250,7 @@ if (db_numrows($result) > 0)
 
   # In printer mode, deploy everything by default: assume that people default
   # printout should contain all necessary info (note that history is excluded)
-  if (sane_all("printer"))
+  if ($printer)
     {
       reset($is_deployed);
       while (list($entry,) = each($is_deployed))

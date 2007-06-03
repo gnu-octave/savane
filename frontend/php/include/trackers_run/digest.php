@@ -20,19 +20,28 @@
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- 
+
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('get', array(
+  'func',
+  'dependencies_of_item', 'dependencies_of_tracker',
+  'items_for_digest', 'field_used')));
+
 if ($func == "digest")
 {
   $browse_preamble = '<p>'._("Select the items you wish to digest with the checkbox shown next to the \"Item Id\" field, on the table below. You will be able to select the fields you wish to include in your digest at the next step.").'</p><p class="warn">'._("Once your selection is made, click on the button \"Proceed to Digest next step\" at the bottom of this page.").'</p>';
 }
 elseif ($func == "digestselectfield")
 {
-  # Determines items to digest, if we are supposed to digest dependancies
+  # Determines items to digest, if we are supposed to digest dependencies
   if ($dependencies_of_item && $dependencies_of_tracker)
     {
+      if (!ctype_alnum($dependencies_of_tracker))
+	util_die("Invalid tracker name <em>" . htmlspecialchars($dependencies_of_tracker) . "</em>");
 
-      $sql = "SELECT is_dependent_on_item_id FROM ".$dependencies_of_tracker."_dependencies WHERE item_id='".addslashes($dependencies_of_item)."' AND is_dependent_on_item_id_artifact='".ARTIFACT."' ORDER by is_dependent_on_item_id";
-      $res_deps = db_query($sql);
+      $res_deps = db_execute("SELECT is_dependent_on_item_id FROM ".$dependencies_of_tracker."_dependencies WHERE item_id=? AND is_dependent_on_item_id_artifact=? ORDER by is_dependent_on_item_id", array($dependencies_of_item, ARTIFACT));
       $items_for_digest = array();
       while ($deps = db_fetch_array($res_deps))
 	{
@@ -64,6 +73,7 @@ elseif ($func == "digestselectfield")
   print "\n\n<p>";
   printf(ngettext("You selected %s item for this digest. Now you must unselect fields you do not want to be included in the digest.", "You selected %s items for this digest. Now you must unselect fields you do not want to be included in the digest.", $count), $count)."</p>\n";
 
+  $i = 0;
   # Select fields
   while ($field_name = trackers_list_all_fields())
     {
@@ -117,11 +127,13 @@ elseif ($func == "digestget")
 
 
   # Browse the list of selected item
+  $i = 0;
   while (list(,$item) = each($items_for_digest))
     {
       $i++;
 
-      $result = db_query("SELECT * FROM ".ARTIFACT." WHERE bug_id='$item' AND group_id='$group_id'");
+      $result = db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+			   array($item, $group_id));
 
       # Skip it is it is private but the user got no privilege.
       # Normally, the user should not even been able to select this item.
@@ -154,11 +166,12 @@ elseif ($func == "digestget")
 	  if ($field_name == "status_id" ||
 	      $field_name == "summary" ||
 	      $field_name == "bug_id" ||
-              $field_name == "details")
+              $field_name == "details" ||
+	      $field_name == "comment_type_id" )
 	    { continue; }
 
 # Check the fields
-	  if ($field_used[$field_name] != 1)
+	  if (!isset($field_used[$field_name]) || $field_used[$field_name] != 1)
 	    { continue; }
 
 	  $field_count++;
@@ -197,16 +210,20 @@ elseif ($func == "digestget")
 	{
 #         $last_comment = db_result(db_query("SELECT old_value FROM ".ARTIFACT."_history WHERE bug_id='$item' AND field_name='details' ORDER BY bug_history_id DESC LIMIT 1"),0,'old_value');
 
-          $detail_result = db_query("SELECT old_value, mod_by, realname, user_name FROM ".ARTIFACT."_history, user WHERE bug_id='$item' AND field_name='details' AND user_id=mod_by ORDER BY bug_history_id DESC LIMIT 1");
-          $last_comment = db_result($detail_result, 0, 'old_value');
-          $mod_by = db_result($detail_result, 0, 'mod_by');
-          if ($mod_by != 100) {
-            $realname = db_result($detail_result, 0, 'realname');
-            $user_name = '&lt;'.db_result($detail_result, 0, 'user_name').'&gt;';
-          } else {
-            $realname = _("Anonymous");
-            $user_name = "";
-          }
+          $detail_result = db_execute("SELECT old_value, mod_by, realname, user_name FROM ".ARTIFACT."_history, user WHERE bug_id=? AND field_name='details' AND user_id=mod_by ORDER BY bug_history_id DESC LIMIT 1", array($item));
+	  $last_comment = null;
+	  if (db_numrows($detail_result) > 0)
+	    {
+	      $last_comment = db_result($detail_result, 0, 'old_value');
+	      $mod_by = db_result($detail_result, 0, 'mod_by');
+	      if ($mod_by != 100) {
+		$realname = db_result($detail_result, 0, 'realname');
+		$user_name = '&lt;'.db_result($detail_result, 0, 'user_name').'&gt;';
+	      } else {
+		$realname = _("Anonymous");
+		$user_name = "";
+	      }
+	    }
 
 	  if ($last_comment)
 	    {
@@ -220,6 +237,3 @@ elseif ($func == "digestget")
     }
   trackers_footer(array());
 }
-
-
-?>

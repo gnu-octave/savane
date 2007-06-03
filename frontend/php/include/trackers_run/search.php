@@ -21,6 +21,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 trackers_header(array ('title'=>_("Search")));
 print '<p>'._("With the following form, you can perform a search in the items summaries and details. If you need to perform more complex search, use the query forms in Browse items page").'</p>';
@@ -28,5 +30,3 @@ print '<p>'._("With the following form, you can perform a search in the items su
 # the page
 print '<p>'.search_box('', ARTIFACT, 45).'</p>';
 trackers_footer(array());
-
-?>

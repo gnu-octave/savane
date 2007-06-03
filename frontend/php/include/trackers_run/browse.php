@@ -24,6 +24,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 # There are parameters that defined before, in the pages that include browse.
 # For instance, $sober is defined by the cookbook/index.php page
 
@@ -35,6 +38,15 @@ if ($sober)
   $preference_prefix .= "-sober";
 }
 
+extract(sane_import('get', array(
+  'func',
+  'chunksz', 'offset', 'msort', 'sumORdet', 'order',
+  'report_id', 'set',
+  'advsrch',
+  'spamscore',
+  'history_search', 'history_field', 'history_event', 'history_date',
+  'history_date_yearfd', 'history_date_monthfd', 'history_date_dayfd',
+  'printer', )));
 
 # Number of search criteria (boxes) displayed in one row
 $fields_per_line=5;
@@ -44,12 +56,12 @@ $browse_preamble = '';
 
 # Number of bugs displayed on screen in one chunk.
 # Default 50
-$chunksz = sane_get("chunksz");
 if (!$chunksz)
 { $chunksz = 50; }
+else
+{ $chunksz = intval($chunksz); }
 
 # Digest mode? Set the digest variable to one
-$func = sane_get("func");
 if ($func == "digest")
 { $digest = 1; }
 else
@@ -59,15 +71,10 @@ else
 }
 
 # Make sure offset is defined and has a correct value
-$offset = sane_get("offset");
 if (!$offset || $offset < 0)
 { $offset = 0; }
-
-
-$msort = sane_get("msort");
-$sumORdet = sane_get("sumORdet");
-$order = sane_get("order");
-$printer = sane_get("printer");
+else
+{ $offset = intval($offset); }
 
 $hdr = '';
 
@@ -76,9 +83,10 @@ $hdr = '';
 # (we will search for items that have score inferior to $spamscore)
 # Default is five. Under 5, an item is not considered to be spam by the 
 # system. But users can however decide to use a tougher limit
-$spamscore = sane_get("spamscore");
 if (!ctype_digit($spamscore) || $spamscore < 1)
 { $spamscore = 5; }
+else
+{ $spamscore = intval($spamscore); }
 if ($spamscore > 20)
 { $spamscore = 20; }
 
@@ -110,7 +118,6 @@ unset($url_params['history_date']);
 #   will avoid to deal with scalar in simple search and array in
 #   advanced which would greatly complexifies the code)
 # ================================================== */
-$advsrch = sane_get("advsrch");
 while (list($field,$value_id) = each($url_params))
 {
   if (!is_array($value_id))
@@ -129,13 +136,15 @@ while (list($field,$value_id) = each($url_params))
       if ($advsrch)
 	{
 	  $field_end = $field.'_end';
-	  $url_params[$field_end] = $$field_end;
+	  $in = sane_import('post', array($field_end));
+	  $url_params[$field_end] = $in[$field_end];
 	  #print '<br /> DBG Setting $url_params['.$field.'_end]= '.$prefs[$field.'_end'];
 	}
       else
 	{
 	  $field_op = $field.'_op';
-	  $url_params[$field_op] = $$field_op;
+	  $in = sane_import('post', array($field_op));
+	  $url_params[$field_op] = $in[$field_op];
 	  if (!$url_params[$field_op])
 	    { $url_params[$field_op] = '='; }
 	  #print '<br /> DBG Setting $url_params['.$field.'_op]= '.$url_params[$field.'_op'];
@@ -144,13 +153,6 @@ while (list($field,$value_id) = each($url_params))
 }
 
 # If history event additional constraint is used, add it
-$history_search = sane_get("history_search");
-$history_field = sane_get("history_field");
-$history_event = sane_get("history_event");
-$history_date = sane_get("history_date");
-$history_date_yearfd = sane_get("history_date_yearfd");
-$history_date_monthfd = sane_get("history_date_monthfd");
-$history_date_dayfd = sane_get("history_date_dayfd");
 if ($history_search)
 {
   # Dates must numeric date, even can be only modified or unmodified
@@ -160,7 +162,7 @@ if ($history_search)
       ctype_digit($history_date_dayfd))
     {
       $history_date = "$history_date_yearfd-$history_date_monthfd-$history_date_dayfd";
-      $url_params['history'][] = addslashes($history_search).'>'.addslashes($history_field).'>'.addslashes($history_event).'>'.$history_date;
+      $url_params['history'][] = $history_search.'>'.$history_field.'>'.$history_event.'>'.$history_date;
     }
 }
 
@@ -225,7 +227,6 @@ if ($morder != '')
 #  If it is set then update the user preference.  Also initialize the
 #  bug report structures.
 #  ================================================== 
-$report_id = sane_get("report_id");
 if (user_isloggedin())
 {
   if (!isset($report_id))
@@ -263,8 +264,6 @@ trackers_report_init($group_id, $report_id);
 #     (Prefs is a string of the form
 #     &amp;field1[]=value_id1&amp;field2[]=value_id2&amp;.... )
 #  ================================================== 
-$set = sane_get("set");
-$msort = sane_get("msort");
 if (!$set)
 {
 
@@ -287,7 +286,7 @@ if (!$set)
 	      else if ($field == 'msort')
 		{ $msort = $value_id; }
 	      else if ($field == 'chunksz')
-		{ $chunksz = $value_id; }
+		{ $chunksz = intval($value_id); }
 	      else if ($field == 'spamscore')
 		{ $spamscore = $value_id; }
 	      else if ($field == 'report_id')
@@ -384,7 +383,6 @@ else
   # Force the status_id to open, set nothing else, trash the prefes
   $url_params['status_id'][]=1;
   user_unset_preference($preference_prefix.'_brow_cust'.$group_id);
-  
 }
 
 # ==================================================
@@ -439,25 +437,34 @@ $full_field_list = $col_list = $lbl_list = array();
 $select_count = 'SELECT count(DISTINCT '.ARTIFACT.'.bug_id) AS count ';
 $select = 'SELECT DISTINCT '.ARTIFACT.'.group_id,'.ARTIFACT.'.priority,'.ARTIFACT.'.privacy,'.ARTIFACT.'.status_id';
 $from = 'FROM '.ARTIFACT.' ';
+$from_params = array();
 
 # On the cookbook in sober mode, we want the system wide recipes,
 # as long as there is no field that comes as select boxes with values 
 # configurable per project set.
 if (ARTIFACT == 'cookbook' && $sober && $not_group_specific)
 {
-  $where = 'WHERE ('.ARTIFACT.'.group_id='.$group_id.' OR '.ARTIFACT.'.group_id='.$sys_group_id.') ';
+  $where = 'WHERE ('.ARTIFACT.'.group_id=? OR '.ARTIFACT.'.group_id=?) ';
+  $where_params = array($group_id, $sys_group_id);
 }
 else
 {
-  $where = 'WHERE '.ARTIFACT.'.group_id='.$group_id.' ';
+  $where = 'WHERE '.ARTIFACT.'.group_id=? ';
+  $where_params = array($group_id);
 }
 
 # Take into account the spamscore limit (always shows
 # item posted by the logged in user)
-unset($spamscore_additional);
+$spamscore_additional = '';
+$spamscore_additional_params = array();
 if (user_getid() != 100)
-{ $spamscore_additional = ' OR submitted_by='.user_getid(); }
-$where .= 'AND ('.ARTIFACT.'.spamscore < '.$spamscore.$spamscore_additional.') ';
+{
+  $spamscore_additional = ' OR submitted_by=?';
+  $spamscore_additional_params = array(user_getid());
+}
+$where .= 'AND ('.ARTIFACT.'.spamscore < ? '.$spamscore_additional.') ';
+$spam_params = array_merge(array($spamscore), $spamscore_additional_params);
+$where_params = array_merge($where_params, $spam_params);
 
 # If the user asked for more than 150 items to be shown but is not in printer
 # mode, restrict arbitrarily to 150: 
@@ -474,7 +481,10 @@ if ($chunksz > 150 &&
 # No limit on sober output, we want all recipes
 $limit = '';
 if (!$sober)
-{ $limit = " LIMIT $offset,$chunksz"; }
+{
+  $limit = " LIMIT ?,?";
+  $limit_params = array($offset,$chunksz);
+}
 
 
 # prepare the where clause with the selection criteria given by the user
@@ -496,7 +506,8 @@ while (list($field,$value_id) = each($url_params))
     {
 
       # Only select box criteria to where clause if argument is not ANY
-      $where .= ' AND '.ARTIFACT.'.'.$field.' IN ('.implode(',',$url_params[$field]).') ';
+      $where .= ' AND '.ARTIFACT.'.'.$field.' IN ('.implode(',', array_fill(0, count($url_params[$field]), '?')).') ';
+      $where_params = array_merge($where_params, $url_params[$field]);
 
     }
   else if (trackers_data_is_date_field($field) && $url_params[$field][0])
@@ -512,32 +523,37 @@ while (list($field,$value_id) = each($url_params))
 	  list($time_end,$ok_end) = utils_date_to_unixtime($url_params[$field.'_end'][0]);
 	  if ($ok)
 	    {
-	      $where .= ' AND '.ARTIFACT.'.'.$field.' >= '. $time; }
-
+	      $where .= ' AND '.ARTIFACT.'.'.$field.' >= ?';
+	      $where_params[] = $time;
+	    }
 	  if ($ok_end)
-	    { $where .= ' AND '.ARTIFACT.'.'.$field.' <= '. $time_end; }
+	    {
+	      $where .= ' AND '.ARTIFACT.'.'.$field.' <= ?';
+	      $where_params[] = $time_end;
+	    }
 
 	}
       else
 	{
-
 	  $operator = $url_params[$field.'_op'][0];
           # '=' means that day between 00:00 and 23:59
 	  if ($operator == '=')
 	    {
 	      $time_end = mktime(23, 59, 59, $month, $day, $year);
-	      $where .= ' AND '.ARTIFACT.'.'.$field." >= $time ".'AND '.ARTIFACT.'.'.$field." <= $time_end ";
+	      $where .= ' AND '.ARTIFACT.'.'.$field.' >= ? AND '.ARTIFACT.'.'.$field.' <= ? ';
+	      $where_params[] = $time;
+	      $where_params[] = $time_end;
 	    }
 	  else
 	    {
 	      $time = mktime(0,0,0, $month, ($day+1), $year);
-	      $where .= ' AND '.ARTIFACT.'.'.$field." $operator= $time ";
+	      $where .= ' AND '.ARTIFACT.'.'.$field." $operator= ? ";
+	      $where_params[] = $time;
 	    }
 	}
 
       # Always exclude undefined dates (0)
       $where .= ' AND '.ARTIFACT.'.'.$field." <> 0 ";
-
     }
   elseif ((trackers_data_is_text_field($field) ||
 	    trackers_data_is_text_area($field)) &&
@@ -557,7 +573,9 @@ while (list($field,$value_id) = each($url_params))
       else 
 	{
           # It s a text field accept. Process INT or TEXT,VARCHAR fields differently
-	  $where .= ' AND '.trackers_build_match_expression($field, $url_params[$field][0]);
+	  list($expr, $params) = trackers_build_match_expression($field, $url_params[$field][0]);
+	  $where .= ' AND $expr ';
+	  $where_params = array_merge($where_params, $params);
 	}
     }
 }
@@ -572,9 +590,13 @@ if ($sumORdet == 1)
     {
       $where .= ' AND ';
       $where .= '( ( ';
-      $where .= trackers_build_match_expression('details', $url_params['details'][0]);
+      list($expr, $params) = trackers_build_match_expression('details', $url_params['details'][0]);
+      $where .= $expr;
+      $where_params = array_merge($where_params, $params);
       $where .= ' ) OR ( ';
-      $where .= trackers_build_match_expression('summary', $url_params['summary'][0]);
+      list($expr, $params) = trackers_build_match_expression('summary', $url_params['summary'][0]);
+      $where .= $expr;
+      $where_params = array_merge($where_params, $params);
       $where .= ') ) ';
     }
   else
@@ -588,12 +610,16 @@ if ($sumORdet == 1)
       if ($details_search == 1 && $url_params['details'][0]) 
 	{  
 	  $where .= ' AND ';
-	  $where .= trackers_build_match_expression('details', $url_params['details'][0]);
+	  list($expr, $params) = trackers_build_match_expression('details', $url_params['details'][0]);
+	  $where .= $expr;
+	  $where_params = array_merge($where_params, $params);
 	}
       if ($summary_search == 1 && $url_params['summary'][0]) 
 	{
 	  $where .= ' AND ';
-	  $where .= trackers_build_match_expression('summary', $url_params['summary'][0]);
+	  list($expr, $params) = trackers_build_match_expression('summary', $url_params['summary'][0]);
+	  $where .= $expr;
+	  $where_params = array_merge($where_params, $params);
 	}
     }
 }
@@ -665,6 +691,10 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
       if ($field == 'details') 
 	{ $details_search = 1; }
       
+      if (!isset($url_params[$field]))
+	// not passed as parameter yet, field just appeared due to a query form change
+	$url_params[$field] = array(null);
+
       $boxes .=
 	($printer ? $url_params[$field][0] : trackers_field_text($field,$url_params[$field][0],15,80)) ;
     }
@@ -787,15 +817,19 @@ if ($history_search) {
   list($unix_history_date,$ok) = utils_date_to_unixtime($history_date);
   if ($history_event == "modified") {
     $from = $from.', '.ARTIFACT.'_history ';
-    $where = $where.'AND '.ARTIFACT.'_history.bug_id = '.ARTIFACT.'.bug_id ';
-    $where .= ' AND '.ARTIFACT.'_history.date >= '.$unix_history_date.' ';
+    $where .= 'AND '.ARTIFACT.'_history.bug_id = '.ARTIFACT.'.bug_id ';
+    $where .= ' AND '.ARTIFACT.'_history.date >= ? ';
+    $where_params[] = $unix_history_date;
     if ($history_field != '0') {
-      $where .= ' AND '.ARTIFACT."_history.field_name = '".$history_field."' ";
+      $where .= ' AND '.ARTIFACT."_history.field_name = ? ";
+      $where_params[] = $history_field;
     }
   } else {
-    $from = $from.' LEFT JOIN '.ARTIFACT.'_history ON (('.ARTIFACT.'_history.bug_id = '.ARTIFACT.'.bug_id ) AND ('.ARTIFACT.'_history.date >= '.$unix_history_date.') ';
+    $from = $from.' LEFT JOIN '.ARTIFACT.'_history ON (('.ARTIFACT.'_history.bug_id = '.ARTIFACT.'.bug_id ) AND ('.ARTIFACT.'_history.date >= ?) ';
+    $from_params[] = $unix_history_date;
     if ($history_field != '0') {
-      $from .= 'AND ('.ARTIFACT."_history.field_name = '".$history_field."')) ";
+      $from .= 'AND ('.ARTIFACT."_history.field_name = ?)) ";
+      $from_params[] = $history_field;
     } else {
       $from .= ') ';
     }
@@ -813,14 +847,11 @@ if ($history_search) {
 
   ================================================== */
 $sql_count = "$select_count $from $where";
-$result_count = db_query($sql_count);
+$result_count = db_execute($sql_count, array_merge($from_params, $where_params));
 $totalrows = db_result($result_count,0,'count');
 
 $sql = "$select $from $where $order_by $limit";
-
-## print "SQL=".$sql."\n";
-
-$result = db_query($sql);
+$result = db_execute($sql, array_merge($from_params, $where_params, $limit_params));
 
 # Build the array that will be given to the function that make the item
 # list. We cannot simply return the SQL results, since we have to remove
@@ -981,7 +1012,7 @@ $form .= $html_select;
 $form .= '</table>';
 
 
-# If both summary and org subm are searched, propose an OR instead of AND
+# If both 'summary' and 'original submission' are searched, propose an OR instead of AND
 if (($details_search == 1) && ($summary_search == 1)) 
 {
   if (!$printer)

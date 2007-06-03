@@ -25,25 +25,24 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# This page is supposed to be register_globals_off() valid,
-# as inserted in cookbook/index.php that calls it.
+#input_is_safe();
+#mysql_is_safe();
 
-$group_id = sane_all("group_id");
-$item_id = sane_all("item_id");
-if (defined('PRINTER'))
-{ $printer = 1; }
-
+extract(sane_import('request', array('item_id', 'printer')));
 # If we are a comingfrom=$group_id defined, it means that we want to show a
 # recipe from the system group as if it were from the current group
-$comingfrom = sane_get("comingfrom");
+extract(sane_import('get', array('comingfrom')));
+
+if (defined('PRINTER'))
+{ $printer = 1; }
 
 # Site doc pretending to be project doc: set the group id to the one of the
 # system group, so its setup will prevail (private right etc)
 if ($comingfrom)
 { $group_id = $sys_group_id; }
 
-$sql="SELECT * FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
-$result=db_query($sql);
+$result = db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+		     array($item_id, $group_id));
 
 if (db_numrows($result) == 0)
 {
@@ -71,8 +70,8 @@ if (db_numrows($result) == 0)
       unset($comingfrom);
 
       # See if it works
-      $sql="SELECT * FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
-      $result=db_query($sql);
+      $result = db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+			   array($item_id, $group_id));
       if (db_numrows($result) == 0)
 	{
 	  exit_error(_("Item not found"));
@@ -161,7 +160,7 @@ print markup_full(db_result($result,0,'details'));
 
 # latest update: when the item was posted or the latest history change
 # (only content changes, other changes are not relevant for the end user)
-$result_history = db_query("SELECT date FROM ".ARTIFACT."_history WHERE bug_id='$item_id' AND (field_name='realdetails' OR field_name='summary') ORDER BY date DESC LIMIT 1");
+$result_history = db_execute("SELECT date FROM ".ARTIFACT."_history WHERE bug_id=? AND (field_name='realdetails' OR field_name='summary') ORDER BY date DESC LIMIT 1", array($item_id));
 unset($last_update);
 if (db_numrows($result_history))
 {
@@ -200,7 +199,7 @@ if (ARTIFACT == 'cookbook')
   print '<h3>'.html_anchor(_("Audience and Context"), "context").'</h3>';
 
   # Obtain selected context
-  $context_result = db_query("SELECT * FROM cookbook_context2recipe WHERE recipe_id='$item_id' AND group_id='$group_id' LIMIT 1");
+  $context_result = db_execute("SELECT * FROM cookbook_context2recipe WHERE recipe_id=? AND group_id=? LIMIT 1", array($item_id, $group_id));
 
   $cases = array("audience", "context", "subcontext");
   $possiblevalues_audience = cookbook_audience_possiblevalues();

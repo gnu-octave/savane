@@ -23,11 +23,17 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once('../include/init.php');
+require_once('../include/graphs.php');
 require_directory("trackers");
 
 if (!$group_id)
 { exit_no_group(); }
+
+extract(sane_import('get', array('field')));
 
 # Give access to this page to anybody: people can already collect such
 # information since they are able to browse the trackers.
@@ -97,8 +103,7 @@ if ($field)
 	  $start=($time_now-($counter*604800));
 	  $end=($time_now-(($counter-1)*604800));
 
-	  $sql="SELECT round(avg((close_date-date)/86400), 0) FROM ".$artifact." WHERE close_date > 0 AND (date >= $start AND date <= $end)  AND group_id='$group_id' AND spamscore < 5 ";
-	  $result = db_query($sql);
+	  $result = db_execute("SELECT round(avg((close_date-date)/86400), 0) FROM ".$artifact." WHERE close_date > 0 AND (date >= ? AND date <= ?)  AND group_id=? AND spamscore < 5 ", array($start, $end, $group_id));
 
           $key = sprintf(_("%s to %s"), utils_format_date($start), utils_format_date($end));
 	  $content[$key] = db_result($result, 0,0);
@@ -115,8 +120,7 @@ if ($field)
 	  $start=($time_now-($counter*604800));
 	  $end=($time_now-(($counter-1)*604800));
 
-	  $sql="SELECT count(*) FROM ".$artifact." WHERE date >= $start AND date <= $end AND group_id='$group_id' AND spamscore < 5";
-	  $result = db_query($sql);
+	  $result = db_execute("SELECT count(*) FROM ".$artifact." WHERE date >= ? AND date <= ? AND group_id=? AND spamscore < 5", array($start, $end, $group_id));
 
           $key = sprintf(_("%s to %s"), utils_format_date($start), utils_format_date($end));
 	  $content[$key] = db_result($result, 0,0);
@@ -133,8 +137,7 @@ if ($field)
 	  $start=($time_now-($counter*604800));
 	  $end=($time_now-(($counter-1)*604800));
 
-	  $sql="SELECT count(*) FROM ".$artifact." WHERE date <= $end AND (close_date >= $end OR close_date < 1 OR close_date is null) AND group_id='$group_id' AND spamscore < 5";
-	  $result = db_query($sql);
+	  $result = db_execute("SELECT count(*) FROM ".$artifact." WHERE date <= ? AND (close_date >= ? OR close_date < 1 OR close_date is null) AND group_id=? AND spamscore < 5", array($end, $end, $group_id));
 
 	  $content[utils_format_date($end)] = db_result($result, 0,0);
 	}
@@ -183,8 +186,9 @@ if ($field)
 
 		  $sql="SELECT user.user_name, count(*) AS Count FROM user,".$artifact." ".
 		     "WHERE user.user_id=".$artifact.".assigned_to AND ".
-		     "".$artifact.".status_id = '1' AND ".$artifact.".group_id='$group_id' AND ".$artifact.".spamscore < 5 ".
+		     "".$artifact.".status_id = '1' AND ".$artifact.".group_id=? AND ".$artifact.".spamscore < 5 ".
 		     "GROUP BY user_name";
+                  $params = array($group_id);
 		}
 	      else
 		{
@@ -192,11 +196,11 @@ if ($field)
                   # check if the project has its own instance of the
                   # value set
 
-                  $sql="SELECT ".$artifact."_field_value.value FROM "
-                       .$artifact."_field_value WHERE "
-                       .$artifact."_field_value.bug_field_id='".                                        trackers_data_get_field_id($field)."' AND ".                                    $artifact."_field_value.group_id='$group_id'";
-
-                  $result=db_query($sql);
+                  $result = db_execute("SELECT ".$artifact."_field_value.value FROM "
+                    .$artifact."_field_value WHERE "
+                    .$artifact."_field_value.bug_field_id=? AND "
+                    .$artifact."_field_value.group_id=?",
+                    array(trackers_data_get_field_id($field), $group_id));
                   if ($result && db_numrows($result) > 0) {
                      $group_to_be_used = $group_id;
                   } else {
@@ -206,15 +210,15 @@ if ($field)
                   }
 
                   $sql="SELECT ".$artifact."_field_value.value, count(*) AS Count FROM ".$artifact."_field_value,".$artifact." ".
-		     "WHERE ".$artifact."_field_value.value_id=".$artifact.".$field AND ".
-		     "".$artifact."_field_value.bug_field_id='".
-		     trackers_data_get_field_id($field)."' AND ".
-		     $artifact."_field_value.group_id=$group_to_be_used AND ".
-		     "".$artifact.".status_id = '1' AND ".$artifact.".group_id='$group_id' AND spamscore < 5 ".
-		     "GROUP BY value_id ORDER BY order_id";
+		    " WHERE ".$artifact."_field_value.value_id=".$artifact.".$field AND "
+		    .$artifact."_field_value.bug_field_id = ? "
+		    ." AND ".$artifact."_field_value.group_id = ? AND "
+		    .$artifact.".status_id = '1' AND ".$artifact.".group_id=? AND spamscore < 5 "
+		    ." GROUP BY value_id ORDER BY order_id";
+                  $params = array(trackers_data_get_field_id($field), $group_to_be_used, $group_id);
 		}
 
-	      $result=db_query($sql);
+	      $result=db_execute($sql, $params);
 	      if ($result && db_numrows($result) > 0)
 		{ graphs_build($result, $field); }
 	      else
@@ -233,22 +237,17 @@ if ($field)
 		{
 
 		  $sql="SELECT user.user_name, count(*) AS Count FROM user,".$artifact." ".
-		     "WHERE user.user_id=".$artifact.".assigned_to AND ".$artifact.".group_id='$group_id' AND ".$artifact.".spamscore < 5 ".
+		     "WHERE user.user_id=".$artifact.".assigned_to AND ".$artifact.".group_id = ? AND ".$artifact.".spamscore < 5 ".
 		     "GROUP BY user_name";
-
-
-
+                  $params = array($group_id);
 		}
 	      else
 		{
-
-                  $sql="SELECT ".$artifact."_field_value.value FROM "
-                       .$artifact."_field_value WHERE "
-                       .$artifact."_field_value.bug_field_id='".
-                        trackers_data_get_field_id($field)."' AND ".
-                        $artifact."_field_value.group_id='$group_id'";
-
-                  $result=db_query($sql);
+                  $result = db_execute("SELECT ".$artifact."_field_value.value FROM "
+                    .$artifact."_field_value WHERE "
+                    .$artifact."_field_value.bug_field_id = ? "
+                    ." AND ".$artifact."_field_value.group_id = ?",
+                    array(trackers_data_get_field_id($field), $group_id));
                   if ($result && db_numrows($result) > 0) {
                      $group_to_be_used = $group_id;
                   } else {
@@ -258,13 +257,13 @@ if ($field)
                   }
 
 		  $sql="SELECT ".$artifact."_field_value.value, count(*) AS Count FROM ".$artifact."_field_value,".$artifact." ".
-		     "WHERE ".$artifact."_field_value.value_id=".$artifact.".$field AND ".
-		     "".$artifact."_field_value.bug_field_id='".
-		     trackers_data_get_field_id($field)."' AND ".
-		     $artifact."_field_value.group_id=$group_to_be_used AND ".$artifact.".group_id='$group_id' AND spamscore < 5 ".
-		     "GROUP BY value_id ORDER BY order_id";
+		    "WHERE ".$artifact."_field_value.value_id=".$artifact.".$field AND "
+		    .$artifact."_field_value.bug_field_id = ? "
+		    ." AND ".$artifact."_field_value.group_id = ? AND ".$artifact.".group_id = ? AND spamscore < 5 ".
+		    "GROUP BY value_id ORDER BY order_id";
+                  $params = array(trackers_data_get_field_id($field), $group_to_be_used, $group_id);
 		}
-	      $result=db_query($sql);
+	      $result=db_execute($sql, $params);
 	      if ($result && db_numrows($result) > 0)
 		{ graphs_build($result, $field); }
 	      else

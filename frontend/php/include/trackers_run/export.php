@@ -21,21 +21,31 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 register_globals_off();
+extract(sane_import('post', array(
+  'update', 'create',
+  // Use the time as it was while the form was printed to the user
+  'current_time',
+  // Find out the relevant timestamp that will be used by the backend
+  // to determine which job must be performed
+  'date_mainchoice',
+  'date_next_day', 'date_next_hour', 'date_frequent_hour', 'date_frequent_day')));
+extract(sane_import('request', array('report_id', 'advsrch', 'form_id', 'report_id')));
+extract(sane_import('get', array('delete', 'feedback')));
 
 # use the wording "export job" to distinguish the job from the task that
 # will help users to follow the job.
 # Yes, job and task can be considered as synonym. But as long as we havent
 # got such jobs completely managed via the task tracker, we need to avoid
 # confusions.
-$group_id = sane_all("group_id");
-$group = sane_all("group");
-$group_name = $group;
 
 if (!$group_id)
 { print exit_no_group(); }
 
-$project=project_get_object($group_id);
+$project = project_get_object($group_id);
 
 if (!member_check(0, $group_id))
 {
@@ -52,8 +62,7 @@ if (defined('PRINTER'))
 $max_export = 5;
 
 # Get the list of current exports
-$sql = "SELECT * FROM trackers_export WHERE user_name='".user_getname()."' AND unix_group_name='".$group_name."' AND status<>'I' ORDER BY export_id ASC";
-$res_export = db_query($sql);
+$res_export = db_execute("SELECT * FROM trackers_export WHERE user_name=? AND unix_group_name=? AND status<>'I' ORDER BY export_id ASC", array(user_getname(), $group));
 $export_count = db_numrows($res_export);
 
 
@@ -61,12 +70,11 @@ $export_count = db_numrows($res_export);
 ########################################################################
 # GET/POST Update
 
-if (sane_all("update"))
+if ($update)
 {
   # Create new item
-  if (sane_post("create"))
+  if ($create)
     {
-      $form_id = sane_all("form_id");
       if (!form_check($form_id))
 	{ exit_error(_("Exiting")); }
 
@@ -80,20 +88,19 @@ if (sane_all("update"))
 
       ##
       # Find out the sql to build up export
-      $report_id = sane_all("report_id");
       if (!$report_id)
 	{ $report_id = 100; }
       trackers_report_init($group_id, $report_id);
 
       $select = 'SELECT bug_id ';
       $from = 'FROM '.ARTIFACT.' ';
-      $where = 'WHERE group_id='.$group_id.' ';
+      $where = 'WHERE group_id=? ';
+      $where_params = array($group_id);
 
       #################### GRABBED FROM BROWSE
       # This should probably included in functions
       $url_params = trackers_extract_field_list();
       unset($url_params['group_id'], $url_params['history_date']);
-      $advsrch = sane_get("advsrch");
       while (list($field,$value_id) = each($url_params))
 	{
 	  if (!is_array($value_id))
@@ -101,17 +108,19 @@ if (sane_all("update"))
 	      unset($url_params[$field]);
 	      $url_params[$field][] = $value_id;
 	    }
-	  if (trackers_data_is_date_field($field))
+	  if (trackers_data_is_date_field($field)) 
 	    {
 	      if ($advsrch)
 		{
 		  $field_end = $field.'_end';
-		  $url_params[$field_end] = sane_post($field_end);
+		  $in = sane_import('post', array($field_end));
+		  $url_params[$field_end] = $in[$field_end];
 		}
 	      else
 		{
 		  $field_op = $field.'_op';
-		  $url_params[$field_op] = sane_post($field_op);
+		  $in = sane_import('post', array($field_op));
+		  $url_params[$field_op] = $in[$field_op];
 		  if (!$url_params[$field_op])
 		    { $url_params[$field_op] = '='; }
 		}
@@ -138,7 +147,8 @@ if (sane_all("update"))
 
 	  if (trackers_data_is_select_box($field) && !trackers_isvarany($url_params[$field]) )
 	    {
-	      $where .= ' AND '.$field.' IN ('.implode(',',$url_params[$field]).') ';
+	      $where .= ' AND '.$field.' IN ('.implode(',', array_fill(0, count($url_params[$field]), '?')).') ';
+	      $where_params[] = $url_params[$field];
 	    }
 	  else if (trackers_data_is_date_field($field) && $url_params[$field][0])
 	    {
@@ -150,10 +160,16 @@ if (sane_all("update"))
 		{
 		  list($time_end,$ok_end) = utils_date_to_unixtime($url_params[$field.'_end'][0]);
 		  if ($ok)
-		    { $where .= ' AND '.$field.' >= '. $time; }
+		    {
+		      $where .= ' AND '.$field.' >= ? ';
+		      $where_params[] = $time;
+		    }
 
 		  if ($ok_end)
-		    { $where .= ' AND '.$field.' <= '. $time_end; }
+		    {
+		      $where .= ' AND '.$field.' <= ? ';
+		      $where_params[] = $time_end;
+		    }
 		}
 	      else
 		{
@@ -162,12 +178,15 @@ if (sane_all("update"))
 		  if ($operator == '=')
 		    {
 		      $time_end = mktime(23, 59, 59, $month, $day, $year);
-		      $where .= ' AND '.$field.' >= '.$time.' AND '.$field.' <= '.$time_end.' ';
+		      $where .= ' AND '.$field.' >= ? AND '.$field.' <= ? ';
+		      $where_params[] = $time;
+		      $where_params[] = $time_end;
 		    }
 		  else
 		    {
 		      $time = mktime(0,0,0, $month, ($day+1), $year);
-		      $where .= ' AND '.$field." $operator= $time ";
+		      $where .= ' AND '.$field." $operator= ? ";
+		      $where_params[] = $time;
 		    }
 		}
 
@@ -193,7 +212,9 @@ if (sane_all("update"))
 	      else
 		{
           # It s a text field accept. Process INT or TEXT,VARCHAR fields differently
-		  $where .= ' AND '.trackers_build_match_expression($field, $url_params[$field][0]);
+		  list($expr, $params) = trackers_build_match_expression($field, $url_params[$field][0]);
+		  $where .= ' AND $expr ';
+		  $where_params = array_merge($where_params, $params);
 		}
 	    }
 	}
@@ -208,9 +229,13 @@ if (sane_all("update"))
 	    {
 	      $where .= ' AND ';
 	      $where .= '( ( ';
-	      $where .= trackers_build_match_expression('details', $url_params['details'][0]);
+	      list($expr, $params) = trackers_build_match_expression('details', $url_params['details'][0]);
+	      $where .= $expr;
+	      $where_params = array_merge($where_params, $params);
 	      $where .= ' ) OR ( ';
-	      $where .= trackers_build_match_expression('summary', $url_params['summary'][0]);
+	      list($expr, $params) = trackers_build_match_expression('summary', $url_params['summary'][0]);
+	      $where .= $expr;
+	      $where_params = array_merge($where_params, $params);
 	      $where .= ') ) ';
 	    }
 	  else
@@ -224,29 +249,26 @@ if (sane_all("update"))
 	      if ($details_search == 1 && $url_params['details'][0])
 		{
 		  $where .= ' AND ';
-		  $where .= trackers_build_match_expression('details', $url_params['details'][0]);
+		  list($expr, $params) = trackers_build_match_expression('details', $url_params['details'][0]);
+		  $where .= $expr;
+		  $where_params = array_merge($where_params, $params);
 		}
 	      if ($summary_search == 1 && $url_params['summary'][0])
 		{
 		  $where .= ' AND ';
-		  $where .= trackers_build_match_expression('summary', $url_params['summary'][0]);
+		  list($expr, $params) = trackers_build_match_expression('summary', $url_params['summary'][0]);
+		  $where .= $expr;
+		  $where_params = array_merge($where_params, $params);
 		}
 	    }
 	}
       #################### GRABBED FROM BROWSE
-      $export_sql = "$select $from $where";
+      $export_sql = db_variable_binding("$select $from $where", $where_params);
 
 
       ##
       # Find out the time arguments
       unset($timestamp, $requested_hour, $requested_day);
-
-      # Use the time as it was while the form was printed to the user
-      $current_time = sane_post("current_time");
-
-      # Find out the relevant timestamp that will be used by the backend
-      # to determine which job must be performed
-      $mainchoice = sane_post("date_mainchoice");
 
       switch ($mainchoice)
 	{
@@ -263,8 +285,8 @@ if (sane_all("update"))
 	  #    etc...
 	  $current_day = strftime('%d', $current_time);
 	  $current_month = strftime('%m', $current_time);
-	  $day = ($current_day+sane_post("date_next_day"));
-	  $hour =  sane_post("date_next_hour");
+	  $day = ($current_day+$date_next_day);
+	  $hour = $date_next_hour;
 	  $timestamp = mktime($hour, 0, 0, $current_month, $day);
 	  break;
 	case 'frequent':
@@ -274,9 +296,9 @@ if (sane_all("update"))
 	  # to update the timestamp afterwards
 	  $current_day = strftime('%d', $current_time);
 	  $current_month = strftime('%m', $current_time);
-	  $hour =  sane_post("date_frequent_hour");
+	  $hour =  $date_frequent_hour;
 	  $requested_hour = $hour;
-	  $requested_day = (sane_post("date_frequent_day")+1);
+	  $requested_day = $date_frequent_day + 1;
 
 	  for ($day = $current_day; $day <= ($current_day+8); $day++)
 	    {
@@ -297,13 +319,23 @@ if (sane_all("update"))
       # First add an entry in trackers_export. Create the export with the
       # status invalid (I) so it wont be handled by the backend before
       # the next step is done on the frontend side
-      $sql = "INSERT INTO trackers_export (task_id, artifact, unix_group_name , user_name, `sql`, status, date, frequency_day, frequency_hour) VALUES ('0', '".ARTIFACT."', '".$group_name."', '".user_getname()."', '".addslashes($export_sql)."', 'I', '".$timestamp."', '".$requested_day."', '".$requested_hour."')";
-      $result = db_query($sql);
+      $result = db_autoexecute('trackers_export',
+	array(
+          'task_id' => 0,
+	  'artifact' => ARTIFACT,
+	  'unix_group_name ' => $group,
+	  'user_name' => user_getname(),
+	  'sql' => $export_sql,
+	  'status' => 'I',
+	  'date' => $timestamp,
+	  'frequency_day' => $requested_day,
+	  'frequency_hour' => $requested_hour,
+	), DB_AUTOQUERY_INSERT);
       if (!$result)
 	{
 	  exit_error(_("SQL insert error"));
 	}
-      $insert_id =  db_insertid($result);
+      $insert_id = db_insertid($result);
 
 
       form_clean($form_id);
@@ -319,15 +351,15 @@ if (sane_all("update"))
     }
 
   # Delete item
-  if (sane_get("delete"))
+  if ($delete)
     {
-      $export_id = sane_get("delete");
+      $export_id = $delete;
 
       # Obtain the relevant task number
-      $task_id = db_result(db_query("SELECT task_id FROM trackers_export WHERE export_id='$export_id' LIMIT 1"), 0, 'task_id');
+      $task_id = db_result(db_execute("SELECT task_id FROM trackers_export WHERE export_id=? LIMIT 1", array($export_id)), 0, 'task_id');
 
       # Delete the entry
-      $result = db_query("DELETE FROM trackers_export WHERE export_id='$export_id' AND user_name='".user_getname()."' LIMIT 1");
+      $result = db_execute("DELETE FROM trackers_export WHERE export_id=? AND user_name=? LIMIT 1", array($export_id, user_getname()));
       if (db_affected_rows($result))
 	{
 	  fb(sprintf(_("Export job #%s successfully removed"), $export_id));
@@ -343,8 +375,7 @@ if (sane_all("update"))
 
 
       # Update the list of current exports
-      $sql = "SELECT * FROM trackers_export WHERE user_name='".user_getname()."' AND unix_group_name='".$group_name."' AND status<>'I' ORDER BY export_id ASC";
-      $res_export = db_query($sql);
+      $res_export = db_execute("SELECT * FROM trackers_export WHERE user_name=? AND unix_group_name=? AND status<>'I' ORDER BY export_id ASC", array(user_getname(), $group));
       $export_count = db_numrows($res_export);
 
 
@@ -365,7 +396,7 @@ if (sane_all("update"))
 #                        if the maximum was of 10 queues was not reached
 
 
-unset($export_id); # Not implemented
+$export_id = null; # Not implemented
 if ($export_id)
 {
   # Not implemented
@@ -373,10 +404,6 @@ if ($export_id)
 }
 else
 {
-  # allow additional feedback
-  if (sane_get("feedback"))
-    {  $feedback = sane_get("feedback"); }
-
   trackers_header(array('title'=>_("Data Export Jobs")));
 
   print '<p>'._("From here, you can select criteria for an XML export of the items of your project of the current tracker. Then your request will be queued and made available on an HTTP accessible URL. This way you can automate exports, using scripts, as you know the file URL in advance.").'</p>';
@@ -396,7 +423,7 @@ else
 	    { print $HTML->box_nextitem(utils_get_alt_row_color($i+1)); }
 
 	 print '<span class="trash">';
-	 print utils_link($_SERVER['PHP_SELF'].'?update=1&amp;delete='.db_result($res_export, $i, 'export_id').'&amp;group='.$group_name,
+	 print utils_link($_SERVER['PHP_SELF'].'?update=1&amp;delete='.db_result($res_export, $i, 'export_id').'&amp;group='.$group,
 			  '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Remove this job").'" />');
 	 print '</span>';
 
@@ -414,7 +441,7 @@ else
 				  $status));
 
 
-	 $export_url = $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."export/$group_name/".user_getname()."/".db_result($res_export, $i, 'export_id').".xml";
+	 $export_url = $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."export/$group/".user_getname()."/".db_result($res_export, $i, 'export_id').".xml";
 	 print '<br />'.sprintf(_("URL: %s"), utils_link($export_url, $export_url));
 
 	 $type = utils_get_tracker_name(db_result($res_export, $i, 'artifact'));
@@ -462,12 +489,13 @@ else
     {
       ##
       # Query Form selection
-      $report_id = sane_all("report_id");
       if (!$report_id)
 	{ $report_id = 100; }
       trackers_report_init($group_id, $report_id);
 
-      $multiple_selection = sane_all("advsrch");
+      $multiple_selection = $advsrch;
+      $advsrch_0 = '';
+      $advsrch_1 = '';
       if ($multiple_selection)
 	{
 	  $advsrch_1 = ' selected="selected"';
@@ -480,9 +508,6 @@ else
 	{ $advsrch_0 = ' selected="selected"'; }
 
 
-      $form .= sprintf(' '._("and %s selection."), '<select name="advsrch"><option value="0"'.$advsrch_0.'>'._("Simple").'</option><option value="1"'.$advsrch_1.'>'._("Multiple").'</option></select>');
-
-
       $res_report = trackers_data_get_reports($group_id,user_getid());
 
       print html_show_displayoptions(sprintf(_("Use the %s Query Form and %s selection for export criteria."),
@@ -492,13 +517,13 @@ else
 								   true,
 								   'Basic'),
 					     '<select name="advsrch"><option value="0"'.$advsrch_0.'>'._("Simple").'</option><option value="1"'.$advsrch_1.'>'._("Multiple").'</option></select>'),
-				     form_header($_SERVER['PHP_SELF'].'#new', '').form_input("hidden", "group", $group_name),
+				     form_header($_SERVER['PHP_SELF'].'#new', '').form_input("hidden", "group", $group),
 				     form_submit(_("Apply")));
 
       ##
       # Display criteria
       print form_header($_SERVER['PHP_SELF'], '');
-      print form_input("hidden", "group", $group_name);
+      print form_input("hidden", "group", $group);
       print form_input("hidden", "create", "1");
       $current_time = time();
       print form_input("hidden", "current_time", $current_time);
@@ -518,7 +543,10 @@ else
       $summary_search = 0;
       $details_search = 0;
 
-      while ($field = trackers_list_all_fields(cmp_place_query))
+      $labels = '';
+      $boxes = '';
+      $html_select = '';
+      while ($field = trackers_list_all_fields('cmp_place_query'))
 	{
 # Skip unused field
 	  if (!trackers_data_is_used($field))
@@ -541,7 +569,7 @@ else
 
 	  if (trackers_data_is_select_box($field))
 	    {
-	      unset($value);
+	      $value = null;
 	      if (isset($is_multiple))
 		{ $value = array(); }
 
@@ -634,7 +662,7 @@ else
 
       $valid_days = array();
       $valid_days = array(_("Today"), _("Tomorrow"));
-      unset($count);
+      $count = 0;
       for ($day = ($current_day+2); $count <= 31; $day++)
 	{
 	  $count++;

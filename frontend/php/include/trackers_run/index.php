@@ -25,6 +25,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 require_once(dirname(__FILE__).'/../trackers/votes.php');
 
 # This page does not give access to sober mode
@@ -44,6 +47,8 @@ extract(sane_import('post',
 	// The comment/follow-up itself
 	'comment', 'additional_comment', 'canned_response',
 	'comment_type_id', # comment type
+	// Original e-mail
+	'originator_email',
 	// carbon-copy
 	'add_cc', 'cc_comment',
 	// vote field
@@ -55,8 +60,14 @@ extract(sane_import('post',
 	'reassign_change_artifact',
 	'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support', 'dependent_on_patch',
 	// Second button 'submit but then edit this item again'
-	'submitreturn'
+	'submitreturn',
+	// delete_*
+	'item_file_id', 'item_cc_id',
+	// delete_dependancy
+	'item_depends_on', 'item_depends_on_artifact',
 	)));
+// Spam-related
+extract(sane_import('get', array('comment_internal_id')));
 
 # Other form fields: check trackers_extract_field_list()
 
@@ -179,26 +190,20 @@ switch ($func)
          # files is the section next to comments, and the original 
          # submission in the latest comment. So the proximity is always
          # optimal.
-	 if (sane_upload("input_file1", "tmp_name") ||
-	     sane_upload("input_file2", "tmp_name") ||
-	     sane_upload("input_file3", "tmp_name") ||
-	     sane_upload("input_file4", "tmp_name"))
-	   {
-             # (attach_several_files will use sane_() functions to get the
-             # the necessary info)
-	     list($changed,) = 
-	       trackers_attach_several_files($item_id,
-					     $group_id,
-					     $changes);
-	   }
+	 // (attach_several_files will use sane_() functions to get the
+	 // the necessary info)
+	 list($changed,) = 
+	   trackers_attach_several_files($item_id,
+					 $group_id,
+					 $changes);
 
          # Add new cc if any
 	 if ($add_cc && user_isloggedin())
 	   {
 	     trackers_add_cc($item_id,
 			     $group_id,
-			     sane_post("add_cc"),
-			     sane_post("cc_comment"), # 4
+			     $add_cc,
+			     $cc_comment, # 4
 			     $changes);
 	   }
 
@@ -222,24 +227,24 @@ switch ($func)
 		  (!user_isloggedin() && trackers_data_is_showed_on_add_nologin($oe_field_name))) 
 	       {
                  # cannot be a registered user
-		 if (validate_email(sane_post($oe_field_name)))
+		 if (validate_email($originator_email))
 		   {
                   # must be different from the submitter field
 		     $user=user_getid();
-		     $submitter_email = db_result(db_query("SELECT email FROM user WHERE user_id=".$user),
+		     $submitter_email = db_result(db_execute("SELECT email FROM user WHERE user_id=?", array($user)),
 						  0, 'email');
-		     if (sane_post($oe_field_name) != $submitter_email)
+		     if ($originator_email != $submitter_email)
 		       {
 			 trackers_add_cc($item_id,
 					 $group_id,
-					 sane_post($oe_field_name),
+					 $originator_email,
 					 "-SUB-",
 					 $changes);
 		       }
 		   }
 		 else
 		   {
-		     $oem=sane_post($oe_field_name);
+		     # $oem=sane_post($oe_field_name);
 		     fb(_("Originator E-mail is not valid, thus was not added to the Carbon-Copy list."), 1);
 		   }
 	       }
@@ -271,11 +276,15 @@ switch ($func)
 	   {		   
              # Mention if there was an attached file: we cannot
              # pre-fill an HTML input file. 
-	     for ($file = 1; $file < 5; $file++)
+	     $filenames = array();
+	     for ($i = 1; $i < 5; $i++)
+	       $filenames[] = "input_file$i";
+	     $files = sane_import('files', $filenames);
+	     foreach ($files as $file)
 	       {
-		 if (sane_upload("input_file$file", "tmp_name"))
+		 if ($file['error'] == UPLOAD_ERR_OK)
 		   {
-		     fb(sprintf(_("Warning: do not forget to re-attach your file '%s'"), sane_upload("input_file$file", "name", 1)));
+		     fb(sprintf(_("Warning: do not forget to re-attach your file '%s'"), $file['name'], 1));
 			
 		   }
 	       }
@@ -353,27 +362,20 @@ switch ($func)
      # Get the list of bug fields used in the form
      $vfl = trackers_extract_field_list();
 
-     # Attach new file if there is one
-     # Do that first so it can update the comment
-     if (sane_upload("input_file1", "tmp_name") ||
-	 sane_upload("input_file2", "tmp_name") ||
-	 sane_upload("input_file3", "tmp_name") ||
-	 sane_upload("input_file4", "tmp_name"))
+     // Attach new file if there is one Do that first so it can update
+     // the comment (attach_several_files will use sane_() functions
+     // to get the the necessary info)
+     list($changed, $additional_comment) = 
+       trackers_attach_several_files($item_id,
+				     $group_id,
+				     $changes);
+     
+     // If there is an item for this comment, add the additional
+     // comment providing refs to the item
+     if (array_key_exists('comment', $vfl) && 
+	 $vfl['comment'] != '')
        {
-         # (attach_several_files will use sane_() functions to get the
-         # the necessary info)
-	 list($changed, $additional_comment) = 
-	   trackers_attach_several_files($item_id,
-					 $group_id,
-					 $changes);
-
-             # If there is an item for this comment, add the additional
-             # comment providing refs to the item
-	 if (array_key_exists('comment', $vfl) && 
-	     $vfl['comment'] != '')
-	   {
-	     $vfl['comment'] .= $additional_comment;
-	   }
+	 $vfl['comment'] .= $additional_comment;
        }
 
      # data control layer
@@ -394,12 +396,15 @@ switch ($func)
        {
          # Mention if there was an attached file: we cannot
          # pre-fill an HTML input file.
-	 for ($file = 1; $file < 5; $file++)
+	 $filenames = array();
+	 for ($i = 1; $i < 5; $i++)
+	   $filenames[] = "input_file$i";
+	 $files = sane_import('files', $filenames);
+	 foreach ($files as $file)
 	   {
-	     if (sane_upload("input_file$file", "tmp_name"))
+	     if ($file['error'] == UPLOAD_ERR_OK)
 	       {
-		 fb(sprintf(_("Warning: do not forget to re-attach your file '%s'"), sane_upload("input_file$file", "name", 1)));
-		 
+		 fb(sprintf(_("Warning: do not forget to re-attach your file '%s'"), $file['name']));
 	       }
 	   }
 	 
@@ -414,9 +419,9 @@ switch ($func)
          # it is irrelevant to the item itself
 	 trackers_add_cc($item_id,
 			 $group_id,
-			 sane_post("add_cc"),
-			 sane_post("cc_comment"), # 4
-			 sane_post("changes"));
+			 $add_cc,
+			 $cc_comment, # 4
+			 $changes);
        }
 
      # Update vote (will do the necessary checks itself)
@@ -426,7 +431,7 @@ switch ($func)
        {
 	 trackers_votes_update($item_id,
 			       $group_id,
-			       sane_post("new_vote"));
+			       $new_vote);
        }
 	    	    	    
      # Now handle notification, after all necessary actions has been 
@@ -470,8 +475,8 @@ switch ($func)
        {
 	 dbg("reassign item: reassign_change_project:$reassign_change_project, reassign_change_artifact:$reassign_change_artifact, ARTIFACT:".ARTIFACT);
 	 trackers_data_reassign_item($item_id,
-				     sane_post("reassign_change_project"),
-				     sane_post("reassign_change_artifact"));
+				     $reassign_change_project,
+				     $reassign_change_artifact);
        }
      
 
@@ -515,8 +520,8 @@ switch ($func)
 
      # Filter out people that would submit data while they are not allowed 
      # too (obviously by using an old form, or something else)
-     $sql="SELECT privacy,discussion_lock,submitted_by FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
-     $result=db_query($sql);
+     $result = db_execute("SELECT privacy,discussion_lock,submitted_by FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+			  array($item_id, $group_id));
 	
      if (db_numrows($result) > 0) 
        {
@@ -552,19 +557,12 @@ switch ($func)
      # Attach new file if there is one
      # Do that first so it can update the comment
      $additional_comment = '';
-     if (sane_upload("input_file1", "tmp_name") ||
-	 sane_upload("input_file2", "tmp_name") ||
-	 sane_upload("input_file3", "tmp_name") ||
-	 sane_upload("input_file4", "tmp_name"))
-       {
-         # (attach_several_files will use sane_() functions to get the
-         # the necessary info)
-	 list($changed, $additional_comment) = 
-	   trackers_attach_several_files($item_id,
-					 $group_id,
-					 $changes);
-       }
-
+     // (attach_several_files will use sane_() functions to get the
+     // the necessary info)
+     list($changed, $additional_comment) = 
+       trackers_attach_several_files($item_id,
+				     $group_id,
+				     $changes);
 		    
      # Add a new comment if there is one
      if ($comment != '')
@@ -610,8 +608,8 @@ switch ($func)
          # it is irrelevant to the item itself
 	 trackers_add_cc($item_id,
 			 $group_id,
-			 sane_post("add_cc"),
-			 sane_post("cc_comment"), # 4
+			 $add_cc,
+			 $cc_comment, # 4
 			 $changes);
        }
 	
@@ -626,7 +624,7 @@ switch ($func)
              # (that could harass developers)
 	     trackers_votes_update($item_id,
 				   $group_id,
-				   sane_post("new_vote"));	
+				   $new_vote);
 	   }
        }
      if ($changed)
@@ -653,7 +651,7 @@ switch ($func)
        {
 	 trackers_data_delete_file($group_id,
 				   $item_id,
-				   sane_all("item_file_id"));
+				   $item_file_id);
 
 # unset previous settings and return to the item
 	 $depends_search = $reassign_change_project_search = $add_cc
@@ -672,7 +670,7 @@ switch ($func)
 #### Remove a person from the Cc
      $changed = trackers_delete_cc($group_id,
 				   $item_id,
-				   sane_all("item_cc_id"),
+				   $item_cc_id,
 				   $changes);
 
 # Irrevelant: no need to warn people that someone got removed from the
@@ -714,8 +712,8 @@ switch ($func)
 
      $changed |= trackers_delete_dependancy($group_id,
 					    $item_id,
-					    sane_all("item_depends_on"),
-					    sane_all("item_depends_on_artifact"),
+					    $item_depends_on,
+					    $item_depends_on_artifact,
 					    $changes);
 	
      if ($changed)
@@ -767,7 +765,7 @@ switch ($func)
        }
 
      spam_flag($item_id, 
-	       sane_get("comment_internal_id"), 
+	       $comment_internal_id,
 	       $spamscore,
 	       $group_id);
 	
@@ -802,7 +800,7 @@ switch ($func)
        }
 	
      spam_unflag($item_id, 
-		 sane_get("comment_internal_id"),
+		 $comment_internal_id,
 		 ARTIFACT,
 		 $group_id);
 
@@ -870,6 +868,3 @@ switch ($func)
    }
 
 }
-
-
-?>

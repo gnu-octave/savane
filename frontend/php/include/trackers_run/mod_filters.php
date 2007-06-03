@@ -146,5 +146,3 @@ if (user_isloggedin()) {
 }
 
 bug_footer(array());
-
-?>

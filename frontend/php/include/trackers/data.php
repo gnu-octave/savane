@@ -476,7 +476,9 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false, $ch
       # If only active field
       if ($active_only)
 	{
-	  if ($checked)
+# FIXME: does not handle the case where $checked has multiple values
+# Check eg export.php:586. It's not clear what $checked exactly means...
+	  if ($checked and !is_array($checked))
 	    {
 	      $status_cond = "AND  (status IN ('A','P') OR value_id=?) ";
 	      $status_cond_params = array($checked);

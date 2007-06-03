@@ -21,13 +21,14 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 register_globals_off();
 
 # We need to do this step in a page separated from the export.php page because
 # ARTIFACT must be set to task
-$group_id = sane_all("group_id");
-$group = sane_all("group_name");
-$group_name = $group;
+extract(sane_import('get', array('from', 'export_id')));
 
 if (!$group_id)
 { exit_no_group(); }
@@ -39,16 +40,12 @@ if (!member_check(0, $group_id))
   exit_error(_("Data Export is currently restricted to projects members"));
 }
 
-$from = sane_get("from");
-$export_id = sane_get("export_id");
-
 if (!$from || !$export_id)
 {
   exit_missing_param();
 }
 
-$sql = "SELECT * FROM trackers_export WHERE export_id='$export_id' LIMIT 1";
-$result = db_query($sql);
+$result = db_execute("SELECT * FROM trackers_export WHERE export_id=? LIMIT 1", array($export_id));
 if (db_numrows($result) < 1)
 {
   # No such export id or not in 'I' status
@@ -66,7 +63,7 @@ $vfl = array();
 # We put it in a directory for each group and user, so it is lighter for
 # the filesystem and it will allow us to implement .htaccess restrictions
 # on some directories
-$export_url = $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."export/$group_name/".user_getname()."/".$export_id.".xml";
+$export_url = $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."export/$group/".user_getname()."/".$export_id.".xml";
 
 $vfl['summary'] = 'Data Export #'.$export_id.' ('.$from.')';
 
@@ -86,7 +83,7 @@ Once the job will be done, it will be available at:
 
 Closing this task will not remove the job. To remove the job, '.user_getname(0, 1).' must go at: 
 
-  <'.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].$from.'/export.php?group='.$group_name.'>
+  <'.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].$from.'/export.php?group='.$group.'>
 
 
 = Job Details =
@@ -113,7 +110,7 @@ if ($requested_hour && $requested_day)
   $vfl['planned_close_date'] = (date("Y")+2)."-".strftime("%m-%d", $timestamp);
 }
 
-$address = "";
+$address = '';
 $item_id = trackers_data_create_item($group_id,$vfl,$address);
 
 # Send email notification
@@ -124,9 +121,7 @@ $address .= $additional_address;
 trackers_mail_followup($item_id, $address, false);
 
 # Update the export table to make it aware of the relevant task
-$sql = "UPDATE trackers_export SET status='P', task_id='$item_id' WHERE export_id='$export_id' LIMIT 1";
-$result = db_query($sql);
+$result = db_execute("UPDATE trackers_export SET status='P', task_id=? WHERE export_id=? LIMIT 1",
+		     array($item_id, $export_id));
 
 session_redirect($GLOBALS['sys_home'].$from."/export.php?group=".rawurlencode($group)."&feedback=".rawurlencode(sprintf(_("Export job #%s registered, task #%s created"), $export_id, $item_id)));
-
-?>

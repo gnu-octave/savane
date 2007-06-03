@@ -23,7 +23,10 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Pre was already loaded
+#input_is_safe();
+#mysql_is_safe();
+
+# init.php was already loaded
 register_globals_off();
 
 extract(sane_import('get', array('file_id', 'item_file_id')));
@@ -41,15 +44,14 @@ if (empty($file_id) or !ctype_digit($file_id))
 # check privacy of the item this file is attached to and reject access by
 # non-authorized users
 
-$sql="SELECT trackers_file.item_id, ".ARTIFACT.".group_id FROM trackers_file, ".ARTIFACT." WHERE trackers_file.file_id='$file_id' AND ".ARTIFACT.".bug_id=trackers_file.item_id";
-$result=db_query($sql);
+$result = db_execute("SELECT trackers_file.item_id, ".ARTIFACT.".group_id FROM trackers_file, ".ARTIFACT." WHERE trackers_file.file_id=? AND ".ARTIFACT.".bug_id=trackers_file.item_id", array($file_id));
                                                                                 
 if ($result && db_numrows($result) > 0) {
   $item_id  = db_result($result,0,'item_id');
   $group_id = db_result($result,0,'group_id');
 }
-$sql="SELECT privacy FROM ".ARTIFACT." WHERE bug_id='$item_id' AND group_id='$group_id'";
-$result=db_query($sql);
+$result = db_execute("SELECT privacy FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+		     array($item_id, $group_id));
 
 # print "FID = ".$file_id." ITID = ".$item_id." UID = ".user_getid()."\n";
                                                                                 
@@ -61,8 +63,8 @@ if (db_numrows($result) > 0) {
 }
 # ---
 
-$sql="SELECT filename,filesize FROM trackers_file WHERE file_id='$file_id' LIMIT 1";
-$result=db_query($sql);
+$result = db_execute("SELECT filename,filesize FROM trackers_file WHERE file_id=? LIMIT 1",
+		     array($file_id));
 
 if ($result && db_numrows($result) > 0) 
 {
@@ -87,5 +89,3 @@ else
 {
   exit_error(_("Couldn't find attached file")." (file #$file_id)");
 }
-
-?>

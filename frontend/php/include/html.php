@@ -633,7 +633,7 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 
   $checked_count=count($checked_array);
   #      print '-- '.$checked_count.' --';
-  $return .= '
+  $return = '
 		<SELECT NAME="'.$name.'" MULTIPLE SIZE="'.$size.'">';
   /*
 		Put in the Any box

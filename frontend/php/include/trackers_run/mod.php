@@ -24,6 +24,8 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
 
 require_once(dirname(__FILE__).'/../trackers/show.php');
 require_once(dirname(__FILE__).'/../trackers/format.php');
@@ -792,5 +794,3 @@ if (db_numrows($result) > 0)
 }
 
 trackers_footer(array());
-
-?>

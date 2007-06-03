@@ -116,18 +116,12 @@ if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
 # Functions to access user input
 ###########################################################
 
-# Return the input as-is, without unwanted magic_quotes_gpc effect
-function stripslashesgpc($val)
-{
-
-}
-
-
 // Check the existence of a series of input parameters, then return an
 // array suitable for extract()
 // Ex: extract(sane_import('post',
 //       array('insert_group_name', 'rand_hash',
 //             'form_full_name', 'form_unix_name')));
+// Note: there's another import function to clean-up in trackers/general.php
 function sane_import($method, $names) {
   if ($method == 'get')
     $input_array =& $_GET;

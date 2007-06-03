@@ -21,13 +21,13 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 register_globals_off();
 
 # We need to do this step in a page separated from the export.php page because
 # ARTIFACT must be set to task
-$group_id = sane_all("group_id");
-$group = sane_all("group_name");
-$group_name = $group;
 
 if (!$group_id)
 { exit_no_group(); }
@@ -39,9 +39,7 @@ if (!member_check(0, $group_id))
   exit_error(_("Data Export is currently restricted to projects members"));
 }
 
-$from = sane_get("from");
-$export_id = sane_get("export_id");
-$task_id = sane_get("task_id");
+extract(sane_import('get', array('from', 'export_id', 'task_id')));
 
 if (!$from || !$export_id || !$task_id)
 {
@@ -61,12 +59,12 @@ trackers_data_add_history('details',
 			  $task_id,
 			  false,
 			  'task');
-$changes['details']['add'] = stripslashes($comment);
+$changes['details']['add'] = $comment;
 $changes['details']['type'] = '100';
 
 # Harshly close the relevant task
 $now = time();
-$result = db_query("UPDATE task SET status_id='3',close_date='$now' WHERE bug_id='$task_id' LIMIT 1");  
+$result = db_execute("UPDATE task SET status_id='3',close_date=? WHERE bug_id=? LIMIT 1", array($now, $task_id));
 $changes['status_id']['add'] = 'Closed';
 
 # Send a mail notification
@@ -77,5 +75,3 @@ $address .= $additional_address;
 trackers_mail_followup($task_id, $address, $changes,false,'task');
 
 session_redirect($GLOBALS['sys_home'].$from."/export.php?group=".rawurlencode($group)."&feedback=".rawurlencode(sprintf(_("Export job #%s deleted, task #%s closed"), $export_id, $task_id)));
-
-?>

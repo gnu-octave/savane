@@ -10,7 +10,6 @@
 #  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
 #
-#
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -653,6 +652,9 @@ function trackers_extract_field_list($post_method=true)
   reset($superglobal);
   while ( list($key, $val) = each($superglobal))
     {
+      if (get_magic_quotes_gpc())
+	$val = stripslashes($val);
+
       if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
 	{
 	  // Must build the date field key.
@@ -1858,6 +1860,9 @@ function trackers_build_match_expression($field, &$to_match)
   $res = db_execute("SHOW COLUMNS FROM ".ARTIFACT." LIKE ?", array($field));
   $type = db_result($res,0,'Type');
 
+  $expr = '';
+  $params = array();
+
   #echo "<br />DBG '$field' field type = $type";
 
   if (preg_match('/text|varchar|blob/i', $type))
@@ -1866,7 +1871,10 @@ function trackers_build_match_expression($field, &$to_match)
       # If it is sourrounded by /.../ the assume a regexp
       # else transform into a series of LIKE %word%
       if (preg_match('/\/(.*)\#/', $to_match, $matches))
-	$expr = "$field RLIKE '".$matches[1]."' ";
+	{
+	  $expr = "$field RLIKE ? ";
+	  $params[] = $matches[1];
+	}
       else
 	{
 	  $words = preg_split('/\s+/', $to_match);
@@ -1874,7 +1882,8 @@ function trackers_build_match_expression($field, &$to_match)
 	  while ( list($i,$w) = each($words))
 	    {
 	      #echo "<br />DBG $i, $w, $words[$i]";
-	      $words[$i] = "$field LIKE '%$w%'";
+	      $words[$i] = "$field LIKE ?";
+	      $params[] = '%$w%';
 	    }
 	  $expr = join(' AND ', $words);
 	}
@@ -1887,7 +1896,8 @@ function trackers_build_match_expression($field, &$to_match)
       # else assume an equality
       if (preg_match('/\/(.*)\#/', $to_match, $matches))
 	{
-	  $expr = "$field RLIKE '".$matches[1]."' ";
+	  $expr = "$field RLIKE ? ";
+	  $params[] = $matches[1];
 	}
       else
 	{
@@ -1896,7 +1906,8 @@ function trackers_build_match_expression($field, &$to_match)
 	    {
 	      # It's < or >,  = and a number then use as is
 	      $matches[2] = (string)((int)$matches[2]);
-	      $expr = "$field ".$matches[1]." '".$matches[2]."' ";
+	      $expr = "$field ".$matches[1]." ? ";
+              $params[] = $matches[2];
 	      $to_match = $matches[1].' '.$matches[2];
 
 	    }
@@ -1905,7 +1916,9 @@ function trackers_build_match_expression($field, &$to_match)
 	      # it's a range number1-number2
 	      $matches[1] = (string)((int)$matches[1]);
 	      $matches[2] = (string)((int)$matches[2]);
-	      $expr = "$field >= '".$matches[1]."' AND $field <= '". $matches[2]."' ";
+	      $expr = "$field >= ? AND $field <= ? ";
+	      $params[] = $matches[1];
+	      $params[] = $matches[2];
 	      $to_match = $matches[1].'-'.$matches[2];
 
 	    }
@@ -1913,7 +1926,8 @@ function trackers_build_match_expression($field, &$to_match)
 	    {
 	      # It's a number so use  equality
 	      $matches[1] = (string)((int)$matches[1]);
-	      $expr = "$field = '".$matches[1]."'";
+	      $expr = "$field = ? ";
+              $params[] = $matches[1];
 	      $to_match = $matches[1];
 
 	    }
@@ -1933,7 +1947,8 @@ function trackers_build_match_expression($field, &$to_match)
       # else assume an equality
       if (preg_match('/\/(.*)\#', $to_match, $matches))
 	{
-	  $expr = "$field RLIKE '".$matches[1]."' ";
+	  $expr = "$field RLIKE ? ";
+          $params[] = $matches[1];
 	}
       else
 	{
@@ -1943,25 +1958,27 @@ function trackers_build_match_expression($field, &$to_match)
 	    {
 	      # It's < or >,  = and a number then use as is
 	      $matches[2] = (string)((float)$matches[2]);
-	      $expr = "$field ".$matches[1]." '".$matches[2]."' ";
+	      $expr = "$field ".$matches[1]." ? ";
+	      $params[] = $matches[2];
 	      $to_match = $matches[1].' '.$matches[2];
-
 	    }
 	  else if (preg_match("/\s*($flt_reg)\s*-\s*($flt_reg)/", $to_match, $matches) )
 	    {
 	      # it's a range number1-number2
 	      $matches[1] = (string)((float)$matches[1]);
 	      $matches[2] = (string)((float)$matches[2]);
-	      $expr = "$field >= '".$matches[1]."' AND $field <= '". $matches[2]."' ";
+	      $expr = "$field >= ? AND $field <= $matches[2] ";
+	      $params[] = $matches[1];
+	      $params[] = $matches[2];
 	      $to_match = $matches[1].'-'.$matches[2];
-
 	    }
 	  else if (preg_match("/\s*($flt_reg)/", $to_match, $matches))
 	    {
 
 	      # It's a number so use  equality
 	      $matches[1] = (string)((float)$matches[1]);
-	      $expr = "$field = '".$matches[1]."'";
+	      $expr = "$field = ? ";
+	      $params[] = $matches[1];
 	      $to_match = $matches[1];
 	    }
 	  else
@@ -1976,11 +1993,13 @@ function trackers_build_match_expression($field, &$to_match)
   else
     {
       # All the rest (???) use =
-      $expr = "$field = '$to_match'";
+      $expr = "$field = ?";
+      $params[] = $to_match;
     }
 
   #echo "<br />DBG expr to match for '$field' = $expr";
-  return ' ('.$expr.') ';
+  $expr = ' ('.$expr.') ';
+  return array($expr, $params);
 
 }
 
