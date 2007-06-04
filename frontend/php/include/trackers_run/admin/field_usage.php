@@ -132,7 +132,7 @@ if ($group_id && user_ismember($group_id,'A')) {
       if (trackers_data_is_select_box($field))
 	{
 	  # Only selectboxes can have values configured
-	  $closetag = ' &nbsp;&nbsp; <span class="smaller">('.utils_link($GLOBALS['sys_home'].ARTIFACT.'/admin/field_values.php?group='.$group_name.'&amp;list_value=1&amp;field='.$field, _("Jump to this field values")).')</span>';
+	  $closetag = ' &nbsp;&nbsp; <span class="smaller">('.utils_link($GLOBALS['sys_home'].ARTIFACT.'/admin/field_values.php?group='.$group.'&amp;list_value=1&amp;field='.$field, _("Jump to this field values")).')</span>';
 	}
       $closetag .= "</h2>\n";
 

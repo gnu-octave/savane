@@ -262,11 +262,13 @@ $rows_without_history = db_numrows($result_without_history);
 // rename a user. This has nothing to do with the 1.0.6 upgrade - we
 // need to convert the project history to machine-readable data.
 
+$history_is_flawed = false;
 if ($rows_without_history != $rows)
 {
   # If number of rows differ, assume that history is flawed.
   $result = $result_without_history;
   $rows = $rows_without_history;
+  $history_is_flawed = true;
 }
 
 
@@ -281,7 +283,10 @@ if ($rows_without_history != $rows)
 
       $content .= '<li class="'.utils_get_alt_row_color($j).'">';
       $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'. db_result($result,$i,'unix_group_name') .'/">'.db_result($result,$i,'group_name').'</a><br />';
-      $date_joined = db_result($result, $i, 'date');
+      if ($history_is_flawed)
+	$date_joined = null;
+      else
+	$date_joined = db_result($result, $i, 'date');
       if ($date_joined)
 	{
 # If the group history is flawed (site install problem), the

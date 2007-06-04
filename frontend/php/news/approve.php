@@ -25,7 +25,7 @@ require_once('../include/sendmail.php');
 #mysql_is_safe();
 
 extract(sane_import('all',
-  array('group_id', 'group', 'id',
+  array('id',
 	'update', 'form_id',
 	'post_changes', 'summary', 'details',
 	'status', 'approve', 'for_group_id')));
@@ -107,7 +107,7 @@ if ($group_id && member_check(0, $group_id, 'N3'))
 	     $from = user_getrealname(db_result($res, 0, 'submitted_by'),1).' <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
 	     
 	     // Run stripslashes to avoid slashes added by magic quotes and 
-	     sendmail_mail($from, $to, $summary, stripslashes($details), $group_name, 'news');
+	     sendmail_mail($from, $to, $summary, stripslashes($details), $group, 'news');
 	   }
         }
 
@@ -312,7 +312,7 @@ if ($group_id && member_check(0, $group_id, 'N3'))
 	    {
 	      print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id']){ print ' class="boxhighlight"'; }
-            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='.$group_name.'&amp;id='.db_result($result,$i,'id').'">';
+            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='.$group.'&amp;id='.db_result($result,$i,'id').'">';
 
               if ($group_id == $GLOBALS['sys_group_id']) 
                 { print group_getname(db_result($result,$i,'group_id')).' - '; }
@@ -350,7 +350,7 @@ if ($group_id && member_check(0, $group_id, 'N3'))
 	  for ($i=0; $i<$rows; $i++) {
 	    print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id']){ print ' class="boxhighlight"'; }
-            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='.$group_name.'&amp;id='.db_result($result,$i,'id').'">';
+            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='.$group.'&amp;id='.db_result($result,$i,'id').'">';
 
               if ($group_id == $GLOBALS['sys_group_id']) 
                 { print group_getname(db_result($result,$i,'group_id')).' - '; }

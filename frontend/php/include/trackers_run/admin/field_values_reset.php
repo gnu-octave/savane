@@ -20,6 +20,10 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('post', array('field', 'cancel', 'confirm')));
 
 if ($group_id && user_ismember($group_id,'A'))
 {
@@ -48,7 +52,8 @@ if ($group_id && user_ismember($group_id,'A'))
     }
   else
     {
-      db_query("DELETE FROM ".ARTIFACT."_field_value WHERE group_id='".addslashes($group_id)."' AND bug_field_id = '".trackers_data_get_field_id($field)."'");
+      db_execute("DELETE FROM ".ARTIFACT."_field_value WHERE group_id=? AND bug_field_id = ?",
+		 array($group_id, trackers_data_get_field_id($field)));
       session_redirect($GLOBALS['sys_home'].ARTIFACT."/admin/field_values.php?group_id=$group_id&field=$field&list_value=1");
     }
 
@@ -66,6 +71,3 @@ else
     }
 
 }
-
-
-?>

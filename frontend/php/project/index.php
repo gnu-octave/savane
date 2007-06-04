@@ -31,4 +31,4 @@ require_once('../include/init.php');
 
 register_globals_off();
 
-header ("Location: ".$GLOBALS['sys_home']."projects/".$group_name);
+header ("Location: ".$GLOBALS['sys_home']."projects/".$group);

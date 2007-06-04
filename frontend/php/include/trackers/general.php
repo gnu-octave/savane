@@ -57,7 +57,7 @@ function trackers_include()
 # needs to present some standard page inside a non standard location
 function trackers_bastardinclude($page, $is_admin_page='0')
 {
-  unset($pre);
+  $pre = '';
   if ($is_admin_page)
     {
       $pre = "../";

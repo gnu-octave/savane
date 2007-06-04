@@ -70,7 +70,7 @@ if (!$squad_id)
 
 	      if ($valid && db_numrows(db_execute("SELECT user_id FROM user WHERE "
 						  . "user_name LIKE ?",
-						  array($group_name.'-'.$form_loginname))) > 0)
+						  array($groupx.'-'.$form_loginname))) > 0)
 		{
 		  fb(_("That username already exists."),1);
 		  $valid = false;
@@ -78,7 +78,7 @@ if (!$squad_id)
 	      
 	      if ($valid && db_numrows(db_execute("SELECT group_list_id FROM mail_group_list WHERE "
 						  . "list_name LIKE ?",
-						  array($group_name.'-'.$form_loginname))) > 0)
+						  array($group.'-'.$form_loginname))) > 0)
 		{
 		  fb(_("That username is blocked to avoid conflict with mailing-list addresses."),1);
 		  $valid = false;
@@ -90,7 +90,7 @@ if (!$squad_id)
                  # If at this point parameters are still valid, create the squad
 		  $result = db_autoexecute('user',
                     array(
-                      'user_name' => strtolower($group_name."-".$form_loginname),
+                      'user_name' => strtolower($group."-".$form_loginname),
 		      'user_pw' => 'ignored',
 		      'realname' => $form_realname,
 		      'email' => $GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'],
@@ -181,7 +181,7 @@ if (!$squad_id)
       print form_header($_SERVER["PHP_SELF"].'#form', $form_id);
       print form_input("hidden", "group_id", $group_id);
       print '<p><span class="preinput">'._("Squad Login Name:").'</span><br />&nbsp;&nbsp;';
-      print $group_name."-".form_input("text", "form_loginname", $form_loginname).'</p>';
+      print $group."-".form_input("text", "form_loginname", $form_loginname).'</p>';
       
       print '<p><span class="preinput">'._("Real Name:").'</span><br />&nbsp;&nbsp;';
       print form_input("text", "form_realname", $form_realname).'</p>'; 
@@ -356,7 +356,7 @@ else
   ## PERMISSIONS LINK
   print '<h3>'._("Setting permissions").'</h3>';
 
-  print '<a href="userperms.php?group='.$group_name.'#'.db_result($result, 0, 'user_name').'">'._("Go the the 'Set Permissions' page").'</a>';
+  print '<a href="userperms.php?group='.$group.'#'.db_result($result, 0, 'user_name').'">'._("Go the the 'Set Permissions' page").'</a>';
 
 
 

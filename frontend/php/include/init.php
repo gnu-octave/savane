@@ -308,6 +308,9 @@ if (!session_issecure() && isset($_COOKIE['redirect_to_https']) && $GLOBALS['sys
        in case of a project page
 **************************************************************/
 
+extract(sane_import('get', array('comingfrom'))); #cookbook
+extract(sane_import('request', array('group', 'group_id')));
+
 # defines the artifact we are using
 if(!defined('ARTIFACT'))
      define('ARTIFACT', get_module_include_dir($_SERVER['REQUEST_URI'], 1));
@@ -325,8 +328,8 @@ if ((ARTIFACT == "bugs" ||
     && !empty($_SERVER['QUERY_STRING'])
     && ctype_digit($_SERVER['QUERY_STRING']))
 {
-  sane_set("item_id", $_SERVER['QUERY_STRING']);
-  sane_set("func", "detailitem");
+  $item_id = $_SERVER['QUERY_STRING'];
+  $func = 'detailitem';
 }
 
 
@@ -340,12 +343,13 @@ user_guess();
 
 # if we got an item_id and no group_id we need to get the appropriate
 # group_id
-if (!isset($group_id) && !isset($group_name) && isset($item_id))
+if (!isset($group_id) && !isset($group) && isset($item_id))
 {
   $result = db_execute("SELECT group_id FROM ".ARTIFACT." WHERE bug_id=?", array($item_id));
   if (db_numrows($result))
     {  
-      sane_set("group_id", db_result($result,0,'group_id')); }
+      $group_id = db_result($result,0,'group_id');
+    }
   else
     {
       exit_error(_("Item not found"));
@@ -356,9 +360,9 @@ if (!isset($group_id) && !isset($group_name) && isset($item_id))
   # it actually belongs to the system group.
   if (ARTIFACT == 'cookbook' &&
       $group_id == $sys_group_id &&
-      sane_get("comingfrom"))
+      $comingfrom && ctype_digit($comingfrom))
     {
-      sane_set("group_id", sane_get("comingfrom"));
+      $group_id = $comingfrom;
     }
 
 }
@@ -371,30 +375,29 @@ if (!isset($group_id) && !isset($group_name) && isset($forum_id))
   $result = db_execute("SELECT group_id FROM forum_group_list WHERE group_forum_id=?",
 		       array($forum_id));
   if ($result && db_numrows($result) > 0)
-    {  sane_set("group_id", db_result(($result),0,'group_id')); }
+    {  $group_id = db_result(($result),0,'group_id'); }
 }
 
 # if we got a msg_id and no group_id, we need to get the appropriate
 # group_id
 # (FIXME: in the future it could follow the naming scheme of trackers)
-if (!isset($group_id) && !isset($group_name) && isset($msg_id))
+if (!isset($group_id) && isset($msg_id))
 {
   $result = db_execute("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id=?",
 		       array($msg_id));
   if ($result)
-    {  sane_set("group_id", db_result(($result),0,'group_id')); }
+    {  $group_id = db_result(($result),0,'group_id'); }
 }
 
 # defines group_id if group is set
 # defines group_name if group_id is set
-unset($res_grp);
+$res_grp = null;
 if (isset($group) && !isset($group_id))
 {
   $res_grp = db_execute("SELECT group_id,status FROM groups WHERE unix_group_name=?",
 			array($group));
   if (db_numrows($res_grp) > 0) {
-    sane_set("group_id", db_result($res_grp,0,'group_id'));
-    sane_set("group_name", $group);
+    $group_id = db_result($res_grp,0,'group_id');
   }
 }
 elseif (isset($group_id))
@@ -402,7 +405,7 @@ elseif (isset($group_id))
   $res_grp = db_execute("SELECT unix_group_name,status FROM groups WHERE group_id=?",
 			array($group_id));
   if (db_numrows($res_grp) > 0)
-    sane_set("group_name", db_result($res_grp,0,'unix_group_name'));
+    $group = db_result($res_grp,0,'unix_group_name');
 }
 
 # See also $group_name definition in sane.php

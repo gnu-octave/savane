@@ -28,6 +28,8 @@
 #input_is_safe();
 #mysql_is_safe();
 
+require_once('../include/trackers/cookbook.php');
+
 extract(sane_import('request', array('item_id', 'printer')));
 # If we are a comingfrom=$group_id defined, it means that we want to show a
 # recipe from the system group as if it were from the current group
@@ -141,7 +143,7 @@ if ($comingfrom)
 
 ##
 # Print the recipe
-unset($category);
+$category = '';
 if (db_result($result,0,'category_id') != '100')
 {
   $category = ", ".trackers_field_display('category_id',
@@ -231,7 +233,7 @@ if (ARTIFACT == 'cookbook')
 	{
 	  if (db_result($context_result, 0, $case."_".$field) == 1)
 	    {
-	      $case_result[$case] .= $label.", ";
+	      $case_result[$case] = (isset($case_result[$case])?$case_result[$case]:'') . $label . ", ";
 
 	      # Keep in memory whether the user is the targetted audience
 	      if ($case == 'audience' && $field == AUDIENCE)

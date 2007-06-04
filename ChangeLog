@@ -1,3 +1,9 @@
+2007-06-05  Sylvain Beucler  <beuc@beuc.net>
+
+	* I essentially finished the clean-up (PHP warnings,
+	register_globals=off, magic_quotes=off, mysql sanitizing,
+	etc.). That puts an end to the freeze started 6 months ago.
+
 2007-05-29  Sylvain Beucler  <beuc@beuc.net>
 
 	* frontend/php/search/index.php: removed base_host support. The

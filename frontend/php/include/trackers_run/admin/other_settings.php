@@ -22,6 +22,11 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
+extract(sane_import('post', array('submit', 'form_preamble')));
+
 require_directory("project");
 
 $is_admin_page='y';
@@ -41,17 +46,11 @@ if ($submit)
 {
 
   group_add_history ('Changed Tracking System Settings','',$group_id);
-  #blank out any invalid email addresses
-  if ($email_addresses && !validate_emails($email_addresses) )
-    {
-      $email_addresses='';
-      fb(_("Email Address Appeared Invalid"));
-    }
 
   # Update the Bug table now
-  $result=db_query('UPDATE groups SET '
-		   .ARTIFACT."_preamble='".htmlspecialchars($form_preamble)."' "
-		   ."WHERE group_id=$group_id");
+  $result = db_execute('UPDATE groups SET '.ARTIFACT.'_preamble=? '
+		       .'WHERE group_id=?',
+		       array(htmlspecialchars($form_preamble), $group_id));
 
   if (!$result)
     {
@@ -75,7 +74,7 @@ if ($submit)
 
 trackers_header_admin(array ('title'=>_("Other Settings")));
 
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 if (db_numrows($res_grp) < 1)
 {
   exit_no_group();
@@ -95,6 +94,3 @@ echo '
 </form>';
 
 trackers_footer(array());
-
-?>
-

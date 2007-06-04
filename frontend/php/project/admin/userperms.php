@@ -416,7 +416,7 @@ if ($update)
 site_project_header(array('title'=>_("Set Permissions"),'group'=>$group_id,'context'=>'ahome'));
 
 print form_header($_SERVER['PHP_SELF']).
-form_input("hidden", "group", $group_name);
+form_input("hidden", "group", $group);
 
 ########################### POSTING RESTRICTIONS
 # Exists also in trackers config (missing for news).

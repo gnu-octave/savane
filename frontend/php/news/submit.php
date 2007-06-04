@@ -85,7 +85,7 @@ if ($update)
 
       form_clean($form_id);
 
-      session_redirect($GLOBALS['sys_home'].'news/?group='.$group_name.'&feedback='.urlencode($feedback));
+      session_redirect($GLOBALS['sys_home'].'news/?group='.$group.'&feedback='.urlencode($feedback));
     }
 }
 

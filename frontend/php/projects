@@ -48,7 +48,7 @@ if (db_numrows($res_grp) < 1) {
 } else {
 
 	# set up the group_id
-        $group_name=$pathinfo;
+        $group=$pathinfo;
 	$group_id=db_result($res_grp,0,'group_id');
 
 	$project=new Project($group_id);

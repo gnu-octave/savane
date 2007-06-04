@@ -43,17 +43,17 @@ if (!$download) {
 
   print '<p>'._("Below is the content of this project's keyring. These are the successfully registered keys of project members.").'</p>';
   print nl2br(htmlspecialchars($keyring));
-  print '<p>'.sprintf(_("You can %sdownload the keyring%s and import it with the command %s"), '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group_name.'&amp;download=1">', '</a>', '<em>gpg --import &lt;file&gt;</em>').'</p>';
+  print '<p>'.sprintf(_("You can %sdownload the keyring%s and import it with the command %s"), '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group.'&amp;download=1">', '</a>', '<em>gpg --import &lt;file&gt;</em>').'</p>';
 
   site_project_footer(array());
 
 } else {
 
 # Download the keyring
-  $result = db_execute("SELECT keyring FROM groups_gpg_keyrings WHERE unix_group_name=? LIMIT 1", array($group_name));
+  $result = db_execute("SELECT keyring FROM groups_gpg_keyrings WHERE unix_group_name=? LIMIT 1", array($group));
 
   header('Content-Type: application/pgp-keys');
-  header('Content-Disposition: filename='.$group_name.'-keyring.gpg');
-  header('Content-Description: GPG Keyring of the project '.$group_name);
+  header('Content-Disposition: filename='.$group.'-keyring.gpg');
+  header('Content-Description: GPG Keyring of the project '.$group);
   print db_result($result,0,'keyring');
 }

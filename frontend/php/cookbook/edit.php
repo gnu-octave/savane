@@ -25,4 +25,5 @@
 
 # This page will behave like index does for most trackers
 require_once('../include/init.php');
-include trackers_bastardinclude("index");
+require_once('../include/trackers/general.php');
+require(trackers_bastardinclude("index"));

@@ -480,6 +480,7 @@ if ($chunksz > 150 &&
 
 # No limit on sober output, we want all recipes
 $limit = '';
+$limit_params = array();
 if (!$sober)
 {
   $limit = " LIMIT ?,?";
@@ -917,7 +918,7 @@ if ($browse_preamble)
 
 $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get" name="bug_form">';
 $form = '
-          <input type="hidden" name="group" value="'.$group_name.'" />
+          <input type="hidden" name="group" value="'.$group.'" />
           <input type="hidden" name="func" value="'.$func.'" />
           <input type="hidden" name="set" value="custom" />
           <input type="hidden" name="msort" value="'.$msort.'" />
@@ -956,7 +957,7 @@ else
 }
 
 # Start building the URL that we use to for hyperlink in the form
-$url = $GLOBALS['sys_home'].ARTIFACT."/?group=$group_name&amp;func=".$func."&amp;set=$set&amp;msort=$msort";
+$url = $GLOBALS['sys_home'].ARTIFACT."/?group=$group&amp;func=".$func."&amp;set=$set&amp;msort=$msort";
 if ($set == 'custom')
      $url .= $pref_stg;
      else
@@ -1206,7 +1207,7 @@ print html_show_displayoptions($form,$form_opening,$form_submit);
 if ($digest)
 {
   print '<form action="'.$_SERVER['PHP_SELF'].'" method="get">
-<input type="hidden" name="group" value="'.$group_name.'" />
+<input type="hidden" name="group" value="'.$group.'" />
 <input type="hidden" name="func" value="digestselectfield" />
 ';
 
@@ -1242,5 +1243,3 @@ else
 }
 
 trackers_footer(array());
-
-?>

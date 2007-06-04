@@ -142,8 +142,8 @@ if (isset($submit_last_release)) {
 	fclose($fopened);
 
 	echo '<h3 class="error">'._("UPDATED: now the specified version is highlighted").'</h3>';
-	printf (_("Note that you can also add a #%s to the HTML links to your filelist, as %s"),$pkg.$version,'<a href="'.$GLOBALS['sys_home'].'files/?group='.$group_name.'#'.$pkg.$version.'">http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'files/?group='.$group_name.'#'.$pkg.$version.'</a>');
-	printf ('<p>'._("Alternatively, you can make a link to %s").'</p>', '<a href="'.$GLOBALS['sys_home'].'files/?group='.$group_name.'#'.pkg.'latest">http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'files/?group='.$group_name.'#'.$pkg.'latest</a>');
+	printf (_("Note that you can also add a #%s to the HTML links to your filelist, as %s"),$pkg.$version,'<a href="'.$GLOBALS['sys_home'].'files/?group='.$group.'#'.$pkg.$version.'">http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'files/?group='.$group_name.'#'.$pkg.$version.'</a>');
+	printf ('<p>'._("Alternatively, you can make a link to %s").'</p>', '<a href="'.$GLOBALS['sys_home'].'files/?group='.$group.'#'.pkg.'latest">http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'files/?group='.$group_name.'#'.$pkg.'latest</a>');
 	echo '<h3>'._("How does it work, how to do this without a web browser?").'</h3>
 	'._("It just creates a nice LATEST_RELEASE_IS file in the package dir with the version name as content.").'
 	<p>'._("You can do this job exactly by making a similar file and upload it:").'<br />

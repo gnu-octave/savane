@@ -51,7 +51,7 @@ if ($detailed)
 # %s currently is "basic" or "detailed"
   $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
   $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
-print html_show_displayoptions(sprintf(_("Browse with the %s memberlist."), '<select name="detailed"><option value="0">'._("basic").'</option><option value="1"'.$checked.'>'._("detailed").'</option></select>').'<input type="hidden" name="group" value="'.$group_name.'" />',
+print html_show_displayoptions(sprintf(_("Browse with the %s memberlist."), '<select name="detailed"><option value="0">'._("basic").'</option><option value="1"'.$checked.'>'._("detailed").'</option></select>').'<input type="hidden" name="group" value="'.$group.'" />',
 			       $form_opening,
 			       $form_submit);
 
@@ -236,7 +236,7 @@ print "\t</table>";
 
 if ($project->getGPGKeyring())
 {
-  print '<p>'.sprintf(_('You may also be interested in the %sGPG Keyring of this project%s'), '<a href="memberlist-gpgkeys.php?group='.$group_name.'">','</a>').'</p>';
+  print '<p>'.sprintf(_('You may also be interested in the %sGPG Keyring of this project%s'), '<a href="memberlist-gpgkeys.php?group='.$group.'">','</a>').'</p>';
 
 }
 

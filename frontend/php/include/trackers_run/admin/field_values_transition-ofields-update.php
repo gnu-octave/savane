@@ -21,8 +21,22 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 $is_admin_page='y';
 
+extract(sane_import('request', array('transition_id')));
+extract(sane_import('post', array('update',
+'form_category_id',
+'form_resolution_id',
+'form_privacy',
+'form_percent_complete',
+'form_assigned_to',
+'form_status_id',
+'form_discussion_lock',
+'form_comment_type_id',
+)));
 
 if ($group_id && member_check(0,$group_id,'A')) 
 {
@@ -31,9 +45,10 @@ if ($group_id && member_check(0,$group_id,'A'))
 
   if (!$transition_id) 
     { exit_missing_param(); }
-  $result = db_query("SELECT field_id,from_value_id,to_value_id ".
-		     "FROM trackers_field_transition ".
-		     "WHERE group_id='".addslashes($group_id)."' AND artifact='".ARTIFACT."' AND transition_id='".addslashes($transition_id)."'");
+  $result = db_execute("SELECT field_id,from_value_id,to_value_id ".
+		       "FROM trackers_field_transition ".
+		       "WHERE group_id=? AND artifact='".ARTIFACT."' AND transition_id=?",
+		       array($group_id, $transition_id));
   if (!db_numrows($result)) 
     { exit_error(_("Transition not found")); }
   
@@ -41,8 +56,8 @@ if ($group_id && member_check(0,$group_id,'A'))
   $field = trackers_data_get_field_name($field_id);
 
   $registered = array();
-  $sql = trackers_transition_get_other_field_update($transition_id);
-  while ($entry = db_fetch_array($sql))
+  $result2 = trackers_transition_get_other_field_update($transition_id);
+  while ($entry = db_fetch_array($result2))
       {
 	$registered[$entry['update_field_name']] = $entry['update_value_id'];
       }
@@ -64,7 +79,7 @@ if ($group_id && member_check(0,$group_id,'A'))
 		{
 		  # If there is no entry in the database, set the registered array entry
 		  # to 0 so it looks like the form entry "no update"
-		  if (!$registered[$field_name])
+		  if (empty($registered[$field_name]))
 		    { $registered[$field_name] = 0; }
 
 		  # If we get here, we found a field that could need to be updated.
@@ -84,7 +99,7 @@ if ($group_id && member_check(0,$group_id,'A'))
 	    }
 	}
       # After update
-      session_redirect($GLOBALS['sys_home'].ARTIFACT.'/admin/field_values.php?group='.$group_name.'&list_value=1&field='.$field.'#registered');
+      session_redirect($GLOBALS['sys_home'].ARTIFACT.'/admin/field_values.php?group='.$group.'&list_value=1&field='.$field.'#registered');
     }
 
 # ################################  Display the UI form
@@ -106,7 +121,7 @@ if ($group_id && member_check(0,$group_id,'A'))
 
 # here begin the form  
 print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
-<input type="hidden" name="group" value="'.$group_name.'" />
+<input type="hidden" name="group" value="'.$group.'" />
 <input type="hidden" name="transition_id" value="'.$transition_id.'" />
 ';
   
@@ -116,6 +131,7 @@ print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
  
   print html_build_list_table_top($title_arr);
 
+  $i = 0;
   while ($field_name = trackers_list_all_fields())
     {
       
@@ -128,10 +144,14 @@ print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
 	  print "\n".'<tr class="'. utils_get_alt_row_color($i) .'"><td width="25%"><span title="'.trackers_data_get_description($field_name).'" class="help">'.trackers_data_get_label($field_name).'</span></td>';
 
 	  # checked to set!
-	  # Here, we about "show any" possibility of trackers_field_box to set the "No Update"
+	  # Here, we abuse the "show any" possibility of trackers_field_box to set the "No Update"
 	  # possibility. It sounded more sensible to abuse the 'show none', but "none" is a
 	  # legitimate entry here -one could want to change the field to none, if the field value
 	  # exists, while "any" does never make sense here.
+	  if (empty($registered['update_value_id']))
+	    $registered['update_value_id'] = null;
+	  if (empty($registered[$field_name]))
+	    $registered[$field_name] = null;
 	  print '<td>'.$registered['update_value_id'].
 	    trackers_field_box($field_name,"form_".$field_name,$group_id,$registered[$field_name],false,false,true,_("No automatic update")).
 	    '</td></tr>';
@@ -153,5 +173,3 @@ else
     { exit_permission_denied(); }
 
 }
-
-?>

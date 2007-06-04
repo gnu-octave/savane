@@ -30,6 +30,7 @@
 #mysql_is_safe();
 
 require_once(dirname(__FILE__).'/../trackers/transition.php');
+require_once(dirname(__FILE__).'/../trackers/cookbook.php');
  
 /*
 
@@ -838,13 +839,17 @@ function trackers_data_get_keep_history($field, $by_field_id=false)
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
-      $val = $BF_USAGE_BY_ID[$field]['custom_keep_history'];
+      $val = null;
+      if (isset($BF_USAGE_BY_ID[$field]['custom_keep_history']))
+	$val = $BF_USAGE_BY_ID[$field]['custom_keep_history'];
       if (!isset($val))
 	{ $val = $BF_USAGE_BY_ID[$field]['keep_history']; }
     }
   else
     {
-      $val = $BF_USAGE_BY_NAME[$field]['custom_keep_history'];
+      $val = null;
+      if (isset($BF_USAGE_BY_NAME[$field]['custom_keep_history']))
+	$val = $BF_USAGE_BY_NAME[$field]['custom_keep_history'];
       if (!isset($val))
 	{ $val = $BF_USAGE_BY_NAME[$field]['keep_history']; }
     }

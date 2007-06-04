@@ -102,12 +102,14 @@ function trackers_transition_update_other_field ($transition_id, $field_name, $v
       fb("other $transition_id, $field_name, $value_id", 1);
   # Otherwise, we first check if there is such "other field update configured" and do
   # INSERT or UPDATE accordingly
-  $id = db_result(db_execute(
+  $result = db_execute(
       "SELECT other_field_update_id FROM trackers_field_transition_other_field_update
        WHERE transition_id=? AND update_field_name=? LIMIT 1",
-      array($transition_id, $field_name)),
-    0,
-    'other_field_update_id');
+      array($transition_id, $field_name));
+  if (db_numrows($result) > 0)
+    $id = db_result($result, 0, 'other_field_update_id');
+  else
+    $id = null;
   if ($id)
     { 
       $sql_res = db_execute(

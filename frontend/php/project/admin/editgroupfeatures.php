@@ -168,14 +168,14 @@ if ($update)
 
       if ($result == true)
 	{ 
-	  session_redirect($_SERVER['PHP_SELF']."?group=$group_name&feedback=".rawurlencode(_("Update failed.")));
+	  session_redirect($_SERVER['PHP_SELF']."?group=$group&feedback=".rawurlencode(_("Update failed.")));
 	}
       else
 	{ 
 	  # To avoid the fact that we $project was already set and 
 	  # that $project =& new Project($group_id); no longer works,
 	  # we force reloading the page with a redirection
-	  session_redirect($_SERVER['PHP_SELF']."?group=$group_name&feedback=".rawurlencode(_("Update successful.")));
+	  session_redirect($_SERVER['PHP_SELF']."?group=$group&feedback=".rawurlencode(_("Update successful.")));
 	}
     }
   else

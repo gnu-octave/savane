@@ -83,7 +83,7 @@ trackers_header_admin(array ('title'=>_("Set Permissions")));
 ########################### POSTING RESTRICTIONS
 print '<h3>'._("Posting Restrictions").'</h3>';
 print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
-<input type="hidden" name="group" value="'.$group_name.'" />';
+<input type="hidden" name="group" value="'.$group.'" />';
 
 ## post restriction
 print '<span class="preinput">'._("Authentication level required to be able to post new items on this tracker:").' </span><br />';

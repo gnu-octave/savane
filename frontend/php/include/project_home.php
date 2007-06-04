@@ -39,7 +39,7 @@ if (!$sys_debug_nobasehost && strcasecmp($_SERVER['HTTP_HOST'], $project->getTyp
   exit;
 }
 
-$group_name = $project->getUnixName();
+$project=new Project($group_id);
 
 site_project_header(array());
 
@@ -80,7 +80,7 @@ printf(ngettext("%s member", "%s members", $membersnum['count']),'<strong>'.$mem
 # But we show it anyway: this page can be used for request for membership,
 # provide more info that the little infobox.
 print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-print '['.utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group_name, _("View Members")).']</span>'; # [ and ] are cosmetics, not supposed to be affected by any translation
+print '['.utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group, _("View Members")).']</span>'; # [ and ] are cosmetics, not supposed to be affected by any translation
 
 print $HTML->box_bottom();
 print '<br />
@@ -90,7 +90,7 @@ print '<span class="smaller">';
 print _("Id:").' <strong>#'.$group_id.'</strong>';
 $j = 0;
 print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-print _("System Name:").' <strong>'.$group_name.'</strong>';
+print _("System Name:").' <strong>'.$group.'</strong>';
 print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
 print _("Name:").' <strong>'.$project->GetName().'</strong>';
 print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
@@ -132,7 +132,7 @@ else
     else
       {
         print '<p>';
-        printf(_("This project has not yet submitted a short description. You can %ssubmit it%s now."), '<a href="'.$GLOBALS['sys_home'].'project/admin/editgroupinfo.php?group='.$group_name.'">', '</a>');
+        printf(_("This project has not yet submitted a short description. You can %ssubmit it%s now."), '<a href="'.$GLOBALS['sys_home'].'project/admin/editgroupinfo.php?group='.$group.'">', '</a>');
         print "</p>\n";
       }
   }
@@ -228,7 +228,7 @@ if (member_check(0, $group_id, 'A'))
 
   print $HTML->box_nextitem(utils_get_alt_row_color($odd));
 
-  print utils_link($GLOBALS['sys_home'].'project/admin/?group='.$group_name,
+  print utils_link($GLOBALS['sys_home'].'project/admin/?group='.$group,
 		  html_image("contexts/main.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Admin Page"))).'&nbsp;'._("Project Main Administration Page"));
   print $HTML->box_bottom();
   print '<br />';
@@ -303,7 +303,7 @@ else
 
 # Memberlist
 specific_makesep();
-print utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group_name,
+print utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group,
 	 html_image("contexts/people.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Memberlist')).'&nbsp;'._("Project Memberlist"));
 print " (";
 printf(ngettext("%s member", "%s members", $membersnum['count']), "<strong>{$membersnum['count']}</strong>");
@@ -313,7 +313,7 @@ $i++;
 if ($project->getGPGKeyring())
 {
   specific_makesep();
-  print utils_link($GLOBALS['sys_home'].'project/memberlist-gpgkeys.php?group='.$group_name,
+  print utils_link($GLOBALS['sys_home'].'project/memberlist-gpgkeys.php?group='.$group,
 		   html_image("contexts/keys.png",array('width'=>'24', 'height'=>'24', 'alt'=>'GPG Keyring')).'&nbsp;'._("Project Members GPG Keyring"));
   $i++;
 
@@ -326,7 +326,7 @@ print '<br />';
 
 # ################################## COMMUNICATION
 
-if ($GLOBALS['sys_unix_group_name'] == $group_name ||
+if ($GLOBALS['sys_unix_group_name'] == $group ||
     $project->Uses("support") ||
     $project->Uses("forum") ||
     $project->usesMail() ||
@@ -426,7 +426,7 @@ if ($GLOBALS['sys_unix_group_name'] == $group_name ||
 
   if (people_project_jobs_rows($group_id) != 0) {
     specific_makesep();
-    print utils_link($GLOBALS['sys_home'].'people/?group='.$group_name,
+    print utils_link($GLOBALS['sys_home'].'people/?group='.$group,
 		     html_image("contexts/people.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("People"))).'&nbsp;'._("This project is looking for people"));
 
     $job_count = people_project_jobs_rows($group_id);

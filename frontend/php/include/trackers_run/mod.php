@@ -754,7 +754,7 @@ if (db_numrows($result) > 0)
 	      while (list($res_group_name, $res_unix_group_name, $res_group_id)  = db_fetch_array($result_search))
 		{
 # Not reassigning to itself.
-		  if ($res_unix_group_name != $group_name)
+		  if ($res_unix_group_name != $group)
 		    {
 		      print '<br />';
 		      print '&nbsp;&nbsp;&nbsp;'.form_input("radio", "reassign_change_project", $res_unix_group_name).' ['.$res_unix_group_name.', #'.$res_group_id.'] '.$res_group_name;

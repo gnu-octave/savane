@@ -24,6 +24,9 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#input_is_safe();
+#mysql_is_safe();
+
 $is_admin_page='y';
 
 extract(sane_import('request', array(
@@ -225,7 +228,7 @@ if ($group_id && user_ismember($group_id,'A'))
 
 	  trackers_header_admin(array ('title'=>$hdr));
 	  
-	  print '<h2>'._("Field Label:").' '.trackers_data_get_label($field).' &nbsp;&nbsp; <span class="smaller">('.utils_link($GLOBALS['sys_home'].ARTIFACT.'/admin/field_usage.php?group='.$group_name.'&amp;update_field=1&amp;field='.$field, _("Jump to this field usage")).")</span></h2>\n";
+	  print '<h2>'._("Field Label:").' '.trackers_data_get_label($field).' &nbsp;&nbsp; <span class="smaller">('.utils_link($GLOBALS['sys_home'].ARTIFACT.'/admin/field_usage.php?group='.$group.'&amp;update_field=1&amp;field='.$field, _("Jump to this field usage")).")</span></h2>\n";
 
 
 
@@ -263,7 +266,11 @@ if ($group_id && user_ismember($group_id,'A'))
 		  $value = $fld_val['value'];
 		  $description = $fld_val['description'];
 		  $order_id = $fld_val['order_id'];
-                  $usage = trackers_data_count_field_value_usage($group_id, $field, $value_id);
+		  if ($field == 'comment_type_id')
+		    // FIXME: not a table field... weird
+		    $usage = 0;
+		  else
+		    $usage = trackers_data_count_field_value_usage($group_id, $field, $value_id);
 
 		  $html = '';
 
@@ -538,7 +545,7 @@ if ($group_id && user_ismember($group_id,'A'))
 # Get list of registered field updates
 		      $registered = trackers_transition_get_other_field_update($transition['transition_id']);
 # Make sure $content is clean
-		      unset($content);
+		      $content = '';
 # No result? Print only a link
 		      if ($registered)
 			{
@@ -555,7 +562,7 @@ if ($group_id && user_ismember($group_id,'A'))
 			  $content = _("Edit others fields update");
 			}
 
-		      print utils_link($GLOBALS['sys_home'].ARTIFACT."/admin/field_values_transition-ofields-update.php?group=".$group_name."&amp;transition_id=".$transition['transition_id'], $content);
+		      print utils_link($GLOBALS['sys_home'].ARTIFACT."/admin/field_values_transition-ofields-update.php?group=".$group."&amp;transition_id=".$transition['transition_id'], $content);
 		      print '</td><td align="center">'.$transition['notification_list'].'</td>';
 		    }
 		  else
@@ -563,7 +570,7 @@ if ($group_id && user_ismember($group_id,'A'))
 		      print '<td align="center">---------</td>'
 			.'<td align="center">--------</td>';
 		    }
-                  print '<td align="center">'.utils_link($_SERVER['PHP_SELF'].'?group='.$group_name.'&amp;func=deltransition&amp;transition_id='.$transition['transition_id'].'&amp;list_value=1&amp;field='.$field, '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Delete this transition?").'" />').'</td>';
+                  print '<td align="center">'.utils_link($_SERVER['PHP_SELF'].'?group='.$group.'&amp;func=deltransition&amp;transition_id='.$transition['transition_id'].'&amp;list_value=1&amp;field='.$field, '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Delete this transition?").'" />').'</td>';
                   print '</tr>';
                 }
 
