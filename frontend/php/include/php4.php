@@ -27,3 +27,8 @@
 function debug_print_backtrace() {
   var_dump(debug_backtrace());
 }
+
+function memory_get_peak_usage() {
+  // Needs PHP5
+  return 0;
+}
