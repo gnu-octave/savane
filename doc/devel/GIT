@@ -1,0 +1,33 @@
+Git branch
+==========
+
+- Frontend:
+ * [X] project/admin/editgroupfeatures.php - new active feature and gitweb URL
+ * [X] siteadmin/group_type.php - new configuration block; new webpage attachment
+ * [X] siteadmin/groupedit.php - new field to configure
+ * [X] new git/ directory
+ * [X] new context (include/context.php)
+ * [X] new menu entries (include/pagemenu.php)
+ * [X] new link in project homepage
+ * [X] Group.class: group_get_artifact_url
+ * [ ] new cookbook entries?
+
+[X] DB:
+ * new fields in 'groups':
+| use_git         | char(1)      | YES  |     | 0       |       |
+| url_git         | varchar(255) | YES  |     | NULL    |       |
+| url_git_viewcvs | varchar(255) | YES  |     | NULL    |       |
+| dir_git         | varchar(255) | YES  |     | NULL    |       |
+ * new fields in group_type:
+| can_use_git                      | int(1)       | NO   |     | 0        |       |
+| is_menu_configurable_git         | int(1)       | NO   |     | 0        |       |
+| is_menu_configurable_git_viewcvs | int(1)       | NO   |     | 0        |       |
+| dir_type_git                     | varchar(255) | NO   |     | basicgit |       |
+| dir_git                          | varchar(255) | NO   |     | /        |       |
+| url_git_viewcvs                  | varchar(255) | NO   |     | http://  |       |
+ * New update (cf. 1.0.6/new_scm.sql for SVN and GNU Arch)
+ * Update database initialization
+
+[X] Backend:
+ * sv_groups
+ * Git.pm

@@ -35,7 +35,7 @@ session_require(array('group'=>$sys_group_id,'admin_flags'=>'A'));
 extract(sane_import('post',
   array('update', 'form_name', 'form_status', 'form_public', 'form_license',
 	'group_type',
-	'form_dir_arch', 'form_dir_svn', 'form_dir_cvs',
+	'form_dir_cvs', 'form_dir_arch', 'form_dir_svn', 'form_dir_git',
 	'form_dir_homepage', 'form_dir_download')));
 extract(sane_import('get',
   array('updatefast', 'status')));
@@ -74,9 +74,10 @@ if ($update || $updatefast)
 	  'license' => $form_license,
 	  'type' => $group_type,
 	  'unix_group_name' => $form_name,
+	  'dir_cvs' => $form_dir_cvs,
 	  'dir_arch' => $form_dir_arch,
 	  'dir_svn' => $form_dir_svn,
-	  'dir_cvs' => $form_dir_cvs,
+	  'dir_git' => $form_dir_git,
 	  'dir_homepage' => $form_dir_homepage,
 	  'dir_download' => $form_dir_download,
 	), DB_AUTOQUERY_UPDATE,
@@ -209,18 +210,23 @@ print _('[BACKEND SPECIFIC] If this group must have specific directories for hom
 $i=0;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'._("Primary SCM (CVS) directory:").'</span><br /> ';
+print '<p><span class="preinput">'._("CVS directory:").'</span><br /> ';
 print '<input type="text" name="form_dir_cvs" value="'.$row_grp['dir_cvs'].'" size="50" />';
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'._("Secondary SCM (Arch) directory:").'</span><br /> ';
+print '<p><span class="preinput">'._("GNU Arch directory:").'</span><br /> ';
 print '<input type="text" name="form_dir_arch" value="'.$row_grp['dir_arch'].'" size="50" />';
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'._("Tertiary SCM (Subversion) directory:").'</span><br /> ';
+print '<p><span class="preinput">'._("Subversion directory:").'</span><br /> ';
 print '<input type="text" name="form_dir_svn" value="'.$row_grp['dir_svn'].'" size="50" />';
+$i++;
+print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
+
+print '<p><span class="preinput">'._("Git directory:").'</span><br /> ';
+print '<input type="text" name="form_dir_git" value="'.$row_grp['dir_git'].'" size="50" />';
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 

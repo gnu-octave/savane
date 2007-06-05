@@ -41,45 +41,13 @@
 # Unset variables that users are not allowed to set in any cases
 unset($feedback_html);
 
-# Catch recurrent globals like **_id and set give them global status with
-# sane_all.
-#
-# Page that calls register_globals_off() will actually get these 
-# unregistered.
-# But it is not a big deal, these pages will have initialize this.
-# The point of doing this right now is to have these initialized cleanly 
-# because they are used in include/pre.php
-
-$to_sanitize = array("user_id",
-		     "group_id", 
-		     "group",
-		     "item_id", 
-		     "forum_id", 
-		     "msg_id",
-		     "export_id");
-
-foreach ($to_sanitize as $var)
-{
-  unset($$var);
-  if (sane_isset($var))
-    {
-      $$var = sane_all($var);
-    }
-}
-
-
-# Set group_name only if group was set
-unset($group_name);
-if (!empty($group))
-{ $group_name = $group; }
-
 # Keep only numerical characters in the item_id
 # (Set both the global and the _REQUEST vars, because the global may be
 # unregistered by register_globals_off())
 if (isset($item_id) && !ctype_digit($item_id))
 {
   preg_match("/(\d+)/", $item_id, $match);
-  sane_set("item_id", $match[0]);
+  $item_id = $match[0];
 }
 
 # Keep only numerical characters in the export_id
@@ -88,7 +56,7 @@ if (isset($item_id) && !ctype_digit($item_id))
 if (isset($export_id) && !ctype_digit($export_id))
 {
   preg_match("/(\d+)/", $export_id, $match);
-  sane_set("export_id", $match[0]);
+  $export_id = $match[0];
 }
 
 
@@ -98,7 +66,7 @@ if (isset($export_id) && !ctype_digit($export_id))
 if (isset($group_id) && !ctype_digit($group_id))
 {
   preg_match("/(\d+)/", $group_id, $match);
-  sane_set("group_id", $match[0]);
+  $group_id = $match[0];
 }
 
 # Keep only numerical characters in the user_id
@@ -107,7 +75,7 @@ if (isset($group_id) && !ctype_digit($group_id))
 if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
 {
   preg_match("/(\d+)/", $user_id, $match);
-  sane_set("user_id", $match[0]);
+  $user_id = $match[0];
 }
 
 

@@ -370,7 +370,7 @@ if (!isset($group_id) && !isset($group) && isset($item_id))
 # if we got a forum_id and no group_id, we need to get the appropriate
 # group_id
 # (FIXME: in the future it could follow the naming scheme of trackers)
-if (!isset($group_id) && !isset($group_name) && isset($forum_id))
+if (!isset($group_id) && !isset($group) && isset($forum_id))
 {
   $result = db_execute("SELECT group_id FROM forum_group_list WHERE group_forum_id=?",
 		       array($forum_id));

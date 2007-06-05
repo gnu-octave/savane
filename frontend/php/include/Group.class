@@ -678,6 +678,10 @@ function group_get_artifact_url ($artifact, $hostname=1)
     {  
       return $GLOBALS['project']->getTypeUrl("svn_viewcvs"); 
     }
+  else if ($artifact == "git_viewcvs") 
+    {  
+      return $GLOBALS['project']->getTypeUrl("git_viewcvs"); 
+    }
   else 
     {
       if ($hostname) 

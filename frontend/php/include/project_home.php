@@ -458,12 +458,29 @@ if ($project->Uses("patch") ||
   #  - check if the SCM is selected by the project
   #  - check if the SCM is the default SCM, if the project use the standard
   #    webpage
-  # SVN goes first, CVS the outdated one goes last
+  if ($project->Uses("git") || $project->UsesForHomepage("git"))
+    {
+      $url = $project->getArtifactUrl("git");
+
+      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Git'));
+      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Git Repository").'</a>';
+
+      if ($project->Uses("git") && $project->getUrl("git_viewcvs") != 'http://' && $project->getUrl("git_viewcvs") != '')
+	{
+	  print '<br /> &nbsp; - <a href="'.$project->getUrl("git_viewcvs").'">'._("Browse Sources Repository").'</a>';
+	}
+      if ($project->UsesForHomepage("git") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
+	{
+	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
+	}
+      $i++;
+    }
+
   if ($project->Uses("svn") || $project->UsesForHomepage("svn"))
     {
       $url = $project->getArtifactUrl("svn");
 
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Arch'));
+      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Subversion'));
       print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Subversion Repository").'</a>';
 
       if ($project->Uses("svn") && $project->getUrl("svn_viewcvs") != 'http://' && $project->getUrl("svn_viewcvs") != '')

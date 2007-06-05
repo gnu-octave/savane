@@ -25,12 +25,13 @@
 
 require_once('../../include/init.php');
 require_once('../../include/sane.php');
+
 session_require(array('group' => $group_id,
 		      'admin_flags' => 'A'));
 
 extract(sane_import('post', array(
-  'update',  'feedback', 'group',
-  'use_cvs', 'use_arch', 'use_svn',
+  'update',  'feedback',
+  'use_cvs', 'use_arch', 'use_svn', 'use_git',
   'use_bugs', 'use_support', 'use_patch', 'use_task',
   'use_mail', 'use_download',
   'use_homepage', 'use_extralink_documentation', 
@@ -39,11 +40,15 @@ extract(sane_import('post', array(
   'url_cvs', 'url_cvs_viewcvs', 'url_cvs_viewcvs_homepage',
   'url_arch', 'url_arch_viewcvs',
   'url_svn', 'url_svn_viewcvs',
+  'url_git', 'url_svn_git',
   'url_bugs','url_patch','url_task','url_support',
   'url_mail', 'url_download', 'dir_download', // ?
   'url_homepage',
   'url_forum',
   'url_extralink_documentation')));
+
+$project = project_get_object($group_id);
+
 # If this was a submission, make updates
 if ($update)
 {
@@ -76,6 +81,8 @@ if ($update)
     { $use_arch=0; }
   if (!$use_svn)
     { $use_svn=0; }
+  if (!$use_git)
+    { $use_git=0; }
   if (!$use_news)
     { $use_news=0; }
   if (!$use_news)
@@ -94,6 +101,7 @@ if ($update)
 		 "use_cvs",
 		 "use_arch",
 		 "use_svn",
+		 "use_git",
 		 "use_news",
 		 "use_support",
 		 "use_download",
@@ -132,7 +140,8 @@ if ($update)
 	  ($field == "url_cvs_viewcvs_homepage" && $project->CanUse("homepage")) ||
 	  ($field == "url_cvs_viewcvs" && $project->CanUse("cvs")) ||
 	  ($field == "url_arch_viewcvs" && $project->CanUse("arch")) ||
-	  ($field == "url_svn_viewcvs" && $project->CanUse("svn")))
+	  ($field == "url_svn_viewcvs" && $project->CanUse("svn")) ||
+	  ($field == "url_git_viewcvs" && $project->CanUse("git")))
 	{
 	  if ($type == "use" ||
 	      ($type == "use" && $field_name == "extralink_documentation" && $project->CanModifyUrl("extralink_documentation")))
@@ -229,6 +238,7 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
 	  $artifact == "cvs_viewcvs" ||
 	  $artifact == "arch_viewcvs" ||
 	  $artifact == "svn_viewcvs" ||
+	  $artifact == "git_viewcvs" ||
 	  preg_match("/viewcvs/", $artifact) ||
 	  preg_match("/extralink/", $artifact))
 	{
@@ -324,6 +334,11 @@ if ($project->CanUse("svn"))
   specific_line("svn_viewcvs", _("Subversion Web Browsing"), 0, 0);
 }
 
+if ($project->CanUse("git"))
+{
+  specific_line("git", _("Git"), $project->Uses("git"));
+  specific_line("git_viewcvs", _("Git Web Browsing"), 0, 0);
+}
 
 if ($project->CanUse("bug"))
 { specific_line("bugs", _("Bugs Tracker"), $project->Uses("bugs")); }

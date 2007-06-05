@@ -66,12 +66,12 @@ if ($update) {
   $fields = array(
     // General
     'name', 'description', 'base_host', 'can_use_homepage',
-    'dir_type_cvs', 'dir_type_svn', 'dir_type_arch',
+    'dir_type_cvs', 'dir_type_svn', 'dir_type_arch', 'dir_type_git',
     'dir_type_download', 'dir_type_homepage', 'dir_cvs', 'dir_arch',
-    'dir_svn', 'homepage_scm', 'dir_homepage', 'url_homepage',
+    'dir_svn', 'dir_git', 'homepage_scm', 'dir_homepage', 'url_homepage',
     'url_cvs_viewcvs_homepage', 'can_use_arch', 'can_use_svn',
-    'can_use_cvs', 'can_use_forum', 'url_cvs_viewcvs',
-    'url_arch_viewcvs', 'url_svn_viewcvs', 'can_use_license',
+    'can_use_cvs', 'can_use_git', 'can_use_forum', 'url_cvs_viewcvs',
+    'url_arch_viewcvs', 'url_svn_viewcvs', 'url_git_viewcvs', 'can_use_license',
     'can_use_devel_status', 'can_use_download', 'dir_download',
     'url_download', 'can_use_mailing_list', 'mailing_list_host',
     'url_mailing_list_listinfo', 'url_mailing_list_subscribe',
@@ -95,6 +95,8 @@ if ($update) {
     'is_menu_configurable_arch_viewcvs',
     'is_menu_configurable_svn',
     'is_menu_configurable_svn_viewcvs',
+    'is_menu_configurable_git',
+    'is_menu_configurable_git_viewcvs',
     'is_menu_configurable_bugs',
     'is_menu_configurable_task',
     'is_menu_configurable_patch',
@@ -232,7 +234,8 @@ else
   print '<br>'.specific_showinput(_("Selected SCM:"), '<select name="homepage_scm">
   <option value="cvs"'.(($row_grp['homepage_scm'] == "cvs")?" selected=\"selected\"":"").'>'._("CVS").'</option>
   <option value="arch"'.(($row_grp['homepage_scm'] == "arch")?" selected=\"selected\"":"").'>'._("GNU Arch").'</option>
-  <option value="svn"'.(($row_grp['homepage_scm'] == "svn")?" selected=\"selected\"":"").'>'._("Subversion").'</option></select>');
+  <option value="svn"'.(($row_grp['homepage_scm'] == "svn")?" selected=\"selected\"":"").'>'._("Subversion").'</option>
+  <option value="git"'.(($row_grp['homepage_scm'] == "git")?" selected=\"selected\"":"").'>'._("Git").'</option></select>');
 
   html_select_typedir_box("dir_type_homepage",
 			  $row_grp['dir_type_homepage']);
@@ -245,7 +248,7 @@ else
 
   # ########### Source code
 
-  print $HTML->box_top(_("Primary Source Code Manager: CVS"));
+  print $HTML->box_top(_("Source Code Manager: CVS"));
   print '<div>This is useful if you provide directly CVS repositories (created by the backend) or if you want to allow projects to configure the related menu entry (see below).</div>';
   print specific_showinput_inverted(_("Can use CVS"), '<INPUT TYPE="CHECKBOX" NAME="can_use_cvs" VALUE="1"'.(($row_grp['can_use_cvs']==1) ? ' checked="checked"' : '').' />');
   html_select_typedir_box("dir_type_cvs",
@@ -256,9 +259,9 @@ else
   print $HTML->box_bottom();
   print '<br /><br />';
 
-  # ########### Secondary Source code
+  # ########### Source code
 
-  print $HTML->box_top(_("Secondary Source Code Manager: GNU Arch"));
+  print $HTML->box_top(_("Source Code Manager: GNU Arch"));
   print '<div>This is useful if you provide directly GNU Arch repositories (created by the backend) or if you want to allow projects to configure the related menu entry (see below).</div>';
   print specific_showinput_inverted(_("Can use GNU Arch"), '<INPUT TYPE="CHECKBOX" NAME="can_use_arch" VALUE="1"'.(($row_grp['can_use_arch']==1) ? ' checked="checked"' : '').' />');
   html_select_typedir_box("dir_type_arch",
@@ -269,15 +272,28 @@ else
   print $HTML->box_bottom();
   print '<br /><br />';
 
-  # ########### Tertiary Source code
+  # ########### Source code
 
-  print $HTML->box_top(_("Tertiary Source Code Manager: Subversion"));
+  print $HTML->box_top(_("Source Code Manager: Subversion"));
   print '<div>This is useful if you provide directly Subversion repositories (created by the backend) or if you want to allow projects to configure the related menu entry (see below).</div>';
   print specific_showinput_inverted(_("Can use Subversion"), '<INPUT TYPE="CHECKBOX" NAME="can_use_svn" VALUE="1"'.(($row_grp['can_use_svn']==1) ? ' checked="checked"' : '').' />');
   html_select_typedir_box("dir_type_svn",
 			  $row_grp['dir_type_svn']);
   print specific_showinput(_("Repository Dir (path on the filesystem) [BACKEND SPECIFIC]:"), '<input type="text" name="dir_svn" value="'.$row_grp['dir_svn'].'" size="'.$textfield_size.'" />');
   print specific_showinput(_("Repository view URL (cvsweb, viewcvs, archzoom...):"), '<input type="text" name="url_svn_viewcvs" value="'.$row_grp['url_svn_viewcvs'].'" size="'.$textfield_size.'" />');
+
+  print $HTML->box_bottom();
+  print '<br /><br />';
+
+  # ########### Source code
+
+  print $HTML->box_top(_("Source Code Manager: Git"));
+  print '<div>This is useful if you provide directly Subversion repositories (created by the backend) or if you want to allow projects to configure the related menu entry (see below).</div>';
+  print specific_showinput_inverted(_("Can use Git"), '<INPUT TYPE="CHECKBOX" NAME="can_use_git" VALUE="1"'.(($row_grp['can_use_git']==1) ? ' checked="checked"' : '').' />');
+  html_select_typedir_box("dir_type_git",
+			  $row_grp['dir_type_git']);
+  print specific_showinput(_("Repository Dir (path on the filesystem) [BACKEND SPECIFIC]:"), '<input type="text" name="dir_git" value="'.$row_grp['dir_git'].'" size="'.$textfield_size.'" />');
+  print specific_showinput(_("Repository view URL (cvsweb, viewcvs, archzoom...):"), '<input type="text" name="url_git_viewcvs" value="'.$row_grp['url_git_viewcvs'].'" size="'.$textfield_size.'" />');
 
   print $HTML->box_bottom();
   print '<br /><br />';
@@ -474,7 +490,7 @@ print '
 		    _("the viewcvs link for homepage code can be modified"),0);
 
   specific_checkbox("arch",
-		    _("the arch link can be modified"));
+		    _("the GNU Arch link can be modified"));
   specific_checkbox("arch_viewcvs",
 		    _("the arch viewcvs link can be modified"),0);
 
@@ -483,6 +499,10 @@ print '
   specific_checkbox("svn_viewcvs",
 		    _("the subversion viewcvs link can be modified"),0);
 
+  specific_checkbox("git",
+		    _("the git link can be modified"));
+  specific_checkbox("git_viewcvs",
+		    _("the git viewcvs link can be modified"),0);
 
   print $HTML->box_bottom(1);
 

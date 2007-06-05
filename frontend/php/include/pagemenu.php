@@ -442,22 +442,29 @@ function pagemenu_group ()
       $project->Uses("arch") ||
       $project->UsesForHomepage("arch") ||
       $project->Uses("svn") ||
-      $project->UsesForHomepage("svn"))
+      $project->UsesForHomepage("svn") ||
+      $project->Uses("git") ||
+      $project->UsesForHomepage("git"))
     {
       # If it uses only one SCM, main link points to it
       $cvs = FALSE;
       $svn = FALSE;
       $arch = FALSE;
+      $git = FALSE;
       if ($project->Uses("cvs") || $project->UsesForHomepage("cvs"))
 	{ $cvs = 1; }
       if ($project->Uses("arch") || $project->UsesForHomepage("arch"))
 	{ $arch = 1; }
       if ($project->Uses("svn") || $project->UsesForHomepage("svn"))
 	{ $svn = 1; }
+      if ($project->Uses("git") || $project->UsesForHomepage("git"))
+	{ $git = 1; }
 
-      if (($cvs && !$arch && !$svn) ||
-	  (!$cvs && $arch && !$svn) ||
-	  (!$cvs && !$arch && $svn))
+      // Only one SCM - direct link
+      if (($cvs && !$arch && !$svn && !$git) ||
+	  (!$cvs && $arch && !$svn && !$git) ||
+	  (!$cvs && !$arch && $svn && !$git) ||
+	  (!$cvs && !$arch && !$svn && $git))
 	{
 	  unset($tool);
 	  if ($cvs)
@@ -466,6 +473,8 @@ function pagemenu_group ()
 	    { $tool = "arch"; }	    
 	  if ($svn)
 	    { $tool = "svn"; }
+	  if ($git)
+	    { $tool = "git"; }
 
 	  pagemenu_submenu_title(_("Source Code"), 
 				 $project->getArtifactUrl($tool),
@@ -478,7 +487,8 @@ function pagemenu_group ()
 	  
 	  pagemenu_submenu_title(_("Source Code"), 
 				 '#', # non-link
-				 (CONTEXT == 'cvs' || CONTEXT == 'arch' || CONTEXT == 'svn'),
+				 (CONTEXT == 'cvs' || CONTEXT == 'arch'
+				  || CONTEXT == 'svn' || CONTEXT == 'git'),
 				 1,
 				 _("Source Code Management"));
 	}
@@ -487,6 +497,32 @@ function pagemenu_group ()
       $count = 0;
       
 
+      if ($git)
+	{
+	  $count++;
+	  $ret .= pagemenu_submenu_entry(_("Use Git"),
+					 $project->getArtifactUrl("git"),
+					 1,
+					 _("Source Code Manager: Git Repository"));
+	  # Do we need links to browse repositories?
+	  if ($project->Uses("git") && 
+	      $project->getUrl("git_viewcvs") != 'http://' && 
+	      $project->getUrl("git_viewcvs") != '')
+	    {
+	      $count++;
+	      $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
+					     $project->getUrl("git_viewcvs"));
+	    }
+	  if ($project->UsesForHomepage("git") && 
+	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' && 
+	      $project->getUrl("cvs_viewcvs_homepage") != '')
+	    {
+	      $count++;
+	      $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
+					     $project->getUrl("cvs_viewcvs_homepage"));
+	    }	  
+
+	} 
       if ($svn)
 	{
 	  $count++;

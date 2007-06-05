@@ -246,6 +246,8 @@ function context_title ()
     case 'arch': $title = _("GNU Arch Repositories"); break;
 
     case 'svn': $title = _("Subversion Repositories"); break;
+
+    case 'svn': $title = _("Git Repositories"); break;
       
     case 'userguide': 
       $title = _("In Depth Guide"); 
@@ -395,9 +397,10 @@ function context_icon ()
     case 'support': return 'help'; break;
     case 'mail': return 'mail'; break;
     case 'task': return 'task'; break;
-    case 'cvs': return 'cvs'; break;
-    case 'svn': return 'cvs'; break;
-    case 'arch': return 'cvs'; break;
+    case 'cvs':
+    case 'arch':
+    case 'svn':
+    case 'git': return 'cvs'; break;
     case 'news': return 'news'; break;
     case 'special': return 'news'; break;
     case 'patch': return 'patch'; break;

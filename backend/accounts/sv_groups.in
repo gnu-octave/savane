@@ -1,4 +1,5 @@
 #! @PERL@
+# -*-Perl-*-
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -43,6 +44,7 @@ use Savane;
 use Savane::Download;
 use Savane::Cvs;
 use Savane::Svn;
+use Savane::Git;
 use Getopt::Long;
 use Term::ANSIColor qw(:constants);
 use POSIX qw(strftime);
@@ -63,6 +65,7 @@ my $no_etc = 0;
 my $no_cvs = 0; 
 my $no_arch = 0; 
 my $no_svn = 0;
+my $no_git = 0;
 my $no_homepage = 0;
 my $no_download = 0;
 
@@ -70,6 +73,7 @@ my $only_etc;
 my $only_cvs;
 my $only_arch;
 my $only_svn;
+my $only_git
 my $only_homepage;
 my $only_download;
 
@@ -89,12 +93,14 @@ eval {
 			 "no-etc" => \$no_etc,
 			 "no-cvs" => \$no_cvs,
 			 "no-svn" => \$no_svn,
+			 "no-git" => \$no_git,
 			 "no-arch" => \$no_arch,
 			 "no-homepage" => \$no_homepage,
 			 "no-download" => \$no_download,
 			 "only-etc" => \$only_etc,
 			 "only-cvs" => \$only_cvs,
 			 "only-svn" => \$only_svn,
+			 "only-git" => \$only_git,
 			 "only-arch" => \$only_arch,
 			 "only-homepage" => \$only_homepage,
 			 "only-download" => \$only_download,
@@ -118,6 +124,7 @@ Normally, sv_users should run just after.
       --no-cvs                 Do not update cvs trees
       --no-arch                Do not update arch trees
       --no-svn                 Do not update svn trees
+      --no-git                 Do not update git trees
       --no-homepage            Do not update homepage dirs
       --no-download            Do not update download dirs
 
@@ -125,6 +132,7 @@ Normally, sv_users should run just after.
       --only-cvs               Only update cvs trees
       --only-arch              Only update arch trees
       --only-svn               Only update svn trees
+      --only-git               Only update git trees
       --only-homepage          Only update homepage dirs
       --only-download          Only update download dirs
 
@@ -143,6 +151,7 @@ if ($only_etc ||
     $only_cvs ||
     $only_arch ||
     $only_svn ||
+    $only_git ||
     $only_homepage ||
     $only_download) {
  
@@ -151,6 +160,7 @@ if ($only_etc ||
     $no_cvs = 1;
     $no_arch = 1;
     $no_svn = 1;
+    $no_git = 1;
     $no_homepage = 1;
     $no_download = 1;
 
@@ -158,6 +168,7 @@ if ($only_etc ||
     $no_cvs = 0 if $only_cvs;
     $no_arch = 0 if $only_arch;
     $no_svn = 0 if $only_svn;
+    $no_git = 0 if $only_git;
     $no_homepage = 0 if $only_homepage;
     $no_download = 0 if $only_download;
 }
@@ -195,11 +206,11 @@ AcquireReplicationLock($lockfile);
 my %db_group_type;
 foreach my $line (GetDB("group_type", 
 			0,
-			"name,type_id,dir_type_homepage,dir_type_cvs,dir_type_arch,dir_type_svn,dir_type_download,dir_homepage,dir_cvs,dir_arch,dir_svn,dir_download,can_use_homepage,can_use_cvs,can_use_arch,can_use_svn,can_use_download")) {
+			"name,type_id,dir_type_homepage,dir_type_cvs,dir_type_arch,dir_type_svn,dir_type_git,dir_type_download,dir_homepage,dir_cvs,dir_arch,dir_svn,dir_git,dir_download,can_use_homepage,can_use_cvs,can_use_arch,can_use_svn,can_use_git,can_use_download")) {
     chomp($line);
-    my ($name, $id, $dir_type_homepage, $dir_type_cvs, $dir_type_arch, $dir_type_svn, $dir_type_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_download, $can_use_homepage, $can_use_cvs, $can_use_arch, $can_use_svn, $can_use_download) = split(",", $line);
+    my ($name, $id, $dir_type_homepage, $dir_type_cvs, $dir_type_arch, $dir_type_svn, $dir_type_git, $dir_type_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_git, $dir_download, $can_use_homepage, $can_use_cvs, $can_use_arch, $can_use_svn, $can_use_git, $can_use_download) = split(",", $line);
     print "DBG db: get $line from database\n" if $debug;
-    $db_group_type{$id} = [ ($name, $id, $dir_type_homepage, $dir_type_cvs, $dir_type_arch, $dir_type_svn, $dir_type_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_download, $can_use_homepage, $can_use_cvs, $can_use_arch, $can_use_svn, $can_use_download) ];
+    $db_group_type{$id} = [ ($name, $id, $dir_type_homepage, $dir_type_cvs, $dir_type_arch, $dir_type_svn, $dir_type_git, $dir_type_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_git, $dir_download, $can_use_homepage, $can_use_cvs, $can_use_arch, $can_use_svn, $can_use_git, $can_use_download) ];
 }
 
 # db_groups:
@@ -217,11 +228,11 @@ my %db_groups;
 my @db_groups;
 foreach my $line (GetDB("groups", 
 			"status='A'",
-			"unix_group_name,type,is_public,use_homepage,use_cvs,use_arch,use_svn,use_download,dir_homepage,dir_cvs,dir_arch,dir_svn,dir_download")) {
+			"unix_group_name,type,is_public,use_homepage,use_cvs,use_arch,use_svn,use_git,use_download,dir_homepage,dir_cvs,dir_arch,dir_svn,dir_git,dir_download")) {
     chomp($line);
-    my ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_download) = split(",", $line);
+    my ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_git, $use_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_git, $dir_download) = split(",", $line);
     print "DBG db: get group $line from database\n" if $debug;
-    $db_groups{$name} = [ ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_download) ];
+    $db_groups{$name} = [ ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_git, $use_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_git, $dir_download) ];
     push(@db_groups, $name);
 }
 
@@ -296,7 +307,7 @@ for ("svusers", "anoncvs") {
 
 foreach my $group (@only_in_db){
     
-    my ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_download) = @{$db_groups{$group}};
+    my ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_git, $use_download) = @{$db_groups{$group}};
     
     print "DBG create: $name and web$name\n" if $debug;
     
@@ -335,14 +346,15 @@ foreach my $group (@db_groups) {
 
     } else {
 	
-	my ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_download, $group_dir_homepage, $group_dir_cvs, $group_dir_arch, $group_dir_svn, $group_dir_download) = @{$db_groups{$group}};
-	my ($type_name, $type_id, $dir_type_homepage, $dir_type_cvs, $dir_type_arch, $dir_type_svn, $dir_type_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_download, $can_use_homepage, $can_use_cvs, $can_use_arch, $can_use_svn, $can_use_download) = @{$db_group_type{$type}};
+	my ($name, $type, $is_public, $use_homepage, $use_cvs, $use_arch, $use_svn, $use_git, $use_download, $group_dir_homepage, $group_dir_cvs, $group_dir_arch, $group_dir_svn, $group_dir_git, $group_dir_download) = @{$db_groups{$group}};
+	my ($type_name, $type_id, $dir_type_homepage, $dir_type_cvs, $dir_type_arch, $dir_type_svn, $dir_type_git, $dir_type_download, $dir_homepage, $dir_cvs, $dir_arch, $dir_svn, $dir_git, $dir_download, $can_use_homepage, $can_use_cvs, $can_use_arch, $can_use_svn, $can_use_git, $can_use_download) = @{$db_group_type{$type}};
         
 	# If a use in the database is empty, set it to the group type can_use
 	$use_homepage = $can_use_homepage if $use_homepage eq '';
 	$use_cvs = $can_use_cvs if $use_cvs eq '';
 	$use_arch = $can_use_arch if $use_arch eq '';
 	$use_svn = $can_use_svn if $use_svn eq '';
+	$use_git = $can_use_git if $use_git eq '';
 	$use_download = $can_use_download if $use_download eq '';
 	
 	# If a group_dir in the database is not empty, set reset the default
@@ -351,9 +363,10 @@ foreach my $group (@db_groups) {
 	$dir_cvs = $group_dir_cvs if $group_dir_cvs;
 	$dir_arch = $group_dir_arch if $group_dir_arch;
 	$dir_svn = $group_dir_svn if $group_dir_svn;
+	$dir_git = $group_dir_git if $group_dir_git;
 	$dir_download = $group_dir_download if $group_dir_download;
 	
-	print "DBG update: $name, type:$type, public:$is_public, homepage:$use_homepage, cvs:$use_cvs, arch:$use_arch, svn:$use_svn, download:$use_download\n\t $dir_homepage $dir_cvs $dir_download\n" if $debug;
+	print "DBG update: $name, type:$type, public:$is_public, homepage:$use_homepage, cvs:$use_cvs, arch:$use_arch, svn:$use_svn, git:$use_git, download:$use_download\n\t $dir_homepage $dir_cvs $dir_download\n" if $debug;
 	
 	my $madesomething;
 	
@@ -465,6 +478,16 @@ foreach my $group (@db_groups) {
 		    $madesomething .= SvnMakeAreaAttic($name,$dir_svn,$is_public);
 		} elsif ($dir_type_svn eq "svnatticwebsite") {
 		    $madesomething .= SvnMakeAreaAtticWebsite($name,$dir_svn,$is_public); 
+		}
+	    }
+
+
+	    # Create the git area, by relying on the library, that should
+	    # make the appropriate decision (ie if no %PROJECT string is
+	    # provided, nothing should be done)
+	    if ($use_git && !$no_git) {
+		if ($dir_type_git eq "basicgit") {
+		    $madesomething .= GitMakeArea($name,$dir_git,$is_public);
 		}
 	    }
 	}
