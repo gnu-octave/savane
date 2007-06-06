@@ -72,6 +72,17 @@ extract(sane_import('get', array('comment_internal_id')));
 # Other form fields: check trackers_extract_field_list()
 
 
+# if we are on an artifact index page and we have only one argument which is
+# a numeric number, we suppose it is an item_id
+# Maybe it was a link shortcut like
+# blabla.org/task/?nnnn (blabla.org/task/?#nnnn cannot work because # is 
+# not sent by the browser as it's a tag for html anchors)
+if (!empty($_SERVER['QUERY_STRING'])
+    && ctype_digit($_SERVER['QUERY_STRING']))
+{
+  $func = 'detailitem';
+}
+
 // FIXME: quotation is broken with new markup feature
 $change_quotation_style = null;
 

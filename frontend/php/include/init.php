@@ -309,7 +309,7 @@ if (!session_issecure() && isset($_COOKIE['redirect_to_https']) && $GLOBALS['sys
 **************************************************************/
 
 extract(sane_import('get', array('comingfrom'))); #cookbook
-extract(sane_import('request', array('group', 'group_id')));
+extract(sane_import('request', array('group', 'group_id', 'item_id')));
 
 # defines the artifact we are using
 if(!defined('ARTIFACT'))
@@ -329,7 +329,6 @@ if ((ARTIFACT == "bugs" ||
     && ctype_digit($_SERVER['QUERY_STRING']))
 {
   $item_id = $_SERVER['QUERY_STRING'];
-  $func = 'detailitem';
 }
 
 

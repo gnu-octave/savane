@@ -2724,6 +2724,6 @@ function trackers_data_count_field_value_usage ($group_id, $field, $field_value_
 {
   if (!preg_match('/^[a-z0-9_]+$/', $field))
     util_die('trackers_data_count_field_value_usage: invalid $field <em>' . htmlspecialchars($field) . '</em>');
-  return db_numrows(db_execute("SELECT bug_id FROM ".ARTIFACT." WHERE $field=? AND group_id=?",
-			       array($field_value_value_id, $group_id)));
+  return db_result(db_execute("SELECT COUNT(*) AS count FROM ".ARTIFACT." WHERE $field=? AND group_id=?",
+			      array($field_value_value_id, $group_id)), 0, 'count');
 }
