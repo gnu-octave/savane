@@ -130,7 +130,7 @@ function sane_nomagic($arg, $method) {
     { // array
       $arr =& $arg;
       $arr_nomagic = array();
-      if ($method == 'files' and array_key_exists('tmp_name', $_arg))
+      if ($method == 'files' and array_key_exists('tmp_name', $arr))
 	{ // this is a file entry
 	  // convert only a few entry - especially _not_ 'tmp_name'
 	  $arr_nomagic['name']  = sane_nomagic($arr['name'], $method);
@@ -145,7 +145,7 @@ function sane_nomagic($arg, $method) {
 	  $arr_nomagic = array();
 	  foreach ($arr as $key => $val)
 	    {
-	      $ret_val[$key] = sane_nomagic($val, $method);
+	      $arr_nomagic[$key] = sane_nomagic($val, $method);
 	    }
 	}
       return $arr_nomagic;

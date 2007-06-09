@@ -73,7 +73,7 @@ my $only_etc;
 my $only_cvs;
 my $only_arch;
 my $only_svn;
-my $only_git
+my $only_git;
 my $only_homepage;
 my $only_download;
 

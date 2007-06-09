@@ -47,7 +47,7 @@ sub GitMakeArea {
         # --shared sets g+s on directories
 	$ENV{'GIT_DIR'} = $dir_git;
 	system('git-init-db', '--shared');
-	undef($ENV{'GIT_DIR'});
+	delete $ENV{'GIT_DIR'};
 	
 	system('chgrp', '-R', $name, $dir_git);
         # needed to make the repo accessible via bare HTTP

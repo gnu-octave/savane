@@ -37,11 +37,16 @@ our $version = 1;
 # that happened (clean, segfault...)
 sub AcquireReplicationLock {
     my ($lockfile) = @_;
+    my $lockdir = "/var/lock/savane";
+
+    if (! -d $lockdir) {
+	mkdir $lockdir or die "Can't create lock directory $lockdir: $!";
+    }
 
     if ($lockfile) {
 	# System-wide lock
 	# http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLOCKLOCKFILES
-	open LOCKFILE, "+>> /var/lock/savane/$lockfile" or die "Failed to ask lock.";
+	open LOCKFILE, "+>> $lockdir/$lockfile" or die "Failed to ask lock.";
     } else {
 	# Script lock
 	# http://perl.plover.com/yak/flock/samples/slide006.html

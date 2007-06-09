@@ -5,26 +5,6 @@
 
 ErrorDocument 404 /404.php
 
-<Files projects>
-ForceType application/x-httpd-php
-</Files>
-<Files p>
-ForceType application/x-httpd-php
-</Files>
-<Files pr>
-ForceType application/x-httpd-php
-</Files>
-
-<Files users>
-ForceType application/x-httpd-php
-</Files>
-<Files u>
-ForceType application/x-httpd-php
-</Files>
-<Files us>
-ForceType application/x-httpd-php
-</Files>
-
-<Files file>
-ForceType application/x-httpd-php
+<Files ~ "^(users|us|u|projects|pr|p|file)$">
+  SetHandler application/x-httpd-php
 </Files>

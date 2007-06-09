@@ -105,7 +105,7 @@ if ($update) {
   $values = sane_import('post', $fields);
 
   $result = db_autoexecute('group_type',
-    array_combine($fields, $values), DB_AUTOQUERY_UPDATE,
+    $values, DB_AUTOQUERY_UPDATE,
     "type_id=?", array($type_id));
 
   if (!$result)

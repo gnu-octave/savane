@@ -84,13 +84,13 @@ if (version_compare(PHP_VERSION, '5.0', '<')) require_once(dirname(__FILE__).'/p
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF'))
-{ require_once(getenv('SAVANE_CONF').'/.savane.conf.php'); }
+{ @include(getenv('SAVANE_CONF').'/.savane.conf.php'); }
 elseif (getenv('SV_LOCAL_INC_PREFIX'))
-{ require_once(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'); }
+{ @include(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'); }
 else
 {
   # go back to default location
-  require_once('/etc/savane/.savane.conf.php');
+  @include('/etc/savane/.savane.conf.php');
 }
 
 // Detect where we are, unless it's explicitely specified in the

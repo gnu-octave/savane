@@ -104,4 +104,4 @@ Notes
 downloading a release tarball), you first need to install the
 autotools (Autoconf and Automake), and bootstrap the build system:
 
-	./boostrap
+	./bootstrap

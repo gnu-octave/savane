@@ -1,3 +1,22 @@
+2007-06-09  Sylvain Beucler  <beuc@beuc.net>
+
+	* The frontend configuration file is now optional, Savane works
+	fine in test environment / common case without one.
+
+	* Fix sane_nomagic() array import
+
+	* Simplify the root .htaccess using a regexp for p/pr/projects
+	etc.
+
+	* frontend/php/include/php4.php: add a quick'n dirty replacement
+	for PHP5's array_combine - I'd have used PHP_Compat if only it
+	weren't under the (GPL-incompatible) PHP License, sigh.
+
+	* lib/Savane/Lock.pm: create /var/lock/savane if it doesn't exist
+	already (bug#9200@gna)
+
+	* Finish git support
+
 2007-06-05  Sylvain Beucler  <beuc@beuc.net>
 
 	* I essentially finished the clean-up (PHP warnings,

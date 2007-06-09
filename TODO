@@ -38,6 +38,3 @@
   gateway.
   https://gna.org/bugs/?7975
   https://gna.org/support/?1640
-
-- Create /var/lock/savane when needed
-  http://gna.org/bugs/?9200

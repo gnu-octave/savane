@@ -580,7 +580,7 @@ function pagemenu_group ()
       if ($cvs)
 	{
 	  $count++;
-	  $ret .= pagemenu_submenu_entry(_("View CVS Instructions"),
+	  $ret .= pagemenu_submenu_entry(_("Use CVS"),
 					 $project->getArtifactUrl("cvs"),
 					 1,
 					 _("Source Code Manager: CVS Repository"));
