@@ -10,6 +10,7 @@ Git branch
  * [X] new menu entries (include/pagemenu.php)
  * [X] new link in project homepage
  * [X] Group.class: group_get_artifact_url
+ * [X] New site-specific-content file git/index.txt
  * [ ] new cookbook entries?
 
 [X] DB:
