@@ -63,7 +63,7 @@ extract(sane_import('request',
 if (isset($GLOBALS['sys_https_host']) && !session_issecure())
 {
   # Force use of TLS for login
-  header('Location: '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri);
+  header('Location: '.$GLOBALS['sys_https_url'].$_SERVER['REQUEST_URI']);
 }
 
 # Check cookie support
@@ -73,7 +73,7 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
     {
     // Attempt to set a cookie to go to a new page to see if the client will indeed send that cookie.
     session_cookie('cookie_probe', 1);
-    header('Location: '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri.'&cookie_test=1');
+    header('Location: login.php?uri='.$uri.'&cookie_test=1');
     }
   else # 
     {
@@ -118,16 +118,23 @@ if (!empty($login))
             }
 	}
 
-      # Optionally stay in TLS mode
-      if (!empty($GLOBALS['sys_https_host']) && $stay_in_ssl)
-	{ $http = "https"; }
-      else
-	{ $http = "http"; }
 
+      # We return to our brother 'my', where we login originally,
+      # unless we are request to go to an uri
+      if (!$uri)
+	{
+	  $uri = $GLOBALS['sys_home'] . 'my/';
+	}
+      
       # If a brother server exists, login there too, if we are not
       # already coming from there
       if (!empty($GLOBALS['sys_brother_domain']) && $brotherhood)
 	{
+	  if (session_issecure())
+	    { $http = "https"; }
+	  else
+	    { $http = "http"; }
+
 	  if (!$from_brother)
 	    {
 	      # Go there saying hello to your brother
@@ -136,16 +143,7 @@ if (!empty($login))
 	    }
 	  else
 	    {
-	      # We return to our brother 'my', where we login originally,
-              # unless we are request to go to an uri
-              if (!$uri) 
-                {            
-	         header ("Location: ".$http."://".$GLOBALS['sys_brother_domain'].$GLOBALS['sys_home']."my/");
-                }
-              else
-                {
-	         header ("Location: ".$http."://".$GLOBALS['sys_brother_domain'].$uri);
-                }
+	      header("Location: ".$http."://".$GLOBALS['sys_brother_domain'].$uri);
 	      exit;
 	    }
 	}
@@ -153,14 +151,20 @@ if (!empty($login))
 	{
 	  # If No brother server exists, just go to 'my' page 
           # unless we are request to go to an uri
-          if (!$uri) 
-           {  
-	      header ("Location: ".$http."://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']."my/");
-           }
-          else
-           {
-	      header ("Location: ".$http."://".$GLOBALS['sys_default_domain'].$uri);
-           }
+
+	  // Optionally stay in TLS mode
+	  if ($stay_in_ssl)
+	    {
+	      // switch to requested HTTPs mode
+	      header("Location: {$GLOBALS['sys_https_url']}.$uri");
+	    }
+	  else
+	    {
+	      // Stay in current http mode (also avoids mentioning
+	      // hostname&port, which can be useful in test
+	      // environments with port forwarding)
+	      header("Location: $uri");
+	    }
 	  exit;
 	}
 

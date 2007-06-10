@@ -41,6 +41,11 @@ extract(sane_import('post',
 	'form_loginname', 'form_pw', 'form_pw2', 'form_realname', 'form_email',
 	'form_usepam')));
 
+if (isset($GLOBALS['sys_https_host']) && !session_issecure())
+{
+  # Force use of TLS for login
+  header('Location: '.$GLOBALS['sys_https_url'].$_SERVER['REQUEST_URI']);
+}
 
 # Logged users have no business here
 if (user_isloggedin())

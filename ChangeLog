@@ -1,3 +1,12 @@
+2007-06-10  Sylvain Beucler  <beuc@beuc.net>
+
+	* Using a full URL (with hostname and port, not a relative path)
+	breaks port-forwarding in test environment (eg. qemu --redir). If
+	there's no need to switch http protocol (eg. http->https) the URI
+	is now relative. There's no easy way to get around if
+	sys_https_host is set, but that's less important for quick
+	tests. This concerns links to/in login.php and register.php.
+
 2007-06-09  Sylvain Beucler  <beuc@beuc.net>
 
 	* The frontend configuration file is now optional, Savane works

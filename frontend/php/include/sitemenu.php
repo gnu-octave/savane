@@ -475,16 +475,14 @@ function sitemenu_notloggedin()
   print '
         <li class="menuitem"> <span class="error">'._("Not Logged In").'</span></li>';
 
-  $HTML->menu_entry($GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.urlencode($_SERVER['REQUEST_URI'].$extraurl),
+  $HTML->menu_entry($GLOBALS['sys_home'].'account/login.php?uri='.urlencode($_SERVER['REQUEST_URI'].$extraurl),
 		    _("Login"),
 		    1,
 		    _("Login page - you must have registered an account first"));
 
-  $HTML->menu_entry($GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/register.php',
+  $HTML->menu_entry($GLOBALS['sys_home'].'account/register.php',
 		    _("New User"),
 		    1,
 		    _("Account registration form"));
   $HTML->menuhtml_bottom();
 }
-
-?>
