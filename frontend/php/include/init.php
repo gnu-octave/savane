@@ -83,14 +83,15 @@ if (version_compare(PHP_VERSION, '5.0', '<')) require_once(dirname(__FILE__).'/p
 # if (version_compare(PHP_VERSION, '4.3', '<')) die("PHP 4.3 is required");
 
 # This needs to be loaded first because the lines below depend upon it.
-if (getenv('SAVANE_CONF'))
-{ @include(getenv('SAVANE_CONF').'/.savane.conf.php'); }
-elseif (getenv('SV_LOCAL_INC_PREFIX'))
-{ @include(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'); }
+if (getenv('SAVANE_CONF') and file_exists(getenv('SAVANE_CONF').'/.savane.conf.php'))
+{ include(getenv('SAVANE_CONF').'/.savane.conf.php'); }
+elseif (getenv('SV_LOCAL_INC_PREFIX') and file_exists(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'))
+{ include(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'); }
 else
 {
   # go back to default location
-  @include('/etc/savane/.savane.conf.php');
+  if (file_exists('/etc/savane/.savane.conf.php'))
+    include('/etc/savane/.savane.conf.php');
 }
 
 // Detect where we are, unless it's explicitely specified in the

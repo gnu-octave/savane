@@ -1,3 +1,10 @@
+2007-06-17  Sylvain Beucler  <beuc@beuc.net>
+
+	* Using '@' before include($conf_file) is not a good idea
+	actually: if the (optional) conf file is not there, it avoids a
+	warning, but if there's a syntax error in it, we just get a blank
+	page. So I now explicitely test whether the file_exists.
+
 2007-06-10  Sylvain Beucler  <beuc@beuc.net>
 
 	* Using a full URL (with hostname and port, not a relative path)
