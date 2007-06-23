@@ -302,8 +302,7 @@ function session_delete_cookie($n)
 
 function session_redirect($loc) 
 {
-  header('Location: http' . (session_issecure()?'s':'') . '://' . (session_issecure()?$GLOBALS['sys_https_host']:$GLOBALS['sys_default_domain']).$loc);
-  print("\n\n");
+  header("Location: $loc");
   exit;
 }
 

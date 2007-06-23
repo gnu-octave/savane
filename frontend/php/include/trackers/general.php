@@ -1074,7 +1074,6 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
   # changed the assignee, the new assignee is the current assignee.
   # The previous assignee may or may not receive updates, if he update the 
   # item (if so, he is in CC)
-  temp_dbg($item_id);
   $assignee_uid = db_result(db_execute("SELECT assigned_to from $artifact WHERE bug_id=?",
 				     array($item_id)),
 			    0, 'assigned_to');

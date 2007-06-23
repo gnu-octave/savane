@@ -175,6 +175,7 @@ if ($update)
 			       "group_id=?",
 			       array($group_id));
 
+
       if ($result == true)
 	{ 
 	  session_redirect($_SERVER['PHP_SELF']."?group=$group&feedback=".rawurlencode(_("Update failed.")));
