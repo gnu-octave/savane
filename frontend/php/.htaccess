@@ -13,14 +13,15 @@ php_flag register_globals off
 php_flag magic_quotes_gpc off
 php_flag file_uploads on
 
-# Set error_reporting=E_ALL|E_NOTICE:
-php_value error_reporting 8191
 php_flag display_errors on
 php_flag log_errors on
 
+# Does not work in .htaccess, put it in your apache.conf:
 # Security shield
-php_value disable_functions exec,passthru,popen,shell_exec,system
-php_flag allow_url_fopen off
+#php_admin_value disable_functions exec,passthru,popen,shell_exec,system
+#php_admin_flag allow_url_fopen off
+# Set error_reporting=E_ALL|E_NOTICE:
+#php_value error_reporting 8191
 
 DirectoryIndex index.php index.html
 
