@@ -1,17 +1,18 @@
 <?php # -*- PHP -*-
 # Provide an url with a valid filename that browsers will use (save as...)
+# 
+# Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
+# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007  Sylvain Beucler
 #
-#  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
-#
-#  Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
-#
-#
-# The Savane project is free software; you can redistribute it and/or
+# This file is part of Savane.
+# 
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -21,9 +22,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 require_once('include/init.php');
-register_globals_off();
 
-$file_id = sane_all("file_id");
+extract(sane_import('request', array('file_id')));
 
 # check if the provided file_id is a valid numerical id
 if (!$file_id || !ctype_digit($file_id))
@@ -35,8 +35,8 @@ if (!$file_id || !ctype_digit($file_id))
 # check privacy of the item this file is attached to and reject access by
 # non-authorized users
 
-$sql="SELECT item_id, artifact FROM trackers_file WHERE file_id='$file_id'";
-$result=db_query($sql);
+$result = db_execute("SELECT item_id, artifact FROM trackers_file WHERE file_id=?",
+		     array($file_id));
                                                                                 
 if ($result && db_numrows($result) > 0) {
   $item_id  = db_result($result,0,'item_id');
@@ -44,9 +44,10 @@ if ($result && db_numrows($result) > 0) {
 }
 
 # print "FID = ".$file_id." ITID = ".$item_id." UID = ".user_getid()."\n";
-                                                                                
-$sql="SELECT group_id, privacy FROM $artifact WHERE bug_id=$item_id";
-$result=db_query($sql);
+if (!ctype_alnum($artifact))
+  util_die('Invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
+$result=db_execute("SELECT group_id, privacy FROM $artifact WHERE bug_id=?",
+		   array($item_id));
 
 if ($result && db_numrows($result) > 0) {
   $group_id = db_result($result,0,'group_id');
@@ -58,8 +59,8 @@ if ($result && db_numrows($result) > 0) {
 
 # ---
 
-$sql="SELECT description,file,filename,filesize,filetype FROM trackers_file WHERE file_id='$file_id' LIMIT 1";
-$result=db_query($sql);
+$result = db_execute("SELECT description,file,filename,filesize,filetype FROM trackers_file WHERE file_id=? LIMIT 1",
+		     array($file_id));
 
 if ($result && db_numrows($result) > 0) 
 {

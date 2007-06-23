@@ -1,19 +1,18 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
+# Send message to given user via Savane
 # 
-#  Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007  Sylvain Beucler
 #
-#  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# This file is part of Savane.
 # 
-# The Savane project is free software; you can redistribute it and/or
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -24,10 +23,6 @@
 
 require_once('include/init.php');
 require_once('include/sendmail.php');
-
-register_globals_off();
-#input_is_safe();
-#mysql_is_safe();
 
 extract(sane_import('request',
   array('touser', 'fromuser', 'send_mail', 'subject', 'body', 'feedback')));

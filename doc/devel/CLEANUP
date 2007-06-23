@@ -65,6 +65,18 @@ Once a page is clean-up wrt input (GET/POST) or output (MySQL), we
 You can use devel/sv_check_security.pl will be able to check which
 files remains to be cleaned-up based on those tags.
 
+After the clean-up I removed these tags. The following files were not
+cleaned-up because they are old unused code:
+  ../frontend/php/include/trackers_run/mod_filters.php
+  ../frontend/php/include/trackers_run/postmod_filters.php
+  ../frontend/php/forum/old/save.php
+  ../frontend/php/forum/old/expand.php
+  ../frontend/php/forum/old/index.php
+  ../frontend/php/forum/old/monitor.php
+  ../frontend/php/forum/old/thread.php
+  ../frontend/php/forum/old/who_monitors.php
+  ../frontend/php/forum/old/admin/index.php
+
 
 - Autoconfiscation:
 

@@ -1,20 +1,18 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
+# Same as 404 error but for export pages
+# 
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007  Sylvain Beucler
 #
-# $Id: 404.php 4567 2005-06-30 17:19:37Z toddy $
-#
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#
-#  Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
-#
-#
-# The Savane project is free software; you can redistribute it and/or
+# This file is part of Savane.
+# 
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -23,12 +21,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Same as 404 error but for export pages
-
 require_once('include/init.php');
-register_globals_off();
-#input_is_safe();
-#mysql_is_safe();
 
 site_header(array('title'=>_("Requested XML not Found (Error 404)")));
 

@@ -1056,7 +1056,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
     $artifact = ARTIFACT;
   }
   if (!ctype_alnum($artifact))
-    util_die('invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
+    util_die('Invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
 
   $addresses = array();
   $addresses_to_skip = array();
@@ -1214,7 +1214,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
     { $artifact = ARTIFACT; }
 
   if (!ctype_alnum($artifact))
-    util_die('trackers_mail_followup: invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
+    util_die('Invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
 
   $result = db_execute("SELECT * from $artifact WHERE bug_id=?", array($item_id));
   $bug_href = "http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']."$artifact/?$item_id";

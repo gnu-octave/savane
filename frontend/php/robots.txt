@@ -1,5 +1,5 @@
 User-agent: *
 Disallow: /include/
 Disallow: /images/
-Disallow: /admin/
+Disallow: /siteadmin/
 
