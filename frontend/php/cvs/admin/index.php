@@ -23,6 +23,7 @@
 #mysql_is_safe();
 
 require_once('../../include/init.php');
+require_once('../../include/sane.php');
 require_once('../../include/account.php');
 
 # get current information
@@ -36,49 +37,55 @@ if (db_numrows($res_grp) < 1)
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 
-#echo "<pre>";
-#print_r($_POST);
-#echo "</pre>";
+extract(sane_import('post',
+  array(
+    'log_accum',
+    'arr_id', 'arr_remove',
+    'arr_repo_name', 'arr_match_type', 'arr_dir_list', 'arr_branches',
+    'arr_emails_notif', 'arr_enable_diff', 'arr_emails_diff',
+)));
 
 #echo "<pre>\n";
-if (isset($_POST['log_accum'])) {
-  foreach ($_POST['remove'] as $hook_id => $ignored) {
-    if (!ctype_digit($hook_id.''))
-      exit_error(_("Non-numeric hook id") . ": [" . htmlspecialchars($hook_id) . "]");
-    db_query("DELETE cvs_hooks, cvs_hooks_log_accum FROM cvs_hooks, cvs_hooks_log_accum
-              WHERE cvs_hooks.id = cvs_hooks_log_accum.hook_id
-                AND group_id=? AND id=?",
-	     array($group_id, $hook_id)) or die(mysql_error());
+if (isset($log_accum)) {
+  if (isset($arr_remove) and is_array($arr_remove)) {
+    foreach ($arr_remove as $hook_id => $ignored) {
+      if (!ctype_digit($hook_id.''))
+	exit_error(_("Non-numeric hook id") . ": [" . htmlspecialchars($hook_id) . "]");
+      db_execute("DELETE cvs_hooks, cvs_hooks_log_accum FROM cvs_hooks, cvs_hooks_log_accum
+                  WHERE cvs_hooks.id = cvs_hooks_log_accum.hook_id
+                    AND group_id=? AND id=?",
+		 array($group_id, $hook_id)) or die(mysql_error());
+    }
   }
-  foreach ($_POST['id'] as $hook_id => $ignored) {
+  foreach ($arr_id as $hook_id => $ignored) {
     // Input validation
     if (!ctype_digit($hook_id.'') and ($hook_id != "new"))
       exit_error(_("Non-numeric hook id") . ": [" . htmlspecialchars($hook_id) . "]");
 
-    if (!isset($_POST['remove'][$hook_id])) {
-      $repo_name = $_POST['repo_name'][$hook_id];
+    if (!isset($arr_remove[$hook_id])) {
+      $repo_name = $arr_repo_name[$hook_id];
       if ($repo_name != 'sources' and $repo_name != 'web')
-	exit_error(_("Invalid repository name"));
-      $match_type = $_POST['match_type'][$hook_id];
+	exit_error(_("Invalid repository name: " . htmlspecialchars($repo_name)));
+      $match_type = $arr_match_type[$hook_id];
       if ($match_type != 'ALL' and $match_type != 'dir_list' and $match_type != 'DEFAULT')
 	exit_error(_("Invalid matching type"));
-      $dir_list = $_POST['dir_list'][$hook_id];
+      $dir_list = $arr_dir_list[$hook_id];
       if ($match_type != 'dir_list')
 	unset($dir_list);
       else if ($dir_list == '' or preg_match('/[[:space:]]/', $dir_list) or !preg_match("/^(([a-zA-Z0-9_.+-\/]+)(,|$))+/", $dir_list))
 	exit_error(_("Invalid directories list"));
-      $branches = $_POST['branches'][$hook_id];
+      $branches = $arr_branches[$hook_id];
       if ($branches == '')
 	unset($branches);
       $enable_diff = '0';
-      if (isset($_POST['enable_diff'][$hook_id]))
-	$enable_diff = $_POST['enable_diff'][$hook_id];
+      if (isset($arr_enable_diff[$hook_id]))
+	$enable_diff = $arr_enable_diff[$hook_id];
       if ($enable_diff != '0' and $enable_diff != '1')
 	exit_error(_("Invalid value for enable_diff"));
-      $emails_notif = $_POST['emails_notif'][$hook_id];
+      $emails_notif = $arr_emails_notif[$hook_id];
       if (!preg_match('/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))+/', $emails_notif))
 	exit_error(_("Invalid list of notification e-mails"));
-      $emails_diff = $_POST['emails_diff'][$hook_id];
+      $emails_diff = $arr_emails_diff[$hook_id];
       if ($emails_diff == '' or $enable_diff == '0')
 	unset($emails_diff);
       else if (!preg_match('/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))*/', $emails_diff))
@@ -105,7 +112,7 @@ if (isset($_POST['log_accum'])) {
 	  DB_AUTOQUERY_INSERT) or die(mysql_error());
       } else {
 	// Update existing entry
-	db_query('cvs_hooks, cvs_hooks_log_accum',
+	db_autoexecute('cvs_hooks, cvs_hooks_log_accum',
 	  array(
 	    'repo_name' => $repo_name,
 	    'match_type' => $match_type,
@@ -163,24 +170,24 @@ while ($row = mysql_fetch_assoc($result)) {
   $cur= $row['hook_id'];
   echo "<tr>\n";
   echo "<td>";
-  echo "<input type='hidden' name='id[$cur]' value='$cur' />\n";
-  echo html_build_checkbox("remove[$cur]", 0);
+  echo "<input type='hidden' name='arr_id[$cur]' value='$cur' />\n";
+  echo html_build_checkbox("arr_remove[$cur]", 0);
   echo "</td>\n";
   echo "<td>";
-  echo html_build_select_box_from_array(array('sources', 'web'), "repo_name[$cur]", $row['repo_name'], 1);
+  echo html_build_select_box_from_array(array('sources', 'web'), "arr_repo_name[$cur]", $row['repo_name'], 1);
   echo "</td>\n";
   echo "<td>";
   echo html_build_select_box_from_arrays(array('ALL', 'dir_list', 'DEFAULT'),
 					 array('Always', 'Module list', 'Fallback'),
-					 "match_type[$cur]", $row['match_type'], 0);
+					 "arr_match_type[$cur]", $row['match_type'], 0);
   echo "</td>\n";
-  echo "<td><input type='text' name='dir_list[$cur]' value='{$row['dir_list']}' /></td>\n";
-  echo "<td><input type='text' name='branches[$cur]' value='{$row['branches']}' /></td>\n";
-  echo "<td><input type='text' name='emails_notif[$cur]' value='{$row['emails_notif']}' /></td>\n";
+  echo "<td><input type='text' name='arr_dir_list[$cur]' value='{$row['dir_list']}' /></td>\n";
+  echo "<td><input type='text' name='arr_branches[$cur]' value='{$row['branches']}' /></td>\n";
+  echo "<td><input type='text' name='arr_emails_notif[$cur]' value='{$row['emails_notif']}' /></td>\n";
   echo "<td>";
-  echo html_build_checkbox("enable_diff[$cur]", $row['enable_diff']);
+  echo html_build_checkbox("arr_enable_diff[$cur]", $row['enable_diff']);
   echo "</td>\n";
-  echo "<td><input type='text' name='emails_diff[$cur]' value='{$row['emails_diff']}' /></td>\n";
+  echo "<td><input type='text' name='arr_emails_diff[$cur]' value='{$row['emails_diff']}' /></td>\n";
   echo "<td>" . ($row['needs_refresh'] ? 'Scheduled' : 'Yes') . "</td>";
   echo "</tr>\n";
 }
@@ -195,12 +202,12 @@ echo "<h3>New notification</h3>";
 echo "<form action='{$_SERVER['PHP_SELF']}?group=$group' method='post'>";
 echo "<ol>";
 echo "<li>Repository: ";
-echo html_build_select_box_from_array(array('sources', 'web'), "repo_name[new]", $row['repo_name'], 1);
+echo html_build_select_box_from_array(array('sources', 'web'), "arr_repo_name[new]", $row['repo_name'], 1);
 echo "</li><li>";
 echo "Matching type: ";
 echo html_build_select_box_from_arrays(array('ALL', 'dir_list', 'DEFAULT'),
 					 array('Always', 'Module list', 'Fallback'),
-					 "match_type[new]", $row['match_type'], 0);
+					 "arr_match_type[new]", $row['match_type'], 0);
 echo "<ul>
   <li><i>Always</i> is always performed (even in addition to Fallback)</li>
   <li><i>Module list</i> if you specify a list of directories (see below)<li/>
@@ -211,24 +218,24 @@ echo "Filter by directory: if match is <i>Module list</i>, enter a list of direc
   (eg: <code>emacs,emacs/lisp,manual</code>)<br />
   You'll only get notifications if the commit is performed in one of these directories.<br/>
   Leave blank if you want to get notifications for all the repository (default):<br />";
-echo "<input type='text' name='dir_list[new]' value='{$row['dir_list']}' />";
+echo "<input type='text' name='arr_dir_list[new]' value='{$row['dir_list']}' />";
 echo "</li><li>";
 echo "List of comma-separated e-mails to send notifications to (eg: him@domain.org,her@domain.org):<br />";
-echo "<input type='text' name='emails_notif[new]' value='{$row['emails_notif']}' />";
+echo "<input type='text' name='arr_emails_notif[new]' value='{$row['emails_notif']}' />";
 echo "</li><li>";
 echo "Send diffs? ";
-echo html_build_checkbox("enable_diff[new]", $row['enable_diff']);
+echo html_build_checkbox("arr_enable_diff[new]", $row['enable_diff']);
 echo "</li><li>";
 echo "Optional alternate list of mails to send diffs separately to (eg: him@domain.org,her@domain.org).<br />
   If empty, the diffs will be included with the commit notifications:<br />";
-echo "<input type='text' name='emails_diff[new]' value='{$row['emails_diff']}' />\n";
+echo "<input type='text' name='arr_emails_diff[new]' value='{$row['emails_diff']}' />\n";
 echo "</li><li>";
 echo "Filter by branch: you will be notified only of these branches' commits, separated by commas.<br />
   Enter <i>HEAD</i> if you only want trunk (non-branch) commits.<br />
   Leave blank if you want to get notifications for all commits (default):<br/>";
-echo "<input type='text' name='branches[new]' value='{$row['branches']}' />";
+echo "<input type='text' name='arr_branches[new]' value='{$row['branches']}' />";
 echo "</li></ol>";
-echo "<input type='hidden' name='id[new]' value='new' />";
+echo "<input type='hidden' name='arr_id[new]' value='new' />";
 $caption = _('Add');
 echo "<input type='submit' name='log_accum' value='$caption' />
 </form>";

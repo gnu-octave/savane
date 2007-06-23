@@ -1040,7 +1040,7 @@ function trackers_canned_response_box ($group_id,$name='canned_response')
 //   return false;
 // }
 
-function trackers_build_notification_list($item_id, $group_id, $changes)
+function trackers_build_notification_list($item_id, $group_id, $changes, $artifact=null)
 {
   # Should be notified any person in the CC list and the assignee
   # 
@@ -1051,6 +1051,12 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
   #   - unless this person wants to know only if the item status changed and
   #   the item status changed
   #
+
+  if ($artifact == null) {
+    $artifact = ARTIFACT;
+  }
+  if (!ctype_alnum($artifact))
+    util_die('invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
 
   $addresses = array();
   $addresses_to_skip = array();
@@ -1068,7 +1074,8 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
   # changed the assignee, the new assignee is the current assignee.
   # The previous assignee may or may not receive updates, if he update the 
   # item (if so, he is in CC)
-  $assignee_uid = db_result(db_execute("SELECT assigned_to from ".ARTIFACT." WHERE bug_id=?",
+  temp_dbg($item_id);
+  $assignee_uid = db_result(db_execute("SELECT assigned_to from $artifact WHERE bug_id=?",
 				     array($item_id)),
 			    0, 'assigned_to');
   # assignee to 100 == unassigned 
@@ -1079,7 +1086,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes)
   # Now go through the CC list: 
   # (automatically added CC will be in numerical
   # form and email = added_by)
-  $result = db_execute("SELECT email,added_by FROM ".ARTIFACT."_cc WHERE bug_id=? GROUP BY email LIMIT 150",
+  $result = db_execute("SELECT email,added_by FROM {$artifact}_cc WHERE bug_id=? GROUP BY email LIMIT 150",
 		       array($item_id));
   $rows = db_numrows($result);
   for ($i=0; $i < $rows; $i++)
@@ -1316,7 +1323,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
   # See who is going to receive the notification.
   # Plus append any other email
   # given at the end of the list.
-  $arr_addresses = trackers_build_notification_list($item_id,$group_id,$changes);
+  $arr_addresses = trackers_build_notification_list($item_id,$group_id,$changes,$artifact);
   $to = join(',',$arr_addresses);
   $from = user_getrealname(0,1).' <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
   $subject = utils_unconvert_htmlspecialchars(db_result($result,0,'summary'));

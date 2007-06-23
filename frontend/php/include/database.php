@@ -148,9 +148,25 @@ $success = db_autoexecute('user', array('realname' => $newvalue),
 function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
 			$where_condition=false, $where_inputarr=null)
 {
-  // table name validation
-  if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]+$/', $table))
-    util_die("db_autoexecute: invalid table name: " . htmlspecialchars($table));
+  // table name validation and quoting
+  $tables = preg_split('/[\s,]+/', $table);
+  $tables_string = '';
+  $first = true;
+  foreach ($tables as $table)
+    {
+      if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]+$/', $table))
+	util_die("db_autoexecute: invalid table name: " . htmlspecialchars($table));
+
+      if ($first)
+	{
+	  $tables_string = "`$table`";
+	  $first = false;
+	}
+      else 
+	{
+	  $tables_string .= ",`$table`";
+	}
+    }
 
   switch((string) $mode) {
   case 'INSERT':
@@ -173,7 +189,7 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
       }
     // $fields = `date`,`summary`,...
     $question_marks = implode(',', array_fill(0, count($dict), '?')); // ?,?,...
-    return db_execute("INSERT INTO `$table` ($fields) VALUES ($question_marks)",
+    return db_execute("INSERT INTO $tables_string ($fields) VALUES ($question_marks)",
 		     array_values($dict));
     break;
   case 'UPDATE':
@@ -187,7 +203,7 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
     $sql_fields = rtrim($sql_fields, ',');
     $values = array_merge($values, $where_inputarr);
     $where_sql = $where_condition ? "WHERE $where_condition" : '';
-    return db_execute("UPDATE `$table` SET $sql_fields $where_sql", $values);
+    return db_execute("UPDATE $tables_string SET $sql_fields $where_sql", $values);
     break;
   default:
     // no default

@@ -2183,10 +2183,10 @@ function trackers_data_reassign_item ($item_id,
           'status_id' => 3,
 	  'close_date' => $now,
 	  'summary' => "Reassigned to another tracker [was: {$row_data['summary']}]",
-	  'details' => '<p class=\"warn\">THIS ITEM WAS REASSIGNED TO '
+	  'details' => 'THIS ITEM WAS REASSIGNED TO '
 	    .strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
 	    .' #'.$new_item_id
-	    .'</p> '.$row_data['details']
+	    ."\n".$row_data['details']
         ), DB_AUTOQUERY_UPDATE,
         "bug_id=?", array($item_id));
       trackers_data_add_history('close_date',$now,$now,$item_id);      
@@ -2206,10 +2206,10 @@ function trackers_data_reassign_item ($item_id,
         array(
 	  'bug_id' => $item_id,
 	  'field_name' => 'details',
-	  'old_value' => '<p class=\"warn\">THIS ITEM WAS REASSIGNED TO '
+	  'old_value' => 'THIS ITEM WAS REASSIGNED TO '
 	    .strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
 	    .' #'.$new_item_id.'</p>'
-	    .'<p>Please, do not post any new comments to this item.</p>',
+	    ."\n" . 'Please, do not post any new comments to this item.',
 	  'mod_by' => user_getid(),
 	  'date' => $now,
 	  'type' => 100
@@ -2218,10 +2218,7 @@ function trackers_data_reassign_item ($item_id,
       # Now send the notification (this must be done here, because we got
       # here the proper new id, etc)
       list($additional_address, $sendall) = trackers_data_get_item_notification_info($new_item_id, $reassign_change_artifact, 1);
-      if (($sendall == 1) && (trim($address) != "") && (trim($additional_address) != "")) 
-	{ $address .= ", "; }
-      $address .= $additional_address;
-      trackers_mail_followup($new_item_id, $address, false, false, $reassign_change_artifact);
+      trackers_mail_followup($new_item_id, $additional_address, false, false, $reassign_change_artifact);
       
 
       # If we get here, assume everything went properly

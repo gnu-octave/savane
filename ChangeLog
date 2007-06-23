@@ -1,3 +1,21 @@
+2007-06-23  Sylvain Beucler  <beuc@beuc.net>
+
+	* New debug variable: sys_debug_noformcheck to bypass form
+	duplicates checks - this makes devs waste time going back + reload
+	+ resubmit during debugging.
+
+	* frontend/php/cvs/admin/index.php: sane_import clean-up + fixed
+	warning when no hook was removed
+
+	* frontend/php/include/trackers/data.php: remove HTML from
+	reassignment message, it's not accepted by the tracker anymore for
+	a while now.
+
+	* Pass the tracker type to trackers_build_notification_list -
+	during item reassignement, it can be a different type.
+
+	* Various bugfixes (warnings, introduces during the clean-up...)
+
 2007-06-17  Sylvain Beucler  <beuc@beuc.net>
 
 	* Using '@' before include($conf_file) is not a good idea

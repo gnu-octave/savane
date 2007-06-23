@@ -69,11 +69,14 @@ $sys_mail_admin = get_current_user();
 $sys_mail_replyto = "NO-REPLY.INVALID-ADDRESS";
 $sys_email_adress="$sys_mail_admin@$sys_mail_domain";
 
-// Debug
+// Debug variables
+// (Add them in tests/minimal_configs/Makefile, possibly commented out)
 // Print debug information before exiting:
 $sys_debug_on = false;
 // Prevent redirections like sv.gnu.org -> sv.nongnu.org
 $sys_debug_nobasehost = false;
+// Prevent form duplicate checks which are a PITA during debugging
+$sys_debug_noformcheck = false;
 
 
 # autoconf-based:
