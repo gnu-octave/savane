@@ -31,6 +31,8 @@ $GLOBALS['feedback_count'] = 0;
 $GLOBALS['feedback'] = '';
 $GLOBALS['ffeedback'] = '';
 
+define('FB_ERROR', 1);
+
 function utils_safeinput ($string)
 {
   return safeinput($string);

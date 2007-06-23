@@ -209,7 +209,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array, $chang
 	{
 	  # Update database silently, we may have no rows to update
 	  db_autoexecute(ARTIFACT, $upd_list, DB_AUTOQUERY_UPDATE,
-			 "WHERE bug_id=?", array($item_id));
+			 "bug_id=?", array($item_id));
 	}
     }
 

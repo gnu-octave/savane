@@ -411,6 +411,7 @@ if ($group_id && user_ismember($group_id,'A'))
 
 	    $default_result = trackers_data_get_field_predefined_values($field, '100',false,false,false);
 	    $default_rows = db_numrows($default_result);
+	    $previous = false;
 	    if ($default_result && $default_rows > 0)
 	      {
 		while ($fld_val = db_fetch_array($default_result))
@@ -428,7 +429,7 @@ if ($group_id && user_ismember($group_id,'A'))
 		      { print ", "; }
 
 		    print '<strong>'.$value.'</strong> <span class="smaller">('.$order.', "'.$description.'")</span>';
-		    $previous = 1;
+		    $previous = true;
 		  }
 
 	      }

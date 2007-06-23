@@ -51,7 +51,7 @@ if (db_numrows($result) > 0)
 
 # Check whether this item is private or not. If it is private, show only to
 # the submitter or to people that got the right to see private items
-  unset($private_intro);
+  $private_intro = '';
   if (db_result($result,0,'privacy') == "2")
     {
       if (member_check_private(0, $group_id))
@@ -182,7 +182,8 @@ if (db_numrows($result) > 0)
   $is_manager = member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'3');
 
   # Variables that will be used afterwards
-  unset($item_assigned_to, $item_discussion_lock);
+  $item_assigned_to = null;
+  $item_discussion_lock = null;
 
   # $i is used to count the number of field
   # $j is used to select the appropriate background color
@@ -525,7 +526,7 @@ if (db_numrows($result) > 0)
   );
   foreach ($tracker_list as $option_value => $text)
     {
-      unset($selected);
+      $selected = '';
       if ($option_value == $depends_search_only_artifact)
         { $selected = ' selected="selected"'; }
       print "<option value=\"$option_value\"$selected>$text</option>\n";
@@ -538,7 +539,7 @@ if (db_numrows($result) > 0)
 
   # By default, search restricted to the project (lighter for the CPU, probably
   # also more accurate)
-  unset($selected);
+  $selected = '';
   if ($depends_search_only_project == "any")
     { $selected = ' selected="selected"'; }
 
@@ -548,7 +549,7 @@ if (db_numrows($result) > 0)
   if (!$selected)
     { $selected = ' selected="selected"'; }
   else
-    { unset($selected); }
+    { $selected = ''; }
 
   print '<option value="notany"'.$selected.'>'._("This Project Only").'</option>
    </select>&nbsp;';
@@ -571,7 +572,7 @@ if (db_numrows($result) > 0)
       printf (_("Please select a dependency to add in the result of your search of '%s' in the database:"), $depends_search);
       print '</span>';
 
-      unset($success);
+      $success = false;
 
 # If we have less than 4 characters, to avoid giving lot of feedback
 # and put an exit to the report, just consider the search as a failure.
@@ -696,10 +697,11 @@ if (db_numrows($result) > 0)
       function specific_reassign_artifact ($art, $content)
 	{
 # Function too trivial to generalized in usual includes.
-	  if (!$GLOBALS[reassign_change_artifact] && ARTIFACT == $art || $GLOBALS[reassign_change_artifact] == $art)
+	  $checked = '';
+	  if (!$GLOBALS['reassign_change_artifact'] && ARTIFACT == $art || $GLOBALS['reassign_change_artifact'] == $art)
 	    { $checked = ' selected="selected"'; }
 	  print '<option value="'.$art.'"'.$checked.'>'.$content.'</option>';
-	  unset($checked);
+	  $checked = '';
 	}
       print '<select name="reassign_change_artifact">';
       specific_reassign_artifact("support", _("Support Tracker"));
@@ -744,7 +746,7 @@ if (db_numrows($result) > 0)
 # to use the back button of his browser.
 	  print '<br />&nbsp;&nbsp;&nbsp;<input type="radio" name="reassign_change_project" value="0" checked="checked" /> '._("Do not reassign to another project.");
 
-	  unset($success);
+	  $success = false;
 	  $result_search = search_run($reassign_change_project_search, "soft", 0);
 	  $success = db_numrows($result_search);
 

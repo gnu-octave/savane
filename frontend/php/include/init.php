@@ -282,6 +282,10 @@ if (isset($GLOBALS['sys_unix_group_name']))
     $sys_group_id = db_result($res, 0, 'group_id');
 }
 
+if (!isset($sys_group_id)) {
+  fb("Your \$sys_group_id configuration variable refers to a non-existing project. Please update the configuration.", FB_ERROR);
+}
+
 # determine if they're logged in
 session_set();
 

@@ -312,18 +312,18 @@ function html_feedback_top()
   # Only success
   if ($GLOBALS['feedback'] && !$GLOBALS['ffeedback'])
     {
-        print '<div id="feedback" class="feedback" '.$script_hide.'><span class="feedbacktitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" class="feedbackimage" alt="'._("Success").'" /> '._("Success:").'</span> '.$GLOBALS['feedback'].'</div>';
+        print '<div id="feedback" class="feedback" '.$script_hide.'><span class="feedbacktitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" class="feedbackimage" alt="" /> '._("Success:").'</span> '.$GLOBALS['feedback'].'</div>';
     }
 
   # Only errors
   if ($GLOBALS['ffeedback'] && !$GLOBALS['feedback'])
     {
-      print '<div id="feedback" class="feedbackerror" '.$script_hide.'><span class="feedbackerrortitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" class="feedbackimage" alt="'._("Error").'" /> '._("Error:").'</span><br/>'.$GLOBALS['ffeedback'].'</div>';
+      print '<div id="feedback" class="feedbackerror" '.$script_hide.'><span class="feedbackerrortitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" class="feedbackimage" alt="" /> '._("Error:").'</span><br/>'.$GLOBALS['ffeedback'].'</div>';
     }
 
   # Errors and success
   if ($GLOBALS['ffeedback'] && $GLOBALS['feedback'])
-    {  print '<div id="feedback" class="feedbackerrorandsuccess" '.$script_hide.'><span class="feedbackerrorandsuccesstitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" class="feedbackimage" alt="'._("Some Errors").'" /> '._("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.$GLOBALS['ffeedback'].'</div>'; }
+    {  print '<div id="feedback" class="feedbackerrorandsuccess" '.$script_hide.'><span class="feedbackerrorandsuccesstitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" class="feedbackimage" alt="" /> '._("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.$GLOBALS['ffeedback'].'</div>'; }
 
   # We empty feedback so there will be a bottom feedback only if something
   # changed. It may confuse users, however I would find more confusing to

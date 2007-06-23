@@ -557,6 +557,8 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
       print html_build_list_table_top ($title_arr);
 
       $j=0;
+      $previous_date = null;
+      $previous_user = null;
       for ($i=0; $i < $rows; $i++)
 	{
           $field = db_result($result, $i, 'field_name');
@@ -780,7 +782,7 @@ function show_dependent_item ($item_id, $dependson=0)
   # Sort the content by key, which contain the date as first field
   # (so order by date)
   ksort($content);
-  unset($i);
+  $i = 0;
   
   while (list($key,) = each($content))
     {
@@ -840,7 +842,7 @@ function show_dependent_item ($item_id, $dependson=0)
 	}
 	  
        # Print group info if the item is from another group
-      unset($fromgroup);
+      $fromgroup = null;
       if ($current_group_id != $group_id)
 	{
 	  if (!array_key_exists($current_group_id, $group_getname))
@@ -863,10 +865,10 @@ function show_dependent_item ($item_id, $dependson=0)
   # Add links to make digests
   reset($artifacts);
   print '<p class="noprint"><span class="preinput">'._("Digest:").'</span><br />&nbsp;&nbsp;&nbsp;';
-  unset($content);
+  $content = '';
   while (list(, $tracker) = each($artifacts))
     {
-      if ($item_exists_tracker[$tracker])
+      if (!empty($item_exists_tracker[$tracker]))
 	{
 	  switch ($tracker)
 	    {

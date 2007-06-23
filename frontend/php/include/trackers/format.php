@@ -521,7 +521,9 @@ function format_item_changes ($changes,$item_id,$group_id)
       $label = trackers_data_get_label($field);
       if (!$label)
 	{ $label = $field; }
-      $out .= sprintf($fmt, $label, $h['del'],$h['add']);
+      $out .= sprintf($fmt, $label,
+		      isset($h['del']) ? $h['del'] : null,
+		      isset($h['add']) ? $h['add'] : null);
     }
 
   if ($out)

@@ -63,11 +63,13 @@ extract(sane_import('post',
 	'submitreturn',
 	// delete_*
 	'item_file_id', 'item_cc_id',
-	// delete_dependancy
-	'item_depends_on', 'item_depends_on_artifact',
 	)));
 // Spam-related
-extract(sane_import('get', array('comment_internal_id')));
+extract(sane_import('get',
+  array('comment_internal_id',
+	// delete_dependancy
+	'item_depends_on', 'item_depends_on_artifact',
+)));
 
 # Other form fields: check trackers_extract_field_list()
 

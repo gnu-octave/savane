@@ -766,17 +766,21 @@ function trackers_data_get_group_id($field, $by_field_id=false)
 function trackers_data_get_label($field, $by_field_id=false)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  $lbl = null;
   if ($by_field_id)
     {
-      $lbl = $BF_USAGE_BY_ID[$field]['custom_label'];
-      if (!isset($lbl))
+      if (isset($BF_USAGE_BY_ID[$field]['custom_label']))
+	$lbl = $BF_USAGE_BY_ID[$field]['custom_label'];
+      if (!isset($lbl) and isset($BF_USAGE_BY_ID[$field]['label']))
 	{ $lbl = $BF_USAGE_BY_ID[$field]['label']; }
-    }  else
-      {
+    }
+  else
+    {
+      if (isset($BF_USAGE_BY_NAME[$field]['custom_label']))
 	$lbl = $BF_USAGE_BY_NAME[$field]['custom_label'];
-	if (!isset($lbl))
-	  { $lbl = $BF_USAGE_BY_NAME[$field]['label']; }
-      }
+      if (!isset($lbl) and isset($BF_USAGE_BY_NAME[$field]['label']))
+	{ $lbl = $BF_USAGE_BY_NAME[$field]['label']; }
+    }
   return($lbl);
 }
 
@@ -1657,9 +1661,10 @@ function trackers_data_handle_update ($group_id,
 
 		  # Register the transition, but only if the field it is about
                   # was not filled in the form
-		  if (!is_array($changes[$field]) ||
-		      (!array_key_exists('del', $changes[$field]) &&
-		       !array_key_exists('add', $changes[$field])))
+		  if (!isset($changes[$field])
+		      || !is_array($changes[$field])
+		      || (!array_key_exists('del', $changes[$field])
+			  && !array_key_exists('add', $changes[$field])))
 		    {
 
 		      $field_transition_id = $field_transition[$field_id]["any"][$value]['transition_id'];
@@ -2143,7 +2148,7 @@ function trackers_data_reassign_item ($item_id,
           'item_id' => $new_item_id,
 	  'artifact' => $reassign_change_artifact
         ), DB_AUTOQUERY_UPDATE,
-	"WHERE item_id=? AND artifact=?",
+	"item_id=? AND artifact=?",
 	array($item_id, ARTIFACT));
 
       if (!$result)
@@ -2183,7 +2188,7 @@ function trackers_data_reassign_item ($item_id,
 	    .' #'.$new_item_id
 	    .'</p> '.$row_data['details']
         ), DB_AUTOQUERY_UPDATE,
-        "WHERE bug_id=?", array($item_id));
+        "bug_id=?", array($item_id));
       trackers_data_add_history('close_date',$now,$now,$item_id);      
 
       if (!$result)
@@ -2672,8 +2677,8 @@ function trackers_data_add_watchees ($user_id, $watchee_id, $group_id)
 
 function trackers_data_delete_watchees ($user_id, $watchee_id, $group_id)
 {
-  return db_autoexecute("DELETE FROM trackers_watcher WHERE user_id=? AND watchee_id=? AND group_id=?",
-			array($user_id, $watchee_id, $group_id));
+  return db_execute("DELETE FROM trackers_watcher WHERE user_id=? AND watchee_id=? AND group_id=?",
+			    	array($user_id, $watchee_id, $group_id));
 }
 
 

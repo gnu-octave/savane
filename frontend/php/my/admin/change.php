@@ -269,8 +269,8 @@ if ($update)
 	  $success = false;
 	  
 	  if (ereg("^[a-f0-9]{16}$",$confirm_hash)) {
-	    $res_user = db_autoexecute("SELECT * FROM user WHERE confirm_hash=?",
-				       array($confirm_hash));
+	    $res_user = db_execute("SELECT * FROM user WHERE confirm_hash=?",
+				   array($confirm_hash));
 	    if (db_numrows($res_user) > 1)
 	      {
 		$ffeedback = (" This confirm hash exists more than once.");
