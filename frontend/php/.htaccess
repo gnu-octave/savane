@@ -3,7 +3,26 @@
 # 
 # But if it is not the case, it should be able usually to rely on these.
 
+# If you want to override the default configuration path:
+#SetEnv SAVANE_CONF /etc/savane/
+
 ErrorDocument 404 /404.php
+
+# PHP conf
+php_admin_flag register_globals off
+php_admin_flag magic_quotes_gpc off
+php_admin_flag file_uploads on
+
+# Set error_reporting=E_ALL|E_NOTICE:
+php_value error_reporting 8191
+php_admin_flag display_errors on
+php_admin_flag log_errors on
+
+# Security shield
+php_admin_value disable_functions exec,passthru,popen,shell_exec,system
+php_admin_flag allow_url_fopen off
+
+DirectoryIndex index.php index.html
 
 <Files ~ "^(users|us|u|projects|pr|p|file)$">
   SetHandler application/x-httpd-php

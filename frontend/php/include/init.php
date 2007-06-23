@@ -88,6 +88,7 @@ if (version_compare(PHP_VERSION, '5.0', '<')) require_once(dirname(__FILE__).'/p
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF') and file_exists(getenv('SAVANE_CONF').'/.savane.conf.php'))
 { include(getenv('SAVANE_CONF').'/.savane.conf.php'); }
+// deprecated:
 elseif (getenv('SV_LOCAL_INC_PREFIX') and file_exists(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'))
 { include(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'); }
 else
