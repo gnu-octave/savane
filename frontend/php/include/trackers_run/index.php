@@ -520,16 +520,14 @@ switch ($func)
 
 ### Add a comment to a bug already in the database,
 ### these are the only changes an non member can make
+
+# Restrictions: don't allow posts/attachments/... but allow votes and CCs
+
      $changed = false;
 
      # Check for duplicates
      if (!form_check($form_id))
        { exit_error(_("Exiting")); }
-
-      # Check restrictions: should never end up here, if so, assume 
-      # it is malicious
-     if (!group_restrictions_check($group_id, ARTIFACT, 2))
-       { exit_permission_denied(); }
 
      # Filter out people that would submit data while they are not allowed 
      # too (obviously by using an old form, or something else)
@@ -564,21 +562,24 @@ switch ($func)
 	 exit_permission_denied();
        }
 		    
-     # To keep track of changes
+     // To keep track of changes
      $changes = array();
 
-     # Attach new file if there is one
-     # Do that first so it can update the comment
+     // Attach new file if there is one
+     // Do that first so it can update the comment
      $additional_comment = '';
-     // (attach_several_files will use sane_() functions to get the
-     // the necessary info)
-     list($changed, $additional_comment) = 
-       trackers_attach_several_files($item_id,
-				     $group_id,
-				     $changes);
-		    
+     if (group_restrictions_check($group_id, ARTIFACT, 2))
+       {
+         // (attach_several_files will use sane_() functions to get the
+         // the necessary info)
+         list($changed, $additional_comment) = 
+           trackers_attach_several_files($item_id,
+                                         $group_id,
+                                         $changes);
+       }
+                    
      # Add a new comment if there is one
-     if ($comment != '')
+     if ($comment != '' and group_restrictions_check($group_id, ARTIFACT, 2))
        {
          # Add the additionnal comment that may have been added during
          # the file upload

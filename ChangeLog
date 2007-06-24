@@ -1,5 +1,8 @@
 2007-06-24  Sylvain Beucler  <beuc@beuc.net>
 
+	* Fixed old bug that disallowed people from adding themselves in
+	Cc, or vote, in a tracker with member-only posting
+
 	* Quiet an old bug in include/my/general.php where hidden items
 	trigger bad SQL requests in condensed (i.e. user_home.php) mode
 
