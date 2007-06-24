@@ -329,6 +329,7 @@ if(!defined('ARTIFACT'))
 # Maybe it was a link shortcut like
 # blabla.org/task/?nnnn (blabla.org/task/?#nnnn cannot work because # is 
 # not sent by the browser as it's a tag for html anchors)
+# Necessary to determine group_id
 if ((ARTIFACT == "bugs" ||
      ARTIFACT == "task" ||
      ARTIFACT == "support" ||

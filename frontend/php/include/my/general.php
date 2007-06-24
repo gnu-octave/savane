@@ -302,15 +302,15 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
 	      
 	      # This group is supposed to be hidden, just do a count; do it 
 	      # now.
-	      $rows = db_numrows(db_execute('SELECT count('.$tracker.'.bug_id) AS count
+	      $rows = db_numrows(db_execute("SELECT count($tracker.bug_id) AS count
                   $from
                   $where
-                  AND '.$tracker.'.group_id=?
-                  GROUP BY bug_id LIMIT ?'),
+                  AND $tracker.group_id=?
+                  GROUP BY bug_id LIMIT ?",
                 array_merge($from_params, $where_params,
-                            array($current_group_id, $sql_limit)));
+                            array($current_group_id, $sql_limit))));
 
-	      # Feed the array so it nows exactly how many items we have
+	      # Feed the array so it knows exactly how many items we have
 	      # (array_fill exists only in PHP 4.2)
 	      for ($k=0; $k<$rows; $k++)
 		{ $items_per_groups[$current_group_id][] = true; }
@@ -509,7 +509,7 @@ function my_item_list_extractdata ($sql_result, $tracker) {
 	  # sorting
 	  $thisitem = db_result($sql_result, $j, 'date').'.'.$tracker.'#'.db_result($sql_result,$j,'bug_id');
 	  $thisgroup = db_result($sql_result,$j,'group_id');
-	      
+	  
 	  # Associate to the group
           # (ignore if it was already done)	      
 	  if (array_key_exists($thisgroup, $items_per_groups)
@@ -604,10 +604,16 @@ function my_item_list_print ($role="assignee", $openclosed="open", $condensed=fa
 	  while (list($thisitem,) = each($current_group_items))
 	    {
 	      $current_item_id = $item_data['item_id'][$thisitem];
+
+              // FIXME: if we're on /users/myuser and the user marked a tracker as hidden in /my/,
+	      // then we don't have the values we should display
+              // (we just have an empty array t where count(t) is valid, but with an empty keys)
+              // This is because $condensed from my_items_list is not passed to buildsql.
+	      if (empty($current_item_id))
+		continue;
 	      $tracker = $item_data['tracker'][$thisitem];
 	      $prefix = utils_get_tracker_prefix($tracker);
 	      $icon = utils_get_tracker_icon($tracker);
-	      
 
 	      # Found out the status full text name:
    	      # this is project specific. If there is no project setup for this

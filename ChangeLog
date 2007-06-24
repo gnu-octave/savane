@@ -1,3 +1,13 @@
+2007-06-24  Sylvain Beucler  <beuc@beuc.net>
+
+	* Quiet an old bug in include/my/general.php where hidden items
+	trigger bad SQL requests in condensed (i.e. user_home.php) mode
+
+	* Fix a bug in detail.html that didn't support the task/?XXXX form
+
+	* Removed an added '.' in the redirect URL in login.php
+	(incomplete concatenation -> string substitution)
+
 2007-06-23  Sylvain Beucler  <beuc@beuc.net>
 
 	* New debug variable: sys_debug_noformcheck to bypass form

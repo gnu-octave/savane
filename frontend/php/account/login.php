@@ -156,7 +156,7 @@ if (!empty($login))
 	  if ($stay_in_ssl)
 	    {
 	      // switch to requested HTTPs mode
-	      header("Location: {$GLOBALS['sys_https_url']}.$uri");
+	      header("Location: {$GLOBALS['sys_https_url']}$uri");
 	    }
 	  else
 	    {
