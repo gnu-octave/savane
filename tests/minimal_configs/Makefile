@@ -21,6 +21,7 @@ PATH:=$(PATH):/usr/local/sbin:/usr/sbin:/sbin
 /tmp/savane:
 	rsync -av --exclude '.svn' . /tmp/savane
 	ln -sf $(CURDIR)/../../frontend/php /tmp/savane/apache2/htdocs
+	mkdir /tmp/savane/apache2/logs
 	mysql_install_db --no-defaults --pid-file=pid --socket=sock --skip-networking --datadir=/tmp/savane/mysql
 	-mkdir /tmp/savane/savane
 	echo '<?php $$sys_dbhost=":/tmp/savane/mysql/sock";' > /tmp/savane/savane/.savane.conf.php
