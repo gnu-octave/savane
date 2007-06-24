@@ -60,7 +60,8 @@ if ($type_of_search == "soft")
       # Only one result? Redirect, but only if this is the first
       # page to be displayed. Otherwise, if the last page contains
       # just one row, the user will be redirected.
-      Header("Location: ../projects/$project");
+      $project = db_result($result, 0, 'unix_group_name');
+      header("Location: ../projects/$project");
     }
   else
     {
