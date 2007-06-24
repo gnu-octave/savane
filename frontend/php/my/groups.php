@@ -191,6 +191,7 @@ $rows = db_numrows($result);
 
 # Alternative sql that do not use group_history, just in case this history
 # would be flawed (history usage has been inconsistent over Savane history)
+$history_is_flawed = false;
 $result_without_history = db_execute("SELECT groups.group_name,"
 . "groups.group_id,"
 . "groups.unix_group_name,"
@@ -213,6 +214,7 @@ if ($rows_without_history != $rows)
   # The following update script was maybe forgot:
   # update/1.0.6/update_group_history.pl
   fb(_("Groups history appears to be flawed. This is a site installation problem. Please report the incident to administrators, asking them to get in touch with their Savane supplier."), 1);
+  $history_is_flawed = true;
   $result = $result_without_history;
   $rows = $rows_without_history;
 }
@@ -404,7 +406,9 @@ else
 	   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Quit this project?").'" /></a><br /></span>';
 
 	  $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'. db_result($result,$i,'unix_group_name') .'/">'.db_result($result,$i,'group_name').'</a><br />';
-	  $date_joined = db_result($result, $i, 'date');
+	  $date_joined = null;
+	  if (!$history_is_flawed)
+	    $date_joined = db_result($result, $i, 'date');
 	  if ($date_joined)
 	    {
 	      # If the group history is flawed (site install problem), the
