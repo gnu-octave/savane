@@ -310,7 +310,7 @@ if (user_isloggedin())
 
 # redirect them from http to https if they said so at login time
 if (!session_issecure() && isset($_COOKIE['redirect_to_https']) && $GLOBALS['sys_https_host'])
-     header('Location: https://'.$GLOBALS['sys_https_host'].$REQUEST_URI);
+     header('Location: https://'.$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI']);
 
 /**************************************************************
        Defines every information useful
