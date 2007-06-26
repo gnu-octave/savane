@@ -223,7 +223,7 @@ sub CvsMakeAreaSavannah {
 # Set this to "no" if pserver shouldn't check system users/passwords
 SystemAuth=no
 # Set also this to "no" under Debian for the same reason
-PamAuth=no
+#PamAuth=no
 
 # Put CVS lock files in this directory rather than directly in the repository.
 LockDir=/var/lock/cvs/$repo_type/$name
