@@ -279,6 +279,18 @@ anoncvs
 EOF
 	close(FILE);
 
+# Mark files for Savane hooks management
+	open(FILE, "> $dir_cvs/CVSROOT/commitinfo");
+	print FILE <<EOF;
+#<savane>
+#</savane>
+EOF
+	open(FILE, "> $dir_cvs/CVSROOT/loginfo");
+	print FILE <<EOF;
+#<savane>
+#</savane>
+EOF
+
 	# if not present, pserver assumes write access for everybody
 	# not in 'readers'
 	open(TOUCH, "> $dir_cvs/CVSROOT/writers"); close(TOUCH);
