@@ -38,3 +38,5 @@
   gateway.
   https://gna.org/bugs/?7975
   https://gna.org/support/?1640
+
+- commit hooks won't get updated if all hooks are removed

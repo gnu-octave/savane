@@ -57,75 +57,77 @@ if (isset($log_accum)) {
 		 array($group_id, $hook_id)) or die(mysql_error());
     }
   }
-  foreach ($arr_id as $hook_id => $ignored) {
-    // Input validation
-    if (!ctype_digit($hook_id.'') and ($hook_id != "new"))
-      exit_error(_("Non-numeric hook id") . ": [" . htmlspecialchars($hook_id) . "]");
+  if (isset($arr_id and is_array($arr_id))) {
+    foreach ($arr_id as $hook_id => $ignored) {
+      // Input validation
+      if (!ctype_digit($hook_id.'') and ($hook_id != "new"))
+	exit_error(_("Non-numeric hook id") . ": [" . htmlspecialchars($hook_id) . "]");
+      
+      if (!isset($arr_remove[$hook_id])) {
+	$repo_name = $arr_repo_name[$hook_id];
+	if ($repo_name != 'sources' and $repo_name != 'web')
+	  exit_error(_("Invalid repository name: " . htmlspecialchars($repo_name)));
+	$match_type = $arr_match_type[$hook_id];
+	if ($match_type != 'ALL' and $match_type != 'dir_list' and $match_type != 'DEFAULT')
+	  exit_error(_("Invalid matching type"));
+	$dir_list = $arr_dir_list[$hook_id];
+	if ($match_type != 'dir_list')
+	  unset($dir_list);
+	else if ($dir_list == '' or preg_match('/[[:space:]]/', $dir_list) or !preg_match("/^(([a-zA-Z0-9_.+-\/]+)(,|$))+/", $dir_list))
+	  exit_error(_("Invalid directories list"));
+	$branches = $arr_branches[$hook_id];
+	if ($branches == '')
+	  unset($branches);
+	$enable_diff = '0';
+	if (isset($arr_enable_diff[$hook_id]))
+	  $enable_diff = $arr_enable_diff[$hook_id];
+	if ($enable_diff != '0' and $enable_diff != '1')
+	  exit_error(_("Invalid value for enable_diff"));
+	$emails_notif = $arr_emails_notif[$hook_id];
+	if (!preg_match('/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))+/', $emails_notif))
+	  exit_error(_("Invalid list of notification e-mails"));
+	$emails_diff = $arr_emails_diff[$hook_id];
+	if ($emails_diff == '' or $enable_diff == '0')
+	  unset($emails_diff);
+	else if (!preg_match('/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))*/', $emails_diff))
+	  exit_error(_("Invalid list of diff notification e-mails"));
 
-    if (!isset($arr_remove[$hook_id])) {
-      $repo_name = $arr_repo_name[$hook_id];
-      if ($repo_name != 'sources' and $repo_name != 'web')
-	exit_error(_("Invalid repository name: " . htmlspecialchars($repo_name)));
-      $match_type = $arr_match_type[$hook_id];
-      if ($match_type != 'ALL' and $match_type != 'dir_list' and $match_type != 'DEFAULT')
-	exit_error(_("Invalid matching type"));
-      $dir_list = $arr_dir_list[$hook_id];
-      if ($match_type != 'dir_list')
-	unset($dir_list);
-      else if ($dir_list == '' or preg_match('/[[:space:]]/', $dir_list) or !preg_match("/^(([a-zA-Z0-9_.+-\/]+)(,|$))+/", $dir_list))
-	exit_error(_("Invalid directories list"));
-      $branches = $arr_branches[$hook_id];
-      if ($branches == '')
-	unset($branches);
-      $enable_diff = '0';
-      if (isset($arr_enable_diff[$hook_id]))
-	$enable_diff = $arr_enable_diff[$hook_id];
-      if ($enable_diff != '0' and $enable_diff != '1')
-	exit_error(_("Invalid value for enable_diff"));
-      $emails_notif = $arr_emails_notif[$hook_id];
-      if (!preg_match('/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))+/', $emails_notif))
-	exit_error(_("Invalid list of notification e-mails"));
-      $emails_diff = $arr_emails_diff[$hook_id];
-      if ($emails_diff == '' or $enable_diff == '0')
-	unset($emails_diff);
-      else if (!preg_match('/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))*/', $emails_diff))
-	exit_error(_("Invalid list of diff notification e-mails"));
-
-      if ($hook_id == 'new') {
-	// New entry
-	db_autoexecute('cvs_hooks',
-	  array(
-            'group_id' => $group_id,
-            'repo_name' => $repo_name,
-            'match_type' => $match_type,
-            'dir_list' => (!isset($dir_list) ? null : $dir_list),
-            'hook_name' => 'log_accum',
-            'needs_refresh' => 1),
-          DB_AUTOQUERY_INSERT) or die(mysql_error());
-	$new_hook_id = mysql_insert_id();
-	db_autoexecute('cvs_hooks_log_accum',
-          array('hook_id' => $new_hook_id,
-		'branches' => (!isset($branches) ? null : $branches),
-		'emails_notif' => $emails_notif,
-		'enable_diff' => $enable_diff,
-		'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
-	  DB_AUTOQUERY_INSERT) or die(mysql_error());
-      } else {
-	// Update existing entry
-	db_autoexecute('cvs_hooks, cvs_hooks_log_accum',
-	  array(
-	    'repo_name' => $repo_name,
-	    'match_type' => $match_type,
-	    'dir_list' => (!isset($dir_list) ? null : $dir_list),
-	    'hook_name' => 'log_accum',
-	    'needs_refresh' => 1,
-	    'branches' => (!isset($branches) ? null : $branches),
-	    'emails_notif' => $emails_notif,
-	    'enable_diff' => $enable_diff,
-	    'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
-          DB_AUTOQUERY_UPDATE,
-          "cvs_hooks.id = cvs_hooks_log_accum.hook_id AND group_id=? AND id=?",
-	  array($group_id, $hook_id)) or die(mysql_error());
+	if ($hook_id == 'new') {
+	  // New entry
+	  db_autoexecute('cvs_hooks',
+			 array(
+			       'group_id' => $group_id,
+			       'repo_name' => $repo_name,
+			       'match_type' => $match_type,
+			       'dir_list' => (!isset($dir_list) ? null : $dir_list),
+			       'hook_name' => 'log_accum',
+			       'needs_refresh' => 1),
+			 DB_AUTOQUERY_INSERT) or die(mysql_error());
+	  $new_hook_id = mysql_insert_id();
+	  db_autoexecute('cvs_hooks_log_accum',
+			 array('hook_id' => $new_hook_id,
+			       'branches' => (!isset($branches) ? null : $branches),
+			       'emails_notif' => $emails_notif,
+			       'enable_diff' => $enable_diff,
+			       'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
+			 DB_AUTOQUERY_INSERT) or die(mysql_error());
+	} else {
+	  // Update existing entry
+	  db_autoexecute('cvs_hooks, cvs_hooks_log_accum',
+			 array(
+			       'repo_name' => $repo_name,
+			       'match_type' => $match_type,
+			       'dir_list' => (!isset($dir_list) ? null : $dir_list),
+			       'hook_name' => 'log_accum',
+			       'needs_refresh' => 1,
+			       'branches' => (!isset($branches) ? null : $branches),
+			       'emails_notif' => $emails_notif,
+			       'enable_diff' => $enable_diff,
+			       'emails_diff' => (!isset($emails_diff) ? null : $emails_diff)),
+			 DB_AUTOQUERY_UPDATE,
+			 "cvs_hooks.id = cvs_hooks_log_accum.hook_id AND group_id=? AND id=?",
+			 array($group_id, $hook_id)) or die(mysql_error());
+	}
       }
     }
   }
