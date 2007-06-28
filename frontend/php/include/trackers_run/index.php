@@ -235,9 +235,8 @@ switch ($func)
 
 	 if (trackers_data_is_used($oe_field_name))
 	   {
-	     if  (($is_trackeradmin && trackers_data_is_showed_on_add_members($oe_field_name)) ||
-		  (!$is_trackeradmin && trackers_data_is_showed_on_add($oe_field_name)) ||
-		  (!user_isloggedin() && trackers_data_is_showed_on_add_nologin($oe_field_name))) 
+	     // Originator email is only available to anonymous
+	     if (!user_isloggedin() && trackers_data_is_showed_on_add_nologin($oe_field_name))
 	       {
                  # cannot be a registered user
 		 if (validate_email($originator_email))

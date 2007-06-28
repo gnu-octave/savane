@@ -1,3 +1,15 @@
+2007-06-28  Sylvain Beucler  <beuc@beuc.net>
+
+	* frontend/php/include/trackers_run/index.php: old project may
+	have 'originator_email' configured as 'show_on_add' /
+	'show_on_member_add', while this field is only meant for anonymous
+	users. This can trigger a warning a item creation by a project
+	member. Now the field is only used if the user is anonymous (and
+	if the field is activated). Ex: sr #105913@savannah
+
+	* frontend/php/include/user_home.php: unmask private e-mails for
+	site administrators
+
 2007-06-24  Sylvain Beucler  <beuc@beuc.net>
 
 	* Fixed old bug that disallowed people from adding themselves in
