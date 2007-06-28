@@ -155,7 +155,7 @@ print '
 	<strong><a href="'.$GLOBALS['sys_home'].'sendmessage.php?touser='.db_result($res_user,0,'user_id').'">';
   
   # Do not print email address to anonymous user
-if (db_result($res_user,0,'email_hide') == "1")
+if (db_result($res_user,0,'email_hide') == "1" && !user_is_super_user())
 {
   print _("Send him/her a mail");
   
