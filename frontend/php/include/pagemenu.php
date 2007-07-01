@@ -47,7 +47,7 @@ function pagemenu ($params)
   # Print topmenu title 
   # We use javascript for browsers that does not support CSS correctly
   if (is_broken_msie() && 
-      !$_GET["printer"] &&
+      empty($_GET['printer']) &&
       !$GLOBALS['stone_age_menu'])
     {
 
@@ -168,7 +168,7 @@ function pagemenu_submenu_title ($title, $url, $selected=0, $available=1, $help=
 # talking about it on savane-dev.
 # DONT CHANGE width, margin and padding size, or you ll be very sorry
 # for MSIE users
-  if (is_broken_msie() && !$_GET["printer"])
+  if (is_broken_msie() && empty($_GET['printer']))
     {
       # normally we should have white-space: nowrap; but then MSIE make 
       # the text disappear on mouse out.

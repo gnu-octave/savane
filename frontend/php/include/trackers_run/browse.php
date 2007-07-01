@@ -211,6 +211,7 @@ if ($morder != '')
 # the first thing to be set will matters a lot)
 if ($morder == '' && !$msort)
 { $morder = "bug_id<"; }
+$order_by = '';
 if ($morder != '')
 { $order_by = ' ORDER BY '.trackers_criteria_list_to_query($morder); }
 
@@ -860,9 +861,9 @@ while ($thisarray = db_fetch_array($result))
 
   # Do not show private item, apart to technician level members
   # and submitter
-  if ($thisarray["privacy"] == "2" &&
+  if ($thisarray['privacy'] == '2' &&
       !member_check_private(0,$group_id) &&
-      $thisarray["submitted_by"] != user_getname())
+      $thisarray['submitted_by'] != user_getname())
     { 
       $totalrows--;
       continue; 
@@ -898,6 +899,7 @@ while ($thisarray = db_fetch_array($result))
    Display the HTML search form
   ================================================== */
 
+$form_submit = '';
 if ($printer)
 {
   trackers_header(array('title'=>_("Browse Items").' - '.utils_format_date(time())));
