@@ -1327,18 +1327,20 @@ function utils_is_broken_msie ()
   $is_broken = false;
 
   # Try to find the string MSIE
-  $msie = strpos($_SERVER['HTTP_USER_AGENT'], "MSIE");
-  if ($msie)
-    { 
-      # Avoid MSIE > 6: look for the first integer after the MSIE string,
-      # in the next characters
-      $msie = substr($_SERVER['HTTP_USER_AGENT'], $msie, 10);
-      preg_match("/MSIE (\d*)/", $msie, $msie_version);
-      if ($msie_version[1] < 7)
-	{
-	  $is_broken = true;
-	}     
-
+  if (isset($_SERVER['HTTP_USER_AGENT']))
+    {
+      $msie = strpos($_SERVER['HTTP_USER_AGENT'], "MSIE");
+      if ($msie === false)
+	{ 
+	  // Avoid MSIE > 6: look for the first integer after the MSIE
+	  // string, in the next characters
+	  $msie = substr($_SERVER['HTTP_USER_AGENT'], $msie, 10);
+	  preg_match("/MSIE (\d*)/", $msie, $msie_version);
+	  if ($msie_version[1] < 7)
+	    {
+	      $is_broken = true;
+	    }     
+	}
     }
   
   # Save for later
