@@ -1330,7 +1330,7 @@ function utils_is_broken_msie ()
   if (isset($_SERVER['HTTP_USER_AGENT']))
     {
       $msie = strpos($_SERVER['HTTP_USER_AGENT'], "MSIE");
-      if ($msie === false)
+      if ($msie !== false)
 	{ 
 	  // Avoid MSIE > 6: look for the first integer after the MSIE
 	  // string, in the next characters
