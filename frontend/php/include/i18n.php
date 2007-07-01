@@ -4,7 +4,7 @@
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
-# $Id$
+# $Id: i18n.php,v 1.1 2007/07/01 15:16:25 me Exp $
 #
 #  Copyright 2003-2006 (c) Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
 #                          Mathieu Roy <yeupou--gnu.org>
@@ -89,6 +89,8 @@ while (list(, $lng) = each ($navigatorLanguages)) {
 
 # Set the locale used by gettext() and strftime() functions :
 setlocale(LC_ALL, $locale);
+if (!defined('SV_LANG'))
+  define('SV_LANG', 'en-US.UTF-8');
 
 # Specify the .mo path; defaults to gettext's compile-time $datadir/locale otherwise
 if (!empty($sys_localedir)) {
