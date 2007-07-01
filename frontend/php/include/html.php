@@ -298,7 +298,7 @@ function html_feedback_top()
   # With MSIE  the feedback will be be 
   # in relative position, so the hiding link will not make sense
   if (is_broken_msie() && empty($_GET['printer']))
-    { unset($script_hide); }
+    { $script_hide = ''; }
   # Users can choose the same behavior, disallowing the fixed positionning
   # of the feedback (less convenient as the feedback gets easily hidden,
   # requires to scroll to be accessed, but seems prefered by users of 

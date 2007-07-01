@@ -514,7 +514,7 @@ switch ($func)
       
  case 'postaddcomment' :
    {
- if (!user_isloggedin() && ($_POST['check'] != 421))
+ if (!user_isloggedin() && (!isset($_POST['check']) || ($_POST['check'] != 421)))
  { exit_error(_("You're not logged in and you didn't enter the magic anti-spam number, please go back!")); }
 
 ### Add a comment to a bug already in the database,

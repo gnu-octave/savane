@@ -662,7 +662,9 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
     {
       $boxes .=
 	 trackers_field_display($field,$group_id,
-				($advsrch ? $url_params[$field] : $url_params[$field][0]),
+				($advsrch ?
+				 (isset($url_params[$field]) ? $url_params[$field] : null)
+				 : (isset($url_params[$field][0]) ? $url_params[$field][0] : null)),
 				false,false,($printer?true:false),false,true,'None', true,'Any');
 
     }

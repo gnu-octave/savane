@@ -143,7 +143,7 @@ function account_emailvalid ($email)
 
   utils_get_content("forbidden_mail_domains");
 
-  if ($GLOBALS['forbid_mail_domains_regexp'])
+  if (!empty($GLOBALS['forbid_mail_domains_regexp']))
     {
       if (preg_match($GLOBALS['forbid_mail_domains_regexp'], $email))
 	{
