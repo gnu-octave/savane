@@ -1,6 +1,5 @@
 <?php
 # Database access wrappers, with quoting/escaping
-# 
 # Copyright (C) 1999-2000  The SourceForge Crew
 # Copyright (C) 2004-2005  Elfyn McBratney <elfyn--emcb.co.uk>
 # Copyright (C) 2004-2005  Mathieu Roy <yeupou--gnu.org>
@@ -23,9 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-#input_is_safe();
-#mysql_is_safe();
 
 define('DB_AUTOQUERY_INSERT', 1);
 define('DB_AUTOQUERY_UPDATE', 2);
@@ -250,6 +246,23 @@ function db_query($qstring,$print=0)
     $location = "$relative_path:{$outside['line']}";
     array_push($GLOBALS['debug_queries'], array($qstring, $location));
   }
+
+  if (extension_loaded('XCache'))
+    {
+      $backtrace = debug_backtrace();
+      $outside = null;
+      foreach ($backtrace as $step) {
+        if ($step['file'] != __FILE__) {
+          $outside = $step;
+          break;
+        }
+      }
+      // strip installation prefix
+      $relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '', $outside['file']);
+      $location = "$relative_path:{$outside['line']}";
+
+      xcache_inc($location);
+    }
 
   if ($print)
     {
