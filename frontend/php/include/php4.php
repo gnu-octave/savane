@@ -23,9 +23,27 @@
 #mysql_is_safe();
 
 // Appears in PHP5
-// (quick'n dirty replacement)
-function debug_print_backtrace() {
-  var_dump(debug_backtrace());
+function debug_print_backtrace()
+{
+  //var_dump(debug_backtrace());
+  $bt = debug_backtrace();
+  array_shift($bt); # remove this very function
+  $i = 0;
+  foreach($bt as $frame)
+    {
+      echo "#$i  ";
+      echo $frame['function'];
+      echo '(';
+      echo implode(', ', $frame['args']);
+      echo ')';
+      echo ' called at [';
+      echo $frame['file'];
+      echo ':';
+      echo $frame['line'];
+      echo ']';
+      echo '<br />';
+      $i++;
+    }
 }
 
 function memory_get_peak_usage() {
