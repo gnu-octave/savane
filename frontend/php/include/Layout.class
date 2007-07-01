@@ -240,7 +240,7 @@ class Layout extends Error
     # W3C standards.
     # (ignore in printer mode, as we have no left and top menu and that menus
     # actually do not matter)
-    if (utils_is_broken_msie() && !$_GET["printer"])
+    if (utils_is_broken_msie() && empty($_GET['printer']))
       {
 	print '  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/internal/msie-dirtyhacks.css" />
 ';
@@ -280,7 +280,7 @@ class Layout extends Error
 # CSS.
 # If we are using MSIE, we havent closed main and realbody yet,
 # because the footer wouldnt be visible otherwise.
-    if (is_broken_msie() && !$_GET["printer"])
+    if (is_broken_msie() && empty($_GET['printer']))
       {
 	print '
 <!-- closing now main and realbody MSIE DIRTY HACK --></div></div>';
@@ -320,7 +320,7 @@ class Layout extends Error
 # CSS.
 # If we are using MSIE, we cannot close main, because the footer
 # will never be visible otherwise.
-    if (!is_broken_msie() || $_GET["printer"])
+    if (!is_broken_msie() || !empty($_GET['printer']))
       {
 
 	print '

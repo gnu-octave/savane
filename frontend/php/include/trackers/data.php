@@ -386,9 +386,11 @@ function trackers_data_get_item_notification_info($item_id, $artifact, $updated)
 
 function cmp_place($ar1, $ar2)
 {
-  if ($ar1['place']< $ar2['place'])
+  $place1 = isset($ar1['place']) ? $ar1['place'] : 0;
+  $place2 = isset($ar2['place']) ? $ar2['place'] : 0;
+  if ($place1 < $place2)
     return -1;
-  else if ($ar1['place']>$ar2['place'])
+  else if ($place1 > $place2)
     return 1;
   return 0;
 }

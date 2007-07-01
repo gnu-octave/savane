@@ -669,7 +669,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
 	}
       else
 	{
-	  unset($html_delete);
+	  $html_delete = '';
 	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2') && !$sober)
 	    {
 	      $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_file&amp;item_id='.$item_id.'&amp;item_file_id='.$item_file_id.'">'.

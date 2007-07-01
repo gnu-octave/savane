@@ -767,7 +767,7 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
   else
     {
       # Less simple in multicolumn, indeed
-      unset($morder_icon_is_set);
+      $morder_icon_is_set = 0;
       $morder_arr = explode(',',$morder);
       while (list(,$crit) = each($morder_arr))
 	{
