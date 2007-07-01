@@ -36,7 +36,7 @@ extract(sane_import('post', array('update',
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-if (sane_post("update"))
+if ($update)
 {
   group_add_history ('Changed Public Info','',$group_id);
 
@@ -90,7 +90,7 @@ print '
 					'cols="70" rows="10" wrap="virtual"').'</p>';
 
 $type_id = $row_grp['type'];
-$result1 = db_query("SELECT * FROM group_type WHERE type_id='$type_id'");
+$result1 = db_execute("SELECT * FROM group_type WHERE type_id=?", array($type_id));
 $row_grp1 = db_fetch_array($result1);
 
 if($DEVEL_STATUS1 = $row_grp1['devel_status_array']){
