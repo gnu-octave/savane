@@ -202,7 +202,7 @@ if (ARTIFACT == 'cookbook')
   $possiblevalues_subcontext = cookbook_subcontext_possiblevalues();
   $case_result = array();
 
-  unset($is_user_good_audience);
+  $is_user_good_audience = false;
   if ($group_id == $sys_group_id)
     {
       # If we are showing site doc, ignore the test of audience:
