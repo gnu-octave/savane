@@ -249,7 +249,7 @@ if ($form_is_valid)
 	}
 
 
-      sendmail_mail($GLOBALS['sys_replyto']."@".$GLOBALS['sys_mail_domain'],
+      sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
 		    $form_email,
 		    $GLOBALS['sys_name']." "._("Account Registration"),
 		    $message);
