@@ -190,6 +190,61 @@ if ($sys_debug_on == true) {
     print '</pre>';
   }
   register_shutdown_function("debug_dump");
+
+  // alternate PHP error handler that prints a backtrace
+  function btErrorHandler($errno, $errstr, $errfile, $errline, $context)
+  {
+    print '<strong>';
+    switch ($errno) {
+    case E_ERROR:             print "Error";                  break;
+    case E_WARNING:           print "Warning";                break;
+    case E_PARSE:             print "Parse Error";            break;
+    case E_NOTICE:            print "Notice";                 break;
+    case E_CORE_ERROR:        print "Core Error";             break;
+    case E_CORE_WARNING:      print "Core Warning";           break;
+    case E_COMPILE_ERROR:     print "Compile Error";          break;
+    case E_COMPILE_WARNING:   print "Compile Warning";        break;
+    case E_USER_ERROR:        print "User Error";             break;
+    case E_USER_WARNING:      print "User Warning";           break;
+    case E_USER_NOTICE:       print "User Notice";            break;
+    case E_STRICT:            print "Strict Notice";          break;
+    case E_RECOVERABLE_ERROR: print "Recoverable Error";      break;
+    default:                  print "Unknown error ($errno)"; break;
+    }
+    print '</strong>';
+    print ": $errstr in <strong>$errfile</strong> on line <strong>$errline</strong><br />\n";
+    print '<pre>';
+
+    // Write my own backtrace function to avoid printing
+    // btErrorHandler() in the stack trace
+    $bt = debug_backtrace();
+    array_shift($bt); // remove this very function
+    $i = 0;
+    foreach($bt as $frame)
+      {
+	echo "#$i  ";
+	echo $frame['function'];
+	echo '(';
+	echo implode(', ', $frame['args']);
+	echo ')';
+	echo ' called at [';
+	echo $frame['file'];
+	echo ':';
+	echo $frame['line'];
+	echo ']';
+	echo '<br />';
+	$i++;
+      }
+
+    //debug_print_backtrace();
+    print '</pre>';
+      
+    /* Don't execute PHP internal error handler */
+    return true;
+  }
+  
+  // set to the user defined error handler
+  $old_error_handler = set_error_handler("btErrorHandler");
 }
 
 // Stop an failed assertion.  We don't use much assertions though,
