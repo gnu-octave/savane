@@ -77,7 +77,8 @@ $sys_debug_on = false;
 $sys_debug_nobasehost = false;
 // Prevent form duplicate checks which are a PITA during debugging
 $sys_debug_noformcheck = false;
-
+// Log which queries are used the most, using XCache variables
+$sys_debug_sqlprofiler = false;
 
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');

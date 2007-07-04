@@ -247,7 +247,7 @@ function db_query($qstring,$print=0)
     array_push($GLOBALS['debug_queries'], array($qstring, $location));
   }
 
-  if (extension_loaded('XCache'))
+  if ($GLOBALS['sys_debug_sqlprofiler'] && extension_loaded('XCache'))
     {
       $backtrace = debug_backtrace();
       $outside = null;
