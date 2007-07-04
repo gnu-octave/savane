@@ -469,9 +469,9 @@ function session_set_new($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
   session_set_new_cookies($user_id, $cookie_for_a_year, $stay_in_ssl);
 }
 
+# set session cookies
 function session_set_new_cookies($user_id, $cookie_for_a_year=0, $stay_in_ssl=1) 
 {
-  # set session cookies
   # set a non-secure cookie so that Savane will automatically redirect to https
   if ($stay_in_ssl)
     {
@@ -481,7 +481,10 @@ function session_set_new_cookies($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
 								       
   session_cookie('session_uid', $user_id, $cookie_for_a_year, $stay_in_ssl);
   session_cookie('session_hash', $GLOBALS['session_hash'], $cookie_for_a_year, $stay_in_ssl);
+  $_COOKIE['session_uid'] = $user_id;
+  $_COOKIE['session_hash'] = $GLOBALS['session_hash'];
   session_delete_cookie('cookie_probe');
+  session_set();
 }
 
 function session_set() 
