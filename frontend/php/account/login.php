@@ -1,19 +1,17 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
+# Front page - news, latests projects, etc.
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2006, 2007  Sylvain Beucler
 #
-# $Id$
-#
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#
-#  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#
-# The Savane project is free software; you can redistribute it and/or
+# This file is part of Savane.
+# 
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -25,11 +23,6 @@
 require_once('../include/init.php');
 require_once('../include/account.php');
 require_once('../include/sane.php');
-
-#input_is_safe();
-#mysql_is_safe();
-
-register_globals_off();
 
 Header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 Header("Cache-Control: no-cache");

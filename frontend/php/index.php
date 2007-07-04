@@ -1,6 +1,5 @@
 <?php
-# 'Not found' error page with a Savane look&feel
-# 
+# Front page - news, latests projects, etc.
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2006, 2007  Sylvain Beucler
