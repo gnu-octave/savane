@@ -60,10 +60,6 @@ if ($_SERVER['SERVER_PORT'] != 80)
      $sys_default_domain .= ':'.$_SERVER['SERVER_PORT'];
 $sys_unix_group_name = 'siteadmin';
 
-#print "<pre>";
-#print_r($_SERVER);
-#print "</pre>";
-
 $sys_mail_domain = 'localhost';
 $sys_mail_admin = get_current_user();
 $sys_mail_replyto = "NO-REPLY.INVALID-ADDRESS";
@@ -219,24 +215,8 @@ if ($sys_debug_on == true) {
     // btErrorHandler() in the stack trace
     $bt = debug_backtrace();
     array_shift($bt); // remove this very function
-    $i = 0;
-    foreach($bt as $frame)
-      {
-	echo "#$i  ";
-	echo $frame['function'];
-	echo '(';
-	echo implode(', ', $frame['args']);
-	echo ')';
-	echo ' called at [';
-	echo $frame['file'];
-	echo ':';
-	echo $frame['line'];
-	echo ']';
-	echo '<br />';
-	$i++;
-      }
 
-    //debug_print_backtrace();
+    utils_debug_print_mybacktrace($bt);
     print '</pre>';
       
     /* Don't execute PHP internal error handler */

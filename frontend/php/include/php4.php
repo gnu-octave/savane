@@ -1,6 +1,5 @@
 <?php
 # Backward compatibility functions for PHP4
-# 
 # Copyright (C) 2007  Sylvain Beucler
 #
 # This file is part of Savane.
@@ -19,31 +18,12 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#input_is_safe();
-#mysql_is_safe();
-
 // Appears in PHP5
 function debug_print_backtrace()
 {
-  //var_dump(debug_backtrace());
   $bt = debug_backtrace();
-  array_shift($bt); # remove this very function
-  $i = 0;
-  foreach($bt as $frame)
-    {
-      echo "#$i  ";
-      echo $frame['function'];
-      echo '(';
-      echo implode(', ', $frame['args']);
-      echo ')';
-      echo ' called at [';
-      echo $frame['file'];
-      echo ':';
-      echo $frame['line'];
-      echo ']';
-      echo '<br />';
-      $i++;
-    }
+  array_shift($bt); // remove this very function
+  utils_debug_print_mybacktrace($bt);
 }
 
 function memory_get_peak_usage() {
