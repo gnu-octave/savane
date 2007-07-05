@@ -1,4 +1,4 @@
- <?php
+<?php
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
