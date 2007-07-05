@@ -1,21 +1,18 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
+# Add and edit project mailing lists
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2006  BBN Technologies Corp
+# Copyright (C) 2007  Sylvain Beucler
 #
-# $Id$
-#
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#
-#  Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#  Copyright (C) 2006  BBN Technologies Corp
-#  Copyright (C) 2007  Sylvain Beucler
-#
-# The Savane project is free software; you can redistribute it and/or
+# This file is part of Savane.
+# 
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -56,15 +53,14 @@ define('LIST_STATUS_CREATED', 5);
 require_once('../../include/init.php');
 require_once('../../include/account.php');
 
-#input_is_safe();
-#mysql_is_safe();
-
-register_globals_off();
 extract(sane_import('post',
   array(
     'post_changes',
     'list_name', 'description', 'is_public', 'reset_password', // arrays of values
 )));
+
+if (!$group_id) 
+{ exit_no_group(); } 
 
 if (!member_check(0, $group_id))
 { exit_permission_denied(); }
@@ -250,10 +246,6 @@ $result = db_execute("SELECT list_name,group_list_id,is_public,description,passw
 		     "WHERE group_id=? ORDER BY list_name ASC",
 		     array($group_id));
 
-if (!$result || db_numrows($result) < 1)
-{
-  exit_error(_("No lists found"));
-}
 
 // Show the form to modify lists status
 site_project_header(array('title'=>_("Update Mailing List"),'group'=>$group_id,'context'=>'amail'));
