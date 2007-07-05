@@ -1,4 +1,4 @@
-<?php
+ <?php
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
@@ -30,7 +30,7 @@
 #       to a given group, since it means it is in the left menu
 function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 {
-  global $words,$forum_id,$group_id,$exact,$type_of_search,$type,$max_rows,$only_group_id,$project;
+  global $words,$group_id,$exact,$type_of_search,$type,$max_rows,$only_group_id,$project;
 
   if ($only_group_id)
     {
@@ -463,7 +463,7 @@ function search_run ($keywords, $type_of_search="soft", $return_error_messages=1
     }
 
   $sql .= " LIMIT ?,?";
-  $sql_params[] = $offset;
+  $sql_params[] = intval($offset);
   $sql_params[] = $max_rows + 1;
   return db_execute($sql, $sql_params);
 }

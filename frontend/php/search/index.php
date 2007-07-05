@@ -23,8 +23,11 @@
 
 require_once('../include/init.php');
 
-extract(sane_import('all',
-  array('only_group_id', 'type', 'words', 'type_of_search', 'func', 'exact')));
+extract(sane_import('request',
+  array('only_group_id', 'type', 'words', 'type_of_search',
+	'func', 'exact',
+	'offset', 'max_rows',
+)));
 
 # No words? Ask for them
 if (!$words)
