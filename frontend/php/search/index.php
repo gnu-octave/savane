@@ -1,21 +1,18 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#
-#  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
+# Display search form and search results
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+#                         Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
+#
+# This file is part of Savane.
 # 
-# The Savane project is free software; you can redistribute it and/or
+# Savane is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# The Savane project is distributed in the hope that it will be useful,
+# Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -24,11 +21,7 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#input_is_safe();
-#mysql_is_safe();
-
 require_once('../include/init.php');
-# not yet compliant, kind of messy: register_globals_off();
 
 extract(sane_import('all',
   array('only_group_id', 'type', 'words', 'type_of_search', 'func', 'exact')));
@@ -46,7 +39,7 @@ $result = search_run($words, $type_of_search);
 
 # Print out the results
 
-if ($type_of_search == "soft")
+if ($type_of_search == 'soft')
 {
   $rows = $rows_returned = db_numrows($result);
 
@@ -231,7 +224,7 @@ else if ($type_of_search == 'bugs' ||
 
       print "\n";
 
-      $j;
+      $j = 0;
       for ( $i = 0; $i < $rows; $i++ )
 	{
           # Do even show private item
