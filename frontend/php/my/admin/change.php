@@ -223,7 +223,7 @@ if ($update)
 		    . $url."&step=confirm\n\n"
 		    . sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
 		  
-		  $warning_message = sprintf(_("Someone, presumably you, has requested a change of email address on %s.\nIf it wasn't you, maybe someone is trying to steal your account...\n\nYour current address is %s, the supposedly new address is %s.\n\n"), $GLOBALS['sys_name'], $row_user[email], $newvalue)
+		  $warning_message = sprintf(_("Someone, presumably you, has requested a change of email address on %s.\nIf it wasn't you, maybe someone is trying to steal your account...\n\nYour current address is %s, the supposedly new address is %s.\n\n"), $GLOBALS['sys_name'], $row_user['email'], $newvalue)
 		    . _("If you did not request that change, please visit the following URL to discard\nthe email change and report the problem to us:")."\n\n"
 		    . $url."&step=discard\n\n"
 		    . sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
@@ -244,7 +244,7 @@ if ($update)
 	      # on.
 	      # The next step is probably to print the mail change request
 	      # on account/ with the possibility to discard
-		  sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_domain_domain'],
+		  sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
 				$row_user['email'],
 				$GLOBALS['sys_name'] .' '._("Verification"),
 				$warning_message);
