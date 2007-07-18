@@ -202,7 +202,7 @@ else if ($type_of_search == 'bugs' ||
     {
       search_failed();
     }
-  elseif (($rows == 1) && ($GLOBALS['offset'] == 0 && (db_result($result, $i, 'privacy') != "2")))
+  elseif (($rows == 1) && ($GLOBALS['offset'] == 0 && (db_result($result, 0, 'privacy') != "2")))
     {
       # no automatic redirection for private item, use the usual listing
       $bug = db_result($result, 0, 'bug_id');
