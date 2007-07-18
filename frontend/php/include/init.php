@@ -323,7 +323,7 @@ if (isset($GLOBALS['sys_unix_group_name']))
 }
 
 if (!isset($sys_group_id)) {
-  fb("Your \$sys_group_id configuration variable refers to a non-existing project. Please update the configuration.", FB_ERROR);
+  fb("Your \$sys_unix_group_name configuration variable refers to a non-existing project. Please update the configuration.", FB_ERROR);
 }
 
 # determine if they're logged in

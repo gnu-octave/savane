@@ -287,8 +287,14 @@ function html_anchor ($content, $name)
 function html_feedback_top()
 {
   global $feedback, $ffeedback;
+
   # Escape the html special chars, active markup
-  # Ugh: -- Beuc
+
+  // Ugh... Actually this is because feedback may be passed through
+  // $_GET[] in some situations, which can lead to XSS if the content
+  // is not escaped. On the other hand, no being able to use proper
+  // HTML in feedback is pretty annoying.
+
   #$feedback = markup_basic(htmlspecialchars($feedback));
   #$ffeedback = markup_basic(htmlspecialchars($ffeedback));
 
