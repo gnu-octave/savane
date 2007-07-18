@@ -41,7 +41,10 @@ if (!$group_id)
 
 # Get parameters
 extract(sane_import('all',
-  array('func', 'printer')));
+  array('func', 'printer',
+	// delete_*
+	'item_file_id', 'item_cc_id',
+	)));
 extract(sane_import('post',
   array('form_id', # anti double-post
 	// The comment/follow-up itself
@@ -61,8 +64,6 @@ extract(sane_import('post',
 	'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support', 'dependent_on_patch',
 	// Second button 'submit but then edit this item again'
 	'submitreturn',
-	// delete_*
-	'item_file_id', 'item_cc_id',
 	)));
 // Spam-related
 extract(sane_import('get',
