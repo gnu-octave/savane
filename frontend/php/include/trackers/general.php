@@ -1697,7 +1697,7 @@ function trackers_delete_cc_by_user ($item_id, $user_id)
 		       array($item_id, $user_id, user_getname($user_id), user_getemail($user_id)));
 
   # Return the success or failure
-  return (db_numrows($res) >= 1);
+  return (db_numrows($result) >= 1);
 }
 
 
