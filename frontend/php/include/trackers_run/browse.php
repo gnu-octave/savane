@@ -431,7 +431,7 @@ while ($field = trackers_list_all_fields())
 # item title is provided to everybody.
 $full_field_list = $col_list = $lbl_list = array();
 $select_count = 'SELECT count(DISTINCT '.ARTIFACT.'.bug_id) AS count ';
-$select = 'SELECT DISTINCT '.ARTIFACT.'.group_id,'.ARTIFACT.'.priority,'.ARTIFACT.'.privacy,'.ARTIFACT.'.status_id';
+$select = 'SELECT DISTINCT '.ARTIFACT.'.group_id,'.ARTIFACT.'.priority,'.ARTIFACT.'.privacy,'.ARTIFACT.'.status_id,'.ARTIFACT.'.submitted_by ';
 $from = 'FROM '.ARTIFACT.' ';
 $from_params = array();
 
