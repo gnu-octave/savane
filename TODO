@@ -45,32 +45,6 @@
 Database upgrade
 ================
 
-- include/trackers_run/admin/field_values.php:300: I wanted to use a
-  strtoupper() because status can be either 'a' or 'A'. The database
-  update could put every status under a canonical form (only
-  uppercase). The way that script sorts Active/Hidden is also affected
-  (currently 'a' is under the 'Hidden' category, yet still written as
-  'Active').
-
-- The 'Priority' field at Savannah has both old-style 'Immediate++'
-  values and '3 - Low' values. Only the latter are valid (they are
-  used to color the items, and their value_id ranges from 1 to 9
-  instead of things like 150 or 180. The old-style form produces PHP
-  warnings because there is no associated colour index.
-
-  I don't know when the changes dates from. This only affects the bugs
-  trackers, other trackers ony use the new-style values.
-
-  The database update could wipe out the old values and replace them
-  by the matching new ones. This affects the values, and the group
-  configuration (where you specify which fields can be used or are
-  hidden for your group). 260 rows are currently affected (select
-  count(priority) from bugs where priority>9) and 11 groups redefined
-  active/hidden values for the priority field (select distinct
-  group_id from bugs_field_value where bug_field_id='211').
-
-  That code feels a bit ugly.
-
 - The database content is UTF-8, but is still declared latin1. That's
   why there are alignment issues when reading query results via the
   command line interface. This also leads to mis-sorting when
