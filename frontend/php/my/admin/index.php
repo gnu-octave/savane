@@ -260,7 +260,7 @@ print "<br />\n";
 print '<h3>'._("Secondary Arrangements").'</h3>';
 
 # warning about MSIE hacks
-if (is_broken_msie() && !$_GET["printer"])
+if (is_broken_msie() && empty($_GET["printer"]))
 print '<p>'._("Caution: your current web browser identifies itself as Microsoft Internet Explorer. Unexpected behavior of this software in several regards may cause rendering problems, most notably break the interface layout.").' <span class="warn">'._("You are strongly advised to use a browser like Mozilla or Konqueror if you encounter such troubles.").'</span></p>';
 
 print html_splitpage(1);
