@@ -340,7 +340,7 @@ function utils_filesize($filename, $file_size=0)
 
   # Round results: Savane is not a math software
 
-  if (!$file_size)
+  if (!isset($file_size))
     {   $file_size = filesize($filename); }
 
   if ($file_size >= 1048576)
