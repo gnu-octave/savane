@@ -25,10 +25,12 @@ PATH:=$(PATH):/usr/local/sbin:/usr/sbin:/sbin
 	mysql_install_db --no-defaults --pid-file=pid --socket=sock --skip-networking --datadir=/tmp/savane/mysql
 	-mkdir /tmp/savane/savane
 	echo '<?php $$sys_dbhost=":/tmp/savane/mysql/sock";' > /tmp/savane/savane/.savane.conf.php
+	echo '$$sys_incdir="'`pwd`'/../../etc/site-specific-content";' >> /tmp/savane/savane/.savane.conf.php
 	echo '#$$sys_debug_on=true;' >> /tmp/savane/savane/.savane.conf.php
 	echo '$$sys_debug_nobasehost=true;' >> /tmp/savane/savane/.savane.conf.php
 	echo '#$$sys_debug_noformcheck=true;' >> /tmp/savane/savane/.savane.conf.php
-        echo 'our $sys_dbparams="mysql_socket=/tmp/savane/mysql/sock";' > /tmp/savane/savane/savane.conf.pl
+	echo 'our $sys_dbparams="mysql_socket=/tmp/savane/mysql/sock";' > /tmp/savane/savane/savane.conf.pl
+	make -C ../../frontend/php/images
 database:
 	cd ../.. && ./configure --sysconfdir=/tmp/savane --with-db-options="-S /tmp/savane/mysql/sock"
 	for i in 1 2 3 4 5; do if mysqladmin -S /tmp/savane/mysql/sock ping; then break; fi; sleep 1; done
