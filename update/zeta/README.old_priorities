@@ -1,0 +1,26 @@
+We saw that the 'Priority' field at Savannah has both old-style
+'Immediate++' values and '3 - Low' values. Only the latter are valid
+(their value are used to color the items: they range from 1 to 9
+instead of things like 150 or 180). The old-style form produces PHP
+warnings because there is no associated colour index.
+
+We don't know when the changes dates from (more than 3 years). This
+only affected the bugs trackers, other trackers ony use the new-style
+values.
+
+We fixed the situation with the following, you may need to adjust to
+conversion, depending on which values are used in your bug trackers:
+
+UPDATE bugs SET priority=5 WHERE priority=100;
+UPDATE bugs SET priority=9 WHERE priority=240;
+UPDATE bugs SET priority=7 WHERE priority=210;
+UPDATE bugs SET priority=3 WHERE priority=150;
+UPDATE bugs SET priority=5 WHERE priority=180;
+UPDATE bugs SET priority=1 WHERE priority=120;
+
+DELETE FROM bugs_field_value WHERE bug_field_id=211 AND value_id>9;
+
+
+You can use these queries to analyse your database:
+SELECT DISTINCT priority FROM bugs ORDER BY priority;
+SELECT bugs_field_value.*, groups.unix_group_name FROM bugs_field_value,groups WHERE bug_field_id='211' AND groups.group_id=bugs_field_value.group_id ;
