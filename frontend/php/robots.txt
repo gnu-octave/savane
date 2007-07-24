@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /include/
 Disallow: /images/
 Disallow: /siteadmin/
-
+Disallow: /account/login.php
