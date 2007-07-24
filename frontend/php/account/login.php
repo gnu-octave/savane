@@ -100,7 +100,7 @@ if (!empty($login))
     {
       # Set up the theme, if the user has selected any in the user
       # preferences -- but give priority to a cookie, if set.
-      if (!isset($_COOKIE["SV_THEME"]))
+      if (!isset($_COOKIE['SV_THEME']))
         {
           $theme_result = user_get_result_set(user_getid());
           $theme = db_result($theme_result, 0, 'theme');
@@ -248,7 +248,7 @@ if (!empty($GLOBALS['sys_brother_domain']))
   if ($login and !$brotherhood)
      $checked = '';
 
-  print '<p><input type="checkbox" name="brotherhood" value="1" '.$checked.'/><span class="preinput">';
+  print '<p><input type="checkbox" name="brotherhood" value="1" tabindex="1" '.$checked.'/><span class="preinput">';
   printf (_("Login also in %s").'</span><br />', $GLOBALS['sys_brother_domain']);
 }
 
