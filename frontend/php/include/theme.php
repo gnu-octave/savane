@@ -46,10 +46,10 @@ function theme_rotate_jump()
     { $num = "0"; }
   
   # keep in mind the new number
-  setcookie("SV_THEME_ROTATE_NUMERIC", $num, time() + 60*60*24*365, $GLOBALS['sys_home']);
+  setcookie('SV_THEME_ROTATE_NUMERIC', $num, time() + 60*60*24*365, $GLOBALS['sys_home']);
 
   # associate this number with a theme
-  setcookie("SV_THEME_ROTATE", $theme[$num], time() + 60*60*24, $GLOBALS['sys_home']);
+  setcookie('SV_THEME_ROTATE', $theme[$num], time() + 60*60*24, $GLOBALS['sys_home']);
 }
 
 # Return an array with all the themes, but not the special case "rotate" 
@@ -101,6 +101,23 @@ function theme_list ()
 }
 
 
+# Check whether a theme follows latest GUIDELINES
+function theme_guidelines_check ($theme)
+{
+  # Get from the README the latest GUIDELINES number
+  preg_match("/VERSION: (.*)/", utils_read_file($GLOBALS['sys_www_topdir']."/css/README"), $latest);  
+  # Get from the css the current GUIDELINES number
+  preg_match("/\/\* GUIDELINES VERSION FOLLOWED: (.*) \*\//", utils_read_file($GLOBALS['sys_www_topdir']."/css/".$theme.".css"), $current);
+  
+  if ($latest[1] != $current[1])
+    {
+      return false;
+    }
+  
+  return true;
+}
+
+
 # TODO: move to init.php
 
 
@@ -132,7 +149,7 @@ if (isset($_COOKIE['SV_THEME']))
 	  mt_srand ((double)microtime()*1000000);
 	  $num = mt_rand(0,count($theme)-1);
 	  $random_theme = $theme[$num];
-	  setcookie('SV_THEME_RANDOM', $random_theme, time() + 60*60*24, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);
+	  setcookie('SV_THEME_RANDOM', $random_theme, time() + 60*60*24, $GLOBALS['sys_home']);
 	  if (!defined('SV_THEME'))
 	    define('SV_THEME', $random_theme);
 	}
@@ -161,10 +178,10 @@ if (isset($_COOKIE['SV_THEME']))
 	      if ($num==count($theme)) 
 		{ $num = '0'; }		  
 	    }
-	  setcookie('SV_THEME_ROTATE_NUMERIC', $num, time() + 60*60*24*365, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);	  
+	  setcookie('SV_THEME_ROTATE_NUMERIC', $num, time() + 60*60*24*365, $GLOBALS['sys_home']);
 	  # we associate this number with a theme
 	  $rotate_theme = $theme[$num];
-	  setcookie('SV_THEME_ROTATE', $rotate_theme, time() + 60*60*24, $GLOBALS['sys_home'],$GLOBALS['sys_default_domain']);
+	  setcookie('SV_THEME_ROTATE', $rotate_theme, time() + 60*60*24, $GLOBALS['sys_home']);
 	  if (!defined('SV_THEME'))
 	    define('SV_THEME', $rotate_theme);
 	}
@@ -180,7 +197,7 @@ if (isset($_COOKIE['SV_THEME']))
 	{
 	  if (!defined('SV_THEME')) // defined by the /my/admin/ page
 	    define('SV_THEME', $GLOBALS['sys_themedefault']);
-	  setcookie("SV_THEME", 'SV_THEME', time() + 60*60*24*365, $GLOBALS['sys_url_topdir']);
+	  setcookie('SV_THEME', SV_THEME, time() + 60*60*24*365, $GLOBALS['sys_home']);
 	}
       else
 	{
@@ -195,20 +212,4 @@ else
   // manual set (i.e. my/admin/index.php)
   if (!defined('SV_THEME'))
     define('SV_THEME', $GLOBALS['sys_themedefault']);
-}
-
-# Check whether a theme follows latest GUIDELINES
-function theme_guidelines_check ($theme)
-{
-  # Get from the README the latest GUIDELINES number
-  preg_match("/VERSION: (.*)/", utils_read_file($GLOBALS['sys_www_topdir']."/css/README"), $latest);  
-  # Get from the css the current GUIDELINES number
-  preg_match("/\/\* GUIDELINES VERSION FOLLOWED: (.*) \*\//", utils_read_file($GLOBALS['sys_www_topdir']."/css/".$theme.".css"), $current);
-  
-  if ($latest[1] != $current[1])
-    {
-      return false;
-    }
-  
-  return true;
 }
