@@ -226,7 +226,9 @@ if (ARTIFACT == 'cookbook')
 	{
 	  if (db_result($context_result, 0, $case."_".$field) == 1)
 	    {
-	      $case_result[$case] = (isset($case_result[$case])?$case_result[$case]:'') . $label . ", ";
+	      $case_result[$case] = (isset($case_result[$case])
+				     ? $case_result[$case] : '')
+		. $label . ", ";
 
 	      # Keep in memory whether the user is the targetted audience
 	      if ($case == 'audience' && $field == AUDIENCE)
@@ -236,7 +238,10 @@ if (ARTIFACT == 'cookbook')
 	    }
 
 	}
-      $case_result[$case] = rtrim($case_result[$case], ", ");
+      if (isset($case_result[$case]))
+	$case_result[$case] = rtrim($case_result[$case], ", ");
+      else
+	$case_result[$case] = null;
     }
 
   ##
@@ -286,5 +291,3 @@ if (member_check(0, $group_id))
 }
 
 trackers_footer(array());
-
-?>
