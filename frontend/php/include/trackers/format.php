@@ -570,14 +570,11 @@ function format_item_changes ($changes,$item_id,$group_id)
       $out_att .= ":\n\n";
 
       
-      for ($i = 1; $i < 5; $i++)
+      foreach ($changes['attach'] as $file)
 	{ 
-	  if (!isset($changes['attach'.$i]['name']))
-	    { continue; }
-	  
 	  $out_att .= sprintf("File name: %-30s Size:%d KB\n",
-			      $changes['attach'.$i]['name'],
-			      intval($changes['attach'.$i]['size']/1024));
+			      $file['name'],
+			      intval($file['size']/1024));
 
 	}
       unset($changes['attach']);

@@ -1397,15 +1397,14 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
       if ($file_id)
 	{ 
 	  $comment .= "file #$file_id, "; 
-	  $changes['attach'.$i]['name'] = $file['name'];
-	  $changes['attach'.$i]['size'] = $file['size'];	  
+	  $changes['attach'][] = array('name' => $file['name'],
+				       'size' => $file['size']);
 	}
     }
 
   if ($comment)
     {
       $changed = true; 
-      $changes['attach'] = true;
       $comment = "\n\n(".rtrim($comment, ", ").")";
     }
   
