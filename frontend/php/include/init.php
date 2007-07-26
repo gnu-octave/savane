@@ -139,7 +139,16 @@ if ($sys_debug_on == true) {
   $GLOBALS['debug_query_count'] = 0;
   $GLOBALS['debug_queries'] = array();
 
+  // Save the input arrays in case they are emptied
+  // (eg. trackers_run/index.php)
+  $GLOBALS['INPUT_SAVE'] = array('get' => $_GET,
+				 'post' => $_POST,
+				 'cookie' => $_COOKIE,
+				 'files' => $_FILES);
+
   function debug_dump() {
+    global $INPUT_SAVE;
+
     print '<pre>';
     print '<hr />';
     print utils_size_readable(memory_get_usage(false)) . '/' . utils_size_readable(memory_get_peak_usage(false))
@@ -157,19 +166,19 @@ if ($sys_debug_on == true) {
 
     print '<hr />';
     print 'GET:<br />';
-    print_r($_GET);
+    print_r($INPUT_SAVE['get']);
 
     print '<hr />';
     print 'POST:<br />';
-    print_r($_POST);
+    print_r($INPUT_SAVE['post']);
 
     print '<hr />';
     print 'COOKIE:<br />';
-    print_r($_COOKIE);
+    print_r($INPUT_SAVE['cookie']);
 
     print '<hr />';
     print 'FILES:<br />';
-    print_r($_FILES);
+    print_r($INPUT_SAVE['files']);
 
 # Useless, only prints 'debug_dump()'...
 # Check util_die() maybe.
