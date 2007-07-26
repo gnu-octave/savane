@@ -57,7 +57,7 @@ if (isset($log_accum)) {
 		 array($group_id, $hook_id)) or die(mysql_error());
     }
   }
-  if (isset($arr_id and is_array($arr_id))) {
+  if (isset($arr_id) and is_array($arr_id)) {
     foreach ($arr_id as $hook_id => $ignored) {
       // Input validation
       if (!ctype_digit($hook_id.'') and ($hook_id != "new"))
