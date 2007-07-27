@@ -30,9 +30,9 @@ PATH:=$(PATH):/usr/local/sbin:/usr/sbin:/sbin
 	echo '$$sys_debug_nobasehost=true;' >> /tmp/savane/savane/.savane.conf.php
 	echo '#$$sys_debug_noformcheck=true;' >> /tmp/savane/savane/.savane.conf.php
 	echo 'our $sys_dbparams="mysql_socket=/tmp/savane/mysql/sock";' > /tmp/savane/savane/savane.conf.pl
-	make -C ../../frontend/php/images
 database:
 	cd ../.. && ./configure --sysconfdir=/tmp/savane --with-db-options="-S /tmp/savane/mysql/sock"
+	make -C ../../frontend/php/images
 	for i in 1 2 3 4 5; do if mysqladmin -S /tmp/savane/mysql/sock ping; then break; fi; sleep 1; done
 	cd ../.. && make database
 install:
