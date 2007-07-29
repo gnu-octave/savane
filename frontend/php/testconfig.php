@@ -111,7 +111,7 @@ foreach ( $phptags as $tag => $goodval ) {
 # Check against minimum sizes
 $phptags = array (
 	'post_max_size' => '3M',
-	'upload_max_filesize' => '3M',
+	'upload_max_filesize' => '2M',
 );
 ksort($phptags);
 foreach ( $phptags as $tag => $goodval ) {
