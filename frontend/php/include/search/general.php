@@ -352,7 +352,6 @@ function search_run ($keywords, $type_of_search="soft", $return_error_messages=1
 
   # Remove useless blank spaces, escape nasty characters
   $keywords = trim($keywords);
-  $keywords = addslashes($keywords);
 
   # Convert the wildcard * to the similar SQL one, when it is alone
   if ($keywords == "*")

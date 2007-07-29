@@ -45,10 +45,11 @@ function show_pending_users_list ($result, $group_id)
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"approve_for_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
+  $exists = false;
   while ($usr = db_fetch_array($result)) {
     print "<option value=".$usr['user_id'].">".$usr['realname'].
       " &lt;".$usr['user_name']."&gt;</option>\n";
-    $exists=1;
+    $exists = true;
   }
 
   if (!$exists)
