@@ -2,7 +2,7 @@
 # This file is part of the Savane project
 # <http://gna.org/projects/savane/>
 #
-# $Id: sitemenu.php 5517 2006-03-09 22:58:11Z yeupou $
+# $Id: sitemenu.php,v 1.1 2007/08/23 17:25:13 me Exp $
 #
 #  Copyright 1999-2000 (c) The SourceForge Crew
 #
@@ -178,7 +178,7 @@ function sitemenu_projects()
   $HTML->menuhtml_top(_("Hosted Projects"));
   $HTML->menu_entry($GLOBALS['sys_home'].'register/',
 		    _("Register New Project"),
-		    user_isloggedin(),
+		    1,
 		    sprintf(_("Register your project at %s"),$GLOBALS['sys_name']));
  $HTML->menu_entry($GLOBALS['sys_home'].'search/index.php?type_of_search=soft&amp;words=%%%',
 		   _("Full List"),
