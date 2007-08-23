@@ -277,7 +277,7 @@ if ($update)
 	      }
 	    else if (db_numrows($res_user) < 1)
 	      {
-		$ffeedback = (" Invalid confirmation hash.");
+		exit_error(" Invalid confirmation hash.");
 	      }
 	    else
 	      {
@@ -390,7 +390,7 @@ if ($update)
 	    }
 	  if (db_numrows($res_user) < 1)
 	    {
-	      $ffeedback = ("Invalid confirmation hash.");
+	      exit_error("Invalid confirmation hash.");
 	      $success = 0;
 	    }
 	  if ($success)
@@ -521,7 +521,6 @@ else if ($item == "email")
       $input_title = _('New Email Address:');
       $preamble = _("Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file.").'</p><p>'._("We need to maintain an accurate email address for each user due to the level of access we grant via this account. If we need to reach a user for issues related to this server, it is important that we be able to do so.").'</p><p>'._("Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.");
     }
-
 }
 else if ($item == "delete")
 {
