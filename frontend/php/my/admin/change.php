@@ -283,6 +283,8 @@ if ($update)
 	      {
 		$success = true;
 	      }
+	  } else {
+	    exit_error(" Invalid confirmation hash.");
 	  }
 	  if ($success)
 	    {
