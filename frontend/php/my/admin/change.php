@@ -121,14 +121,14 @@ if ($update)
 	    }
 
 	}
-      else if ($row_pw[user_pw] != md5($oldvalue))
+      else if ($row_pw['user_pw'] != md5($oldvalue))
 	{
 	  # use basic authentication via user table
 	  fb(_("Old password is incorrect."), 1);
 	  $success = 0;
 	}
 
-      if($usepam)
+      if($GLOBALS['sys_use_pamauth'])
 	{
 	  # allow user to set authentication to be PAM based
 	  $success = db_autoexecute('user', array('user_pw' => 'PAM'),
