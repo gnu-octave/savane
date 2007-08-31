@@ -1228,8 +1228,12 @@ function util_die($msg) {
       print "<strong>Fatal error:</strong> $msg<br />";
       debug_print_backtrace();
       print '</pre>';
+      die();
     }
-  die();
+  else
+    {
+      die($msg);
+    }
 }
 
 

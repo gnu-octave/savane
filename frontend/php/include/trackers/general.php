@@ -1888,7 +1888,7 @@ function trackers_build_match_expression($field, &$to_match)
 	    {
 	      #echo "<br />DBG $i, $w, $words[$i]";
 	      $words[$i] = "$field LIKE ?";
-	      $params[] = '%$w%';
+	      $params[] = "%$w%";
 	    }
 	  $expr = join(' AND ', $words);
 	}

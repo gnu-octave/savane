@@ -571,7 +571,7 @@ while (list($field,$value_id) = each($url_params))
 	{
           # It s a text field accept. Process INT or TEXT,VARCHAR fields differently
 	  list($expr, $params) = trackers_build_match_expression($field, $url_params[$field][0]);
-	  $where .= ' AND $expr ';
+	  $where .= " AND $expr ";
 	  $where_params = array_merge($where_params, $params);
 	}
     }
