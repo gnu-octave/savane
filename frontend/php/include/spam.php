@@ -128,13 +128,13 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
 	  $discussion_lock = array('discussion_lock' => 1);
 	}
       
-      db_autoquery(ARTIFACT,
-		   array_merge(array('spamscore' => $newscore,
-				     'summary' => $summary),
-			       $discussion_lock),
-		   DB_AUTOQUERY_UPDATE,
-		   'WHERE bug_id=?',
-		   array($item_id));
+      db_autoexecute(ARTIFACT,
+		     array_merge(array('spamscore' => $newscore,
+				       'summary' => $summary),
+				 $discussion_lock),
+		     DB_AUTOQUERY_UPDATE,
+		     'WHERE bug_id=?',
+		     array($item_id));
     }
 
   fb(sprintf(_("Flagged (+%s, total spamscore: %s)"), $score, $newscore));
