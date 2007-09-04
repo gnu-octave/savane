@@ -133,7 +133,7 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
 				       'summary' => $summary),
 				 $discussion_lock),
 		     DB_AUTOQUERY_UPDATE,
-		     'WHERE bug_id=?',
+		     'bug_id=?',
 		     array($item_id));
     }
 
