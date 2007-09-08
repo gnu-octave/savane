@@ -438,6 +438,8 @@ function session_set_new($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
 			       array($GLOBALS['session_hash']))) > 0);
   
   # make new session entries into db
+  if (!isset($stay_in_ssl))
+    $stay_in_ssl = 0; // avoid passing NULL
   db_autoexecute('session', array('session_hash' => $GLOBALS['session_hash'],
 				  'ip_addr' => $_SERVER['REMOTE_ADDR'],
 				  'time' => time(),
