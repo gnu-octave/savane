@@ -412,6 +412,16 @@ function sitemenu_loggedin($page_title, $page_toptab=0, $page_group=0)
 			1,
 			_("Superuser rights are required to perform site admin tasks"));
     }
+  if (user_is_super_user())
+    {
+      print "Become this user:<br/>";
+      print '<form method="POST" action="'
+	. $GLOBALS['sys_home'] . 'account/impersonate.php' . '">';
+      print '<input type="hidden" name="uri" value="'
+	. $_SERVER['REQUEST_URI'] . '" />';
+      print '<input type="text" name="user_name" size=10/>';
+      print '</form>';
+    }
   $HTML->menu_entry($GLOBALS['sys_home'].'my/',
 		    _("My Incoming Items"),
 		    1,
