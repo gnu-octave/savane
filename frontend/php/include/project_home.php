@@ -205,7 +205,7 @@ if ($GLOBALS['sys_group_id'] == $group_id)
 
       print $HTML->box_nextitem(utils_get_alt_row_color($odd));
 
-      print utils_link($GLOBALS['sys_home'].'admin/',
+      print utils_link($GLOBALS['sys_home'].'siteadmin/',
 		      html_image("contexts/admin.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Server Admin"))).'&nbsp;'._("Server Main Administration Page"));
 
       print $HTML->box_nextitem(utils_get_alt_row_color($even));
