@@ -5,3 +5,4 @@ stamp-po
 Makefile
 Makefile.in
 savane.pot
+remove-potcdate.sed
