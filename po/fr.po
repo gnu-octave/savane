@@ -2152,15 +2152,13 @@ msgid "Source Code Management"
 msgstr "Gestion de code source"
 
 #: frontend/php/include/pagemenu.php:503
-#, fuzzy
 msgid "Use Git"
 msgstr "Utiliser Git"
 
 #: frontend/php/include/pagemenu.php:506
 #: frontend/php/include/project_home.php:466
-#, fuzzy
 msgid "Source Code Manager: Git Repository"
-msgstr "Gestion de code source : Dépôt CVS"
+msgstr "Gestion de code source : Dépôt Git"
 
 #: frontend/php/include/pagemenu.php:529
 msgid "Use Subversion"
