@@ -104,7 +104,7 @@ my $now = time();
 #    frequency         = if these are set, status is not set to D when
 #                        the job has been done; it remains equal to Q
 #                        but the date is updated accordingly
-#             _day     = values from 1 (monday) to 7 (sunday)
+#             _day     = values from 1 (monday) to 7 (sunday) + 8 (everyday)
 #             _hour    = values from 0 (midnight) to 23
 #
 # Note: field labels are used in lower-case with blank space replaced by _
@@ -541,7 +541,11 @@ while (my ($key, $value) = each(%jobs)) {
 	# Assume that the script is running the correct day, so we can easily
 	# just add 7 days to the current day
 	my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
-	($year,$month,$day) = Add_Delta_YMD($year,$month,$day, 0,0,7);
+        if ($req_frequency_day < 8) {
+	  ($year,$month,$day) = Add_Delta_YMD($year,$month,$day, 0,0,7);
+        } else {
+          ($year,$month,$day) = Add_Delta_YMD($year,$month,$day, 0,0,1);
+        }
 	my $timestamp = timelocal("0","0",$req_frequency_hour,$day,($month-1),($year-1900));
 	SetDBSettings($export_table, "export_id='$req_id'", "date='$timestamp'"); 
 

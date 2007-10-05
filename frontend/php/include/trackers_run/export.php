@@ -299,19 +299,23 @@ if ($update)
 	  $hour =  $date_frequent_hour;
 	  $requested_hour = $hour;
 	  $requested_day = $date_frequent_day + 1;
-
-	  for ($day = $current_day; $day <= ($current_day+8); $day++)
-	    {
-	      # Test the next 8 days and find out which one match with
-              # the requested day
-	      $timestamp = mktime($hour, 0, 0, $current_month, $day);
-	      if (strftime('%u', $timestamp) == $requested_day)
-		{ break; }
+	  if ($date_frequent_day < 7) {
+	    for ($day = $current_day; $day <= ($current_day+8); $day++)
+	      {
+		// Test the next 8 days and find out which one match
+		// with the requested day
+		$timestamp = mktime($hour, 0, 0, $current_month, $day);
+		if (strftime('%u', $timestamp) == $requested_day)
+		  { break; }
+	      }
+	  } else {
+	    $timestamp = mktime($hour, 0, 0, $current_month, $current_day);
+	    if ($timestamp < mktime()) {
+	      $timestamp = mktime($hour, 0, 0, $current_month,$current_day+1);
 	    }
-
-
+	  }
 	}
-
+	  
 
       ##
       # Insert the request into the database
@@ -451,9 +455,14 @@ else
 	     # I18N
 	     # First string is 'every weekday', second the time of day
 	     # Example: "every Wednesday at 16:45 hours"
-	     $date = sprintf(_("%s at %s hours"),
-			     calendar_every_weekday_name(db_result($res_export, $i, 'frequency_day')),
-			     db_result($res_export, $i, 'frequency_hour'));
+	     if (db_result($res_export, $i, 'frequency_day') == 8) {
+	       $date = sprintf(_("%s at %s hours [GMT]"), "every day",
+			       db_result($res_export, $i, 'frequency_hour'));
+	     } else {
+	       $date = sprintf(_("%s at %s hours [GMT]"),
+			       calendar_every_weekday_name(db_result($res_export, $i, 'frequency_day')),
+			       db_result($res_export, $i, 'frequency_hour'));
+	     }
 	   }
 	 else
 	   {
@@ -697,6 +706,7 @@ else
       $valid_days = array();
       for ($day = 1; $day <= 7; $day++)
 	{ $valid_days[] = calendar_every_weekday_name($day); }
+      $valid_days[] =  _("every day");
 
       print '&nbsp;&nbsp;&nbsp;'.form_input("radio", "date_mainchoice", "frequent").' '.
         # I18N

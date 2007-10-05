@@ -184,7 +184,7 @@ if (!empty($login) && !$success)
       print '<h3>'._("Pending Account").'</h3>';
       print '<p>'._("Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.").'</p>';
       print '<p>'._("If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.").'</p>';
-      print '<p><a href="pending-resend.php?form_user='.$form_loginname.'">['._("Resend Confirmation Email").']</a></p>';
+      print '<p><a href="pending-resend.php?form_user='.htmlspecialchars($form_loginname, ENT_QUOTES).'">['._("Resend Confirmation Email").']</a></p>';
 
     }
   else
@@ -213,7 +213,7 @@ print '<input type="hidden" name="uri" value="'.$uri.'" />';
 # so they dont mess with the normal order when you press TAB on the keyboard
 # (login -> password -> post)
 print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
-print '<input type="text" name="form_loginname" value="'.$form_loginname.'" tabindex="1" /> <a class="smaller" href="register.php" tabindex="2">['._("No account yet?").']</a></p>';
+print '<input type="text" name="form_loginname" value="'.htmlspecialchars($form_loginname, ENT_QUOTES).'" tabindex="1" /> <a class="smaller" href="register.php" tabindex="2">['._("No account yet?").']</a></p>';
 
 print '<p><span class="preinput">'._("Password:").'</span><br />&nbsp;&nbsp;';
 print '<input type="password" name="form_pw" tabindex="1" /> <a class="smaller" href="lostpw.php" tabindex="2">['._("Lost your password?").']</a></p>';

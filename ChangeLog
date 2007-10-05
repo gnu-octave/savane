@@ -1,3 +1,21 @@
+2007-10-05  Sylvain Beucler  <beuc@beuc.net>
+
+	* Incorporate changes from Yves Perrin (CERN): fix xss
+	vulnerability in form login name [Beuc: added EMT_QUOTES and fixed
+	another occurrence]; introduced DAILY export
+
+2007-10-04  Sylvain Beucler  <beuc@beuc.net>
+
+	* New spanish translation from Gonzalo Sebastian
+
+2007-09-08  Sylvain Beucler  <beuc@beuc.net>
+
+	* New "become this user" feature for admins.
+
+2007-XX-XX  Sylvain Beucler  <beuc@beuc.net>
+
+	* Lots of small fixes (PHP warnings...)
+
 2007-06-28  Sylvain Beucler  <beuc@beuc.net>
 
 	* frontend/php/include/trackers_run/index.php: old project may
