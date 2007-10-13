@@ -460,6 +460,7 @@ if ($project->Uses("patch") ||
   #    webpage
   if ($project->Uses("git") || $project->UsesForHomepage("git"))
     {
+      specific_makesep();
       $url = $project->getArtifactUrl("git");
 
       html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Git'));
@@ -479,6 +480,7 @@ if ($project->Uses("patch") ||
   if ($project->Uses("svn") || $project->UsesForHomepage("svn"))
     {
       $url = $project->getArtifactUrl("svn");
+      specific_makesep();
 
       html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Subversion'));
       print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Subversion Repository").'</a>';
