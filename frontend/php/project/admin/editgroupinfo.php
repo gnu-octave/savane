@@ -26,9 +26,17 @@ require_once('../../include/init.php');
 require_once('../../include/vars.php');
 
 extract(sane_import('post', array('update',
-  'form_group_name', 'form_shortdesc', 'form_longdesc', 'form_devel_status')));
+  'form_group_name', 'form_shortdesc', 'form_longdesc', 'form_devel_status', 'upgrade_gpl')));
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+
+# update info for page
+$res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
+if (db_numrows($res_grp) < 1)
+{
+  exit_no_group();
+}
+$row_grp = db_fetch_array($res_grp);
 
 if ($update)
 {
@@ -44,7 +52,12 @@ if ($update)
     "group_id=?", array($group_id));
   if (!$result)
     { fb(_("Update failed."), 1); }
+
+  if ($row_grp['license'] == 'gpl' and $upgrade_gpl) {
+    db_execute("UPDATE groups SET license='gplv3orlater' WHERE group_id=?", array($group_id));
+  }
 }
+
 
 # update info for page
 $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
@@ -105,6 +118,13 @@ if ($project->CanUse("devel_status"))
       print '</option>';
     }
   print '</select></p>';
+}
+
+if ($project->getLicense() == 'gpl') {
+  print '<p><span class="preinput">'._("GNU GPL v3:").'</span><br />&nbsp;&nbsp;';
+  html_build_checkbox("upgrade_gpl");
+  print " Upgrade license to &quot;GNU GPLv3 or later&quot;";
+  print "</p>";
 }
 
 print form_footer();
