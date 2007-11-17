@@ -34,7 +34,7 @@ SHELL=$BASH
 AC_CONFIG_AUX_DIR(autotools)
 # For future version of aclocal:
 AC_CONFIG_MACRO_DIR(autotools/macros)
-AM_INIT_AUTOMAKE(savane,3.1-zeta)
+AM_INIT_AUTOMAKE(savane,3.1-cleanup)
 
 dnl The installed program must know where to find its message catalogs.
 dnl Unfortunately, prefix gets only finally determined at the end of configure.
