@@ -1,5 +1,25 @@
+# Search engine crawlers restrictions
+
+# This file is checked by crawlers only if installed at the root "/"
+# of the website (it won't be read if you installed Savane in a
+# subdirectory such as http://yoursite.tld/savane/), so paths in this
+# file are relatives to the root of the website.
+
 User-agent: *
+
+# Disallow pages without indexable content
 Disallow: /include/
 Disallow: /images/
 Disallow: /siteadmin/
+
+# Disallow login.php because everypage links to it with a 'uri='
+# parameter - this generates lots of useless pages to index, and lots
+# of traffic for nothing
 Disallow: /account/login.php
+
+
+## Extended syntax ('*' wildcard)
+
+# Disallow identical pages - less crawler traffic
+Disallow: /*?reload=1
+Disallow: /*?printer=1
