@@ -1787,7 +1787,7 @@ function trackers_data_handle_update ($group_id,
       # Browse the canned responses
       while (list(,$thiscanned) = each($canned_response))
         {
-	  $res3 = db_execute("SELECT * FROM ".ARTIFACT."_canned_responses WHERE bug_canned_id=?".
+	  $res3 = db_execute("SELECT * FROM ".ARTIFACT."_canned_responses WHERE bug_canned_id=?",
 			     array(addslashes($thiscanned)));
 	  
 	  if ($res3 && db_numrows($res3) > 0)
