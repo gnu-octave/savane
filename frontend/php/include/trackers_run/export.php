@@ -327,7 +327,7 @@ if ($update)
 	array(
           'task_id' => 0,
 	  'artifact' => ARTIFACT,
-	  'unix_group_name ' => $group,
+	  'unix_group_name' => $group,
 	  'user_name' => user_getname(),
 	  'sql' => $export_sql,
 	  'status' => 'I',
