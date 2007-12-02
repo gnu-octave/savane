@@ -120,6 +120,11 @@ if ($project->CanUse("devel_status"))
   print '</select></p>';
 }
 
+
+echo '<p><span class="preinput">'
+    ._("License:").'</span><br />&nbsp;&nbsp;
+License changes are moderated by the site administrators. Please contact them to change your project license.</p>';
+
 if ($project->getLicense() == 'gpl') {
   print '<p><span class="preinput">'._("GNU GPL v3:").'</span><br />&nbsp;&nbsp;';
   html_build_checkbox("upgrade_gpl");
