@@ -32,7 +32,8 @@ extract(sane_import('post', array(
   // Find out the relevant timestamp that will be used by the backend
   // to determine which job must be performed
   'date_mainchoice',
-  'date_next_day', 'date_next_hour', 'date_frequent_hour', 'date_frequent_day')));
+  'date_next_day', 'date_next_hour', 'date_frequent_hour', 'date_frequent_day',
+  'sumORdet')));
 extract(sane_import('request', array('report_id', 'advsrch', 'form_id', 'report_id')));
 extract(sane_import('get', array('delete', 'feedback')));
 
@@ -268,14 +269,14 @@ if ($update)
 
       ##
       # Find out the time arguments
-      unset($timestamp, $requested_hour, $requested_day);
+      $timestamp = $requested_hour = $requested_day = null;
 
-      switch ($mainchoice)
+      switch ($date_mainchoice)
 	{
 	case 'asap':
 	  # Basic case where the user wants the export to be done as soon
 	  # as possible: we provide current time as timestamp
-	  $timestamp = mktime();
+	  $timestamp = time();
 	  break;
 	case 'next':
 	  # Case where the user provide a date for a one time export
