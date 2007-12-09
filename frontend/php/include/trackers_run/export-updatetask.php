@@ -69,6 +69,7 @@ $changes['status_id']['add'] = 'Closed';
 
 # Send a mail notification
 list($additional_address, $sendall) = trackers_data_get_item_notification_info($task_id, 'task', 0);
+$address = '';
 if ((trim($address) != "") && (trim($additional_address) != "")) 
 { $address .= ", "; }
 $address .= $additional_address;

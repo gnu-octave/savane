@@ -4,8 +4,8 @@
 #
 # $Id: download.php 4969 2005-11-15 10:32:43Z yeupou $
 #
-#  Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#
+# Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007  Sylvain Beucler
 #
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
 
 register_globals_off();
 extract(sane_import('post', array(
-  'update', 'create',
+  'create',
   // Use the time as it was while the form was printed to the user
   'current_time',
   // Find out the relevant timestamp that will be used by the backend
@@ -34,7 +34,8 @@ extract(sane_import('post', array(
   'date_mainchoice',
   'date_next_day', 'date_next_hour', 'date_frequent_hour', 'date_frequent_day',
   'sumORdet')));
-extract(sane_import('request', array('report_id', 'advsrch', 'form_id', 'report_id')));
+extract(sane_import('request', array('update', 'report_id', 'advsrch',
+  'form_id', 'report_id')));
 extract(sane_import('get', array('delete', 'feedback')));
 
 # use the wording "export job" to distinguish the job from the task that
@@ -149,7 +150,7 @@ if ($update)
 	  if (trackers_data_is_select_box($field) && !trackers_isvarany($url_params[$field]) )
 	    {
 	      $where .= ' AND '.$field.' IN ('.implode(',', array_fill(0, count($url_params[$field]), '?')).') ';
-	      $where_params[] = $url_params[$field];
+	      $where_params = array_merge($where_params, $url_params[$field]);
 	    }
 	  else if (trackers_data_is_date_field($field) && $url_params[$field][0])
 	    {
@@ -353,42 +354,38 @@ if ($update)
       # Maybe we wil reconsider this later.
       session_redirect($GLOBALS['sys_home']."task/export-createtask.php?group=".rawurlencode($group)."&export_id=$insert_id&from=".ARTIFACT);
 
-    }
+    } /* if ($create) */
 
-  # Delete item
+  // Delete item
   if ($delete)
     {
       $export_id = $delete;
-
-      # Obtain the relevant task number
+      
+      // Obtain the relevant task number
       $task_id = db_result(db_execute("SELECT task_id FROM trackers_export WHERE export_id=? LIMIT 1", array($export_id)), 0, 'task_id');
-
-      # Delete the entry
+      
+      // Delete the entry
       $result = db_execute("DELETE FROM trackers_export WHERE export_id=? AND user_name=? LIMIT 1", array($export_id, user_getname()));
       if (db_affected_rows($result))
 	{
 	  fb(sprintf(_("Export job #%s successfully removed"), $export_id));
-
+	  
 	  session_redirect($GLOBALS['sys_home']."task/export-updatetask.php?group=".rawurlencode($group)."&export_id=$export_id&task_id=$task_id&from=".ARTIFACT);
-
+	  
 	}
       else
 	{
 	  fb(sprintf(_("Unable to remove export job #%s"), $export_id), 1);
 	}
-
-
-
-      # Update the list of current exports
+      
+      
+      
+      // Update the list of current exports
       $res_export = db_execute("SELECT * FROM trackers_export WHERE user_name=? AND unix_group_name=? AND status<>'I' ORDER BY export_id ASC", array(user_getname(), $group));
       $export_count = db_numrows($res_export);
+    } /* if ($delete) */
+ }
 
-
-
-    }
-
-
-}
 
 
 ########################################################################
@@ -735,7 +732,3 @@ else
 
   trackers_footer(array());
 }
-
-
-
-?>
