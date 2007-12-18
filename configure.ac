@@ -26,8 +26,7 @@ AC_INIT
 # We expect to use Bash for our build scripts - it's widespread
 # enough, not need to write portable shell in this case, I'd say.
 if test -z "$BASH"; then
-  echo "*** Essential program Bash not found" 1>&2
-  exit 1
+  AC_MSG_ERROR([*** Essential program Bash not found])
 fi
 SHELL=$BASH
 
