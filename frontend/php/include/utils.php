@@ -847,29 +847,6 @@ function build_priority_select_box ($name="priority", $checked_val="5")
 
 }
 
-# ########################################### checkbox array
-# ################# mostly for group languages and environments
-
-function utils_buildcheckboxarray($options,$name,$checked_array)
-{
-  $option_count=count($options);
-  $checked_count=count($checked_array);
-
-  for ($i=1; $i<=$option_count; $i++)
-    {
-      print '
-			<BR><INPUT type="checkbox" name="'.$name.'" value="'.$i.'"';
-      for ($j=0; $j<$checked_count; $j++)
-	{
-	  if ($i == $checked_array[$j])
-	    {
-	      print ' CHECKED';
-	    }
-	}
-      print '> '.$options[$i];
-    }
-}
-
 # deprecated name
 function GraphResult($result,$title)
 {

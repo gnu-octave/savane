@@ -940,33 +940,6 @@ function html_buildpriority_select_box ($name='priority', $checked_val='5')
   return html_build_priority_select_box($name, $checked_val);
 }
 
-
-function html_build_checkboxarray($options,$name,$checked_array)
-{
-  $option_count=count($options);
-  $checked_count=count($checked_array);
-
-  for ($i=1; $i<=$option_count; $i++)
-    {
-      print '
-			<br><input type="checkbox" name="'.$name.'" value="'.$i.'"';
-      for ($j=0; $j<$checked_count; $j++)
-	{
-	  if ($i == $checked_array[$j])
-	    {
-	      print ' checked="checked"';
-	    }
-	}
-      print ' /> '.$options[$i];
-    }
-}
-
-function html_buildcheckboxarray($options,$name,$checked_array)
-{
-  #deprecated
-  return html_build_checkboxarray($options,$name,$checked_array);
-}
-
 function html_build_checkbox ($name, $is_checked=0)
 {
   print  '<input type="checkbox" name="'.$name.'" value="1"';
