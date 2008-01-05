@@ -386,6 +386,10 @@ if ((ARTIFACT == "bugs" ||
   $item_id = $_SERVER['QUERY_STRING'];
 }
 
+if (!empty($item_id) && !is_numeric($item_id))
+{
+  util_die(_("Invalid item ID."));
+}
 
 # Set the CONTEXT and SUBCONTEXT constants, useful to guess page titles
 # but also to find out if cookbook entries are relevant

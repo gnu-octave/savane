@@ -206,7 +206,7 @@ if (session_issecure())
 
 }
 print '<form action="'.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php" method="post">';
-print '<input type="hidden" name="uri" value="'.$uri.'" />';
+print '<input type="hidden" name="uri" value="'.htmlspecialchars($uri, ENT_QUOTES).'" />';
 
 # Shortcuts to New Account and Lost Password have a tabindex superior to 
 # the rest of form, 
