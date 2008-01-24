@@ -29,7 +29,7 @@ register_globals_off();
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 ###### See if we were asked to perform anything
-extract(sane_import('get', array('ban_user_id', 'wash_user_id', 'wash_ip';
+extract(sane_import('get', array('ban_user_id', 'wash_user_id', 'wash_ip',
 				 'max_rows', 'offset')));
 
 if ($ban_user_id)
@@ -93,7 +93,7 @@ if (!isset($offset))
 else
 { $offset = intval($offset); }
 
-$result = db_execute("SELECT user_name,realname,user_id,spamscore FROM user WHERE status='A' AND spamscore > 0 ORDER BY spamscore DESC LIMIT ?,?", array($offset,($max_rows+1));
+$result = db_execute("SELECT user_name,realname,user_id,spamscore FROM user WHERE status='A' AND spamscore > 0 ORDER BY spamscore DESC LIMIT ?,?", array($offset,($max_rows+1)));
 if (!db_numrows($result))
 {
   print '<p>'._("No suspects found").'</p>';

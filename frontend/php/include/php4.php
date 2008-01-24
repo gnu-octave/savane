@@ -19,14 +19,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // Appears in PHP5
-function debug_print_backtrace()
+if (substr(PHP_VERSION, 0, 1) < 5)
 {
-  $bt = debug_backtrace();
-  array_shift($bt); // remove this very function
-  utils_debug_print_mybacktrace($bt);
-}
-
-function memory_get_peak_usage() {
-  // Needs PHP5
-  return 0;
+  function debug_print_backtrace()
+  {
+    $bt = debug_backtrace();
+    array_shift($bt); // remove this very function
+    utils_debug_print_mybacktrace($bt);
+  }
+  
+  function memory_get_peak_usage() {
+    // Needs PHP5
+    return 0;
+  }
 }
