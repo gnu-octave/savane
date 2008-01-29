@@ -7,6 +7,7 @@
 # Copyright 2004-2005 (c) Loic Dachary <loic--gnu.org>
 #                         Mathieu Roy <yeupou--gnu.org>
 #                         Timothee Besset <ttimo--ttimo.net>
+# Copyright (C) 2007, 2008  Sylvain Beucler
 #
 # The Savane project is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -60,6 +61,11 @@ our @prepend_args_svn = ( '-r', '/svn' );
 
 our $use_git = "0";
 our $bin_git = "git-shell";
+
+our $use_bzr = "0";
+our $bin_bzr = "bzr";
+our $dir_bzr = "/srv/bzr";
+
 
 # Open configuration file
 if (-e "/etc/membersh-conf.pl") {
@@ -129,10 +135,20 @@ if ($#ARGV == 1 and $ARGV[0] eq "-c") {
 	push( @args, @args_user );
 	exec($bin_svn, @args) or die("Failed to exec $bin_svn: $!");
 
-    } elsif ($use_git and $ARGV[1] =~ m:git-.+:) {
+    } elsif ($use_git and $ARGV[1] =~ m/^git-/) {
 	
 	# Delegate filtering to git-shell
         exec($bin_git, @ARGV) or die("Failed to exec $bin_git: $!");
+
+    } elsif ($use_bzr and $ARGV[1] =~ m:$bin_bzr serve --inet --directory=[a-zA-Z0-9-_/]+ --allow-writes:) {
+
+	# bzr wants to write a ~/.bzr.log
+	# Tip: mkdir -m 755 /var/lib/bzr
+	#      ln -s /dev/null /var/lib/bzr/.bzr.log
+	$ENV{'HOME'} = '/var/lib/bzr';
+	# authorize 'bzr serve' in SSH tunnel mode
+        exec($bin_bzr, 'serve', '--inet', '--directory='.$dir_bzr, '--allow-writes')
+	    or die("Failed to exec '$bin_bzr serve --inet --directory=$dir_bzr --allow-writes': $!");
 
     }
 }
