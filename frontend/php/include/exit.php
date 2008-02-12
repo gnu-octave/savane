@@ -72,6 +72,7 @@ function exit_not_logged_in()
     {
       header ("Location: http://".$sys_default_domain.$sys_home."account/login.php?uri=".urlencode($REQUEST_URI));
     }
+  exit;
 }
 
 function exit_no_group() 
@@ -107,6 +108,7 @@ function exit_header($status=false)
     { $status = "404 Not Found"; }
   
   header($_SERVER['SERVER_PROTOCOL'].' '.$status);
+  exit;
 }
 
 
