@@ -108,7 +108,6 @@ function exit_header($status=false)
     { $status = "404 Not Found"; }
   
   header($_SERVER['SERVER_PROTOCOL'].' '.$status);
-  exit;
 }
 
 
