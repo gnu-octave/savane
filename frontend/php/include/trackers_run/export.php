@@ -312,7 +312,7 @@ if ($update)
 	      }
 	  } else {
 	    $timestamp = mktime($hour, 0, 0, $current_month, $current_day);
-	    if ($timestamp < mktime()) {
+	    if ($timestamp < time()) {
 	      $timestamp = mktime($hour, 0, 0, $current_month,$current_day+1);
 	    }
 	  }
