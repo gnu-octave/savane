@@ -46,7 +46,7 @@ sub GitMakeArea {
 
         # --shared sets g+s on directories
 	$ENV{'GIT_DIR'} = $dir_git;
-	system('git-init-db', '--shared');
+	system('git-init', '--shared');
 	delete $ENV{'GIT_DIR'};
 	
 	system('chgrp', '-R', $name, $dir_git);
@@ -57,8 +57,17 @@ sub GitMakeArea {
 	system('chattr', '+i', $dir_git.'/hooks');
 
 	# Create folder for subrepositories (need to code multi-repo support first)
+	# TODO: precise directory location
 	#system('mkdir', '-m', '2775', ".../$name/");
 	#system('chown', "root:$name", ".../$name/");
+
+	# 'git-cvsserver' support
+	system('git-config', 'gitcvs.pserver.enabled', 1);
+	system('git-config', 'gitcvs.ext.enabled', 0);
+	system('git-config', 'gitcvs.dbname', '%G/gitcvs-db/sqlite');
+	my $sqlite_dir = "$dir_git/gitcvs-db";
+	system('mkdir', $sqlite_dir, '-m', '755');
+	system('chown', 'nobody', $sqlite_dir)
 
 	umask($old_umask);
 	return ' '.$dir_git.$warning;	
