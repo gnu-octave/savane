@@ -67,7 +67,7 @@ sub GitMakeArea {
 	system('git-config', 'gitcvs.dbname', '%G/gitcvs-db/sqlite');
 	my $sqlite_dir = "$dir_git/gitcvs-db";
 	system('mkdir', $sqlite_dir, '-m', '755');
-	system('chown', 'nobody', $sqlite_dir)
+	system('chown', 'nobody', $sqlite_dir);
 
 	umask($old_umask);
 	return ' '.$dir_git.$warning;	
