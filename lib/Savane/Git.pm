@@ -44,10 +44,11 @@ sub GitMakeArea {
 	# Create a repository
 	my $old_umask = umask(0002);
 
-        # --shared sets g+s on directories
+	# Define the git repository we work on
 	$ENV{'GIT_DIR'} = $dir_git;
+
+        # --shared sets g+s on directories
 	system('git-init', '--shared');
-	delete $ENV{'GIT_DIR'};
 	
 	system('chgrp', '-R', $name, $dir_git);
         # needed to make the repo accessible via bare HTTP
@@ -69,7 +70,10 @@ sub GitMakeArea {
 	system('mkdir', $sqlite_dir, '-m', '755');
 	system('chown', 'nobody', $sqlite_dir);
 
+	# Clean-up environment
+	delete $ENV{'GIT_DIR'};
 	umask($old_umask);
+
 	return ' '.$dir_git.$warning;	
     }
     return 0;
