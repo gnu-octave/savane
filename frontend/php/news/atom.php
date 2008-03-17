@@ -35,22 +35,26 @@ $result = db_execute("
     is_approved <> 4 AND is_approved <> 5
     AND group_id=?
     AND news_bytes.submitted_by = user.user_id
-  ORDER BY date ASC
+  ORDER BY date DESC
   LIMIT 20", array($group_id));
 
 $news = array();
 while ($row = db_fetch_array($result))
 {
-  $news[] = array('id' => "http://$sys_default_domain{$sys_home}forum/forum.php?forum_id={$row['forum_id']}",
-		  'title' => $row['summary'],
-		  'updated' => date('c', $row['date']),
-		  'author' => $row['realname'],
-		  'content' => markup_full(trim($row['details'])));
+  array_unshift($news,
+    array('id' => "http://$sys_default_domain{$sys_home}forum/forum.php?forum_id={$row['forum_id']}",
+	  'title' => $row['summary'],
+	  'updated' => date('c', $row['date']),
+	  'author' => $row['realname'],
+	  'content' => markup_full(trim($row['details']))));
 }
 
 $id = "http://$sys_default_domain{$sys_home}news/atom.php?group=$group";
 $title = $group_obj->getPublicName()." - News";
-$last_updated = $news[count($news)-1]['updated'];
+if (count($news) != 0)
+     $last_updated = $news[count($news)-1]['updated'];
+else
+     $last_updated = date('c', 0); # Epoch
 
 // Feed header
 header('Content-type: application/atom+xml;charset=UTF-8');
