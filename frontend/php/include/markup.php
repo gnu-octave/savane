@@ -149,13 +149,13 @@ function markup_full($text, $allow_headings=true)
           $verbatim = 1;  
 	  $verbatim_buffer = '';
 	  $verbatim_buffer_linecount = 0;
-          # empty the context stack
+
 	  $line = join("\n", $context_stack);
 
 	  if (empty($printer))
-	    { $context_stack = array('</textarea>'); }
+	    { array_unshift($context_stack, '</textarea>'); }
 	  else
-	    { $context_stack = array('</pre>'); }
+	    { array_unshift($context_stack, '</pre>'); }
 	  
 	  # Jump to the next line, assuming that we can ignore the rest of the
 	  # line
@@ -170,9 +170,9 @@ function markup_full($text, $allow_headings=true)
       if (preg_match('/([-]verbatim[-])/', $line) and $verbatim == 1)
         {
           $verbatim = false;
-          # empty the context stack
+
           $line = join("\n", $context_stack);
-          $context_stack = array();
+          array_shift($context_stack);
 
           #array_pop($result); # no longer useful since we bufferize verbatim
 	  if (empty($printer))

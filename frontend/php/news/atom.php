@@ -1,21 +1,23 @@
 <?php
+# Atom feed generator for news items
+
 # Copyright (C) 2008  Sylvain Beucler
-#
+
 # This file is part of Savane.
 
-# Savane is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 3 of the
+# Savane is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
-# Savane is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
+# Savane is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see
-# <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 require_once('../include/init.php');
 require_once('../include/news/general.php');
@@ -55,19 +57,27 @@ if (count($news) != 0)
      $last_updated = $news[count($news)-1]['updated'];
 else
      $last_updated = date('c', 0); # Epoch
+     $is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? true : false;
+     $myself = ($is_https ? 'https://' : 'http://')
+     . $_SERVER['SERVER_NAME']
+     . (((!$is_https && $_SERVER['SERVER_PORT'] == 80)
+	 || ($is_https && $_SERVER['SERVER_PORT'] == 443))
+	? '' : $_SERVER['SERVER_PORT'])
+     . $_SERVER['REQUEST_URI'];
 
 // Feed header
+// Nice doc here: http://www.atomenabled.org/developers/syndication/
 header('Content-type: application/atom+xml;charset=UTF-8');
 print '<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>'.$id.'</id>
-  <link rel="self" href="'.$id.'"/>
+  <link rel="self" href="'.$myself.'"/>
   <title>'.$title.'</title>
   <updated>'.$last_updated.'</updated>
 
 ';
 
-// All enws entries
+// All news entries
 foreach ($news as $entry)
 {
 print "
@@ -79,7 +89,9 @@ print "
     <author>
       <name>{$entry['author']}</name>
     </author>
-    <content type='html' xml:base='{$entry['id']}'>{$entry['content']}</content>
+    <content type='xhtml' xml:base='{$entry['id']}'>
+      <div xmlns='http://www.w3.org/1999/xhtml'>{$entry['content']}</div>
+    </content>
   </entry>
 ";
 }
