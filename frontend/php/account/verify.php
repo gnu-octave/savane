@@ -36,7 +36,7 @@ register_globals_off();
 
 extract(sane_import('post',
   array('update', 'form_id',
-    'form_loginname', 'confirm_hash')));
+    'form_loginname', 'form_pw', 'confirm_hash')));
 
 # Block here potential robots
 dnsbl_check();
@@ -70,7 +70,7 @@ if (!empty($update))
 
   # then check valid login	
   if (session_login_valid($form_loginname, 
-			  sane_post('form_pw'),
+			  $form_pw,
 			  1, # accept not yet confirmed accounts
 			  0, # not a cookie for a year
 			  0, # not crypted
