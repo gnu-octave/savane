@@ -1,6 +1,6 @@
 <?php
 # Copyright 1999-2000 (c) The SourceForge Crew
-#  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
 # 
@@ -20,8 +20,6 @@
 # along with the Savane project; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#input_is_safe();
-#mysql_is_safe();
 
 require_once('../../include/init.php');
 require_once('../../include/sendmail.php');

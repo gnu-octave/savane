@@ -1,10 +1,7 @@
 <?php
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
-#  Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# <one line to give a brief idea of what this does.>
+# 
+# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
 #
 # The Savane project is free software; you can reprintdistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,8 +21,6 @@ require_once('../include/init.php');
 register_globals_off();
 extract(sane_import('get', array('user_id')));
 
-#input_is_safe();
-#mysql_is_safe();
 
 # Check whether the user exists
 if (!$user_id)

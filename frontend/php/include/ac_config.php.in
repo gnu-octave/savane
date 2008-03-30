@@ -7,5 +7,3 @@ $sys_localedir = "@localedir@";
 $savane_version = "@VERSION@";
 $savane_url = 'http://savannah.nongnu.org/projects/savane-cleanup';
 
-#input_is_safe();
-#mysql_is_safe();

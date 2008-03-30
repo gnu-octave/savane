@@ -1,9 +1,6 @@
 #!/usr/bin/perl
-# This file is part of the Savane project
-# <http://gna.org/projects/savane/>
-#
-# $Id$
-#
+# <one line to give a brief idea of what this does.>
+# 
 # Copyright 2004-2005 (c) Mathieu Roy <yeupou--gnu.org>
 #
 #   The Savane project is free software; you can redistribute it and/or modify

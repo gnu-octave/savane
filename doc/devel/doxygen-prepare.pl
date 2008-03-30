@@ -2,8 +2,8 @@
 #
 # Copyright (C) 2005 Tobias Toedter
 #
-# $Id: backup_database.pl 4698 2005-09-10 11:19:24Z yeupou $
-#
+# <one line to give a brief idea of what this does.>
+# 
 # This file is part of Savane.
 #
 # Savane is free software; you can redistribute it and/or modify it

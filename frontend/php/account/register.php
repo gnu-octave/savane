@@ -1,9 +1,9 @@
 <?php
 # Register an account, part 1 (part 2 is e-mail confirmation)
 
-#  Copyright 1999-2000 (c) The SourceForge Crew
-#  Copyright 2003-2006 (c) Mathieu Roy <yeupou--gna.org>
-#  Copyright (C) 2007  Sylvain Beucler
+# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gna.org>
+# Copyright (C) 2007  Sylvain Beucler
 
 # This file is part of the Savane project
 
@@ -33,8 +33,6 @@ require_once('../include/html.php');
 require_once('../include/sendmail.php');
 
 register_globals_off();
-#input_is_safe();
-#mysql_is_safe();
 
 extract(sane_import('post',
   array('update', 'form_id',
