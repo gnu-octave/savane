@@ -654,12 +654,15 @@ function pagemenu_group ()
       $ret = '';
       $ret .= pagemenu_submenu_entry(_("Browse"),
 				     $GLOBALS['sys_home'].'news/?group='.$project->getUnixName());
+      $ret .= pagemenu_submenu_entry(_("Atom Feed"),
+				     $GLOBALS['sys_home'].'news/atom.php?group='.$project->getUnixName());
       $ret .= pagemenu_submenu_entry(_("Submit"),
 				     $GLOBALS['sys_home'].'news/submit.php?group='.$project->getUnixName(),
 				     group_restrictions_check($group_id, "news"));
       $ret .= pagemenu_submenu_entry(_("Manage"),
 				     $GLOBALS['sys_home'].'news/approve.php?group='.$project->getUnixName(),
 				     member_check(0, $group_id, "N3"));
+
       if ($is_admin)
 	{
 	  $ret .= pagemenu_submenu_entry_separator().

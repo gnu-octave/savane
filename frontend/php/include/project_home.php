@@ -175,7 +175,10 @@ if ($project->Uses("news")) {
   print '
 <div class="splitright">';
 
-  print $HTML->box_top(_("Latest News"));
+  print $HTML->box_top(_("Latest News")
+		       . "&nbsp;<a href='{$GLOBALS['sys_home']}news/atom.php?group=$group'"
+		       . " style='display: inline'><img"
+		       . " src='{$GLOBALS['sys_home']}images/common/feed16.png' /></a>");
   print news_show_latest($group_id,4,"true");
   print $HTML->box_bottom();
 
