@@ -36,7 +36,7 @@ extract(sane_import('post', array(
   'url_cvs', 'url_cvs_viewcvs', 'url_cvs_viewcvs_homepage',
   'url_arch', 'url_arch_viewcvs',
   'url_svn', 'url_svn_viewcvs',
-  'url_git', 'url_svn_git',
+  'url_git', 'url_git_viewcvs',
   'url_bugs','url_patch','url_task','url_support',
   'url_mail', 'url_download', 'dir_download', // ?
   'url_homepage',
