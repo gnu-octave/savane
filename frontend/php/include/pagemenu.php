@@ -440,13 +440,16 @@ function pagemenu_group ()
       $project->Uses("svn") ||
       $project->UsesForHomepage("svn") ||
       $project->Uses("git") ||
-      $project->UsesForHomepage("git"))
+      $project->UsesForHomepage("git") ||
+      $project->Uses("hg") ||
+      $project->UsesForHomepage("hg"))
     {
       # If it uses only one SCM, main link points to it
       $cvs = FALSE;
       $svn = FALSE;
       $arch = FALSE;
       $git = FALSE;
+      $hg = FALSE;
       if ($project->Uses("cvs") || $project->UsesForHomepage("cvs"))
 	{ $cvs = 1; }
       if ($project->Uses("arch") || $project->UsesForHomepage("arch"))
@@ -455,12 +458,15 @@ function pagemenu_group ()
 	{ $svn = 1; }
       if ($project->Uses("git") || $project->UsesForHomepage("git"))
 	{ $git = 1; }
+      if ($project->Uses("hg") || $project->UsesForHomepage("hg"))
+	{ $hg = 1; }
 
       // Only one SCM - direct link
-      if (($cvs && !$arch && !$svn && !$git) ||
-	  (!$cvs && $arch && !$svn && !$git) ||
-	  (!$cvs && !$arch && $svn && !$git) ||
-	  (!$cvs && !$arch && !$svn && $git))
+      if (($cvs && !$arch && !$svn && !$git && !$hg) ||
+	  (!$cvs && $arch && !$svn && !$git && !$hg) ||
+	  (!$cvs && !$arch && $svn && !$git && !$hg) ||
+	  (!$cvs && !$arch && !$svn && $git && !$hg) ||
+	  (!$cvs && !$arch && !$svn && !$git && $hg))
 	{
 	  unset($tool);
 	  if ($cvs)
@@ -471,6 +477,8 @@ function pagemenu_group ()
 	    { $tool = "svn"; }
 	  if ($git)
 	    { $tool = "git"; }
+	  if ($hg)
+	    { $tool = "hg"; }
 
 	  pagemenu_submenu_title(_("Source Code"), 
 				 $project->getArtifactUrl($tool),
@@ -484,7 +492,8 @@ function pagemenu_group ()
 	  pagemenu_submenu_title(_("Source Code"), 
 				 '#', # non-link
 				 (CONTEXT == 'cvs' || CONTEXT == 'arch'
-				  || CONTEXT == 'svn' || CONTEXT == 'git'),
+				  || CONTEXT == 'svn' || CONTEXT == 'git'
+                                  || CONTEXT == 'hg'),
 				 1,
 				 _("Source Code Management"));
 	}
@@ -510,6 +519,32 @@ function pagemenu_group ()
 					     $project->getUrl("git_viewcvs"));
 	    }
 	  if ($project->UsesForHomepage("git") && 
+	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' && 
+	      $project->getUrl("cvs_viewcvs_homepage") != '')
+	    {
+	      $count++;
+	      $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
+					     $project->getUrl("cvs_viewcvs_homepage"));
+	    }	  
+
+	} 
+      if ($hg)
+	{
+	  $count++;
+	  $ret .= pagemenu_submenu_entry(_("Use Mercurial"),
+					 $project->getArtifactUrl("hg"),
+					 1,
+					 _("Source Code Manager: Mercurial Repository"));
+	  # Do we need links to browse repositories?
+	  if ($project->Uses("hg") && 
+	      $project->getUrl("hg_viewcvs") != 'http://' && 
+	      $project->getUrl("hg_viewcvs") != '')
+	    {
+	      $count++;
+	      $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
+					     $project->getUrl("hg_viewcvs"));
+	    }
+	  if ($project->UsesForHomepage("hg") && 
 	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' && 
 	      $project->getUrl("cvs_viewcvs_homepage") != '')
 	    {

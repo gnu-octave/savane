@@ -845,6 +845,7 @@ function html_select_typedir_box ($input_name, $current_value)
         <option value="basiccvs"'.(($current_value == "basiccvs")?" selected=\"selected\"":"").'>'._("Basic Cvs Directory").'</option>
         <option value="basicsvn"'.(($current_value == "basicsvn")?" selected=\"selected\"":"").'>'._("Basic Subversion Directory").'</option>
         <option value="basicgit"'.(($current_value == "basicgit")?" selected=\"selected\"":"").'>'._("Basic Git Directory").'</option>
+        <option value="basichg"'.(($current_value == "basichg")?" selected=\"selected\"":"").'>'._("Basic Mercurial Directory").'</option>
         <option value="cvsattic"'.(($current_value == "cvsattic")?" selected=\"selected\"":"").'>'._("Cvs Attic/Gna").'</option>
         <option value="svnattic"'.(($current_value == "svnattic")?" selected=\"selected\"":"").'>'._("Subversion Attic/Gna").'</option>
         <option value="svnatticwebsite"'.(($current_value == "svnatticwebsite")?" selected=\"selected\"":"").'>'._("Subversion Subdirectory Attic/Gna").'</option>

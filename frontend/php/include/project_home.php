@@ -476,6 +476,25 @@ if ($project->Uses("patch") ||
       $i++;
     }
 
+  if ($project->Uses("hg") || $project->UsesForHomepage("hg"))
+    {
+      specific_makesep();
+      $url = $project->getArtifactUrl("hg");
+
+      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Mercurial'));
+      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Mercurial Repository").'</a>';
+
+      if ($project->Uses("hg") && $project->getUrl("hg_viewcvs") != 'http://' && $project->getUrl("hg_viewcvs") != '')
+	{
+	  print '<br /> &nbsp; - <a href="'.$project->getUrl("hg_viewcvs").'">'._("Browse Sources Repository").'</a>';
+	}
+      if ($project->UsesForHomepage("hg") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
+	{
+	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
+	}
+      $i++;
+    }
+
   if ($project->Uses("svn") || $project->UsesForHomepage("svn"))
     {
       $url = $project->getArtifactUrl("svn");

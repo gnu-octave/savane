@@ -27,7 +27,7 @@ session_require(array('group' => $group_id,
 
 extract(sane_import('post', array(
   'update',  'feedback',
-  'use_cvs', 'use_arch', 'use_svn', 'use_git',
+  'use_cvs', 'use_arch', 'use_svn', 'use_git', 'use_hg',
   'use_bugs', 'use_support', 'use_patch', 'use_task',
   'use_mail', 'use_download',
   'use_homepage', 'use_extralink_documentation', 
@@ -37,6 +37,7 @@ extract(sane_import('post', array(
   'url_arch', 'url_arch_viewcvs',
   'url_svn', 'url_svn_viewcvs',
   'url_git', 'url_svn_git',
+  'url_hg', 'url_svn_hg',
   'url_bugs','url_patch','url_task','url_support',
   'url_mail', 'url_download', 'dir_download', // ?
   'url_homepage',
@@ -79,6 +80,8 @@ if ($update)
     { $use_svn=0; }
   if (!$use_git)
     { $use_git=0; }
+  if (!$use_hg)
+    { $use_hg=0; }
   if (!$use_news)
     { $use_news=0; }
   if (!$use_news)
@@ -98,6 +101,7 @@ if ($update)
 		 "use_arch",
 		 "use_svn",
 		 "use_git",
+		 "use_hg",
 		 "use_news",
 		 "use_support",
 		 "use_download",
@@ -137,7 +141,8 @@ if ($update)
 	  ($field == "url_cvs_viewcvs" && $project->CanUse("cvs")) ||
 	  ($field == "url_arch_viewcvs" && $project->CanUse("arch")) ||
 	  ($field == "url_svn_viewcvs" && $project->CanUse("svn")) ||
-	  ($field == "url_git_viewcvs" && $project->CanUse("git")))
+	  ($field == "url_git_viewcvs" && $project->CanUse("git")) ||
+	  ($field == "url_hg_viewcvs" && $project->CanUse("hg")))
 	{
 	  if ($type == "use" ||
 	      ($type == "use" && $field_name == "extralink_documentation" && $project->CanModifyUrl("extralink_documentation")))
@@ -236,6 +241,7 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
 	  $artifact == "arch_viewcvs" ||
 	  $artifact == "svn_viewcvs" ||
 	  $artifact == "git_viewcvs" ||
+	  $artifact == "hg_viewcvs" ||
 	  preg_match("/viewcvs/", $artifact) ||
 	  preg_match("/extralink/", $artifact))
 	{
@@ -335,6 +341,12 @@ if ($project->CanUse("git"))
 {
   specific_line("git", _("Git"), $project->Uses("git"));
   specific_line("git_viewcvs", _("Git Web Browsing"), 0, 0);
+}
+
+if ($project->CanUse("hg"))
+{
+  specific_line("hg", _("Mercurial"), $project->Uses("hg"));
+  specific_line("hg_viewcvs", _("Mercurial Web Browsing"), 0, 0);
 }
 
 if ($project->CanUse("bug"))

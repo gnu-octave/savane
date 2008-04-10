@@ -31,7 +31,7 @@ extract(sane_import('post',
   array('update', 'form_name', 'form_status', 'form_public', 'form_license',
 	'group_type',
 	'form_dir_cvs', 'form_dir_arch', 'form_dir_svn', 'form_dir_git',
-	'form_dir_homepage', 'form_dir_download')));
+	'form_dir_hg', 'form_dir_homepage', 'form_dir_download')));
 extract(sane_import('get',
   array('updatefast', 'status')));
 
@@ -73,6 +73,7 @@ if ($update || $updatefast)
 	  'dir_arch' => $form_dir_arch,
 	  'dir_svn' => $form_dir_svn,
 	  'dir_git' => $form_dir_git,
+	  'dir_hg' => $form_dir_hg,
 	  'dir_homepage' => $form_dir_homepage,
 	  'dir_download' => $form_dir_download,
 	), DB_AUTOQUERY_UPDATE,
@@ -222,6 +223,11 @@ print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
 print '<p><span class="preinput">'._("Git directory:").'</span><br /> ';
 print '<input type="text" name="form_dir_git" value="'.$row_grp['dir_git'].'" size="50" />';
+$i++;
+print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
+
+print '<p><span class="preinput">'._("Mercurial directory:").'</span><br /> ';
+print '<input type="text" name="form_dir_hg" value="'.$row_grp['dir_hg'].'" size="50" />';
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
