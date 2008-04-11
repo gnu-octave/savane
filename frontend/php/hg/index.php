@@ -3,6 +3,7 @@
 # 
 # Copyright 2005 (c) Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 

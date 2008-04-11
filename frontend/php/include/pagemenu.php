@@ -6,6 +6,8 @@
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
 #
+# Copyright (C) 2008 Alex Conchillo Flaque
+#
 # This file is part of Savane.
 # 
 # Savane is free software: you can redistribute it and/or modify

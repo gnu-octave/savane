@@ -3,6 +3,8 @@
 # 
 # Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #
+# Copyright (C) 2008 Alex Conchillo Flaque
+#
 # This file is part of Savane.
 # 
 # Savane is free software: you can redistribute it and/or modify

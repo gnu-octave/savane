@@ -2,6 +2,7 @@
 # <one line to give a brief idea of what this does.>
 # 
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2008 Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 
@@ -36,8 +37,8 @@ extract(sane_import('post', array(
   'url_cvs', 'url_cvs_viewcvs', 'url_cvs_viewcvs_homepage',
   'url_arch', 'url_arch_viewcvs',
   'url_svn', 'url_svn_viewcvs',
-  'url_git', 'url_svn_git',
-  'url_hg', 'url_svn_hg',
+  'url_git', 'url_git_viewcvs',
+  'url_hg', 'url_hg_viewcvs',
   'url_bugs','url_patch','url_task','url_support',
   'url_mail', 'url_download', 'dir_download', // ?
   'url_homepage',
