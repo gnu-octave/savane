@@ -7,7 +7,7 @@ ALTER TABLE `group_type` ADD `can_use_hg` INT( 1 ) DEFAULT '0' NOT NULL AFTER `c
 ALTER TABLE `group_type` ADD `is_menu_configurable_hg` INT( 1 ) DEFAULT '0' NOT NULL AFTER `is_menu_configurable_git_viewcvs` ,
  ADD `is_menu_configurable_hg_viewcvs` INT( 1 ) DEFAULT '0' NOT NULL AFTER `is_menu_configurable_hg`;
 
-ALTER TABLE `group_type` ADD `dir_type_hg` VARCHAR( 255 ) DEFAULT 'basicdirectory' NOT NULL AFTER `dir_type_git`;
+ALTER TABLE `group_type` ADD `dir_type_hg` VARCHAR( 255 ) DEFAULT 'basichg' NOT NULL AFTER `dir_type_git`;
 
 ALTER TABLE `group_type` ADD `dir_hg` VARCHAR( 255 ) DEFAULT '/' NOT NULL AFTER `dir_git`;
 
