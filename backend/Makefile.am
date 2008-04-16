@@ -2,6 +2,7 @@ bin_SCRIPTS = \
 	accounts/sv_groups \
 	accounts/sv_users \
 	accounts/sv_membersh \
+	accounts/sv_ssh_access \
 	export/sv_export \
 	export/sv_export_cleaner \
 	mail/sv_mailman \

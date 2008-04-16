@@ -4,6 +4,7 @@
 # Copyright 2003-2005 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Sylvain Beucler <beuc--beuc.net>
 #                          Free Software Foundation, Inc.
+# Copyright (C) 2008  Aleix Conchillo Flaque
 # 
 # This file is part of Savane.
 # 
@@ -245,16 +246,24 @@ sub UserAddSSHKey {
     my $user = $_[0];
     my $home = GetUserHome($user);
     my $authorized_keys = $_[1];
+    my $authorized_command = $_[2];
     my $ssh_keys_registered = 0;
 
     # If the authorized key entry is NULL, it means that we want to actually
     # simply remove the SSH file, so we dont even touch the file
-    if ($authorized_keys ne '') {
+    if ($authorized_keys) {
 	open(SSH_KEY, "> $home/.ssh/authorized_keys");
 	# In the database, linebreak are ###
-	$ssh_keys_registered = ($authorized_keys =~ s/###/\n/g); #' count keys
-				print SSH_KEY $authorized_keys; 
-				close(SSH_KEY);
+	$authorized_keys =~ s/###/\n/g;
+	my @ssh_keys = split(/\n/, $authorized_keys);
+	$ssh_keys_registered = @ssh_keys;
+	foreach (@ssh_keys) {
+	    if ($authorized_command ne '') {
+		print SSH_KEY 'command="'. $authorized_command. '" ';
+	    }
+	    print SSH_KEY $_ . "\n";
+	}
+	close(SSH_KEY);
     }
   
 
