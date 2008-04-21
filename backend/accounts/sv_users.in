@@ -5,7 +5,6 @@
 #                          Mathieu Roy <yeupou--gnu.org> 
 #                          Sylvain Beucler <beuc--beuc.net>
 #                          Timothee Besset <ttimo--ttimo.net>
-#  Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 
@@ -79,10 +78,6 @@ my $webgroup = 0;
 my $svusers = "svusers"; # this could be configurable, however it
                          # does not seems very important right now.
 my $svusers_gid = getgrnam($svusers);
-
-# Command to be saved in SSH authorized_keys file
-#    command="$sv_ssh_access_cmd" ssh-rsa ...
-my $sv_ssh_access_cmd = "sv_ssh_access";
 
 # get options
 eval {
@@ -398,10 +393,8 @@ foreach my $user (@only_in_db){
 		   $user);
 	    
 	    # Add SSH public key
-	    if ($authorized_keys and $authorized_keys ne "NULL") {
-		$ssh_keys_count = UserAddSSHKey($user,
-						$authorized_keys,
-						$sv_ssh_access_cmd);
+	    if ($authorized_keys ne "NULL") {
+		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
 	    }
 	    
 	    # If we use GPG in some way, we need to store the ASCII file
@@ -550,11 +543,9 @@ foreach my $user (@well_known) {
     my $ssh_keys_count = 0;
     if ($etc_password{$user}->[8] eq $sys_shell) {
 	print "DBG update: $user ssh key managed by sv\n" if $debug;
-	if ($authorized_keys and $authorized_keys ne GetUserSSHKeyReal($user)) {
+	if ($authorized_keys ne GetUserSSHKeyReal($user)) {
 	    unless ($debug) {
-		$ssh_keys_count = UserAddSSHKey($user,
-						$authorized_keys,
-						$sv_ssh_access_cmd);
+		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
 	    }
 	    print LOG strftime "[$script] %c ---- update $ssh_keys_count $user ssh keys\n", localtime;
 	} 

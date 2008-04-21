@@ -1,7 +1,6 @@
 # Autoconf configuration
 # 
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 
@@ -125,7 +124,6 @@ dnl AC_CONFIG_FILES(backend/accounts/sv_groups, [chmod +x backend/accounts/sv_gr
 AC_CONFIG_FILES(backend/accounts/sv_groups, [chmod +x backend/accounts/sv_groups])
 AC_CONFIG_FILES(backend/accounts/sv_users, [chmod +x backend/accounts/sv_users])
 AC_CONFIG_FILES(backend/accounts/sv_membersh, [chmod +x backend/accounts/sv_membersh])
-AC_CONFIG_FILES(backend/accounts/sv_ssh_access, [chmod +x backend/accounts/sv_ssh_access])
 AC_CONFIG_FILES(backend/export/sv_export, [chmod +x backend/export/sv_export])
 AC_CONFIG_FILES(backend/export/sv_export_cleaner, [chmod +x backend/export/sv_export_cleaner])
 AC_CONFIG_FILES(backend/mail/sv_mailman, [chmod +x backend/mail/sv_mailman])
