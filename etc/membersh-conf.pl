@@ -18,4 +18,18 @@
 # $regexp_rsync = "^rsync --server";
 # $regexp_dir_rsync = "^(/upload)|(/var/ftp)";
 
+# $use_svn = "1";
+# $bin_svn = "svnserve";
+# $regexp_svn = "^svnserve -t";
+# @prepend_args_svn = ( '-r', '/svn' );
 
+# $use_git = "1";
+# $bin_git = "git-shell";
+
+# $use_bzr = "1";
+# $bin_bzr = "bzr";
+# $dir_bzr = "/srv/bzr";
+
+# $use_hg = "1";
+# $bin_hg = "hg-ssh";
+# @prepend_args_hg = ( '.', '*' );

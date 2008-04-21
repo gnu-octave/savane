@@ -4,7 +4,9 @@
 # Copyright 2004-2005 (c) Loic Dachary <loic--gnu.org>
 #                         Mathieu Roy <yeupou--gnu.org>
 #                         Timothee Besset <ttimo--ttimo.net>
-# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2008  Sylvain Beucler
+#                     Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 
@@ -64,6 +66,9 @@ our $use_bzr = "0";
 our $bin_bzr = "bzr";
 our $dir_bzr = "/srv/bzr";
 
+our $use_hg = "0";
+our $bin_hg = "hg-ssh";
+our @prepend_args_hg = ( '.', '*' );
 
 # Open configuration file
 if (-e "/etc/membersh-conf.pl") {
@@ -147,6 +152,20 @@ if ($#ARGV == 1 and $ARGV[0] eq "-c") {
 	# authorize 'bzr serve' in SSH tunnel mode
         exec($bin_bzr, 'serve', '--inet', '--directory='.$dir_bzr, '--allow-writes')
 	    or die("Failed to exec '$bin_bzr serve --inet --directory=$dir_bzr --allow-writes': $!");
+
+    } elsif ($use_hg and $ARGV[1] =~ m:hg -R [a-zA-Z0-9-_/]+ serve --stdio:) {
+
+	# In order to allow multi-repo, we change to the project
+        # directory and pass ". *" to hg-ssh, which means to allow
+        # access to base directory and all its subdirectories.
+	my (@args_user) = split(' ', $ARGV[1]);
+	my $dir_project = $args_user[2];
+	chdir $dir_project;
+
+	# Delegate filtering to hg-ssh.
+	# hg-ssh uses the SSH_ORIGINAL_COMMAND environment variable.
+	$ENV{'SSH_ORIGINAL_COMMAND'} = $ARGV[1];
+	exec($bin_hg, @prepend_args_hg) or die("Failed to exec $bin_hg: $!");
 
     }
 }
