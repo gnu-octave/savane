@@ -170,11 +170,11 @@ AcquireReplicationLock($lockfile);
 #    To limit the number of request, we use only one very long SQL request. 
 my %db_user;
 my @db_users;
-foreach my $line (GetDB("user", 
-			"status='A' OR status='D'",
-			"user_name,email,realname,authorized_keys,gpg_key,status")) {
-    chomp($line);
-    my ($user, $email, $realname, $authorized_keys, $gpg_keys, $status) = split(",", $line);
+my $lists_ref = GetDBListsRef("user",
+  "status='A' OR status='D'",
+  "user_name,email,realname,authorized_keys,gpg_key,status");
+foreach my $line (@$lists_ref) {
+    my ($user, $email, $realname, $authorized_keys, $gpg_keys, $status) = @$line;
     print "DBG db: get $user <$email> from database\n" if $debug;
     $realname =~ s/\://g;
     $db_user{$user} = [ ($user, $email, $realname, $authorized_keys, $gpg_keys, $status) ];
@@ -395,7 +395,7 @@ foreach my $user (@only_in_db){
 		   $user);
 	    
 	    # Add SSH public key
-	    if ($authorized_keys and $authorized_keys ne "NULL") {
+	    if (defined($authorized_keys)) {
 		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
 	    }
 	    
@@ -545,7 +545,7 @@ foreach my $user (@well_known) {
     my $ssh_keys_count = 0;
     if ($etc_password{$user}->[8] eq $sys_shell) {
 	print "DBG update: $user ssh key managed by sv\n" if $debug;
-	if ($authorized_keys and $authorized_keys ne GetUserSSHKeyReal($user)) {
+	if (defined($authorized_keys) and $authorized_keys ne GetUserSSHKeyReal($user)) {
 	    unless ($debug) {
 		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
 	    }

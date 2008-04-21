@@ -250,7 +250,7 @@ sub UserAddSSHKey {
 
     # If the authorized key entry is NULL, it means that we want to actually
     # simply remove the SSH file, so we dont even touch the file
-    if ($authorized_keys) {
+    if ($authorized_keys ne '') {
 	open(SSH_KEY, "> $home/.ssh/authorized_keys");
 	# In the database, linebreak are ###
 	$ssh_keys_registered = ($authorized_keys =~ s/###/\n/g); #' count keys
