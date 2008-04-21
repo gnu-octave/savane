@@ -1,12 +1,16 @@
-# Based on gettext-0.16.1/gettext-tools/examples/hello-php
+# Based on gettext-0.17/gettext-tools/examples/hello-php
 # (public domain)
 
-# Changes: some targets at the end, use `find` instead of $(POTFILES),
-# andmake sure .mo are encoded using UTF-8 for efficiency and/or to
-# ease the Savane-specific PHP implementation of the gettext runtime,
-# and add $(GMOFILES) to the default target, so .mo files are updated
-# when a .po is modified.
-
+# Changes:
+# - some targets at the end, use `find` instead of
+#   $(POTFILES). $(POTFILES_DEPS) is supposed to do that though.
+# - make sure .mo are encoded using UTF-8 for efficiency and/or to
+#   ease the Savane-specific PHP implementation of the gettext
+#   runtime.
+# - @XGETTEXT_EXTRA_OPTIONS@ is apparently recently introduced in
+#   autoconf. Let's not use for now.
+# - Add $(GMOFILES) to the default target (all-local-yes), so .mo
+#   files are updated when a .po is modified.
 
 # List of files which contain translatable strings.
 # Empty because we use some `find` in $(DOMAIN).opt-update
@@ -130,18 +134,38 @@ stamp-po: $(srcdir)/$(DOMAIN).pot
 # This target rebuilds $(DOMAIN).pot; it is an expensive operation.
 # Note that $(DOMAIN).pot is not touched if it doesn't need to be changed.
 $(DOMAIN).pot-update: $(POTFILES_DEPS) remove-potcdate.sed
+	if LC_ALL=C grep 'GNU $(PACKAGE)' $(top_srcdir)/* 2>/dev/null | grep -v 'libtool:' >/dev/null; then \
+	  package_gnu='GNU '; \
+	else \
+	  package_gnu=''; \
+	fi; \
 	if test -n '$(MSGID_BUGS_ADDRESS)'; then \
 	  msgid_bugs_address='$(MSGID_BUGS_ADDRESS)'; \
 	else \
 	  msgid_bugs_address='$(PACKAGE_BUGREPORT)'; \
 	fi; \
-	$(XGETTEXT) --default-domain=$(DOMAIN) --directory=$(top_srcdir) \
-	  --language=PHP \
-	  --add-comments=TRANSLATORS: $(XGETTEXT_OPTIONS) \
-	  --copyright-holder='$(COPYRIGHT_HOLDER)' \
-	  --msgid-bugs-address="$$msgid_bugs_address" \
-	  $(POTFILES) \
-	  `cd .. && find frontend/php/ -iname "*.php" -or -iname "*.class"`
+	case `$(XGETTEXT) --version | sed 1q | sed -e 's,^[^0-9]*,,'` in \
+	  '' | 0.[0-9] | 0.[0-9].* | 0.1[0-5] | 0.1[0-5].* | 0.16 | 0.16.[0-1]*) \
+	    $(XGETTEXT) --default-domain=$(DOMAIN) --directory=$(top_srcdir) \
+	      --language=PHP \
+	      --add-comments=TRANSLATORS: $(XGETTEXT_OPTIONS) \
+	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
+	      --msgid-bugs-address="$$msgid_bugs_address" \
+	      $(POTFILES) \
+	      `cd .. && find frontend/php/ -iname "*.php" -or -iname "*.class"` \
+	    ;; \
+	  *) \
+	    $(XGETTEXT) --default-domain=$(DOMAIN) --directory=$(top_srcdir) \
+	      --language=PHP \
+	      --add-comments=TRANSLATORS: $(XGETTEXT_OPTIONS) \
+	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
+	      --package-name="$${package_gnu}$(PACKAGE)" \
+	      --package-version='$(VERSION)' \
+	      --msgid-bugs-address="$$msgid_bugs_address" \
+	      $(POTFILES) \
+	      `cd .. && find frontend/php/ -iname "*.php" -or -iname "*.class"` \
+	    ;; \
+	esac
 	test ! -f $(DOMAIN).po || { \
 	  if test -f $(srcdir)/$(DOMAIN).pot; then \
 	    sed -f remove-potcdate.sed < $(srcdir)/$(DOMAIN).pot > $(DOMAIN).1po && \
@@ -283,7 +307,7 @@ EXTRA_DIST = remove-potcdate.sin LINGUAS $(POFILES) $(GMOFILES)
 # Hidden from automake, but really activated. Works around an automake-1.5 bug.
 #distdir: distdir1
 distdir1:
-	$(MAKE) stamp-po
+	$(MAKE) update-po
 	if test -f $(srcdir)/$(DOMAIN).pot; then \
 	  for file in $(DOMAIN).pot stamp-po; do \
 	    if test -f $$file; then d=.; else d=$(srcdir); fi; \
