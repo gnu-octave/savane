@@ -1,12 +1,12 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Page-specific menu (Bugs/Tasks/Admin/Source Code/...)
 # 
 # Copyright 1999-2000 (c) The SourceForge Crew (was in Layout.class)
 #
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
-#
-# Copyright (C) 2008 Alex Conchillo Flaque
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Alex Conchillo Flaque
 #
 # This file is part of Savane.
 # 
@@ -512,23 +512,22 @@ function pagemenu_group ()
 					 1,
 					 _("Source Code Manager: Git Repository"));
 	  # Do we need links to browse repositories?
-	  if ($project->Uses("git") && 
-	      $project->getUrl("git_viewcvs") != 'http://' && 
+	  if ($project->Uses("git") &&
+	      $project->getUrl("git_viewcvs") != 'http://' &&
 	      $project->getUrl("git_viewcvs") != '')
 	    {
 	      $count++;
 	      $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
 					     $project->getUrl("git_viewcvs"));
 	    }
-	  if ($project->UsesForHomepage("git") && 
-	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' && 
+	  if ($project->UsesForHomepage("git") &&
+	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
 	      $project->getUrl("cvs_viewcvs_homepage") != '')
 	    {
 	      $count++;
 	      $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
 					     $project->getUrl("cvs_viewcvs_homepage"));
-	    }	  
-
+	    }
 	} 
       if ($hg)
 	{

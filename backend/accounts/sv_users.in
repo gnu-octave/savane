@@ -1,11 +1,12 @@
 #! @PERL@
-# <one line to give a brief idea of what this does.>
+# Replicate users, SSH keys and GPG keyrings to the system
 # 
-#  Copyright 2001-2006 (c) Loic Dachary <loic--gnu.org> (sv_cvs.pl)
-#                          Mathieu Roy <yeupou--gnu.org> 
-#                          Sylvain Beucler <beuc--beuc.net>
-#                          Timothee Besset <ttimo--ttimo.net>
-#  Copyright (C) 2008  Aleix Conchillo Flaque
+# Copyright 2001-2006 (c) Loic Dachary <loic--gnu.org> (sv_cvs.pl)
+#                         Mathieu Roy <yeupou--gnu.org> 
+#                         Sylvain Beucler <beuc--beuc.net>
+#                         Timothee Besset <ttimo--ttimo.net>
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 

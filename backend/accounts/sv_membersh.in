@@ -1,12 +1,11 @@
 #! @PERL@
-# <one line to give a brief idea of what this does.>
+# Restricted shell to be used as login shell for Savane system users
 # 
 # Copyright 2004-2005 (c) Loic Dachary <loic--gnu.org>
 #                         Mathieu Roy <yeupou--gnu.org>
 #                         Timothee Besset <ttimo--ttimo.net>
-# Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2008  Sylvain Beucler
-#                     Aleix Conchillo Flaque
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 

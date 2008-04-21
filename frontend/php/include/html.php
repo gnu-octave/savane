@@ -1,11 +1,11 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Common, reuseable HTML code
 # 
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Paul Pogonyshev <pogonyshev--gmx.net>
-#
-# Copyright (C) 2008 Alex Conchillo Flaque
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Alex Conchillo Flaque
 #
 # This file is part of Savane.
 # 

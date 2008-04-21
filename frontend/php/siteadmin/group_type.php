@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Edit group types configuration
 # 
-#  Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
-#  Copyright (C) 2008 Alex Conchillo Flaque
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Alex Conchillo Flaque
 #
 # This file is part of Savane.
 # 
