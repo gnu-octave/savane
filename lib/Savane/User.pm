@@ -4,6 +4,7 @@
 # Copyright 2003-2005 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Sylvain Beucler <beuc--beuc.net>
 #                          Free Software Foundation, Inc.
+# Copyright (C) 2008  Aleix Conchillo Flaque
 # 
 # This file is part of Savane.
 # 
@@ -249,7 +250,7 @@ sub UserAddSSHKey {
 
     # If the authorized key entry is NULL, it means that we want to actually
     # simply remove the SSH file, so we dont even touch the file
-    if ($authorized_keys ne '') {
+    if ($authorized_keys) {
 	open(SSH_KEY, "> $home/.ssh/authorized_keys");
 	# In the database, linebreak are ###
 	$ssh_keys_registered = ($authorized_keys =~ s/###/\n/g); #' count keys

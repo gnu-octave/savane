@@ -5,6 +5,7 @@
 #                          Mathieu Roy <yeupou--gnu.org> 
 #                          Sylvain Beucler <beuc--beuc.net>
 #                          Timothee Besset <ttimo--ttimo.net>
+#  Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 
@@ -393,7 +394,7 @@ foreach my $user (@only_in_db){
 		   $user);
 	    
 	    # Add SSH public key
-	    if ($authorized_keys ne "NULL") {
+	    if ($authorized_keys and $authorized_keys ne "NULL") {
 		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
 	    }
 	    
@@ -543,7 +544,7 @@ foreach my $user (@well_known) {
     my $ssh_keys_count = 0;
     if ($etc_password{$user}->[8] eq $sys_shell) {
 	print "DBG update: $user ssh key managed by sv\n" if $debug;
-	if ($authorized_keys ne GetUserSSHKeyReal($user)) {
+	if ($authorized_keys and $authorized_keys ne GetUserSSHKeyReal($user)) {
 	    unless ($debug) {
 		$ssh_keys_count = UserAddSSHKey($user, $authorized_keys);
 	    }
