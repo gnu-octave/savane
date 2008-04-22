@@ -120,7 +120,7 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
       $discussion_lock = array();
       if ($newscore > 4)
 	{ 
-	  if (strpos($summary, '[SPAM]' !== FALSE))
+	  if (strpos($summary, '[SPAM]') === FALSE)
 	    $summary = '[SPAM] '.$summary;
 	  $discussion_lock = array('discussion_lock' => 1);
 	}
