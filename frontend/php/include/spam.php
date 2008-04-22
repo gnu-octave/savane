@@ -120,7 +120,8 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
       $discussion_lock = '';
       if ($newscore > 4)
 	{ 
-	  $summary = '[SPAM] '.$summary; 
+	  if (strpos($summary, '[SPAM]' !== FALSE))
+	    $summary = '[SPAM] '.$summary;
 	  $discussion_lock = array('discussion_lock' => 1);
 	}
       
@@ -177,19 +178,17 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
 }
 
 # Mark that a spam is actually not one
-# We reset everything to 0 but we do not remove entries in the 
-# spamscore table, so someone that flagged this as a spam in the past wont
-# be able to redo it.
 # (allow to set the tracker, because this function may be called from 
 # siteadmin area)
 function spam_unflag ($item_id, $comment_id, $tracker, $group_id) 
 {
   # update the spamscore table
-  db_execute("UPDATE trackers_spamscore SET score=0
+  db_execute("DELETE FROM trackers_spamscore
               WHERE item_id=? AND comment_id=? AND artifact=?",
 	     array($item_id, $comment_id, $tracker));
   
-  assert('ctype_alnum($tracker)');
+  if (!ctype_alnum($tracker))
+    util_die('Tracker is not valid (not alnum): ' . htmlescape($tracker));
 
   # Update the item spamscore fields
   if ($comment_id)
@@ -375,10 +374,11 @@ function spam_banip ($item_id, $comment_id, $tracker)
 			   array($item_id, $since));
     }
   
-  $ip = db_result($result, 0, 'ip');
-
+  $ip = null;
+  if (db_numrows($result))
+    $ip = db_result($result, 0, 'ip');
   # No rows? No IP found? Stop here
-  if (!db_numrows($result) || !$ip)
+  if (empty($ip))
     { return false; }
 
   # Now set up the ban
