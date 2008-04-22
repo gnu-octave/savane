@@ -186,8 +186,8 @@ function spam_unflag ($item_id, $comment_id, $tracker, $group_id)
 {
   # update the spamscore table
   db_execute("UPDATE trackers_spamscore SET score=0
-              WHERE item_id=? AND comment_id=? AND artifact=? AND group_id=?",
-	     array($item_id, $comment_id, $tracker, $group_id));
+              WHERE item_id=? AND comment_id=? AND artifact=?",
+	     array($item_id, $comment_id, $tracker));
   
   assert('ctype_alnum($tracker)');
 
