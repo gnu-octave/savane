@@ -117,7 +117,7 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
       $summary = db_result(db_execute("SELECT summary FROM ".ARTIFACT." WHERE bug_id=?",
 				      array($item_id)),
 			   0, 'summary');
-      $discussion_lock = '';
+      $discussion_lock = array();
       if ($newscore > 4)
 	{ 
 	  if (strpos($summary, '[SPAM]' !== FALSE))
