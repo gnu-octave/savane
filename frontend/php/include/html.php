@@ -5,7 +5,7 @@
 # Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Paul Pogonyshev <pogonyshev--gmx.net>
 # Copyright (C) 2007, 2008  Sylvain Beucler
-# Copyright (C) 2008  Alex Conchillo Flaque
+# Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 
