@@ -402,7 +402,7 @@ function search_run ($keywords, $type_of_search="soft", $return_error_messages=1
         $arr_keywords,
         array('group_name', 'short_description', 'unix_group_name', 'group_id'),
         $and_or);
-      $sql .= " AND $kw_sql ORDER BY unix_group_name,group_name ";
+      $sql .= " AND $kw_sql ORDER BY group_name,unix_group_name ";
       $sql_params = array_merge($sql_params, $kw_sql_params);
     }
   else if ($type_of_search == "people")
