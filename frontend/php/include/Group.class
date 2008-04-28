@@ -176,43 +176,63 @@ class Group extends Error
   
 
   function getTypeMailingListListinfoUrl($list="%LIST")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_listinfo']));
+    { return str_replace("%PROJECT", $this->getUnixName(),
+			  str_replace("%LIST", $list, $this->type_data_array['url_mailing_list_listinfo']));
     }
 
   function getTypeMailingListArchivesUrl($list="%LIST")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_archives']));
+    { return str_replace("%PROJECT", $this->getUnixName(),
+			  str_replace("%LIST", $list, $this->type_data_array['url_mailing_list_archives']));
     }
   
   function getTypeMailingListArchivesPrivateUrl($list="%LIST")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_archives_private']));
+    { return str_replace("%PROJECT", $this->getUnixName(),
+			  str_replace("%LIST", $list, $this->type_data_array['url_mailing_list_archives_private']));
     }
 
   function getTypeMailingListAdminUrl($list="%LIST")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_admin']));
+    { return str_replace("%PROJECT", $this->getUnixName(),
+			  str_replace("%LIST", $list, $this->type_data_array['url_mailing_list_admin']));
     }
 
   function getTypeMailingListSubscribeUrl($list="%LIST")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_subscribe']));
+    { return str_replace("%PROJECT", $this->getUnixName(),
+			  str_replace("%LIST", $list, $this->type_data_array['url_mailing_list_subscribe']));
     }
 
   function getTypeMailingListUnsubscribeUrl($list="%LIST")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%LIST", $list, $this->type_data_array['url_mailing_list_unsubscribe']));
+    { return str_replace("%PROJECT", $this->getUnixName(),
+			  str_replace("%LIST", $list, $this->type_data_array['url_mailing_list_unsubscribe']));
     }
 
+  /**
+   * $list -> $list@mydomain.tld
+   * Default: no %LIST substitution (but %PROJECT substitution nonetheless)
+   */
   function getTypeMailingListAddress($list="%LIST")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%LIST", $list, $this->type_data_array['mailing_list_address']));
+    { return str_replace("%PROJECT", $this->getUnixName(),
+			  str_replace("%LIST", $list, $this->type_data_array['mailing_list_address']));
     }
 
-  function getTypeMailingListFormat($list="%NAME")
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
-			  ereg_replace("%NAME", $list, $this->type_data_array['mailing_list_format']));
+  /**
+   * $list ~> project-$list
+   * Default: no %NAME substitution (but %PROJECT substitution nonetheless)
+   */
+  function getTypeMailingListFormat($list="%NAME", $index=null)
+    {
+      if (!isset($index))
+	{
+	  // return raw format (multiple formats separated by commas)
+	  return str_replace("%PROJECT", $this->getUnixName(),
+			     str_replace("%NAME", $list, $this->type_data_array['mailing_list_format']));
+	}
+      else
+	{
+	  // return format with number $index
+	  $formats = split(',', $this->type_data_array['mailing_list_format']);
+	  return str_replace("%PROJECT", $this->getUnixName(),
+			     str_replace("%NAME", $list, $formats[$index]));
+	}
     }
 
   function canuseForum()
