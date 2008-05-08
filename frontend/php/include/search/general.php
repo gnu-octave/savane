@@ -1,8 +1,10 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Functions used by /search/index.php
 # 
-#  Copyright 2003-2006 (c) Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
-#                          Mathieu Roy <yeupou--gnu.org>
+# Copyright 2003-2006 (c) Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
+#                         Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Nicodemo Alvaro
 #
 # This file is part of Savane.
 # 
@@ -233,7 +235,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
 function search_send_header ()
 {
-  global $HTML,$words,$type_of_search,$only_group_id;
+  global $words,$type_of_search,$only_group_id;
 
   if ($type_of_search == "soft" || $type_of_search == "people")
     {
@@ -255,8 +257,11 @@ function search_send_header ()
   print html_show_boxoptions($title, search_box($words, '', 45));
 }
 
+# Search results for XXX (in YYY):
+# e.g.: Search results for emacs (in Project/Group):
 function print_search_heading()
 {
+  global $words,$type_of_search,$only_group_id;
   # Print the result
   print '<h3>';
   if ($words && $type_of_search)
@@ -474,16 +479,19 @@ function search_exact ($keywords)
 
 	if ($non_precise_key1 === false && $non_precise_key2 === false)
 	   {
-	   $arr_keywords = explode(" ", $keywords);
+	   $arr_keywords = explode(' ', $keywords);
+	   $question_marks = implode(',', array_fill(0, count($arr_keywords), '?'));
 	   $sql = "SELECT group_name,unix_group_name,short_description,name 
 	   	   FROM groups,group_type 
-		   WHERE type=type_id AND group_name IN(?) AND status='A' AND is_public='1'";
+		   WHERE type=type_id AND group_name IN ($question_marks) AND status='A' AND is_public='1'";
 	   $result = db_execute($sql,$arr_keywords);
 	   $num_rows = db_numrows($result);
 
 	     if ($num_rows == 1)
 	          {
-	          print "<h3>Unique project search result for <strong>$keywords:</strong></h3>";
+		  print "<h3>";
+		  printf(_("Unique project search result for %s:"), '<strong>'.htmlspecialchars($keywords).'</strong>');
+		  print "</h3>";
 
 		  $title_arr = array();
 		  $title_arr[] = _("Project");

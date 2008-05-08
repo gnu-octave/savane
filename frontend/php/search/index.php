@@ -68,7 +68,6 @@ if ($type_of_search == 'soft')
       search_exact($words);
 
       print_search_heading();
-
       $title_arr = array();
       $title_arr[] = _("Project");
       $title_arr[] = _("Description");
