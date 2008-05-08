@@ -65,6 +65,10 @@ if ($type_of_search == 'soft')
 	{ $rows = $GLOBALS['max_rows']; }
       search_send_header();
 
+      search_exact($words);
+
+      print_search_heading();
+
       $title_arr = array();
       $title_arr[] = _("Project");
       $title_arr[] = _("Description");
@@ -109,6 +113,8 @@ else if ($type_of_search == "people")
 	{ $rows = $GLOBALS['max_rows']; }
 
       search_send_header();
+
+      print_search_heading();
 
       $title_arr = array();
       $title_arr[] = _("Login");
@@ -214,6 +220,8 @@ else if ($type_of_search == 'bugs' ||
 	{ $rows = $GLOBALS['max_rows']; }
 
       search_send_header();
+
+      print_search_heading();
 
       $title_arr = array();
       $title_arr[] = _("Item Id");

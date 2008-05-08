@@ -253,7 +253,10 @@ function search_send_header ()
     { $title = sprintf(_("New search criteria for the Group %s:"), group_getname($only_group_id)); }
 
   print html_show_boxoptions($title, search_box($words, '', 45));
+}
 
+function print_search_heading()
+{
   # Print the result
   print '<h3>';
   if ($words && $type_of_search)
@@ -461,4 +464,39 @@ function search_run ($keywords, $type_of_search="soft", $return_error_messages=1
   $sql_params[] = intval($offset);
   $sql_params[] = $max_rows + 1;
   return db_execute($sql, $sql_params);
+}
+
+function search_exact ($keywords)
+{
+	// Find the characters that maybe for a non-precise search. No need to continue if it they are present.
+	$non_precise_key1 = strpos($keywords, '*' );
+	$non_precise_key2 = strpos($keywords, '%' );
+
+	if ($non_precise_key1 === false && $non_precise_key2 === false)
+	   {
+	   $arr_keywords = explode(" ", $keywords);
+	   $sql = "SELECT group_name,unix_group_name,short_description,name 
+	   	   FROM groups,group_type 
+		   WHERE type=type_id AND group_name IN(?) AND status='A' AND is_public='1'";
+	   $result = db_execute($sql,$arr_keywords);
+	   $num_rows = db_numrows($result);
+
+	     if ($num_rows == 1)
+	          {
+	          print "<h3>Unique project search result for <strong>$keywords:</strong></h3>";
+
+		  $title_arr = array();
+		  $title_arr[] = _("Project");
+      		  $title_arr[] = _("Description");
+      		  $title_arr[] = _("Type");
+
+	          print html_build_list_table_top($title_arr);
+	          print "\n";
+	          $row = db_fetch_array($result);
+	          print "<tr><td><a href=\"../projects/${row['unix_group_name']}\">${row['group_name']}</a></td> \n
+	          <td>${row['short_description']}</td> \n
+	          <td>${row['name']}</td></tr> \n
+	          </table> \n";
+	          }
+	   }
 }
