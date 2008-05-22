@@ -310,7 +310,7 @@ function search_failed ()
   $no_rows = 1 ;
   search_send_header();
   print '<span class="warn">';
-  print _("None found. Please note that only search words of more than three characters are valid.");
+  print _("None found. Please note that only search words of more than two characters are valid.");
   print '</span>';
   print db_error();
 }

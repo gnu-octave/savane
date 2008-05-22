@@ -50,14 +50,15 @@ if ($type_of_search == 'soft')
       # No result? Stop here.
       search_failed();
     }
-  elseif (($rows == 1) && ($GLOBALS['offset'] == 0))
+/*  // Some users had noted this was a little much and would rather have it display the lone result.
+    elseif (($rows == 1) && ($GLOBALS['offset'] == 0))
     {
       # Only one result? Redirect, but only if this is the first
       # page to be displayed. Otherwise, if the last page contains
       # just one row, the user will be redirected.
       $project = db_result($result, 0, 'unix_group_name');
       header("Location: ../projects/$project");
-    }
+    }*/
   else
     {
       # More results? Print them in the respect of max_rows setting.
