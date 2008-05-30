@@ -56,6 +56,19 @@ sub HgMakeArea {
 	#system('mkdir', '-m', '2775', ".../$name/");
 	#system('chown', "root:$name", ".../$name/");
 
+	# hgrc project file with Savane update-able parts
+	open(FILE, "> $dir_hg/.hg/hgrc");
+	print FILE <<EOF;
+#<savane>
+[web]
+contact =
+description = $name
+#</savane>
+EOF
+	close(FILE);
+	system('chgrp', $name, "$dir_hg/.hg/hgrc");
+
+
 	# Clean-up environment
 	umask($old_umask);
 
