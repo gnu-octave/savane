@@ -357,7 +357,7 @@ else
    # ###########  Mailing List
 
   print $HTML->box_top(_("Mailing List"));
-  print '<div class="warn">Important: Everytime a mailing-list name should appear, use the special string %LIST.</div><div>Do not configure Mailing-list Host, this is a deprecated feature left for backward compatibility.</div><div>Mailing-list virtual host only need to be set if you use mailman list, set up via the backend, and have several mailman virtual hosts set.';
+  print '<div class="warn">Important: Everytime a mailing-list name should appear, use the special string %LIST.</div><div>Do not configure Mailing-list Host, this is a deprecated feature left for backward compatibility.</div><div>Mailing-list virtual host only need to be set if you use mailman list, set up via the backend, and have several mailman virtual hosts set.</div>';
 
   print specific_showinput_inverted(_("Can use mailing-lists"), '<INPUT TYPE="CHECKBOX" NAME="can_use_mailing_list" VALUE="1"'.( ($row_grp['can_use_mailing_list']==1) ? ' checked="checked"' : '' ).' />');
 

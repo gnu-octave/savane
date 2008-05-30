@@ -1,8 +1,10 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Functions used by /search/index.php
 # 
-#  Copyright 2003-2006 (c) Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
-#                          Mathieu Roy <yeupou--gnu.org>
+# Copyright 2003-2006 (c) Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
+#                         Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Nicodemo Alvaro
 #
 # This file is part of Savane.
 # 
@@ -233,7 +235,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
 function search_send_header ()
 {
-  global $HTML,$words,$type_of_search,$only_group_id;
+  global $words,$type_of_search,$only_group_id;
 
   if ($type_of_search == "soft" || $type_of_search == "people")
     {
@@ -253,7 +255,13 @@ function search_send_header ()
     { $title = sprintf(_("New search criteria for the Group %s:"), group_getname($only_group_id)); }
 
   print html_show_boxoptions($title, search_box($words, '', 45));
+}
 
+# Search results for XXX (in YYY):
+# e.g.: Search results for emacs (in Project/Group):
+function print_search_heading()
+{
+  global $words,$type_of_search,$only_group_id;
   # Print the result
   print '<h3>';
   if ($words && $type_of_search)
@@ -302,7 +310,7 @@ function search_failed ()
   $no_rows = 1 ;
   search_send_header();
   print '<span class="warn">';
-  print _("None found. Please note that only search words of more than three characters are valid.");
+  print _("None found. Please note that only search words of more than two characters are valid.");
   print '</span>';
   print db_error();
 }
@@ -461,4 +469,42 @@ function search_run ($keywords, $type_of_search="soft", $return_error_messages=1
   $sql_params[] = intval($offset);
   $sql_params[] = $max_rows + 1;
   return db_execute($sql, $sql_params);
+}
+
+function search_exact ($keywords)
+{
+	// Find the characters that maybe for a non-precise search. No need to continue if it they are present.
+	$non_precise_key1 = strpos($keywords, '*' );
+	$non_precise_key2 = strpos($keywords, '%' );
+
+	if ($non_precise_key1 === false && $non_precise_key2 === false)
+	   {
+	   $arr_keywords = explode(' ', $keywords);
+	   $question_marks = implode(',', array_fill(0, count($arr_keywords), '?'));
+	   $sql = "SELECT group_name,unix_group_name,short_description,name 
+	   	   FROM groups,group_type 
+		   WHERE type=type_id AND group_name IN ($question_marks) AND status='A' AND is_public='1'";
+	   $result = db_execute($sql,$arr_keywords);
+	   $num_rows = db_numrows($result);
+
+	     if ($num_rows == 1)
+	          {
+		  print "<h3>";
+		  printf(_("Unique project search result for %s:"), '<strong>'.htmlspecialchars($keywords).'</strong>');
+		  print "</h3>";
+
+		  $title_arr = array();
+		  $title_arr[] = _("Project");
+      		  $title_arr[] = _("Description");
+      		  $title_arr[] = _("Type");
+
+	          print html_build_list_table_top($title_arr);
+	          print "\n";
+	          $row = db_fetch_array($result);
+	          print "<tr><td><a href=\"../projects/${row['unix_group_name']}\">${row['group_name']}</a></td> \n
+	          <td>${row['short_description']}</td> \n
+	          <td>${row['name']}</td></tr> \n
+	          </table> \n";
+	          }
+	   }
 }

@@ -64,10 +64,14 @@ our $bin_git = "git-shell";
 our $use_bzr = "0";
 our $bin_bzr = "bzr";
 our $dir_bzr = "/srv/bzr";
+our $regexp_bzr = '^bzr serve --inet --directory=[a-zA-Z0-9-_][a-zA-Z0-9-_/]* --allow-writes$';
 
 our $use_hg = "0";
-our $bin_hg = "hg-ssh";
-our @prepend_args_hg = ( '.', '*' );
+our $bin_hg = "hg";
+our $dir_hg = "/srv/hg";
+# Only access serving existing directories, and within a subdirectory
+# of $dir_hg:
+our $regexp_hg = '^hg -R ([a-zA-Z0-9-_][a-zA-Z0-9-_/]*) serve --stdio$';
 
 # Open configuration file
 if (-e "/etc/membersh-conf.pl") {
@@ -76,7 +80,7 @@ if (-e "/etc/membersh-conf.pl") {
     die "System misconfiguration, contact administrators. Exiting";
 } 
 
-# A configuration file /etc/membersh-conf.pl must exists and be executable.
+# A configuration file /etc/membersh-conf.pl must exists.
 # Here come an example:
 #
 # $use_cvs = "1";
@@ -94,6 +98,9 @@ if (-e "/etc/membersh-conf.pl") {
 # $bin_rsync = "/usr/bin/rsync";
 # $regexp_rsync = "^rsync --server";
 # $regexp_dir_rsync = "^(/upload)|(/var/ftp)";
+# # For read-only rsync:
+# #$regexp_rsync = '^rsync --server --sender ';
+
 
 
 if ($#ARGV == 1 and $ARGV[0] eq "-c") {
@@ -142,7 +149,7 @@ if ($#ARGV == 1 and $ARGV[0] eq "-c") {
 	# Delegate filtering to git-shell
         exec($bin_git, @ARGV) or die("Failed to exec $bin_git: $!");
 
-    } elsif ($use_bzr and $ARGV[1] =~ m:$bin_bzr serve --inet --directory=[a-zA-Z0-9-_/]+ --allow-writes:) {
+    } elsif ($use_bzr and $ARGV[1] =~ m:$regexp_bzr:) {
 
 	# bzr wants to write a ~/.bzr.log
 	# Tip: mkdir -m 755 /var/lib/bzr
@@ -152,19 +159,14 @@ if ($#ARGV == 1 and $ARGV[0] eq "-c") {
         exec($bin_bzr, 'serve', '--inet', '--directory='.$dir_bzr, '--allow-writes')
 	    or die("Failed to exec '$bin_bzr serve --inet --directory=$dir_bzr --allow-writes': $!");
 
-    } elsif ($use_hg and $ARGV[1] =~ m:hg -R [a-zA-Z0-9-_/]+ serve --stdio:) {
+    } elsif ($use_hg and $ARGV[1] =~ m:$regexp_hg:) {
 
-	# In order to allow multi-repo, we change to the project
-        # directory and pass ". *" to hg-ssh, which means to allow
-        # access to base directory and all its subdirectories.
-	my (@args_user) = split(' ', $ARGV[1]);
-	my $dir_project = $args_user[2];
-	chdir $dir_project;
+	# Get path to repository
+	my $repo_path = $1; # get repo_path from $regexp_hg
 
-	# Delegate filtering to hg-ssh.
-	# hg-ssh uses the SSH_ORIGINAL_COMMAND environment variable.
-	$ENV{'SSH_ORIGINAL_COMMAND'} = $ARGV[1];
-	exec($bin_hg, @prepend_args_hg) or die("Failed to exec $bin_hg: $!");
+	# Run in $dir_hg to get rid of the path prefix (e.g. /srv/hg)
+	exec($bin_hg, '--cwd', $dir_hg, '-R', $repo_path, 'serve', '--stdio')
+	    or die("Failed to exec $bin_hg -R $repo_path serve --stdio: $!");
 
     }
 }

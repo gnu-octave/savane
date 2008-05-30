@@ -287,10 +287,9 @@ While this item will be useful to track the registration process, *approving or 
 }
 else
 {
+  echo "<p>Please fill in this submission form. The Savannah Hackers will then review it for hosting compliance.</p>";
+  echo "<p style='font-size: smaller'>Note: if you wish to submit your package for GNU Evaluation, please check the <a href='http://www.gnu.org/help/evaluation.html'>GNU Software Evaluation</a> webpage instead.</p>";
 }
 
-echo "<p>Please fill in this submission form. The Savannah Hackers will then review it for hosting compliance.</p>";
-
-echo "<p style='font-size: smaller'>Note: if you wish to submit your package for GNU Evaluation, please check the <a href='http://www.gnu.org/help/evaluation.html'>GNU Software Evaluation</a> webpage instead.</p>";
 $form->display();
 $HTML->footer(array());

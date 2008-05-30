@@ -56,6 +56,7 @@ extract(sane_import('post',
   array(
     'post_changes',
     'list_name', 'description', 'is_public', 'reset_password', // arrays of values
+    'newlist_format_index',
 )));
 
 if (!$group_id) 
@@ -68,6 +69,14 @@ exit_test_usesmail($group_id);
 
 $grp=project_get_object($group_id);
 
+# Check first if the group type set up is acceptable. Otherwise, the form
+# will probably be puzzling to the user (ex: no input text for the list
+# name)
+if (!$grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname")) || $grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname")) == "@")
+{
+  exit_error("Mailing-list are misconfigured. Post a support request to ask your site administrator to review group type setup.");
+}
+
 
 if ($post_changes)
 {
@@ -78,22 +87,27 @@ if ($post_changes)
 	// Add a new list
 	// Need account related functions
 	
-	if (empty($list_name['new']))
-	    // User didn't fill the form
-	    continue;
+	if (!isset($newlist_format_index) && !isset($list_name['new']))
+	  // User didn't fill the form
+	  continue;
+	if (!isset($newlist_format_index) && isset($list_name['new']))
+	  // when there's only a single choice, there's no format index
+	  $newlist_format_index = 0;
 
 	// Generates a password
 	$new_list_password = substr(md5(time() . rand(0,40000)),0,16);
 	
-	// Name shorter than two characters are not acceptable
-	if (!$list_name['new'] || strlen($list_name['new']) < 2)
+	// Name shorter than two characters are not acceptable (only
+	// check if the chosen format requires %NAME substitution)
+	if (strpos($grp->getTypeMailingListFormat("%NAME", $newlist_format_index), "%NAME") !== false
+	    && (!$list_name['new'] || strlen($list_name['new']) < 2))
 	  {
 	    fb(sprintf(_("You must provide list name that is two or more characters long: %s"), $list_name['new']), 1);
 	    continue;
 	  }
 	
 	// Site may have a strict policy on list names: checks now
-	$new_list_name = $grp->getTypeMailingListFormat(strtolower($list_name['new']));
+	$new_list_name = $grp->getTypeMailingListFormat(strtolower($list_name['new']), $newlist_format_index);
 	
 	// Check if it is a valid name
 	if (!account_namevalid($new_list_name, 1, 1, 1, _("list name"),80))
@@ -112,17 +126,26 @@ if ($post_changes)
 	  }
 	
 	// Check if the list does not exists already
-	$result = db_execute("SELECT * FROM mail_group_list WHERE lower(list_name)=?", array($new_list_name));
+	$result = db_execute("SELECT group_id FROM mail_group_list WHERE lower(list_name)=?", array($new_list_name));
 	
 	if (db_numrows($result) > 0)
 	  {
-	    // If the list exists already, we create an alias
-	    // (same name but attached to a different project),
-	    // assuming that group type configuration is well-done
-	    // and disallow list name to persons not supposed to
-	    // use some names
-	    fb(sprintf(_("List %s is already in the database. We will create an alias"), $new_list_name));
-	    $status = LIST_STATUS_CREATED;
+	    $row = db_fetch_array($result);
+	    if ($row['group_id'] != $group_id)
+	      {
+		// If the list exists already, we create an alias
+		// (same name but attached to a different project),
+		// assuming that group type configuration is well-done
+		// and disallow list name to persons not supposed to
+		// use some names
+		fb(sprintf(_("List %s is already in the database. We will create an alias"), $new_list_name));
+		$status = LIST_STATUS_CREATED;
+	      }
+	    else
+	      {
+		fb(sprintf(_("The list %s already exists."), $new_list_name), 1);
+		continue;
+	      }
 	  }
 	else
 	  {
@@ -312,14 +335,6 @@ while ($row = db_fetch_array($result))
 
 // New list form
 
-# Check first if the group type set up is acceptable. Otherwise, the form
-# will probably be puzzling to the user (ex: no input text for the list
-# name)
-if (!$grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname")) || $grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname")) == "@")
-{
-  exit_error("Mailing-list are misconfigured. Post a support request to ask your site administrator to review group type setup.");
-}
-
 print '<br /><br />';
 utils_get_content("mail/about_list_creation");
 
@@ -329,8 +344,21 @@ print '
 			<input type="hidden" name="group_id" value="'.$group_id.'" />
 			<h3>'._('Create a new mailing list:').'</h3> ';
 
+$project_list_format  = $grp->getTypeMailingListFormat();
+$project_list_formats = split(',', $project_list_format);
 
-print $grp->getTypeMailingListAddress($grp->getTypeMailingListFormat('<input type="text" name="list_name[new]" value="" size="25" maxlenght="70" />'));
+$i = 0;
+foreach ($project_list_formats as $format)
+{
+  if (count($project_list_formats) > 1)
+    print "<input type='radio' name='newlist_format_index' value='$i'> ";
+  $input = str_replace('%NAME',
+		       '<input type="text" name="list_name[new]" value="" size="25" maxlenght="70" />',
+		       $format);
+  print $grp->getTypeMailingListAddress($input);
+  print '<br />';
+  $i++;
+}
 
 print '<p></p>';
 print			_('Is Public?').' '._('(visible to non-members)').'<BR>
