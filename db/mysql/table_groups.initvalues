@@ -53,7 +53,7 @@ INSERT INTO `groups` SET
 `url_cvs_viewcvs_homepage` = NULL,
 `url_arch` = NULL,
 `url_arch_viewcvs` = NULL,
-`url_svn`,
+`url_svn` = NULL,
 `url_svn_viewcvs` = NULL,
 `url_git` = NULL,
 `url_git_viewcvs` = NULL,

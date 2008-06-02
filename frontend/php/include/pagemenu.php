@@ -444,7 +444,7 @@ function pagemenu_group ()
       $project->Uses("git") ||
       $project->UsesForHomepage("git") ||
       $project->Uses("hg") ||
-      $project->UsesForHomepage("hg"))
+      $project->UsesForHomepage("hg") ||
       $project->Uses("bzr") ||
       $project->UsesForHomepage("bzr"))
     {

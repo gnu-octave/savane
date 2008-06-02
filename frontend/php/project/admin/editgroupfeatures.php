@@ -148,7 +148,7 @@ if ($update)
 	  ($field == "url_arch_viewcvs" && $project->CanUse("arch")) ||
 	  ($field == "url_svn_viewcvs" && $project->CanUse("svn")) ||
 	  ($field == "url_git_viewcvs" && $project->CanUse("git")) ||
-	  ($field == "url_hg_viewcvs" && $project->CanUse("hg"))
+	  ($field == "url_hg_viewcvs" && $project->CanUse("hg")) ||
 	  ($field == "url_bzr_viewcvs" && $project->CanUse("bzr")))
 	{
 	  if ($type == "use" ||
