@@ -65,15 +65,18 @@ if ($update) {
     // General
     'name', 'description', 'base_host', 'can_use_homepage',
     'dir_type_cvs', 'dir_type_svn', 'dir_type_arch', 'dir_type_git',
-    'dir_type_hg', 'dir_type_download', 'dir_type_homepage',
-    'dir_cvs', 'dir_arch', 'dir_svn', 'dir_git', 'dir_hg',
+    'dir_type_hg', 'dir_type_bzr',
+    'dir_type_download', 'dir_type_homepage',
+    'dir_cvs', 'dir_arch', 'dir_svn', 'dir_git', 'dir_hg','dir_bzr',
     'homepage_scm', 'dir_homepage', 'url_homepage',
     'url_cvs_viewcvs_homepage', 'can_use_arch', 'can_use_svn',
-    'can_use_cvs', 'can_use_git', 'can_use_hg', 'can_use_forum',
+    'can_use_cvs', 'can_use_git', 'can_use_hg', 'can_use_bzr',
+    'can_use_forum',
     'url_cvs_viewcvs', 'url_arch_viewcvs', 'url_svn_viewcvs',
-    'url_git_viewcvs', 'url_hg_viewcvs', 'can_use_license',
-    'can_use_devel_status', 'can_use_download', 'dir_download',
-    'url_download', 'can_use_mailing_list', 'mailing_list_host',
+    'url_git_viewcvs', 'url_hg_viewcvs', 'url_bzr_viewcvs',
+    'can_use_license', 'can_use_devel_status', 'can_use_download',
+    'dir_download', 'url_download',
+    'can_use_mailing_list', 'mailing_list_host',
     'url_mailing_list_listinfo', 'url_mailing_list_subscribe',
     'url_mailing_list_unsubscribe', 'url_mailing_list_archives',
     'url_mailing_list_archives_private', 'url_mailing_list_admin',
@@ -99,6 +102,8 @@ if ($update) {
     'is_menu_configurable_git_viewcvs',
     'is_menu_configurable_hg',
     'is_menu_configurable_hg_viewcvs',
+    'is_menu_configurable_bzr',
+    'is_menu_configurable_bzr_viewcvs',
     'is_menu_configurable_bugs',
     'is_menu_configurable_task',
     'is_menu_configurable_patch',
@@ -238,7 +243,8 @@ else
   <option value="arch"'.(($row_grp['homepage_scm'] == "arch")?" selected=\"selected\"":"").'>'._("GNU Arch").'</option>
   <option value="svn"'.(($row_grp['homepage_scm'] == "svn")?" selected=\"selected\"":"").'>'._("Subversion").'</option>
   <option value="git"'.(($row_grp['homepage_scm'] == "git")?" selected=\"selected\"":"").'>'._("Git").'</option>
-  <option value="hg"'.(($row_grp['homepage_scm'] == "hg")?" selected=\"selected\"":"").'>'._("Mercurial").'</option></select>');
+  <option value="hg"'.(($row_grp['homepage_scm'] == "hg")?" selected=\"selected\"":"").'>'._("Mercurial").'</option></select>
+  <option value="bzr"'.(($row_grp['homepage_scm'] == "bzr")?" selected=\"selected\"":"").'>'._("Bazaar").'</option></select>');
 
   html_select_typedir_box("dir_type_homepage",
 			  $row_grp['dir_type_homepage']);
@@ -310,6 +316,19 @@ else
 			  $row_grp['dir_type_hg']);
   print specific_showinput(_("Repository Dir (path on the filesystem) [BACKEND SPECIFIC]:"), '<input type="text" name="dir_hg" value="'.$row_grp['dir_hg'].'" size="'.$textfield_size.'" />');
   print specific_showinput(_("Repository view URL (cvsweb, viewcvs, archzoom...):"), '<input type="text" name="url_hg_viewcvs" value="'.$row_grp['url_hg_viewcvs'].'" size="'.$textfield_size.'" />');
+
+  print $HTML->box_bottom();
+  print '<br /><br />';
+
+  # ########### Source code
+
+  print $HTML->box_top(_("Source Code Manager: Bazaar"));
+  print '<div>This is useful if you provide directly Bazaar repositories (created by the backend) or if you want to allow projects to configure the related menu entry (see below).</div>';
+  print specific_showinput_inverted(_("Can use Bazaar"), '<INPUT TYPE="CHECKBOX" NAME="can_use_bzr" VALUE="1"'.(($row_grp['can_use_bzr']==1) ? ' checked="checked"' : '').' />');
+  html_select_typedir_box("dir_type_bzr",
+			  $row_grp['dir_type_bzr']);
+  print specific_showinput(_("Repository Dir (path on the filesystem) [BACKEND SPECIFIC]:"), '<input type="text" name="dir_bzr" value="'.$row_grp['dir_bzr'].'" size="'.$textfield_size.'" />');
+  print specific_showinput(_("Repository view URL (cvsweb, viewcvs, archzoom...):"), '<input type="text" name="url_bzr_viewcvs" value="'.$row_grp['url_bzr_viewcvs'].'" size="'.$textfield_size.'" />');
 
   print $HTML->box_bottom();
   print '<br /><br />';
@@ -508,22 +527,27 @@ print '
   specific_checkbox("arch",
 		    _("the GNU Arch link can be modified"));
   specific_checkbox("arch_viewcvs",
-		    _("the arch viewcvs link can be modified"),0);
+		    _("the GNU Arch viewcvs link can be modified"),0);
 
   specific_checkbox("svn",
-		    _("the subversion link can be modified"));
+		    _("the Subversion link can be modified"));
   specific_checkbox("svn_viewcvs",
-		    _("the subversion viewcvs link can be modified"),0);
+		    _("the Subversion viewcvs link can be modified"),0);
 
   specific_checkbox("git",
-		    _("the git link can be modified"));
+		    _("the Git link can be modified"));
   specific_checkbox("git_viewcvs",
-		    _("the git viewcvs link can be modified"),0);
+		    _("the Git viewcvs link can be modified"),0);
 
   specific_checkbox("hg",
-		    _("the mercurial link can be modified"));
+		    _("the Mercurial link can be modified"));
   specific_checkbox("hg_viewcvs",
-		    _("the mercurial viewcvs link can be modified"),0);
+		    _("the Mercurial viewcvs link can be modified"),0);
+
+  specific_checkbox("bzr",
+		    _("the Bazaar link can be modified"));
+  specific_checkbox("bzr_viewcvs",
+		    _("the Bazaar viewcvs link can be modified"),0);
 
   print $HTML->box_bottom(1);
 

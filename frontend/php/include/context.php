@@ -3,7 +3,8 @@
 # 
 # Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #
-# Copyright (C) 2008 Aleix Conchillo Flaque
+# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
 # 
@@ -248,6 +249,8 @@ function context_title ()
     case 'git': $title = _("Git Repositories"); break;
 
     case 'hg': $title = _("Mercurial Repositories"); break;
+
+    case 'bzr': $title = _("Bazaar Repositories"); break;
       
     case 'userguide': 
       $title = _("In Depth Guide"); 
@@ -402,6 +405,7 @@ function context_icon ()
     case 'svn':
     case 'git':
     case 'hg': return 'cvs'; break;
+    case 'bzr': return 'cvs'; break;
     case 'news': return 'news'; break;
     case 'special': return 'news'; break;
     case 'patch': return 'patch'; break;

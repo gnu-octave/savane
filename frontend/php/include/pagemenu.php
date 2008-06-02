@@ -445,6 +445,8 @@ function pagemenu_group ()
       $project->UsesForHomepage("git") ||
       $project->Uses("hg") ||
       $project->UsesForHomepage("hg"))
+      $project->Uses("bzr") ||
+      $project->UsesForHomepage("bzr"))
     {
       # If it uses only one SCM, main link points to it
       $cvs = FALSE;
@@ -452,6 +454,7 @@ function pagemenu_group ()
       $arch = FALSE;
       $git = FALSE;
       $hg = FALSE;
+      $bzr = FALSE;
       if ($project->Uses("cvs") || $project->UsesForHomepage("cvs"))
 	{ $cvs = 1; }
       if ($project->Uses("arch") || $project->UsesForHomepage("arch"))
@@ -462,13 +465,18 @@ function pagemenu_group ()
 	{ $git = 1; }
       if ($project->Uses("hg") || $project->UsesForHomepage("hg"))
 	{ $hg = 1; }
+      if ($project->Uses("bzr") || $project->UsesForHomepage("bzr"))
+	{ $bzr = 1; }
 
       // Only one SCM - direct link
-      if (($cvs && !$arch && !$svn && !$git && !$hg) ||
-	  (!$cvs && $arch && !$svn && !$git && !$hg) ||
-	  (!$cvs && !$arch && $svn && !$git && !$hg) ||
-	  (!$cvs && !$arch && !$svn && $git && !$hg) ||
-	  (!$cvs && !$arch && !$svn && !$git && $hg))
+      $count = 0;
+      if ($cvs)  $count++;
+      if ($arch) $count++;
+      if ($svn)  $count++;
+      if ($git)  $count++;
+      if ($hg)   $count++;
+      if ($bzr)  $count++;
+      if ($count == 1)
 	{
 	  unset($tool);
 	  if ($cvs)
@@ -481,6 +489,8 @@ function pagemenu_group ()
 	    { $tool = "git"; }
 	  if ($hg)
 	    { $tool = "hg"; }
+	  if ($bzr)
+	    { $tool = "bzr"; }
 
 	  pagemenu_submenu_title(_("Source Code"), 
 				 $project->getArtifactUrl($tool),
@@ -495,7 +505,7 @@ function pagemenu_group ()
 				 '#', # non-link
 				 (CONTEXT == 'cvs' || CONTEXT == 'arch'
 				  || CONTEXT == 'svn' || CONTEXT == 'git'
-                                  || CONTEXT == 'hg'),
+                                  || CONTEXT == 'hg' || CONTEXT == 'bzr'),
 				 1,
 				 _("Source Code Management"));
 	}
@@ -528,7 +538,7 @@ function pagemenu_group ()
 	      $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
 					     $project->getUrl("cvs_viewcvs_homepage"));
 	    }
-	} 
+	}
       if ($hg)
 	{
 	  $count++;
@@ -537,23 +547,47 @@ function pagemenu_group ()
 					 1,
 					 _("Source Code Manager: Mercurial Repository"));
 	  # Do we need links to browse repositories?
-	  if ($project->Uses("hg") && 
-	      $project->getUrl("hg_viewcvs") != 'http://' && 
+	  if ($project->Uses("hg") &&
+	      $project->getUrl("hg_viewcvs") != 'http://' &&
 	      $project->getUrl("hg_viewcvs") != '')
 	    {
 	      $count++;
 	      $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
 					     $project->getUrl("hg_viewcvs"));
 	    }
-	  if ($project->UsesForHomepage("hg") && 
-	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' && 
+	  if ($project->UsesForHomepage("hg") &&
+	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
 	      $project->getUrl("cvs_viewcvs_homepage") != '')
 	    {
 	      $count++;
 	      $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
 					     $project->getUrl("cvs_viewcvs_homepage"));
-	    }	  
-
+	    }
+	} 
+      if ($bzr)
+	{
+	  $count++;
+	  $ret .= pagemenu_submenu_entry(_("Use Bazaar"),
+					 $project->getArtifactUrl("bzr"),
+					 1,
+					 _("Source Code Manager: Bazaar Repository"));
+	  # Do we need links to browse repositories?
+	  if ($project->Uses("bzr") &&
+	      $project->getUrl("bzr_viewcvs") != 'http://' &&
+	      $project->getUrl("bzr_viewcvs") != '')
+	    {
+	      $count++;
+	      $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
+					     $project->getUrl("bzr_viewcvs"));
+	    }
+	  if ($project->UsesForHomepage("bzr") &&
+	      $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
+	      $project->getUrl("cvs_viewcvs_homepage") != '')
+	    {
+	      $count++;
+	      $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
+					     $project->getUrl("cvs_viewcvs_homepage"));
+	    }
 	} 
       if ($svn)
 	{
@@ -579,7 +613,6 @@ function pagemenu_group ()
 	      $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
 					     $project->getUrl("cvs_viewcvs_homepage"));
 	    }	  
-
 	} 
       if ($arch)
 	{

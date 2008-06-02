@@ -497,6 +497,25 @@ if ($project->Uses("patch") ||
       $i++;
     }
 
+  if ($project->Uses("bzr") || $project->UsesForHomepage("bzr"))
+    {
+      specific_makesep();
+      $url = $project->getArtifactUrl("bzr");
+
+      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Bazaar'));
+      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Bazaar Repository").'</a>';
+
+      if ($project->Uses("bzr") && $project->getUrl("bzr_viewcvs") != 'http://' && $project->getUrl("bzr_viewcvs") != '')
+	{
+	  print '<br /> &nbsp; - <a href="'.$project->getUrl("bzr_viewcvs").'">'._("Browse Sources Repository").'</a>';
+	}
+      if ($project->UsesForHomepage("bzr") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
+	{
+	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
+	}
+      $i++;
+    }
+
   if ($project->Uses("svn") || $project->UsesForHomepage("svn"))
     {
       $url = $project->getArtifactUrl("svn");
