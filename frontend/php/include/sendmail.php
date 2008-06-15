@@ -168,7 +168,7 @@ function sendmail_mail ($from,
 
 
   # Forge the real to list, by parsing every item of the $to list
-  $real_to = '';
+  $recipients = array();
 
   # Do a first run to convert squads by users 
   $to2 = array();
@@ -324,7 +324,7 @@ function sendmail_mail ($from,
       # in %seen_before
 
       # Add addresses arrived so far to the list, 
-      $real_to .= $v.", "; 
+      $recipients[] = $v; 
       
       # Always record the full string. We may have already saved such info
       # before, but we maybe saved strictly the email address, while the 
@@ -338,9 +338,6 @@ function sendmail_mail ($from,
     { 
       $subject = "[".utils_get_tracker_prefix($savane_tracker)." #".$savane_item_id."] ".$subject; 
     }
-
-   # Remove the extra ", " at the end of the list
-   $real_to = substr($real_to,0,-2);
 
    # Beuc - 20050316
    # That is what I intended to do:
@@ -359,13 +356,16 @@ function sendmail_mail ($from,
 
    # Send the final mail, 
    $ret = '';
-   if ($real_to) 
+   if (count($recipients) > 0)
         {
+	  $real_to = sendmail_encode_recipients($recipients);
+
 	  # Normally, $real_to should not contain duplicates
 	  if (empty($int_delayspamcheck))
 	    {
-	      $ret .= mail(sendmail_encode_header_content($real_to), sendmail_encode_header_content($subject), $message, $more_headers);
-	      fb(sprintf(_("Mail sent to %s"), utils_email($real_to, 1)));
+	      $ret .= mail($real_to, sendmail_encode_header_content($subject), $message, $more_headers);
+	      $r = array_map("htmlspecialchars", $recipients);
+	      fb(sprintf(_("Mail sent to %s"), join(', ', $r)));
 	    }
 	  else
 	    {
@@ -375,7 +375,7 @@ function sendmail_mail ($from,
                   'artifact' => $savane_tracker,
 		  'item_id' => $savane_item_id,
 		  'comment_id' => $savane_comment_id,
-		  'to_header' => sendmail_encode_header_content($real_to),
+		  'to_header' => $real_to,
 		  'other_headers' => $more_headers,
 		  'subject_header' => sendmail_encode_header_content($subject),
 		  'message' => $message
@@ -412,6 +412,13 @@ function sendmail_mail ($from,
   return $ret; 
 }
 
+
+# Encode each recipient separately and separate them using commas
+function sendmail_encode_recipients ($recipients)
+{
+  $r = array_map("sendmail_encode_header_content", $recipients);
+  return join(', ', $r);
+}
 
 # Needed to send utf-8 headers:
 # Take a look at http://www.faqs.org/rfcs/rfc2047.html
