@@ -45,8 +45,8 @@ sub BzrMakeArea {
 	# Create a repository
 	my $old_umask = umask(0002);
 
-	system('chmod', 'g+s', $dir_bzr);
-	system('chgrp', '-R', $name, $dir_bzr);
+	system('mkdir', '-m', '2775', '-p', $dir_bzr);
+	system('chgrp', $name, $dir_bzr);
 
 	# Create folder for subrepositories (need to code multi-repo support first)
 	# TODO: precise directory location
