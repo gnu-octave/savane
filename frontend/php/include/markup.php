@@ -733,7 +733,9 @@ function _markup_inline($line)
     # if it doesn't start there, the character before the slash
     # must be either whitespace or the closing brace '>', to
     # allow for nested html tags (e.g. <p>_markup_</p>).
-    '/(^|\s+|>)'
+    # Additionally, the opening brace may appear.
+    # See bug #10571 on http://gna.org/ for reference.
+    '/(^|\s+|>|\()'
     # match the underscore
     .'_'
     # match any character (non-greedy)
