@@ -94,10 +94,10 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
 	      # Get the story
 	      $story = rtrim(db_result($result,$i,'details'));
 
-	      # if the news item is large (>500 characters or >30 words),
+	      # if the news item is large (>500 characters),
 	      # only show about 250 characters of the story
 	      $strlen_story = strlen($story);
-	      if ($strlen_story > 500 || str_word_count($story) > 30)
+	      if ($strlen_story > 500)
 	        {
 	          # if there is a linebreak close to the 250 character
 	          # mark, we use it to truncate the news item, so that
@@ -126,8 +126,6 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",$start_fro
 	      else
 	        {
 		  # this is a short news item. just display it.
-		  # FIXME: actually counting the number of words may not be
-		  # enough, as it may have list in here.
 		  $summ_txt = markup_full($story);
 		}
 	      $proj_name = db_result($result,$i,'group_name');
