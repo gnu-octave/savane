@@ -40,16 +40,44 @@ if ($update)
       $thiskey = trim($thiskey);
       # Remove line breaks
       $thiskey = str_replace("\n", " ", $thiskey);
-      if ($thiskey != "")
+      if ($thiskey != '')
 	{
-	  fb(sprintf(_("Key #%s seen"), $i+1));
-	  $keys .= $thiskey."###";
+	  # test the key with ssh-vulnkey
+	  $descriptorspec = array(
+	    0 => array('pipe', 'r'),
+	    1 => array('pipe', 'w'),
+	    2 => array('file', '/dev/null', 'a'),
+	  );
+	  $process = proc_open('ssh-vulnkey -', $descriptorspec, $pipes);
+
+	  $return_value = 1;
+	  if (is_resource($process)) {
+	    fwrite($pipes[0], $thiskey);
+	    fclose($pipes[0]);
+	    stream_get_contents($pipes[1]); // empty pipe
+	    fclose($pipes[1]);
+	    $return_value = proc_close($process);
+	  }
+	  if ($return_value != 0)
+	    {
+	      fb(sprintf(_("Key #%s seen"), $i+1));
+	      $keys .= $thiskey."###";
+	    }
+	  else
+	    {
+	      fb(sprintf(_("Error: ssh-vulnkey detected key #%s as compromised."
+			   . " Please upgrade your system and regenerate it"
+			   . " (see <a href='http://wiki.debian.org/SSLkeys'>http://wiki.debian.org/SSLkeys</a>"
+			   . " for more information)."), $i+1), 1);
+	    }
 	}
     }
 
   # Update the database
-  $success = db_execute("UPDATE user SET authorized_keys = ? WHERE user_id = ?",
-			array($keys, user_getid()));
+  $success = 0;
+  if ($keys != '')
+    $success = db_execute("UPDATE user SET authorized_keys = ? WHERE user_id = ?",
+			  array($keys, user_getid()));
   
   if ($success)
     { fb(_("Keys registered")); }
