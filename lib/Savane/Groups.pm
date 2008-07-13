@@ -28,6 +28,8 @@ use strict;
 require Exporter;
 
 use Savane::Util;
+use File::Temp qw(tempdir);
+use English;
 
 # Exports
 our @ISA = qw(Exporter);
@@ -137,7 +139,10 @@ sub StoreGroupGPGKeyring {
 
     # Otherwise, get the list and store it (not in groups, to avoid having
     # enormous blob in this table)
-    open(LIST, "gpg --list-public-keys --display-charset=utf-8 --keyring $keyring |");
+    
+    my $tempdir = tempdir( CLEANUP => 1 );
+    open(LIST, "gpg --homedir $tempdir --quiet --no-default-keyring --no-options "
+	 . " --display-charset=utf-8 --keyring $keyring --list-public-keys |");
     my $line;
     my $content;
     while(<LIST>) {
@@ -150,6 +155,9 @@ sub StoreGroupGPGKeyring {
     }
     close(LIST);
     SetDBSettings("groups", "unix_group_name='$group'", "registered_gpg_keys=".$dbd->quote($content));
+    # Remove it even if CLEANUP==1 because this eats lots of space
+    # when regenerating all keyrings
+    system('rm', '-rf', $tempdir);
 
     # And get the file and store it
     $content = "";
@@ -177,23 +185,47 @@ sub GroupAddGPGKey {
     # Make sure the keyring dir exists
     system("mkdir", "-p", dirname($keyring)) unless -e dirname($keyring);
 
-    my @gpg_args = ("gpg",
-		    "--quiet",
-		    "--batch",
-		    "--no-tty",
-                    "--no-default-keyring",
-                    "--keyring",
-                    $keyring,
-                    '--import',
-                    '-');
-
+    my $tempdir = tempdir( CLEANUP => 1 );
+    system('chown', 'nobody:', $tempdir);
+    my $tempkeyring = "$tempdir/tempkeyring";
     my $pid = open (GPG, "|-");
 
     if ($pid) {                   # parent
+	if ( -e $keyring) {
+	    system('cp', $keyring, $tempkeyring);
+	    system('chown', 'nobody:', $tempkeyring);
+	}
         print GPG $key;
         close (GPG);
+	system('cp', $tempkeyring, $keyring);
+	# Remove it even if CLEANUP==1 because this eats lots of space
+	# when regenerating all keyrings
+	system('rm', '-rf', $tempdir);
         return $?;
     } else {                      # child
+	# Become nobody
+	my ($nobody_uid,$nobody_gid) = (getpwnam("nobody"))[2,3];
+	#$EGID="101 102"; $GID=100
+	$GID = $EGID = $nobody_gid;
+	$UID = $EUID = $nobody_uid;
+
+	# You can also use POSIX::setuid/gid, but doesn't set the additional groups:
+	#perl -MPOSIX -e 'setgid(100); setuid(100); system "id"'
+	#uid=100(identd) gid=100(users) groupes=0(root)
+
+
+	my @gpg_args = ("gpg",
+			"--homedir", $tempdir,
+			"--quiet",
+			"--no-default-keyring",
+			"--no-options",
+			"--keyring", $tempkeyring,
+			'--import',
+			'-');
+
+	# Prevent from sending GPG warnings due to invalid user keys
+	close(STDERR);
+
         exec (@gpg_args) || exit 1;
     }
 
