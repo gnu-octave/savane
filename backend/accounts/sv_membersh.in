@@ -64,7 +64,7 @@ our $bin_git = "git-shell";
 our $use_bzr = "0";
 our $bin_bzr = "bzr";
 our $dir_bzr = "/srv/bzr";
-our $regexp_bzr = '^bzr serve --inet --directory=[a-zA-Z0-9-_][a-zA-Z0-9-_/]* --allow-writes$';
+our $regexp_bzr = '^bzr serve --inet --directory=/ --allow-writes$';
 
 our $use_hg = "0";
 our $bin_hg = "hg";
