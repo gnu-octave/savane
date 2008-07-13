@@ -628,7 +628,8 @@ print LOG strftime "[$script] %c - gpg group keyrings updates done\n", localtime
 # updates.
 #
 # Note: if someone would like to regenerate all keyrings, he could simply
-# remove all "ascii-public-key" contains in /home.
+# remove all "ascii-public-key" files present in /home :
+#   find /home -type f -name 'ascii-public-key' -print0 | xargs -0r rm
 # (maybe we should provide a switch for that)
 while (my ($group,) = each(%gpg_keyrings_to_rebuild)) {
     my $count;
