@@ -137,7 +137,7 @@ sub StoreGroupGPGKeyring {
 
     # Otherwise, get the list and store it (not in groups, to avoid having
     # enormous blob in this table)
-    open(LIST, "gpg --list-public-keys --keyring $keyring |");
+    open(LIST, "gpg --list-public-keys --display-charset=utf-8 --keyring $keyring |");
     my $line;
     my $content;
     while(<LIST>) {
