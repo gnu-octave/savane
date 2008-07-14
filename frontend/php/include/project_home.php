@@ -47,7 +47,7 @@ site_project_header(array());
 $res_admin = db_execute("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname "
 			. "FROM user,user_group "
 			. "WHERE user_group.user_id=user.user_id AND user_group.group_id=? AND "
-			. "user_group.admin_flags = 'A'", array($group_id));
+			. "user_group.admin_flags = 'A' AND user_group.onduty = 1", array($group_id));
 
 
 print '
@@ -69,9 +69,9 @@ if ($adminsnum > 0)
   }
 
 #count of developers on this project
-$membersnum = db_fetch_array(db_execute("SELECT COUNT(*) AS count FROM user_group WHERE group_id=? AND admin_flags<>'P' AND admin_flags<>'SQD'", array($group_id)));
+$membersnum = db_fetch_array(db_execute("SELECT COUNT(*) AS count FROM user_group WHERE group_id=? AND admin_flags<>'P' AND admin_flags<>'SQD' AND user_group.onduty = 1", array($group_id)));
 print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-printf(ngettext("%s member", "%s members", $membersnum['count']),'<strong>'.$membersnum['count'].'</strong>');
+printf(ngettext("%s active member", "%s active members", $membersnum['count']),'<strong>'.$membersnum['count'].'</strong>');
 
 # if member = 1, it's obviously (or it should be) the project admin
 # if there's no admin, we need to get access to the list

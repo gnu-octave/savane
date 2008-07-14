@@ -127,6 +127,7 @@ if ($update)
 
       $admin_flags="admin_user_{$row_dev['user_id']}";
       $privacy_flags="privacy_user_{$row_dev['user_id']}";
+      $onduty="onduty_user_{$row_dev['user_id']}";
 
       $permissions = sane_import('post', array(
         $bugs_flags,
@@ -136,6 +137,7 @@ if ($update)
 	$cookbook_flags,
 	$news_flags,
 	$admin_flags,
+	$onduty,
 	$privacy_flags,));
 
       # admin are not allowed to turn off their own admin flag
@@ -226,6 +228,7 @@ if ($update)
       $fields_values = array(
 	'admin_flags' => $permissions[$admin_flags],
 	'privacy_flags' => $permissions[$privacy_flags],
+	'onduty' => $permissions[$onduty],
 	'cookbook_flags' => $permissions[$cookbook_flags],
       );
 
@@ -691,6 +694,7 @@ $result = db_execute("SELECT user.user_name AS user_name,"
 . "user.realname AS realname, "
 . "user.user_id AS user_id, "
 . "user_group.admin_flags, "
+. "user_group.onduty, "
 . "user_group.privacy_flags, "
 . "user_group.bugs_flags, "
 . "user_group.cookbook_flags, "
@@ -717,6 +721,7 @@ else
   $title_arr=array();
   $title_arr[]=_("Member");
   $title_arr[]=_("General Rights");
+  $title_arr[]=_("On Duty");
   if ($project->Uses("support")) 
     {
       $title_arr[]=_("Support Tracker");
@@ -782,7 +787,10 @@ else
        }
      print '
     </td>';
-
+     print '<td align="center">';
+     $extra = ($row['onduty'] == '1' ) ? 'checked="checked"' : '';
+     print form_input("checkbox", "onduty_user_".$row['user_id'], 1, $extra);
+     print '</td>';
      if ($project->Uses("support")) 
        {
 	 html_select_permission_box("support", $row);

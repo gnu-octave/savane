@@ -28,8 +28,18 @@
 require_once('../include/init.php');
 require_directory("trackers");
 
+function specific_print_role ($row, $title)
+{
+  print
+    (($row == 1)?$title.' '._("technician").',<br />':"").
+    (($row == 3)?$title.' '._("manager").',<br />':"").
+    (($row == 2)?$title.' '._("techn. & manager").',<br />':"");
+}
+
+
 $detailed = sane_get("detailed");
 $form_tgrp = sane_all("form_grp");
+
 
 if ((!$group_id) && $form_grp)
 {
@@ -63,172 +73,176 @@ else
 
 }
 
-if ($detailed)
+$activeness = array(1, 0);
+foreach ($activeness as $active)
 {
-  member_explain_roles();
-  # FIXME: yeupou--gnu.org 2003-11-07
-  # The best would be to print non-specific roles but roles in any case.
-  # It requires more, so we will see if there are people interested in that
-  # or not.
-  print '<p>'._("On this page are only presented specific roles, roles which are not attributed by default when joining this project.").'</p>';
-}
-
-# list members
-if (!$detailed)
-{
-  $res_memb = db_execute("SELECT user.user_name AS user_name, "
-     . "user.user_id AS user_id,"
-     . "user.realname AS realname, "
-     . "user.add_date AS add_date, "
-     . "user.people_view_skills AS people_view_skills, "
-     . "user_group.admin_flags AS admin_flags, "
-     . "user.email AS email "
-     . "FROM user,user_group "
-     . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
-     . "ORDER BY user.user_name ", array($group_id));
-}
-else
-{
-  $res_memb = db_execute("SELECT user.user_name AS user_name, "
-     . "user.user_id AS user_id,"
-     . "user.realname AS realname, "
-     . "user.add_date AS add_date, "
-     . "user.people_view_skills AS people_view_skills, "
-     . "user_group.admin_flags AS admin_flags, "
-     . "user_group.bugs_flags AS bugs_flags, "
-     . "user_group.task_flags AS task_flags, "
-     . "user_group.patch_flags AS patch_flags, "
-     . "user_group.news_flags AS news_flags, "
-     . "user_group.support_flags AS support_flags, "
-     . "user.email AS email "
-     . "FROM user,user_group "
-     . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
-     . "ORDER BY user.user_name", array($group_id));
-}
-
-
-$title_arr=array();
-$title_arr[]="&nbsp;";
-$title_arr[]=_("Member");
-if ($detailed)
-{ $title_arr[]=_("Specific Role"); }
-# yeupou--gnu.org, 2004-11-04, remove email from this page; this data
-# is accessible elsewhere, via links. It saves us extra tests on whether
-# users want to hide their email or not.
-#$title_arr[]=_("Email");
-$title_arr[]=_("Resume and Skills");
-if (user_ismember($group_id))
-{
-  $title_arr[]=_("Watch");
-}
-
-echo html_build_list_table_top ($title_arr);
-
-
-
-function specific_print_role ($row, $title)
-{
-  print
-    (($row == 1)?$title.' '._("technician").',<br />':"").
-    (($row == 3)?$title.' '._("manager").',<br />':"").
-    (($row == 2)?$title.' '._("techn. & manager").',<br />':"");
-}
-
-$i = 1;
-while ($row_memb=db_fetch_array($res_memb))
-{
-  if ($row_memb['admin_flags'] != 'P')
+  if ($detailed)
     {
-      $i++;
-      $color = utils_get_alt_row_color($i);
-      if ($row_memb['admin_flags'] == 'A')
-	{ $color = "boxhighlight"; }
+      member_explain_roles();
+      # FIXME: yeupou--gnu.org 2003-11-07
+      # The best would be to print non-specific roles but roles in any case.
+      # It requires more, so we will see if there are people interested in that
+      # or not.
+      print '<p>'._("On this page are only presented specific roles, roles which are not attributed by default when joining this project.").'</p>';
+    }
+  
+    # list members
+  if (!$detailed)
+    {
+      $res_memb = db_execute("SELECT user.user_name AS user_name, "
+       . "user.user_id AS user_id,"
+       . "user.realname AS realname, "
+       . "user.add_date AS add_date, "
+       . "user.people_view_skills AS people_view_skills, "
+       . "user_group.admin_flags AS admin_flags, "
+       . "user.email AS email "
+       . "FROM user,user_group "
+       . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
+       . "AND user_group.onduty = $active "
+       . "ORDER BY user.user_name ", array($group_id));
+    }
+  else
+    {
+      $res_memb = db_execute("SELECT user.user_name AS user_name, "
+       . "user.user_id AS user_id,"
+       . "user.realname AS realname, "
+       . "user.add_date AS add_date, "
+       . "user.people_view_skills AS people_view_skills, "
+       . "user_group.admin_flags AS admin_flags, "
+       . "user_group.bugs_flags AS bugs_flags, "
+       . "user_group.task_flags AS task_flags, "
+       . "user_group.patch_flags AS patch_flags, "
+       . "user_group.news_flags AS news_flags, "
+       . "user_group.support_flags AS support_flags, "
+       . "user.email AS email "
+       . "FROM user,user_group "
+       . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
+       . "AND user_group.onduty = $active "
+       . "ORDER BY user.user_name", array($group_id));
+    }
+  
+  
+  $title_arr=array();
+  $title_arr[]="&nbsp;";
+  $title_arr[]=_("Member");
+  if ($detailed)
+    { $title_arr[]=_("Specific Role"); }
+  # yeupou--gnu.org, 2004-11-04, remove email from this page; this data
+  #  is accessible elsewhere, via links. It saves us extra tests on whether
+  # users want to hide their email or not.
+  #$title_arr[]=_("Email");
+  $title_arr[]=_("Resume and Skills");
+  if (user_ismember($group_id))
+    {
+      $title_arr[]=_("Watch");
+    }
 
-      print "\n\t<tr class=\"".$color."\">\n";
-      print "\t\t";
+  if (db_numrows($res_memb) == 0)
+    continue;
+  
+  if ($active)
+    print '<h3>Active members on duty</h3>';
+  else
+    print '<h3>Currently inactive members</h3>';
+  
+  echo html_build_list_table_top ($title_arr);
 
-      # Realname
-      if ($row_memb['admin_flags'] == 'A')
-	{
-	  if ($group_id != $GLOBALS['sys_group_id'])
-	    {
-	      $icon = "project-admin";
-	      $icon_alt = _("Project Administrator");
-	    }
-	  else
-	    {
-	      $icon = "site-admin";
-	      $icon_alt = _("Site Administrator");
-	    }
-	}
-      else if ($row_memb['admin_flags'] == 'SQD')
-	{
-	  $icon = "people";
-	  $icon_alt = _("Squad");   
-	}
-      else
-	{
-	  $icon = "project-member";
-	  $icon_alt = _("Project Member");      
-	}
-      
-      print "\t\t".'<td><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" class="icon" /></span></td><td>'.utils_user_link($row_memb['user_name'], $row_memb['realname'])."</td>\n";
 
-      # Role
-      if ($detailed)
+  $i = 1;
+  while ($row_memb=db_fetch_array($res_memb))
+    {
+      if ($row_memb['admin_flags'] != 'P')
 	{
-	  print "\t\t<td align=\"middle\">";
+	  $i++;
+	  $color = utils_get_alt_row_color($i);
+	  if ($row_memb['admin_flags'] == 'A')
+	    { $color = "boxhighlight"; }
+	  
+	  print "\n\t<tr class=\"".$color."\">\n";
+	  print "\t\t";
+	  
+          # Realname
 	  if ($row_memb['admin_flags'] == 'A')
 	    {
-	      # No details if it is an admin
-	      print _("project admin");
+	      if ($group_id != $GLOBALS['sys_group_id'])
+		{
+		  $icon = "project-admin";
+		  $icon_alt = _("Project Administrator");
+		}
+	      else
+		{
+		  $icon = "site-admin";
+		  $icon_alt = _("Site Administrator");
+		}
+	    }
+	  else if ($row_memb['admin_flags'] == 'SQD')
+	    {
+	      $icon = "people";
+	      $icon_alt = _("Squad");   
 	    }
 	  else
 	    {
-	      # Print only not by default role.
-
-	      specific_print_role($row_memb['support_flags'], _("support tracker"));
-	      specific_print_role($row_memb['bugs_flags'], _("bug tracker"));
-	      specific_print_role($row_memb['task_flags'], _("task tracker"));
-	      specific_print_role($row_memb['patch_flags'], _("patch tracker"));
-	      specific_print_role($row_memb['news_flags'], _("news tracker"));
-
+	      $icon = "project-member";
+	      $icon_alt = _("Project Member");      
 	    }
-	  print "</td>\n";
-	}
-
+	  
+	  print "\t\t".'<td><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" class="icon" /></span></td><td>'.utils_user_link($row_memb['user_name'], $row_memb['realname'])."</td>\n";
+	  
+          # Role
+	  if ($detailed)
+	    {
+	      print "\t\t<td align=\"middle\">";
+	      if ($row_memb['admin_flags'] == 'A')
+		{
+                  # No details if it is an admin
+		  print _("project admin");
+		}
+	      else
+		{
+                  # Print only not by default role.
+		  specific_print_role($row_memb['support_flags'], _("support tracker"));
+		  specific_print_role($row_memb['bugs_flags'], _("bug tracker"));
+		  specific_print_role($row_memb['task_flags'], _("task tracker"));
+		  specific_print_role($row_memb['patch_flags'], _("patch tracker"));
+		  specific_print_role($row_memb['news_flags'], _("news tracker"));
+		  
+		}
+	      print "</td>\n";
+	    }
+	  
       # Email
 # yeupou--gnu.org, 2004-11-04, remove email from this page; this data
 # is accessible elsewhere, via links. It saves us extra tests on whether
 # users want to hide their email or not.
 
-      # Skills
-      if ($row_memb['people_view_skills'] == 1)
-	{
-	  print "\t\t<td align=\"middle\"><a href=\"".$GLOBALS['sys_home']."people/resume.php?user_id=".$row_memb['user_id']."\">"._("View Skills")."</a></td>\n";
-	}
-      else
-	{
-	  print "\t\t<td align=\"middle\">"._("Set to private")."</td>\n";
-	}
-      # Watch
-      if (user_ismember($group_id))
-	{
-	  $thisuser = user_getid();
-	  if ($row_memb['user_id'] != $thisuser && !trackers_data_is_watched($thisuser,$row_memb['user_id'],$group_id))
+          # Skills
+	  if ($row_memb['people_view_skills'] == 1)
 	    {
-	      # permit to add a watchee only if not already in the watched list
-	      print "\t\t<td align=\"middle\"><a href=\"".$GLOBALS['sys_home']."my/groups.php?func=addwatchee&amp;group_id=$group_id&amp;watchee_id=".$row_memb['user_id']."\">"._("Watch partner")."</a></td>\n";
+	      print "\t\t<td align=\"middle\"><a href=\"".$GLOBALS['sys_home']."people/resume.php?user_id=".$row_memb['user_id']."\">"._("View Skills")."</a></td>\n";
 	    }
 	  else
 	    {
-	      print "\t\t<td align=\"middle\">---</td>\n";
+	      print "\t\t<td align=\"middle\">"._("Set to private")."</td>\n";
 	    }
+          # Watch
+	  if (user_ismember($group_id))
+	    {
+	      $thisuser = user_getid();
+	      if ($row_memb['user_id'] != $thisuser && !trackers_data_is_watched($thisuser,$row_memb['user_id'],$group_id))
+		{
+                  # permit to add a watchee only if not already in the watched list
+		  print "\t\t<td align=\"middle\"><a href=\"".$GLOBALS['sys_home']."my/groups.php?func=addwatchee&amp;group_id=$group_id&amp;watchee_id=".$row_memb['user_id']."\">"._("Watch partner")."</a></td>\n";
+		}
+	      else
+		{
+		  print "\t\t<td align=\"middle\">---</td>\n";
+		}
+	    }
+	  print "\t<tr>\n";
 	}
-      print "\t<tr>\n";
     }
+  print "\t</table>";
 }
-print "\t</table>";
 
 if ($project->getGPGKeyring())
 {

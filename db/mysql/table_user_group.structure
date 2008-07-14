@@ -16,6 +16,7 @@ CREATE TABLE `user_group` (
   `user_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
   `admin_flags` char(16) default NULL,
+  `onduty` tinyint default '1' NOT NULL,
   `privacy_flags` int(1) default '1',
   `forum_flags` int(11) default NULL,
   `bugs_flags` int(11) default NULL,
