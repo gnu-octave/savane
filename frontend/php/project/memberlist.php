@@ -64,7 +64,7 @@ print html_show_displayoptions(sprintf(_("Browse with the %s memberlist."), '<se
 
 if (!member_check(0,$group_id))
 {
-  print '<p>'.sprintf(_("If you would like to contribute to this project by becoming a member, %scontact one of the project admins%s, designated in bold text below."),
+  print '<p>'.sprintf(_("If you would like to contribute to this project by becoming a member, use the %srequest for inclusion%s form."),
 	 '<a href="'.$GLOBALS['sys_home'].'my/groups.php?words='.group_getname($group_id).'#searchgroup">', '</a>').'</p>';
 }
 else
