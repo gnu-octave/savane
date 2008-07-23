@@ -43,13 +43,11 @@ sub GitMakeArea {
         #         /srv/git/sources/project_name/other_module.git (TODO)
 	
 	# Create a repository
-	my $old_umask = umask(0002);
-
 	# Define the git repository we work on
 	$ENV{'GIT_DIR'} = $dir_git;
 
         # --shared sets g+s on directories
-	system('git-init', '--shared');
+	system('git', 'init', '--shared=all');
 	
 	system('chgrp', '-R', $name, $dir_git);
         # needed to make the repo accessible via bare HTTP
@@ -73,7 +71,6 @@ sub GitMakeArea {
 
 	# Clean-up environment
 	delete $ENV{'GIT_DIR'};
-	umask($old_umask);
 
 	return ' '.$dir_git.$warning;	
     }
