@@ -62,7 +62,7 @@ $confirm_hash = md5(strval(time()) . strval(rand()));
 $res_user = db_execute("SELECT * FROM user WHERE user_name=? AND status='A'", array($form_loginname));
 if (db_numrows($res_user) < 1)
 {
-  exit_error(_("Invalid User"), _("This account does exist or has not been activated"));
+  exit_error(_("Invalid User"), _("This account does not exist or has not been activated"));
 }
 $row_user = db_fetch_array($res_user);
 
