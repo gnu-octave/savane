@@ -377,10 +377,18 @@ sub WebCvsMakeAreaSavannahNonGNU {
 
     unless (-e $dir_cvs) {
         CvsMakeAreaSavannah($name,$dir_cvs,$is_public,'web');
-    
+
+	my $ws_type = 'non-gnu';
+	my $type_id = GetGroupSettings($name, 'type');
+	if ($type_id == 6) {
+	    $ws_type = 'translations';
+	}
+	if ($name eq 'www') {
+	    $ws_type = 'www';
+	}
         # perform an initial checkout so that updates happen:
 	# (will also be done at commit time now)
         system ('/usr/bin/curl', 'http://www.gnu.org/new-savannah-project/new.py',
-		'-s', '-F', "type=non-gnu", '-F', "project=$name");
+		'-s', '-F', "type=$ws_type", '-F', "project=$name");
     }
 }
