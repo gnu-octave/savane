@@ -270,31 +270,21 @@ function utils_format_date($timestamp, $format="default")
   # Used by default
   switch ($format)
     {
-    case 'short':
-      {
-	# To be used in tables, nowhere else
-	return strftime('%a %x, %R', $timestamp);
-      }
     case 'minimal':
       {
         # To be used where place is really lacking, like in feature boxes.
         # (Nowhere else, it is too uninformative)
-	return strftime('%x', $timestamp);
+	# Let's use a non-ambiguous format, such as ISO 8601's YYYY-MM-DD extended calendar format
+	# Previously we used %x, where MM and DD can be swapped
+	# depending on locale, and users reported confusion.
+	return strftime('%Y-%m-%d', $timestamp);
       }
+    case 'short':
     default:
       {
-        # Used by default
-	# Mention timezone to non-logged in users or in printer mode.
-	# Logged-in users have this as account setting, so we can assume they
-	# know and dont want time wasted by that
-	if (user_isloggedin() && !defined('PRINTER'))
-	  {
-	    return strftime('%A %x '._("at").' %R', $timestamp);
-	  }
-	else
-	  {
-	    return strftime('%A %x '._("at").' %R %Z', $timestamp);
-	  }
+	# %c  The preferred date and time representation for the current locale.
+	# Cf. strftime(3)
+	return strftime('%c', $timestamp);
       }
     }
 
