@@ -289,11 +289,12 @@ function html_feedback_top()
 
   // Ugh... Actually this is because feedback may be passed through
   // $_GET[] in some situations, which can lead to XSS if the content
-  // is not escaped. On the other hand, no being able to use proper
-  // HTML in feedback is pretty annoying.
+  // is not escaped. We need a proper way to display formatted text to
+  // the user - OR, we need to properly replace pages that pass
+  // 'feedback' as a GET argument (grep 'feedback=').
 
-  #$feedback = markup_basic(htmlspecialchars($feedback));
-  #$ffeedback = markup_basic(htmlspecialchars($ffeedback));
+  $feedback = markup_basic(htmlspecialchars($feedback));
+  $ffeedback = markup_basic(htmlspecialchars($ffeedback));
 
   $script_hide = 'onclick="document.getElementById(\'feedback\').style.visibility=\'hidden\'; document.getElementById(\'feedbackback\').style.visibility=\'visible\';"';
   $script_show = 'onclick="document.getElementById(\'feedback\').style.visibility=\'visible\'; document.getElementById(\'feedbackback\').style.visibility=\'hidden\';"';
