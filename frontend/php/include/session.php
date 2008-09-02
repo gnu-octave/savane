@@ -278,6 +278,12 @@ function session_cookie($name, $value, $cookie_for_a_year=0, $secure=0)
   if (!eregi('[a-z0-9-]\.[a-z0-9-]', $domain))
       $domain = '';
 
+  // Remove the port from the domain name, this is not supported in
+  // cookies :/
+  $port = strpos($domain, ':');
+  if ($port !== false)
+    $domain = substr($domain, 0, $port); 
+
   setcookie($name, $value, $expiration, $path, $domain, $secure);
 }
 
