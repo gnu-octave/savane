@@ -34,7 +34,7 @@ session_require(array('isloggedin'=>'1'));
 
 extract(sane_import('request',
   array('item', 'update', 'newvalue', 'newvaluecheck', 'oldvalue', 'step',
-	'session_hash', 'confirm_hash')));
+	'session_hash', 'confirm_hash', 'form_id')));
 
 if (!$item)
 {
@@ -61,6 +61,9 @@ if ($item == 'delete')
 # Update the database
 if ($update)
 {
+  if (!form_check($form_id))
+    { exit_error(_("Exiting")); }
+
   # Update the database and redirect to account conf page
   if ($item == "realname")
     {
@@ -552,7 +555,7 @@ if ($preamble)
   print '<p>'.$preamble.'</p>';
 }
 
-print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
+print form_header($_SERVER['PHP_SELF'], false, "post");
 print '<span class="preinput">'.$input_title.'</span>';
 
 # Print the usual input unless we have something specific

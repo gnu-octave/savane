@@ -24,10 +24,13 @@ require_once('../../include/init.php');
 require_once('../../include/account.php');
 session_require(array('isloggedin' => 1));
 
-extract(sane_import('post', array('update', 'keys', 'form_authorized_keys')));
+extract(sane_import('post', array('update', 'keys', 'form_authorized_keys', 'form_id')));
 
 if ($update)
 {
+  if (!form_check($form_id))
+    { exit_error(_("Exiting")); }
+
   $keys = '';
   # Build the key string
   # Key limit is set to 25
@@ -104,7 +107,7 @@ site_user_header(array('title' => _("Change Authorized Keys"),
 utils_get_content("account/editsshkeys");
 
 
-print '<form action="editsshkeys.php" method="post">';
+print form_header($_SERVER['PHP_SELF'], false, "post");
 
 print '<h3>'._("Authorized keys:").'</h3>';
 

@@ -119,6 +119,8 @@ function form_footer ($text=false, $submit_name="update")
 # We do need this extra check for anynomous users. Logged in users can forge
 # their id and remove all the form id of their user, if they wish. Its their
 # problem.
+# 
+# form_check is also used as a cross-side request forgery (CSRF) protection.
 function form_check ($form_id)
 {
   if (!empty($GLOBALS['sys_debug_noformcheck']))
