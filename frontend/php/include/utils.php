@@ -1294,7 +1294,7 @@ function fb ($msg, $error=0)
       dbg("Add feedback #".$GLOBALS['feedback_count']);
     }
 
-  $msg .= '<br />';
+  $msg .= "\n";
 
   # feed
   if (!$error)
