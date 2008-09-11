@@ -283,15 +283,18 @@ EOF
 #<savane>
 #</savane>
 EOF
+	close(FILE);
 	open(FILE, "> $dir_cvs/CVSROOT/loginfo");
 	print FILE <<EOF;
 #<savane>
 #</savane>
 EOF
+	close(FILE);
 
 	# if not present, pserver assumes write access for everybody
 	# not in 'readers'
-	open(TOUCH, "> $dir_cvs/CVSROOT/writers"); close(TOUCH);
+	open(TOUCH, "> $dir_cvs/CVSROOT/writers");
+	close(TOUCH);
 
 	chmod(0644, "$dir_cvs/CVSROOT/config");
 	chmod(0644, "$dir_cvs/CVSROOT/passwd");
