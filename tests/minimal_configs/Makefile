@@ -18,49 +18,49 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 PATH:=$(PATH):/usr/local/sbin:/usr/sbin:/sbin
-/tmp/savane:
-	rsync -av --exclude '.svn' . /tmp/savane
-	ln -sf $(CURDIR)/../../frontend/php /tmp/savane/apache2/htdocs
-	mkdir /tmp/savane/apache2/logs
-	mysql_install_db --no-defaults --pid-file=pid --socket=sock --skip-networking --datadir=/tmp/savane/mysql
-	-mkdir /tmp/savane/savane
-	echo '<?php $$sys_dbhost=":/tmp/savane/mysql/sock";' > /tmp/savane/savane/.savane.conf.php
-	echo '$$sys_incdir="'`pwd`'/../../etc/site-specific-content";' >> /tmp/savane/savane/.savane.conf.php
-	echo '#$$sys_debug_on=true;' >> /tmp/savane/savane/.savane.conf.php
-	echo '$$sys_debug_nobasehost=true;' >> /tmp/savane/savane/.savane.conf.php
-	echo '#$$sys_debug_noformcheck=true;' >> /tmp/savane/savane/.savane.conf.php
-	echo 'our $sys_dbparams="mysql_socket=/tmp/savane/mysql/sock";' > /tmp/savane/savane/savane.conf.pl
+/tmp/savane-mini:
+	rsync -av --exclude '.svn' . /tmp/savane-mini
+	ln -sf $(CURDIR)/../../frontend/php /tmp/savane-mini/apache2/htdocs
+	mkdir /tmp/savane-mini/apache2/logs
+	mysql_install_db --no-defaults --pid-file=pid --socket=sock --skip-networking --datadir=/tmp/savane-mini/mysql
+	-mkdir /tmp/savane-mini/savane
+	echo '<?php $$sys_dbhost=":/tmp/savane-mini/mysql/sock";' > /tmp/savane-mini/savane/.savane.conf.php
+	echo '$$sys_incdir="'`pwd`'/../../etc/site-specific-content";' >> /tmp/savane-mini/savane/.savane.conf.php
+	echo '#$$sys_debug_on=true;' >> /tmp/savane-mini/savane/.savane.conf.php
+	echo '$$sys_debug_nobasehost=true;' >> /tmp/savane-mini/savane/.savane.conf.php
+	echo '#$$sys_debug_noformcheck=true;' >> /tmp/savane-mini/savane/.savane.conf.php
+	echo 'our $sys_dbparams="mysql_socket=/tmp/savane-mini/mysql/sock";' > /tmp/savane-mini/savane/savane.conf.pl
 database:
-	cd ../.. && ./configure --sysconfdir=/tmp/savane --with-db-options="-S /tmp/savane/mysql/sock"
+	cd ../.. && ./configure --sysconfdir=/tmp/savane-mini --with-db-options="-S /tmp/savane-mini/mysql/sock"
 	make -C ../../frontend/php/images
-	for i in 1 2 3 4 5; do if mysqladmin -S /tmp/savane/mysql/sock ping; then break; fi; sleep 1; done
+	for i in 1 2 3 4 5; do if mysqladmin -S /tmp/savane-mini/mysql/sock ping; then break; fi; sleep 1; done
 	cd ../.. && make database
 install:
-	make /tmp/savane
+	make /tmp/savane-mini
 	make start
 	make database
 
 refresh:
-	rsync apache2/apache2.conf /tmp/savane/apache2/
+	rsync apache2/apache2.conf /tmp/savane-mini/apache2/
 
 start: apache2-start mysql-start
 apache2-start:
-	apache2 -f /tmp/savane/apache2/apache2.conf -e debug
+	apache2 -f /tmp/savane-mini/apache2/apache2.conf -e debug
 mysql-start:
 	mysqld_safe --no-defaults --pid-file=pid --socket=sock \
-		--skip-networking --datadir=/tmp/savane/mysql > /dev/null &
+		--skip-networking --datadir=/tmp/savane-mini/mysql > /dev/null &
 
 restart: mysql-stop mysql-start apache2-restart
 apache2-restart:
-	kill -HUP `cat /tmp/savane/apache2/pid`
+	kill -HUP `cat /tmp/savane-mini/apache2/pid`
 
 stop: apache2-stop mysql-stop
 mysql-stop:
-	-mysqladmin -S /tmp/savane/mysql/sock shutdown
+	-mysqladmin -S /tmp/savane-mini/mysql/sock shutdown
 apache2-stop:
-	-kill `cat /tmp/savane/apache2/pid`
+	-kill `cat /tmp/savane-mini/apache2/pid`
 
 uninstall: stop
 #-rm -rf mysql/db
 #-rm -f apache2/logs/*
-	rm -rf /tmp/savane/
+	rm -rf /tmp/savane-mini/
