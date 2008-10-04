@@ -186,8 +186,9 @@ FIXME : this is broken and seems to be due to the kerberos module.
     }
 }
 
-$form_is_valid = $login_is_valid and $pw_is_valid
-  and $email_is_valid and $realname_is_valid;
+# Don't forget parenthesis to avoid precendence issues with 'and'
+$form_is_valid = ($login_is_valid and $pw_is_valid
+		  and $email_is_valid and $realname_is_valid);
 
 if ($form_is_valid)
 {
