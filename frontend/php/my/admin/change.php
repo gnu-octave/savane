@@ -217,10 +217,10 @@ if ($update)
 		  fb(_("Database updated."));
 		  
 		  if (!empty($GLOBALS['sys_https_host']))
-		    { $url = 'https://'.$GLOBALS['sys_https_host'].$GLOBALS['sys_home'].'my/admin/change.php?item=email&update=1&confirm_hash='.$confirm_hash; }
+		    { $url = 'https://'.$GLOBALS['sys_https_host']; }
 		  else
-		    { $url = 'http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'my/admin/change.php?item=email&update=1&confirm_hash='.$confirm_hash; }
-		  
+		    { $url = 'http://'.$GLOBALS['sys_default_domain']; }
+		  $url .= $GLOBALS['sys_home'].'my/admin/change.php?item=email&confirm_hash='.$confirm_hash;
 		  $message = sprintf(_("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:"), $GLOBALS['sys_name']) . "\n\n"
 		    . $url."&step=confirm\n\n"
 		    . sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
@@ -267,6 +267,11 @@ if ($update)
 	    }
 	}
       else if ($step == "confirm")
+	{
+	  // Cf. form at the end
+	}
+      // additional step with a direct POST request to avoid CSRF attacks
+      else if ($step == "confirm2")
 	{
 	  $success = false;
 	  
@@ -354,9 +359,10 @@ if ($update)
 	      fb(_("Database updated."));
 	      
 	      if (!empty($GLOBALS['sys_https_host']))
-		{ $url = 'https://'.$GLOBALS['sys_https_host'].$GLOBALS['sys_home'].'my/admin/change.php?item=delete&update=1&confirm_hash='.$confirm_hash; }
+		{ $url = 'https://'.$GLOBALS['sys_https_host']; }
 	      else
-		{ $url = 'http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].'my/admin/change.php?item=delete&update=1&confirm_hash='.$confirm_hash; }
+		{ $url = 'http://'.$GLOBALS['sys_default_domain']; }
+	      $url .= $GLOBALS['sys_home'].'my/admin/change.php?item=delete&confirm_hash='.$confirm_hash;
 	      
 	      $message = sprintf(_("Someone, presumably you, has requested your %s account deletion.\nIf it wasn't you, it probably means that someone stole your account.\n\n"), $GLOBALS['sys_name']).
 		sprintf(_("If you did request your %s account deletion, visit the following URL to finish\nthe deletion process:"), $GLOBALS['sys_name']) . "\n\n"
@@ -384,6 +390,11 @@ if ($update)
 	    }
 	}
       else if ($step == "confirm")
+	{
+	  // Cf. form below
+	}
+      // additional step with a direct POST request to avoid CSRF attacks
+      else if ($step == "confirm2")
 	{
 	  $success = 1;
 	  $res_user = db_execute("SELECT * FROM user WHERE confirm_hash=?", array($confirm_hash));
@@ -525,6 +536,14 @@ else if ($item == "email")
       $input_title = _('New Email Address:');
       $preamble = _("Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file.").'</p><p>'._("We need to maintain an accurate email address for each user due to the level of access we grant via this account. If we need to reach a user for issues related to this server, it is important that we be able to do so.").'</p><p>'._("Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.");
     }
+  else if ($step == "confirm")
+    {
+      $title = _("Confirm Email change");
+      $preamble = _('Click update to confirm your e-mail change');
+      $input_title = _('Confirmation hash:');
+      $input_specific = "<input type='text' readonly='readonly' name='confirm_hash' value='$confirm_hash' />";
+      $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
+    }
 }
 else if ($item == "delete")
 {
@@ -537,6 +556,14 @@ else if ($item == "delete")
       $input_title = _('Do you really want to delete your user account:');
       $input_specific = form_input("checkbox", "newvalue", "deletionconfirmed").' '._("Yes, I really do");
       $preamble = _("This process will require email confirmation.");
+    }
+  else if ($step == "confirm")
+    {
+      $title = _("Confirm account deletion");
+      $preamble = _('Click update to confirm your account deletion');
+      $input_title = _('Confirmation hash:');
+      $input_specific = "<input type='text' readonly='readonly' name='confirm_hash' value='$confirm_hash' />";
+      $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
     }
 }
 
