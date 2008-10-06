@@ -22,7 +22,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 $is_admin_page='y';
 
 extract(sane_import('request', array(
@@ -114,10 +113,13 @@ if ($group_id && user_ismember($group_id,'A'))
 	{
 
 # A form was posted to create a canned response
-	  $sql="INSERT INTO ".ARTIFACT."_canned_responses (group_id,title,body,order_id) ".
-	    " VALUES ('$group_id','". htmlspecialchars($title) .
-	    "','". htmlspecialchars($body) ."','".addslashes($order_id)."')";
-	  $result=db_query($sql);
+	  $result = db_autoexecute(ARTIFACT.'_canned_responses',
+            array(
+	      'group_id' => $group_id,
+	      'title' => htmlspecialchars($title),
+	      'body' => htmlspecialchars($body),
+	      'order_id' => $order_id,
+            ), DB_AUTOQUERY_INSERT);
 	  if (!$result)
 	    {
 	      fb(_("Error inserting canned bug response"),1);
@@ -131,10 +133,14 @@ if ($group_id && user_ismember($group_id,'A'))
       else if ($update_canned)
 	{
 # A form was posted to update a canned response
-	  $sql="UPDATE ".ARTIFACT."_canned_responses ".
-	    "SET title='". htmlspecialchars($title) ."', body='". htmlspecialchars($body)."', order_id='".addslashes($order_id)."'".
-	    " WHERE group_id='$group_id' AND bug_canned_id='$item_canned_id'";
-	  $result=db_query($sql);
+	  $result = db_autoexecute(ARTIFACT.'_canned_responses',
+	    array(
+	      'title' => htmlspecialchars($title),
+	      'body' => htmlspecialchars($body),
+	      'order_id' => $order_id,
+	    ), DB_AUTOQUERY_UPDATE,
+	    'group_id = ? AND bug_canned_id = ?',
+	    array($group_id,  $item_canned_id));
 	  if (!$result)
 	    {
 	      fb(_("Error updating canned bug response"),1);
@@ -165,20 +171,28 @@ if ($group_id && user_ismember($group_id,'A'))
 
   if ($to != $from) {
 # A form was posted to update or create a transition
-    $sql="SELECT from_value_id,to_value_id,is_allowed,notification_list ".
-      "FROM trackers_field_transition ".
-      "WHERE group_id='$group_id' AND artifact='".ARTIFACT."' AND field_id='$field_id' AND from_value_id='$from' AND to_value_id='$to' ";
-    $res_value = db_query($sql);
+    $res_value = db_execute(
+     "SELECT from_value_id, to_value_id, is_allowed,notification_list
+      FROM trackers_field_transition
+      WHERE group_id = ? AND artifact = ? AND field_id = ?
+        AND from_value_id = ? AND to_value_id = ?",
+     array($group_id, ARTIFACT, $field_id,
+	   $from, $to));
     $rows=db_numrows($res_value);
 
 # If no entry for this transition, create one
     if ($rows == 0)
       {
-
-	$sql = "INSERT INTO  trackers_field_transition ".
-	  "(group_id,artifact,field_id,from_value_id,to_value_id,is_allowed,notification_list) ".
-	  "VALUES ('$group_id','".ARTIFACT."','$field_id','$from','$to','$allowed','$mail_list')";
-	$result = db_query($sql);
+	$result = db_autoexecute('trackers_field_transition',
+	  array(
+	    'group_id' => $group_id,
+	    'artifact' => ARTIFACT,
+	    'field_id' => $field_id,
+	    'from_value_id' => $from,
+	    'to_value_id' => $to,
+	    'is_allowed' => $allowed,
+	    'notification_list' => $mail_list,
+          ), DB_AUTOQUERY_INSERT);
 
 	if (db_affected_rows($result) < 1)
 	  {  fb(_("Insert failed."), 1); }
@@ -188,10 +202,14 @@ if ($group_id && user_ismember($group_id,'A'))
     else
       {
 # update the existing entry for this transition
-	$sql = "UPDATE trackers_field_transition ".
-	  "SET is_allowed='$allowed',notification_list='$mail_list' ".
-	  "WHERE group_id='$group_id' AND artifact='".ARTIFACT."' AND field_id='$field_id'  AND from_value_id='$from' AND to_value_id='$to' ";
-	$result = db_query($sql);
+	$result = db_autoexecute('trackers_field_transition',
+	   array(
+	     'is_allowed' => $allowed,
+	     'notification_list' => $mail_list,
+	   ), DB_AUTOQUERY_UPDATE,
+	   'group_id = ? AND artifact = ? AND field_id = ?
+                         AND from_value_id = ? AND to_value_id = ?',
+	   array($group_id, ARTIFACT, $field_id, $from, $to));
 
 	if (db_affected_rows($result) < 1)
 	  {
@@ -453,10 +471,9 @@ if ($group_id && user_ismember($group_id,'A'))
         {
 
 # First get all the value_id - value pairs
-	  $sql="SELECT value_id,value ".
-	    "FROM ".ARTIFACT."_field_value ".
-	    "WHERE group_id='".addslashes($group_id)."' AND bug_field_id='".addslashes($field_id)."'";
-          $res_value = db_query($sql);
+          $res_value = db_execute('SELECT value_id,value FROM '.ARTIFACT.'_field_value
+				   WHERE group_id = ? AND bug_field_id = ?',
+				  array($group_id, $field_id));
           $rows=db_numrows($res_value);
 
           if ($rows > 0)
@@ -471,10 +488,9 @@ if ($group_id && user_ismember($group_id,'A'))
             }
           else
             {
-	      $sql="SELECT value_id,value ".
-		"FROM ".ARTIFACT."_field_value ".
-		"WHERE group_id=100 AND bug_field_id='".addslashes($field_id)."'";
-	      $res_value = db_query($sql);
+	      $res_value = db_execute('SELECT value_id,value FROM '.ARTIFACT.'_field_value
+				       WHERE group_id = 100 AND bug_field_id = ?',
+				      array($field_id));
 	      $rows=db_numrows($res_value);
 
 	      if ($rows > 0)
@@ -489,11 +505,10 @@ if ($group_id && user_ismember($group_id,'A'))
 		}
 	    }
 
-          $sql="SELECT transition_id,from_value_id,to_value_id,is_allowed,notification_list ".
-	    "FROM trackers_field_transition ".
-	    "WHERE group_id='".addslashes($group_id)."' AND artifact='".ARTIFACT."' AND field_id='".addslashes($field_id)."' ";
-
-          $result = db_query($sql);
+          $result = db_execute('SELECT transition_id,from_value_id,to_value_id,is_allowed,notification_list
+			        FROM trackers_field_transition
+			        WHERE group_id = ? AND artifact = ? AND field_id = ?',
+			       array($group_id, ARTIFACT, $field_id));
           $rows = db_numrows($result);
 
           if ($result && $rows > 0)
@@ -699,8 +714,9 @@ if ($group_id && user_ismember($group_id,'A'))
       */
       trackers_header_admin(array ('title'=>_("Create/Modify Canned Responses")));
 
-      $sql="SELECT * FROM ".ARTIFACT."_canned_responses WHERE group_id='$group_id' ORDER BY order_id ASC";
-      $result=db_query($sql);
+      $result=db_execute('SELECT * FROM '.ARTIFACT.'_canned_responses
+			  WHERE group_id = ? ORDER BY order_id ASC',
+			 array($group_id));
       $rows=db_numrows($result);
 
       if($result && $rows > 0)
@@ -771,7 +787,10 @@ if ($group_id && user_ismember($group_id,'A'))
       $sql="SELECT bug_canned_id,title,body,order_id FROM ".ARTIFACT."_canned_responses WHERE ".
 	"group_id='".addslashes($group_id)."' AND bug_canned_id='".addslashes($item_canned_id)."'";
 
-      $result=db_query($sql);
+      $result=db_execute('SELECT bug_canned_id,title,body,order_id
+			  FROM '.ARTIFACT.'_canned_responses
+			  WHERE group_id = ? AND bug_canned_id = ?',
+			 array($group_id, $item_canned_id));
 
       if (!$result || db_numrows($result) < 1)
 	{
