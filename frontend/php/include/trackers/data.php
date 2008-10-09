@@ -1783,14 +1783,14 @@ function trackers_data_handle_update ($group_id,
       while (list(,$thiscanned) = each($canned_response))
         {
 	  $res3 = db_execute("SELECT * FROM ".ARTIFACT."_canned_responses WHERE bug_canned_id=?",
-			     array(addslashes($thiscanned)));
+			     array($thiscanned));
 	  
 	  if ($res3 && db_numrows($res3) > 0)
 	    {
               # add a data separator
 	      if ($details)
 		{ $details .= "\n\n";  }
-	      $details .= addslashes(utils_unconvert_htmlspecialchars(db_result($res3,0,'body')));
+	      $details .= utils_unconvert_htmlspecialchars(db_result($res3, 0, 'body'));
 	      fb(_("Canned response used"));
 	    }
 	  else
