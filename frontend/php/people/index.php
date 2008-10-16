@@ -25,7 +25,7 @@ register_globals_off();
 require_once('../include/people/general.php');
 
 
-extract(sane_import('get', array('group_id', 'group_name', 'category_id', 'type_id')));
+extract(sane_import('get', array('category_id', 'type_id')));
 
 if ($group_id)
 {
