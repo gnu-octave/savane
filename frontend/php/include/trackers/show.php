@@ -335,8 +335,10 @@ function show_item_list_sober ($result_arr,
 	      for ($i = 0; $i < $result_rows; $i++)
 		{
 		  $thisitem_id = db_result($result_context, $i, 'recipe_id');
-		  $thisaudience_results[$thisitem_id] =
-		    strtolower($result_arr[$thisitem_id]["summary"]);
+ 		  #check if $thisitem_id exists in $result_array before adding to $thisaudience_results
+ 		  if(array_key_exists($thisitem_id, $result_arr))
+ 		  { $thisaudience_results[$thisitem_id] =
+ 		    strtolower($result_arr[$thisitem_id]["summary"]); }
 		}
 	      asort($thisaudience_results);
 	      $audience_content = '';
