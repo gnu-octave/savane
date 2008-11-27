@@ -308,7 +308,7 @@ if ($update)
   )));
 
   # If the group entry do not exists, create it
-  if (!db_result(db_execute("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id=?", array($group_id)), 0, "groups_default_permissions_id"))
+  if (!db_numrows(db_execute("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id=?", array($group_id))))
     {
       db_execute("INSERT INTO groups_default_permissions (group_id) VALUES (?)", array($group_id));
     }
