@@ -14,7 +14,7 @@ EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
 
 database:
 	( \
-	  echo "CREATE DATABASE $(SV_DB_NAME);"; \
+	  echo "CREATE DATABASE $(SV_DB_NAME) DEFAULT CHARACTER SET utf8;"; \
 	  echo "USE $(SV_DB_NAME);"; \
 	  cat db/mysql/table_*.structure; \
 	  cat db/mysql/table_*.initvalues; \

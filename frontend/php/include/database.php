@@ -52,6 +52,8 @@ function db_connect()
     echo "Until this problem get fixed, you will not be able to use this site.";
     exit;
   }
+
+  mysql_set_charset('utf8', $conn);
 }
 
 // sprinf-like function to auto-escape SQL strings

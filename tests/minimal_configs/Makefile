@@ -27,6 +27,7 @@ PATH:=$(PATH):/usr/local/sbin:/usr/sbin:/sbin
 	echo '<?php $$sys_dbhost=":/tmp/savane-mini/mysql/sock";' > /tmp/savane-mini/savane/.savane.conf.php
 	echo '$$sys_incdir="'`pwd`'/../../etc/site-specific-content";' >> /tmp/savane-mini/savane/.savane.conf.php
 	echo '#$$sys_debug_on=true;' >> /tmp/savane-mini/savane/.savane.conf.php
+	echo '# No redirect to brother website' >> /tmp/savane-mini/savane/.savane.conf.php
 	echo '$$sys_debug_nobasehost=true;' >> /tmp/savane-mini/savane/.savane.conf.php
 	echo '#$$sys_debug_noformcheck=true;' >> /tmp/savane-mini/savane/.savane.conf.php
 	echo 'our $sys_dbparams="mysql_socket=/tmp/savane-mini/mysql/sock";' > /tmp/savane-mini/savane/savane.conf.pl
@@ -47,8 +48,10 @@ start: apache2-start mysql-start
 apache2-start:
 	apache2 -f /tmp/savane-mini/apache2/apache2.conf -e debug
 mysql-start:
+#	Use max_allowed_packet=32M to import big databases when testing
 	mysqld_safe --no-defaults --pid-file=pid --socket=sock \
-		--skip-networking --datadir=/tmp/savane-mini/mysql > /dev/null &
+		--skip-networking -O max_allowed_packet=32M \
+		--datadir=/tmp/savane-mini/mysql > /dev/null &
 
 restart: mysql-stop mysql-start apache2-restart
 apache2-restart:
