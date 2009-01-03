@@ -38,6 +38,8 @@
 header('Content-type: text/plain;charset=UTF-8');
 include('include/init.php');
 
+mysql_set_charset('latin1');
+
 $tables = array
   (
    'bugs' => array('custom_ta1', 'details', 'originator_name', 'summary'),

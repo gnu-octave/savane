@@ -53,7 +53,9 @@ function db_connect()
     exit;
   }
 
-  mysql_set_charset('utf8', $conn);
+  # Not available in Etch (5.2.0 < 5.2.3...) - using a work-around meanwhile
+  # mysql_set_charset('utf8', $conn);
+  mysql_query('SET NAMES utf8');
 }
 
 // sprinf-like function to auto-escape SQL strings
