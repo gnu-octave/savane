@@ -35,6 +35,7 @@ register_globals_off();
 extract(sane_import('post',
   array('update', 'form_id',
 	'form_loginname', 'form_pw', 'form_pw2', 'form_realname', 'form_email',
+	'form_year',
 	'form_usepam')));
 
 if (isset($GLOBALS['sys_https_host']) && !session_issecure())
@@ -60,11 +61,22 @@ $login_is_valid = false;
 $pw_is_valid = false;
 $email_is_valid = false;
 $realname_is_valid = false;
+$antispam_is_valid = false;
 
 if (!empty($update) and form_check($form_id))
 // Form is submitted
 {
   // feedback included by the check function
+
+  // Temporary spam block
+  if ($form_year != 1983)
+    {
+      fb(_("Please read carefully!"),1);
+    }
+  else
+    {
+      $antispam_is_valid = true;
+    }
 
   // Login
   if ($form_loginname == '')
@@ -188,7 +200,8 @@ FIXME : this is broken and seems to be due to the kerberos module.
 
 # Don't forget parenthesis to avoid precendence issues with 'and'
 $form_is_valid = ($login_is_valid and $pw_is_valid
-		  and $email_is_valid and $realname_is_valid);
+		  and $email_is_valid and $realname_is_valid
+		  and $antispam_is_valid);
 
 if ($form_is_valid)
 {
@@ -288,6 +301,10 @@ else
   print '<p><span class="preinput">'._("Email Address:").'</span><br />&nbsp;&nbsp;';
   print '<input size="30" type="text" name="form_email" value="'.$form_email.'" />';
   print '<br /><span class="text">'._("This email address will be verified before account activation.").'</span></p>';
+
+  print '<p><span class="preinput">'._("Antispam test:").'</span><br />&nbsp;&nbsp;';
+  print '<input size="30" type="text" name="form_year" value="'.$form_year.'" />';
+  print '<br /><span class="text">'._("In what year was the <a href='http://www.gnu.org/gnu/gnu-history.html'>GNU project</a> announced?").'</span></p>';
 
   # Extension for PAM authentication
   # FIXME: for now, only the PAM authentication that exists is for AFS.
