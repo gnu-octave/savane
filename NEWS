@@ -1,15 +1,44 @@
-Clean-up branch - v.3.1-zeta
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Clean-up branch - v.3.1-cleanup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [CONFIGURATION]
 
 * .mo (translation files) will be installed in /usr/local/share/locale
   by default, and the $sys_localedir configuration variable should be
-  set accordingly. See an explanation in configure/INSTALLNLSDIR.
+  set accordingly.
+
+* $sys_appdatadir (default "/var/lib/savane") and
+  $sys_trackers_attachments_dir (default
+  "$sys_appdatadir/trackers_attachments")
+
 
 [SITE SPECIFIC CONTENT]
 
-* git.txt added: displayed in /git/index.php
+* git/index.txt added: displayed in /git/index.php
+
+* hg/index.txt added: displayed in /hg/index.php
+
+* bzr/index.txt added: displayed in /bzr/index.php
+
+
+[FRONTEND]
+
+* New TextCHA antispam in the user registration process.
+
+
+[BACKEND]
+
+* Git, Mercurial and Bazaar support.	
+
+
+[DATABASE STRUCTURE]
+
+* Store trackers attachments on the filesystem. On large sites such as
+  Savannah, there are now ~17000 files totalling >400MB, which becomes
+  inconvient to handle (huge dumpfiles, etc.). The migration script
+  stores files in /var/lib/savane/trackers_attachments by
+  default. Files are named after their file_id, to avoid naming issues
+  (duplicates, security, simplicity, etc.)
 
 
 Unreleased, Changes from 2.0 to 3.0:

@@ -2687,8 +2687,9 @@ function trackers_data_is_watched ($user_id, $watchee_id, $group_id)
 }
 
 
-function trackers_data_delete_file($group_id, $item_id, $item_file_id)
+function trackers_data_delete_file($group_id, $item_id, $file_id)
 {
+  global $sys_trackers_attachments_dir;
   # Make sure the attachment belongs to the group
   $res = db_execute("SELECT bug_id from ".ARTIFACT." WHERE bug_id=? AND group_id=?",
 		    array($item_id, $group_id));
@@ -2699,17 +2700,21 @@ function trackers_data_delete_file($group_id, $item_id, $item_file_id)
     }
 
   # Now delete the attachment
-  $result = db_execute("DELETE FROM trackers_file WHERE item_id=? AND file_id=?",
-		       array($item_id, $item_file_id));
+  if (unlink($sys_trackers_attachments_dir . '/' . $file_id))
+    {
+      $result = db_execute("DELETE FROM trackers_file WHERE item_id=? AND file_id=?",
+			   array($item_id, $file_id));
+    }
+
   if (!$result)
     {
-      "Error deleting attachment #$item_file_id: ".db_error($res);
+      "Error deleting attachment #$file_id: ".db_error($res);
     }
   else
     {
       fb(_("File successfully deleted"));
       trackers_data_add_history("Attached File",
-				"#".$item_file_id,
+				"#".$file_id,
 				"Removed",
 				$item_id,
 				0,0,1);
