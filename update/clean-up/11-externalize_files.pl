@@ -33,6 +33,11 @@ system('mkdir', '-m', '775', '/var/lib/savane/trackers_attachments');
 system('chown', "root:$httpd_user", '/var/lib/savane/trackers_attachments');
 
 our $dbd;
+
+# Clean-up: drop empty files
+$dbd->do("DELETE FROM trackers_file WHERE LENGTH(file)=0");
+
+# Extract all files
 my $hop = $dbd->prepare("SELECT file_id,artifact,item_id,date,filename,filesize,file
 	FROM trackers_file");
 # Getting one row at a time rather than caching 500MB on the client)
@@ -41,7 +46,7 @@ $hop->execute;
 while (my $row = $hop->fetchrow_hashref) {
     #print $row->{'file_id'} . " ($row->{'filename'})\n";
     my $path = "$base_dir/$row->{'file_id'}";
-    open(OUT, ">$path) or die $!;
+    open(OUT, ">$path") or die $!;
     print OUT $row->{'file'};
     close(OUT);
     my $stamp = strftime "%Y%m%d%H%M.%S", localtime($row->{'date'});

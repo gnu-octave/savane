@@ -53,9 +53,18 @@ function db_connect()
     exit;
   }
 
-  # Not available in Etch (5.2.0 < 5.2.3...) - using a work-around meanwhile
-  # mysql_set_charset('utf8', $conn);
-  mysql_query('SET NAMES utf8');
+  if (version_compare(PHP_VERSION, '5.2.3', '>='))
+    {
+      mysql_set_charset('utf8', $conn);
+    }
+  else
+    {
+      // Not available in Etch (5.2.0 < 5.2.3...) - using a
+      // work-around meanwhile. Apparently this means
+      // mysql_real_escape_string() isn't aware of the charset, hence
+      // why this isn't recommended.
+      mysql_query('SET NAMES utf8');
+    }
 }
 
 // sprinf-like function to auto-escape SQL strings

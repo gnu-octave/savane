@@ -58,7 +58,7 @@ if ($result && db_numrows($result) > 0) {
 
 # ---
 
-$result = db_execute("SELECT description,file,filename,filesize,filetype FROM trackers_file WHERE file_id=? LIMIT 1",
+$result = db_execute("SELECT description,filename,filesize,filetype FROM trackers_file WHERE file_id=? LIMIT 1",
 		     array($file_id));
 
 if ($result && db_numrows($result) > 0) 
@@ -79,15 +79,19 @@ if ($result && db_numrows($result) > 0)
       exit_error(_("The filename in the url does not match the filename registered in the database"));
     }
 
-  
+  $path = $sys_trackers_attachments_dir . '/' . $file_id;
+  if (!is_readable($path))
+    {
+      exit_error(_("The file can't be found."));
+    }
+
   # Download the patch with the correct filetype
   header('Content-Type: '.db_result($result,0,'filetype'));
   header('Content-Length: '.db_result($result,0,'filesize'));
   header('Content-Disposition: filename='.db_result($result,0,'filename'));
   header('Content-Description: '. db_result($result,0,'description'));
-  
-  print db_result($result,0,'file');
-  
+  # Dump file to the browser
+  readfile($sys_trackers_attachments_dir . '/' . $file_id);
 } 
 else
 {

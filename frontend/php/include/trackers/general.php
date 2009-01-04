@@ -1422,13 +1422,16 @@ function trackers_attach_file($item_id,
                               $file_description,
 			      &$changes)
 {
-
+  global $sys_trackers_attachments_dir;
 
   $user_id = (user_isloggedin() ? user_getid(): 100);
 
-  # Open the file
-  $data = fopen($input_file, 'r');
-  if (!$data)
+  if (!is_writable($sys_trackers_attachments_dir))
+    {
+      fb(sprintf(_("The upload directory '%s' is not writable."), $sys_trackers_attachments_dir), 1);
+      return false;
+    }
+  if (!is_uploaded_file($input_file))
     {
       fb(sprintf(_("File %s not attached: unable to open it"), $input_file_name), 1);
       return false;
@@ -1438,7 +1441,7 @@ function trackers_attach_file($item_id,
   # It could not be inferior to 0. If it is, someone obviously find a way
   # to tamper, ignore the file
   $current_upload_size = $GLOBALS['current_upload_size'];
-  unset($current_upload_size_comment);
+  $current_upload_size_comment = '';
   if ($current_upload_size < 0)
     {
       fb(sprintf(_("Unexpected error, disregarding file %s attachement"), $input_file_name), 1);
@@ -1468,12 +1471,16 @@ function trackers_attach_file($item_id,
     fb(sprintf(_("File %s not attached: the allowed upload size is %s kilobytes, after escaping characters as required. This file size is %s kilobytes."), $input_file_name, $GLOBALS['sys_upload_max'], $filesize).$current_upload_size_comment, 1);
     return false;
   }
-  $data = fread($data, filesize($input_file));
   $filesize = round(filesize($input_file) / 1024);
   $uploadsize = $filesize + $current_upload_size;
   if ($uploadsize > $GLOBALS['sys_upload_max'])
     {
       fb(sprintf(_("File %s not attached: the allowed upload size is %s kilobytes. This file size is %s kilobytes."), $input_file_name, $GLOBALS['sys_upload_max'], $filesize).$current_upload_size_comment, 1);
+      return false;
+    }
+  if (filesize($input_file) == 0)
+    {
+      fb(sprintf(_("File %s is empty."), $input_file_name).$current_upload_size_comment, 1);
       return false;
     }
 
@@ -1487,7 +1494,6 @@ function trackers_attach_file($item_id,
       'submitted_by' => $user_id,
       'date' => time(),
       'description' => htmlspecialchars($file_description),
-      'file' => $data,
       'filename' => $input_file_name,
       'filesize' => $input_file_size,
       'filetype' => $input_file_type
@@ -1500,6 +1506,13 @@ function trackers_attach_file($item_id,
     }
   else
     {
+      $file_id = db_insertid($res);
+      if (!move_uploaded_file($input_file, "$sys_trackers_attachments_dir/$file_id"))
+	{
+	  fb(sprintf(_("Error while saving file %s on disk"), $input_file_name), 1);
+	  return false;
+	}
+
       $file_id = db_insertid($res);
       fb(sprintf(_("file #%s attached"), $file_id));
 

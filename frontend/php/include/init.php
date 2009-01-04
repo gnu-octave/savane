@@ -54,6 +54,8 @@ $sys_dbname = 'savane';
 $sys_dbuser = 'root';
 
 $sys_incdir = '/etc/savane/content';
+$sys_appdatadir = '/var/lib/savane';
+$sys_trackers_attachments_dir = $sys_appdatadir . '/trackers_attachments';
 $sys_themedefault = 'Emeraud';
 
 $sys_default_domain = $_SERVER['SERVER_NAME'];
