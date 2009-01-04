@@ -41,6 +41,24 @@ Clean-up branch - v.3.1-cleanup
   (duplicates, security, simplicity, etc.)
 
 
+[DEVELOPER NOTES]
+
+* Code compatible with PHP5
+
+* Cleaner PHP code (less warnings, allowing to look for real issues)
+
+* More secure input validation (prevents SQL injections and CSRF);
+  works with register_globals=off and magic_quotes=off.
+
+* Test Savane on http://localhost:50080/ with single line:
+    make -C tests/minimal_configs/
+
+* Build system based on autoconf & automake, plus MakeMaker for the
+  Perl library
+
+* Full UTF-8 database (including declarations and ordering)
+
+
 Unreleased, Changes from 2.0 to 3.0:
 
 

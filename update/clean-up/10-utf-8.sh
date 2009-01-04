@@ -76,10 +76,11 @@ mysql_query information_schema "SELECT \`TABLE_NAME\` FROM \`TABLES\` WHERE \`TA
 done
 echo
 echo "Done!"
+exit
 
+# If you're infortunate enough to have messed the CHAR() fields
+# (i.e. you're a Savane developper), you'll have to do things like:
 
-# If you're infortunate enough to mess the CHAR() fields, you'll have
-# to do things like:
 #UPDATE user_group SET admin_flags=replace(admin_flags, "\0", "");
 #UPDATE bugs_report SET scope=replace(scope, "\0", "");
 #UPDATE cookbook_field_usage SET transition_default_auth=replace(transition_default_auth, "\0", "");
@@ -88,3 +89,13 @@ echo "Done!"
 #UPDATE support_report SET scope=replace(scope,"\0", "");
 #UPDATE task_report SET scope=replace(scope,"\0", "");
 #UPDATE user SET email_hide=replace(email_hide,"\0", "");
+#UPDATE bugs SET privacy=replace(privacy,"\0", "");
+#UPDATE task SET privacy=replace(privacy,"\0", "");
+#UPDATE support SET privacy=replace(privacy,"\0", "");
+#UPDATE patch SET privacy=replace(privacy,"\0", "");
+#UPDATE user_queue SET action=replace(action,"\0","");
+#...
+
+# Or automatically:
+#mysql information_schema -B -e 'SELECT `TABLE_NAME`, `COLUMN_NAME` FROM COLUMNS WHERE `TABLE_SCHEMA` = "savane" AND `DATA_TYPE` = "char";'| tail -n +2 | while read table field; do echo 'SELECT count(*) FROM '$table' WHERE '$field' LIKE "%\0%";'; done
+#mysql information_schema -B -e 'SELECT `TABLE_NAME`, `COLUMN_NAME` FROM COLUMNS WHERE `TABLE_SCHEMA` = "savane" AND `DATA_TYPE` = "char";'| tail -n +2 | while read table field; do echo 'UPDATE '$table' SET '$field' = replace('$field', "\0", "");'; done
