@@ -18,7 +18,6 @@ CREATE TABLE `trackers_file` (
   `submitted_by` int(11) NOT NULL default '0',
   `date` int(11) NOT NULL default '0',
   `description` text NOT NULL,
-  `file` longblob NOT NULL,
   `filename` text NOT NULL,
   `filesize` int(11) NOT NULL default '0',
   `filetype` text NOT NULL,
