@@ -48,12 +48,14 @@ mysql_query information_schema "SELECT \`TABLE_NAME\` FROM \`TABLES\` WHERE \`TA
     echo -n "$table "
     mysql_query $database "ALTER TABLE $table DEFAULT CHARACTER SET utf8;"
     # Columns (only the ones that use charsets, i.e. not integers)
-    mysql_query information_schema "SELECT \`COLUMN_NAME\`, \`COLUMN_TYPE\`, \`DATA_TYPE\` FROM COLUMNS WHERE \`TABLE_SCHEMA\` = '$database' AND \`TABLE_NAME\` = '$table' AND CHARACTER_SET_NAME IS NOT NULL;" \
+    # Using CONCAT('x', ...) to avoid empty fields which 'read' doesn't like
+    mysql_query information_schema "SELECT \`COLUMN_NAME\`, \`COLUMN_TYPE\`, \`DATA_TYPE\`, CONCAT('x', \`COLUMN_DEFAULT\`), \`IS_NULLABLE\` FROM COLUMNS WHERE \`TABLE_SCHEMA\` = '$database' AND \`TABLE_NAME\` = '$table' AND CHARACTER_SET_NAME IS NOT NULL;" \
 	| tail -n +2 \
 	| (
 	tobin=""
 	toutf8=""
-	while read column type data_type; do
+	while read column type data_type default is_nullable; do
+	    default=${default#x}
 	    # Don't convert fixed-length CHAR() types or we'll get trailing \0
 	    # Plus they only contain small ASCII strings, no conversion happens
 	    if [ "$data_type" != "char" ]; then
@@ -62,11 +64,24 @@ mysql_query information_schema "SELECT \`TABLE_NAME\` FROM \`TABLES\` WHERE \`TA
 		else
 		    tobin="$tobin,MODIFY \`$column\` $type CHARACTER SET binary"
 		fi
+		if [ "$default" != 'NULL' ]; then
+		    tobin="$tobin DEFAULT '$default'"
+		fi
+		if [ "$is_nullable" == 'NO' ]; then
+		    tobin="$tobin NOT NULL"
+		fi
 	    fi
+
 	    if [ -z "$toutf8" ]; then
 		toutf8="MODIFY \`$column\` $type CHARACTER SET utf8"
 	    else
 		toutf8="$toutf8,MODIFY \`$column\` $type CHARACTER SET utf8"
+	    fi
+	    if [ "$default" != 'NULL' ]; then
+		toutf8="$toutf8 DEFAULT '$default'"
+	    fi
+	    if [ "$is_nullable" == 'NO' ]; then
+		toutf8="$toutf8 NOT NULL"
 	    fi
 	done
         # Variant from documentation, to avoid converting primary keys to BLOB, which is forbidden
