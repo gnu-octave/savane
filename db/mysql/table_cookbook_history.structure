@@ -15,7 +15,7 @@ CREATE TABLE `cookbook_history` (
   `bug_history_id` int(11) NOT NULL auto_increment,
   `bug_id` int(11) NOT NULL default '0',
   `field_name` text NOT NULL,
-  `old_value` text NOT NULL,
+  `old_value` text,
   `new_value` text NOT NULL,
   `mod_by` int(11) NOT NULL default '0',
   `date` int(11) default NULL,

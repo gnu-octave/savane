@@ -61,7 +61,7 @@ my $initvalues_suffix=".initvalues";
 # Conf to be edited
 
 # Path to the db directory
-my $output_path="/home/projects/svn.gna.org/savane/db/mysql";
+my $output_path="/usr/src/savane/db/mysql";
 # Tables that will have no initvalues in anyway
 # Unused for now
 #my %table_with_no_initvalues;
@@ -104,15 +104,15 @@ while (my $table = $hop -> fetchrow_array) {
     print "Extract $table structure... ";
     BuildHeader($table, $structure_suffix);
     my $dumpfile = "$output_path/".$table_prefix.$table.$structure_suffix;
-    `mysqldump --compatible="mysql323,mysql40" --skip-comments --allow-keywords --compact --no-data --complete-insert $dbname $table -u$dbuser -p$dbpasswd >> $dumpfile`;
+    `mysqldump --compatible="mysql323,mysql40" --skip-comments --allow-keywords --compact --no-data --complete-insert $dbname $table -S /tmp/savane-mini/mysql/sock >> $dumpfile`;
     print "done\n";
 
     # Extract the table init values
-    print "Extract $table initvalues... ";
-    BuildHeader($table, $initvalues_suffix);
-    my $dumpfile = "$output_path/".$table_prefix.$table.$initvalues_suffix;
-    `mysqldump --compatible="mysql323,mysql40" --skip-comments --allow-keywords --compact  --no-create-db --no-create-info --complete-insert $dbname $table -u$dbuser -p$dbpasswd >> $dumpfile`;
-    print "done\n";
+    #print "Extract $table initvalues... ";
+    #BuildHeader($table, $initvalues_suffix);
+    #my $dumpfile = "$output_path/".$table_prefix.$table.$initvalues_suffix;
+    #`mysqldump --compatible="mysql323,mysql40" --skip-comments --allow-keywords --compact  --no-create-db --no-create-info --complete-insert $dbname $table -S /tmp/savane-mini/mysql/sock >> $dumpfile`;
+    #print "done\n";
 }
 
 
