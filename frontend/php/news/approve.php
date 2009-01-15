@@ -54,30 +54,21 @@ if ($group_id && member_check(0, $group_id, 'N3'))
 	{
 	  $fields = array('is_approved' => $status,
                           'date' => time(),
+                          'date_last_edit' => time(),
                           'summary' => htmlspecialchars($summary),
                           'details' => htmlspecialchars($details));
 	  $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
 				   "id=? AND group_id=?", array($id, $for_group_id));
 
 	}
-      else
+      elseif ($status == 0 || $status == 4)
 	{
-	  if ($status == 0)
-	    {
-	      $fields = array('is_approved' => 0,
-			      'summary' => htmlspecialchars($summary),
-			      'details' => htmlspecialchars($details));
-	      $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
-				       "id=? AND group_id=?", array($id, $group_id));
-	    }
-	  elseif ($status == 4)
-	    {
-	      $fields = array('is_approved' => 4,
-			      'summary' => htmlspecialchars($summary),
-			      'details' => htmlspecialchars($details));
-	      $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
-				       "id=? AND group_id=?", array($id, $group_id));
-	    }
+	  $fields = array('is_approved' => $status,
+                          'date_last_edit' => time(),
+			  'summary' => htmlspecialchars($summary),
+			  'details' => htmlspecialchars($details));
+	  $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
+				   "id=? AND group_id=?", array($id, $group_id));
 	}
 
       if (!$result || db_affected_rows($result) < 1)

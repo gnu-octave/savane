@@ -20,13 +20,48 @@
 
 
 require_once('../include/init.php');
-require_once('../include/news/general.php');
 
 if (empty($group_id))
 {
-  exit_no_group();
+  header('HTTP/1.0 404 Not Found');
+  echo _("No such project.");
+  exit;
 }
 
+
+// Cache control
+$result = db_execute("
+  SELECT date_last_edit FROM news_bytes
+  WHERE
+    is_approved <> 4 AND is_approved <> 5
+    AND group_id=?
+  ORDER BY date_last_edit DESC
+  LIMIT 1", array($group_id));
+
+$mtime = 0;
+if ($row = db_fetch_array($result))
+  $mtime = $row['date_last_edit'];
+
+if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']))
+  {
+    $modified_since = $_SERVER['HTTP_IF_MODIFIED_SINCE'];
+    
+    // remove trailing garbage from IE
+    $pos = strpos($modified_since, ';');
+    if ($pos !== false)
+      $modified_since = substr($modified_since, 0, $pos);
+    
+    $iftime = strtotime($modified_since);
+    if ($iftime != -1 && $mtime <= $iftime)
+      {
+	header('HTTP/1.0 304 Not Modified');
+	exit;
+      }
+  }
+header('Last-Modified: ' . date('r', $mtime));
+
+
+require_once('../include/news/general.php');
 $group_obj = project_get_object($group_id);
 
 $result = db_execute("
@@ -40,30 +75,18 @@ $result = db_execute("
   ORDER BY date DESC
   LIMIT 20", array($group_id));
 
-$news = array();
-while ($row = db_fetch_array($result))
-{
-  array_unshift($news,
-    array('id' => "http://$sys_default_domain{$sys_home}forum/forum.php?forum_id={$row['forum_id']}",
-	  'title' => $row['summary'],
-	  'updated' => date('c', $row['date']),
-	  'author' => $row['realname'],
-	  'content' => markup_full(trim($row['details']))));
-}
 
 $id = "http://$sys_default_domain{$sys_home}news/atom.php?group=$group";
 $title = $group_obj->getPublicName()." - News";
-if (count($news) != 0)
-     $last_updated = $news[count($news)-1]['updated'];
-else
-     $last_updated = date('c', 0); # Epoch
-     $is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? true : false;
-     $myself = ($is_https ? 'https://' : 'http://')
-     . $_SERVER['SERVER_NAME']
-     . (((!$is_https && $_SERVER['SERVER_PORT'] == 80)
-	 || ($is_https && $_SERVER['SERVER_PORT'] == 443))
-	? '' : $_SERVER['SERVER_PORT'])
-     . $_SERVER['REQUEST_URI'];
+$last_updated = date('c', $mtime);
+$is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? true : false;
+$myself = ($is_https ? 'https://' : 'http://')
+  . $_SERVER['SERVER_NAME']
+  . (((!$is_https && $_SERVER['SERVER_PORT'] == 80)
+      || ($is_https && $_SERVER['SERVER_PORT'] == 443))
+     ? '' : $_SERVER['SERVER_PORT'])
+  . $_SERVER['REQUEST_URI'];
+
 
 // Feed header
 // Nice doc here: http://www.atomenabled.org/developers/syndication/
@@ -77,20 +100,25 @@ print '<?xml version="1.0" encoding="utf-8"?>
 
 ';
 
-// All news entries
-foreach ($news as $entry)
+while ($row = db_fetch_array($result))
 {
-print "
+  $id = "http://$sys_default_domain{$sys_home}forum/forum.php?forum_id={$row['forum_id']}";
+  $title = $row['summary'];
+  $updated = date('c', $row['date']);
+  $author = $row['realname'];
+  $content = markup_full(trim($row['details']));
+
+  print "
   <entry>
-    <id>{$entry['id']}</id>
-    <link rel='alternate' href='{$entry['id']}'/>
-    <title>{$entry['title']}</title>
-    <updated>{$entry['updated']}</updated>
+    <id>$id</id>
+    <link rel='alternate' href='$id'/>
+    <title>$title</title>
+    <updated>$updated</updated>
     <author>
-      <name>{$entry['author']}</name>
+      <name>$author</name>
     </author>
-    <content type='xhtml' xml:base='{$entry['id']}'>
-      <div xmlns='http://www.w3.org/1999/xhtml'>{$entry['content']}</div>
+    <content type='xhtml' xml:base='$id'>
+      <div xmlns='http://www.w3.org/1999/xhtml'>$content</div>
     </content>
   </entry>
 ";

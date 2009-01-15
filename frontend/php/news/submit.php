@@ -63,6 +63,7 @@ if ($update)
       $fields['submitted_by'] = user_getid();
       $fields['is_approved'] = 5;
       $fields['date'] = time();
+      $fields['date_last_edit'] = $fields['date'];
       $fields['forum_id'] = $new_id;
       $fields['summary'] = htmlspecialchars($summary);
       $fields['details'] = htmlspecialchars($details);
