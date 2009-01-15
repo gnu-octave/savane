@@ -22,6 +22,7 @@
 
 
 require_once('../include/init.php');
+require_once('../include/http.php');
 
 
 if (!$group_id)
@@ -35,6 +36,16 @@ if (!$project->Uses("cvs") && !$project->UsesForHomepage("cvs"))
 {
   exit_error(_("This project has turned off this tool"));
 }
+
+$file = utils_get_content_filename("cvs/index");
+if ($file != null)
+  {
+    /* Get file stat */
+    $stat = stat($file);
+    $mtime = $stat['mtime'];
+    http_exit_if_not_modified($mtime);
+    header('Last-Modified: ' . date('r', $mtime));
+  }
 
 site_project_header(array('group'=>$group_id,'context'=>'cvs'));
 

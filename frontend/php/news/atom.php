@@ -20,6 +20,7 @@
 
 
 require_once('../include/init.php');
+require_once('../include/http.php');
 
 if (empty($group_id))
 {
@@ -41,23 +42,7 @@ $result = db_execute("
 $mtime = 0;
 if ($row = db_fetch_array($result))
   $mtime = $row['date_last_edit'];
-
-if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']))
-  {
-    $modified_since = $_SERVER['HTTP_IF_MODIFIED_SINCE'];
-    
-    // remove trailing garbage from IE
-    $pos = strpos($modified_since, ';');
-    if ($pos !== false)
-      $modified_since = substr($modified_since, 0, $pos);
-    
-    $iftime = strtotime($modified_since);
-    if ($iftime != -1 && $mtime <= $iftime)
-      {
-	header('HTTP/1.0 304 Not Modified');
-	exit;
-      }
-  }
+http_exit_if_not_modified($mtime);
 header('Last-Modified: ' . date('r', $mtime));
 
 

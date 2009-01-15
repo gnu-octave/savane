@@ -35,21 +35,25 @@ function utils_safeinput ($string)
 
 
 # This function permit including site specific content with ease
-function utils_get_content ($file)
+function utils_get_content_filename ($file)
 {
   if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
-    {
-      # there is localized version of the file :
-      include($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']);
-    }
+    // there is localized version of the file :
+    return $GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale'];
   elseif (is_file($GLOBALS['sys_incdir'].'/'.$file.'.txt'))
-    {
-      include($GLOBALS['sys_incdir'].'/'.$file.'.txt');
-    }
+    return $GLOBALS['sys_incdir'].'/'.$file.'.txt';
   else
-    {
-      fb(sprintf(_("Warning: Savane was not able to read \"%s\" site-specific information, please contact administrators"), $file), 1);
-    }
+    return null;
+}
+
+# This function permit including site specific content with ease
+function utils_get_content ($file)
+{
+  $file = utils_get_content_filename($file);
+  if ($file != null)
+    include($file);
+  else
+    fb(sprintf(_("Warning: Savane was not able to read \"%s\" site-specific information, please contact administrators"), $file), 1);
 }
 
 # Make sure that to avoid malicious file paths

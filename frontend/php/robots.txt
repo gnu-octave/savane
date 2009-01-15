@@ -23,3 +23,14 @@ Disallow: /account/login.php
 # Disallow identical pages - less crawler traffic
 Disallow: /*?reload=1
 Disallow: /*?printer=1
+
+# Disallow multi-fields sorts which exhibit thousands of URLs
+Disallow: /*func=browse
+Disallow: /*func=digest
+
+# Disallow those which are hit thousands of time for some reason:
+Disallow: /bugs/?func=search&group=
+Disallow: /cookbook/?func=search&group=
+Disallow: /patch/?func=search&group=
+Disallow: /support/?func=search&group=
+Disallow: /task/?func=search&group=
