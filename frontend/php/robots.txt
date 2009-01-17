@@ -17,6 +17,17 @@ Disallow: /siteadmin/
 # of traffic for nothing
 Disallow: /account/login.php
 
+# There's one page per user and it doesn't contain any indexable
+# content - let's exclude it:
+Disallow: /sendmessage.php
+
+# Disallow those which are hit thousands of time for some reason:
+Disallow: /bugs/?func=search&group=
+Disallow: /cookbook/?func=search&group=
+Disallow: /patch/?func=search&group=
+Disallow: /support/?func=search&group=
+Disallow: /task/?func=search&group=
+
 
 ## Extended syntax ('*' wildcard)
 
@@ -27,10 +38,3 @@ Disallow: /*?printer=1
 # Disallow multi-fields sorts which exhibit thousands of URLs
 Disallow: /*func=browse
 Disallow: /*func=digest
-
-# Disallow those which are hit thousands of time for some reason:
-Disallow: /bugs/?func=search&group=
-Disallow: /cookbook/?func=search&group=
-Disallow: /patch/?func=search&group=
-Disallow: /support/?func=search&group=
-Disallow: /task/?func=search&group=
