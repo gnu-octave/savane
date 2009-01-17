@@ -37,8 +37,10 @@ if (!$project->Uses("cvs") && !$project->UsesForHomepage("cvs"))
   exit_error(_("This project has turned off this tool"));
 }
 
+// Enable cache for this page if the user isn't logged in, because
+// crawlers particularly like it:
 $file = utils_get_content_filename("cvs/index");
-if ($file != null)
+if ($file != null and !user_isloggedin())
   {
     /* Get file stat */
     $stat = stat($file);
