@@ -31,6 +31,9 @@
 // either BINARY fields will be hex-encoded, either BLOB field will
 // get corrupted. So I needed to do that at the SQL level.
 
+// BEWARE: it doesn't support multiple fields in primary keys
+// (e.g. 'bugs_field_usage')
+
 // Usage:
 // SAVANE_CONF=/tmp/savane-mini/savane php test.php
 
@@ -43,7 +46,6 @@ mysql_set_charset('latin1');
 $tables = array
   (
    'bugs' => array('custom_ta1', 'details', 'originator_name', 'summary'),
-   'bugs_field_usage' => array('custom_label', 'custom_description'),
    'bugs_history' => array('new_value', 'old_value'),
    'forum' => array('body', 'subject'),
    'forum_group_list' => array('forum_name'),
@@ -63,7 +65,6 @@ $tables = array
 $pks = array
   (
    'bugs' => 'bug_id',
-   'bugs_field_usage' => 'bug_field_id',
    'bugs_history' => 'bug_history_id',
    'forum' => 'msg_id',
    'forum_group_list' => 'group_forum_id',
