@@ -242,7 +242,7 @@ print '<br />';
 if ($words) {
   $keywords = explode(' ',$words);
   list($kw_sql, $kw_sql_params) = search_keywords_in_fields(
-    $keywords, array('user_name', 'realname'), 'OR');
+    $keywords, array('user_name', 'realname', 'user_id'), 'OR');
   $result = db_execute("SELECT user_id, user_name, realname "
 		       . "FROM user "
 		       . "WHERE $kw_sql AND (status='A') ORDER BY user_name LIMIT 0,26",
