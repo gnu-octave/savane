@@ -71,7 +71,7 @@ if (!empty($update) and form_check($form_id))
   // Temporary spam block
   if ($form_year != 1983)
     {
-      fb(_("Please read carefully!"),1);
+      fb(_("Please answer the antispam test!"),1);
     }
   else
     {
@@ -304,7 +304,7 @@ else
 
   print '<p><span class="preinput">'._("Antispam test:").'</span><br />&nbsp;&nbsp;';
   print '<input size="30" type="text" name="form_year" value="'.$form_year.'" />';
-  print '<br /><span class="text">'._("In what year was the <a href='http://www.gnu.org/gnu/gnu-history.html'>GNU project</a> announced?").'</span></p>';
+  print '<br /><span class="text">'._("In what year was the GNU project announced? (<a href='http://www.gnu.org/gnu/gnu-history.html'>hint</a>)").'</span></p>';
 
   # Extension for PAM authentication
   # FIXME: for now, only the PAM authentication that exists is for AFS.
