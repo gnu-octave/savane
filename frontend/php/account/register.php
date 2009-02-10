@@ -304,7 +304,10 @@ else
 
   print '<p><span class="preinput">'._("Antispam test:").'</span><br />&nbsp;&nbsp;';
   print '<input size="30" type="text" name="form_year" value="'.$form_year.'" />';
-  print '<br /><span class="text">'._("In what year was the GNU project announced? (<a href='http://www.gnu.org/gnu/gnu-history.html'>hint</a>)").'</span></p>';
+  print '<br /><span class="text">'
+    ._("In what year was the GNU project announced?"
+       . " [<a href='http://www.gnu.org/gnu/gnu-history.html'>click for a hint</a>]")
+    . '</span></p>';
 
   # Extension for PAM authentication
   # FIXME: for now, only the PAM authentication that exists is for AFS.
