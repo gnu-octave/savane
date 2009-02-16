@@ -297,7 +297,15 @@ switch ($func)
 			
 		   }
 	       }
-		
+             #copy the previous form values (taking into account dates) to redisplay them and initialize nocache to 0
+             foreach ($vfl as $fieldname => $value)
+               {
+                 if(trackers_data_is_date_field($fieldname))
+                   { list($value, $ok) = utils_date_to_unixtime($value); }
+                 $$fieldname = $value;
+               }
+             $nocache=0;             		
+
 	     include '../include/trackers_run/add.php';
 	     break;
 	   }
