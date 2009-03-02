@@ -237,8 +237,13 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5", $ope
       $select_params = array();
       $from = 'FROM '.$tracker.',groups ';
       $from_params = array();
-      $where = 'WHERE groups.group_id='.$tracker.'.group_id '.
-	'AND '.$tracker.'.status_id=? '.
+      $where = 'WHERE groups.group_id='.$tracker.'.group_id ';
+
+      #If we are dealing with tasks, check if the group has tasks' tracker enabled
+      if ($tracker == "task")
+        $where .= 'AND groups.use_task=1 ';        
+
+      $where .= 'AND '.$tracker.'.status_id=? '.
 	'AND ('.$tracker.'.priority >= ? OR  '.$tracker.'.date > ?) '.$showprivate;
       $where_params = array($openclosed, $threshold, $new_date_limit);
 
