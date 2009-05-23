@@ -243,7 +243,7 @@ else
   <option value="arch"'.(($row_grp['homepage_scm'] == "arch")?" selected=\"selected\"":"").'>'._("GNU Arch").'</option>
   <option value="svn"'.(($row_grp['homepage_scm'] == "svn")?" selected=\"selected\"":"").'>'._("Subversion").'</option>
   <option value="git"'.(($row_grp['homepage_scm'] == "git")?" selected=\"selected\"":"").'>'._("Git").'</option>
-  <option value="hg"'.(($row_grp['homepage_scm'] == "hg")?" selected=\"selected\"":"").'>'._("Mercurial").'</option></select>
+  <option value="hg"'.(($row_grp['homepage_scm'] == "hg")?" selected=\"selected\"":"").'>'._("Mercurial").'</option>
   <option value="bzr"'.(($row_grp['homepage_scm'] == "bzr")?" selected=\"selected\"":"").'>'._("Bazaar").'</option></select>');
 
   html_select_typedir_box("dir_type_homepage",
