@@ -126,6 +126,12 @@ if ($update)
 		 "url_arch_viewcvs",
 		 "url_svn",
 		 "url_svn_viewcvs",
+		 "url_git",
+		 "url_git_viewcvs",
+		 "url_hg",
+		 "url_hg_viewcvs",
+		 "url_bzr",
+		 "url_bzr_viewcvs",
 		 "url_support",
 		 "dir_download",
 		 "url_extralink_documentation");
