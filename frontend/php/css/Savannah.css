@@ -40,14 +40,14 @@ body {
   margin-right: 0;
   margin-bottom: 0;
   font-family: arial,helvetica;
-  color: #333333;
+  color: black;
 /*  background-color: #ffe4b7; */
 /*  background-color: #eae3d7; */
   background-color: #ffffff;
 }
 
-a { text-decoration: none; color: #641212;}
-a:hover { text-decoration: underline; color: #c40f0f; }
+a { text-decoration: underline; color: #641212;}
+a:hover { text-decoration: none; color: #c40f0f; }
 a:active { color: #ff0000; }
 
 .unavailable {
@@ -182,6 +182,11 @@ h5 {
  padding: 5px;
 /*  border: thin dotted #e0c080; */
 }
+
+.menu a { text-decoration: none; color: #641212;}
+.menu a:hover { text-decoration: underline; color: #c40f0f; }
+.menu a:active { color: #ff0000; }
+
 
 .menutitle {
 	font-weight: bold;
