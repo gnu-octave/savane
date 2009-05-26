@@ -278,6 +278,10 @@ li.topmenuitemsubmenu:hover {
 	padding: 1%;
 }
 
+.boxitemalt a { text-decoration: none; color: #641212;}
+.boxitemalt a:hover { text-decoration: underline; color: #c40f0f; }
+.boxitemalt a:active { color: #ff0000; }
+
 .boxhighlight  {	
 	background-color: #ffe0db;
 	border-left: thin dotted #e0c080;
