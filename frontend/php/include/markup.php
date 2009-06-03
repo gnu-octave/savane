@@ -649,9 +649,10 @@ function _markup_inline($line)
   # (do not use utils_emails, this does extensive database
   # search on the string
   # and replace addresses in several fashion. Here we just want to make
-  # a link)
-  $line = eregi_replace("([a-z0-9_+-.]+@([a-z0-9_+-]+\.)+[a-z]+)",
-    utils_email_basic('\1'), $line);
+  # a link). Make sure that 'cvs -d:pserver:anonymous@cvs.sv.gnu.org:/...'
+  # is NOT replaced.
+  $line = preg_replace("/(^|\s)([a-z0-9_+-.]+@([a-z0-9_+-]+\.)+[a-z]+)(\s|$)/i",
+		       '\1' . utils_email_basic('\2') . '\4', $line);
 
   # Links between items
   # FIXME: it should be i18n, but in a clever way, meaning that everytime
