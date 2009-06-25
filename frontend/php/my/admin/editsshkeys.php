@@ -42,7 +42,7 @@ if ($update)
       # Remove useless blank spaces
       $thiskey = trim($thiskey);
       # Remove line breaks
-      $thiskey = str_replace("\n", " ", $thiskey);
+      $thiskey = str_replace("\n", "", $thiskey);
       if ($thiskey != '')
 	{
 	  # test the key with ssh-vulnkey
