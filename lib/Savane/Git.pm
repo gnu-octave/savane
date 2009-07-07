@@ -62,9 +62,9 @@ sub GitMakeArea {
 	#system('chown', "root:$name", ".../$name/");
 
 	# 'git-cvsserver' support
-	system('git-config', 'gitcvs.pserver.enabled', 1);
-	system('git-config', 'gitcvs.ext.enabled', 0);
-	system('git-config', 'gitcvs.dbname', '%G/gitcvs-db/sqlite');
+	system('git config', 'gitcvs.pserver.enabled', 1);
+	system('git config', 'gitcvs.ext.enabled', 0);
+	system('git config', 'gitcvs.dbname', '%G/gitcvs-db/sqlite');
 	my $sqlite_dir = "$dir_git/gitcvs-db";
 	system('mkdir', $sqlite_dir, '-m', '755');
 	system('chown', 'nobody', $sqlite_dir);
