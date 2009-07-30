@@ -23,6 +23,6 @@ bin_SCRIPTS = \
 	misc/sv_spamcheck_monitor \
 	misc/sv_cleaner \
 	misc/sv_spamcheck_scholar \
-	misc/sv_spammer_purge
+	misc/sv_spammers_purge
 
 SUBDIRS = system-specific
