@@ -30,7 +30,7 @@ PATH:=$(PATH):/usr/local/sbin:/usr/sbin:/sbin
 	echo '# No redirect to brother website' >> /tmp/savane-mini/savane/.savane.conf.php
 	echo '$$sys_debug_nobasehost=true;' >> /tmp/savane-mini/savane/.savane.conf.php
 	echo '#$$sys_debug_noformcheck=true;' >> /tmp/savane-mini/savane/.savane.conf.php
-	echo 'our $sys_dbparams="mysql_socket=/tmp/savane-mini/mysql/sock";' > /tmp/savane-mini/savane/savane.conf.pl
+	echo 'our $$sys_dbparams="mysql_socket=/tmp/savane-mini/mysql/sock";' > /tmp/savane-mini/savane/savane.conf.pl
 database:
 	cd ../.. && ./configure --sysconfdir=/tmp/savane-mini --with-db-options="-S /tmp/savane-mini/mysql/sock"
 	make -C ../../frontend/php/images
