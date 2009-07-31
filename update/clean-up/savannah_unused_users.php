@@ -1,6 +1,7 @@
 <?php
 mysql_connect('localhost', 'root', '');
 mysql_select_db('savane_old');
+mysql_set_charset('utf8');
 
 // Get all user_id that are used in the system: group membership, comments, etc.
 $sqls = array();
