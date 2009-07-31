@@ -74,13 +74,13 @@ foreach my $line (@db) {
     DeleteDB('user_group', "user_id=$user_id");
 
     # Reset other references without removing the related data
-    SetDBSettings("task_report", "user_id=100", "user_id=$user_id");
-    SetDBSettings("mail_group_list", "list_admin=100", "list_admin=$user_id");
-    SetDBSettings("support", "assigned_to=100", "assigned_to=$user_id");
-    SetDBSettings("bugs", "assigned_to=100", "assigned_to=$user_id");
-    SetDBSettings("task", "assigned_to=100", "assigned_to=$user_id");
-    SetDBSettings("patch", "assigned_to=100", "assigned_to=$user_id");
-    SetDBSettings("cookbook", "assigned_to=100", "assigned_to=$user_id");
+    SetDBSettings("task_report", "user_id=$user_id", "user_id=100");
+    SetDBSettings("mail_group_list", "list_admin=$user_id", "list_admin=100");
+    SetDBSettings("support", "assigned_to=$user_id", "assigned_to=100");
+    SetDBSettings("bugs", "assigned_to=$user_id", "assigned_to=100");
+    SetDBSettings("task", "assigned_to=$user_id", "assigned_to=100");
+    SetDBSettings("patch", "assigned_to=$user_id", "assigned_to=100");
+    SetDBSettings("cookbook", "assigned_to=$user_id", "assigned_to=100");
 
     # Purge user itself
     DeleteDB('user', "user_id=$user_id");
