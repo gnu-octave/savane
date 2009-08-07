@@ -13,7 +13,7 @@
 
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL auto_increment,
-  `user_name` text NOT NULL,
+  `user_name` varchar(33) NOT NULL,
   `email` text NOT NULL,
   `user_pw` varchar(32) NOT NULL default '',
   `realname` varchar(32) NOT NULL default '',
@@ -32,5 +32,6 @@ CREATE TABLE `user` (
   `gpg_key` text,
   `gpg_key_count` int(11) default NULL,
   PRIMARY KEY  (`user_id`),
-  KEY `idx_user_user` (`status`)
+  KEY `idx_user_user` (`status`),
+  INDEX (`user_name`)
 ) TYPE=MyISAM AUTO_INCREMENT=101;

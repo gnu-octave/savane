@@ -31,5 +31,6 @@ CREATE TABLE `user_group` (
   KEY `patch_flags_idx` (`patch_flags`),
   KEY `support_flags_idx` (`support_flags`),
   KEY `forum_flags_idx` (`forum_flags`),
-  KEY `admin_flags_idx` (`admin_flags`)
+  KEY `admin_flags_idx` (`admin_flags`),
+  INDEX `pk_idx` (`user_id`, `group_id`)
 ) TYPE=MyISAM;

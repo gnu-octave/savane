@@ -198,7 +198,7 @@ print LOG strftime "[$script] %c ---- deleted $result sessions older than one ye
 
 #######################################################################
 ##
-## Remove lost password request count, if they were not made this jour
+## Remove lost password request count, if they were not made this day
 ##
 #######################################################################
  
