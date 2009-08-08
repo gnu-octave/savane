@@ -95,9 +95,10 @@ UPDATE user, temp_table
   WHERE user.user_id = temp_table.user_id
     AND user.uidNumber IS NULL;
 ") or die "SQL Error: $DBI::errstr\n";
-$dbd->do("
-DROP TABLE temp_table
-") or die "SQL Error: $DBI::errstr\n";
+# Privileges issues:
+#$dbd->do("
+#DROP TABLE temp_table
+#") or die "SQL Error: $DBI::errstr\n";
 
 
 # Generate gidNumber's
@@ -126,9 +127,10 @@ UPDATE groups, temp_table
   WHERE groups.group_id = temp_table.group_id
     AND groups.gidNumber IS NULL;
 ") or die "SQL Error: $DBI::errstr\n";
-$dbd->do("
-DROP TABLE temp_table
-") or die "SQL Error: $DBI::errstr\n";
+# Privileges issues:
+#$dbd->do("
+#DROP TABLE temp_table
+#") or die "SQL Error: $DBI::errstr\n";
 
 
 # Cache users/groups to make libmysql-nss-bg more efficient
