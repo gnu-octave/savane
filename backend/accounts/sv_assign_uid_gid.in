@@ -70,66 +70,66 @@ EOF
 
 # Generate uidNumber's
 $dbd->do("
-CREATE TEMPORARY TABLE temp_table (user_id int, uidNumber int auto_increment PRIMARY KEY);
+CREATE TEMPORARY TABLE temp_uid_counter (user_id int, uidNumber int auto_increment PRIMARY KEY);
 ") or die "SQL Error: $DBI::errstr\n";
 $dbd->do("
-INSERT INTO temp_table (user_id, uidNumber)
+INSERT INTO temp_uid_counter (user_id, uidNumber)
   VALUES (0, $min_uidNumber-1);
 ") or die "SQL Error: $DBI::errstr\n";
 
 # Import existing uidNumber's
 $dbd->do("
-INSERT INTO temp_table (user_id, uidNumber)
+INSERT INTO temp_uid_counter (user_id, uidNumber)
   SELECT user_id, uidNumber FROM user WHERE uidNumber > 0;
 ") or die "SQL Error: $DBI::errstr\n";
 # Assign new uidNumber's
 $dbd->do("
-INSERT INTO temp_table (user_id)
+INSERT INTO temp_uid_counter (user_id)
   SELECT user_id FROM user WHERE uidNumber IS NULL AND status='A';
 ") or die "SQL Error: $DBI::errstr\n";
 
 # Update uidNumber's
 $dbd->do("
-UPDATE user, temp_table
-  SET user.uidNumber = temp_table.uidNumber
-  WHERE user.user_id = temp_table.user_id
+UPDATE user, temp_uid_counter
+  SET user.uidNumber = temp_uid_counter.uidNumber
+  WHERE user.user_id = temp_uid_counter.user_id
     AND user.uidNumber IS NULL;
 ") or die "SQL Error: $DBI::errstr\n";
 # Privileges issues:
 #$dbd->do("
-#DROP TABLE temp_table
+#DROP TABLE temp_uid_counter
 #") or die "SQL Error: $DBI::errstr\n";
 
 
 # Generate gidNumber's
 $dbd->do("
-CREATE TEMPORARY TABLE temp_table (group_id int, gidNumber int auto_increment PRIMARY KEY);
+CREATE TEMPORARY TABLE temp_gid_counter (group_id int, gidNumber int auto_increment PRIMARY KEY);
 ") or die "SQL Error: $DBI::errstr\n";
 $dbd->do("
-INSERT INTO temp_table (group_id, gidNumber)
+INSERT INTO temp_gid_counter (group_id, gidNumber)
   VALUES (0, $min_gidNumber-1);
 ") or die "SQL Error: $DBI::errstr\n";
 # Import existing gidNumber's
 $dbd->do("
-INSERT INTO temp_table (group_id, gidNumber)
+INSERT INTO temp_gid_counter (group_id, gidNumber)
   SELECT group_id, gidNumber FROM groups WHERE gidNumber > 0;
 ") or die "SQL Error: $DBI::errstr\n";
 # Assign new uidNumber's
 $dbd->do("
-INSERT INTO temp_table (group_id)
+INSERT INTO temp_gid_counter (group_id)
   SELECT group_id FROM groups WHERE gidNumber IS NULL AND status='A';
 ") or die "SQL Error: $DBI::errstr\n";
 
 # Update gidNumber's
 $dbd->do("
-UPDATE groups, temp_table
-  SET groups.gidNumber = temp_table.gidNumber
-  WHERE groups.group_id = temp_table.group_id
+UPDATE groups, temp_gid_counter
+  SET groups.gidNumber = temp_gid_counter.gidNumber
+  WHERE groups.group_id = temp_gid_counter.group_id
     AND groups.gidNumber IS NULL;
 ") or die "SQL Error: $DBI::errstr\n";
 # Privileges issues:
 #$dbd->do("
-#DROP TABLE temp_table
+#DROP TABLE temp_gid_counter
 #") or die "SQL Error: $DBI::errstr\n";
 
 
