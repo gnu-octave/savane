@@ -36,7 +36,7 @@ done | sed 's/,$//'
 echo ";"
 echo "UPDATE user, temp_table
   SET user.uidNumber = temp_table.uidNumber
-  WHERE user.user_name = temp_table.username;"
+  WHERE user.user_name = BINARY temp_table.username;"
 )
 echo "DROP TABLE temp_table;"
 
@@ -52,6 +52,6 @@ done | sed 's/,$//'
 echo ";"
 echo "UPDATE groups, temp_table
   SET groups.gidNumber = temp_table.gidNumber
-  WHERE groups.unix_group_name = temp_table.name;"
+  WHERE groups.unix_group_name = BINARY temp_table.name;"
 )
 echo "DROP TABLE temp_table;"

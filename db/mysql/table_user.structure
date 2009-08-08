@@ -18,6 +18,7 @@ CREATE TABLE `user` (
   `user_pw` varchar(32) NOT NULL default '',
   `realname` varchar(32) NOT NULL default '',
   `status` varchar(16) NOT NULL default 'A',
+  `uidNumber` int,
   `spamscore` int(2) default '0',
   `add_date` int(11) NOT NULL default '0',
   `confirm_hash` varchar(32) default NULL,
@@ -33,5 +34,6 @@ CREATE TABLE `user` (
   `gpg_key_count` int(11) default NULL,
   PRIMARY KEY  (`user_id`),
   KEY `idx_user_user` (`status`),
-  INDEX (`user_name`)
+  INDEX (`user_name`),
+  INDEX `idx_uidNumber` (`uidNumber`)
 ) TYPE=MyISAM AUTO_INCREMENT=101;

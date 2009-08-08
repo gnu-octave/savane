@@ -1,0 +1,148 @@
+#! @PERL@
+# -*-Perl-*-
+# Assign uidNumber and gidNumber in the database
+# 
+# Copyright (C) 2009  Sylvain Beucler
+#
+# This file is part of Savane.
+# 
+# Savane is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+# 
+# Savane is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use Savane;
+use Getopt::Long;
+
+# This is done in a cron job to avoid any race condition. Ideally
+# uidNumber and gidNumber would be assign directly on account creation
+# to avoid any delay.
+
+# TODO: avoid assigning nobody(65534) and nogroup(65534).  Maybe we
+# should just start at 65535 or 70000 (and update sv_users/sv_groups
+# accordingly)...
+
+# Locks: There are several sv_db2sys scripts but they should not run
+#        concurrently.
+AcquireReplicationLock($lockfile);
+
+
+# Fill remaining uidNumbers and gidNumbers
+
+# Using range 5000-oo for our groups. 1000-5000 should be reserved for
+# /etc/passwd and /etc/group.  You can change this value if necessary.
+
+my $min_uidNumber = 5000;
+my $min_gidNumber = 5000;
+eval {
+    $getopt = GetOptions("help" => \$help,
+			 "min-uidNumber=i" => \$min_uidNumber,
+			 "min-gidNumber=i" => \$min_gidNumber,
+	);
+};
+
+if($help) {
+    print STDERR <<EOF;
+Usage: $0 [project] [OPTIONS] 
+
+Assign uidNumber/gidNumber for users/groups.
+
+Minimum IDs need to be set above your system maximum
+uidNumber/gidNumber, so that the system can create users and groups in
+a range that is not used by this script.
+
+      --help                   Show this help and exit
+      --min-uidNumber          Start assigning user ids from this number
+      --min-gidNumber          Start assigning group ids from this number
+
+Savane version: $version
+EOF
+    exit(1);
+}
+
+# Generate uidNumber's
+$dbd->do("
+CREATE TEMPORARY TABLE temp_table (user_id int, uidNumber int auto_increment PRIMARY KEY);
+") or die "SQL Error: $DBI::errstr\n";
+$dbd->do("
+INSERT INTO temp_table (user_id, uidNumber)
+  VALUES (0, $min_uidNumber-1);
+") or die "SQL Error: $DBI::errstr\n";
+
+# Import existing uidNumber's
+$dbd->do("
+INSERT INTO temp_table (user_id, uidNumber)
+  SELECT user_id, uidNumber FROM user WHERE uidNumber > 0;
+") or die "SQL Error: $DBI::errstr\n";
+# Assign new uidNumber's
+$dbd->do("
+INSERT INTO temp_table (user_id)
+  SELECT user_id FROM user WHERE uidNumber IS NULL AND status='A';
+") or die "SQL Error: $DBI::errstr\n";
+
+# Update uidNumber's
+$dbd->do("
+UPDATE user, temp_table
+  SET user.uidNumber = temp_table.uidNumber
+  WHERE user.user_id = temp_table.user_id
+    AND user.uidNumber IS NULL;
+") or die "SQL Error: $DBI::errstr\n";
+$dbd->do("
+DROP TABLE temp_table
+") or die "SQL Error: $DBI::errstr\n";
+
+
+# Generate gidNumber's
+$dbd->do("
+CREATE TEMPORARY TABLE temp_table (group_id int, gidNumber int auto_increment PRIMARY KEY);
+") or die "SQL Error: $DBI::errstr\n";
+$dbd->do("
+INSERT INTO temp_table (group_id, gidNumber)
+  VALUES (0, $min_gidNumber-1);
+") or die "SQL Error: $DBI::errstr\n";
+# Import existing gidNumber's
+$dbd->do("
+INSERT INTO temp_table (group_id, gidNumber)
+  SELECT group_id, gidNumber FROM groups WHERE gidNumber > 0;
+") or die "SQL Error: $DBI::errstr\n";
+# Assign new uidNumber's
+$dbd->do("
+INSERT INTO temp_table (group_id)
+  SELECT group_id FROM groups WHERE gidNumber IS NULL AND status='A';
+") or die "SQL Error: $DBI::errstr\n";
+
+# Update gidNumber's
+$dbd->do("
+UPDATE groups, temp_table
+  SET groups.gidNumber = temp_table.gidNumber
+  WHERE groups.group_id = temp_table.group_id
+    AND groups.gidNumber IS NULL;
+") or die "SQL Error: $DBI::errstr\n";
+$dbd->do("
+DROP TABLE temp_table
+") or die "SQL Error: $DBI::errstr\n";
+
+
+# Cache users/groups to make libmysql-nss-bg more efficient
+
+# This is a temporary work-around - a better is to fix
+# libmysql-nss-bg's inefficient, 1 query / group getgrent
+# implementation.  MySQL's GROUP_CONCAT will help.
+
+$dbd->do("
+UPDATE user_group, user, groups
+  SET user_group.cache_uidNumber = user.uidNumber,
+      user_group.cache_gidNumber = groups.gidNumber,
+      user_group.cache_user_name = user.user_name
+  WHERE user_group.user_id = user.user_id
+    AND user_group.group_id = groups.group_id
+    AND user_group.admin_flags <> 'P';
+") or die "SQL Error: $DBI::errstr\n";
