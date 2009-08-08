@@ -24,6 +24,8 @@ bin_SCRIPTS = \
 	misc/sv_cleaner \
 	misc/sv_spamcheck_scholar \
 	misc/sv_spammers_purge \
-	accounts/sv_assign_uid_gid
+	accounts/sv_assign_uid_gid \
+	accounts/sv_homedirs \
+	accounts/sv_authorized_keys
 
 SUBDIRS = system-specific

@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+# Create home directories for new users
+# 
+# Copyright (C) 2009  Sylvain Beucler
+#
+# This file is part of Savane.
+# 
+# Savane is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+# 
+# Savane is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import ConfigParser
+import os
+import pwd
+
+cp = ConfigParser.RawConfigParser()
+cp.read('/etc/savane/savane.ini')
+
+import MySQLdb
+MySQLdb.charset = 'UTF-8'
+conn = MySQLdb.connect(host=cp.get('database', 'HOST'),
+                       user=cp.get('database', 'USER'),
+                       passwd=cp.get('database', 'PASSWORD'),
+                       db=cp.get('database', 'NAME'),
+                       use_unicode=True)
+
+# Get a list of users that are members of a project
+conn.query("""
+SELECT user_name, LOWER(CONCAT('/home/', SUBSTRING(user_name FROM 1 FOR 1),
+    '/', SUBSTRING(user_name FROM 1 FOR 2),
+    '/', user_name)) AS homedir
+FROM user
+  JOIN user_group ON user.user_id = user_group.user_id
+  JOIN groups ON user_group.group_id = groups.group_id
+WHERE uidNumber >= 1000
+  AND user.status = 'A'
+  AND user_group.admin_flags <> 'P'
+  AND groups.status = 'A'
+GROUP BY user_group.user_id
+  HAVING count(user_group.group_id) > 0
+""");
+res = conn.store_result()
+
+for row in res.fetch_row(maxrows=0, how=1):
+    if not os.path.exists(row['homedir']):
+        try:
+            os.makedirs(row['homedir'])
+            ent = pwd.getpwnam(row['user_name'])
+            uid = ent[2]
+            gid = ent[3]
+            os.chown(row['homedir'], uid, gid)
+        except OSError, e:
+            print "Cannot create homedirectory '%s' with ownership(%d, %d): %s" % (row['homedir'], uid, gid, e.messages)
