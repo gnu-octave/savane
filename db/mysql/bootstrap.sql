@@ -21,9 +21,10 @@ VALUES
    1, 1, 1, 1, 1, 1, 1, 1);
 
 -- (include/member.php)
-INSERT INTO user_group (user_id, group_id, admin_flags) VALUES (101, 101, 'A');
+INSERT INTO user_group (user_id, group_id, admin_flags) VALUES (101, LAST_INSERT_ID(), 'A');
 INSERT INTO group_history(group_id,field_name,old_value,mod_by,date)
-     VALUES (101,'Added User', 'admin', 101, UNIX_TIMESTAMP(NOW()));
+     VALUES ((SELECT group_id FROM groups WHERE unix_group_name = 'siteadmin'),
+             'Added User', 'admin', 101, UNIX_TIMESTAMP(NOW()));
 
 -- We also add a specific field for the task tracker (we need to copy the None field)
 INSERT INTO task_field_value (bug_field_id, group_id, value_id, value, description, order_id, status)
