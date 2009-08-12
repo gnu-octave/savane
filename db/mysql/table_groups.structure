@@ -18,6 +18,7 @@ CREATE TABLE `groups` (
   `is_public` int(11) NOT NULL default '0',
   `status` char(1) NOT NULL default 'A',
   `unix_group_name` varchar(30) NOT NULL default '',
+  `gidNumber` int,
   `short_description` varchar(255) default NULL,
   `license` varchar(16) default NULL,
   `register_purpose` text,
@@ -106,5 +107,6 @@ CREATE TABLE `groups` (
   KEY `idx_groups_public` (`is_public`),
   KEY `idx_groups_unix` (`unix_group_name`),
   KEY `idx_groups_type` (`type`),
-  KEY `is_public` (`is_public`)
+  KEY `is_public` (`is_public`),
+  INDEX `idx_gidNumber` (`gidNumber`)
 ) TYPE=MyISAM AUTO_INCREMENT=101;

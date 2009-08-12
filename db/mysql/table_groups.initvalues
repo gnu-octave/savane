@@ -99,3 +99,6 @@ INSERT INTO `groups` SET
 `support_private_exclude_address` = NULL,
 `patch_private_exclude_address` = NULL,
 `cookbook_private_exclude_address` = NULL;
+
+INSERT INTO groups (unix_group_name, group_name, status)
+  VALUES ('svusers', 'Default system group', 'A');

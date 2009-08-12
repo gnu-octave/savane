@@ -156,6 +156,7 @@ AC_CONFIG_FILES(backend/misc/sv_spamcheck_monitor, [chmod +x backend/misc/sv_spa
 AC_CONFIG_FILES(backend/misc/sv_cleaner, [chmod +x backend/misc/sv_cleaner])
 AC_CONFIG_FILES(backend/misc/sv_spamcheck_scholar, [chmod +x backend/misc/sv_spamcheck_scholar])
 AC_CONFIG_FILES(backend/misc/sv_spammers_purge, [chmod +x backend/misc/sv_spammers_purge])
+AC_CONFIG_FILES(backend/accounts/sv_assign_uid_gid, [chmod +x backend/accounts/sv_assign_uid_gid])
 
 AC_OUTPUT
 
