@@ -10,9 +10,6 @@
 $DNSBL['spamhaus'] = "sbl-xbl.spamhaus.org";
 $DNSBL_INFOURL['spamhaus'] = "http://www.spamhaus.org/query/bl?ip=";
 
-$DNSBL['listdsbl'] = "list.dsbl.org";
-$DNSBL_INFOURL['listdsbl'] = "http://dsbl.org/listing?";
-
 $DNSBL['recentspamsorbs'] = "recent.spam.dnsbl.sorbs.net";
 
 
