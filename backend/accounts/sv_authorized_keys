@@ -20,6 +20,7 @@
 
 import ConfigParser
 import os
+import pwd
 
 cp = ConfigParser.RawConfigParser()
 cp.read('/etc/savane/savane.ini')
@@ -67,8 +68,13 @@ for row in res.fetch_row(maxrows=0, how=1):
         f.close()
 
     if sys_keys != db_keys:
+        ent = pwd.getpwnam(row['user_name'])
+        uid = ent[2]
+        gid = ent[3]
         if not os.path.exists(sshdir_path):
             os.mkdir(sshdir_path, 0700)
+            os.chown(sshdir_path, uid, gid)
         f = open(key_path, 'w')
         f.write(db_keys)
         f.close()
+        os.chown(key_path, uid, gid)
