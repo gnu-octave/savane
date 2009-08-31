@@ -83,7 +83,7 @@ $form->setDefaults(array('group_type' => 2));
 $form->addElement('select', 'license', 'Project license', $LICENSE);
 $form->addElement('textarea', 'license_other', 'Other license or precisions');
 
-$form->addElement('header', 'title_checklist', _('Checklist - **see <a href="http://savannah.gnu.org/maintenance/HowToGetYourProjectApprovedQuickly">Wiki page</a>**'));
+$form->addElement('header', 'title_checklist', _('Checklist - **see <a href="http://savannah.gnu.org/maintenance/HowToGetYourProjectApprovedQuickly">How To Get Your Project Approved Quickly</a>**'));
 # <savannah-specific>
 $form->addElement('checkbox', 'cl1', _('My project runs primarily on a completely free OS'));
 $form->addElement('checkbox', 'cl2', _('My license is compatible with the GNU GPL or GFDL'));
