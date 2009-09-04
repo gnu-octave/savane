@@ -16,6 +16,9 @@ CREATE TABLE `user_group` (
   `user_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
   `admin_flags` char(16) default NULL,
+  `cache_uidNumber` int,
+  `cache_gidNumber` int,
+  `cache_user_name` varchar(33),
   `onduty` tinyint default '1' NOT NULL,
   `privacy_flags` int(1) default '1',
   `forum_flags` int(11) default NULL,
@@ -31,5 +34,8 @@ CREATE TABLE `user_group` (
   KEY `patch_flags_idx` (`patch_flags`),
   KEY `support_flags_idx` (`support_flags`),
   KEY `forum_flags_idx` (`forum_flags`),
-  KEY `admin_flags_idx` (`admin_flags`)
+  KEY `admin_flags_idx` (`admin_flags`),
+  INDEX `pk_idx` (`user_id`, `group_id`),
+  INDEX `idx_cache_uidNumber` (`cache_uidNumber`),
+  INDEX `idx_cache_gidNumber` (`cache_gidNumber`)
 ) TYPE=MyISAM;

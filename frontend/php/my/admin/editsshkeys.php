@@ -3,6 +3,7 @@
 # 
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007  Sylvain Beucler
 #
 # This file is part of Savane.
 # 
@@ -42,7 +43,7 @@ if ($update)
       # Remove useless blank spaces
       $thiskey = trim($thiskey);
       # Remove line breaks
-      $thiskey = str_replace("\n", " ", $thiskey);
+      $thiskey = str_replace("\n", "", $thiskey);
       if ($thiskey != '')
 	{
 	  # test the key with ssh-vulnkey

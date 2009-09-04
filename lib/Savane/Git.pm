@@ -51,6 +51,10 @@ sub GitMakeArea {
 	
 	system('chgrp', '-R', $name, $dir_git);
         # needed to make the repo accessible via bare HTTP
+	open(HOOK, ">$dir_git/hooks/post-update") or warn $!;
+	print HOOK "#!/bin/sh\n";
+	print HOOK "exec git update-server-info\n";
+	close(HOOK);
 	system('chmod', '+x', $dir_git.'/hooks/post-update');
 	# forbid access to hooks
 	system('chown', '-R', 'root:', $dir_git.'/hooks');
@@ -62,9 +66,9 @@ sub GitMakeArea {
 	#system('chown', "root:$name", ".../$name/");
 
 	# 'git-cvsserver' support
-	system('git-config', 'gitcvs.pserver.enabled', 1);
-	system('git-config', 'gitcvs.ext.enabled', 0);
-	system('git-config', 'gitcvs.dbname', '%G/gitcvs-db/sqlite');
+	system('git', 'config', 'gitcvs.pserver.enabled', 1);
+	system('git', 'config', 'gitcvs.ext.enabled', 0);
+	system('git', 'config', 'gitcvs.dbname', '%G/gitcvs-db/sqlite');
 	my $sqlite_dir = "$dir_git/gitcvs-db";
 	system('mkdir', $sqlite_dir, '-m', '755');
 	system('chown', 'nobody', $sqlite_dir);
