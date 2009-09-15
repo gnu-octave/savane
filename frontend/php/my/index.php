@@ -131,7 +131,7 @@ if (user_isloggedin())
       for ($j=0; $j<$rows; $j++)
 	{
 	  print '<div class="'.utils_get_alt_row_color($j).'">';
-	  print '<a href="'.$GLOBALS[sys_home].'news/approve.php?approve=1&amp;id='.db_result($result, $j, 'id').'&amp;group='.group_getunixname(db_result($result, $j, 'group_id')).'">'.db_result($result, $j, 'summary').'</a><br />';
+	  print '<a href="'.$GLOBALS['sys_home'].'news/approve.php?approve=1&amp;id='.db_result($result, $j, 'id').'&amp;group='.group_getunixname(db_result($result, $j, 'group_id')).'">'.db_result($result, $j, 'summary').'</a><br />';
 	  # FIXME: num. of new comments?
 	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), utils_format_date(db_result($result,$j,'date'))).'</span>';
 	  print '</div>';
