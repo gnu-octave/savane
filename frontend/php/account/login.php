@@ -52,11 +52,11 @@ extract(sane_import('request',
 	'stay_in_ssl', 'brotherhood',
 	'uri', 'login', 'cookie_test')));
 
-if (isset($GLOBALS['sys_https_host']) && !session_issecure())
-{
-  # Force use of TLS for login
-  header('Location: '.$GLOBALS['sys_https_url'].$_SERVER['REQUEST_URI']);
-}
+#if (isset($GLOBALS['sys_https_host']) && !session_issecure())
+#{
+#  # Force use of TLS for login
+#  header('Location: '.$GLOBALS['sys_https_url'].$_SERVER['REQUEST_URI']);
+#}
 
 # Check cookie support
 if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
@@ -69,7 +69,7 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
     }
   else # 
     {
-      fb(sprintf(_("Savane thinks your cookies are not activated for %s. To log-in, we need you to activate cookies in your web browser for this website. Please do so and click here:"), $sys_default_domain).' '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri, 1);
+      fb(sprintf(_("Savane thinks your cookies are not activated for %s. To log-in, we need you to activate cookies in your web browser for this website. Please do so and click here:"), $sys_default_domain).' '.$GLOBALS['sys_http_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri, 1);
     }
 }
 
@@ -217,7 +217,7 @@ print '<input type="text" name="form_loginname" value="'.htmlspecialchars($form_
 print '<p><span class="preinput">'._("Password:").'</span><br />&nbsp;&nbsp;';
 print '<input type="password" name="form_pw" tabindex="1" /> <a class="smaller" href="lostpw.php" tabindex="2">['._("Lost your password?").']</a></p>';
 
-if (session_issecure())
+if (isset($GLOBALS['sys_https_host']))
 {
 
   $checked = 'checked="checked" ';
@@ -253,5 +253,7 @@ if (!empty($GLOBALS['sys_brother_domain']))
 
 print '<div class="center"><input type="submit" name="login" value="'._("Login").'" tabindex="1" /></div>';
 print '</form>';
+
+utils_get_content("account/login");
 
 $HTML->footer(array());
