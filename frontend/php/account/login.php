@@ -199,10 +199,9 @@ if (!empty($login) && !$success)
 
 }
 
-if (session_issecure())
+if (isset($GLOBALS['sys_https_host']))
 {
-  print '<p>'._("You're going to be connected with a secure (https) server and your password will not be visible to other users.").'</p>';
-
+  utils_get_content("account/login");
 }
 print '<form action="'.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php" method="post">';
 print '<input type="hidden" name="uri" value="'.htmlspecialchars($uri, ENT_QUOTES).'" />';
@@ -253,7 +252,5 @@ if (!empty($GLOBALS['sys_brother_domain']))
 
 print '<div class="center"><input type="submit" name="login" value="'._("Login").'" tabindex="1" /></div>';
 print '</form>';
-
-utils_get_content("account/login");
 
 $HTML->footer(array());
