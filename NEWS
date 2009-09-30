@@ -20,6 +20,8 @@ Clean-up branch - v.3.1-cleanup
 
 * bzr/index.txt added: displayed in /bzr/index.php
 
+* account/login.txt added: displayed in /account/login.php
+
 
 [FRONTEND]
 
