@@ -69,7 +69,7 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
     }
   else # 
     {
-      fb(sprintf(_("Savane thinks your cookies are not activated for %s. To log-in, we need you to activate cookies in your web browser for this website. Please do so and click here:"), $sys_default_domain).' '.$GLOBALS['sys_http_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri, 1);
+      fb(sprintf(_("Savane thinks your cookies are not activated for %s. To log-in, we need you to activate cookies in your web browser for this website. Please do so and click here:"), $sys_default_domain).' '.$GLOBALS['sys_https_url'].$GLOBALS['sys_home'].'account/login.php?uri='.$uri, 1);
     }
 }
 
