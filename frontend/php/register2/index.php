@@ -90,7 +90,7 @@ $form->addElement('checkbox', 'cl2', _('My license is compatible with the GNU GP
 $form->addElement('checkbox', 'cl3', _('My dependencies are compatible with my project license'));
 $form->addElement('checkbox', 'cl4', _('All my files include valid copyright notices [<a href="http://www.gnu.org/prep/maintain/html_node/Copyright-Notices.html">1</a>]'));
 $form->addElement('checkbox', 'cl5', _('All my files include a license header [<a href="http://www.gnu.org/licenses/gpl-howto.html">1</a>] [<a href="http://www.gnu.org/licenses/fdl-howto.html">2</a>]'));
-$form->addElement('checkbox', 'cl6', _('Origin and license of media files is precised'));
+$form->addElement('checkbox', 'cl6', _('Origin and license of media files is specified'));
 $form->addElement('checkbox', 'cl7', _('My tarball includes a copy of the license'));
 # </savannah-specific>
 $form->addElement('checkbox', 'cl_foolproof', _("I read carefully and don't check this one"));
