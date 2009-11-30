@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Create ~/.ssh/authorized_keys for each system user
+# Create authorized_keys file for each system user
 # 
 # Copyright (C) 2009  Sylvain Beucler
 #
@@ -19,8 +19,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import ConfigParser
-import os
+import os, sys
 import pwd
+
+
+from optparse import OptionParser
+parser = OptionParser()
+parser.add_option("-d", "--single-dir", metavar="DIR",
+                  help="""Instead of storing keys files in
+~/.ssh/authorized_keys, put them all in DIR, in a file named after the
+user.  For example: --single-dir=/etc/ssh/authorized_keys/ . In that
+case, for OpenSSH, you would use 'AuthorizedKeysFile
+/etc/ssh/authorized_keys/%u' in /etc/ssh/sshd_config . It is assumed that
+the directory is not writable by unprivileged users, to avoid symlink attacks.""")
+(options, args) = parser.parse_args()
+
+use_homedir = True
+if options.single_dir is not None:
+    use_homedir = False
+
 
 cp = ConfigParser.RawConfigParser()
 cp.read('/etc/savane/savane.ini')
@@ -50,6 +67,11 @@ GROUP BY user_group.user_id
 """);
 res = conn.store_result()
 
+# By making each user own his 'authorized_keys' files, we can prevent
+# other users from looking at each others' keys, which increases
+# security as the attacker can't brute-force them.
+old_umask = os.umask(077)
+
 # The naive approach is to overwrite all authorized_keys files on
 # disk. In practice this mean lots of disk write. It's more efficient
 # to read all existing files and overwrite them only if there's a
@@ -60,8 +82,12 @@ for row in res.fetch_row(maxrows=0, how=1):
     db_keys = db_keys.encode('UTF-8')
 
     sys_keys = ''
-    sshdir_path = row['homedir'] + '/.ssh'
-    key_path = sshdir_path + '/authorized_keys'
+    user_sshdir_path = row['homedir'] + '/.ssh'
+    if use_homedir:
+        key_path = user_sshdir_path + '/authorized_keys'
+    else:
+        key_path = os.path.normpath(options.single_dir) + '/' + row['user_name']
+
     if os.path.exists(key_path):
         f = open(key_path)
         sys_keys = f.read()
@@ -71,10 +97,36 @@ for row in res.fetch_row(maxrows=0, how=1):
         ent = pwd.getpwnam(row['user_name'])
         uid = ent[2]
         gid = ent[3]
-        if not os.path.exists(sshdir_path):
-            os.mkdir(sshdir_path, 0700)
-            os.chown(sshdir_path, uid, gid)
+
+        if use_homedir:
+            # Avoid symlink attacks and races (and avoid calling chown)
+            # http://en.wikipedia.org/wiki/Symlink_race
+            groups_save = os.getgroups()
+            os.setgroups([])
+            os.setegid(gid)
+            os.seteuid(uid)
+            if not os.path.exists(user_sshdir_path):
+                os.mkdir(user_sshdir_path, 0700)
+            if os.path.islink(user_sshdir_path) or os.path.islink(key_path):
+                # Note: even when checking for symlinks, seteuid is
+                # necessary, to avoid symlinks race attacks.
+                print >> sys.stderr, "Possible symlink attack for %s!" % (key_path)
+                continue
+        else:
+            # Assume the directory is not writable by unprivileged
+            # users
+            pass
+
         f = open(key_path, 'w')
         f.write(db_keys)
         f.close()
-        os.chown(key_path, uid, gid)
+
+        if use_homedir:
+            # Switch back to root
+            os.seteuid(0)
+            os.setegid(0)
+            os.setgroups(groups_save)
+        else:
+            os.chown(key_path, uid, gid)
+
+os.umask(old_umask)

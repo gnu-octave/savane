@@ -2,8 +2,8 @@
 # <one line to give a brief idea of what this does.>
 # 
 # Copyright 2003-2005 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Sylvain Beucler <beuc--beuc.net>
 #                          Free Software Foundation, Inc.
+#  Copyright (C) 2005, 2006, 2009  Sylvain Beucler <beuc--beuc.net>
 # Copyright (C) 2008  Aleix Conchillo Flaque
 # 
 # This file is part of Savane.
@@ -28,6 +28,7 @@
 ##
 
 use strict "vars";
+use English;
 require Exporter;
 
 use Savane::Util;
@@ -118,6 +119,101 @@ sub GetUserList {
 # arg1 : which user id
 sub GetUserName {
     return $dbd->selectrow_array("SELECT user_name FROM user WHERE user_id='".$_[0]."'");
+}
+
+## Get system uid/gid
+sub GetUserUidGid {
+    my $user = $_[0];
+    my ($name,$passwd,$uid,$gid,
+	$quota,$comment,$gcos,$dir,$shell,$expire) = getpwnam($user);
+    return ($uid,$gid);
+}
+
+## Become this effective user (EUID/EGID) and perform this action.
+## 
+## This protect against symlink attacks; they are inevitable when
+## working in a directory owned by a local user.  We could naively
+## check for the presence of symlinks, but then we'd still be
+## vulnerable to a symlink race attack.
+## 
+## We'll use set_e_uid/set_e_gid for efficiency and simplicity
+## (e.g. we can get the return value directly), which is enough for
+## opening files and similar basic operations.  When calling external
+## programs, you should use fork&exec&setuid/setgid.
+## 
+# arg1: username
+# arg2: a Perl sub{}
+sub SudoEffectiveUser {
+    my $user = $_[0];
+    my $sub_unprivileged = $_[1];
+
+    my ($uid,$gid) = GetUserUidGid($user);
+    if ($uid eq "" or $gid eq "") {
+	print "Unknown user: $user";
+	return;
+    }
+
+    my $old_GID = $GID; # save additional groups
+    $! = '';
+    $EGID = "$gid $gid"; # set egid and additional groups
+    if ($! ne '') {
+	warn "Cannot setegid($gid $gid): $!";
+	return;
+    }
+    $EUID = $uid;
+    if ($! ne '') {
+	warn "Cannot seteuid($uid): $!";
+	return;
+    }
+
+    # Perform the action under this effective user:
+    my $ret = &$sub_unprivileged();
+
+    # Back to root
+    undef($EUID);     # restore euid==uid
+    $EGID = $old_GID; # restore egid==gid + additional groups
+
+    return $ret;
+}
+
+## Fork, become this user (UID/GID) and run this command. Return a
+## file handle to the child process's pipe.
+## 
+# arg1: username
+# arg2&next: an array (command+params) to pass to exec()
+sub SudoForkPipe {
+    my $user = shift(@_);
+    my @command_args = @_;
+
+    my ($uid,$gid) = GetUserUidGid($user);
+    if ($uid eq "" or $gid eq "") {
+	print "Unknown user: $user";
+	return;
+    }
+
+    local *INOUT;
+    my $pid = open(*INOUT, "|-");
+
+    if ($pid) {                   # parent
+        return *INOUT;
+    } else {                      # child
+	$! = '';
+	$GID=$EGID="$gid $gid"; # set gid and additional groups
+	if ($! ne '') {
+	    warn "Cannot setegid($gid $gid): $!";
+	    exit 1;
+	}
+	$UID=$EUID=$uid;
+	if ($! ne '') {
+	    warn "Cannot seteuid($uid): $!";
+	    exit 1;
+	}
+
+	# Also change the home directory
+	$ENV{'HOME'} = GetUserHome($user);
+
+        exec (@command_args) or exit 1;
+    }
 }
 
 #####
@@ -251,18 +347,18 @@ sub UserAddSSHKey {
     # If the authorized key entry is NULL, it means that we want to actually
     # simply remove the SSH file, so we dont even touch the file
     if ($authorized_keys ne '') {
-	open(SSH_KEY, "> $home/.ssh/authorized_keys");
-	# In the database, linebreak are ###
-	$ssh_keys_registered = ($authorized_keys =~ s/###/\n/g); #' count keys
-				print SSH_KEY $authorized_keys; 
-				close(SSH_KEY);
+	my $authorized_keys_file = "$home/.ssh/authorized_keys";
+	SudoEffectiveUser($user, sub {
+	    if (open(SSH_KEY, "> $authorized_keys_file")) {
+		# In the database, linebreak are ###
+		$ssh_keys_registered = ($authorized_keys =~ s/###/\n/g); #' count keys
+		print SSH_KEY $authorized_keys; 
+		close(SSH_KEY);
+	    } else {
+		warn("Cannot write $authorized_keys_file: " . $!);
+	    }
+	     });
     }
-  
-
-
-    # If no key where found, simply remove the file
-    system("rm", "-f", "$home/.ssh/authorized_keys")
-	unless $ssh_keys_registered;
 
     # Store the information in the database, an interface the frontend could
     # (but does not currently) use to tell the user if all this keys are 
@@ -281,41 +377,37 @@ sub UserAddSSHKey {
 # return the number of keys registered.
 sub UserAddGPGKey {
     my ($user, $key) = @_;
+    return 1 unless ($key);
 
     my $home = GetUserHome($user);
 
-    unlink("$home/.gnupg/pubring.gpg");
-
-    return 1 unless ($key);
+    SudoEffectiveUser($user, sub { mkdir("$home/.gnupg"); });
+    my $pubring_file = "$home/.gnupg/pubring.gpg";
+    SudoEffectiveUser($user, sub { unlink($pubring_file); });
 
     my @gpg_args = ("/usr/bin/gpg",
 		    "--batch",
 		    "--quiet",
 		    "--no-tty",
+		    "--no-options", # disable ~/.gnupg and gpg.conf creation
                     "--no-default-keyring",
                     "--keyring",
-                    "$home/.gnupg/pubring.gpg",
+                    $pubring_file,
                     "--import",
                     "-");
 
-    my $pid = open (GPG, "|-");
-
-    if ($pid) {                   # parent
-        print GPG $key;
-        close (GPG);
-        my $ret = $?;
-        if ($ret) {
-            SetUserSettings($user, "gpg_key_count", 0);
-        } else {
-            SetUserSettings($user, "gpg_key_count", 1);
-        }
-        return $ret;
-    } else {                      # child
-        exec (@gpg_args) || exit 1;
+    my $inout = SudoForkPipe($user, @gpg_args);
+    print $inout $key;
+    close ($inout);
+    my $ret = $?;
+    if ($ret) {
+	SetUserSettings($user, "gpg_key_count", 0);
+    } else {
+	SetUserSettings($user, "gpg_key_count", 1);
     }
-
-    return 1;
+    return $ret;
 }
+
 ## Store ASCII version of the GPG key, for future comparisons
 # arg1 : username
 # arg2 : content
@@ -324,13 +416,16 @@ sub UserStoreGPGKey {
     my ($user, $key) = @_;
     my $home = GetUserHome($user);
 
-    if (!$key or $key eq "NULL") {
-	unlink("$home/.gnupg/ascii-public-key");
-    } else {
-	open(STOREFILE, "> $home/.gnupg/ascii-public-key");
-	print STOREFILE $key;
-	close(STOREFILE);
-    }
+    SudoEffectiveUser($user, sub { mkdir("$home/.gnupg"); });
+    SudoEffectiveUser($user, sub {
+	if (!$key or $key eq "NULL") {
+	    unlink("$home/.gnupg/ascii-public-key");
+	} else {
+	    open(STOREFILE, "> $home/.gnupg/ascii-public-key");
+	    print STOREFILE $key;
+	    close(STOREFILE);
+	}
+		      });
     return 1;
 }
 
