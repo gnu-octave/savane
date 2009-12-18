@@ -364,7 +364,10 @@ function sendmail_mail ($from,
 	  if (empty($int_delayspamcheck))
 	    {
 	      $ret .= mail($real_to, sendmail_encode_header_content($subject), $message, $more_headers);
-	      $r = array_map("htmlspecialchars", $recipients);
+	      // html_feedback_top() is currently escaping HTML
+	      // already, to prevent XSS. So no need to do it again
+	      // here:
+	      //$r = array_map("htmlspecialchars", $recipients);
 	      fb(sprintf(_("Mail sent to %s"), join(', ', $r)));
 	    }
 	  else
