@@ -368,7 +368,7 @@ function sendmail_mail ($from,
 	      // already, to prevent XSS. So no need to do it again
 	      // here:
 	      //$r = array_map("htmlspecialchars", $recipients);
-	      fb(sprintf(_("Mail sent to %s"), join(', ', $r)));
+	      fb(sprintf(_("Mail sent to %s"), join(', ', $recipients)));
 	    }
 	  else
 	    {
