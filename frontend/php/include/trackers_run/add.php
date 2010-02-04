@@ -230,7 +230,7 @@ if (user_isloggedin())
 
 # Minimal anti-spam
 if (!user_isloggedin()) {
-  print '<p class="noprint">Please enter 421 here (basic anti-spam test): <input type="text" name="check" /></p>';
+  print '<p class="noprint">Please enter the title of <a href="http://en.wikipedia.org/wiki/George_Orwell">George Orwell</a>\'s famous dystopian book (it\'s a date): <input type="text" name="check" /></p>';
 }
 
 print '<p>&nbsp;</p>';
