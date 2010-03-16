@@ -146,7 +146,7 @@ if ($group_id)
 	  $previoustextexists = true;
 
 	  # Admin interface
-	  print sprintf(_("Project administrators could use the %sadministrative interface%s to manage the list."),'<a href="'.$project->getTypeMailingListAdminUrl($list).'">','</a>').'</dd>';
+	  print sprintf(_("Project administrators can use the %sadministrative interface%s to manage the list."),'<a href="'.$project->getTypeMailingListAdminUrl($list).'">','</a>').'</dd>';
 	  
 	}
       print '</p><br />';
