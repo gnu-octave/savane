@@ -44,6 +44,6 @@ if (!db_result($result,0,'gpg_key'))
 
 # If we get here, a key exists. Simply print it.
 header('Content-Type: application/pgp-keys');
-header('Content-Disposition: filename='.db_result($result, 0, 'user_name').'-key.gpg');
+header('Content-Disposition: attachment; filename='.db_result($result, 0, 'user_name').'-key.gpg');
 header('Content-Description: GPG Key of the user '.db_result($result, 0, 'user_name'));
 print db_result($result,0,'gpg_key');

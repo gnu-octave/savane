@@ -49,7 +49,7 @@ if (!$download) {
   $result = db_execute("SELECT keyring FROM groups_gpg_keyrings WHERE unix_group_name=? LIMIT 1", array($group));
 
   header('Content-Type: application/pgp-keys');
-  header('Content-Disposition: filename='.$group.'-keyring.gpg');
+  header('Content-Disposition: attachment; filename='.$group.'-keyring.gpg');
   header('Content-Description: GPG Keyring of the project '.$group);
   print db_result($result,0,'keyring');
 }
