@@ -151,12 +151,12 @@ if ($#ARGV == 1 and $ARGV[0] eq "-c") {
 
     } elsif ($use_bzr and $ARGV[1] =~ m:$regexp_bzr:) {
 
-	# bzr wants to write a ~/.bzr.log
-	# Tip: mkdir -m 755 /var/lib/bzr
-	#      ln -s /dev/null /var/lib/bzr/.bzr.log
+	# bzr wants to write a ~/.bzr.log.  Suppress that (see
+	# https://bugs.edge.launchpad.net/bzr/+bug/106117 for more).
+	$ENV{'BZR_LOG'} = '/dev/null';
 	$ENV{'HOME'} = '/var/lib/bzr';
 	# authorize 'bzr serve' in SSH tunnel mode
-        exec($bin_bzr, 'serve', '--inet', '--directory='.$dir_bzr, '--allow-writes')
+        exec($bin_bzr, '--no-plugins', 'serve', '--inet', '--directory='.$dir_bzr, '--allow-writes')
 	    or die("Failed to exec '$bin_bzr serve --inet --directory=$dir_bzr --allow-writes': $!");
 
     } elsif ($use_hg and $ARGV[1] =~ m:$regexp_hg:) {
