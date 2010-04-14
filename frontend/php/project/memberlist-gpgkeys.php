@@ -37,8 +37,8 @@ if (!$download) {
 			    'context'=>'keys'));
 
 
-  print '<p>'._("Below is the content of this project's keyring. These are the successfully registered keys of project members.").'</p>';
-  print nl2br(htmlspecialchars($keyring));
+#  print '<p>'._("Below is the content of this project's keyring. These are the successfully registered keys of project members.").'</p>';
+#  print nl2br(htmlspecialchars($keyring));
   print '<p>'.sprintf(_("You can %sdownload the keyring%s and import it with the command %s"), '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group.'&amp;download=1">', '</a>', '<em>gpg --import &lt;file&gt;</em>').'</p>';
 
   site_project_footer(array());
@@ -51,5 +51,6 @@ if (!$download) {
   header('Content-Type: application/pgp-keys');
   header('Content-Disposition: attachment; filename='.$group.'-keyring.gpg');
   header('Content-Description: GPG Keyring of the project '.$group);
-  print db_result($result,0,'keyring');
+  #print db_result($result,0,'keyring');
+  passthru('/usr/local/bin/sv_tmpgpg ' . $group_id);
 }

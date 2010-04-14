@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+# Generate a project GPG keyring on the fly
+#
+# Copyright (C) 2010  Sylvain Beucler
+#
+# This file is part of Savane.
+#
+# Savane is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# Savane is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from pyme import core, constants
+import os, sys, tempfile, shutil, glob
+import ConfigParser
+
+cp = ConfigParser.RawConfigParser()
+cp.read('/etc/savane/savane.ini')
+
+import MySQLdb
+MySQLdb.charset = 'UTF-8'
+conn = MySQLdb.connect(host=cp.get('database', 'HOST'),
+                       user=cp.get('database', 'USER'),
+                       passwd=cp.get('database', 'PASSWORD'),
+                       db=cp.get('database', 'NAME'),
+                       use_unicode=True)
+
+if len(sys.argv) < 2:
+   sys.stderr.write("Usage: %s group_id\n" % sys.argv[0])   sys.exit(1)
+group_id = sys.argv[1]
+
+
+tdir = tempfile.mkdtemp()
+core.set_engine_info(constants.PROTOCOL_OpenPGP, None, tdir)
+c = core.Context()
+
+
+# Get a list of users that are members of a project
+conn.query("""
+SELECT gpg_key FROM user JOIN user_group ON user.user_id = user_group.user_id WHERE group_id=%d;
+""" % int(group_id));
+res = conn.store_result()
+
+
+for row in res.fetch_row(maxrows=0, how=1):
+    key_txt = row['gpg_key']
+
+    status = c.op_import(core.Data(str(key_txt)))
+    result = c.op_import_result()
+
+data_export = core.Data()
+c.op_export(None, 0, data_export)
+data_export.seek(0, os.SEEK_SET)
+keyring_txt = data_export.read()
+
+sys.stdout.write(keyring_txt)
+
+shutil.rmtree(tdir)
+
+# Page display:
+# gpg --homedir /tmp/t --batch --quiet --no-tty --no-options --no-default-keyring --list-keys  --display-charset=utf-8 --keyring `pwd`/out
