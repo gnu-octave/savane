@@ -45,7 +45,8 @@ c = core.Context()
 
 # Get a list of users that are members of a project
 conn.query("""
-SELECT gpg_key FROM user JOIN user_group ON user.user_id = user_group.user_id WHERE group_id=%d;
+SELECT gpg_key FROM user JOIN user_group ON user.user_id = user_group.user_id
+WHERE admin_flags<>'P' AND status='A' AND group_id=%d;
 """ % int(group_id));
 res = conn.store_result()
 
