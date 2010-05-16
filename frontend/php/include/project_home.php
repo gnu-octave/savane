@@ -149,7 +149,7 @@ if ($project->CanUse("license"))
     else
       print "Unknown!";
     if ($license == "other") {
-      print $project->getLicense_other();
+      print " - " . $project->getLicense_other();
     }
   }
 }
