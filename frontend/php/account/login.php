@@ -130,7 +130,7 @@ if (!empty($login))
 	  if (!$from_brother)
 	    {
 	      # Go there saying hello to your brother
-	      header ("Location: ".$http."://".$GLOBALS['sys_brother_domain'].$GLOBALS['sys_home']."/account/login.php?form_loginname=$form_loginname&form_pw=$form_pw&session_uid=".user_getid()."&session_hash=".$GLOBALS['session_hash']."&cookie_for_a_year=$cookie_for_a_year&from_brother=1&login=1&stay_in_ssl=$stay_in_ssl&brotherhood=1&uri=".urlencode($uri));
+	      header ("Location: ".$http."://".$GLOBALS['sys_brother_domain'].$GLOBALS['sys_home']."/account/login.php?session_uid=".user_getid()."&session_hash=".$GLOBALS['session_hash']."&cookie_for_a_year=$cookie_for_a_year&from_brother=1&login=1&stay_in_ssl=$stay_in_ssl&brotherhood=1&uri=".urlencode($uri));
 	      exit;
 	    }
 	  else
