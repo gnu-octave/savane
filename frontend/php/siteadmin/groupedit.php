@@ -30,8 +30,8 @@ require_directory("project");
 session_require(array('group'=>$sys_group_id,'admin_flags'=>'A'));
 
 extract(sane_import('post',
-  array('update', 'form_name', 'form_status', 'form_public', 'form_license',
-	'group_type',
+  array('update', 'form_name', 'form_status', 'form_public',
+	'form_license', 'form_license_other', 'group_type',
 	'form_dir_cvs', 'form_dir_arch', 'form_dir_svn', 'form_dir_git',
 	'form_dir_hg', 'form_dir_bzr', 'form_dir_homepage', 'form_dir_download')));
 extract(sane_import('get',
@@ -69,6 +69,7 @@ if ($update || $updatefast)
 	  'is_public' => $form_public,
 	  'status' => $form_status,
 	  'license' => $form_license,
+	  'license_other' => $form_license_other,
 	  'type' => $group_type,
 	  'unix_group_name' => $form_name,
 	  'dir_cvs' => $form_dir_cvs,
@@ -107,6 +108,10 @@ $row_grp = db_fetch_array($res_grp);
 
 # we get site-specific content
 utils_get_content("admin/groupedit_intro");
+
+print '<p>';
+print "<a href='../projects/{$row_grp['unix_group_name']}'>Go to project public page</a>";
+print '</p>';
 
 # MODIFICATORS SHORTCUTS
 print '<h3>'._("Registration Management Shortcuts").'</h3>';
@@ -170,16 +175,18 @@ print _("Note: this has influence only if the group type of which this group bel
 print '<select name="form_license">';
 print '<option value="none">'._("N/A").'</option>';
 print '<option value="other">'._("Other").'</option>';
-print '</p>';
-
 while (list($k,$v) = each($LICENSE))
 {
   print "<OPTION value=\"$k\"";
   if ($k == $row_grp['license']) print " selected";
   print ">$v</option>\n";
 }
-
 print '</select>';
+print '<br />';
+print _("If other:").'<br />';
+print '<input type="text" name="form_license_other" value="'.$row_grp['license_other'].'" />';
+print '</p>';
+
 print '<input type="hidden" name="group_id" value="'.$group_id.'" />';
 
 
