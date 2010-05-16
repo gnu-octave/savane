@@ -277,14 +277,14 @@ function require_directory ($module)
   $GLOBALS['directory_'.$module.'_is_loaded'] = 1;
 }
 
-function get_module_include_dir ($phpself, $true_artifact=0, $true_dir=0)
+function get_module_include_dir($script_name, $true_artifact=0, $true_dir=0)
 {
-  $guess = basename(dirname($phpself));
+  $guess = basename(dirname($script_name));
 
   if (!$true_dir && $guess == "admin")
     {
       # Need to go deeper
-      $guess = basename(dirname(dirname($phpself)));
+      $guess = basename(dirname(dirname($script_name)));
     }
 
   if (!$true_artifact) {
@@ -369,8 +369,8 @@ extract(sane_import('get', array('comingfrom'))); #cookbook
 extract(sane_import('request', array('group', 'group_id', 'item_id')));
 
 # defines the artifact we are using
-if(!defined('ARTIFACT'))
-     define('ARTIFACT', get_module_include_dir($_SERVER['REQUEST_URI'], 1));
+if (!defined('ARTIFACT'))
+     define('ARTIFACT', get_module_include_dir($_SERVER['SCRIPT_NAME'], 1));
 
 # if we are on an artifact index page and we have only one argument which is
 # a numeric number, we suppose it is an item_id
@@ -527,4 +527,4 @@ if (isset($group_id))
 
 # If requires/include for an artifact exists, load them all
 # In any case, set the ARTIFACT constant.
-#require_directory(get_module_include_dir($_SERVER['PHP_SELF']));
+#require_directory(get_module_include_dir($_SERVER['SCRIPT_NAME']));
