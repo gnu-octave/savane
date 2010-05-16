@@ -21,4 +21,4 @@
 
 require_once('../include/init.php');
 require_once('../include/trackers/general.php');
-include trackers_include();
+include(trackers_include());

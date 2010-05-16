@@ -33,7 +33,7 @@ require_once(dirname(__FILE__).'/format.php');
 function trackers_include()
 {
   # Keep the dirname only if it's admin
-  $dir = get_module_include_dir($_SERVER['PHP_SELF'], 0, 1);
+  $dir = get_module_include_dir($_SERVER['SCRIPT_NAME'], 0, 1);
   $pre = '';
   if ($dir != "admin")
     {
@@ -45,7 +45,7 @@ function trackers_include()
       $pre = "../";
     }
 
-  return $pre."../include/trackers_run/".$dir.basename($_SERVER['PHP_SELF']);
+  return $pre."../include/trackers_run/".$dir.basename($_SERVER['SCRIPT_NAME']);
 }
 
 # Does like trackers_include() but load an arbitrary page of the common
