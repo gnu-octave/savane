@@ -541,7 +541,8 @@ else if ($item == "email")
       $title = _("Confirm Email change");
       $preamble = _('Click update to confirm your e-mail change');
       $input_title = _('Confirmation hash:');
-      $input_specific = "<input type='text' readonly='readonly' name='confirm_hash' value='$confirm_hash' />";
+      $input_specific = "<input type='text' readonly='readonly' name='confirm_hash' value='"
+	. htmlentities($confirm_hash, ENT_QUOTES) . "' />";
       $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
     }
 }
