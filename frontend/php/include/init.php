@@ -169,19 +169,19 @@ if ($sys_debug_on == true) {
 
     print '<hr />';
     print 'GET:<br />';
-    print_r($INPUT_SAVE['get']);
+    print htmlspecialchars(print_r($INPUT_SAVE['get'], true), ENT_QUOTES);
 
     print '<hr />';
     print 'POST:<br />';
-    print_r($INPUT_SAVE['post']);
+    print htmlspecialchars(print_r($INPUT_SAVE['post'], true), ENT_QUOTES);
 
     print '<hr />';
     print 'COOKIE:<br />';
-    print_r($INPUT_SAVE['cookie']);
+    print htmlspecialchars(print_r($INPUT_SAVE['cookie'], true), ENT_QUOTES);
 
     print '<hr />';
     print 'FILES:<br />';
-    print_r($INPUT_SAVE['files']);
+    print htmlspecialchars(print_r($INPUT_SAVE['files'], true), ENT_QUOTES);
 
 # Useless, only prints 'debug_dump()'...
 # Check util_die() maybe.
