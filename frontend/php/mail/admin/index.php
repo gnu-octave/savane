@@ -102,7 +102,8 @@ if ($post_changes)
 	if (strpos($grp->getTypeMailingListFormat("%NAME", $newlist_format_index), "%NAME") !== false
 	    && (!$list_name['new'] || strlen($list_name['new']) < 2))
 	  {
-	    fb(sprintf(_("You must provide list name that is two or more characters long: %s"), $list_name['new']), 1);
+	    if (strlen($list_name['new']) > 0)
+	      fb(sprintf(_("You must provide list name that is two or more characters long: %s"), $list_name['new']), 1);
 	    continue;
 	  }
 	
