@@ -42,7 +42,7 @@ our $bin_cvs = "cvs";
  
 our $use_scp = "0";
 our $bin_scp = "scp";
-our $regexp_scp = "^(scp .*-t /upload)|(scp .*-t /var/ftp)";
+our $regexp_scp = "^(scp .*-t (-- )?/upload)|(scp .*-t (-- )?/var/ftp)";
 
 our $use_sftp = "0";
 our $bin_sftp = "sftp-server";
