@@ -11,6 +11,11 @@ Clean-up branch - v.3.1-cleanup
   $sys_trackers_attachments_dir (default
   "$sys_appdatadir/trackers_attachments")
 
+* The behavior of SCP changed somewhere between OpenSSH 5.2 and 5.5
+  (inclusive).  It now passes an extra '--' argument before the copy
+  destination.  You may need to adapt your '$regexp_scp' in
+  '/etc/membersh-conf.pl'.
+
 
 [SITE SPECIFIC CONTENT]
 
