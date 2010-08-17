@@ -1,4 +1,5 @@
 # Spanish translation
+# Copyright (C) 2010  Rene Lopez <rsl@members.fsf.org>
 # Copyright (C) 2007  Gonzalo Sebastian
 # Copyright (C) 2007  Sylvain Beucler (tech. fixes)
 # This file is distributed under the same license as the Savane package.
@@ -149,11 +150,11 @@ msgstr "Usted será conectado con un servidor seguro (https) y su contraseña no
 #: frontend/php/account/register.php:277
 #: frontend/php/include/user_home.php:141
 msgid "Login Name:"
-msgstr "Nombre de conexión:"
+msgstr "Nombre de usuario:"
 
 #: frontend/php/account/login.php:216
 msgid "No account yet?"
-msgstr "Todavía no tiene cuenta?"
+msgstr "¿Todavía no tiene cuenta?"
 
 #: frontend/php/account/login.php:218
 #: frontend/php/account/register.php:280
@@ -163,7 +164,7 @@ msgstr "Contraseña:"
 #: frontend/php/account/login.php:219
 #: frontend/php/account/lostpw.php:42
 msgid "Lost your password?"
-msgstr "Perdió su contraseña?"
+msgstr "¿Perdió su contraseña?"
 
 #: frontend/php/account/login.php:229
 msgid "Stay in secure (https) mode after login"
@@ -179,7 +180,7 @@ msgstr "Este servidor no cifra datos (no es https), por eso la contraseña que u
 
 #: frontend/php/account/login.php:242
 msgid "Remember me"
-msgstr "Recuerdame"
+msgstr "Recordarme"
 
 #: frontend/php/account/login.php:243
 msgid "For a year, your login information will be stored in a cookie. Use this only if you are using your own computer."
@@ -206,11 +207,11 @@ msgstr "Error"
 
 #: frontend/php/account/lostlogin.php:40
 msgid "This confirm hash exists more than once."
-msgstr "Esto confirma que el hash existe más de una vez"
+msgstr "Esto confirma que el hash existe más de una vez."
 
 #: frontend/php/account/lostlogin.php:43
 msgid "Invalid confirmation hash."
-msgstr "Hash de confirmación inválido"
+msgstr "Hash de confirmación inválido."
 
 #: frontend/php/account/lostlogin.php:57
 #: frontend/php/account/lostlogin.php:59
@@ -233,7 +234,7 @@ msgstr "Nueva Contraseña:"
 
 #: frontend/php/account/lostlogin.php:68
 msgid "New Password (repeat):"
-msgstr "Nueva Contraseña (repetirla):"
+msgstr "Nueva Contraseña (repetir):"
 
 #: frontend/php/account/lostpw-confirm.php:70
 msgid "Invalid User"
@@ -291,7 +292,7 @@ msgstr ""
 #: frontend/php/my/admin/change.php:365
 #, php-format
 msgid "-- the %s team."
-msgstr "--El equipo %s."
+msgstr "-- El equipo %s."
 
 #: frontend/php/account/lostpw-confirm.php:160
 msgid "Confirmation mailed"
@@ -307,7 +308,7 @@ msgstr "Un email ha sido enviado a la dirección que tiene en el archivo."
 
 #: frontend/php/account/lostpw-confirm.php:166
 msgid "Follow the instructions in the email to change your account password."
-msgstr "Siga las instrucciones en el email para cambiar su contraseña de cuenta."
+msgstr "Siga las instrucciones en el email para cambiar la contraseña de su cuenta."
 
 #: frontend/php/account/lostpw.php:39
 msgid "Lost Account Password"
@@ -319,7 +320,7 @@ msgstr "Hey... perder su contraseña es un asunto serio. Compromete la seguridad
 
 #: frontend/php/account/lostpw.php:46
 msgid "The form below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation hash for your account. Visiting the URL will allow you to change your password online and login."
-msgstr "El formulario de abajo enviará una URL a la dirección de email que tenemos en el archivo de usted. Esta URL es una confirmación hash de 128-bit para su cuenta. Visitar la URL le permitirá cambiar su contraseña en línea y entrar al sistema."
+msgstr "El formulario de abajo enviará una URL a la dirección de email que tenemos archivada de usted. Esta URL es una confirmación hash de 128-bit para su cuenta. Visitar la URL le permitirá cambiar su contraseña en línea y entrar al sistema."
 
 #: frontend/php/account/lostpw.php:47
 msgid "This will work only if your account was already successfully registered and activated. Note that accounts that are not activated within the three days next to their registration are automatically deleted."
@@ -435,7 +436,7 @@ msgstr "Confirmación de Registro"
 
 #: frontend/php/account/register.php:259
 msgid "New Account Registration Confirmation"
-msgstr "Confirmación de registro de nueva cuenta"
+msgstr "Confirmación de registro de una nueva cuenta"
 
 #: frontend/php/account/register.php:260
 #, php-format
@@ -445,11 +446,11 @@ msgstr "Felicitaciones. Usted se ha registrado en %s"
 #: frontend/php/account/register.php:261
 #, php-format
 msgid "Your login is: %s"
-msgstr "Su información de entrada al sistema es: %s"
+msgstr "Su nombre de usuario es: %s"
 
 #: frontend/php/account/register.php:263
 msgid "You are now being sent a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account."
-msgstr "Se le ha enviado un email de confirmación para verificar su dirección de email.Visitar el enlace enviado en este email activará su cuenta."
+msgstr "Se le ha enviado un email de confirmación para verificar su dirección de email. Visitar el enlace enviado en este email activará su cuenta."
 
 #: frontend/php/account/register.php:263
 msgid "Accounts not confirmed after two days are deleted from the database."
@@ -481,7 +482,7 @@ msgstr "Esta dirección de email será verificada antes de la activación de la 
 
 #: frontend/php/account/su.php:87
 msgid "What are you doing here?"
-msgstr "Que está haciendo aquí?"
+msgstr "¿Que está haciendo aquí?"
 
 #: frontend/php/account/verify.php:62
 msgid "Invalid username."
@@ -502,7 +503,7 @@ msgstr "Para completar su registro, ingrese al sistema ahora. Su cuenta será en
 
 #: frontend/php/account/verify.php:92
 msgid "Login Name"
-msgstr "Nombre de conexión"
+msgstr "Nombre de usuario"
 
 #: frontend/php/account/verify.php:96
 msgid "Password"
@@ -510,11 +511,11 @@ msgstr "Contraseña"
 
 #: frontend/php/account/impersonate.php:24
 msgid "You need to be site administrator to use this feature."
-msgstr ""
+msgstr "Necesitas ser administrador del sitio para usar esta característica."
 
 #: frontend/php/account/impersonate.php:31
 msgid "This user doesn't exist."
-msgstr "Ese usuario no existe"
+msgstr "Este usuario no existe."
 
 #: frontend/php/arch/index.php:37
 #: frontend/php/cvs/index.php:41
@@ -552,7 +553,7 @@ msgstr "Puede navegar el repositorio %s de este proyecto con su navegador web. E
 #: frontend/php/include/project_home.php:526
 #: frontend/php/svn/index.php:65
 msgid "Browse Sources Repository"
-msgstr "Navegar el Repositorio de Fuentes"
+msgstr "Navegar el Repositorio de las Fuentes"
 
 #: frontend/php/arch/index.php:71
 #: frontend/php/cvs/index.php:78
@@ -567,7 +568,7 @@ msgstr "Navegar el Repositorio de Fuentes"
 #: frontend/php/include/project_home.php:530
 #: frontend/php/svn/index.php:72
 msgid "Browse Web Pages Repository"
-msgstr "Navegar el Repositorio de Páginas Web"
+msgstr "Navegar el Repositorio de la Páginas Web"
 
 #: frontend/php/arch/index.php:77
 #: frontend/php/cvs/index.php:85
@@ -595,35 +596,35 @@ msgstr ""
 #: frontend/php/cvs/admin/index.php:69
 #, fuzzy
 msgid "Invalid repository name: "
-msgstr "Nombre de lista inválido"
+msgstr "Nombre del repositorio inválido: "
 
 #: frontend/php/cvs/admin/index.php:72
 #, fuzzy
 msgid "Invalid matching type"
-msgstr "Hash de confirmación inválido"
+msgstr "Tipo de concordancia inválido"
 
 #: frontend/php/cvs/admin/index.php:77
 msgid "Invalid directories list"
-msgstr ""
+msgstr "Lista de directorios inválido"
 
 #: frontend/php/cvs/admin/index.php:85
 #, fuzzy
 msgid "Invalid value for enable_diff"
-msgstr "Nombre de usuario inválido."
+msgstr "Valor inválido para enable_diff"
 
 #: frontend/php/cvs/admin/index.php:88
 #, fuzzy
 msgid "Invalid list of notification e-mails"
-msgstr "Hash de confirmación inválido"
+msgstr "Lista de notificacion de e-mails inválida"
 
 #: frontend/php/cvs/admin/index.php:93
 #, fuzzy
 msgid "Invalid list of diff notification e-mails"
-msgstr "Hash de confirmación inválido"
+msgstr ""
 
 #: frontend/php/cvs/admin/index.php:198
 msgid "Modify"
-msgstr ""
+msgstr "Modificar"
 
 #: frontend/php/cvs/admin/index.php:241
 #: frontend/php/files/add.php:43
@@ -647,7 +648,7 @@ msgstr "Pero, el sistema de descarga de archivos debería funcionar si usted res
 #: frontend/php/files/add.php:66
 #, php-format
 msgid "How does file list work on %s?"
-msgstr "Cómo funciona la lista de archivos en %s?"
+msgstr "¿Cómo funciona la lista de archivos en %s?"
 
 #: frontend/php/files/add.php:67
 #, php-format
@@ -816,11 +817,11 @@ msgstr "Alternativamente, puede hacer un enlace a %s"
 
 #: frontend/php/files/add.php:147
 msgid "How does it work, how to do this without a web browser?"
-msgstr "Cómo funciona, cómo hacer esto sin un navegador web?"
+msgstr "¿Cómo funciona, cómo hacer esto sin un navegador web?"
 
 #: frontend/php/files/add.php:148
 msgid "It just creates a nice LATEST_RELEASE_IS file in the package dir with the version name as content."
-msgstr "Esto sólo crea un lindo archivo ES_ULTIMO_LANZAMIENTO en el directorio paquete con el nombre de la versión como contenido."
+msgstr "Esto sólo crea un lindo archivo LATEST_RELEASE en el directorio paquete con el nombre de la versión como contenido."
 
 #: frontend/php/files/add.php:149
 msgid "You can do this job exactly by making a similar file and upload it:"
@@ -837,7 +838,7 @@ msgstr "Usted no tiene los privilegios requeridos para acceder a esta página"
 
 #: frontend/php/files/index.php:71
 msgid "Below is a list of files of the project. You can access the project download area directly at"
-msgstr "Abajo está una lista de archivos del proyecto. Puede acceder el área de descarga del proyecto directamente en "
+msgstr "Abajo hay una lista de archivos del proyecto. Puede acceder el área de descarga del proyecto directamente en "
 
 #: frontend/php/files/index.php:91
 #, php-format
@@ -857,7 +858,7 @@ msgstr "Aplicar"
 #: frontend/php/forum/forum.php:130
 #, fuzzy
 msgid "This forum ID doesn't exist."
-msgstr "Ese tipo de grupo no existe"
+msgstr "Este grupo no existe"
 
 #: frontend/php/forum/forum.php:360
 msgid "Previous Messages"
@@ -906,12 +907,12 @@ msgstr[1] ""
 
 #: frontend/php/include/account.php:49
 msgid "account name"
-msgstr "nombre de cuenta"
+msgstr "nombre de la cuenta"
 
 #: frontend/php/include/account.php:74
 #, php-format
 msgid "There cannot be any spaces in the %s"
-msgstr "No puede haber ningún espacio en el / la %s"
+msgstr "No puede haber ningún espacio en el/la %s"
 
 #: frontend/php/include/account.php:81
 #, php-format
@@ -1095,16 +1096,16 @@ msgstr "Repositorios CVS"
 
 #: frontend/php/include/context.php:246
 msgid "GNU Arch Repositories"
-msgstr "Repositorios GNU"
+msgstr "Repositorios GNU Arch"
 
 #: frontend/php/include/context.php:248
 msgid "Subversion Repositories"
-msgstr "Repositorios de Subversion"
+msgstr "Repositorios Subversion"
 
 #: frontend/php/include/context.php:250
 #, fuzzy
 msgid "Git Repositories"
-msgstr "Repositorios CVS"
+msgstr "Repositorios Git"
 
 #: frontend/php/include/context.php:253
 msgid "In Depth Guide"
@@ -1124,7 +1125,7 @@ msgstr "Libro de cocina"
 
 #: frontend/php/include/context.php:268
 msgid "Support Tracker Administration"
-msgstr "Administración de Tracker de soporte "
+msgstr "Administración del Tracker de soporte "
 
 #: frontend/php/include/context.php:269
 #: frontend/php/include/pagemenu.php:397
@@ -1136,7 +1137,7 @@ msgstr "Soporte"
 #: frontend/php/include/context.php:276
 #: frontend/php/include/context.php:284
 msgid "Bugs Tracker Administration"
-msgstr "Administración de tracker de fallas"
+msgstr "Administración del tracker de fallas"
 
 #: frontend/php/include/context.php:277
 #: frontend/php/include/context.php:285
@@ -1180,7 +1181,7 @@ msgstr "Noticias"
 
 #: frontend/php/include/context.php:330
 msgid "Mailing Lists Administration"
-msgstr "Administración de listas de correo"
+msgstr "Administración de las listas de correo"
 
 #: frontend/php/include/context.php:331
 #: frontend/php/include/pagemenu.php:418
@@ -1256,7 +1257,7 @@ msgstr ":"
 
 #: frontend/php/include/exit.php:48
 msgid "Exiting with Error"
-msgstr "Salir con Error"
+msgstr "Saliendo con Error"
 
 #: frontend/php/include/exit.php:59
 msgid "Permission Denied"
@@ -1272,7 +1273,7 @@ msgstr "Parámetros Perdidos"
 
 #: frontend/php/include/exit.php:118
 msgid "This Project Has Turned Off Mailing Lists"
-msgstr "Este Proyecto ha Decepcionado las Listas de Correo"
+msgstr "Este Proyecto ha desactivado las Listas de Correo"
 
 #: frontend/php/include/features_boxes.php:34
 #, php-format
@@ -1307,14 +1308,14 @@ msgstr[1] ""
 #: frontend/php/include/features_boxes.php:111
 #, php-format
 msgid "%s hosted project"
-msgid_plural "%s hosted projects"
+msgid_plural "%s proyectos hospedados"
 msgstr[0] ""
 msgstr[1] ""
 
 #: frontend/php/include/features_boxes.php:125
 #, php-format
 msgid "+ %s registration pending"
-msgid_plural "+ %s registrations pending"
+msgid_plural "+ %s registros pendientes"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1332,7 +1333,7 @@ msgstr ":"
 #: frontend/php/my/votes.php:111
 #, php-format
 msgid "%s vote"
-msgid_plural "%s votes"
+msgid_plural "%s votos"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1465,7 +1466,7 @@ msgstr "Lo mismo para los nuevos items"
 #: frontend/php/include/trackers/format.php:379
 #: frontend/php/project/memberlist.php:176
 msgid "Project Member"
-msgstr "Miembro de Proyecto"
+msgstr "Miembro del Proyecto"
 
 #: frontend/php/include/html.php:815
 #: frontend/php/include/html.php:827
@@ -1494,7 +1495,7 @@ msgstr "Directorio de Subversión Básico"
 #: frontend/php/include/html.php:852
 #, fuzzy
 msgid "Basic Git Directory"
-msgstr "Directorio Básico"
+msgstr "Directorio de Git Básico"
 
 #: frontend/php/include/html.php:853
 msgid "Cvs Attic/Gna"
@@ -1777,7 +1778,7 @@ msgstr "Items entrantes"
 
 #: frontend/php/include/pagemenu.php:250
 msgid "What's new for me?"
-msgstr "Qué hay de nuevo para mi?"
+msgstr "¿Qué hay de nuevo para mi?"
 
 #: frontend/php/include/pagemenu.php:253
 msgid "Items"
@@ -1992,13 +1993,13 @@ msgstr "Administración de Código Fuente"
 #: frontend/php/include/pagemenu.php:503
 #, fuzzy
 msgid "Use Git"
-msgstr "Lista de Usuario"
+msgstr "Usar Git"
 
 #: frontend/php/include/pagemenu.php:506
 #: frontend/php/include/project_home.php:466
 #, fuzzy
 msgid "Source Code Manager: Git Repository"
-msgstr "Administrador de Código Fuente: Repositorio CVS"
+msgstr "Administrador de Código Fuente: Repositorio Git"
 
 #: frontend/php/include/pagemenu.php:529
 msgid "Use Subversion"
@@ -2021,7 +2022,7 @@ msgstr "Administrador de Código Fuente: Repositorio GNU Arch"
 #: frontend/php/include/pagemenu.php:583
 #, fuzzy
 msgid "Use CVS"
-msgstr "Puede usar CVS"
+msgstr "Usar CVS"
 
 #: frontend/php/include/pagemenu.php:586
 #: frontend/php/include/project_home.php:523
@@ -2095,7 +2096,7 @@ msgstr "Resumir recetas"
 
 #: frontend/php/include/pagemenu.php:790
 msgid "Savane In Depth Guide"
-msgstr "Guía Avanzada Savane"
+msgstr "Guía Avanzada de Savane"
 
 #: frontend/php/include/pagemenu.php:801
 #: frontend/php/include/trackers_run/admin/field_usage.php:356
@@ -2201,7 +2202,7 @@ msgstr "Navegar Lista de Usuarios"
 #: frontend/php/include/pagemenu.php:889
 #: frontend/php/siteadmin/index.php:133
 msgid "Monitoring"
-msgstr "Vigilando"
+msgstr "Monitoreando"
 
 #: frontend/php/include/pagemenu.php:893
 #: frontend/php/siteadmin/index.php:135
@@ -2240,7 +2241,7 @@ msgstr "ERROR - La habilidad ya está en su inventario"
 
 #: frontend/php/include/people/general.php:214
 msgid "You must be logged in first"
-msgstr "Debe estar dentro del sistema en primer lugar"
+msgstr "En primer lugar, debe estar dentro del sistema"
 
 #: frontend/php/include/people/general.php:228
 #: frontend/php/include/people/general.php:525
@@ -2782,7 +2783,7 @@ msgstr "Mail enviado a %s"
 msgid "Send a Message to %s"
 msgstr "Enviar Mensaje a %s"
 
-#: frontend/php/include/sendmail.php:480
+#: frontend/php/include/sen4dmail.php:480
 msgid "From:"
 msgstr "De:"
 
@@ -2985,7 +2986,7 @@ msgstr "Mostrar mis marcadores"
 
 #: frontend/php/include/sitemenu.php:454
 msgid "My Account Conf"
-msgstr "Mi Configuración de Cuenta"
+msgstr "Configuración de mi cuenta"
 
 #: frontend/php/include/sitemenu.php:461
 msgid "Logout Superuser"
@@ -3388,7 +3389,7 @@ msgstr "Ninguna reasignación es requerida o posible."
 
 #: frontend/php/include/trackers/data.php:2023
 msgid "Unable to find out to which artifact the item is to be reassigned, exiting."
-msgstr "Incapaz de encontrar a cual artefacto el item tiene que ser reasignado, al salir."
+msgstr "Incapaz de encontrar a cual artefacto el item tiene que ser reasignado, saliendo."
 
 #: frontend/php/include/trackers/data.php:2046
 msgid "Unable to create a new item."
@@ -3491,7 +3492,7 @@ msgstr "Resultado de spam actual: %s"
 
 #: frontend/php/include/trackers/format.php:259
 msgid "Unflag as spam"
-msgstr "Sin marcar como spam"
+msgstr "Des-marcar como spam"
 
 #: frontend/php/include/trackers/format.php:270
 #, php-format
@@ -3537,7 +3538,7 @@ msgstr "A cargo de este item."
 
 #: frontend/php/include/trackers/format.php:473
 msgid "Flag as spam"
-msgstr "Marcado como Spam"
+msgstr "Marcar como Spam"
 
 #: frontend/php/include/trackers/format.php:619
 msgid "No files currently attached"
@@ -3565,11 +3566,11 @@ msgstr "Lista CC está vacía"
 #: frontend/php/include/trackers_run/admin/field_values.php:512
 #: frontend/php/include/trackers_run/admin/field_values.php:614
 msgid "Carbon-Copy List"
-msgstr "Lista Copia-Carbón"
+msgstr "Lista de Copia-Carbón"
 
 #: frontend/php/include/trackers/format.php:808
 msgid "Submitted the item"
-msgstr "Enviado el item"
+msgstr "Item enviado"
 
 #: frontend/php/include/trackers/format.php:816
 msgid "Posted a comment"
@@ -3577,12 +3578,12 @@ msgstr "Publicado un comentario"
 
 #: frontend/php/include/trackers/format.php:824
 msgid "Updated the item"
-msgstr "Actualizado el item"
+msgstr "Item Actualizado"
 
 #: frontend/php/include/trackers/general.php:109
 #: frontend/php/include/trackers/general.php:134
 msgid "This project has turned off this tracker."
-msgstr "Este proyecto ha decepcionado este tracker."
+msgstr "Este proyecto ha des-activado este tracker."
 
 #: frontend/php/include/trackers/general.php:493
 msgid "Error: no group defined"
@@ -3718,7 +3719,7 @@ msgstr "Para Todos"
 
 #: frontend/php/include/trackers/show.php:263
 msgid "For Project Members Only"
-msgstr "Sólo para miembros de Proyecto"
+msgstr "Sólo para miembros del Proyecto"
 
 #: frontend/php/include/trackers/show.php:266
 #: frontend/php/siteadmin/groupedit.php:173
@@ -3732,7 +3733,7 @@ msgstr "Indefinido"
 #: frontend/php/include/trackers/show.php:399
 #, php-format
 msgid "From %s User Docs"
-msgstr "De Documentos de Usuario %s"
+msgstr "De los Documentos del Usuario %s"
 
 #: frontend/php/include/trackers/show.php:409
 #: frontend/php/include/trackers/show.php:421
@@ -3916,7 +3917,7 @@ msgstr "Agregar Direcciones de Email (coma como separador):"
 
 #: frontend/php/include/trackers_run/add.php:241
 msgid "Did you check to see if this item has already been submitted?"
-msgstr "Usted ha comprobado para ver si este item ya fue enviado?"
+msgstr "¿Usted ha comprobado si este item ya fue enviado?"
 
 #: frontend/php/include/trackers_run/admin/editqueryforms.php:195
 #, php-format
@@ -4013,7 +4014,7 @@ msgstr "Id"
 
 #: frontend/php/include/trackers_run/admin/editqueryforms.php:490
 msgid "Query form name"
-msgstr "Nombre de formulario de consulta"
+msgstr "Nombre del formulario de consulta"
 
 #: frontend/php/include/trackers_run/admin/editqueryforms.php:492
 #: frontend/php/include/trackers_run/admin/field_usage.php:368
@@ -4025,7 +4026,7 @@ msgstr "Alcance"
 #: frontend/php/include/trackers_run/admin/field_values.php:513
 #: frontend/php/include/trackers_run/admin/field_values.php:721
 msgid "Delete?"
-msgstr "Borrar?"
+msgstr "¿Borrar?"
 
 #: frontend/php/include/trackers_run/admin/editqueryforms.php:495
 msgid "Existing Query Forms:"
@@ -4089,11 +4090,11 @@ msgstr "Historial de Item:"
 
 #: frontend/php/include/trackers_run/admin/field_usage.php:178
 msgid "Keep field value changes in history"
-msgstr "Mantener cambios en el valor del campo en el historial"
+msgstr "Mantener cambios del valor del campo en el historial"
 
 #: frontend/php/include/trackers_run/admin/field_usage.php:179
 msgid "Ignore field value changes in history"
-msgstr "Ignorar cambios en el valor del campo en el historial"
+msgstr "Ignorar cambios del valor del campo en el historial"
 
 #: frontend/php/include/trackers_run/admin/field_usage.php:187
 msgid "Access:"
@@ -4161,7 +4162,7 @@ msgstr "Prohibido"
 
 #: frontend/php/include/trackers_run/admin/field_usage.php:343
 msgid "Reset to defaults"
-msgstr "Restablecer a valores por defecto"
+msgstr "Restablecer valores por defecto"
 
 #: frontend/php/include/trackers_run/admin/field_usage.php:367
 msgid "Rank on screen"
@@ -4335,11 +4336,11 @@ msgstr "Descripción (opcional):"
 #: frontend/php/include/trackers_run/admin/field_values.php:399
 #: frontend/php/include/trackers_run/admin/field_values.php:405
 msgid "Reset values"
-msgstr "Restablecer Valores"
+msgstr "Restablecer valores"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:400
 msgid "You are currently using custom values. If you want to reset values to the default ones, use the following form:"
-msgstr "Usted está actualmente usando valores personalizados. Si quiere restablecer los valores a los valores de defecto, use el siguiente formulario:"
+msgstr "Usted está actualmente usando valores personalizados. Si quiere restablecer los valores por defecto, use el siguiente formulario:"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:410
 msgid "For your information, the default active values are:"
@@ -4394,7 +4395,7 @@ msgstr "No"
 #: frontend/php/include/trackers_run/admin/field_values.php:537
 #: frontend/php/include/trackers_run/admin/field_values.php:625
 msgid "* - Any"
-msgstr "* - Cualquier"
+msgstr "* - Cualquiera"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:563
 msgid "Edit others fields update"
@@ -4402,7 +4403,7 @@ msgstr "Editar otras actualizaciones de campos"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:574
 msgid "Delete this transition?"
-msgstr "Borrar esta transición?"
+msgstr "¿Borrar esta transición?"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:583
 #, php-format
@@ -4464,7 +4465,7 @@ msgstr "Cuerpo (abstracto)"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:735
 msgid "Delete this canned answer?"
-msgstr "Borrar esta respuesta guardada?"
+msgstr "¿Borrar esta respuesta guardada?"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:743
 msgid "No canned bug responses set up yet"
@@ -4733,12 +4734,12 @@ msgstr "Usar %s lógico entre las búsquedas '%s' y '%s'. "
 #: frontend/php/include/trackers_run/browse.php:1022
 #: frontend/php/include/trackers_run/browse.php:1031
 msgid "AND"
-msgstr "Y"
+msgstr "AND"
 
 #: frontend/php/include/trackers_run/browse.php:1022
 #: frontend/php/include/trackers_run/browse.php:1031
 msgid "OR"
-msgstr "O"
+msgstr "OR"
 
 #: frontend/php/include/trackers_run/browse.php:1073
 msgid "modified"
@@ -4927,11 +4928,11 @@ msgstr "Lista Copia-Carbon de Notificación de Mail"
 
 #: frontend/php/include/trackers_run/detail.php:366
 msgid "Do you think this task is very important?"
-msgstr ""
+msgstr "¿Cree que esta tarea es muy importante?"
 
 #: frontend/php/include/trackers_run/detail.php:368
 msgid "If so, you can click here to add your encouragement to it."
-msgstr ""
+msgstr "Si lo hace, puede hacer click aquí para dar tu apoyo a ella."
 
 #: frontend/php/include/trackers_run/detail.php:370
 #, php-format
