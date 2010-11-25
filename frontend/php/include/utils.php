@@ -178,7 +178,7 @@ function utils_email ($address, $nohtml=0)
 # like the previous but does no extended search, just print as it comes
 function utils_email_basic ($address, $nohtml=0)
 {
-  if (user_isloggedin() || CONTEXT == 'forum' || CONTEXT == 'news')
+  if (user_isloggedin() || CONTEXT == 'forum' || CONTEXT == 'news' || CONTEXT == ''/*frontpage*/)
     {
       if ($nohtml)
 	{ return htmlspecialchars($address); }
