@@ -28,12 +28,13 @@ register_globals_off();
 extract(sane_import('request', array('msg_id')));
 
 if ($msg_id) {
- 
+	$msg_id = intval($msg_id);
 	/*
 		Figure out which group this message is in, for the sake of the admin links
 	*/
-	$result=db_query("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id ".
-		"FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id='$msg_id'");
+	$result=db_execute("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id ".
+			   "FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id=?",
+			   array($msg_id));
 
 	$forum_id=db_result($result,0,'group_forum_id');
 	$thread_id=db_result($result,0,'thread_id');
@@ -44,9 +45,9 @@ if ($msg_id) {
 	print "<p>";
 
 	$sql="SELECT user.user_name,forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
-		"FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id='$msg_id';";
+		"FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id=?;";
 
-	$result = db_query ($sql);
+	$result = db_query($sql, array($msg_id));
 
 	if (!$result || db_numrows($result) < 1) {
 		/*
