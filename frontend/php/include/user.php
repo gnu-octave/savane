@@ -441,8 +441,7 @@ function user_use_votes ($user_id=false)
   if (!$user_id)
     { $user_id = user_getid(); }
 
-  $sql = "SELECT vote_id FROM user_votes WHERE user_id='$user_id'";
-  $result = db_query($sql);
+  $result = db_execute("SELECT vote_id FROM user_votes WHERE user_id=?", array($user_id));
   if (db_numrows($result) > 0) 
     {
       return true;
