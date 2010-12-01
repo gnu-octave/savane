@@ -51,7 +51,7 @@ if ($update && form_check($form_id) && $form_pw && !strcmp($form_pw, $form_pw2) 
   session_redirect($GLOBALS['sys_home']);
 }
 
-$HTML->header(array('title'=>_("Lost Password Login")));
+site_header(array('title'=>_("Lost Password Login")));
 
 print '<h3>'._("Lost Password Login").'</h3>';
 print '<p>'._("Welcome").', '.$row_lostuser['user_name'].'.';
