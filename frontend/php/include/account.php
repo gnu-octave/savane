@@ -21,9 +21,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+$MIN_PASSWD_LENGTH=8;
 function account_pwvalid ($pw) 
 {
-  $MIN_PASSWD_LENGTH=8;
+  global $MIN_PASSWD_LENGTH;
   if (strlen($pw) < $MIN_PASSWD_LENGTH 
       || !preg_match('/[A-Z].*[A-Z]/',$pw) 
       || !preg_match('/[a-z].*[a-z]/',$pw) 
