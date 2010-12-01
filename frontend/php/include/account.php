@@ -23,7 +23,7 @@
 
 function account_pwvalid ($pw) 
 {
-  $MIN_PASSWD_LENGTH=10;
+  $MIN_PASSWD_LENGTH=8;
   if (strlen($pw) < $MIN_PASSWD_LENGTH 
       || !preg_match('/[A-Z].*[A-Z]/',$pw) 
       || !preg_match('/[a-z].*[a-z]/',$pw) 
