@@ -213,7 +213,7 @@ if ($form_is_valid)
     }
   else
     {
-      $passwd = md5($form_pw);
+      $passwd = account_encryptpw($form_pw);
     }
 
   $confirm_hash = substr(md5(rand(0, 32768) . $passwd . time()), 0, 16);
@@ -287,7 +287,7 @@ else
   print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
   print form_input("text", "form_loginname", $form_loginname);
 
-  print '<p><span class="preinput">'._("Password:").'</span><br />&nbsp;&nbsp;';
+  print '<p><span class="preinput">'._("Password: (minimum 10 characters, must contain symbols, digits (0-9) and upper and lower case letters - at least two of each)").'</span><br />&nbsp;&nbsp;';
   print form_input("password", "form_pw", $form_pw);
   print "</p>";
 

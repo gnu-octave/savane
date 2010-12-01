@@ -23,14 +23,19 @@
 
 function account_pwvalid ($pw) 
 {
-  $MIN_PASSWD_LENGTH=3;
-  if (strlen($pw) < $MIN_PASSWD_LENGTH)
+  $MIN_PASSWD_LENGTH=8;
+  if (strlen($pw) < $MIN_PASSWD_LENGTH 
+      || !preg_match('/[A-Z].*[A-Z]/',$pw) 
+      || !preg_match('/[a-z].*[a-z]/',$pw) 
+      || !preg_match('/[0-9].*[0-9]/',$pw)
+      || !preg_match('/[^A-Za-z0-9].*[^A-Za-z0-9]/',$pw))
     {
-      $err_msg = sprintf(ngettext("Password must be at least %s character.", "Password must be at least %s characters.", $MIN_PASSWD_LENGTH), $MIN_PASSWD_LENGTH);
+      $err_msg = sprintf(_("Password must be at least %s characters, and contain symbols, digits (0-9) and upper and lower case letters (at least two of each)."), $MIN_PASSWD_LENGTH);
       $GLOBALS['register_error'] = $err_msg;
       fb($err_msg, 1);
       return 0;
     }
+
   return 1;
 }
 
@@ -250,7 +255,7 @@ function account_groupnamevalid ($name)
 }
 
 # The following is a random salt generator
-function account_gensalt()
+function account_gensalt($n=2)
 {
   function rannum(){	     
     mt_srand((double)microtime()*1000000);		  
@@ -265,10 +270,10 @@ function account_gensalt()
     return $char;	  
   }	   
 
-  $a = genchr(); 
-  $b = genchr();
-  #	$salt = "$1$" . "$a$b";
-  $salt = "$a$b";
+  for ($i = 0; $i<$n; $i++) {
+    $salt .= genchr(); 
+  }
+
   return $salt;	
 }
 
@@ -297,3 +302,15 @@ function account_shellselects($current)
       echo "<option ".(($current == $this_shell)?"selected ":"")."value=$this_shell>$this_shell</option>\n";
     }
 }
+
+function account_encryptpw($pw)
+{
+  return crypt($pw, '$5$' . account_gensalt(16));
+}
+
+
+function account_validpw($stored_pw, $plain_pw)
+{
+  return (crypt($plain_pw,$stored_pw) == $stored_pw);
+}
+

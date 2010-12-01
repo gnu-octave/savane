@@ -55,7 +55,7 @@ function register_valid()
 	}
 	
 	// if we got this far, it must be good
-	db_autoexecute('user', array('user_pw' => md5($GLOBALS['form_pw']),
+	db_autoexecute('user', array('user_pw' => account_encryptpw($GLOBALS['form_pw']),
 				     'unix_pw' => account_genunixpw($GLOBALS['form_pw'])),
 		       DB_AUTOQUERY_UPDATE, "user_id=?", array($user_id));
 	return 1;
