@@ -60,6 +60,7 @@
 // https://savannah.gnu.org/task/?6800 (don't use a leading dot)
 
 require_once(dirname(__FILE__).'/sane.php');
+require_once(dirname(__FILE__).'/account.php');
 
 $G_SESSION=array();
 $G_USER=array();
@@ -176,9 +177,9 @@ function session_login_valid($form_loginname,
 	  fb("user is a kerberos principal but passwords do not match", 1);
 	  return false;
 	}
-      $md5_pw = md5($form_pw);
+      $stored_pw = account_encryptpw($form_pw);
       db_execute("UPDATE user SET user_pw=? WHERE user_id=?",
-		 array($md5_pw, $usr['user_id']));
+		 array($stored_pw, $usr['user_id']));
     }
   else if($usr['user_pw'] == 'SSH') 
     {
@@ -188,9 +189,6 @@ function session_login_valid($form_loginname,
     }
   else 
     {
-      # Default authentication method:
-      # MD5 encrypted password stored locally
-
       # For this authentication method we enable a brother site
       # login mechanism:
       # Password is crypted (crypt()) if we are coming from the brother site.
@@ -208,7 +206,7 @@ function session_login_valid($form_loginname,
 	} 
       else 
 	{
-	  if ($usr['user_pw'] != md5($form_pw)) 
+	  if (!account_validpw($usr['user_pw'],$form_pw)) 
 	    {
 	      #invalid password or user_name
 	      fb(_('Invalid Password'),1);

@@ -43,7 +43,7 @@ $row_lostuser = db_fetch_array($res_lostuser);
 
 if ($update && form_check($form_id) && $form_pw && !strcmp($form_pw, $form_pw2) && account_pwvalid($form_pw)) {
   db_autoexecute('user',
-    array('user_pw' => md5($form_pw), 'confirm_hash' => ''),
+    array('user_pw' => account_encryptpw($form_pw), 'confirm_hash' => ''),
     DB_AUTOQUERY_UPDATE,
     "confirm_hash=?", array($confirm_hash));
   

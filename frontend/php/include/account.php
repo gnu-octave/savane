@@ -255,7 +255,7 @@ function account_groupnamevalid ($name)
 }
 
 # The following is a random salt generator
-function account_gensalt()
+function account_gensalt($n=2)
 {
   function rannum(){	     
     mt_srand((double)microtime()*1000000);		  
@@ -270,10 +270,10 @@ function account_gensalt()
     return $char;	  
   }	   
 
-  $a = genchr(); 
-  $b = genchr();
-  #	$salt = "$1$" . "$a$b";
-  $salt = "$a$b";
+  for ($i = 0; $i<$n; $i++) {
+    $salt .= genchr(); 
+  }
+
   return $salt;	
 }
 
@@ -302,3 +302,15 @@ function account_shellselects($current)
       echo "<option ".(($current == $this_shell)?"selected ":"")."value=$this_shell>$this_shell</option>\n";
     }
 }
+
+function account_encryptpw($pw)
+{
+  return crypt($pw, '$5$' . account_gensalt(16));
+}
+
+
+function account_validpw($stored_pw, $plain_pw)
+{
+  return (crypt($plain_pw,$stored_pw) == $stored_pw);
+}
+

@@ -123,7 +123,7 @@ if ($update)
 	    }
 
 	}
-      else if ($row_pw['user_pw'] != md5($oldvalue))
+      else if (!account_validpw($row_pw['user_pw'], $oldvalue))
 	{
 	  # use basic authentication via user table
 	  fb(_("Old password is incorrect."), 1);
@@ -158,7 +158,7 @@ if ($update)
 	  # Update only if everything was ok before
 	  if ($success)
 	    {
-	      $success = db_autoexecute('user', array('user_pw' => md5($newvalue)),
+	      $success = db_autoexecute('user', array('user_pw' => account_encryptpw($newvalue)),
 				        DB_AUTOQUERY_UPDATE,
 				        "user_id=?", array(user_getid()));
 	      if ($success)

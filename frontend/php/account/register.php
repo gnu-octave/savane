@@ -213,7 +213,7 @@ if ($form_is_valid)
     }
   else
     {
-      $passwd = md5($form_pw);
+      $passwd = account_encryptpw($form_pw);
     }
 
   $confirm_hash = substr(md5(rand(0, 32768) . $passwd . time()), 0, 16);
