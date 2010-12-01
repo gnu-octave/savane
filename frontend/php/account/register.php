@@ -287,7 +287,7 @@ else
   print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
   print form_input("text", "form_loginname", $form_loginname);
 
-  print '<p><span class="preinput">'._("Password: (not too short, must contain symbols, digits (0-9) and upper and lower case letters)").'</span><br />&nbsp;&nbsp;';
+  print '<p><span class="preinput">'._("Password: (not too short, must contain multiple character classes: symbols, digits (0-9), upper and lower case letters)").'</span><br />&nbsp;&nbsp;';
   print form_input("password", "form_pw", $form_pw);
   print "</p>";
 
