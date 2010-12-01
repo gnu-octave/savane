@@ -51,7 +51,7 @@ if ($update && form_check($form_id) && $form_pw && !strcmp($form_pw, $form_pw2) 
   session_redirect($GLOBALS['sys_home']);
 }
 
-$HTML->header(array('title'=>_("Lost Password Login")));
+site_header(array('title'=>_("Lost Password Login")));
 
 print '<h3>'._("Lost Password Login").'</h3>';
 print '<p>'._("Welcome").', '.$row_lostuser['user_name'].'.';
@@ -59,7 +59,8 @@ print ' '._("You may now change your password").'.</p>';
 
 print form_header($_SERVER['PHP_SELF']);
 
-print '<div class="inputfield"><h5>'._("New Password:").'</h5>';
+print '<div class="inputfield"><h5>'._("New password / passphrase:").'</h5>';
+print '<div>'._("(not too short, must contain multiple character classes: symbols, digits (0-9), upper and lower case letters)").'</div>';
 print form_input("password", "form_pw").'</div>';
 
 print '<div class="inputfield"><h5>'._("New Password (repeat):").'</h5>';

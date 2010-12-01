@@ -21,21 +21,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-function account_pwvalid ($pw) 
-{
-  $MIN_PASSWD_LENGTH=8;
-  if (strlen($pw) < $MIN_PASSWD_LENGTH 
-      || !preg_match('/[A-Z].*[A-Z]/',$pw) 
-      || !preg_match('/[a-z].*[a-z]/',$pw) 
-      || !preg_match('/[0-9].*[0-9]/',$pw)
-      || !preg_match('/[^A-Za-z0-9].*[^A-Za-z0-9]/',$pw))
-    {
-      $err_msg = sprintf(_("Password must be at least %s characters, and contain symbols, digits (0-9) and upper and lower case letters (at least two of each)."), $MIN_PASSWD_LENGTH);
-      $GLOBALS['register_error'] = $err_msg;
-      fb($err_msg, 1);
-      return 0;
-    }
+require_once(dirname(__FILE__).'/pwqcheck.php');
 
+// Modified from http://www.openwall.com/articles/PHP-Users-Passwords#enforcing-password-policy
+function account_pwvalid ($newpass, $oldpass = '', $user = '') 
+{
+  global $use_pwqcheck, $pwqcheck_args;
+  if ($use_pwqcheck) {
+    $check = pwqcheck($newpass, $oldpass, $user, '', $pwqcheck_args);
+  } else {
+    /* Some really trivial and obviously-insufficient password strength checks -
+     * we ought to use the pwqcheck(1) program instead. */
+    $check = '';
+    if (strlen($newpass) < 7)
+      $check = 'way too short';
+    else if (stristr($oldpass, $newpass) ||
+	     (strlen($oldpass) >= 4 && stristr($newpass, $oldpass)))
+      $check = 'is based on the old one';
+    else if (stristr($user, $newpass) ||
+	     (strlen($user) >= 4 && stristr($newpass, $user)))
+      $check = 'is based on the username';
+    else
+      $check = 'OK';
+  }
+
+  if ($check != 'OK') {
+    $GLOBALS['register_error'] = "Bad password ($check)";
+    fb($check, 1);
+    return 0;
+  }
   return 1;
 }
 
@@ -254,33 +268,79 @@ function account_groupnamevalid ($name)
   return 1;
 }
 
-# The following is a random salt generator
-function account_gensalt($n=2)
+// <phpass>
+// From http://www.openwall.com/phpass/
+// Version 0.3 / genuine
+// Public domain
+// Author: Solar Designer
+function account_encode64($input, $count)
 {
-  function rannum(){	     
-    mt_srand((double)microtime()*1000000);		  
-    $num = mt_rand(46,122);		  
-    return $num;		  
-  }	     
-  function genchr(){
-    do {	  
-      $num = rannum();		  
-    } while ( ( $num > 57 && $num < 65 ) || ( $num > 90 && $num < 97 ) );	  
-    $char = chr($num);	  
-    return $char;	  
-  }	   
+  $itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  $output = '';
+  $i = 0;
+  do {
+    $value = ord($input[$i++]);
+    $output .= $itoa64[$value & 0x3f];
+    if ($i < $count)
+      $value |= ord($input[$i]) << 8;
+    $output .= $itoa64[($value >> 6) & 0x3f];
+    if ($i++ >= $count)
+      break;
+    if ($i < $count)
+      $value |= ord($input[$i]) << 16;
+    $output .= $itoa64[($value >> 12) & 0x3f];
+    if ($i++ >= $count)
+      break;
+    $output .= $itoa64[($value >> 18) & 0x3f];
+  } while ($i < $count);
+  
+  return $output;
+}
 
-  for ($i = 0; $i<$n; $i++) {
-    $salt .= genchr(); 
+function account_get_random_bytes($count)
+{
+  $random_state = microtime();
+
+  $output = '';
+  if (is_readable('/dev/urandom') &&
+      ($fh = @fopen('/dev/urandom', 'rb'))) {
+    $output = fread($fh, $count);
+    fclose($fh);
   }
+  
+  if (strlen($output) < $count) {
+    $output = '';
+    for ($i = 0; $i < $count; $i += 16) {
+      $random_state =
+	md5(microtime() . $random_state);
+      $output .=
+	pack('H*', md5($random_state));
+    }
+    $output = substr($output, 0, $count);
+  }
+  
+  return $output;
+}
+// </phpass>
 
-  return $salt;	
+function account_gensalt($salt_base64_length=16)
+{
+  // Note: $salt_base64_length=16 for SHA-512, cf. crypt(3)
+  return account_encode64(account_get_random_bytes($salt_base64_length), $salt_base64_length);
 }
 
 # generate unix pw
 function account_genunixpw($plainpw)
 {
-  return crypt($plainpw,account_gensalt());
+  return account_encryptpw($plainpw);
+}
+
+function account_encryptpw($plainpw)
+{
+  // rounds=5000 is the 2010 glibc default, possibly we'll upgrade in
+  // the future, better have this explicit
+  // Cf. http://www.akkadia.org/drepper/sha-crypt.html
+  return crypt($plainpw, '$6$rounds=5000$' . account_gensalt(16));
 }
 
 # returns next userid
@@ -301,11 +361,6 @@ function account_shellselects($current)
       $this_shell = chop($shells[$i]);
       echo "<option ".(($current == $this_shell)?"selected ":"")."value=$this_shell>$this_shell</option>\n";
     }
-}
-
-function account_encryptpw($pw)
-{
-  return crypt($pw, '$5$' . account_gensalt(16));
 }
 
 
