@@ -79,6 +79,14 @@ $sys_debug_noformcheck = false;
 // Log which queries are used the most, using XCache variables
 $sys_debug_sqlprofiler = false;
 
+// Password strength checking
+// Do we have the pwqcheck(1) program from the passwdqc package?
+$use_pwqcheck = TRUE;
+// We can override the default password policy
+$pwqcheck_args = '';
+#$pwqcheck_args = 'config=/etc/passwdqc.conf';
+
+
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');
 # Backward compatibility for PHP4

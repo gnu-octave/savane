@@ -21,22 +21,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-$MIN_PASSWD_LENGTH=8;
-function account_pwvalid ($pw) 
-{
-  global $MIN_PASSWD_LENGTH;
-  if (strlen($pw) < $MIN_PASSWD_LENGTH 
-      || !preg_match('/[A-Z].*[A-Z]/',$pw) 
-      || !preg_match('/[a-z].*[a-z]/',$pw) 
-      || !preg_match('/[0-9].*[0-9]/',$pw)
-      || !preg_match('/[^A-Za-z0-9].*[^A-Za-z0-9]/',$pw))
-    {
-      $err_msg = sprintf(_("Password must be at least %s characters, and contain symbols, digits (0-9) and upper and lower case letters (at least two of each)."), $MIN_PASSWD_LENGTH);
-      $GLOBALS['register_error'] = $err_msg;
-      fb($err_msg, 1);
-      return 0;
-    }
+require_once(dirname(__FILE__).'/pwqcheck.php');
 
+// Modified from http://www.openwall.com/articles/PHP-Users-Passwords#enforcing-password-policy
+function account_pwvalid ($newpass, $oldpass = '', $user = '') 
+{
+  global $use_pwqcheck, $pwqcheck_args;
+  if ($use_pwqcheck) {
+    $check = pwqcheck($newpass, $oldpass, $user, '', $pwqcheck_args);
+  } else {
+    /* Some really trivial and obviously-insufficient password strength checks -
+     * we ought to use the pwqcheck(1) program instead. */
+    $check = '';
+    if (strlen($newpass) < 7)
+      $check = 'way too short';
+    else if (stristr($oldpass, $newpass) ||
+	     (strlen($oldpass) >= 4 && stristr($newpass, $oldpass)))
+      $check = 'is based on the old one';
+    else if (stristr($user, $newpass) ||
+	     (strlen($user) >= 4 && stristr($newpass, $user)))
+      $check = 'is based on the username';
+    else
+      $check = 'OK';
+  }
+
+  if ($check != 'OK') {
+    $GLOBALS['register_error'] = "Bad password ($check)";
+    fb($check, 1);
+    return 0;
+  }
   return 1;
 }
 
@@ -271,6 +284,7 @@ function account_gensalt($n=2)
     return $char;	  
   }	   
 
+  $salt = '';
   for ($i = 0; $i<$n; $i++) {
     $salt .= genchr(); 
   }
