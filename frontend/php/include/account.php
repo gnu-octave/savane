@@ -306,7 +306,7 @@ function account_shellselects($current)
 
 function account_encryptpw($pw)
 {
-  return crypt($pw, '$5$' . account_gensalt(16));
+  return crypt($pw, '$6$' . account_gensalt(16));
 }
 
 
