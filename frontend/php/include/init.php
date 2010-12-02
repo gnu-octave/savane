@@ -39,6 +39,7 @@ require_once(dirname(__FILE__).'/user.php');
 # like title
 require_once(dirname(__FILE__).'/context.php');
 require_once(dirname(__FILE__).'/exit.php');
+require_once(dirname(__FILE__).'/utils.php');
 
 # Default values, so they cannot be found undefined in the code
 $sys_name = "Change-This-Site-Name-with-\$sys_name";
@@ -274,7 +275,7 @@ function require_directory ($module)
 	{
 	  // - only include PHP scripts
 	  // - avoid Emacs temporary files .#filename.php
-	  if (eregi("^[^\.].*\.(php)$", $file))
+	  if (preg_match("/^[^\.].*\.(php)$/i", $file))
 	    {
 	      require_once($dir."/".$file);
 	    }
