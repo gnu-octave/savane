@@ -341,10 +341,13 @@ function account_encryptpw($plainpw)
   // rounds=5000 is the 2010 glibc default, possibly we'll upgrade in
   // the future, better have this explicit
   // Cf. http://www.akkadia.org/drepper/sha-crypt.html
-  //return crypt($plainpw, '$6$rounds=5000$' . account_gensalt(16));
-  // The PHP version in Lenny 5.2.6 has troubles with the above
-  // (truncated hash at 9 chars)
-  return crypt($plainpw, '$6$' . account_gensalt(16));
+  if (version_compare(PHP_VERSION, '5.3.2', '>=')) {
+    return crypt($plainpw, '$6$rounds=5000$' . account_gensalt(16));
+  } else {
+    // The PHP version in Lenny 5.2.6 has troubles with the above
+    // (truncated hash at 9 chars)
+    return crypt($plainpw, '$6$' . account_gensalt(16));
+  }
 }
 
 # returns next userid
