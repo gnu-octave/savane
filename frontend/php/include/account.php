@@ -326,7 +326,8 @@ function account_get_random_bytes($count)
 function account_gensalt($salt_base64_length=16)
 {
   // Note: $salt_base64_length=16 for SHA-512, cf. crypt(3)
-  return account_encode64(account_get_random_bytes($salt_base64_length), $salt_base64_length);
+  $salt_byte_length = $salt_base64_length * 6 / 8;
+  return account_encode64(account_get_random_bytes($salt_byte_length), $salt_byte_length);
 }
 
 # generate unix pw
@@ -340,7 +341,10 @@ function account_encryptpw($plainpw)
   // rounds=5000 is the 2010 glibc default, possibly we'll upgrade in
   // the future, better have this explicit
   // Cf. http://www.akkadia.org/drepper/sha-crypt.html
-  return crypt($plainpw, '$6$rounds=5000$' . account_gensalt(16));
+  //return crypt($plainpw, '$6$rounds=5000$' . account_gensalt(16));
+  // The PHP version in Lenny 5.2.6 has troubles with the above
+  // (truncated hash at 9 chars)
+  return crypt($plainpw, '$6$' . account_gensalt(16));
 }
 
 # returns next userid
