@@ -220,7 +220,7 @@ function markup_full($text, $allow_headings=true)
       else
         {
 	  # Otherwise, normal run, do the markup
-          $result[] = _full_markup($line, $allow_headings, &$context_stack, &$quoted_text);	  
+          $result[] = _full_markup($line, $allow_headings, $context_stack, $quoted_text);	  
 	}
 
     }
@@ -357,11 +357,11 @@ function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
   # Match the headings, e.g. === heading ===
   if ($allow_headings)
     {
-      $line = _markup_headings($line, &$context_stack, &$start_paragraph);
+      $line = _markup_headings($line, $context_stack, $start_paragraph);
     }
 
   # Match list items
-  $line = _markup_lists($line, &$context_stack, &$start_paragraph);
+  $line = _markup_lists($line, $context_stack, $start_paragraph);
 
   # replace four '-' sign with a horizontal ruler
   if (preg_match('/^----\s*$/', $line))
