@@ -163,8 +163,8 @@ if ($history_search)
 # ==================================================
 #   Memorize order by field as a user preference if explicitly specified.
 #
-#   $morder = comma separated list of sort criteria followed by - for
-#     DESC and + for ASC order
+#   $morder = comma separated list of sort criteria followed by < for
+#     DESC and > for ASC order
 #   $order = last sort criteria selected in the UI
 #   $msort = 1 if multicolumn sort activated.
 #  ================================================== 
@@ -212,7 +212,11 @@ if ($morder == '' && !$msort)
 { $morder = "bug_id<"; }
 $order_by = '';
 if ($morder != '')
-{ $order_by = ' ORDER BY '.trackers_criteria_list_to_query($morder); }
+{
+  $fields = trackers_criteria_list_to_query($morder);
+  if (!empty($fields))
+    $order_by = ' ORDER BY '.$fields;
+}
 
 #print "<BR>>DBG Order by = $order_by";
 

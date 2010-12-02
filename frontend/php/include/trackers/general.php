@@ -352,7 +352,7 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
 {
 
   # value is formatted as Y-m-d
-  $t = split("-", $value);
+  $t = preg_split('/-/', $value);
   $year = isset($t[0]) ? $t[0] : null;
   $month = isset($t[1]) ? $t[1] : null;
   $day = isset($t[2]) ? $t[2] : null;
@@ -663,7 +663,7 @@ function trackers_extract_field_list($post_method=true)
 	  // get what we already have
 	  if (!isset($vfl[$field_name]))
 	    $vfl[$field_name] = '--';
-	  list($year, $month, $day) = split("-", $vfl[$field_name]);
+	  list($year, $month, $day) = preg_split("/-/", $vfl[$field_name]);
 	  if ($field_name_part  == 'day')
 	    { $vfl[$field_name] = "$year-$month-$val"; }
 	  elseif ($field_name_part == 'month')
@@ -1832,7 +1832,13 @@ function trackers_add_sort_criteria($criteria_list, $order, $msort)
 # - is descending)
 function trackers_criteria_list_to_query($criteria_list)
 {
-
+  $criteria = preg_split('/,/', $criteria_list);
+  $criteria_filtered = array();
+  foreach ($criteria as $cr) {
+    if (preg_match('/^[a-z_]+[<>]?$/i', $cr))
+      $criteria_filtered[] = $cr;
+  }
+  $criteria_list = join(',', $criteria_filtered);
   $criteria_list = str_replace('>',' ASC',$criteria_list);
   $criteria_list = str_replace('<',' DESC',$criteria_list);
   // Undo the uid->user_name trick to avoid "Column 'submitted_by' in
