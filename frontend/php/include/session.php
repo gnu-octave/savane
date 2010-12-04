@@ -212,6 +212,19 @@ function session_login_valid($form_loginname,
 	      fb(_('Invalid Password'),1);
 	      return false;
 	    }
+       else
+       {
+         // if the password was improperly salted, fix it.
+         // The PHP version in Lenny 5.2.6 has troubles with the above
+         // (truncated hash at 9 chars)
+         if (version_compare(PHP_VERSION, '5.3.2', '<') and
+             preg_match('/rounds=50/', $usr['user_pw']))
+         {
+           db_autoexecute('user', array('user_pw' => account_encryptpw($form_pw)),
+           DB_AUTOQUERY_UPDATE,
+           "user_id=?", array($usr['user_id']));
+         }
+       }
 	}
 
     }
