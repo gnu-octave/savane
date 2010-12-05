@@ -60,7 +60,7 @@ print ' '._("You may now change your password").'.</p>';
 print form_header($_SERVER['PHP_SELF']);
 
 print '<div class="inputfield"><h5>'._("New password / passphrase:").'</h5>';
-print '<div>'._("(not too short, must contain multiple character classes: symbols, digits (0-9), upper and lower case letters)").'</div>';
+print '<div>'.account_password_help().'</div>';
 print form_input("password", "form_pw").'</div>';
 
 print '<div class="inputfield"><h5>'._("New Password (repeat):").'</h5>';

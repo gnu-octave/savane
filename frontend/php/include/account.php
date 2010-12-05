@@ -23,6 +23,16 @@
 
 require_once(dirname(__FILE__).'/pwqcheck.php');
 
+function account_password_help() {
+  global $use_pwqcheck;
+  $help = _("(not too short, must contain multiple character classes: symbols, digits (0-9), upper and lower case letters)");
+  if ($use_pwqcheck) {
+    $pwqgen = exec("pwqgen");
+    $help .= " ".sprintf(_("(for instance: %s)"), htmlspecialchars($pwqgen));
+  }
+  return $help;
+}
+
 // Modified from http://www.openwall.com/articles/PHP-Users-Passwords#enforcing-password-policy
 function account_pwvalid ($newpass, $oldpass = '', $user = '') 
 {

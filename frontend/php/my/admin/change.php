@@ -481,9 +481,9 @@ else if ($item == "password")
 
   $title = _("Change Password");
 
-  $input_title = _("Current Password:");
-  $input2_title = _("New Password:");
-  $input3_title = _("Re-type New Password:");
+  $input_title = _("Current password:");
+  $input2_title = _("New password / passphrase:") . " " . account_password_help();
+  $input3_title = _("Re-type new password:");
 
   $form_item_name = "oldvalue";
   $form_item2_name = "newvalue";
