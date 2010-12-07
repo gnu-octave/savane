@@ -310,9 +310,13 @@ function user_get_result_set_from_unix($user_name)
   
   global $USER_RES;
   $res = db_execute("SELECT * FROM user WHERE user_name=?", array($user_name));
-  $user_id = db_result($res,0,'user_id');
-  $USER_RES["_".$user_id."_"] = $res;
-  return $USER_RES["_".$user_id."_"];
+  if (db_numrows($res)) {
+    $user_id = db_result($res,0,'user_id');
+    $USER_RES["_".$user_id."_"] = $res;
+    return $USER_RES["_".$user_id."_"];
+  } else {
+    return null;
+  }
 }       
 
 function user_get_timezone() 
