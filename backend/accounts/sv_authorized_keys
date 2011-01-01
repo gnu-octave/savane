@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Create authorized_keys file for each system user
 # 
-# Copyright (C) 2009  Sylvain Beucler
+# Copyright (C) 2009, 2011  Sylvain Beucler
 #
 # This file is part of Savane.
 # 
@@ -21,6 +21,7 @@
 import ConfigParser
 import os, sys
 import pwd
+import subprocess
 
 
 from optparse import OptionParser
@@ -32,6 +33,8 @@ user.  For example: --single-dir=/etc/ssh/authorized_keys/ . In that
 case, for OpenSSH, you would use 'AuthorizedKeysFile
 /etc/ssh/authorized_keys/%u' in /etc/ssh/sshd_config . It is assumed that
 the directory is not writable by unprivileged users, to avoid symlink attacks.""")
+parser.add_option("-s", "--no-user-notification",
+                  help="""Don't notify user by e-mail when SSH key is changed (decreases security)""")
 (options, args) = parser.parse_args()
 
 use_homedir = True
@@ -54,7 +57,7 @@ conn = MySQLdb.connect(host=cp.get('database', 'HOST'),
 conn.query("""
 SELECT user_name, LOWER(CONCAT('/home/', SUBSTRING(user_name FROM 1 FOR 1),
     '/', SUBSTRING(user_name FROM 1 FOR 2),
-    '/', user_name)) AS homedir, authorized_keys
+    '/', user_name)) AS homedir, authorized_keys, email, realname
 FROM user
   JOIN user_group ON user.user_id = user_group.user_id
   JOIN groups ON user_group.group_id = groups.group_id
@@ -129,4 +132,23 @@ for row in res.fetch_row(maxrows=0, how=1):
         else:
             os.chown(key_path, uid, gid)
 
+        if not options.no_user_notification:
+            # Notify impacted user by e-mail.
+            # This increases security because if a user web account is
+            # compromised, changes in the SSH keys will be noticed.
+            p = subprocess.Popen(['sendmail', '-t'], stdin=subprocess.PIPE)
+            p.stdin.write("""From: "Savane robot" <root>\n""")
+            p.stdin.write("""To: "%s" <%s>\n""" % (row['realname'].replace('"', '\\"'), row['email']))
+            p.stdin.write("Subject: SSH authorized_keys file update\n")
+            p.stdin.write("\n")
+            p.stdin.write(("Your SSH authorized_keys file was just updated on the '%s' system.\n"
+                           "\n"
+                           "If you didn't request a change in your SSH authorized_keys,"
+                           " somebody may have cracked your account,"
+                           " in which case please notify the system administrators.\n")
+                          % subprocess.Popen(['hostname'], stdout=subprocess.PIPE).communicate()[0].strip())
+            p.stdin.close()
+            if p.wait() != 0:
+                print "Error sending mail to %s" % row['email']
+            
 os.umask(old_umask)
