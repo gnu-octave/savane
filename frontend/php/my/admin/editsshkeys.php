@@ -23,6 +23,7 @@
 
 require_once('../../include/init.php');
 require_once('../../include/account.php');
+require_once('../../include/sendmail.php');
 session_require(array('isloggedin' => 1));
 
 extract(sane_import('post', array('update', 'keys', 'form_authorized_keys', 'form_id')));
@@ -76,6 +77,30 @@ if ($update)
 	    }
 	}
     }
+
+  # Grab original keys from the database for comparison
+  $res_orig_keys = db_execute("SELECT authorized_keys FROM user WHERE user_id = ?", array(user_getid()));
+  $row_orig_keys = db_fetch_array($res_orig_keys);
+  $orig_keys = $row_orig_keys['authorized_keys'];
+  $new_keys = array_diff(split("###", $keys), split('###', $orig_keys));
+
+  if (count($new_keys)) {
+    $user_id = user_getid();
+
+    $message = sprintf(_("Someone, presumably you, has changed your SSH keys on %s.\nIf it wasn't you, maybe someone is trying to compromise your account...\n\n"), $GLOBALS['sys_name']);
+
+    $message .= sprintf(_("The request came from %s"),gethostbyaddr($_SERVER['REMOTE_ADDR']))."\n";
+    $message .= '(IP: '.$_SERVER['REMOTE_ADDR'].' port: '.$_SERVER['REMOTE_PORT'].")\n";
+    $message .= _("with").' '.$_SERVER['HTTP_USER_AGENT']."\n\n";
+
+    $message .= sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
+
+    sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
+                  user_get_email($user_id),
+                  $GLOBALS['sys_name'] .' '._("SSH key changed on your account"),
+                  $message);
+  }
+
 
   # Update the database
   $success = 0;
