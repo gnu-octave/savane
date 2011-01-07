@@ -1347,6 +1347,9 @@ function trackers_data_get_technicians ($group_id)
 	  $notfirst = true;
 	}
     }
+  if (empty($params))
+    // return a valid (but empty) resultset
+    $sql .= 'NULL';
   $sql .= " ORDER BY user_name";
   return db_execute($sql, $params);
 }
