@@ -6,7 +6,7 @@
 -- user 'admin', password 'admin'
 -- (account/register.php)
 INSERT INTO user (user_name, user_pw, add_date, status, realname)
-VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3', UNIX_TIMESTAMP(NOW()), 'A', 'Administrator');
+VALUES ('admin', '$6$vzIAmmEN6zm7td8o$On4O229qcLwPZ2hCayDu9exc8tPAmrM18aUt07V5RAQPApUUutW3oEngsb1N/fO9KZ5YO7NXao1DrA7GVX2u51', UNIX_TIMESTAMP(NOW()), 'A', 'Administrator');
 
 -- siteadmin project
 -- (register/*)
