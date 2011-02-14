@@ -226,6 +226,8 @@ if ($sys_debug_on == true) {
     case E_USER_NOTICE:       print "User Notice";            break;
     case E_STRICT:            print "Strict Notice";          break;
     case E_RECOVERABLE_ERROR: print "Recoverable Error";      break;
+    /* E_DEPRECATED - PHP >= 5.3 : */
+    case 8192:                return false; // too much noise
     default:                  print "Unknown error ($errno)"; break;
     }
     print '</strong>';
@@ -413,7 +415,7 @@ user_guess();
 
 # if we got an item_id and no group_id we need to get the appropriate
 # group_id
-if (!isset($group_id) && !isset($group) && isset($item_id))
+if (!isset($group_id) && !isset($group) && isset($item_id) && in_array(ARTIFACT, array('bugs', 'patch', 'task', 'cookbook', 'support')))
 {
   $result = db_execute("SELECT group_id FROM ".ARTIFACT." WHERE bug_id=?", array($item_id));
   if (db_numrows($result))
