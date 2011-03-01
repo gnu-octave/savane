@@ -294,7 +294,7 @@ print $HTML->box_top(_("Request for Inclusion"),'',1);
 print '<div class="boxitem">'."\n";
   print '<p>';
 #print _("If there is a project - or several - you would like to be member of, to be able to fully contribute, it is possible to search for the names in the whole group database with the following search tool. A list of groups will be generated, depending on the word(s) typed in this form.")."\n";
-print _("Type below the name of the project you want to contribute to.  Joining a project means getting write access to the code repositories and involves responsibilities.  Usually you will first contact the project developers (e.g. using the project mailing list) before requesting formal inclusion using this form.")."\n";
+print _("Type below the name of the project you want to contribute to. Joining a project means getting write access to the project repositories and trackers, and involves responsibilities.  Therefore, usually you would first contact the project developers (e.g., using a project mailing list) before requesting formal inclusion using this form.")."\n";
 print '</p>';
 
 print '
