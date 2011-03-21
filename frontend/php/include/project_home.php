@@ -566,7 +566,9 @@ if ($project->Uses("patch") ||
 	{
 	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs").'">'._("Browse Sources Repository").'</a>';
 	}
-      if ($project->UsesForHomepage("cvs") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
+      if ($project->Uses("homepage") &&
+          $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
+          $project->getUrl("cvs_viewcvs_homepage") != '')
 	{
 	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
 	}
