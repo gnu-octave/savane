@@ -25,61 +25,62 @@ msgstr ""
 "Project-Id-Version: Savane\n"
 "Report-Msgid-Bugs-To: savane-dev@gna.org\n"
 "POT-Creation-Date: 2006-11-28 10:53+0100\n"
-"PO-Revision-Date: 2011-01-14 13:30+0100\n"
+"PO-Revision-Date: 2011-04-17 03:01+0100\n"
 "Last-Translator: Joerg Kohne <joeko (AT) online (PUNKT) de>\n"
 "Language-Team: German <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Bookmarks: -1,-1,-1,-1,-1,-1,24,-1,-1,-1\n"
 
 #: ../frontend/php/404-export.php:31
 msgid "Requested XML not Found (Error 404)"
-msgstr "Angefordertes XML nicht gefunden (Fehler 404)"
+msgstr "Das angeforderte XML wurde nicht gefunden (Fehler 404)"
 
 #: ../frontend/php/404-export.php:34
 #, php-format
 msgid "The XML file you are trying to access doesn't exist on %s."
-msgstr "Die XML-Datei, die Sie angefordert haben, ist auf %s nicht vorhanden."
+msgstr "Die angeforderte XML-Datei ist auf %s nicht vorhanden."
 
 #: ../frontend/php/404-export.php:35
 #, php-format
 msgid "It is surely because it was not yet generated, or too old. If you think that there's a broken link on %s that must be repaired, %sfile a support request%s, mentioning the URL you tried to access (%s)."
-msgstr "Das liegt sicher daran, dass diese noch nicht erstellt wurde oder zu alt ist. Wenn Sie denken, dass es auf %s einen defekten Verweis gibt, %serstellen Sie eine Supportanfrage%s, in der Sie die URL erwähnen, auf die Sie zugreifen wollten (%s)."
+msgstr "Dies kann daran liegen, weil sie entweder noch nicht erstellt wurde oder zu alt ist. Wenn Sie einen ungültigen Verweis auf %s finden, %ssenden Sie uns bitte eine Supportanfrage%s mit genaueren Informationen, welche URL Sie aufgerufen haben (%s)."
 
 #: ../frontend/php/404-export.php:41
 #: ../frontend/php/404.php:40
 #, php-format
 msgid "Otherwise, you can return to the %s%s main page%s."
-msgstr "Alternativ können Sie auf die %s%s-Hauptseite%s zurückkehren."
+msgstr "Sie können auch auf die %s%s-Startseite%s zurückkehren."
 
 #: ../frontend/php/404.php:30
 msgid "Requested Page not Found (Error 404)"
-msgstr "Angeforderte Seite nicht gefunden (Fehler 404)"
+msgstr "Die angeforderte Seite wurde nicht gefunden (Fehler 404)"
 
 #: ../frontend/php/404.php:33
 #, php-format
 msgid "The web page you are trying to access doesn't exist on %s."
-msgstr "Die Webseite, die Sie angefordert haben, ist  auf %s nicht vorhanden."
+msgstr "Die angeforderte Webseite ist auf %s nicht vorhanden."
 
 #: ../frontend/php/404.php:34
 #, php-format
 msgid "If you think that there's a broken link on %s that must be repaired, %sfile a support request%s, mentioning the URL you tried to access (%s)."
-msgstr "Wenn Sie denken, dass es auf %s einen defekten Verweis gibt, %serstellen Sie eine Supportanfrage%s, in der Sie die URL erwähnen, auf die Sie zugreifen wollten (%s)."
+msgstr "Wenn Sie einen ungültigen Verweis auf %s finden, %ssenden Sie uns bitte eine Supportanfrage%s mit genaueren Informationen, welche URL Sie aufgerufen haben (%s)."
 
 #: ../frontend/php/account/deleted.php:30
 #: ../frontend/php/account/deleted.php:32
 msgid "Deleted Account"
-msgstr "Konto gelöscht"
+msgstr "Benutzerkonto gelöscht"
 
 #: ../frontend/php/account/deleted.php:34
 msgid "Your account has been deleted."
-msgstr "Ihr Konto wurde gelöscht."
+msgstr "Ihr Benutzerkonto wurde gelöscht."
 
 #: ../frontend/php/account/deleted.php:38
 #, php-format
 msgid "If you have questions regarding your deletion, please email %s."
-msgstr "Wenn Sie Fragen zur Entfernung Ihres Benutzerkontos haben, schicken Sie bitte eine E-Mail an %s."
+msgstr "Wenn Sie Fragen zur Entfernung Ihres Benutzerkontos haben, senden Sie bitte eine E-Mail an %s."
 
 #: ../frontend/php/account/deleted.php:39
 #: ../frontend/php/account/suspended.php:33
@@ -94,27 +95,27 @@ msgstr "Willkommen bei %s"
 #: ../frontend/php/account/first.php:30
 #, php-format
 msgid "You are now a registered user on %s."
-msgstr "Sie sind jetzt ein registrierter Benutzer von %s."
+msgstr "Sie sind nun ein registrierter Benutzer auf %s."
 
 #: ../frontend/php/account/first.php:32
 msgid "As a registered user, you can participate fully in the activities on the site."
-msgstr "Als angemeldeter Benutzer können Sie vollständig an den Aktivitäten dieser Seiten teilnehmen."
+msgstr "Als registrierter Benutzer können Sie die Webseite nun uneingeschränkt nutzen."
 
 #: ../frontend/php/account/first.php:33
 #, php-format
 msgid "You may now post items to issue trackers in %s, sign on as a project member, or even start your own project."
-msgstr "Sie können jetzt Objekte in die Verfolgungssysteme von %s eintragen, sich als Projektmitglied bewerben oder sogar Ihr eigenes Projekt starten."
+msgstr "Sie können nun Einträge an die Verfolgungssysteme von %s senden, sich als Projektmitglied anmelden oder ein eigenes Projekt starten."
 
 #: ../frontend/php/account/first.php:35
 #, php-format
 msgid "You should take some time to read %sthe Savane User Guide%s so that you may take full advantage of %s."
-msgstr "Sie sollten sich ein wenig Zeit nehmen, um die %sSavane-Dokumentation für Benutzer%s durchzulesen, so dass Sie alle Vorteile von %s benutzen können."
+msgstr "Sie sollten sich ein wenig Zeit zum Lesen der %sSavannah-Benutzerdokumentation%s nehmen, um alle Vorteile von %s nutzen zu können."
 
 #: ../frontend/php/account/first.php:37
 #: ../frontend/php/account/pending-resend.php:44
 #: ../frontend/php/account/register.php:216
 msgid "Enjoy the site"
-msgstr "Viel Spaß auf der Webseite"
+msgstr "Happy hacking"
 
 #: ../frontend/php/account/login.php:62
 msgid "To log-in, we need you to activate cookies in your web browser"
@@ -134,17 +135,17 @@ msgstr "Anmeldung"
 #: ../frontend/php/account/pending.php:36
 #: ../frontend/php/account/pending.php:39
 msgid "Pending Account"
-msgstr "Anhängiges Konto"
+msgstr "Benutzerkonto freischalten"
 
 #: ../frontend/php/account/login.php:176
 #: ../frontend/php/account/pending.php:41
 msgid "Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account."
-msgstr "Ihr Benutzerkonto muss noch per E-Mail von Ihnen bestätigt werden. Durch Anklicken des Links in dieser E-Mail wird Ihr Benutzerkonto aktiviert."
+msgstr "Ihr Benutzerkonto muss noch per E-Mail bestätigt werden. Klicken Sie auf den enthaltenen Verweis, um Ihr Benutzerkonto zu aktivieren."
 
 #: ../frontend/php/account/login.php:177
 #: ../frontend/php/account/pending.php:43
 msgid "If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration."
-msgstr "Wenn Sie diese E-Mail erneut geschickt bekommen möchten, klicken Sie bitte den Link unten an. Eine Bestätigungs-E-Mail wird dann an die Adresse geschickt, die Sie bei der Anmeldung angegeben haben."
+msgstr "Wenn Ihnen diese E-Mail erneut gesendet werden soll, klicken Sie bitte auf den folgenden Verweis. Es wird Ihnen dann zur Bestätigung eine E-Mail wird dann an die Adresse geschickt, die Sie bei der Anmeldung angegeben haben."
 
 #: ../frontend/php/account/login.php:178
 #: ../frontend/php/account/pending.php:45
@@ -157,11 +158,11 @@ msgstr "Fehlerbehebung:"
 
 #: ../frontend/php/account/login.php:186
 msgid "Is the \"Caps Lock\" or \"A\" light on your keyboard on?"
-msgstr "Ist vielleicht die \"Feststelltaste\" aktiviert?"
+msgstr "Ist vielleicht die „Feststelltaste“ aktiviert?"
 
 #: ../frontend/php/account/login.php:186
 msgid "If so, hit \"Caps Lock\" key before trying again."
-msgstr "Falls ja, drücken Sie \"Feststelltaste\", bevor Sie es erneut versuchen."
+msgstr "Falls ja, drücken Sie „Feststelltaste“, bevor Sie es erneut versuchen."
 
 #: ../frontend/php/account/login.php:187
 msgid "Did you forget or misspell your password?"
@@ -169,7 +170,7 @@ msgstr "Haben Sie Ihr Passwort vergessen oder falsch geschrieben?"
 
 #: ../frontend/php/account/login.php:187
 msgid "You can recover your password using the lost password form."
-msgstr "Sie können Ihr Passwort mit dem Formular „Passwort vergessen“ wiederherstellen."
+msgstr "Sie können Ihr Passwort mit „Passwort vergessen“ wiederherstellen."
 
 #: ../frontend/php/account/login.php:188
 msgid "Still having trouble?"
@@ -181,18 +182,18 @@ msgstr "Schreiben Sie eine Supportanfrage."
 
 #: ../frontend/php/account/login.php:196
 msgid "Cookies must be enabled past this point."
-msgstr "Cookies müssen ab hier eingeschaltet sein."
+msgstr "Cookies müssen aktiviert sein."
 
 #: ../frontend/php/account/login.php:197
 msgid "You will be connected with a secure (https) server and your password will not be visible to other users."
-msgstr "Sie werden mit einem sicheren Server (https) verbunden, und Ihr Passwort wird für andere Benutzer nicht sichtbar sein."
+msgstr "Sie werden mit einem sicheren Webserver (HTTPS) verbunden, Ihr Passwort ist nicht für andere Benutzer sichtbar."
 
 #: ../frontend/php/account/login.php:207
 #: ../frontend/php/account/lostpw.php:48
 #: ../frontend/php/account/register.php:259
 #: ../frontend/php/include/user_home.php:137
 msgid "Login Name:"
-msgstr "Anmeldename:"
+msgstr "Benutzername:"
 
 #: ../frontend/php/account/login.php:208
 msgid "No account yet?"
@@ -210,15 +211,15 @@ msgstr "Passwort vergessen?"
 
 #: ../frontend/php/account/login.php:221
 msgid "Stay in secure (https) mode after login"
-msgstr "Nach dem Anmelden im sicheren Modus (https) verbleiben"
+msgstr "Nach der Anmeldung im sicheren Modus (HTTPS) bleiben"
 
 #: ../frontend/php/account/login.php:222
 msgid "Lynx, Emacs w3 and Microsoft Internet Explorer users will have intermittent https problems, so they should leave https after login. Gecko-based browser (Mozilla, Galeon, Netscape...) and Konqueror users should stay in https mode permanently for maximum security."
-msgstr "Benutzer von Lynx, Emacs w3 und Microsoft Internet Explorer haben wiederkehrende Probleme mit der https-Verbindung und sollten nach der Anmeldung den https-Modus verlassen. Benutzer von Gecko-basierten Browsern (Mozilla, Galeon, Netscape ...) sowie Benutzer von Konqueror sollten permanent im https-Modus bleiben, um die Sicherheit zu maximieren."
+msgstr "Benutzer von Lynx, Emacs W3 und Microsoft Internet Explorer haben zeitweise Probleme mit der HTTPS-Verbindung und sollten nach der Anmeldung den HTTPS-Modus verlassen. Benutzer von Gecko-basierten Webbrowsern (Mozilla, Galeon, Netscape&hellip;) sowie Benutzer von Konqueror sollten dauerhaft im HTTPS-Modus zur maximale Sicherheit bleiben."
 
 #: ../frontend/php/account/login.php:227
 msgid "This server does not encrypt data (no https), so the password you sent may be viewed by other people. Do not use any important passwords."
-msgstr "Dieser Server kann Daten nicht verschlüsseln (kein https). Das Passwort, das Sie senden, könnte also von anderen Leuten gesehen werden. Benutzen Sie keine wichtigen Passwörter."
+msgstr "Dieser Webserver unterstützt keine Verschlüsselung von Daten (kein HTTPS). Das gesendete Passwort kann von Dritten eingesehen werden. Verwenden Sie keine wichtigen Passwörter."
 
 #: ../frontend/php/account/login.php:234
 msgid "Remember me"
@@ -226,7 +227,7 @@ msgstr "Anmeldeinformationen speichern"
 
 #: ../frontend/php/account/login.php:235
 msgid "For a year, your login information will be stored in a cookie. Use this only if you are using your own computer."
-msgstr "Ihre Anmeldeinformationen werden ein Jahr lang in einem Cookie gespeichert. Wählen Sie dies nur, wenn Sie Ihren eigenen Computer benutzen."
+msgstr "Ihre Anmeldeinformationen werden ein Jahr lang in einem Cookie gespeichert. Aktivieren Sie dies nur, wenn Sie Ihren eigenen Computer nutzen."
 
 #: ../frontend/php/account/login.php:244
 #, php-format
@@ -236,7 +237,7 @@ msgstr "Auch bei %s anmelden"
 #: ../frontend/php/account/login.php:246
 #, php-format
 msgid "Do not use this if you are using kerberos. Do not use this until you already successfully logged in on %s, the result would be unpredictable."
-msgstr "Wählen Sie dies nicht, wenn Sie kerberos benutzen. Wählen Sie dies nicht, bevor Sie sich nicht erfolgreich bei %s angemeldet haben. Das Ergebnis wäre unvorhersagbar."
+msgstr "Bitte nicht verwenden, wenn Sie Kerberos nutzen oder sich noch nie erfolgreich bei %s angemeldet haben. Das Ergebnis wäre unvorhersehbar."
 
 #: ../frontend/php/account/lostlogin.php:34
 #: ../frontend/php/account/lostlogin.php:37
@@ -260,16 +261,16 @@ msgstr "Fehler"
 
 #: ../frontend/php/account/lostlogin.php:34
 msgid "This confirm hash exists more than once."
-msgstr "Dieser Bestätigungshash existiert mehr als einmal."
+msgstr "Dieser Bestätigungshash ist bereits vorhanden."
 
 #: ../frontend/php/account/lostlogin.php:37
 msgid "Invalid confirmation hash."
-msgstr "Ungültiger Bestätigungshash."
+msgstr "Bestätigungshash ungültig."
 
 #: ../frontend/php/account/lostlogin.php:51
 #: ../frontend/php/account/lostlogin.php:53
 msgid "Lost Password Login"
-msgstr "Passwort vergessen - Anmeldung"
+msgstr "Passwort vergessen"
 
 #: ../frontend/php/account/lostlogin.php:54
 #: ../frontend/php/index.php:76
@@ -278,7 +279,7 @@ msgstr "Willkommen"
 
 #: ../frontend/php/account/lostlogin.php:55
 msgid "You may now change your password"
-msgstr "Sie können jetzt Ihr Passwort ändern"
+msgstr "Sie können nun Ihr Passwort ändern"
 
 #: ../frontend/php/account/lostlogin.php:59
 #: ../frontend/php/my/admin/change.php:440
@@ -291,15 +292,15 @@ msgstr "Neues Passwort (Wiederholung):"
 
 #: ../frontend/php/account/lostpw-confirm.php:63
 msgid "Invalid User"
-msgstr "Ungültiger Benutzer"
+msgstr "Benutzername ungültig"
 
 #: ../frontend/php/account/lostpw-confirm.php:63
 msgid "This account does exist or has not been activated"
-msgstr "Dieses Konto ist bereits vorhanden oder wurde noch nicht aktiviert "
+msgstr "Dieses Benutzerkonto ist bereits vorhanden oder wurde noch nicht aktiviert "
 
 #: ../frontend/php/account/lostpw-confirm.php:99
 msgid "An email for your lost password has already been sent. Please wait one hour and try again."
-msgstr "Es wurde bereits eine E-Mail für ihr verlorenes Passwort gesendet. Bitte warten Sie eine Stunde und versuchen Sie es erneut."
+msgstr "Es wurde bereits eine E-Mail für ihr vergessenes Passwort gesendet. Bitte warten Sie eine Stunde und versuchen Sie es erneut."
 
 #: ../frontend/php/account/lostpw-confirm.php:117
 #, php-format
@@ -308,12 +309,12 @@ msgstr "Jemand (vermutlich Sie) hat auf der %s-Webseite eine Passwortänderung p
 
 #: ../frontend/php/account/lostpw-confirm.php:119
 msgid "If this was not you, this could pose a security risk for the system."
-msgstr "Wenn dies nicht Sie waren, könnte dies ein Sicherheitsrisiko für das System darstellen."
+msgstr "Wenn dies nicht Sie waren, könnte dies ein Sicherheitsrisiko darstellen."
 
 #: ../frontend/php/account/lostpw-confirm.php:120
 #, php-format
 msgid "The request came from %s"
-msgstr "Die Anfrage kam von %s"
+msgstr "Die Anforderung kam von %s"
 
 #: ../frontend/php/account/lostpw-confirm.php:122
 msgid "with"
@@ -324,8 +325,8 @@ msgid ""
 "If you requested this verification, visit this URL\n"
 "to change your password:"
 msgstr ""
-"Wenn Sie diese Überprüfung angefordert, besuchen Sie \n"
-"diese URL, um Ihr Passwort zu ändern:"
+"Wenn Sie diese Überprüfung angefordert haben, besuchen\n"
+"Sie zur Passwortänderung bitte diese URL:"
 
 #: ../frontend/php/account/lostpw-confirm.php:127
 msgid ""
@@ -333,7 +334,7 @@ msgid ""
 " somebody else, e.g. do not mail this to a public mailinglist!\n"
 "\n"
 msgstr ""
-"Stellen Sie auf jeden Fall sicher, dass Sie diese URL an niemandem\n"
+"Stellen Sie auf jeden Fall sicher, dass Sie diese URL an niemanden\n"
 "weitergeben, z. B. nicht an eine öffentliche Mailingliste senden!\n"
 "\n"
 
@@ -345,7 +346,7 @@ msgstr ""
 #: ../frontend/php/my/admin/change.php:345
 #, php-format
 msgid "-- the %s team."
-msgstr "- Das %s-Team."
+msgstr "Das %s-Team."
 
 #: ../frontend/php/account/lostpw-confirm.php:155
 msgid "Confirmation mailed"
@@ -357,11 +358,11 @@ msgstr "Passwort vergessen - Bestätigung"
 
 #: ../frontend/php/account/lostpw-confirm.php:160
 msgid "An email has been sent to the address you have on file."
-msgstr "Eine E-Mail wurde an die Adresse gesendet, die Sie hinterlegt haben."
+msgstr "Es wurde eine E-Mail an die bei der Registrierung angegebene Adresse gesendet."
 
 #: ../frontend/php/account/lostpw-confirm.php:161
 msgid "Follow the instructions in the email to change your account password."
-msgstr "Befolgen Sie die Anweisungen in der E-Mail, um Ihr Kennwort zu ändern."
+msgstr "Befolgen Sie die Anweisungen in der E-Mail, um Ihr Passwort zu ändern."
 
 #: ../frontend/php/account/lostpw.php:36
 msgid "Lost Account Password"
@@ -369,11 +370,11 @@ msgstr "Passwort vergessen"
 
 #: ../frontend/php/account/lostpw.php:41
 msgid "Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site."
-msgstr "Hey… Ihr Passwort zu verlieren ist eine ernste Angelegenheit. Es beeinträchtigt die Sicherheit Ihres Kontos, Ihrer Projekte und diese Webseite."
+msgstr "Hey&hellip; Ihr Passwort zu vergessen ist eine ernsthafte Angelegenheit. Es beeinträchtigt die Sicherheit Ihres Benutzerkontos, Ihrer Projekte und dieser Webseite."
 
 #: ../frontend/php/account/lostpw.php:43
 msgid "The form below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation hash for your account. Visiting the URL will allow you to change your password online and login."
-msgstr "Das Formular unten schickt eine URL an die E-Mail-Adresse, die wir für Sie gespeichert haben. In dieser URL ist ein 128-Bit Bestätigungshash für Ihr Benutzerkonto. Wenn Sie diese URL besuchen, können Sie dort Ihr Passwort online ändern und sich anmelden."
+msgstr "Wir senden eine Nachricht an die bei der Registrierung von Ihnen angegebene E-Mail-Adresse. Der in der Nachricht enthaltene Verweis ist ein 128-Bit Bestätigungshash für Ihr Benutzerkonto. Wenn Sie diese URL besuchen, können Sie Ihr Passwort online ändern und sich anmelden."
 
 #: ../frontend/php/account/lostpw.php:44
 msgid "This will work only if your account was already successfully registered and activated. Note that accounts that are not activated within the three days next to their registration are automatically deleted."
@@ -381,38 +382,38 @@ msgstr "Das wird nur funktionieren, wenn Ihr Benutzerkonto bereits erfolgreich r
 
 #: ../frontend/php/account/lostpw.php:50
 msgid "Send lost password hash"
-msgstr "Verloren Passwort-Hash senden"
+msgstr "Passwort-Hash senden"
 
 #: ../frontend/php/account/pending-resend.php:41
 #: ../frontend/php/account/register.php:209
 #, php-format
 msgid "Thank you for registering on the %s web site."
-msgstr "Vielen Dank für die Registrierung auf der Website von %s."
+msgstr "Vielen Dank für die Registrierung bei %s."
 
 #: ../frontend/php/account/pending-resend.php:42
 msgid "In order to complete your registration, visit the following url:"
-msgstr "Um Ihre Anmeldung zu vervollständigen, besuchen Sie die folgende URL:"
+msgstr "Um Ihre Anmeldung zu abzuschließen, besuchen Sie bitte folgende URL:"
 
 #: ../frontend/php/account/pending-resend.php:50
 #: ../frontend/php/account/register.php:228
 msgid "Account Registration"
-msgstr "Benutzerkonto anlegen"
+msgstr "Benutzerkonto registrieren"
 
 #: ../frontend/php/account/pending-resend.php:53
 msgid "Account Pending Verification"
-msgstr "Überprüfung eines ausstehenden Benutzerkontos"
+msgstr "Benutzerkonto freischalten"
 
 #: ../frontend/php/account/pending-resend.php:57
 msgid "Your email confirmation has been resent. Visit the link in this email to complete the registration process."
-msgstr "Ihre Bestätigungs-E-Mail wurde erneut verschickt. Besuchen Sie den Link in dieser E-Mail, um den Anmeldeprozess abzuschließen."
+msgstr "Ihre E-Mail-Bestätigung wurde erneut gesendet. Besuchen Sie den enthaltenen Verweis, um die Registrierung abzuschließen."
 
 #: ../frontend/php/account/pending-resend.php:58
 msgid "Return to Home Page"
-msgstr "Zurück zur Homepage"
+msgstr "Zurück zur Startseite"
 
 #: ../frontend/php/account/pending-resend.php:61
 msgid "This account is not pending verification."
-msgstr "Dieses Benutzerkonto wartet nicht auf die Überprüfung."
+msgstr "Dieses Benutzerkonto nicht freigegeben."
 
 #: ../frontend/php/account/pending.php:47
 #, php-format
@@ -438,7 +439,7 @@ msgstr "Sie müssen eine gültige E-Mail-Adresse angeben."
 #: ../frontend/php/project/admin/squadadmin.php:57
 #: ../frontend/php/project/admin/squadadmin.php:216
 msgid "You must supply a non-empty real name."
-msgstr "Sie dürfen keinen leeren echten Namen angeben."
+msgstr "Sie müssen einen nicht-leeren bürgerlicheb Namen angeben."
 
 #: ../frontend/php/account/register.php:87
 msgid "Passwords do not match."
@@ -447,12 +448,12 @@ msgstr "Passwörter sind nicht identisch."
 #: ../frontend/php/account/register.php:116
 #: ../frontend/php/project/admin/squadadmin.php:73
 msgid "That username already exists."
-msgstr "Dieser Benutzername existiert bereits."
+msgstr "Dieser Benutzername ist bereits vorhanden."
 
 #: ../frontend/php/account/register.php:122
 #: ../frontend/php/project/admin/squadadmin.php:80
 msgid "That username is blocked to avoid conflict with mailing-list addresses."
-msgstr "Dieser Benutzername ist gesperrt, um Konflikte mit E-Mail-Verteilerlisten zu verhindern."
+msgstr "Dieser Benutzername ist gesperrt, um Konflikte mit E-Mail-Verteilern zu verhindern."
 
 #: ../frontend/php/account/register.php:134
 msgid "phpkrb5 module failure"
@@ -461,18 +462,18 @@ msgstr "phpkrb5-Modulfehler"
 #: ../frontend/php/account/register.php:139
 #, php-format
 msgid "User is a kerberos principal but password do not match. Please use your kerberos password for the first login and then change your %s password. This is necessary to prevent someone from stealing your account name."
-msgstr "Der Benutzer ist Kerberos bekannt, aber das Passwort stimmt nicht. Bitte benutzen Sie Ihr Kerberos Passwort für die erste Anmeldung und ändern Sie dann Ihr %s Passwort. Dies ist notwendig, um zu verhindern, dass jemand Ihr Benutzerkonto stiehlt."
+msgstr "Der Benutzer ist ein Kerberos-Prinzipal, aber die Passwörter stimmen nicht überein. Bitte benutzen Sie das Kerberos Passwort für die erste Anmeldung und ändern Sie dann Ihr %s-Passwort. Dies ist notwendig, um den Diebstahl Ihres Benutzerkontos zu verhindern."
 
 #: ../frontend/php/account/register.php:210
 msgid "Your login is not mentioned in this mail to prevent account creation by robots"
-msgstr "Ihr Anmeldename wird in dieser Nachricht nicht erwähnt, um die Kontoerstellung durch Robots zu verhindern"
+msgstr "Ihr Benutzername wird in dieser Nachricht nicht erwähnt, um die Kontoeinrichtung durch Robots zu verhindern"
 
 #: ../frontend/php/account/register.php:212
 msgid ""
 "In order to complete your registration, visit the following URL:\n"
 "\n"
 msgstr ""
-"Um Ihre Anmeldung abzuschließen, besuchen Sie die folgende URL:\n"
+"Um Ihre Registrierung abzuschließen, besuchen Sie bitte folgende URL:\n"
 "\n"
 
 #: ../frontend/php/account/register.php:221
@@ -481,7 +482,7 @@ msgid ""
 "P.S. Your kerberos password is now stored in encrypted form\n"
 "in the %s database."
 msgstr ""
-"P.S. Ihre Kerberos-Passwort ist nun in verschlüsselter Form \n"
+"P.S. Ihr Kerberos-Passwort ist nun in verschlüsselter Form \n"
 "in der %s-Datenbank gespeichert."
 
 #: ../frontend/php/account/register.php:222
@@ -491,7 +492,7 @@ msgid ""
 "to change your %s password as soon as possible.\n"
 msgstr ""
 "Aus Sicherheitsgründen raten wir Ihnen,\n"
-"Ihr %s Passwort so bald wie möglich zu ändern.\n"
+"Ihr %s-Passwort so schnell wie möglich zu ändern.\n"
 
 #: ../frontend/php/account/register.php:241
 msgid "Register Confirmation"
@@ -499,25 +500,25 @@ msgstr "Registrierungsbestätigung"
 
 #: ../frontend/php/account/register.php:243
 msgid "New Account Registration Confirmation"
-msgstr "Bestätigung der neuen Kontoregistrierung"
+msgstr "Benutzerkonto Registrierungsbestätigung"
 
 #: ../frontend/php/account/register.php:244
 #, php-format
 msgid "Congratulations. You have registered on %s "
-msgstr "Herzlichen Glückwunsch. Sie haben sich bei %s registriert "
+msgstr "Herzlichen Glückwunsch. Sie haben sich erfolgreich bei %s registriert "
 
 #: ../frontend/php/account/register.php:245
 #, php-format
 msgid "Your login is: %s"
-msgstr "Ihr Benutzerkonto ist: %s"
+msgstr "Ihr Benutzername ist: %s"
 
 #: ../frontend/php/account/register.php:247
 msgid "You are now being sent a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account."
-msgstr "Sie bekommen nun eine Bestätigungs-E-Mail geschickt, um Ihre E-Mail-Adresse zu überprüfen. Das Anklicken des Links in dieser E-Mail aktiviert Ihr Benutzerkonto."
+msgstr "Ihnen wird nun eine Nachricht gesendet, um Ihre E-Mail-Adresse zu überprüfen. Klicken Sie auf den enthaltenen Verweis, um Ihr Benutzerkonto zu aktivieren."
 
 #: ../frontend/php/account/register.php:247
 msgid "Accounts not confirmed after two days are deleted from the database."
-msgstr "Konten, die nach zwei Tagen nicht bestätigt sind, werden aus der Datenbank gelöscht."
+msgstr "Benutzerkonten, die nach zwei Tagen nicht bestätigt wurden, werden aus der Datenbank gelöscht."
 
 #: ../frontend/php/account/register.php:255
 msgid "User account registration"
@@ -526,18 +527,18 @@ msgstr "Registrierung des Benutzerkontos"
 #: ../frontend/php/account/register.php:261
 #, php-format
 msgid "If you have a %s account use that account name - Note that account names cannot consist of only numbers. At least one letter must be included."
-msgstr "Wenn Sie ein Benutzerkonto bei %s haben, benutzen Sie diesen Namen. Beachten Sie, dass Benutzernamen nicht ausschließlich aus Ziffern bestehen dürfen. Es muss mindestens ein Buchstabe enthalten sein."
+msgstr "Wenn Sie bereits ein Benutzerkonto bei %s haben, benutzen Sie diesen Benutzerkontonamen. Beachten Sie, dass Benutzernamen nicht ausschließlich aus Ziffern bestehen dürfen. Es muss mindestens ein Buchstabe enthalten sein."
 
 #: ../frontend/php/account/register.php:267
 msgid "Re-type Password:"
-msgstr "Passwort wiederholen:"
+msgstr "Passwort (Wiederholung):"
 
 #: ../frontend/php/account/register.php:271
 #: ../frontend/php/include/user_home.php:133
 #: ../frontend/php/project/admin/squadadmin.php:183
 #: ../frontend/php/project/admin/squadadmin.php:284
 msgid "Real Name:"
-msgstr "Echter Name:"
+msgstr "Bürgerlicher Name:"
 
 #: ../frontend/php/account/register.php:274
 #: ../frontend/php/include/user_home.php:149
@@ -546,7 +547,7 @@ msgstr "E-Mail-Adresse:"
 
 #: ../frontend/php/account/register.php:276
 msgid "This email address will be verified before account activation."
-msgstr "Diese E-Mail-Adresse wird vor der Aktivierung überprüft."
+msgstr "Diese E-Mail-Adresse wird vor der Kontoaktivierung überprüft."
 
 #: ../frontend/php/account/su.php:85
 msgid "What are you doing here?"
@@ -555,7 +556,7 @@ msgstr "Was machen Sie hier?"
 #: ../frontend/php/account/suspended.php:25
 #: ../frontend/php/account/suspended.php:27
 msgid "Suspended Account"
-msgstr "Stillgelegtes Benutzerkonto"
+msgstr "Benutzerkonto stillgelegt"
 
 #: ../frontend/php/account/suspended.php:31
 msgid "Your account has been suspended."
@@ -564,28 +565,28 @@ msgstr "Ihr Benutzerkonto wurde stillgelegt."
 #: ../frontend/php/account/suspended.php:32
 #, php-format
 msgid "If you have questions regarding your suspension, please email %s."
-msgstr "Wenn Sie Fragen zur Suspendierung Ihres Benutzerkontos haben, schicken Sie bitte eine E-Mail an %s."
+msgstr "Wenn Sie Fragen zur Stilllegung Ihres Benutzerkontos haben, senden Sie uns bitte eine E-Mail an %s."
 
 #: ../frontend/php/account/verify.php:52
 msgid "Invalid username."
-msgstr "Ungültiger Benutzername."
+msgstr "Benutzername ungültig."
 
 #: ../frontend/php/account/verify.php:59
 msgid "Invalid confirmation hash"
-msgstr "Ungültiger Bestätigungshash"
+msgstr "Bestätigungshashungültig"
 
 #: ../frontend/php/account/verify.php:77
 #, php-format
 msgid "%s Account Verification"
-msgstr "%s Benutzerkonto-Überprüfung"
+msgstr "%s-Benutzerkontobestätigung"
 
 #: ../frontend/php/account/verify.php:78
 msgid "In order to complete your registration, login now. Your account will then be activated for normal logins"
-msgstr "Um Ihre Anmeldung zu vervollständigen, melden Sie sich jetzt an. Ihr Benutzerkonto wird dann für normale Anmeldungen freigeschaltet"
+msgstr "Um Ihre Registrierung abzuschließen, melden Sie sich jetzt an. Ihr Benutzerkonto wird dann für normale Anmeldungen freigeschaltet"
 
 #: ../frontend/php/account/verify.php:83
 msgid "Login Name"
-msgstr "Anmeldename"
+msgstr "Benutzername"
 
 #: ../frontend/php/account/verify.php:87
 msgid "Password"
@@ -595,21 +596,21 @@ msgstr "Passwort"
 #: ../frontend/php/cvs/index.php:35
 #: ../frontend/php/svn/index.php:33
 msgid "This project has turned off this tool"
-msgstr "Dieses Projekt hat dieses Werkzeug abgeschaltet"
+msgstr "In diesem Projekt ist dieses Hilfsmittel deaktiviert."
 
 #: ../frontend/php/arch/index.php:51
 #: ../frontend/php/cvs/index.php:56
 #: ../frontend/php/svn/index.php:52
 #, php-format
 msgid "Browsing the %s Repository"
-msgstr "Projektarchiv \"%s\" anzeigen"
+msgstr "%s-Projektarchiv durchsuchen"
 
 #: ../frontend/php/arch/index.php:52
 #: ../frontend/php/cvs/index.php:57
 #: ../frontend/php/svn/index.php:53
 #, php-format
 msgid "You can Browse the %s repository of this project with your web browser. This gives you a good picture of the current status of the source files. You may also view the complete histories of any file in the repository as well as differences among two versions."
-msgstr "Sie können das Projektarchiv \"%s\" dieses Projekts mit Ihrem Webbrowser anzeigen. Damit bekommen Sie einen guten Überblick über den aktuellen Stand der Quelldateien. Sie können auch den kompletten Verlauf jeder beliebigen Datei im Projektarchiv ansehen, genauso wie Unterschiede zwischen zwei Versionen."
+msgstr "Sie können das %s-Projektarchiv mit Ihrem Webbrowser durchsuchen. Dadurch erhalten Sie einen guten Überblick über den aktuellen Stand der Quelldateien. Sie können auch den vollständigen Verlauf jeder Datei sowie Unterschiede zwischen zwei Versionen anzeigen."
 
 #: ../frontend/php/arch/index.php:60
 #: ../frontend/php/cvs/index.php:65
@@ -621,7 +622,7 @@ msgstr "Sie können das Projektarchiv \"%s\" dieses Projekts mit Ihrem Webbrowse
 #: ../frontend/php/include/project_home.php:499
 #: ../frontend/php/svn/index.php:60
 msgid "Browse Sources Repository"
-msgstr "Quelltext-Projektarchiv anzeigen"
+msgstr "Quelltext-Projektarchiv durchsuchen"
 
 #: ../frontend/php/arch/index.php:67
 #: ../frontend/php/cvs/index.php:72
@@ -633,23 +634,23 @@ msgstr "Quelltext-Projektarchiv anzeigen"
 #: ../frontend/php/include/project_home.php:503
 #: ../frontend/php/svn/index.php:67
 msgid "Browse Web Pages Repository"
-msgstr "Webseiten-Projektarchiv anzeigen"
+msgstr "Webseiten-Projektarchiv durchsuchen"
 
 #: ../frontend/php/arch/index.php:73
 #: ../frontend/php/cvs/index.php:79
 #: ../frontend/php/svn/index.php:73
 #, php-format
 msgid "Getting a Copy of the %s Repository"
-msgstr "Kopie des Projektarchivs \"%s\" erhalten"
+msgstr "Kopie des %s-Projektarchivs abrufen"
 
 #: ../frontend/php/contact.php:29
 #: ../frontend/php/include/sitemenu.php:351
 msgid "Contact Us"
-msgstr "Kontakt"
+msgstr "Kontaktieren Sie uns"
 
 #: ../frontend/php/docs/admin.php:33
 msgid "Admin documentation"
-msgstr "Verwalter-Dokumentation"
+msgstr "Projektverwalter-Dokumentation"
 
 #: ../frontend/php/files/add.php:36
 #: ../frontend/php/include/pagemenu.php:436
@@ -664,50 +665,50 @@ msgstr "Hinweis für GNU Projekte"
 
 #: ../frontend/php/files/add.php:54
 msgid "Currently, since file uploads to ftp.gnu.org are not supported by Savannah at present (You should get in touch with accounts@gnu.org to get permissions to do them), the form below cannot be used."
-msgstr "Da zurzeit das Hochladen von Dateien auf ftp.gnu.org nicht von Savannah unterstützt wird, kann das Formular unten nicht benutzt werden. (Sie müssen mit accounts@gnu.org in Kontakt treten, um die Berechtigung dafür zu erhalten.)"
+msgstr "Derzeit wird das Hochladen von Dateien auf ftp.gnu.org nicht von Savannah unterstützt. Bitte nehmen Sie mit „accounts@gnu.org“ Kontakt auf, um eine Berechtigung dafür zu erhalten.)"
 
 #: ../frontend/php/files/add.php:55
 msgid "But, file release system should work if you respect the standard tree explained below."
-msgstr "Allerdings sollte das Releasesystem von Dateien funktionieren, wenn Sie den Standardverzeichnisbaum respektieren, der unten erläutert ist."
+msgstr "Allerdings sollte die Dateiveröffentlichung funktionieren, wenn Sie die folgende Standard-Verzeichnisstruktur beachten."
 
 #: ../frontend/php/files/add.php:59
 #, php-format
 msgid "How does file list work on %s?"
-msgstr "Wie funktioniert die Dateiliste bei %s?"
+msgstr "Wie funktioniert die Dateiliste auf %s?"
 
 #: ../frontend/php/files/add.php:60
 #, php-format
 msgid "On %s, you must use scp, sftp or rsync via SSH to upload your files."
-msgstr "Bei %s müssen Sie scp, sftp oder rsync über SSH benutzen, um Ihre Dateien hochzuladen."
+msgstr "Bei %s müssen Sie „scp“, „sftp“ oder „rsync“ über SSH benutzen, um Ihre Dateien hochzuladen."
 
 #: ../frontend/php/files/add.php:61
 msgid "We prefer this way of managing files for security matters and also because scp and rsync are designed for this kind of usage, unlike a web browser."
-msgstr "Wir bevorzugen diese Art der Dateiverwaltung aus Sicherheitsgründen. Außerdem sind scp und rsync für diese Art der Benutzung konzipiert, anders als ein Webbrowser."
+msgstr "Wir bevorzugen diese Art der Dateiverwaltung nicht nur aus Sicherheitsgründen, sondern auch, weil „scp“ und „rsync“ für diese Art der Nutzung entwickelt, anders als ein Webbrowser, wurden."
 
 #: ../frontend/php/files/add.php:62
 msgid "We want the file management system to be usable with a shell."
-msgstr "Wir wollen, dass das Dateiverwaltungssystem von einer Kommandozeile aus benutzbar ist."
+msgstr "Wir wollen, dass das Dateiverwaltung mittels einer Kommandozeile nutzbar."
 
 #: ../frontend/php/files/add.php:63
 msgid "The following form won't upload files. It will display a list of commands that you will have to copy and paste in a terminal."
-msgstr "Das folgende Formular lädt keine Dateien hoch. Es zeigt eine Liste von Befehlen an, die Sie kopieren und in ein Terminal einfügen müssen."
+msgstr "Es werden keine Dateien hochgeladen. Es wird eine Liste der Befehle angezeigt, die Sie Kopieren und in eine Kommandozeile einfügen können."
 
 #: ../frontend/php/files/add.php:64
 #, php-format
 msgid "If you follow the directory organisation outlined below, the %s %s Filelist for your project%s (available once you have checked the corresponding box in your %s Project Public Info %s) will display the versions in a user friendly way. Otherwise, the visitor of your project will be presented a regular directory listing."
-msgstr "Wenn Sie sich an die Verzeichnisstruktur halten, die unten aufgeführt ist, wird die %s %s Dateiliste für Ihr Projekt %s die Versionen in einer benutzerfreundlichen Weise anzeigen. Die Dateiliste wird verfügbar, sobald Sie das entsprechende Kästchen in Ihrer %s öffentlichen Projektinformation %s aktivieren. Anderenfalls wird den Besuchern Ihres Projektes eine reguläre Verzeichnisstruktur präsentiert."
+msgstr "Wenn Sie die Verzeichnisstruktur beachten, wird die %s %s-Dateiliste für Ihr Projekt %s (verfügbar, sobald Sie das entsprechende Feld in Ihrer öffentlichen Projektinformation %s %s aktivieren) die Versionen benutzerfreundlich angezeigt. Anderenfalls wird den Besuchern des Projekts eine reguläre Verzeichnisstruktur präsentiert."
 
 #: ../frontend/php/files/add.php:65
 msgid "The suggested layout is as follows:"
-msgstr "Das empfohlene Layout ist wie folgt:"
+msgstr "Empfohlenes Layout:"
 
 #: ../frontend/php/files/add.php:66
 msgid "is your dedicated area"
-msgstr "ist das Ihnen zugewiesene Gebiet"
+msgstr "ist Ihr zugewiesener Bereich"
 
 #: ../frontend/php/files/add.php:67
 msgid "is the package/branch name, since you can have as many packages/branches as you want."
-msgstr "ist der Paket-/Zweigname, da Sie soviele Pakete/Zweige benutzen können, wie Sie wollen."
+msgstr "ist der Paket-/Zweigname, da Sie beliebig viele Pakete/Zweige nutzen können"
 
 #: ../frontend/php/files/add.php:67
 msgid "It must end with .pkg."
@@ -715,7 +716,7 @@ msgstr "Es muss mit .pkg enden."
 
 #: ../frontend/php/files/add.php:68
 msgid "is the version name/number for the package/branch we call unstable."
-msgstr "ist der Versionsname/die Versionsnummer für das Paket/Zweig, das wir unstable nennen."
+msgstr "ist der Versionsname/-nummer für das Paket/Zweig, das wir „unstable“ nennen."
 
 #: ../frontend/php/files/add.php:69
 msgid "is a package that users can download for this version of this package/branch."
@@ -723,7 +724,7 @@ msgstr "ist ein Paket, das Benutzer für diese Version des Pakets/Zweigs herunte
 
 #: ../frontend/php/files/add.php:72
 msgid "Note that the package name should be the name of the .tar.gz file. Or whatever you want, but it must not contain characters as \" \" (whitespace) or \"/\" (slash)."
-msgstr "Beachten Sie, dass der Paketname dem der .tar.gz-Datei entsprechen sollte. Oder was immer Sie möchten, aber er darf nicht solche Zeichen wie » « (Leerzeichen) oder »/« (Querstrich) enthalten."
+msgstr "Beachten Sie, dass der Paketname den Namen der .tar.gz-Datei entsprechen sollte. Oder was auch immer Sie möchten, aber keine „ “ (Leerzeichen) oder „/“ (Schrägstrich) enthalten."
 
 #: ../frontend/php/files/add.php:74
 msgid "Help!"
@@ -732,19 +733,19 @@ msgstr "Hilfe!"
 #: ../frontend/php/files/add.php:74
 #, php-format
 msgid "You may take a look at the %s FAQ about %sHow do I add files in the download area%s, especially the \"Tips\" part."
-msgstr "Sie können einen Blick auf die %s FAQ über das Thema %sWie füge ich Dateien im Downloadbereich hinzu%s werfen, speziell der Abschnitt »Tipps«"
+msgstr "Siehe %sHäufig gestellte Fragen über %sWie füge ich Dateien im Downloadbereich hinzu%s, besonders den Abschnitt „Tipps“"
 
 #: ../frontend/php/files/add.php:77
 msgid "Getting a command list to upload the files:"
-msgstr "Befehlsliste erhalten, um die Dateien hochzuladen:"
+msgstr "Befehle zum Hochladen der Dateien abrufen:"
 
 #: ../frontend/php/files/add.php:81
 msgid "Package / Branch:"
-msgstr "Paket / Zweig:"
+msgstr "Paket/Zweig:"
 
 #: ../frontend/php/files/add.php:81
 msgid "ex: the project name, or stable / unstable"
-msgstr "Beispiel: Der Projektname, oder stable/unstable"
+msgstr "Beispiel: Der Projektname oder stable/unstable"
 
 #: ../frontend/php/files/add.php:82
 msgid "Version:"
@@ -756,7 +757,7 @@ msgstr "Beispiel: 1.0.0 oder 20020427"
 
 #: ../frontend/php/files/add.php:83
 msgid "1st File:"
-msgstr "Erste Datei:"
+msgstr "1. Datei:"
 
 #: ../frontend/php/files/add.php:84
 #: ../frontend/php/files/add.php:85
@@ -772,35 +773,35 @@ msgstr "dies sollte der absolute Pfad zu der Datei auf Ihrem Rechner sein"
 
 #: ../frontend/php/files/add.php:85
 msgid "2nd File:"
-msgstr "Zweite Datei:"
+msgstr "2. Datei:"
 
 #: ../frontend/php/files/add.php:86
 msgid "3rd File:"
-msgstr "Dritte Datei:"
+msgstr "3. Datei:"
 
 #: ../frontend/php/files/add.php:87
 msgid "4th File:"
-msgstr "Vierte Datei:"
+msgstr "4. Datei:"
 
 #: ../frontend/php/files/add.php:88
 msgid "5th File:"
-msgstr "Fünfte Datei:"
+msgstr "5. Datei:"
 
 #: ../frontend/php/files/add.php:89
 msgid "6th File:"
-msgstr "Sechste Datei:"
+msgstr "6. Datei:"
 
 #: ../frontend/php/files/add.php:90
 msgid "7th File:"
-msgstr "Siebte Datei:"
+msgstr "7. Datei:"
 
 #: ../frontend/php/files/add.php:91
 msgid "8th File:"
-msgstr "Achte Datei:"
+msgstr "8. Datei:"
 
 #: ../frontend/php/files/add.php:92
 msgid "9th File:"
-msgstr "Neunte Datei:"
+msgstr "9. Datei:"
 
 #: ../frontend/php/files/add.php:94
 msgid "Show me the commands list"
@@ -808,11 +809,11 @@ msgstr "Befehle anzeigen"
 
 #: ../frontend/php/files/add.php:110
 msgid "Here is the command list:"
-msgstr "Dies ist die Befehlsliste:"
+msgstr "Dies sind die Befehle:"
 
 #: ../frontend/php/files/add.php:112
 msgid "You must specify a Package / Branch name."
-msgstr "Sie müssen einen Paket-/Zweignamen angeben."
+msgstr "Sie müssen ein Paket-/Zweignamen angeben."
 
 #: ../frontend/php/files/add.php:114
 msgid "You must specify a Version name."
@@ -820,11 +821,11 @@ msgstr "Sie müssen einen Versionsnamen angeben."
 
 #: ../frontend/php/files/add.php:116
 msgid "Here is the result of the information you give."
-msgstr "Dies ist das Ergebnis der Informationen, die Sie gegeben haben."
+msgstr "Ergebnis der von Ihnen gemachten Angaben."
 
 #: ../frontend/php/files/add.php:116
 msgid "Basically, you just have to copy and paste those commands in a terminal."
-msgstr "Im Grunde müssen Sie diese Befehle nur kopieren und in ein Terminal einfügen."
+msgstr "Im Grunde müssen Sie diese Befehle nur kopieren und im Terminal einfügen."
 
 #: ../frontend/php/files/add.php:137
 msgid "UPDATED: now the specified version is highlighted"
@@ -833,12 +834,12 @@ msgstr "AKTUALISIERT: Jetzt ist die angegebene Version hervorgehoben"
 #: ../frontend/php/files/add.php:138
 #, php-format
 msgid "Note that you can also add a #%s to the HTML links to your filelist, as %s"
-msgstr "Beachten Sie, dass Sie auch eine #%s zu den HTML-Links zu Ihrer Dateiliste hinzufügen können, so wie %s"
+msgstr "Beachten Sie, dass Sie auch eine #%s zu den HTML-Verweisen Ihrer Dateiliste hinzufügen können, wie %s"
 
 #: ../frontend/php/files/add.php:139
 #, php-format
 msgid "Alternatively, you can make a link to %s"
-msgstr "Alternativ können Sie einen Link auf %s erstellen"
+msgstr "Alternativ können Sie ein Verweis auf %s erstellen"
 
 #: ../frontend/php/files/add.php:140
 msgid "How does it work, how to do this without a web browser?"
@@ -846,29 +847,29 @@ msgstr "Wie funktioniert das, wie kann ich dies ohne Webbrowser erreichen?"
 
 #: ../frontend/php/files/add.php:141
 msgid "It just creates a nice LATEST_RELEASE_IS file in the package dir with the version name as content."
-msgstr "Es wird lediglich eine kleine Datei LATEST_RELEASE_IS im Paketverzeichnis erstellt, die den Versionsnamen enthält."
+msgstr "Es wird lediglich eine kleine Datei „LATEST_RELEASE_IS“ im Paketverzeichnis erstellt, die den Versionsnamen enthält."
 
 #: ../frontend/php/files/add.php:142
 msgid "You can do this job exactly by making a similar file and upload it:"
-msgstr "Sie können das auch genausogut selbst erledigen, indem Sie eine ähnliche Datei erstellen und hochladen:"
+msgstr "Sie können diese Aufgabe auch mit einer ähnliche Datei erstellen und Hochladen:"
 
 #: ../frontend/php/files/add.php:147
 #, php-format
 msgid "There is no such Package / Branch or Version online for %s"
-msgstr "Es ist kein Paket/Zweig und keine Version online für %s"
+msgstr "Es ist kein Paket/Zweig oder Version für %s online"
 
 #: ../frontend/php/files/add.php:156
 msgid "You do not have the required privileges to access this page"
-msgstr "Sie haben nicht die erforderlichen Rechte, um diese Seite anzusehen"
+msgstr "Sie haben nicht die erforderlichen Berechtigungen, um diese Seite zuzugreifen"
 
 #: ../frontend/php/files/index.php:43
 msgid "Below is a list of files of the project. You can access the project download area directly at"
-msgstr "Unten sehen Sie eine Liste der Dateien dieses Projekts. Sie können auf den Downloadbereich des Projekts direkt zugreifen unter"
+msgstr "Das sind die Dateien des Projekts. Sie können auf den Download-Bereich direkt zugreifen unter"
 
 #: ../frontend/php/files/index.php:63
 #, php-format
 msgid "Show %s and highlight version %s."
-msgstr "Zeige %s und markiere Version %s."
+msgstr "%s und markiere Version %s anzeigen."
 
 #: ../frontend/php/files/index.php:65
 #: ../frontend/php/include/trackers_run/browse.php:982
@@ -886,29 +887,29 @@ msgstr "Vorherige Nachrichten"
 
 #: ../frontend/php/forum/forum.php:349
 msgid "Next Messages"
-msgstr "Nächste Nachrichten"
+msgstr "Weitere Nachrichten"
 
 #: ../frontend/php/forum/forum.php:362
 msgid "Start a New Thread:"
-msgstr "Neuen Diskussionsstrang beginnen:"
+msgstr "Neuen Diskussionsbeitrag beginnen:"
 
 #: ../frontend/php/forum/message.php:65
 #: ../frontend/php/include/news/forum.php:53
 #: ../frontend/php/include/news/general.php:143
 msgid "posted by"
-msgstr "eingetragen von"
+msgstr "gesendet von"
 
 #: ../frontend/php/forum/message.php:85
 msgid "Post a followup to this message"
-msgstr "Einen Folgekommentar zu dieser Nachricht abschicken"
+msgstr "Antwort auf diese Nachricht senden"
 
 #: ../frontend/php/include/Group.class:526
 msgid "It is possible to post anonymously on this tracker."
-msgstr "Es ist möglich, anonyme Einträge in diesem Verfolgungssystem vorzunehmen."
+msgstr "Es ist möglich, anonym an dieses Verfolgungssystem zu senden."
 
 #: ../frontend/php/include/Group.class:529
 msgid "Project Membership is required to post on this tracker."
-msgstr "Die Mitgliedschaft in diesem Projekt ist die Voraussetzung, um in dieses Verfolgungssystem Eintragungen vorzunehmen."
+msgstr "Um an dieses Verfolgungssystem zu senden, müssen Sie Projektmitglied sein."
 
 #: ../frontend/php/include/Group.class:532
 msgid "Being logged-in is required to post on this tracker."
@@ -927,12 +928,12 @@ msgstr[1] "Das Passwort muss mindestens %s Zeichen lang sein."
 
 #: ../frontend/php/include/account.php:47
 msgid "account name"
-msgstr "Name des Benutzerkontos"
+msgstr "Benutzername"
 
 #: ../frontend/php/include/account.php:76
 #, php-format
 msgid "There cannot be any spaces in the %s"
-msgstr "Es dürfen keine Leerzeichen im %s enthalten sein"
+msgstr "%s darf keine Leerzeichen enthalten"
 
 #: ../frontend/php/include/account.php:83
 #, php-format
@@ -961,7 +962,7 @@ msgstr[1] "Es darf höchstens %s Zeichen lang sein."
 #: ../frontend/php/include/account.php:98
 #, php-format
 msgid "The %s must begin with an alphabetical character."
-msgstr "Das %s muss mit einem alphanumerischen Zeichen beginnen."
+msgstr "Das %s muss mit einem alphabetischen Zeichen beginnen."
 
 #: ../frontend/php/include/account.php:109
 msgid "underscores"
@@ -977,7 +978,7 @@ msgstr "Punkte"
 
 #: ../frontend/php/include/account.php:116
 msgid "tolerated:"
-msgstr "Erlaubt:"
+msgstr "geduldet:"
 
 #: ../frontend/php/include/account.php:118
 #, php-format
@@ -995,16 +996,16 @@ msgstr "Ein Benutzerkonto mit dieser E-Mail-Adresse wurde bereits angelegt."
 
 #: ../frontend/php/include/account.php:152
 msgid "It is not allowed to associate an account with this email address."
-msgstr "Es ist nicht erlaubt, ein Benutzerkonto mit dieser E-Mail-Adresse zu verknüpfen."
+msgstr "Ein Benutzerkonto mit dieser E-Mail-Adresse zu verknüpfen ist nicht erlaubt."
 
 #: ../frontend/php/include/account.php:231
 #: ../frontend/php/include/account.php:243
 msgid "This group name is not allowed."
-msgstr "Dieser Gruppenname ist nicht erlaubt."
+msgstr "Dieser Projektname ist nicht erlaubt."
 
 #: ../frontend/php/include/account.php:250
 msgid "Group name cannot contain underscore for DNS reasons."
-msgstr "Der Gruppenname darf aus DNS-Gründen keinen Unterstrich (_) enthalten."
+msgstr "Der Projektname darf aus DNS-Gründen keinen „_“ (Unterstrich) enthalten."
 
 #: ../frontend/php/include/calendar.php:29
 msgid "January"
@@ -1086,16 +1087,16 @@ msgstr "Jeden Sonntag"
 #: ../frontend/php/include/sitemenu.php:120
 #: ../frontend/php/include/trackers/cookbook.php:57
 msgid "Site Administration"
-msgstr "Siteverwaltung"
+msgstr "Verwaltung der Webseite"
 
 #: ../frontend/php/include/context.php:223
 msgid "Administration Summary"
-msgstr "Verwaltung Zusammenfassung"
+msgstr "Verwaltung-Zusammenfassung"
 
 #: ../frontend/php/include/context.php:224
 #: ../frontend/php/include/project_home.php:102
 msgid "Search in this Group"
-msgstr "In dieser Gruppe suchen"
+msgstr "In diesem Projekt suchen"
 
 #: ../frontend/php/include/context.php:225
 #: ../frontend/php/people/createjob.php:51
@@ -1104,7 +1105,7 @@ msgstr "Zusammenfassung"
 
 #: ../frontend/php/include/context.php:232
 msgid "Filelist Administration"
-msgstr "Verwaltung der Dateilisten"
+msgstr "Verwaltung der Dateiliste"
 
 #: ../frontend/php/include/context.php:233
 msgid "Filelist"
@@ -1112,7 +1113,7 @@ msgstr "Dateiliste"
 
 #: ../frontend/php/include/context.php:237
 msgid "CVS Repositories"
-msgstr "CVS-Repositories"
+msgstr "CVS-Projektarchive"
 
 #: ../frontend/php/include/context.php:239
 msgid "GNU Arch Repositories"
@@ -1227,7 +1228,7 @@ msgstr "Personen bei %s"
 
 #: ../frontend/php/include/context.php:333
 msgid "My Account Configuration"
-msgstr "Meine Kontokonfiguration"
+msgstr "Meine Einstellungen"
 
 #: ../frontend/php/include/context.php:334
 #: ../frontend/php/include/sitemenu.php:386
@@ -1237,11 +1238,11 @@ msgstr "Meine Einträge"
 #: ../frontend/php/include/context.php:335
 #: ../frontend/php/include/sitemenu.php:392
 msgid "My Votes"
-msgstr "Meine Stimmen"
+msgstr "Meine Bewertungen"
 
 #: ../frontend/php/include/context.php:336
 msgid "My Group Membership"
-msgstr "Meine Gruppenmitgliedschaft"
+msgstr "Meine Projektmitgliedschaft"
 
 #: ../frontend/php/include/context.php:337
 #: ../frontend/php/include/sitemenu.php:404
@@ -1273,15 +1274,15 @@ msgstr "Zugriff verweigert"
 
 #: ../frontend/php/include/exit.php:77
 msgid "No group chosen"
-msgstr "Keine Gruppe ausgewählt"
+msgstr "Keine Projekt ausgewählt"
 
 #: ../frontend/php/include/exit.php:83
 msgid "Missing Parameters"
-msgstr "Fehlende Parameter"
+msgstr "Parameter nicht angegeben"
 
 #: ../frontend/php/include/exit.php:115
 msgid "This Project Has Turned Off Mailing Lists"
-msgstr "Dieses Projekt hat Mailinglisten abgeschaltet."
+msgstr "Dieses Projekt hat Mailinglisten ausgeschaltet."
 
 #: ../frontend/php/include/features_boxes.php:32
 #, php-format
@@ -1342,12 +1343,12 @@ msgstr ": "
 #, php-format
 msgid "%s vote"
 msgid_plural "%s votes"
-msgstr[0] "%s Stimme"
-msgstr[1] "%s Stimmen"
+msgstr[0] "%s Bewertung"
+msgstr[1] "%s Bewertungen"
 
 #: ../frontend/php/include/form.php:44
 msgid "System error while creating the form, report it to admins"
-msgstr "Systemfehler während der Erstellung des Formulars, benachrichtigen Sie die Verwalter"
+msgstr "Systemfehler beim Erstell des Formulars aufgetreten, bitte an Projektverwalter melden"
 
 #: ../frontend/php/include/form.php:80
 #: ../frontend/php/include/pagemenu.php:628
@@ -1366,15 +1367,15 @@ msgstr "Senden"
 
 #: ../frontend/php/include/form.php:126
 msgid "Unrecognized unique form_id"
-msgstr "Die eindeutige form_id konnte nicht erkannt werden"
+msgstr "Es wurde keine eindeutige Formular-ID erkannt werden"
 
 #: ../frontend/php/include/form.php:146
 msgid "Duplicate Post: this form was already submitted."
-msgstr "Doppeltes Absenden: Dieses Formular wurde bereits abgeschickt."
+msgstr "Doppeltes Senden: Dieses Formular wurde bereits gesendet."
 
 #: ../frontend/php/include/graphs.php:32
 msgid "No data to work on, no graph will be built"
-msgstr "Keine Daten zum Bearbeiten, es wird keine Grafik erstellt"
+msgstr "Es sind keine zu bearbeitende Daten vorhanden, Grafik nicht erstellt"
 
 #: ../frontend/php/include/graphs.php:83
 #, php-format
@@ -1392,7 +1393,7 @@ msgstr "%s/%s"
 
 #: ../frontend/php/include/graphs.php:116
 msgid "The total of results is zero."
-msgstr "Die Summe der Ergebnisse ist gleich Null."
+msgstr "Das Gesamtergebnisse ist Null."
 
 #: ../frontend/php/include/html.php:32
 msgid "Display Criteria"
@@ -1410,11 +1411,11 @@ msgstr "Vorherige Ergebnisse"
 #: ../frontend/php/include/trackers/show.php:99
 #: ../frontend/php/include/trackers/show.php:106
 msgid "Next Results"
-msgstr "Nächste Ergebnisse"
+msgstr "Weitere Ergebnisse"
 
 #: ../frontend/php/include/html.php:299
 msgid "Show feedback again"
-msgstr "Feedback nochmals anzeigen"
+msgstr "Rückmeldung erneut anzeigen"
 
 #: ../frontend/php/include/html.php:304
 msgid "Success"
@@ -1443,11 +1444,11 @@ msgstr "Unbekannt"
 #: ../frontend/php/include/html.php:701
 #: ../frontend/php/include/html.php:776
 msgid "Group Type Default"
-msgstr "Gruppentyp (Standard)"
+msgstr "Projekttyp (Standard)"
 
 #: ../frontend/php/include/html.php:707
 msgid "Group Default"
-msgstr "Gruppe (Standard)"
+msgstr "Projekt (Standard)"
 
 #: ../frontend/php/include/html.php:719
 #: ../frontend/php/include/html.php:743
@@ -1483,7 +1484,7 @@ msgstr "Dieselben wie für neue Einträge"
 #: ../frontend/php/include/trackers/format.php:374
 #: ../frontend/php/project/memberlist.php:175
 msgid "Project Member"
-msgstr "Mitglieder des Projekts"
+msgstr "Projektmitglied"
 
 #: ../frontend/php/include/html.php:797
 #: ../frontend/php/include/html.php:809
@@ -1527,7 +1528,7 @@ msgstr "GNU Savannah"
 
 #: ../frontend/php/include/html.php:838
 msgid "Savannah non-GNU"
-msgstr "Nicht-GNU Savannah"
+msgstr "non-GNU Savannah"
 
 #: ../frontend/php/include/html.php:869
 msgid "default"
@@ -1535,35 +1536,35 @@ msgstr "Standard"
 
 #: ../frontend/php/include/html.php:1086
 msgid "Choose one below"
-msgstr "Wählen Sie unten eines aus"
+msgstr "Bitte auswählen"
 
 #: ../frontend/php/include/html.php:1093
 msgid "Technicians, and only technicians, can be assigned tracker's items. They cannot reassign items, change the status or priority of items."
-msgstr "Techniker, und nur Techniker, können Verfolgungsbegriffe zugeordnet werden. Sie können Begriffe nicht zuordnen, den Status oder Priorität der Elemente ändern."
+msgstr "Techniker, und nur Techniker, können Verfolgungssystembegriffe zugeordnet werden. Sie können keine Begriffe zuordnen, den Status oder Priorität der Elemente ändern."
 
 #: ../frontend/php/include/html.php:1095
 msgid "Trackers Managers can fully manage the trackers items, including assigning items to technicians, reassign items over trackers and projects, changing priority and status of items - but they cannot configure the trackers."
-msgstr "Verfolgungssystemmanager können die Objekte des Verfolgungssystems vollständig bearbeiten, einschließlich der Zuweisung von Objekten an Techniker, Neuzuweisung von Objekten an andere Verfolgungssysteme oder Projekte, Ändern der Priorität und des Status von Objekten - aber Sie können die Verfolgungssysteme nicht konfigurieren."
+msgstr "Verfolgungssystemverwalter können die Einträge des Verfolgungssystems vollständig verwalten, einschließlich Zuweisung von Einträgen an Techniker, Neuzuweisung von Einträgen an andere Verfolgungssysteme oder Projekte, Änderung der Priorität und des Status der Einträge. Verfolgungssysteme können jedoch nicht konfiguriert werden."
 
 #: ../frontend/php/include/html.php:1097
 msgid "Project Admins can manage members, configure the trackers, post jobs, and add mailing-list. They actually also have manager rights on every tracker and are allowed to read private items."
-msgstr "Projektverwalter können Mitglieder verwalten, die Verfolgungssysteme konfigurieren, Jobs absenden und E-Mail-Verteilerlisten hinzufügen. Sie haben zusätzlich auch Managerrechte bei jedem Verfolgungssystem und können private Objekte lesen."
+msgstr "Projektverwalter können Mitglieder verwalten, Verfolgungssysteme konfigurieren, Aufträge senden und E-Mail-Verteiler hinzufügen. Sie haben zusätzlich auch Verwaltungsberechtigöungen bei jedem Verfolgungssystem und können private Einträge lesen."
 
 #: ../frontend/php/include/markup.php:39
 msgid "Basic Markup"
-msgstr "Grundlegende Markup"
+msgstr "Einfaches Markup"
 
 #: ../frontend/php/include/markup.php:40
 msgid "Only basic text tags are available in this input field."
-msgstr "In diesem Eingabefeld sind nur grundlegende Text-Tags verfügbar."
+msgstr "Es sind nur einfache Text-Tags in diesem Eingabefeld verfügbar."
 
 #: ../frontend/php/include/markup.php:44
 msgid "Rich Markup"
-msgstr "Rich Markup"
+msgstr "Erweitertes Markup"
 
 #: ../frontend/php/include/markup.php:45
 msgid "Rich and basic text tags are available in this input field."
-msgstr "Rich- und grundlegende Text-Tags stehen in diesem Eingabefeld zur Verfügung."
+msgstr "Es sind erweiterte und einfache Text-Tags in diesem Eingabefeld verfügbar."
 
 #: ../frontend/php/include/markup.php:49
 msgid "Full Markup"
@@ -1571,7 +1572,7 @@ msgstr "Vollständiges Markup"
 
 #: ../frontend/php/include/markup.php:50
 msgid "Every tags are available in this input field."
-msgstr "Alle Tags sind in diesem Eingabefeld verfügbar."
+msgstr "Es sind alle Tags in diesem Eingabefeld verfügbar."
 
 #: ../frontend/php/include/markup.php:54
 msgid "No Markup"
@@ -1579,7 +1580,7 @@ msgstr "Kein Markup"
 
 #: ../frontend/php/include/markup.php:55
 msgid "No tags are available in this input field."
-msgstr "Keine Tags sind in diesem Eingabefeld verfügbar."
+msgstr "Es sind keine Tags in diesem Eingabefeld verfügbar."
 
 #: ../frontend/php/include/markup.php:60
 msgid "Check the Markup Reminder in Related Recipes for a description of these tags."
@@ -1587,14 +1588,14 @@ msgstr "Markup-Erinnerung in verwandte Rezepte für eine Beschreibung dieser Tag
 
 #: ../frontend/php/include/member.php:53
 msgid "This user is already member of the group."
-msgstr "Dieser Benutzer ist bereits Mitglied der Gruppe."
+msgstr "Dieser Benutzer ist bereits Projektmitglied."
 
 #: ../frontend/php/include/my/general.php:122
 #, php-format
 msgid "%s item"
 msgid_plural "%s items"
-msgstr[0] "%s Objekt"
-msgstr[1] "%s Objekte"
+msgstr[0] "%s Eintrag"
+msgstr[1] "%s Einträge"
 
 #: ../frontend/php/include/my/general.php:125
 #, php-format
@@ -1620,7 +1621,7 @@ msgstr "Keine gefunden"
 
 #: ../frontend/php/include/my/general.php:510
 msgid "We found many items that match the current criteria. We had to set a limit at some point, some items that match the criteria may be missing for this list."
-msgstr "Zu viele Einträge gefunden, die den aktuellen Kriterien entsprechen. Das Suchergebnis wurde gekürzt und es können Einträge fehlen."
+msgstr "Es sind zu viele Einträge vorhanden, die den Suchkriterien entsprechen. Das Suchergebnis wurde gekürzt und es können Einträge fehlen."
 
 #: ../frontend/php/include/my/general.php:546
 #, php-format
@@ -1640,7 +1641,7 @@ msgstr "Aktuelle Nachrichten"
 #: ../frontend/php/include/news/forum.php:164
 #, php-format
 msgid "Item posted by %s on %s."
-msgstr "Eintrag eingesandt von %s am %s."
+msgstr "Eintrag gesendet von %s am %s."
 
 #: ../frontend/php/include/news/forum.php:185
 msgid "Comments:"
@@ -1652,7 +1653,7 @@ msgstr "Forum überwachen (umschalten)"
 
 #: ../frontend/php/include/news/forum.php:198
 msgid "Save Place"
-msgstr "Stelle speichern"
+msgstr "Ort speichern"
 
 #: ../frontend/php/include/news/forum.php:478
 msgid "Trying to post without a forum ID"
@@ -1660,32 +1661,32 @@ msgstr "Versuchen ohne Forum-ID zu senden"
 
 #: ../frontend/php/include/news/forum.php:482
 msgid "Must include a message body and subject"
-msgstr "Es muss ein Nachrichteninhalt und Betreff enthalten sein"
+msgstr "Muss ein Nachrichtentext und Betreff enthalten"
 
 #: ../frontend/php/include/news/forum.php:495
 msgid "You appear to be double-posting this message, since it has the same subject and followup information as a prior post."
-msgstr "Sie scheinen diese Nachricht zum zweiten Mal abzusenden, da sie dieselbe Betreffzeile und Followup-Information hat wie eine frühere Nachricht."
+msgstr "Sie scheinen diese Nachricht Doppelt zu senden, da der Betreff- und Antwort-Information mit einer vorherigen Nachricht identisch ist."
 
 #: ../frontend/php/include/news/forum.php:527
 msgid "Trying to followup to a message that doesn't exist."
-msgstr "Versuch, einen Folgekommentar zu einer nicht existierenden Nachricht hinzuzufügen."
+msgstr "Versuch, eine nicht mehr vorhandene Nachricht zu beantworten."
 
 #: ../frontend/php/include/news/forum.php:533
 msgid "No followup ID present when trying to post to an existing thread."
-msgstr "Keine Folge-ID vorhanden beim Versuch, einen Eintrag an einen existierenden Thread anzuhängen."
+msgstr "Keine Follow-up-ID vorhanden, wenn man versucht, an eine vorhandene Diskussion zu senden."
 
 #: ../frontend/php/include/news/forum.php:546
 msgid "Posting Failed"
-msgstr "Abschicken fehlgeschlagen"
+msgstr "Konnte nicht gesendet werden"
 
 #: ../frontend/php/include/news/forum.php:550
 msgid "Message Posted"
-msgstr "Nachricht gesendet"
+msgstr "Nachricht erfolgreich gesendet"
 
 #: ../frontend/php/include/news/forum.php:560
 #: ../frontend/php/include/news/forum.php:605
 msgid "You could post if you were logged in"
-msgstr "Sie könnten eine Nachricht eintragen, wenn Sie angemeldet wären"
+msgstr "Um eine Nachricht zu senden, müssen Sie sich anmelden"
 
 #: ../frontend/php/include/news/forum.php:587
 msgid "Subject"
@@ -1707,7 +1708,7 @@ msgstr "Keine Nachrichten gefunden"
 #: ../frontend/php/include/news/general.php:118
 #, php-format
 msgid "%s[Read more]%s"
-msgstr "%s[Mehr lesen]%s"
+msgstr "%s[Mehr&hellip;]%s"
 
 #: ../frontend/php/include/news/general.php:134
 #, php-format
@@ -1739,7 +1740,7 @@ msgstr "Meine"
 #: ../frontend/php/include/pagemenu.php:92
 #: ../frontend/php/search/index.php:245
 msgid "Group"
-msgstr "Gruppe"
+msgstr "Projekt"
 
 #: ../frontend/php/include/pagemenu.php:93
 msgid "Site Admin"
@@ -1753,7 +1754,7 @@ msgstr "Webseitenweit"
 #: ../frontend/php/include/pagemenu.php:125
 #, php-format
 msgid "%s Scope"
-msgstr "%s Geltungsbereich"
+msgstr "%s Anwendungsbereich"
 
 #: ../frontend/php/include/pagemenu.php:122
 msgid "Submenu"
@@ -1765,7 +1766,7 @@ msgstr "Eingegangene Einträge"
 
 #: ../frontend/php/include/pagemenu.php:252
 msgid "What's new for me?"
-msgstr "Was gibts Neues für mich?"
+msgstr "Was gibt’s für mich Neues?"
 
 #: ../frontend/php/include/pagemenu.php:255
 msgid "Items"
@@ -1773,27 +1774,27 @@ msgstr "Einträge"
 
 #: ../frontend/php/include/pagemenu.php:259
 msgid "Browse my items (bugs, tasks, bookmarks...)"
-msgstr "Meine Eintrge anzeigen (Fehler, Aufgaben, Lesezeichen ...)"
+msgstr "Meine Einträge anzeigen (Fehler, Aufgaben, Lesezeichen&hellip;)"
 
 #: ../frontend/php/include/pagemenu.php:264
 #: ../frontend/php/include/trackers_run/detail.php:363
 #: ../frontend/php/include/trackers_run/mod.php:667
 msgid "Votes"
-msgstr "Stimmen"
+msgstr "Bewertungen"
 
 #: ../frontend/php/include/pagemenu.php:268
 #: ../frontend/php/include/sitemenu.php:394
 msgid "Browse items I voted for"
-msgstr "Zeige Objekte, für die ich gestimmt habe"
+msgstr "Meine Bewertungen durchsuchen"
 
 #: ../frontend/php/include/pagemenu.php:272
 msgid "Group Membership"
-msgstr "Gruppenmitgliedschaft"
+msgstr "Projektmitgliedschaft"
 
 #: ../frontend/php/include/pagemenu.php:276
 #: ../frontend/php/include/sitemenu.php:400
 msgid "List the groups I belong to"
-msgstr "Gruppen, denen ich angehöre"
+msgstr "Projekte, bei denen ich Mitglied bin"
 
 #: ../frontend/php/include/pagemenu.php:281
 msgid "Bookmarks"
@@ -1805,22 +1806,22 @@ msgstr "Meine Lesezeichen"
 
 #: ../frontend/php/include/pagemenu.php:289
 msgid "Account Configuration"
-msgstr "Kontokonfiguration"
+msgstr "Einstellungen"
 
 #: ../frontend/php/include/pagemenu.php:293
 #: ../frontend/php/include/sitemenu.php:412
 msgid "Account configuration: authentication, cosmetics preferences..."
-msgstr "Kontokonfiguration: Autorisierung, optische Einstellungen ..."
+msgstr "Einstellungen: Autorisierung, Ansicht, &hellip;"
 
 #: ../frontend/php/include/pagemenu.php:320
 #: ../frontend/php/include/pagemenu.php:327
 msgid "Main"
-msgstr "Hauptseite"
+msgstr "Startseite"
 
 #: ../frontend/php/include/pagemenu.php:324
 #, php-format
 msgid "Project Main Page at %s"
-msgstr "Projekt-Hauptseite bei %s"
+msgstr "Projekt-Startseite auf %s"
 
 #: ../frontend/php/include/pagemenu.php:328
 #: ../frontend/php/include/project_home.php:80
@@ -2135,7 +2136,7 @@ msgstr "Test-System-Konfiguration"
 #: ../frontend/php/include/pagemenu.php:811
 #: ../frontend/php/siteadmin/index.php:53
 msgid "Configure Group Types"
-msgstr "Gruppentypen konfigurieren"
+msgstr "Projekttypen einstellen"
 
 #: ../frontend/php/include/pagemenu.php:813
 #: ../frontend/php/siteadmin/index.php:59
@@ -2168,7 +2169,7 @@ msgstr "Nachrichten genehmigen"
 #: ../frontend/php/include/pagemenu.php:846
 #: ../frontend/php/siteadmin/index.php:110
 msgid "Browse Groups List"
-msgstr "Gruppenübersicht"
+msgstr "Projekte durchsuchen"
 
 #: ../frontend/php/include/pagemenu.php:848
 #: ../frontend/php/siteadmin/index.php:117
@@ -2348,7 +2349,7 @@ msgstr "Dieses Projekt ist nicht im aktiven Status"
 
 #: ../frontend/php/include/project/admin.php:41
 msgid "Group Change History"
-msgstr "Gruppe-Änderungsprotokoll"
+msgstr "Projekt-Änderungsprotokoll"
 
 #: ../frontend/php/include/project/admin.php:44
 msgid "Field"
@@ -2371,7 +2372,7 @@ msgstr "Von"
 
 #: ../frontend/php/include/project/admin.php:72
 msgid "No Changes Have Been Made to This Group"
-msgstr "An dieser Gruppe wurden keine Änderungen vorgenommen."
+msgstr "An diesem Projekt wurden keine Änderungen vorgenommen."
 
 #: ../frontend/php/include/project/admin.php:85
 msgid "Project Admins"
@@ -2384,7 +2385,7 @@ msgstr "Anmeldedatum"
 
 #: ../frontend/php/include/project/admin.php:92
 msgid "System Group Name:"
-msgstr "Systemgruppenname:"
+msgstr "Systemprojektname:"
 
 #: ../frontend/php/include/project/admin.php:94
 msgid "Submitted Description:"
@@ -2418,7 +2419,7 @@ msgstr[1] "%s Mitglieder"
 
 #: ../frontend/php/include/project_home.php:85
 msgid "Group identification"
-msgstr "Gruppenkennung"
+msgstr "Projektkennung"
 
 #: ../frontend/php/include/project_home.php:87
 #: ../frontend/php/include/user_home.php:142
@@ -2439,7 +2440,7 @@ msgstr "Name:"
 #: ../frontend/php/include/project_home.php:94
 #: ../frontend/php/siteadmin/groupedit.php:101
 msgid "Group Type:"
-msgstr "Gruppentyp:"
+msgstr "Projekttyp:"
 
 #: ../frontend/php/include/project_home.php:132
 #, php-format
@@ -2716,7 +2717,7 @@ msgstr "jede"
 #: ../frontend/php/include/search/general.php:225
 #, php-format
 msgid "Search in %s group type, when searching for a \"Project/Group\"."
-msgstr "Suche in der Gruppenart »%s«, wenn nach »Projekt/Gruppe« gesucht werden soll."
+msgstr "In %s-Projekttyp suchen, wenn nach „Projekt“ gesucht werden soll."
 
 #: ../frontend/php/include/search/general.php:228
 msgid "Notes: You can use the wildcard *, standing for everything. You can also search items by number."
@@ -2729,11 +2730,11 @@ msgstr "Suchkriterien:"
 #: ../frontend/php/include/search/general.php:260
 #, php-format
 msgid "New search criteria for the Group %s:"
-msgstr "Neue Suchkriterien für die Gruppe %s:"
+msgstr "Neue Suchkriterien für %s-Projekt:"
 
 #: ../frontend/php/include/search/general.php:270
 msgid "Project/Group"
-msgstr "Projekt/Gruppe"
+msgstr "Projekt"
 
 #: ../frontend/php/include/search/general.php:276
 #: ../frontend/php/stats/index.php:184
@@ -2759,7 +2760,7 @@ msgstr "Suchergebnisse für %s (in %s):"
 #: ../frontend/php/include/search/general.php:290
 #, php-format
 msgid "Search results for %s (in %s, for the Group %s):"
-msgstr "Suchergebnisse für %s (in %s, für die Gruppe %s):"
+msgstr "Suchergebnisse für %s (in %s, für Projekt %s):"
 
 #: ../frontend/php/include/search/general.php:294
 msgid "Search results:"
@@ -2982,7 +2983,7 @@ msgstr "Meine Objekte anzeigen (von mir eingereicht oder mir zugewiesen)"
 #: ../frontend/php/include/sitemenu.php:398
 #: ../frontend/php/my/groups.php:376
 msgid "My Groups"
-msgstr "Meine Gruppen"
+msgstr "Meine Projekte"
 
 #: ../frontend/php/include/sitemenu.php:406
 msgid "Show my bookmarks"
@@ -3062,7 +3063,7 @@ msgstr "Fehlende Parameter"
 #: ../frontend/php/include/trackers/conf.php:48
 #, php-format
 msgid "Start copying configuration of group #%s %s tracker"
-msgstr "Starte den Kopiervorgang der Konfiguration des Verfolgungssystems »%2$s« der Gruppe #%1$s"
+msgstr "Kopiervorgang der Konfiguration des Verfolgungssystems »%2$s« des Projekt #%1$s starten"
 
 #: ../frontend/php/include/trackers/conf.php:70
 msgid "Notification settings copied"
@@ -3316,7 +3317,7 @@ msgstr "Ausschlussliste:"
 
 #: ../frontend/php/include/trackers/data.php:272
 msgid "groups table Update failed."
-msgstr "Aktualisierung der Gruppentabelle fehlgeschlagen."
+msgstr "Aktualisierung der Projekttabelle fehlgeschlagen."
 
 #: ../frontend/php/include/trackers/data.php:296
 msgid "_field_value table Update failed."
@@ -3591,12 +3592,12 @@ msgstr "Dieses Projekt hat dieses Verfolgungssystem abgeschaltet."
 
 #: ../frontend/php/include/trackers/general.php:476
 msgid "Error: no group defined"
-msgstr "Fehler: Keine Gruppe definiert"
+msgstr "Fehler: Keine Projekt definiert"
 
 #: ../frontend/php/include/trackers/general.php:572
 #: ../frontend/php/include/trackers/general.php:599
 msgid "Internal error: no group id"
-msgstr "Interner Fehler: Keine Gruppen-ID"
+msgstr "Interner Fehler: Keine Projekt-Id"
 
 #: ../frontend/php/include/trackers/general.php:809
 #, php-format
@@ -3830,27 +3831,27 @@ msgstr "Automatische Aktualisierung von %s auf Grund der Übergangseinstellungen
 
 #: ../frontend/php/include/trackers/votes.php:43
 msgid "You appear to have less than 0 votes remaining. There's a bug somewhere, please contact the administrators"
-msgstr "Sie scheinen weniger als 0 Stimmen übrig zu haben. Irgendwo ist ein Fehler, bitte melden Sie dies an die Verwalter"
+msgstr "Sie scheinen weniger als 0 Bewertungen übrig zu haben. Irgendwo ist ein Fehler, bitte melden Sie dies an die Verwalter"
 
 #: ../frontend/php/include/trackers/votes.php:72
 msgid "Vote provided is not a simple integer, it has been ignored"
-msgstr "Die abgegebene Stimme ist keine Ganzzahl und wurde ignoriert"
+msgstr "Die abgegebene Bewertung ist keine Ganzzahl und wurde ignoriert"
 
 #: ../frontend/php/include/trackers/votes.php:104
 msgid "Vote erased"
-msgstr "Stimme gelöscht"
+msgstr "Bewertung gelöscht"
 
 #: ../frontend/php/include/trackers/votes.php:160
 msgid "Unable to record the vote, please report to admins"
-msgstr "Konnte die Stimme nicht speichern, bitte benachrichtigen Sie die Verwalter"
+msgstr "Konnte die Bewertung nicht speichern, bitte benachrichtigen Sie die Verwalter"
 
 #: ../frontend/php/include/trackers/votes.php:171
 msgid "Unable to finally record the vote, please report to admins"
-msgstr "Konnte die Stimme nicht endgültig speichern, bitte benachrichtigen Sie die Verwalter"
+msgstr "Konnte die Bewertung nicht endgültig speichern, bitte benachrichtigen Sie die Verwalter"
 
 #: ../frontend/php/include/trackers/votes.php:178
 msgid "Vote recorded"
-msgstr "Stimme gespeichert"
+msgstr "Bewertung gespeichert"
 
 #: ../frontend/php/include/trackers_run/add.php:31
 #: ../frontend/php/news/submit.php:54
@@ -4900,7 +4901,7 @@ msgstr "Eingesandt am:"
 #: ../frontend/php/include/trackers_run/detail.php:111
 #: ../frontend/php/include/trackers_run/mod.php:167
 msgid "Votes:"
-msgstr "Stimmen:"
+msgstr "Bewertungen:"
 
 #: ../frontend/php/include/trackers_run/detail.php:262
 #: ../frontend/php/include/trackers_run/mod.php:396
@@ -4947,33 +4948,33 @@ msgstr "E-Mail-Benachrichtigung Carbon-Copy-Liste"
 #, php-format
 msgid "There is %s vote so far."
 msgid_plural "There are %s votes so far."
-msgstr[0] "Es gibt bislang %s Stimme."
-msgstr[1] "Es gibt bislang %s Stimmen."
+msgstr[0] "Es gibt bislang %s Bewertung."
+msgstr[1] "Es gibt bislang %s Bewertungen."
 
 #: ../frontend/php/include/trackers_run/detail.php:364
 msgid "Votes easily highlight which items people would like to see resolved in priority, independantly of the priority of the item set by tracker managers."
-msgstr "Durch Abstimmen ist einfach erkennbar, welche Objekte die Leute bevorzugt behoben sehen wollen, unabhängig von der Priorität, die das Objekt von den Managern des Verfolgungssystems bekommen hat."
+msgstr "Durch Bewertungen ist einfach erkennbar, welche Objekte die Leute bevorzugt behoben sehen wollen, unabhängig von der Priorität, die das Objekt von den Managern des Verfolgungssystems bekommen hat."
 
 #: ../frontend/php/include/trackers_run/detail.php:382
 #: ../frontend/php/include/trackers_run/mod.php:673
 msgid "Your vote:"
-msgstr "Ihre Stimme:"
+msgstr "Ihre Bewertung:"
 
 #: ../frontend/php/include/trackers_run/detail.php:382
 #: ../frontend/php/include/trackers_run/mod.php:673
 #, php-format
 msgid "/ %s remaining vote"
 msgid_plural "/ %s remaining votes"
-msgstr[0] "/ %s übrige Stimme"
-msgstr[1] "/ %s übrige Stimmen"
+msgstr[0] "/ %s verbleibende Bewertung"
+msgstr[1] "/ %s verbleibende Bewertungen"
 
 #: ../frontend/php/include/trackers_run/detail.php:387
 msgid "Only logged-in users can vote."
-msgstr "Nur angemeldete Benutzer können abstimmen."
+msgstr "Nur angemeldete Benutzer können bewerten."
 
 #: ../frontend/php/include/trackers_run/detail.php:392
 msgid "Only project members can vote."
-msgstr "Nur Projektmitglieder können abstimmen."
+msgstr "Nur Projektmitglieder können bewerten."
 
 #: ../frontend/php/include/trackers_run/detail.php:410
 #: ../frontend/php/include/trackers_run/mod.php:785
@@ -5371,11 +5372,11 @@ msgstr "Bitte wählen Sie eine Abhängigkeit, um sie dem Ergebnis Ihrer Suche na
 
 #: ../frontend/php/include/trackers_run/mod.php:610
 msgid "group"
-msgstr "Gruppe"
+msgstr "Projekt"
 
 #: ../frontend/php/include/trackers_run/mod.php:668
 msgid "Votes easily highlight which items people would like to see resolved in priority, independently of the priority of the item set by tracker managers."
-msgstr "Durch Abstimmen ist einfach erkennbar, welche Objekte die Leute bevorzugt behoben sehen wollen, unabhängig von der Priorität, die das Objekt von den Managern des Verfolgungssystems bekommen hat."
+msgstr "Durch Bewertungen ist einfach erkennbar, welche Objekte die Leute bevorzugt behoben sehen wollen, unabhängig von der Priorität, die das Objekt von den Managern des Verfolgungssystems bekommen hat."
 
 #: ../frontend/php/include/trackers_run/mod.php:686
 msgid "Reassign this item"
@@ -5551,7 +5552,7 @@ msgstr "GPG-Schlüssel herunterladen"
 
 #: ../frontend/php/include/user_home.php:218
 msgid "Project/Group Information"
-msgstr "Projekt-/Gruppeninformation"
+msgstr "Projektinformation"
 
 #: ../frontend/php/include/user_home.php:287
 #: ../frontend/php/my/groups.php:408
@@ -5562,7 +5563,7 @@ msgstr "Mitglied seit %s"
 
 #: ../frontend/php/include/user_home.php:298
 msgid "This user is not a member of any Project/Group"
-msgstr "Dieser Benutzer ist nicht Mitglied eines Projekts/einer Gruppe"
+msgstr "Dieser Benutzer ist kein Mitglied eines Projekts"
 
 #: ../frontend/php/include/user_home.php:313
 #: ../frontend/php/project/admin/index.php:130
@@ -5736,7 +5737,7 @@ msgstr "Datenbank erfolgreich aktualisiert"
 
 #: ../frontend/php/index.php:39
 msgid "Serious configuration problem: sys_unix_group_name is not set"
-msgstr "Ernsthaftes Konfigurationsproblem: sys_unix_group_name ist nicht gesetzt"
+msgstr "Schwerwiegenden Problem der Einstellungen: sys_unix_group_name ist nicht eingestellt"
 
 #: ../frontend/php/index.php:42
 msgid "Configuration problem: sys_name is not set"
@@ -5949,7 +5950,7 @@ msgstr "Hier können Sie alle E-Mail-Benachrichtigungen kündigen."
 
 #: ../frontend/php/my/admin/cc.php:76
 msgid "Beware: this process cannot be undone, you will be definitely removed from carbon-copy lists of any items of the selected groups."
-msgstr "Achtung: Dieser Vorgang kann nicht rückgängig gemacht werden, Sie werden definitiv aus allen CC-Verteilern der ausgewählten Gruppen entfernt."
+msgstr "Achtung: Dieser Vorgang kann nicht Rückgängig gemacht werden, Sie werden definitiv aus allen CC-Verteilern der ausgewählten Projekte entfernt."
 
 #: ../frontend/php/my/admin/cc.php:96
 msgid "You are not registered on any Carbon-Copy list."
@@ -5957,24 +5958,24 @@ msgstr "Sie sind in keinem CC-Verteiler eingetragen."
 
 #: ../frontend/php/my/admin/cc.php:103
 msgid "Groups to which belong items you are in Carbon Copy for"
-msgstr "Gruppen, von denen Sie CC-Nachrichten erhalten"
+msgstr "Projekte, von denen Sie in CC-Verteilern sind"
 
 #: ../frontend/php/my/admin/cc.php:115
 msgid "Cancel CC for this group"
-msgstr "CC für diese Gruppe abbrechen"
+msgstr "CC-Verteiler dieses Projekts widerrufen"
 
 #: ../frontend/php/my/admin/cc.php:132
 msgid "Cancel All CC"
-msgstr "Alle CC abbrechen"
+msgstr "Alle CC-Verteiler widerrufen"
 
 #: ../frontend/php/my/admin/cc.php:134
 #, php-format
 msgid "All Carbon-Copies over %s"
-msgstr "Alle CC über %s"
+msgstr "Alle CC-Verteiler über %s"
 
 #: ../frontend/php/my/admin/change.php:58
 msgid "You must quit groups that your are member of before requesting account deletion. If you registered a project that was not approved or discarded yet, you must ask admins to cancel the registration"
-msgstr "Sie müssen Gruppen verlassen, in denen Sie Mitglied sind, bevor Sie Ihr Benutzerkonto löschen können. Wenn Sie ein Projekt angemeldet haben, das bislang noch nicht genehmigt oder abgelehnt wurde, müssen Sie die Verwalter darum bitten, die Registrierung abzubrechen"
+msgstr "Sie müssen Projekte verlassen, in denen Sie Mitglied sind, bevor Sie Ihr Benutzerkonto löschen können. Wenn Sie ein Projekt angemeldet haben, das bislang noch nicht genehmigt oder abgelehnt wurde, müssen Sie die Verwalter darum bitten, die Registrierung abzubrechen"
 
 #: ../frontend/php/my/admin/change.php:72
 msgid "You must supply a new real name."
@@ -6731,7 +6732,7 @@ msgstr "Konnte Benutzer nicht in die Liste der beobachteten Benutzer aufnehmen, 
 #: ../frontend/php/my/groups.php:117
 #, php-format
 msgid "Membership request for group %s"
-msgstr "Mitgliedsantrag für die Gruppe %s"
+msgstr "Mitgliedsantrag für %s-Projekt"
 
 #: ../frontend/php/my/groups.php:146
 msgid "When joining you must provide a message for the administrator, a short explanation of why you want to join this/these project(s)."
@@ -6743,11 +6744,11 @@ msgstr "Die Bewerbung zur Mitarbeit ist bereits registriert"
 
 #: ../frontend/php/my/groups.php:217
 msgid "Groups history appears to be flawed. This is a site installation problem. Please report the incident to administrators, asking them to get in touch with their Savane supplier."
-msgstr "Der Gruppenverlauf scheint nicht in Ordnung zu sein. Das ist ein Installationsproblem dieser Website. Bitte berichten Sie diesen Vorfall an die Verwalter und bitten Sie sie, ihren Savane-Anbieter zu benachrichtigen."
+msgstr "Der Projektverlauf scheint nicht in Ordnung zu sein. Das ist ein Installationsproblem dieser Websidte. Bitte berichten Sie diesen Vorfall an die Verwalter und bitten Sie sie, ihren Savane-Anbieter zu benachrichtigen."
 
 #: ../frontend/php/my/groups.php:229
 msgid "Here is the list of groups you are member of, plus a form which allows you to ask for inclusion in a Group. Clicking on the trash permits you to quit a project."
-msgstr "Gruppen, in denen Sie Mitglied sind. Außerdem gibt es ein Formular, das es Ihnen ermöglicht, die Mitgliedschaft in einer Gruppe zu beantragen. Durch das Anklicken des Papierkorbs können Sie ein Projekt verlassen."
+msgstr "Projekte, in denen Sie Mitglied sind. Außerdem gibt es ein Formular, das es Ihnen ermöglicht, die Mitgliedschaft in eines Projekt zu beantragen. Durch das Anklicken des Papierkorbs können Sie ein Projekt verlassen."
 
 #: ../frontend/php/my/groups.php:239
 msgid "Watched Partners"
@@ -6785,15 +6786,15 @@ msgstr "Bewerben, um in Projekten mitzuarbeiten"
 
 #: ../frontend/php/my/groups.php:300
 msgid "If there is a project - or several - you would like to be member of, to be able to fully contribute, it is possible to search for the names in the whole group database with the following search tool. A list of groups will be generated, depending on the word(s) typed in this form."
-msgstr "Wenn Sie Mitglied eines Projekts - oder mehrerer Projekte - werden möchten, um vollständig mitarbeiten zu können, ist es möglich, hier nach den Namen in der Gruppendatenbank suchen. Es wird eine Liste von Gruppen erzeugt, abhängig davon, welche Wörter in dieses Formular eingegeben wurden."
+msgstr "Wenn Sie Mitglied eines Projekts - oder mehrerer Projekte - werden möchten, um vollständig mitarbeiten zu können, ist es möglich, hier nach den Namen in der Projektdatenbank suchen. Es wird eine Liste von Gruppen erzeugt, abhängig davon, welche Wörter in dieses Formular eingegeben wurden."
 
 #: ../frontend/php/my/groups.php:309
 msgid "Search Group(s)"
-msgstr "Suche Gruppe(n)"
+msgstr "Projekt/e suchen"
 
 #: ../frontend/php/my/groups.php:328
 msgid "Below is the result of the research in the groups database."
-msgstr "Unten sehen Sie das Ergebnis der Suche in der Gruppendatenbank."
+msgstr "Suchergebnis der Projektdatenbank."
 
 #: ../frontend/php/my/groups.php:333
 msgid "None found. Please note that only search words of more than one character are valid."
@@ -6801,7 +6802,7 @@ msgstr "Keine gefunden. Bitte beachten Sie, dass nur Suchworte mit mehr als eine
 
 #: ../frontend/php/my/groups.php:343
 msgid "To request inclusion in one or several groups, check the correspondent boxes, write a meaningful message for the project administrator who will approve or disapprove the request, and submit the form."
-msgstr "Um die Mitgliedschaft in einer oder mehreren Gruppen zu beantragen, markieren Sie die entsprechenden Kästchen, schreiben eine sinnvolle Nachricht an den Projektverwalter, der die Bewerbung annimmt oder ablehnt, und senden das Formular ab."
+msgstr "Um die Mitgliedschaft in einer oder mehreren Projekte zu beantragen, markieren Sie die entsprechenden Feld, schreiben eine sinnvolle Nachricht an den Projektverwalter, der die Bewerbung annimmt oder ablehnt, und senden das Formular ab."
 
 #: ../frontend/php/my/groups.php:357
 msgid "Comments (required):"
@@ -6817,7 +6818,7 @@ msgstr "Sie sind kein Mitglied eines öffentlichen Projekts"
 
 #: ../frontend/php/my/groups.php:388
 msgid "Groups I'm Administrator of"
-msgstr "Gruppen, von denen ich Verwalter bin"
+msgstr "Projekte, bei denen ich Verwalter bin"
 
 #: ../frontend/php/my/groups.php:399
 #: ../frontend/php/my/groups.php:446
@@ -6830,7 +6831,7 @@ msgstr "Ich bin kein Verwalter eines Projekts"
 
 #: ../frontend/php/my/groups.php:435
 msgid "Groups I'm Contributor of"
-msgstr "Gruppen, von denen ich Mitglied bin"
+msgstr "Projekte, bei denen ich Mitglied bin"
 
 #: ../frontend/php/my/groups.php:467
 msgid "I am not contributor member of any projects"
@@ -6909,31 +6910,31 @@ msgstr "Von mir eingesandt"
 
 #: ../frontend/php/my/quitproject.php:52
 msgid "Quit a group"
-msgstr "Eine Gruppe verlassen"
+msgstr "Eine Projekt beenden"
 
 #: ../frontend/php/my/quitproject.php:57
 #, php-format
 msgid "You are about to leave the group %s, please confirm:"
-msgstr "Sie sind dabei, die Gruppe %s zu verlassen, bitte bestätigen Sie das:"
+msgstr "Sie sind dabei, das %s-Projekt zu beenden, bitte bestätigen:"
 
 #: ../frontend/php/my/votes.php:57
 msgid "Vote count exceed limits, your changes have been discarded"
-msgstr "Die Zahl der Stimmen überschreitet das Limit, Ihre Änderungen wurden verworfen"
+msgstr "Die Zahl der Bewertungen überschreitet das Limit, Ihre Änderungen wurden verworfen"
 
 #: ../frontend/php/my/votes.php:81
 msgid "Here is the list of your votes."
-msgstr "Dies ist die Liste Ihrer Stimmen."
+msgstr "Dies ist die Liste Ihrer Bewertungen."
 
 #: ../frontend/php/my/votes.php:81
 #, php-format
 msgid "%s vote remains at your disposal."
 msgid_plural "%s votes remain at your disposal."
-msgstr[0] "%s Stimme bleibt zu Ihrer Verfügung übrig."
-msgstr[1] "%s Stimmen bleiben zu Ihrer Verfügung übrig."
+msgstr[0] "%s Bewertung bleibt zu Ihrer Verfügung übrig."
+msgstr[1] "%s Bewertungen bleiben zu Ihrer Verfügung übrig."
 
 #: ../frontend/php/my/votes.php:85
 msgid "To change your votes, type in new numbers (using zero removes the entry from your votes list)."
-msgstr "Um Ihre Stimmen zu ändern, geben Sie neue Zahlen ein (bei der Verwendung von Null wird der Eintrag aus Ihrer Stimmliste entfernt)."
+msgstr "Um Ihre Bewertungen zu ändern, geben Sie neue Zahlen ein (bei der Verwendung von Null wird der Eintrag aus Ihrer Stimmliste entfernt)."
 
 #: ../frontend/php/news/admin/index.php:30
 msgid "This Project Has Turned Off News Tracker"
@@ -7284,7 +7285,7 @@ msgstr "Projekte, die nach »%s« suchen"
 
 #: ../frontend/php/people/index.php:84
 msgid "That group type does not exist"
-msgstr "Dieser Gruppentyp ist nicht vorhanden."
+msgstr "Dieser Projekttyp ist nicht vorhanden."
 
 #: ../frontend/php/people/index.php:95
 msgid "Projects Needing Help"
@@ -7439,7 +7440,7 @@ msgstr "Öffentliche Infos bearbeiten"
 
 #: ../frontend/php/project/admin/editgroupinfo.php:73
 msgid "Group Name:"
-msgstr "Gruppenname:"
+msgstr "Projektname:"
 
 #: ../frontend/php/project/admin/editgroupinfo.php:80
 #, php-format
@@ -7505,7 +7506,7 @@ msgstr "Projektverlauf"
 
 #: ../frontend/php/project/admin/index.php:35
 msgid "Invalid Group"
-msgstr "Ungültige Gruppe"
+msgstr "Ungültiges Projekt"
 
 #: ../frontend/php/project/admin/index.php:48
 msgid "You can view/change all of your project configuration from here."
@@ -7559,7 +7560,7 @@ msgstr "Erstellen und Löschen von Teams, Mitglieder zum Team hinzufügen. Mitgl
 
 #: ../frontend/php/project/admin/index.php:146
 msgid "Set members and group default permissions, set posting restrictions."
-msgstr "Festlegen der voreingestellten Rechte für Mitglieder und Gruppen, Beschränkungen für Einträge festlegen."
+msgstr "Festlegen der voreingestellten Rechte für Mitglieder und Projekt, Beschränkungen für Einträge festlegen."
 
 #: ../frontend/php/project/admin/index.php:152
 msgid "Add a job offer."
@@ -7664,19 +7665,19 @@ msgstr "Berechtigungen festlegen"
 
 #: ../frontend/php/project/admin/useradmin.php:36
 msgid "Users Pending for Group"
-msgstr "Benutzer, die auf die Gruppenmitgliedschaft warten"
+msgstr "Benutzer, die freigeschaltet werden müssen"
 
 #: ../frontend/php/project/admin/useradmin.php:38
 msgid "Users that have requested to be member of the group are listed here. To approve their requests, select their name and click on the button below. To discard requests, go to the next section called \"Removing users from group\"."
-msgstr "Benutzer, die Mitglied dieser Gruppe werden möchten, sind hier aufgelistet. Um ihre Anfragen zu genehmigen, wählen Sie ihre Namen aus und klicken auf den Knopf unten. Um die Anfragen zu verwerfen, gehen Sie zum nächsten Abschnitt, der »Benutzer von Gruppe entfernen« lautet."
+msgstr "Übersicht der Benutzer, die Projektmitglied werden möchten. Um Anfragen freizuschalten, wählen Sie den Namen und klicken auf die Schaltfläche. Um Anfragen zu verwerfen, wählen Sie „Benutzer aus Projekt entfernen“."
 
 #: ../frontend/php/project/admin/useradmin.php:58
 msgid "Approve users for group"
-msgstr "Benutzer für Gruppe genehmigen"
+msgstr "Benutzer für Projekt freischalten"
 
 #: ../frontend/php/project/admin/useradmin.php:67
 msgid "Removing users from group"
-msgstr "Benutzer von Gruppe entfernen"
+msgstr "Benutzer aus Projekt entfernen"
 
 #: ../frontend/php/project/admin/useradmin.php:69
 msgid "To remove users, select their name and click on the button below. The administrators of a project cannot be removed unless they quit. Pending users are at the bottom of the list."
@@ -7684,15 +7685,15 @@ msgstr "Um Benutzer zu entfernen, wählen Sie ihren Namen aus und klicken Sie de
 
 #: ../frontend/php/project/admin/useradmin.php:86
 msgid "Pending:"
-msgstr "Schwebend:"
+msgstr "Unerledigt:"
 
 #: ../frontend/php/project/admin/useradmin.php:101
 msgid "Remove users from group"
-msgstr "Benutzer von Gruppe entfernen"
+msgstr "Benutzer aus Projekt entfernen"
 
 #: ../frontend/php/project/admin/useradmin.php:110
 msgid "Adding users to group"
-msgstr "Benutzer zur Gruppe hinzufügen"
+msgstr "Benutzer zum Projekt hinzufügen"
 
 #: ../frontend/php/project/admin/useradmin.php:112
 msgid "You can search one or several users to add in the whole users database with the following search tool. A list of users, depending on the names you'll type in this form, will be generated."
@@ -7700,7 +7701,7 @@ msgstr "Sie können mit dem folgenden Suchwerkzeug nach einem oder mehreren Benu
 
 #: ../frontend/php/project/admin/useradmin.php:119
 msgid "Search users"
-msgstr "Suche Benutzer"
+msgstr "Benutzer suchen"
 
 #: ../frontend/php/project/admin/useradmin.php:128
 msgid "Below is the result of your search in the users database."
@@ -7708,7 +7709,7 @@ msgstr "Unten sehen Sie das Ergebnis Ihrer Suche in der Benutzerdatenbank."
 
 #: ../frontend/php/project/admin/useradmin.php:150
 msgid "Add users to group"
-msgstr "Benutzer zur Gruppe hinzufügen"
+msgstr "Benutzer zum Projekt hinzufügen"
 
 #: ../frontend/php/project/admin/useradmin.php:158
 msgid "Have your file checked"
@@ -7739,7 +7740,7 @@ msgstr "Benutzer %s vom Projekt entfernt."
 #: ../frontend/php/project/admin/userperms.php:113
 #, php-format
 msgid "Configuration for user #%s (you!) ignored to avoid incoherent flags status. End the superuser session to change your settings in this group or use the admin user interface."
-msgstr "Die Konfiguration für den Benutzer #%s (Sie selbst!) wurde ignoriert, um Inkonsistenzen im Flag-Status zu vermeiden. Beenden Sie die Superuser-Session, um Ihre Einstellungen in dieser Gruppe zu ändern oder verwenden Sie die Benutzerschnittstelle für Verwalter."
+msgstr "Die Konfiguration für den Benutzer #%s (Sie selbst!) wurde ignoriert, um Inkonsistenzen im Flag-Status zu vermeiden. Beenden Sie die Superuser-Sitzung, um Ihre Einstellungen in diesem Projekt zu ändern oder verwenden Sie die Benutzerschnittstelle für Projektverwalter."
 
 #: ../frontend/php/project/admin/userperms.php:259
 #, php-format
@@ -7758,11 +7759,11 @@ msgstr "Das Aktualisieren der %s Rechte ist fehlgeschlagen."
 
 #: ../frontend/php/project/admin/userperms.php:321
 msgid "Permissions for the group updated."
-msgstr "Gruppenrechte aktualisiert."
+msgstr "Projektberechtigungen aktualisiert."
 
 #: ../frontend/php/project/admin/userperms.php:326
 msgid "Unable to change group defaults permissions."
-msgstr "Konnte die voreingestellten Gruppenrechte nicht ändern."
+msgstr "Die voreingestellten Projektberechtigungen konnten nicht geändert werden."
 
 #: ../frontend/php/project/admin/userperms.php:401
 msgid "Applies when ..."
@@ -7778,7 +7779,7 @@ msgstr "Kochbuchverwalter"
 
 #: ../frontend/php/project/admin/userperms.php:424
 msgid "Group trackers posting restrictions"
-msgstr "Beschränkungen für Einträge in den Verfolgungssystemen der Gruppe"
+msgstr "Projekt-Verfolgungssystem Nachrichteneinschränkungen"
 
 #: ../frontend/php/project/admin/userperms.php:427
 msgid "Here you can set the minimal authentification level required in order to post on the trackers."
@@ -7794,7 +7795,7 @@ msgstr "Kommentare abschicken"
 
 #: ../frontend/php/project/admin/userperms.php:520
 msgid "Group Default Permissions"
-msgstr "Voreingestellte Gruppenrechte"
+msgstr "Voreingestellte Projektberechtigungen"
 
 #: ../frontend/php/project/admin/userperms.php:572
 msgid "Permissions per squad"
@@ -7980,7 +7981,7 @@ msgstr "Schritt 3: Projektname"
 
 #: ../frontend/php/register/confirmation.php:36
 msgid "No group type has been selected. Use the back button."
-msgstr "Es wurde keine Gruppenart ausgewählt. Benutzen Sie die »Zurück«-Schaltfläche."
+msgstr "Es wurde keine Projekttyp ausgewählt. Benutzen Sie die Schaltfläche „Zurück“."
 
 #: ../frontend/php/register/confirmation.php:42
 msgid "Final Step: Confirmation"
@@ -8083,7 +8084,7 @@ msgstr "Neues Projekt anmelden"
 
 #: ../frontend/php/register/index.php:32
 msgid "No group type has been set. Admins need to create at least one group type. They can make it so clicking on the link \"Group Type Admin\", on the Administration section of the left side menu, while logged in as admin"
-msgstr "Keine Gruppenart festgelegt. Verwalter müssen mindestens eine Gruppenart erzeugen. Sie können dies tun, indem sie auf den Link »Gruppenartverwaltung« klicken."
+msgstr "Keine Projekttyp festgelegt. Projektverwalter müssen mindestens eine Projekttyp erzeugen. Sie können dies tun, indem sie auf den Verweis „Projekttypverwaltung“ klicken."
 
 #: ../frontend/php/register/index.php:40
 #: ../frontend/php/register/requirements.php:29
@@ -8092,7 +8093,7 @@ msgstr "Schritt 1: Dienste und Anforderungen"
 
 #: ../frontend/php/register/license.php:41
 msgid "Invalid Group Name"
-msgstr "Ungültiger Gruppenname"
+msgstr "Ungültiger Projektname"
 
 #: ../frontend/php/register/license.php:63
 msgid "Some required fields were left empty. Use the back button."
@@ -8180,75 +8181,76 @@ msgstr "Name"
 
 #: ../frontend/php/search/index.php:243
 msgid "Item Id"
-msgstr "Objekt-ID"
+msgstr "Eintrag-ID"
 
 #: ../frontend/php/search/index.php:244
 msgid "Item Summary"
-msgstr "Objektzusammenfassung"
+msgstr "Zusammenfassung"
 
 #: ../frontend/php/search/index.php:246
 msgid "Submitted By"
-msgstr "Eingesandt von"
+msgstr "Eingesendet von"
 
 #: ../frontend/php/search/index.php:283
 msgid "Invalid Search!!"
-msgstr "Ungültige Suche!!"
+msgstr "Suche ungültig!!"
 
 #: ../frontend/php/sendmessage.php:46
 msgid "That user does not exist"
-msgstr "Dieser Benutzername existiert nicht"
+msgstr "Dieser Benutzer ist nicht vorhanden."
 
 #: ../frontend/php/sendmessage.php:67
 msgid "Message Sent"
-msgstr "Nachricht verschickt"
+msgstr "Nachricht gesendet"
 
 #: ../frontend/php/sendmessage.php:77
 msgid "Send a message"
-msgstr "Schicke eine Nachricht"
+msgstr "Eine Nachricht senden"
 
 #: ../frontend/php/siteadmin/group_type.php:50
 msgid "Unable to delete group type"
-msgstr "Konnte Gruppenart nicht entfernen"
+msgstr "Projekttyp konnte nicht entfernt werden"
 
 #: ../frontend/php/siteadmin/group_type.php:52
 msgid "group type deleted"
-msgstr "Gruppenart entfernt"
+msgstr "Projekttyp entfernt"
 
 #: ../frontend/php/siteadmin/group_type.php:110
 #, php-format
 msgid "Unable to update group type general settings: %s"
-msgstr "Konnte die allgemeinen Einstellungen der Gruppenart nicht aktualisieren: %s"
+msgstr "Allgemeine Projekttyp-Einstellungen konnten nicht aktualisiert werden: %s"
 
 #: ../frontend/php/siteadmin/group_type.php:112
 msgid "group type general settings updated"
-msgstr "Allgemeine Einstellungen für Gruppenarten aktualisiert"
+msgstr "Allgemeine Projekttyp-Einstellungen wurden aktualisiert"
 
 #: ../frontend/php/siteadmin/group_type.php:136
 #, php-format
 msgid "Unable to update group type menu settings: %s"
-msgstr "Konnte die Menüeinstellungen der Gruppenart nicht aktualisieren: %s"
+msgstr "Projekttyp-Menüeinstellungen konnten nicht aktualisiert werden: %s"
 
 #: ../frontend/php/siteadmin/group_type.php:138
 msgid "group type menu settings updated"
-msgstr "Menüeinstellungen für Gruppenart aktualisiert"
+msgstr "Projekttyp-Menüeinstellungen wurden aktualisiert"
 
 #: ../frontend/php/siteadmin/group_type.php:159
 #, php-format
 msgid "Unable to update group type user permissions settings: %s"
-msgstr "Konnte die Benutzerrechtseinstellungen der Gruppenart nicht aktualisieren: %s"
+msgstr "Projekttyp-Benutzerberechtigungen konnten nicht aktualisiert werden: %s"
 
 #: ../frontend/php/siteadmin/group_type.php:161
 msgid "group type user permissions settings updated"
-msgstr "Einstellungen der Benutzerrechte für Gruppenart aktualisiert"
+msgstr "Projekttyp-Benutzerberechtigungen wurden aktualisiert"
 
 #: ../frontend/php/siteadmin/group_type.php:182
-#, php-format
+#, fuzzy, php-format
 msgid "Unable to update group type posting restrictions settings: %s"
-msgstr "Konnte die Beschränkung für Einträge dieser Gruppenart nicht aktualisieren: %s"
+msgstr "Konnte die Beschränkung für Einträge dieser Projekttyp nicht aktualisieren: %s"
 
 #: ../frontend/php/siteadmin/group_type.php:184
+#, fuzzy
 msgid "group type posting restrictions settings updated"
-msgstr "Einstellungen der Beschränkung für Einträge dieser Gruppenart aktualisiert"
+msgstr "Einstellungen der Beschränkung für Einträge dieses Projekttyp aktualisiert"
 
 #: ../frontend/php/siteadmin/group_type.php:216
 msgid "Create"
@@ -8256,7 +8258,7 @@ msgstr "Anlegen"
 
 #: ../frontend/php/siteadmin/group_type.php:239
 msgid "General Default Settings for Groups of this Type"
-msgstr "Allgemeine Voreinstellungen für Gruppen dieser Art"
+msgstr "Allgemeine Voreinstellungen für Projekte diesen Typs"
 
 #: ../frontend/php/siteadmin/group_type.php:254
 #: ../frontend/php/siteadmin/groupedit.php:99
@@ -8437,7 +8439,7 @@ msgstr "Kann Nachrichtenverwalter benutzen"
 #: ../frontend/php/siteadmin/group_type.php:567
 #: ../frontend/php/siteadmin/group_type.php:591
 msgid "Delete this Group Type"
-msgstr "Diesen Gruppentyp entfernen"
+msgstr "Diesen Projekttyp löschen"
 
 #: ../frontend/php/siteadmin/group_type.php:467
 msgid "Project Menu Settings"
@@ -8517,7 +8519,7 @@ msgstr "Voreingestellte Mitgliederberechtigungen des Projekts"
 
 #: ../frontend/php/siteadmin/group_type.php:543
 msgid "This form allows you to define the default permissions for users added to a group of this type, unless this group defined its own configuration."
-msgstr "Dieses Formular ermöglicht Ihnen, die Rechte voreinzustellen, die für Benutzer gelten sollen, die einer Gruppe dieser Art hinzugefügt werden. Dies gilt nur, wenn die Gruppe nicht eine eigene Konfiguration erstellt hat."
+msgstr "Hier können Standard-Benutzerberechtigungen eingestellt werden, die für Benutzer gelten sollen, die einer Projekt dieser Art hinzugefügt werden. Dies gilt nur, wenn die Projekt nicht eine eigene Konfiguration erstellt hat."
 
 #: ../frontend/php/siteadmin/group_type.php:547
 msgid "Support Tracking"
@@ -8537,7 +8539,7 @@ msgstr "Voreingestellte Beschränkungen für Einträge in diesem Projekt"
 
 #: ../frontend/php/siteadmin/group_type.php:573
 msgid "This form allows you to define the default posting restriction on this group trackers."
-msgstr "Dieses Formular ermöglicht Ihnen, die Beschränkungen für Einträge in den Verfolgungssystemen dieser Gruppe voreinzustellen."
+msgstr "Hier werden die Standard-Nachrichtenbeschränkungen auf diesem Projekt-Verfolgungssystemen definiert."
 
 #: ../frontend/php/siteadmin/groupedit.php:69
 msgid "Updating Project Info"
@@ -8547,11 +8549,11 @@ msgstr "Projektinfo aktualisiert"
 #: ../frontend/php/siteadmin/grouplist.php:28
 #: ../frontend/php/siteadmin/grouplist.php:107
 msgid "Group List"
-msgstr "Gruppenübersicht"
+msgstr "Projektübersicht"
 
 #: ../frontend/php/siteadmin/groupedit.php:80
 msgid "Invalid Group: Invalid group was passed in."
-msgstr "Ungültige Gruppe: Eine ungültige Gruppe wurde zugewiesen."
+msgstr "Ungültiges Projekt: Es wurde ein ungültiges Projekt zugewiesen."
 
 #: ../frontend/php/siteadmin/groupedit.php:91
 msgid "Registration Management Shortcuts"
@@ -8611,7 +8613,7 @@ msgstr "Sie müssen das Feld für das HTML-Depot unten löschen, wenn Sie den »
 
 #: ../frontend/php/siteadmin/groupedit.php:148
 msgid "Note: this has influence only if the group type of which this group belongs to accepts this information."
-msgstr "Beachten Sie: Dies hat nur dann Einfluss, wenn die Gruppenart, zu der diese Gruppe gehört, diese Information akzeptiert."
+msgstr "Hinweis: Dies hat nur dann Einfluss, wenn der Projekttyp, zu der dieses Projekt gehört, diese Information akzeptiert."
 
 #: ../frontend/php/siteadmin/groupedit.php:150
 msgid "N/A"
@@ -8627,7 +8629,7 @@ msgstr "Spezifische Backendeinstellungen"
 
 #: ../frontend/php/siteadmin/groupedit.php:187
 msgid "[BACKEND SPECIFIC] If this group must have specific directories for homepage, sourcecode, download, which are not the default of the group type it belongs to, you can fill in the following fields. You may need to also edit the urls in 'This Project Active Features'. If possible, you should avoid using these fields and consider creating new group types. Exceptions are a pain to handle in the long run."
-msgstr "[BACKEND-SPEZIFISCH] Wenn diese Gruppe bestimmte Verzeichnisse für Startseite, Quellcode und Herunterladen benötigt, die nicht Standard des Gruppentyps sind, können Sie diese in den folgenden Feldern eintragen. Möglicherweise müssen Sie auch die URLs in \"Dieser aktiven Projektfeatures\" bearbeiten. Wenn möglich, sollten Sie diese Felder vermeiden und neue Gruppentypen erstellen."
+msgstr "[BACKEND-SPEZIFISCH] Wenn dieses Projekt bestimmte Verzeichnisse für Startseite, Quellcode und Herunterladen benötigt, die nicht Standard des Projekttyps sind, können Sie diese in den folgenden Feldern eintragen. Möglicherweise müssen Sie auch die URLs in „Aktive Projektfunktionen“ bearbeiten. Wenn möglich, sollten Sie diese Felder vermeiden und neue Projekttypen erstellen."
 
 #: ../frontend/php/siteadmin/groupedit.php:191
 msgid "Primary SCM (CVS) directory:"
@@ -8651,7 +8653,7 @@ msgstr "Verzeichnis zum Herunterladen:"
 
 #: ../frontend/php/siteadmin/grouplist.php:31
 msgid "Group List Filter"
-msgstr "Gruppenübersichtfilter"
+msgstr "Projektfilter"
 
 #: ../frontend/php/siteadmin/grouplist.php:35
 msgid "Number"
@@ -8663,7 +8665,7 @@ msgstr "Ausstehende Projekte (in der Regel sollte eine geöffnete Aufgabe vorhan
 
 #: ../frontend/php/siteadmin/grouplist.php:69
 msgid "Deleted projects (the backend will remove the record soon)"
-msgstr "Gelöschte Projekte (das Backend wird den Datensatz umgehend entfernen)"
+msgstr "Gelöschte Projekte (das Backend entfernt den Datensatz unwiderruflich)"
 
 #: ../frontend/php/siteadmin/grouplist.php:85
 msgid "Incomplete"
@@ -8675,28 +8677,28 @@ msgstr "Verwaltung"
 
 #: ../frontend/php/siteadmin/grouplist.php:89
 msgid "Group Search"
-msgstr "Suche nach Gruppe"
+msgstr "Projekt suchen"
 
 #: ../frontend/php/siteadmin/grouplist.php:91
 msgid "Display Groups beginning with:"
-msgstr "Zeige Gruppen, die anfangen mit:"
+msgstr "Projekte anzeigen, die anfangen mit:"
 
 #: ../frontend/php/siteadmin/grouplist.php:97
 msgid "or search by group_id, group_unix_name or group_name:"
-msgstr "oder suchen Sie nach der Gruppen-ID, dem Unixnamen der Gruppe oder dem Gruppennamen selbst"
+msgstr "oder nach Projekt-ID,  Unix-Projektnamen oder Projektnamen suchen:"
 
 #: ../frontend/php/siteadmin/grouplist.php:123
 #, php-format
 msgid "Groups that begin with %s"
-msgstr "Gruppen, die mit %s beginnen"
+msgstr "Projekte, die mit %s beginnen"
 
 #: ../frontend/php/siteadmin/grouplist.php:137
 msgid "that match"
-msgstr "die passen auf"
+msgstr "die übereinstimmen mit"
 
 #: ../frontend/php/siteadmin/grouplist.php:165
 msgid "Group Name (click to edit)"
-msgstr "Gruppenname (anklicken zum Bearbeiten)"
+msgstr "Projektname (zum Bearbeiten anklicken)"
 
 #: ../frontend/php/siteadmin/grouplist.php:177
 #: ../frontend/php/siteadmin/userlist.php:127
@@ -8718,15 +8720,15 @@ msgstr "Home"
 
 #: ../frontend/php/siteadmin/index.php:33
 msgid "Administrators functions currently have minimal error checking, if any. They are fine to play with but may not act as expected if you leave fields blank, etc. Also, navigating the admin functions with the \"back\" button is highly unadvised."
-msgstr "Administratoren-Funktionen haben derzeit ggf. minimale Fehlerprüfung. Sie können zum Ausprobieren benutzt werden, aber funktionieren eventuell nicht wie erwartet, wenn Sie Felder leer lassen. Das Navigieren innerhalb der Administratorenfunktionen mit der Schaltfläche \"Zurück\" ist ebenfalls absolut zu vermeiden."
+msgstr "Projektverwalter-Funktionen haben derzeit ggf. eine minimale Fehlerprüfung. Sie können zum Ausprobieren benutzt werden, aber funktionieren eventuell nicht wie erwartet, wenn Sie Felder leer lassen. Die Navigation innerhalb der Projektverwalter-Funktionen mit der Schaltfläche „Zurück“ ist ebenfalls absolut zu vermeiden."
 
 #: ../frontend/php/siteadmin/index.php:48
 msgid "Check whether your configuration (PHP, MySQL, Savane) is in a good shape."
-msgstr "Prüfen Sie, ob Ihre Konfiguration (PHP, MySQL, Savannah) in einem guten Zustand ist."
+msgstr "Überprüfen Sie, ob Ihre Konfiguration (PHP, MySQL, Savannah) in einem guten Zustand ist."
 
 #: ../frontend/php/siteadmin/index.php:54
 msgid "The Group Types define which features are provided to groups that belongs to the related type, what are the default values for these. There must be at least one Group Type."
-msgstr "Die Gruppentypen definieren, welche Merkmale in Gruppen bereitgestellt werden, die zum entsprechenden Typ gehörten, die die Standardwerte für diese sind. Es muss mindestens einen Gruppentyp geben."
+msgstr "Die Projekttypen definieren, welche Projektfunktionen bereitgestellt werden, die zum entsprechenden Typ gehörten, die die Standardwerte für diese sind. Es muss mindestens ein Projekttyp angegeben sein."
 
 #: ../frontend/php/siteadmin/index.php:60
 msgid "Here you can define skills for users to select in their Resume and type of jobs for Contribution Requests. "
@@ -8747,7 +8749,7 @@ msgstr "Sie können die zuletzt gesandten Nachrichten auf der gesamten Webseite 
 
 #: ../frontend/php/siteadmin/index.php:111
 msgid "From there, you can see the complete list of groups and reset them (change status, etc)."
-msgstr "Von dort können Sie die vollständige Übersicht der Gruppen anzeigen und zurücksetzen (Status ändern, usw.)."
+msgstr "Von dort können Sie die vollständige Projektübersicht anzeigen und zurücksetzen (Status ändern, usw.)."
 
 #: ../frontend/php/siteadmin/index.php:118
 msgid "From there, you can see the complete list of user and reset them (change status, email, etc)."
@@ -8907,7 +8909,7 @@ msgstr "Benutzerübersicht:"
 
 #: ../frontend/php/siteadmin/userlist.php:86
 msgid "All Groups"
-msgstr "Alle Gruppen"
+msgstr "Alle Projekte"
 
 #: ../frontend/php/siteadmin/userlist.php:118
 msgid "Member Profile"
@@ -8979,8 +8981,8 @@ msgstr[1] "%s neue Benutzer"
 #: ../frontend/php/stats/index.php:104
 msgid "New group"
 msgid_plural "New groups"
-msgstr[0] "Neue Gruppe"
-msgstr[1] "Neue Gruppen"
+msgstr[0] "Neues Projekt"
+msgstr[1] "Neue Projekte"
 
 #: ../frontend/php/stats/index.php:107
 #, php-format
@@ -8991,7 +8993,7 @@ msgstr[1] "%s neue Projekte"
 
 #: ../frontend/php/stats/index.php:109
 msgid "New users and new groups / total:"
-msgstr "Neue Benutzer und neue Gruppen / Summe:"
+msgstr "Neue Benutzer und Projekte/Gesamt:"
 
 #: ../frontend/php/stats/index.php:121
 #: ../frontend/php/stats/index.php:260
@@ -9112,7 +9114,7 @@ msgstr[1] "davon %s im privaten Status"
 
 #: ../frontend/php/stats/index.php:253
 msgid "Projects per group type:"
-msgstr "Projekte pro Gruppentyp:"
+msgstr "Projekte pro Projekttyp:"
 
 #. I18N
 #. This is to be used with "including %s still open", see above
