@@ -300,7 +300,7 @@ else
 
   print '<p><span class="preinput">'._("Email Address:").'</span><br />&nbsp;&nbsp;';
   print '<input size="30" type="text" name="form_email" value="'.$form_email.'" />';
-  print '<br /><span class="text">'._("This email address will be verified before account activation.").'</span></p>';
+  print '<br /><span class="text">'._("This email address will be verified before account activation. Do not use a hotmail account here.").'</span></p>';
 
   print '<p><span class="preinput">'._("Antispam test:").'</span><br />&nbsp;&nbsp;';
   print '<input size="30" type="text" name="form_year" value="'.$form_year.'" />';
