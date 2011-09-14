@@ -82,10 +82,14 @@ if ($msg_id) {
 	*/
 
 	print '<p>&nbsp;<p>';
-	print '<a name="followup"></a>';
-	print '<center><h3>'._("Post a followup to this message").'</h3></center>';
 
-	show_post_form(db_result($result, 0, 'group_forum_id'),db_result($result, 0, 'thread_id'), $msg_id, db_result($result,0, 'subject'));
+   if ($GLOBALS['sys_enable_forum_comments'])
+   {
+      print '<a name="followup"></a>';
+	   print '<center><h3>'._("Post a followup to this message").'</h3></center>';
+
+      show_post_form(db_result($result, 0, 'group_forum_id'),db_result($result, 0, 'thread_id'), $msg_id, db_result($result,0, 'subject'));
+   }
 
 } else {
 

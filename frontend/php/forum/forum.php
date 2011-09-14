@@ -380,8 +380,11 @@ if ($forum_id)
 
   print '<p>&nbsp;</p>';
 
-  print '<h3>'.html_anchor(_("Start a New Thread:"), "newthread").'</h3>';
-  show_post_form($forum_id);
+  if ($GLOBALS['sys_enable_forum_comments'])
+  {
+    print '<h3>'.html_anchor(_("Start a New Thread:"), "newthread").'</h3>';
+    show_post_form($forum_id);
+  }
 
   forum_footer(array());
 }
