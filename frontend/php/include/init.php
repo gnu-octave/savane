@@ -58,6 +58,7 @@ $sys_incdir = '/etc/savane/content';
 $sys_appdatadir = '/var/lib/savane';
 $sys_trackers_attachments_dir = $sys_appdatadir . '/trackers_attachments';
 $sys_themedefault = 'Emeraud';
+$sys_enable_forum_comments = 1;
 
 $sys_default_domain = $_SERVER['SERVER_NAME'];
 if ($_SERVER['SERVER_PORT'] != 80)

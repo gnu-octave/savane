@@ -55,8 +55,14 @@ function forum_show_a_nested_message ($result,$row=0)
 		'                           </td>
 			</tr><tr>
 				<td><p>
-					'. markup_rich(db_result($result,$row,'body')) .
-		'                                   </p><p><a href="'.$GLOBALS['sys_home'].'forum/message.php?msg_id='.db_result($result, $row, 'msg_id') .'#followup">[ '._("Reply").' ]</a>'.
+					'. markup_rich(db_result($result,$row,'body'));
+
+   if ($GLOBALS['sys_enable_forum_comments'])
+   {
+       $ret_val .= '</p><p><a href="'.$GLOBALS['sys_home'].'forum/message.php?msg_id='.db_result($result, $row, 'msg_id') .'#followup">[ '._("Reply").' ]</a>';
+   }
+
+       $ret_val .=
 		'                           </p></td>
 			</tr>
 		</table>';
@@ -477,6 +483,11 @@ function get_forum_saved_date($forum_id)
 function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum_id)
 {
 	global $feedback;
+
+   if (!$GLOBALS['sys_enable_forum_comments'])
+   {
+       exit_error('Posting has been disabled');
+   }
 	if (user_isloggedin())
         {
             if (!$group_forum_id)
