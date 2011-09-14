@@ -486,7 +486,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 
    if (!$GLOBALS['sys_enable_forum_comments'])
    {
-       exit_error('Posting has been disabled');
+       exit_error(_("Posting has been disabled."));
    }
 	if (user_isloggedin())
         {
