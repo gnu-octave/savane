@@ -69,14 +69,37 @@ if (!empty($update) and form_check($form_id))
   // feedback included by the check function
 
   // Temporary spam block
-  if ($form_year != 1983)
-    {
-      fb(_("Please answer the antispam test!"),1);
-    }
-  else
-    {
+  if ($GLOBALS['sys_registration_text_spam_test'])
+  {
+      if ($form_year != 1983)
+      {
+          fb(_("Please answer the antispam test!"),1);
+      }
+      else
+      {
+          $antispam_is_valid = true;
+      }
+  }
+  if ($GLOBALS['sys_registration_captcha'])
+  {
+      include_once $GLOBALS['sys_secureimagedir'] . '/securimage.php';
+      $securimage = new Securimage();
+
+      if ($securimage->check($_POST['captcha_code']) == false)
+      {
+          fb(_("Please correctly answer the antispam captcha!"),1);
+      }
+      else
+      {
+          $antispam_is_valid = true;
+      }
+  }
+
+  if (!$GLOBALS['sys_registration_captcha'] &&
+      !$GLOBALS['sys_registration_text_spam_test'])
+  {
       $antispam_is_valid = true;
-    }
+  }
 
   // Login
   if ($form_loginname == '')
@@ -302,12 +325,23 @@ else
   print '<input size="30" type="text" name="form_email" value="'.$form_email.'" />';
   print '<br /><span class="text">'._("This email address will be verified before account activation.").'</span></p>';
 
-  print '<p><span class="preinput">'._("Antispam test:").'</span><br />&nbsp;&nbsp;';
-  print '<input size="30" type="text" name="form_year" value="'.$form_year.'" />';
-  print '<br /><span class="text">'
-    ._("In what year was the GNU project announced?"
-       . " [<a href='http://www.gnu.org/gnu/gnu-history.html'>click for a hint</a>]")
-    . '</span></p>';
+  if ($GLOBALS['sys_registration_text_spam_test'])
+  {
+      print '<p><span class="preinput">'._("Antispam test:").'</span><br />&nbsp;&nbsp;';
+      print '<input size="30" type="text" name="form_year" value="'.$form_year.'" />';
+      print '<br /><span class="text">'
+          ._("In what year was the GNU project announced?"
+             . " [<a href='http://www.gnu.org/gnu/gnu-history.html'>click for a hint</a>]")
+          . '</span></p>';
+  }
+  if ($GLOBALS['sys_registration_captcha'])
+  {
+      print '<img id="captcha" src="' . $GLOBALS['sys_home'] . 'gencaptcha.php" alt="CAPTCHA" /><br />';
+      print '[ <a href="#" onclick="document.getElementById(\'captcha\').src = \'' .
+          $GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random(); return false">Different Image</a> ]<br />';
+      print _("Antispam test:") . '<input type="text" name="captcha_code" size="10" maxlength="6" />';
+
+  }
 
   # Extension for PAM authentication
   # FIXME: for now, only the PAM authentication that exists is for AFS.
