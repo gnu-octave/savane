@@ -82,7 +82,7 @@ if (!empty($update) and form_check($form_id))
   }
   if ($GLOBALS['sys_registration_captcha'])
   {
-      include_once $GLOBALS['sys_secureimagedir'] . '/securimage.php';
+      include_once $GLOBALS['sys_securimagedir'] . '/securimage.php';
       $securimage = new Securimage();
 
       if ($securimage->check($_POST['captcha_code']) == false)
