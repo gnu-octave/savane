@@ -283,13 +283,13 @@ if($project->Uses("download"))
 # applies to features they use.
 # FIXME: this should print the number of recipes available
 specific_makesep();
-if (!$project->Uses("extralink_documentation"))
+if ($project->Uses("extralink_documentation") && !$project->getUrl("extralink_documentation"))
 {
   print utils_link($project->getArtifactUrl("cookbook"),
 		   html_image("contexts/man.png",array('width'=>'24', 'height'=>'24', 'alt'=>_("Docs"))).'&nbsp;'._("Docs"));
   $i++;
 }
-else
+else if ($project->Uses("extralink_documentation") && $project->getUrl("extralink_documentation"))
 {
   # The project have an external doc? Print it first. See pagemenu.php
   # for explanations about this

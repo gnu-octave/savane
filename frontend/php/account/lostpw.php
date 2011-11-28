@@ -36,7 +36,7 @@ $HTML->header(array('title'=>_("Lost Account Password")));
 
 print '<p><strong>'._("Lost your password?").'</strong></p>';
 
-print '<p>'._("Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site.").'</p>';
+//print '<p>'._("Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site.").'</p>';
 
 print '<p>'._("The form below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation hash for your account. Visiting the URL will allow you to change your password online and login.").'</p>';
 print '<p class="warn">'._("This will work only if your account was already successfully registered and activated. Note that accounts that are not activated within the three days next to their registration are automatically deleted.").'</p>';

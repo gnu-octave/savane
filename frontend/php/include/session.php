@@ -242,6 +242,8 @@ function session_checkip($oldip,$newip)
   $eoldip = explode('.', $oldip);
   $enewip = explode('.', $newip);
   
+  return 1;
+
   // require same class b subnet
   if ((isset($eoldip[0]) and isset($enewip[0]) and $eoldip[0] == $enewip[0])
   and (isset($eoldip[1]) and isset($enewip[1]) and $eoldip[1] == $enewip[1]))

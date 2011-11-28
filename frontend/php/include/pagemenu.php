@@ -381,13 +381,17 @@ function pagemenu_group ()
   $url = $project->getArtifactUrl("cookbook");
   if ($project->Uses("extralink_documentation"))
     { $url = '#'; }
-  pagemenu_submenu_title(_("Docs"), 
-			 $url, 
-			 CONTEXT == 'cookbook',
-			 1,
-			 _("Docs: Cookbook, etc"));
-  pagemenu_submenu_content(pagemenu_group_trackers("cookbook"));
-  pagemenu_submenu_end();
+
+  if ($project->getUrl("extralink_documentation"))
+    {
+          pagemenu_submenu_title(_("Docs"), 
+				 $url, 
+				 CONTEXT == 'cookbook',
+				 1,
+				 _("Docs: Cookbook, etc"));
+	  pagemenu_submenu_content(pagemenu_group_trackers("cookbook"));
+	  pagemenu_submenu_end();
+    }
 
   # SUPPORT
   if ($project->Uses("support"))
