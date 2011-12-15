@@ -3,7 +3,7 @@
 use strict;
 use Savane;
 
-# Import                                                                                                                           
+# imported
 our $dbd;
 
 my $user = $ARGV[0];
@@ -15,5 +15,6 @@ my ($authorized_keys) = $dbd->selectrow_array(q[
     WHERE user_name = ?], undef, $user);
 
 print join("\n", split('###', $authorized_keys));
+print "\n";
 
 exit(0);
