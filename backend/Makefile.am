@@ -1,5 +1,6 @@
 bin_SCRIPTS = \
 	accounts/sv_groups \
+	accounts/sv_get_authorized_keys \
 	accounts/sv_users \
 	accounts/sv_membersh \
 	export/sv_export \

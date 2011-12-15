@@ -1,0 +1,19 @@
+#! @PERL@
+
+use strict;
+use Savane;
+
+# Import                                                                                                                           
+our $dbd;
+
+my $user = $ARGV[0];
+exit(0) unless $user;
+
+my ($authorized_keys) = $dbd->selectrow_array(q[
+    SELECT authorized_keys
+    FROM user
+    WHERE user_name = ?], undef, $user);
+
+print join("\n", split('###', $authorized_keys));
+
+exit(0);
