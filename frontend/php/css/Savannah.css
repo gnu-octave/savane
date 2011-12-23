@@ -24,7 +24,7 @@
  *
 */
 
-/* GUIDELINES VERSION FOLLOWED: 1.12 */
+/* GUIDELINES VERSION FOLLOWED: 1.17 */
 
 @import "internal/base.css";
 
@@ -217,6 +217,11 @@ h5 {
 	width: auto;
 }
 
+.topmenuitem {
+	border: none;
+	padding-left: 15%;
+}
+
 
 .topmenutitle {
 	font-style: italic; 
@@ -332,3 +337,37 @@ div.inputfield {
  	color: #727272;
 	font-style: italic;
 }
+
+
+.quote {
+	padding-left: 1em;
+	font-style: italic;
+}
+
+.verbatim {
+	/* useful to put code blocks, should look by default like postit */
+	border: thin solid #E5E297 !important;
+	margin-left: 0.5em;
+	background-color: #FFFCA8 !important;
+	color: black !important;
+	font-family: monospace;
+}
+
+.boxitemextra {
+	text-align: right;
+	font-size: smaller;
+	vertical-align: top;
+}
+
+.boxitemaltextra {
+	text-align: right;
+	font-size: smaller;
+	vertical-align: top;
+}
+
+.boxhighlightextra {
+	text-align: right;
+	font-size: smaller;
+	vertical-align: top;
+}
+
