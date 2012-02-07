@@ -25,6 +25,7 @@ require_once('../include/database.php');
 require_once('../include/dnsbl.php');
 require_once('../include/spam.php');
 require_once('../include/sane.php');
+require_once('../include/sendmail.php');
 
 
 # Block here potential robots
@@ -53,8 +54,7 @@ if ($row_user['status'] == 'P') {
 		$GLOBALS['sys_name'] . " " . _("Account Registration"),
 		$message);
 
-  $HTML->header(array(title=>_("Account Pending Verification")));
-
+  $HTML->header(array('title'=>_("Account Pending Verification")));
 
   print '<h3>'._("Pending Account").'</h3>';
   print '<p>'._("Your email confirmation has been resent. Visit the link in this email to complete the registration process.").'</p>';
