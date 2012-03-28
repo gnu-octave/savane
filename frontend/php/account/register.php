@@ -338,7 +338,8 @@ else
   {
       print '<img id="captcha" src="' . $GLOBALS['sys_home'] . 'gencaptcha.php" alt="CAPTCHA" /><br />';
       print '[ <a href="#" onclick="document.getElementById(\'captcha\').src = \'' .
-          $GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random(); return false">Different Image</a> ]<br />';
+          $GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random(); return false">Different Image</a> ] ';
+      print '[ <a href="' . $GLOBALS['sys_home'] . 'playcaptcha.php">' . _("Play Captcha") . '</a> ]<br />';
       print _("Antispam test:") . '<input type="text" name="captcha_code" size="10" maxlength="6" />';
 
   }
