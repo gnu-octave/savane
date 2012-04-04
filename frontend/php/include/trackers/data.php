@@ -1814,7 +1814,7 @@ function trackers_data_handle_update ($group_id,
 				'',
 				$item_id,
 				$vfl['comment_type_id']);
-      $changes['details']['add'] = stripslashes($details);
+      $changes['details']['add'] = $details;
       $changes['details']['type'] =
 	trackers_data_get_value('comment_type_id',$group_id, $vfl['comment_type_id']);
       
