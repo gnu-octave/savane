@@ -381,7 +381,7 @@ if (!session_issecure() && isset($_COOKIE['redirect_to_https']) && $GLOBALS['sys
 **************************************************************/
 
 extract(sane_import('get', array('comingfrom'))); #cookbook
-extract(sane_import('request', array('group', 'group_id', 'item_id')));
+extract(sane_import('request', array('group', 'group_id', 'item_id', 'forum_id')));
 
 # defines the artifact we are using
 if (!defined('ARTIFACT'))
@@ -407,6 +407,11 @@ if ((ARTIFACT == "bugs" ||
 if (!empty($item_id) && !is_numeric($item_id))
 {
   util_die(_("Invalid item ID."));
+}
+
+if (!empty($forum_id) && !is_numeric($forum_id))
+{
+  util_die(_("Invalid forum ID."));
 }
 
 # Set the CONTEXT and SUBCONTEXT constants, useful to guess page titles
