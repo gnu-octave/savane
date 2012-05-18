@@ -100,7 +100,7 @@ else
 	}
       
       $from = $GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'];
-      $subject = user_getname(0,1)." quitted the project ".group_getname($quitting_group_id);
+      $subject = user_getname(0,1)." has quit the project ".group_getname($quitting_group_id);
       sendmail_mail($from,$to,$subject,$message);
     }
 
