@@ -4,7 +4,7 @@
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2007, 2013  Sylvain Beucler
 # 
 # This file is part of Savane.
 # 
@@ -521,7 +521,7 @@ else if ($item == "gpgkey")
 
 
   $title = _("Change GPG Key");
-  $input_title = _("You can write down here your (ASCII) public key (gpg --export --armor keyid):");
+  $input_title = _("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):");
   $input_specific = '<textarea cols="70" rows="10" wrap="virtual" name="newvalue">'.$row_user['gpg_key'].'</textarea>';
 
 }
@@ -533,7 +533,7 @@ else if ($item == "email")
   if (!$step)
     {
       $title = _("Change Email Address");
-      $input_title = _('New Email Address:');
+      $input_title = _('New email address:');
       $preamble = _("Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file.").'</p><p>'._("We need to maintain an accurate email address for each user due to the level of access we grant via this account. If we need to reach a user for issues related to this server, it is important that we be able to do so.").'</p><p>'._("Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.");
     }
   else if ($step == "confirm")
