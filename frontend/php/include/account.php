@@ -24,11 +24,13 @@
 require_once(dirname(__FILE__).'/pwqcheck.php');
 
 function account_password_help() {
-  global $use_pwqcheck;
-  $help = _("(not too short, must contain multiple character classes: symbols, digits (0-9), upper and lower case letters)");
+  global $use_pwqcheck, $pwqcheck_args;
+  $help = _("(long enough or containing multiple character classes: symbols, digits (0-9), upper and lower case letters)");
   if ($use_pwqcheck) {
     $pwqgen = exec("pwqgen");
-    $help .= " ".sprintf(_("(for instance: %s)"), htmlspecialchars($pwqgen));
+    $help .= " ".sprintf(_("(for instance: %s)."), htmlspecialchars($pwqgen));
+    $help .= " ".sprintf(_("pwqcheck options are: '%s'"),
+                         htmlspecialchars($pwqcheck_args));
   }
   return $help;
 }

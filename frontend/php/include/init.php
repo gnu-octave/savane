@@ -88,9 +88,17 @@ $sys_debug_sqlprofiler = false;
 // Do we have the pwqcheck(1) program from the passwdqc package?
 $use_pwqcheck = TRUE;
 // We can override the default password policy
-$pwqcheck_args = '';
-#$pwqcheck_args = 'config=/etc/passwdqc.conf';
-
+// max=40 is overridden because some users want longer passwords.
+// min=default,24,11,8,7 is overridden for N0 passwords
+// (the passwords consisting of characters from single class)
+// because NIST Electronic Authentification Gudeline
+// (Special Publication 800-63-1, Table A.1 on page 107
+//  http://csrc.nist.gov/publications/nistpubs/800-63-1/SP-800-63-1.pdf)
+// suggests that user-chosen 7 characters long password passing extensive
+// checks has 27 bits of entropy, the same as 22 characters long
+// user-chosen password composed from 10-character alphabet with no checks
+// implied, so we can safely admit any 24 characters long passwords.
+$pwqcheck_args = 'match=0 max=256 min=24,24,11,8,7';
 
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');
