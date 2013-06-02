@@ -25,7 +25,7 @@ require_once('../include/init.php');
 
 site_admin_header(array('title'=>_("User List"),'context'=>'admuser'));
 
-extract(sane_import('get', array('user_name_search', 'offset',
+extract(sane_import('get', array('user_name_search', 'offset', 'text_search',
 				 'action', 'user_id')));
 extract(sane_import('request', array('search')));
 
@@ -65,16 +65,17 @@ print '<h3>'._("User Search").'</h3>';
 
 print '<p>'._("Display users beginning with").' : ';
 
-for ($i=0; $i < count($abc_array); $i++) {
-	echo "<a href=\"userlist.php?user_name_search=$abc_array[$i]\">$abc_array[$i]</a> ";
-}
+for ($i=0; $i < count($abc_array); $i++)
+  print '<a href="'.$_SERVER["PHP_SELF"].'?user_name_search='.
+        $user_name_search.$abc_array[$i].'">'.
+        $user_name_search.$abc_array[$i].'</a> ';
 
 print '<br />'._("or search by email, username, realname or userid").' :';
 print '
-<form name="usersrch" action="userlist.php" method="POST">
-  <input type="text" name="search" />
+<form name="usersrch" action="'.$_SERVER["PHP_SELF"].'" method="GET">
+  <input type="text" name="text_search" value="'.$text_search.'" />
   <input type="hidden" name="usersearch" value="1" />
-  <input type="submit" value="'._("Search").' (FIXME)" />
+  <input type="submit" value="'._("Search").'" />
 </form>
 </p>';
 
@@ -99,6 +100,14 @@ if (!$group_id)
     {
       $result = db_execute("SELECT user_name,user_id,status,people_view_skills FROM user WHERE user_name LIKE ? ORDER BY user_name LIMIT ?,?", array($user_name_search.'%', $offset, $MAX_ROW+1));
     } 
+  elseif ($text_search)
+    $result = db_execute("SELECT user_name,user_id,status,people_view_skills
+                          FROM user WHERE user_name LIKE ? OR user_id LIKE ?
+                          OR realname LIKE ? OR email LIKE ?
+                          ORDER BY user_name LIMIT ?,?",
+                          array($text_search, $text_search,
+                                $text_search, $text_search,
+                                $offset, $MAX_ROW+1));
   else 
     {
       $result = db_execute("SELECT user_name,user_id,status,people_view_skills FROM user ORDER BY user_name LIMIT ?,?", array($offset, $MAX_ROW+1));
@@ -178,7 +187,11 @@ else
 }
 print "</table>";
 
-html_nextprev($_SERVER['PHP_SELF'].'?user_name_search='.urlencode($user_name_search).'&amp;usersearch=1&amp;search='.urlencode($search), $rows, $rows_returned);
+html_nextprev($_SERVER['PHP_SELF'].
+              '?user_name_search='.urlencode($user_name_search).
+              '&amp;usersearch=1&amp;search='.urlencode($search).
+              '&amp;text_search='.urlencode($text_search),
+              $rows, $rows_returned);
 
 
 $HTML->footer(array());
