@@ -3,6 +3,7 @@
 # 
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2004 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright 2013 (c) Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 # 
@@ -26,8 +27,24 @@
 
 # category.php
 
+function people_get_type_name($type_id)
+{
+  if (!ctype_digit($type_id))
+    return 'Invalid ID';
+  $result = db_execute("SELECT group_type.name
+                        FROM group_type WHERE type_id = ?",
+                        array($type_id));
+  if (!$result || db_numrows($result) < 1)
+    {
+      return 'Invalid ID';
+    }
+  return db_result($result,0,'name');
+}
+
 function people_get_category_name($category_id)
 {
+  if (!ctype_digit($category_id))
+    return 'Invalid ID';
   $result = db_execute("SELECT name FROM people_job_category WHERE category_id=?",
 		       array($category_id));
   if (!$result || db_numrows($result) < 1)
@@ -40,65 +57,74 @@ function people_get_category_name($category_id)
     }
 }
 
-function people_show_category_table()
+# Show job selection controls.
+function people_show_table()
 {
-
-  #show a list of categories in a table
-  #provide links to drill into a detail page that shows these categories
-
-  $title_arr=array();
-  $title_arr[]=_("Category");
-
-  $return = '';
-  $return .= html_build_list_table_top ($title_arr);
+  $return = '<h3>'._("Category").'</h3>';
+  $form_is_empty = 1;
 
   $result = db_query("SELECT * FROM people_job_category ORDER BY category_id");
   $rows=db_numrows($result);
   if (!$result || $rows < 1)
     {
-      $return .= '<tr><td><h2>'._("No Categories Found").'</h2></td></tr>';
+      $return .= '<p><strong>'._("No Categories Found").'</strong></p>';
     }
   else
     {
+      $form_is_empty = 0;
       for ($i=0; $i<$rows; $i++)
-	{
-	  $count_res=db_execute("SELECT count(*) AS count FROM people_job WHERE category_id=? AND status_id=1",
-				array(db_result($result,$i,'category_id')));
-	  print db_error();
-	  $return .= '<tr class="'. utils_get_alt_row_color($i) .'"><td><a href="'.$GLOBALS['sys_home'].'people/?category_id='.
-	     db_result($result,$i,'category_id') .'">'.
-	     db_result($result,$i,'name') .'</a> ('. db_result($count_res,0,'count') .')</td></tr>';
-	}
+        {
+          $count_res=db_execute("SELECT count(*) AS count FROM people_job
+                                 WHERE category_id=? AND status_id=1",
+                                 array(db_result($result,$i,'category_id')));
+          print db_error();
+          $return .= '<input type="checkbox" name="categories[]" value="'.
+             db_result($result,$i,'category_id') .'"><a href="'.
+             $_SERVER["PHP_SELF"].'?categories[]='.
+             db_result($result,$i,'category_id').'">'.
+          db_result($result,$i,'name') .' ('.
+             db_result($count_res,0,'count') .')</a><br />
+';
+        }
     }
-  $return .= '</table>';
-  return $return;
-}
 
-# Show the project types, and a form to show only the related job
-function people_show_grouptype_table()
-{
-  $title_arr=array();
-  $title_arr[]=_("Project type");
-
-  $return = '';
-  $return .= html_build_list_table_top ($title_arr);
-  $sql="SELECT group_type.type_id, group_type.name, COUNT(people_job.job_id) AS count FROM group_type JOIN (groups JOIN people_job ON groups.group_id = people_job.group_id) ON group_type.type_id = groups.type GROUP BY type_id ORDER BY type_id";
-  $result=db_query($sql);
+  $return .= '
+<h3>'._("Project type").'</h3>';
+  $result=db_query("SELECT group_type.type_id, group_type.name,
+                    COUNT(people_job.job_id) AS count FROM
+                    group_type JOIN (groups JOIN people_job ON
+                                     groups.group_id = people_job.group_id)
+                    ON group_type.type_id = groups.type
+                    WHERE status_id = 1 GROUP BY type_id ORDER BY type_id");
   $rows=db_numrows($result);
   if (!$result || $rows < 1)
     {
-      $return .= '<tr><td><h2>'._("No Categories Found").'</h2></td></tr>';
+      $return .= '<p><strong>'._("No Categories Found").'</strong></p>';
     }
   else
     {
+      $form_is_empty = 0;
+
       for ($i=0; $i<$rows; $i++)
-	{
-	  $return .= '<tr class="'. utils_get_alt_row_color($i) .'"><td><a href="'.$GLOBALS['sys_home'].'people/?type_id='.
-	     db_result($result,$i,'type_id') .'">'.
-	     db_result($result,$i,'name') .'</a> ('. db_result($result,$i,'count') .')</td></tr>';
-	}
+        {
+          $return .= '<input type="checkbox" name="types[]" value="' .
+             db_result($result,$i,'type_id') . '"><a href="'.
+             $_SERVER["PHP_SELF"].'?types[]='. db_result($result,$i,'type_id').
+             '">' .  db_result($result,$i,'name') . ' ('.
+             db_result($result,$i,'count'). ')</a><br />
+';
+        }
     }
-  $return .= '</table>';
+  if(!$form_is_empty)
+    {
+      $return = '<form action="'.$_SERVER["PHP_SELF"].'" method="get">
+' . $return . '
+<hr /><input type="checkbox" name="show_any" value="1">
+Show all jobs for all project types<br />
+<input type="submit" name="submit" value="'._("Search").'" />
+</form>
+';
+    }
   return $return;
 }
 
@@ -138,20 +164,6 @@ function people_show_category_list()
     { return false; }
 
   return "<ul class=\"boxli\">".$return."</ul>";
-}
-
-
-function people_show_category_jobs($category_id)
-{
-  #show open jobs for this category
-  $result = db_execute("SELECT people_job.group_id,people_job.job_id,groups.unix_group_name,groups.group_name,groups.type,people_job.title,people_job.date,people_job_category.name AS category_name ".
-     "FROM (people_job JOIN people_job_category ON people_job.category_id=people_job_category.category_id) ".
-     "  JOIN groups ON people_job.group_id=groups.group_id ".
-     "WHERE people_job.category_id=? ".
-     "AND groups.is_public = 1 ".
-     "AND people_job.status_id=1 ORDER BY date DESC", array($category_id));
-
-  return people_show_job_list($result);
 }
 
 # jobs.php
@@ -413,21 +425,52 @@ function people_project_jobs_rows($group_id)
   return $rows;
 }
 
-# Show open jobs for the given group type
-function people_show_grouptype_jobs($type_id, $edit=0)
+# Show open jobs for the given job categories and types of projects,
+# or all open jobs when $show_any is true.
+function people_show_jobs($categories, $types, $show_any)
 {
-  $result = db_execute("SELECT people_job.group_id, people_job.job_id, groups.group_name,
-               groups.unix_group_name, groups.type, people_job.title,
-               people_job.date, people_job_category.name AS category_name
-    FROM people_job, people_job_category, groups,group_type
-    WHERE people_job.category_id = people_job_category.category_id
-          AND people_job.group_id = groups.group_id
-          AND groups.type = group_type.type_id
-          AND people_job.status_id = 1
-          AND type_id = ?
-    ORDER BY people_job.category_id, groups.group_name", array($type_id));
+  #show open jobs for this category
+  $category_ids = '';
+  $type_ids = '';
+  $sql_args = array();
+  if (!$show_any)
+    {
+      $n = 0;
+      if(count($categories))
+        {
+          $category_ids = 'AND ( people_job.category_id = ? ';
+          $sql_args[$n++] = $categories[0];
 
-  return people_show_job_list($result, $edit);
+          for ($i = 1; $i < count($categories); ++$i)
+            {
+              $category_ids .= 'OR people_job.category_id = ? ';
+              $sql_args[$n++] = $categories[$i];
+            }
+          $category_ids .= ')';
+        }
+      if(count($types))
+        {
+          $type_ids = 'AND ( groups.type = ? ';
+          $sql_args[$n++] = $types[0];
+
+          for ($i = 1; $i < count($types); ++$i)
+            {
+              $type_ids .= 'OR groups.type = ? ';
+              $sql_args[$n++] = $types[$i];
+            }
+          $type_ids .= ')';
+        }
+    }
+  $result = db_execute("SELECT people_job.group_id,people_job.job_id,
+     groups.unix_group_name,groups.group_name,groups.type,
+     people_job.title,people_job.date,
+     people_job_category.name AS category_name
+     FROM (people_job JOIN people_job_category ON
+           people_job.category_id=people_job_category.category_id)
+       JOIN groups ON people_job.group_id=groups.group_id
+     WHERE  groups.is_public = 1 AND people_job.status_id=1 ".
+     $category_ids . $type_ids . " ORDER BY date DESC", $sql_args);
+  return people_show_job_list($result);
 }
 
 # skill.php

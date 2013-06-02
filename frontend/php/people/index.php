@@ -1,22 +1,23 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
+# Page showing selected job posts.
+#
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Sylvain Beucler <beuc--beuc.net>
+# Copyright 2013 (c) Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -24,14 +25,26 @@ require_once('../include/init.php');
 register_globals_off();
 require_once('../include/people/general.php');
 
-
-extract(sane_import('get', array('category_id', 'type_id')));
+extract(sane_import('get', array('category_id', 'type_id',
+                                 'types', 'categories', 'show_any')));
+# Provide compatibility with old requests.
+if($category_id && !$categories)
+  {
+    $categories = array("0" => $category_id);
+  }
+if($type_id && !$types)
+  {
+    $types = array("0" => $type_id);
+  }
+if($show_any)
+  {
+    $categories = array();
+    $types = array();
+  }
 
 if ($group_id)
 {
-
   site_project_header(array('title'=>_('Project Help Wanted'),'group'=>$group_id,'context'=>'people'));
-
 
   # we get site-specific content
   utils_get_content("people/index_group");
@@ -39,50 +52,55 @@ if ($group_id)
   print people_show_project_jobs($group_id);
 
 }
-else if ($category_id)
+else if ($categories || $types || $show_any)
 {
-
   # Do check first
-  if (!ctype_digit($category_id))
+  $error = 0;
+  $cat_names = '';
+  $cat_name = '';
+  for ($i = 0; $i < count($categories); ++$i)
     {
-      $cat_name = 'Invalid ID';
-    }
-  else
-    {
-      $cat_name = people_get_category_name($category_id);
+      $cat_name = people_get_category_name($categories[$i]);
+      if ($cat_name == 'Invalid ID')
+        {
+          $error = 1;
+          break;
+        }
+      if($cat_names != '')
+        $cat_names .= ', ';
+      $cat_names .= $cat_name;
     }
 
-  if ($cat_name == 'Invalid ID') # not a digit or not a good category
+  $group_types = '';
+  for ($i = 0; $i < count($types); ++$i)
     {
-      print site_header(array('title' =>_('Project Help Wanted'), 'context'=>_('people')));
-      
+      $cat_name = people_get_type_name($types[$i]);
+      if ($cat_name == 'Invalid ID')
+        {
+          $error = 1;
+          break;
+        }
+      if($group_types != '')
+        $group_types .= ', ';
+      $group_types .= $cat_name;
+    }
+  if ($error)
+    {
+      print site_header(array('title'=>_('Project Help Wanted'),
+                              'context'=>_('people')));
       fb(_("That category does not exist"),1);
     } else {
-      print site_header(array('title'=>sprintf(_('Projects looking for %s'), $cat_name), 'context'=>_('people')));
-      
-      # we get site-specific content
-      utils_get_content("people/index_cat");
-      
-      print people_show_category_jobs($category_id);
-    }
-}
-else if ($type_id)
-{
-  print site_header(array('title'=>_('Project Help Wanted'), 'context'=>_('people')));
+      if($cat_names == '')
+        $cat_names = 'people';
+      if($group_types == '')
+        $group_types = 'Groups';
+      # TRANSLATORS: The first %s is enumeration of group types,
+      # the second %s is enumeration of job categories.
+      $title = sprintf(_('%s looking for %s'), $group_types, $cat_names);
+      print site_header(array('title'=>$title));
+      print '<p>Click job titles for more detailed descriptions.</p>';
 
-  # Do check first
-  $cat_name = people_get_category_name($type_id);
-
-  # Do check first
-  if (!ctype_digit($type_id))
-    {
-      fb(_("That group type does not exist"),1);
-    }
-  else
-    {
-      # Add <br> to add overlaps
-      print '<br />'.
-	people_show_grouptype_jobs($type_id);
+      print people_show_jobs($categories, $types, $show_any);
     }
 }
 else
@@ -92,9 +110,7 @@ else
   # we get site-specific content
   utils_get_content("people/index");
 
-  print people_show_category_table();
-
-  print people_show_grouptype_table();
+  print people_show_table();
 }
 
 site_project_footer(array());
