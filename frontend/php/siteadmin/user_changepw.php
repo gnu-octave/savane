@@ -26,7 +26,7 @@ require_once('../include/account.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 extract(sane_import('request', array('user_id')));
-extract(sane_import('post', array('update')));
+extract(sane_import('post', array('update', 'form_pw', 'form_pw2')));
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
@@ -55,8 +55,7 @@ function register_valid()
 	}
 	
 	// if we got this far, it must be good
-	db_autoexecute('user', array('user_pw' => account_encryptpw($GLOBALS['form_pw']),
-				     'unix_pw' => account_genunixpw($GLOBALS['form_pw'])),
+	db_autoexecute('user', array('user_pw' => account_encryptpw($GLOBALS['form_pw'])),
 		       DB_AUTOQUERY_UPDATE, "user_id=?", array($user_id));
 	return 1;
 }
