@@ -6,6 +6,7 @@
 #                          Paul Pogonyshev <pogonyshev--gmx.net>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
+# Copyright (C) 2013 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 # 
@@ -281,7 +282,7 @@ function html_anchor ($content, $name)
 
 ##
 # Print out the feedback
-function html_feedback_top()
+function html_feedback($bottom)
 {
   global $feedback, $ffeedback;
 
@@ -296,8 +297,22 @@ function html_feedback_top()
   $feedback = markup_basic(htmlspecialchars($feedback));
   $ffeedback = markup_basic(htmlspecialchars($ffeedback));
 
-  $script_hide = 'onclick="document.getElementById(\'feedback\').style.visibility=\'hidden\'; document.getElementById(\'feedbackback\').style.visibility=\'visible\';"';
-  $script_show = 'onclick="document.getElementById(\'feedback\').style.visibility=\'visible\'; document.getElementById(\'feedbackback\').style.visibility=\'hidden\';"';
+  # Be quiet when there is no feedback.
+  if (!($GLOBALS['ffeedback'] || $GLOBALS['feedback']))
+    return;
+
+  $suffix = '';
+  if ($bottom)
+    $suffix = '_bottom';
+
+  $script_hide = 'onclick="document.getElementById(\'feedback'.$suffix.'\')'.
+                 '.style.visibility=\'hidden\'; '.
+                 'document.getElementById(\'feedbackback'.$suffix.
+                 '\').style.visibility=\'visible\';"';
+  $script_show = 'onclick="document.getElementById(\'feedback'.$suffix.'\')'.
+                 '.style.visibility=\'visible\'; '.
+                 'document.getElementById(\'feedbackback'.$suffix.
+                 '\').style.visibility=\'hidden\';"';
 
   # With MSIE  the feedback will be be 
   # in relative position, so the hiding link will not make sense
@@ -311,23 +326,40 @@ function html_feedback_top()
   if (user_get_preference("nonfixed_feedback"))
     { $script_hide = 'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"'; }
 
-  print '<div '.$script_show.' id="feedbackback" class="feedbackback">'._("Show feedback again").'</div>';
+  print '<div '.$script_show.
+        ' id="feedbackback'.$suffix.'" class="feedbackback">'.
+        _("Show feedback again").'</div>';
 
   # Only success
   if ($GLOBALS['feedback'] && !$GLOBALS['ffeedback'])
     {
-        print '<div id="feedback" class="feedback" '.$script_hide.'><span class="feedbacktitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" class="feedbackimage" alt="" /> '._("Success:").'</span> '.$GLOBALS['feedback'].'</div>';
+        print '<div id="feedback'.$suffix.'" class="feedback" '.
+              $script_hide.'><span class="feedbacktitle"><img src="'.
+              $GLOBALS['sys_home'].'images/'.SV_THEME.
+              '.theme/bool/ok.png" class="feedbackimage" alt="" /> '.
+              _("Success:").'</span> '.$GLOBALS['feedback'].'</div>';
     }
 
   # Only errors
   if ($GLOBALS['ffeedback'] && !$GLOBALS['feedback'])
     {
-      print '<div id="feedback" class="feedbackerror" '.$script_hide.'><span class="feedbackerrortitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" class="feedbackimage" alt="" /> '._("Error:").'</span><br/>'.$GLOBALS['ffeedback'].'</div>';
+      print '<div id="feedback'.$suffix.'" class="feedbackerror" '.
+            $script_hide.'><span class="feedbackerrortitle"><img src="'.
+            $GLOBALS['sys_home'].'images/'.SV_THEME.
+            '.theme/bool/wrong.png" class="feedbackimage" alt="" /> '.
+            _("Error:").'</span><br/>'.$GLOBALS['ffeedback'].'</div>';
     }
 
   # Errors and success
   if ($GLOBALS['ffeedback'] && $GLOBALS['feedback'])
-    {  print '<div id="feedback" class="feedbackerrorandsuccess" '.$script_hide.'><span class="feedbackerrorandsuccesstitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/wrong.png" class="feedbackimage" alt="" /> '._("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.$GLOBALS['ffeedback'].'</div>'; }
+    {
+      print '<div id="feedback'.$suffix.'" class="feedbackerrorandsuccess" '.
+            $script_hide.'><span class="feedbackerrorandsuccesstitle">'.
+            '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.
+            '.theme/bool/wrong.png" class="feedbackimage" alt="" /> '.
+            _("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.
+            $GLOBALS['ffeedback'].'</div>';
+    }
 
   # We empty feedback so there will be a bottom feedback only if something
   # changed. It may confuse users, however I would find more confusing to
@@ -338,14 +370,15 @@ function html_feedback_top()
   $GLOBALS['ffeedback'] = '';
 }
 
-##
-# Do as the feeback on the top of the page
-function html_feedback_bottom()
+function html_feedback_top()
 {
-  html_feedback_top();
+  html_feedback(0);
 }
 
-
+function html_feedback_bottom()
+{
+  html_feedback(1);
+}
 
 function html_image ($src,$args,$display=1)
 {
