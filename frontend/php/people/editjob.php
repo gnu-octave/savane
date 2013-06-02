@@ -188,7 +188,8 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 		<p>
 		<strong>'
 	._("Long Description:").'</strong><br />
-		<textarea name="description" rows="10" cols="60" wrap="soft">'. htmlentities(db_result($result,0,'description')) .'</textarea>
+		<textarea name="description" rows="10" cols="60" wrap="soft">'.
+                htmlspecialchars(db_result($result,0,'description')) .'</textarea>
 		<p>
 		<input type="submit" name="update_job" value="'._("Update Descriptions").'" />
 		</form>';
