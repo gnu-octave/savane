@@ -332,7 +332,7 @@ if ($project->CanUse("forum"))
 { specific_line("forum", _("Forum"), $project->Uses("forum")); }
 
 if ($project->CanUse("mailing_list"))
-{ specific_line("mail", _("Mailing-List"), $project->usesMail()); }
+{ specific_line("mail", _("Mailing Lists"), $project->usesMail()); }
 
 if ($project->CanUse("cvs") || $project->CanUse("homepage"))
 {
