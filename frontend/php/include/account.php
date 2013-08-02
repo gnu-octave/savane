@@ -23,14 +23,115 @@
 
 require_once(dirname(__FILE__).'/pwqcheck.php');
 
+function expand_pwqcheck_options() {
+  global $pwqcheck_args;
+
+  $args = $pwqcheck_args." ";
+  $help = "";
+
+  if(preg_match("/max=([[:digit:]]*) /", $args, $matches)) {
+    $help .= "<br />\n";
+      $help .= sprintf(_("The maximum allowed password length: %s."),
+                       $matches[1]);
+  }
+
+  if(preg_match("/passphrase=([[:digit:]]*) /", $args, $matches)) {
+    $help .= "<br />\n";
+      $help .= sprintf(_("The number of words required for a passphrase: %s."),
+                       $matches[1]);
+  }
+
+  if(preg_match("/match=([[:digit:]]*) /", $args, $matches)) {
+    $help .= "<br />\n";
+    if($matches[1]) {
+      $help .= sprintf(_(<<<EOF
+The length of common substring required to conclude that a password
+is at least partially based on information found in a character string: %s.
+EOF
+                        ), $matches[1]);
+    } else {
+      $help .= _("Checks for common substrigs are disabled.");
+    }
+  } # preg_match($args, "/match=([^ ]*)/ ", $matches)
+
+  $field = "([[:digit:]]*|disabled)";
+  if(preg_match("/min=".$field.",".$field.",".$field.",".$field.",".$field." /",
+     $args, $matches)) {
+    $help .= "<br />\n";
+    if($matches[1] == "disabled") {
+      $help .=
+        _("Passwords consisting of characters from one class only are not allowed.");
+    } else {
+      $help .= sprintf(_(<<<EOF
+The minimum length for passwords consisting of characters from one class: %s.
+EOF
+                        ), $matches[1]);
+    }
+    $help .= "<br />\n";
+    if($matches[2] == "disabled") {
+      $help .= _(<<<EOF
+Passwords consisting of characters from two classes that don't meet
+requirements for passphrases are not allowed.
+EOF
+                );
+    } else {
+      $help .= sprintf(_(<<<EOF
+The minimum length for passwords consisting of characters from two classes
+that don't meet requirements for passphrases: %s.
+EOF
+                        ), $matches[2]);
+    }
+    $help .= "<br />\n";
+    if($matches[3] == "disabled") {
+      $help .= _("Check for passphrases is disabled.");
+    } else {
+      $help .=
+        sprintf(_("The minimum length for passphrases: %s."), $matches[3]);
+    }
+    $help .= "<br />\n";
+    if($matches[4] == "disabled") {
+      $help .= _(<<<EOF
+Passwords consisting of characters from three classes are not allowed.
+EOF
+                );
+    } else {
+      $help .= sprintf(_(<<<EOF
+The minimum length for passwords consisting of characters
+from three classes: %s.
+EOF
+                        ), $matches[4]);
+   }
+    $help .= "<br />\n";
+    if($matches[5] == "disabled") {
+      $help .= _(<<<EOF
+Passwords consisting of characters from four classes are not allowed.
+EOF
+                );
+    } else {
+      $help .= sprintf(_(<<<EOF
+The minimum length for passwords consisting of characters
+from four classes: %s.
+EOF
+                        ), $matches[5]);
+   }
+  } # preg_match("/min=".$field.",".$field.",".$field.",".$field.",".$field." /",
+  return $help;
+}
+
 function account_password_help() {
   global $use_pwqcheck, $pwqcheck_args;
-  $help = _("(long enough or containing multiple character classes: symbols, digits (0-9), upper and lower case letters)");
+  $help = _(<<<EOF
+Note: The password should be long enough
+or containing multiple character classes:
+symbols, digits (0-9), upper and lower case letters
+EOF
+);
   if ($use_pwqcheck) {
     $pwqgen = exec("pwqgen");
     $help .= " ".sprintf(_("(for instance: %s)."), htmlspecialchars($pwqgen));
-    $help .= " ".sprintf(_("pwqcheck options are: '%s'"),
+    $help .= " <br />\n".sprintf(_("pwqcheck options are '%s':"),
                          htmlspecialchars($pwqcheck_args));
+    $help .= expand_pwqcheck_options();
   }
   return $help;
 }
