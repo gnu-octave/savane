@@ -5,5 +5,5 @@
 
 $sys_localedir = "@localedir@";
 $savane_version = "@VERSION@";
-$savane_url = 'http://savannah.gnu.org/pronects/administration';
+$savane_url = 'http://savannah.gnu.org/projects/administration';
 
