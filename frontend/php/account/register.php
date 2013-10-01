@@ -266,7 +266,7 @@ if ($form_is_valid)
 
       # send mail
       $message = sprintf(_("Thank you for registering on the %s web site."),$GLOBALS['sys_name'])."\n"
-	."("._("Your login is not mentioned in this mail to prevent account creation by robots").")\n\n"
+	."("._("Your login is not mentioned in this mail to prevent account creation by robots.").")\n\n"
 #	.sprintf(_("Your login is: %s"), addslashes(strtolower($_POST[form_loginname])))."\n\n"
 	._("In order to complete your registration, visit the following URL:\n\n")
 	. $GLOBALS['sys_https_url']
@@ -277,7 +277,7 @@ if ($form_is_valid)
 
       if ($krb5ret == 0) #KRB5_OK
 	{
-	  $message .= sprintf(_("P.S. Your kerberos password is now stored in encrypted form\nin the %s database."),$GLOBALS['sys_name']);
+	  $message .= sprintf(_("P.S. Your password is now stored in encrypted form\nin the %s database.  "),$GLOBALS['sys_name']);
 	  $message .= sprintf(_("For better security we advise you\nto change your %s password as soon as possible.\n"),$GLOBALS['sys_name']);
 	}
 
