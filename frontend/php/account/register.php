@@ -306,23 +306,23 @@ else
   site_header(array('title'=>_("User account registration"),'context'=>'account'));
 
 
-  print form_header($_SERVER['PHP_SELF'], $form_id);
+  print form_header($_SERVER['PHP_SELF'], htmlentities($form_id, ENT_QUOTES , 'UTF-8'));
   print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
-  print form_input("text", "form_loginname", $form_loginname);
+  print form_input("text", "form_loginname", htmlentities($form_loginname, ENT_QUOTES , 'UTF-8'));
 
   print '<p><span class="preinput">'._("Password / passphrase:")." ".account_password_help().'</span><br />&nbsp;&nbsp;';
-  print form_input("password", "form_pw", $form_pw);
+  print form_input("password", "form_pw", htmlentities($form_pw, ENT_QUOTES , 'UTF-8'));
   print "</p>";
 
   print '<p><span class="preinput">'._("Re-type Password:").'</span><br />&nbsp;&nbsp;';
-  print form_input("password", "form_pw2", $form_pw2);
+  print form_input("password", "form_pw2", htmlentities($form_pw2, ENT_QUOTES , 'UTF-8'));
   print "</p>";
 
   print '<p><span class="preinput">'._("Real Name:").'</span><br />&nbsp;&nbsp;';
-  print '<input size="30" type="text" name="form_realname" value="'.$form_realname.'" /></p>';
+  print '<input size="30" type="text" name="form_realname" value="'.htmlentities($form_realname, ENT_QUOTES , 'UTF-8').'" /></p>';
 
   print '<p><span class="preinput">'._("Email Address:").'</span><br />&nbsp;&nbsp;';
-  print '<input size="30" type="text" name="form_email" value="'.$form_email.'" />';
+  print '<input size="30" type="text" name="form_email" value="'.htmlentities($form_email, ENT_QUOTES , 'UTF-8').'" />';
   print '<br /><span class="text">'._("This email address will be verified before account activation. Do not use a hotmail account here.").'</span></p>';
 
   if ($GLOBALS['sys_registration_text_spam_test'])
