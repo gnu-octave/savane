@@ -65,7 +65,9 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
     {
     // Attempt to set a cookie to go to a new page to see if the client will indeed send that cookie.
     session_cookie('cookie_probe', 1);
-    header('Location: login.php?uri='.$uri.'&cookie_test=1');
+    // $uri used to be not url-encoded, it caused login problems,
+    // see sr#108277 (https://savannah.gnu.org/support/?108277)
+    header('Location: login.php?uri='.urlencode($uri).'&cookie_test=1');
     }
   else # 
     {
