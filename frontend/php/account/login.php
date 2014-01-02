@@ -227,7 +227,6 @@ if (isset($GLOBALS['sys_https_host']))
 
   print '<p><input type="checkbox" name="stay_in_ssl" value="1" tabindex="1" '.$checked.'/><span class="preinput">';
   print _("Stay in secure (https) mode after login")."</span><br />\n";
-  print '<span class="text">'._("Lynx, Emacs w3 and Microsoft Internet Explorer users will have intermittent https problems, so they should leave https after login. Gecko-based browser (Mozilla, Galeon, Netscape...) and Konqueror users should stay in https mode permanently for maximum security.").'</span></p>';
 }
 else
 {
