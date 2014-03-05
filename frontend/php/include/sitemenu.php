@@ -377,7 +377,7 @@ function sitemenu_help()
 		    sprintf(_("Get help from the Admins of %s, when documentation is not enough"), $GLOBALS['sys_name']));
   $HTML->menuhtml_bottom();
   $HTML->menu_entry($GLOBALS['sys_home'].'contact.php',
-		    _("Contact Us"),
+		    _("Contact Savannah"),
 		    1,
 		    sprintf(_("Contact address of %s Admins"),$GLOBALS['sys_name']));
   $HTML->menuhtml_bottom();
