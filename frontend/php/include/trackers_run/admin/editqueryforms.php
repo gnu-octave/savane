@@ -173,7 +173,8 @@ if ($post_changes)
 	  $cb_report_val = ($$cb_report ? 1:0);
 	  $tf_search_val = ($$tf_search ? $$tf_search : null);
 	  $tf_report_val = ($$tf_report ? $$tf_report : null);
-	  $tf_colwidth_val = ($$tf_colwidth ? $$tf_colwidth : null);
+	  $tf_colwidth_val = ((array_key_exists ($tf_colwidth, get_defined_vars())
+			       && $$tf_colwidth) ? $$tf_colwidth : null);
 	  $sql .= "(?, ?, ?, ?, ?, ?, ?),";
 	  $params = array_merge($params,
 				array($report_id,$field,$cb_search_val,$cb_report_val,
