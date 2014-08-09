@@ -213,9 +213,31 @@ if ($morder == '' && !$msort)
 $order_by = '';
 if ($morder != '')
 {
-  $fields = trackers_criteria_list_to_query($morder);
-  if (!empty($fields))
-    $order_by = ' ORDER BY '.$fields;
+  $matching_morder = '';
+  # Workaround the case when the list is sorted by a column that has been
+  # removed from the query form (multicolumn sorting is not affected),
+  # Savannah SR #107879.
+  if (!$msort)
+    {
+      $matching_morder = preg_replace('/[<>]$/', '', $morder);
+      while ($field = trackers_list_all_fields('cmp_place_query'))
+        {
+          if (!trackers_data_is_used($field))
+            continue;
+
+          if (!trackers_data_is_showed_on_query($field))
+            continue;
+
+          if ($field == $matching_morder)
+            $matching_morder = '';
+        }
+    }
+  if ($matching_morder == '')
+    {
+      $fields = trackers_criteria_list_to_query($morder);
+      if (!empty($fields))
+        $order_by = ' ORDER BY '.$fields;
+    }
 }
 
 #print "<BR>>DBG Order by = $order_by";
