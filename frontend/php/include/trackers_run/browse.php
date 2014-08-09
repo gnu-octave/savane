@@ -5,6 +5,7 @@
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                         Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2014  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -203,48 +204,6 @@ if ($morder != '')
 	}
     }
 }
-
-# Fill the relevant sql bit to be used later
-# Sensible default case: order by item_id from the recent to the older
-# (only if not in multiple column sort, otherwise dont mess with it because
-# the first thing to be set will matters a lot)
-if ($morder == '' && !$msort)
-{ $morder = "bug_id<"; }
-$order_by = '';
-if ($morder != '')
-{
-  $matching_morder = '';
-  # Workaround the case when the list is sorted by a column that has been
-  # removed from the query form (multicolumn sorting is not affected),
-  # Savannah SR #107879.
-  if (!$msort)
-    {
-      $matching_morder = preg_replace('/[<>]$/', '', $morder);
-      if ($matching_morder == "bug_id")
-        $matching_morder = '';
-      else
-        while ($field = trackers_list_all_fields('cmp_place_query'))
-          {
-            if (!trackers_data_is_used($field))
-              continue;
-
-            if (!trackers_data_is_showed_on_query($field))
-              continue;
-
-            if ($field == $matching_morder)
-              $matching_morder = '';
-          }
-    }
-  if ($matching_morder == '')
-    {
-      $fields = trackers_criteria_list_to_query($morder);
-      if (!empty($fields))
-        $order_by = ' ORDER BY '.$fields;
-    }
-}
-
-#print "<BR>>DBG Order by = $order_by";
-
 
 # ==================================================
 #  If the report type is not defined then get it from the user preferences.
@@ -743,6 +702,45 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
 if ($labels)
 {
   $html_select .= $labels.'</tr>'.$boxes.'</tr>';
+}
+
+# Fill the relevant sql bit to be used later
+# Sensible default case: order by item_id from the recent to the older
+# (only if not in multiple column sort, otherwise dont mess with it because
+# the first thing to be set will matters a lot)
+if ($morder == '' && !$msort)
+{ $morder = "bug_id<"; }
+$order_by = '';
+if ($morder != '')
+{
+  $matching_morder = '';
+  # Workaround the case when the list is sorted by a column that has been
+  # removed from the query form (multicolumn sorting is not affected),
+  # Savannah SR #107879.
+  if (!$msort)
+    {
+      $matching_morder = preg_replace('/[<>]$/', '', $morder);
+      while ($field = trackers_list_all_fields('cmp_place_result'))
+        {
+          if (!trackers_data_is_used($field))
+            continue;
+
+          if (!trackers_data_is_showed_on_result($field))
+            continue;
+
+          if (strcmp($field, $matching_morder) == 0)
+            {
+              $matching_morder = '';
+              break;
+            }
+        }
+    }
+  if ($matching_morder == '')
+    {
+      $fields = trackers_criteria_list_to_query($morder);
+      if (!empty($fields))
+        $order_by = ' ORDER BY '.$fields;
+    }
 }
 
 # ==================================================
