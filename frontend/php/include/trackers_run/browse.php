@@ -220,17 +220,20 @@ if ($morder != '')
   if (!$msort)
     {
       $matching_morder = preg_replace('/[<>]$/', '', $morder);
-      while ($field = trackers_list_all_fields('cmp_place_query'))
-        {
-          if (!trackers_data_is_used($field))
-            continue;
+      if ($matching_morder == "bug_id")
+        $matching_morder = '';
+      else
+        while ($field = trackers_list_all_fields('cmp_place_query'))
+          {
+            if (!trackers_data_is_used($field))
+              continue;
 
-          if (!trackers_data_is_showed_on_query($field))
-            continue;
+            if (!trackers_data_is_showed_on_query($field))
+              continue;
 
-          if ($field == $matching_morder)
-            $matching_morder = '';
-        }
+            if ($field == $matching_morder)
+              $matching_morder = '';
+          }
     }
   if ($matching_morder == '')
     {
