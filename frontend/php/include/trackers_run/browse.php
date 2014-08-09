@@ -729,10 +729,7 @@ if ($morder != '')
             continue;
 
           if (strcmp($field, $matching_morder) == 0)
-            {
-              $matching_morder = '';
-              break;
-            }
+            $matching_morder = '';
         }
     }
   if ($matching_morder == '')
