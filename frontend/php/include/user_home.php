@@ -30,13 +30,26 @@ if (!$res_user || db_numrows($res_user) < 1)
   exit_error('No Such User','No Such User');
 }
 
-site_header(array('title'=>sprintf(_("%s Profile"),db_result($res_user, 0, 'realname')),
+$realname = db_result($res_user,0,'realname');
+
+if (!user_is_super_user() && db_result($res_user,0,'status') == 'D')
+  {
+    $realname = _('-deleted account-');
+    $email_address = _('-deleted account-');
+  }
+
+
+site_header(array('title'=>sprintf(_("%s Profile"),$realname),
 		  'context'=>'people'));
 
 # For suspended account, we will print only very basic info:
 # accound id, login + description as deleted account
 $is_suspended = false;
 if (db_result($res_user,0,'status') == 'S')
+{ $is_suspended = true; }
+
+# The same for deleted accounts.
+if (db_result($res_user,0,'status') == 'D')
 { $is_suspended = true; }
 
 $is_squad = false;
@@ -47,7 +60,7 @@ if (db_result($res_user,0,'status') == 'SQD')
 
 
 
-print '<p>'.sprintf(_("Follows the Profile of %s."), utils_user_link(db_result($res_user, 0, 'user_name'),db_result($res_user, 0, 'realname')));
+print '<p>'.sprintf(_("Follows the Profile of %s."), utils_user_link(db_result($res_user, 0, 'user_name'),$realname));
 
 if ($is_squad) 
 {
@@ -102,7 +115,7 @@ if (!$is_suspended)
   if (!$is_squad)
     {
       # meaningless for squads
-      print $HTML->box_top(sprintf(_("Open Items submitted by %s"),db_result($res_user,0,'realname')),'',1);
+      print $HTML->box_top(sprintf(_("Open Items submitted by %s"),$realname),'',1);
       # FIXME: News item are missing
 
       my_item_list("submitter", "0", "open", $user_id, true);
@@ -111,7 +124,7 @@ if (!$is_suspended)
       print "<br />\n";
     }
 
-  print $HTML->box_top(sprintf(_("Open Items assigned to %s"),db_result($res_user,0,'realname')),'',1);
+  print $HTML->box_top(sprintf(_("Open Items assigned to %s"),$realname),'',1);
   # FIXME: News item are missing
   my_item_list("assignee", "0", "open", $user_id, true);
   print $HTML->box_bottom(1);
@@ -126,46 +139,58 @@ print $HTML->box_top(_("General Information"));
 
 print '
 <br />
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">';
+if (db_result($res_user,0,'status') == "D" && user_is_super_user())
+{
+  print '
+<tr valign="top">
+	<td>'
+	._("Note:").' </td>
+	<td><strong>'._("The account was deleted").'</strong></td>
+</tr>';
+}
+print '
 <tr valign="top">
 	<td>'
 	._("Real Name:").' </td>
-	<td><strong>'.db_result($res_user,0,'realname').'</strong></td>
+	<td><strong>'.$realname.'</strong></td>
 </tr>
 <tr valign="top">
 	<td>'._("Login Name:").' </td>
 	<td><strong>'.db_result($res_user,0,'user_name').'</strong></td>
-</tr>
+</tr>';
+if (db_result($res_user,0,'status') != "D" || user_is_super_user())
+{
+  print '
 <tr valign="top">
 	<td>'
 	._("Id:").' </td>
 	<td><strong>#'.db_result($res_user,0,'user_id').'</strong></td>
-</tr>';
+</tr>
 
-
-print '
-   <tr valign="top">
+<tr valign="top">
 	<td>'._("Email Address:").' </td>
 	<td>
 	<strong><a href="'.$GLOBALS['sys_home'].'sendmessage.php?touser='.db_result($res_user,0,'user_id').'">';
-  
-  # Do not print email address to anonymous user
-if (db_result($res_user,0,'email_hide') == "1" && !user_is_super_user())
-{
-  print _("Send him/her a mail");
-  
-} 
-else 
-{
-  print utils_email_basic(db_result($res_user,0,'email'), 1);
-}
 
-print '</a></strong>
+  # Do not print email address to anonymous user
+  if (db_result($res_user,0,'email_hide') == "1" && !user_is_super_user())
+  {
+    print _("Send him/her a mail");
+  
+  }
+  else
+  {
+    print utils_email_basic(db_result($res_user,0,'email'), 1);
+  }
+
+  print '</a></strong>
 	</td>
 </tr>';
+}
 
 # meaningless for squads
-if (!$is_squad)
+if (!$is_squad && (!$is_suspended || user_is_super_user()))
 { 
   print '
 <tr valign="top">

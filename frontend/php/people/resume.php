@@ -41,7 +41,10 @@ else if (db_result($result,0,'people_view_skills') != 1)
 {
   exit_error(_("This user deactivated his/her Resume & Skills page"));
 }
-
+else if (db_result($result,0,'status') == 'D' && !user_is_super_user())
+{
+  exit_error(_("This account was deleted."));
+}
 
 site_header(array('title'=>sprintf(_("%s Resume & Skills"),db_result($result, 0, 'realname')),
 		  'context'=>'people'));
