@@ -143,7 +143,7 @@ function session_login_valid($form_loginname,
   if($usr['user_pw'] == 'PAM') 
     {
       $pam_error='';
-      if(! pam_auth($form_loginname, $form_pw, &$pam_error)) 
+      if(! pam_auth($form_loginname, $form_pw, $pam_error))
 	{
 	  fb(_('Invalid Password (AFS)'), 1);
 	  return false;

@@ -116,7 +116,7 @@ if ($update)
 	{
 	  # use pam authentication
 	  unset($pam_error);
-	  if (!pam_auth(user_getname(), $oldvalue, &$pam_error))
+	  if (!pam_auth(user_getname(), $oldvalue, $pam_error))
 	    {
 	      ' '._("Old password is incorrect.").' '
 		 . $pam_error;
