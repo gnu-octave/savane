@@ -20,7 +20,10 @@
 # Based on gettext-0.16.1/gettext-tools/examples/hello-php
 # (public domain)
 
-AC_INIT
+AC_INIT([GNU Savannah],
+        [3.1-cleanup1],
+	[savannah-hackers-public@gnu.org], [],
+	[https://savannah.gnu.org/projects/administration])
 
 # We expect to use Bash for our build scripts - it's widespread
 # enough, not need to write portable shell in this case, I'd say.
@@ -31,8 +34,8 @@ SHELL=$BASH
 
 AC_CONFIG_AUX_DIR(autotools)
 # For future version of aclocal:
-AC_CONFIG_MACRO_DIR(autotools/macros)
-AM_INIT_AUTOMAKE(savane,3.1-cleanup)
+AC_CONFIG_MACRO_DIR(autotools/m4)
+AM_INIT_AUTOMAKE([1.11.1])
 
 dnl The installed program must know where to find its message catalogs.
 dnl Unfortunately, prefix gets only finally determined at the end of configure.
