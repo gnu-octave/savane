@@ -22,4 +22,4 @@ CREATE TABLE `mail_group_list` (
   `description` text,
   PRIMARY KEY  (`group_list_id`),
   KEY `idx_mail_group_list_group` (`group_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

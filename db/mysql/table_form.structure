@@ -15,4 +15,4 @@ CREATE TABLE `form` (
   `form_id` varchar(32) default NULL,
   `timestamp` int(11) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0'
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

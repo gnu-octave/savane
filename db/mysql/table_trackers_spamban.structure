@@ -14,4 +14,4 @@
 CREATE TABLE `trackers_spamban` (
   `ip` char(15) NOT NULL default '',
   `date` int(11) NOT NULL default '0'
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

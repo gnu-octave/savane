@@ -14,4 +14,4 @@
 CREATE TABLE `forum_thread_id` (
   `thread_id` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`thread_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

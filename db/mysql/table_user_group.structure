@@ -38,4 +38,4 @@ CREATE TABLE `user_group` (
   INDEX `pk_idx` (`user_id`, `group_id`),
   INDEX `idx_cache_uidNumber` (`cache_uidNumber`),
   INDEX `idx_cache_gidNumber` (`cache_gidNumber`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

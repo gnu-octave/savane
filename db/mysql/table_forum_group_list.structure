@@ -19,4 +19,4 @@ CREATE TABLE `forum_group_list` (
   `description` text,
   PRIMARY KEY  (`group_forum_id`),
   KEY `idx_forum_group_list_group_id` (`group_id`)
-) TYPE=MyISAM AUTO_INCREMENT=101;
+) ENGINE=MyISAM AUTO_INCREMENT=101;

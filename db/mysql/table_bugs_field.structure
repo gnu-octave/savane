@@ -26,4 +26,4 @@ CREATE TABLE `bugs_field` (
   `custom` int(11) NOT NULL default '0',
   PRIMARY KEY  (`bug_field_id`),
   KEY `idx_bug_field_name` (`field_name`)
-) TYPE=MyISAM AUTO_INCREMENT=605;
+) ENGINE=MyISAM AUTO_INCREMENT=605;

@@ -19,4 +19,4 @@ CREATE TABLE `trackers_spamcheck_queue` (
   `priority` int(1) NOT NULL default '1',
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`queue_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

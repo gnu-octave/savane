@@ -28,4 +28,4 @@ CREATE TABLE `forum` (
   KEY `idx_forum_id_date` (`group_forum_id`,`date`),
   KEY `idx_forum_id_date_followup` (`group_forum_id`,`date`,`is_followup_to`),
   KEY `idx_forum_thread_date_followup` (`thread_id`,`date`,`is_followup_to`)
-) TYPE=MyISAM AUTO_INCREMENT=101;
+) ENGINE=MyISAM AUTO_INCREMENT=101;

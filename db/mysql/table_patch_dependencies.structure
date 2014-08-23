@@ -17,4 +17,4 @@ CREATE TABLE `patch_dependencies` (
   `is_dependent_on_item_id_artifact` varchar(255) NOT NULL default '0',
   KEY `idx_item_dependencies_bug_id` (`item_id`),
   KEY `idx_item_is_dependent_on_item_id` (`is_dependent_on_item_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

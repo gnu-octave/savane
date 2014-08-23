@@ -17,4 +17,4 @@ CREATE TABLE `forum_saved_place` (
   `forum_id` int(11) NOT NULL default '0',
   `save_date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`saved_place_id`)
-) TYPE=MyISAM AUTO_INCREMENT=101;
+) ENGINE=MyISAM AUTO_INCREMENT=101;

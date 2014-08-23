@@ -20,4 +20,4 @@ CREATE TABLE `trackers_spamscore` (
   `item_id` int(11) NOT NULL default '0',
   `comment_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

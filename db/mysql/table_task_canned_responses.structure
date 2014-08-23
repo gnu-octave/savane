@@ -19,4 +19,4 @@ CREATE TABLE `task_canned_responses` (
   `order_id` int(11) NOT NULL default '50',
   PRIMARY KEY  (`bug_canned_id`),
   KEY `idx_bug_canned_response_group_id` (`group_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

@@ -16,4 +16,4 @@ CREATE TABLE `group_preferences` (
   `preference_name` varchar(255) NOT NULL default '',
   `preference_value` text,
   PRIMARY KEY  (`group_id`,`preference_name`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

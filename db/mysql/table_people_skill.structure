@@ -15,4 +15,4 @@ CREATE TABLE `people_skill` (
   `skill_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`skill_id`)
-) TYPE=MyISAM AUTO_INCREMENT=10006;
+) ENGINE=MyISAM AUTO_INCREMENT=10006;

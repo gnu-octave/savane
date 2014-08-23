@@ -21,4 +21,4 @@ CREATE TABLE `trackers_field_transition` (
   `is_allowed` char(1) default 'Y',
   `notification_list` text,
   PRIMARY KEY  (`transition_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

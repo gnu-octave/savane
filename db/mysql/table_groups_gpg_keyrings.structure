@@ -16,4 +16,4 @@ CREATE TABLE `groups_gpg_keyrings` (
   `unix_group_name` varchar(30) NOT NULL default '',
   `keyring` longblob,
   UNIQUE KEY `id` (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

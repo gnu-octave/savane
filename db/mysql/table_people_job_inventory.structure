@@ -18,4 +18,4 @@ CREATE TABLE `people_job_inventory` (
   `skill_level_id` int(11) NOT NULL default '0',
   `skill_year_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`job_inventory_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

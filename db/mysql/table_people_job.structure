@@ -21,4 +21,4 @@ CREATE TABLE `people_job` (
   `status_id` int(11) NOT NULL default '0',
   `category_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`job_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

@@ -18,4 +18,4 @@ CREATE TABLE `user_bookmarks` (
   `bookmark_title` text,
   PRIMARY KEY  (`bookmark_id`),
   KEY `idx_user_bookmark_user_id` (`user_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

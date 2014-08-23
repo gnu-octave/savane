@@ -17,4 +17,4 @@ CREATE TABLE `trackers_field_transition_other_field_update` (
   `update_field_name` varchar(255) NOT NULL default '',
   `update_value_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`other_field_update_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

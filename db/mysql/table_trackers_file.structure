@@ -23,4 +23,4 @@ CREATE TABLE `trackers_file` (
   `filetype` text NOT NULL,
   PRIMARY KEY  (`file_id`),
   KEY `item_id_idx` (`item_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

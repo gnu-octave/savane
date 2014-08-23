@@ -21,4 +21,4 @@ CREATE TABLE `trackers_spamcheck_queue_notification` (
   `other_headers` text,
   `message` text,
   PRIMARY KEY  (`notification_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

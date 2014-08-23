@@ -20,4 +20,4 @@ CREATE TABLE `group_history` (
   `date` int(11) default NULL,
   PRIMARY KEY  (`group_history_id`),
   KEY `idx_group_history_group_id` (`group_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

@@ -18,4 +18,4 @@ CREATE TABLE `trackers_notification_event` (
   `description` varchar(255) default NULL,
   `rank` int(11) NOT NULL default '0',
   KEY `event_id_idx` (`event_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

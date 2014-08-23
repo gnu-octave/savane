@@ -43,4 +43,4 @@ CREATE TABLE `cookbook_context2recipe` (
   `subcontext_search` int(1) default '0',
   `subcontext_configure` int(1) default '0',
   PRIMARY KEY  (`context_id`)
-) TYPE=MyISAM AUTO_INCREMENT=4;
+) ENGINE=MyISAM AUTO_INCREMENT=4;

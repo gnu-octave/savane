@@ -17,4 +17,4 @@ CREATE TABLE `user_squad` (
   `squad_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`user_squad_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

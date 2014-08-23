@@ -22,4 +22,4 @@ CREATE TABLE `support_report` (
   KEY `group_id_idx` (`group_id`),
   KEY `user_id_idx` (`user_id`),
   KEY `scope_idx` (`scope`)
-) TYPE=MyISAM AUTO_INCREMENT=113;
+) ENGINE=MyISAM AUTO_INCREMENT=113;

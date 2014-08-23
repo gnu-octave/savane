@@ -18,4 +18,4 @@ CREATE TABLE `patch_filter` (
   `sql_clause` text NOT NULL,
   `is_active` int(11) NOT NULL default '0',
   PRIMARY KEY  (`filter_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

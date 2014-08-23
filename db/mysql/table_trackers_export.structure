@@ -23,4 +23,4 @@ CREATE TABLE `trackers_export` (
   `frequency_day` int(2) default NULL,
   `frequency_hour` int(2) default NULL,
   PRIMARY KEY  (`export_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

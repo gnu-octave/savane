@@ -27,4 +27,4 @@ CREATE TABLE `support_field_value` (
   KEY `idx_bug_fv_group_id` (`group_id`),
   KEY `idx_bug_fv_value_id` (`value_id`),
   KEY `idx_bug_fv_status` (`status`)
-) TYPE=MyISAM AUTO_INCREMENT=732;
+) ENGINE=MyISAM AUTO_INCREMENT=732;

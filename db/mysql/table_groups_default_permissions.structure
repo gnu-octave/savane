@@ -36,4 +36,4 @@ CREATE TABLE `groups_default_permissions` (
   KEY `support_flags_idx` (`support_flags`),
   KEY `forum_flags_idx` (`forum_flags`),
   KEY `admin_flags_idx` (`admin_flags`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

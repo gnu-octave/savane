@@ -36,4 +36,4 @@ CREATE TABLE `user` (
   KEY `idx_user_user` (`status`),
   INDEX (`user_name`),
   INDEX `idx_uidNumber` (`uidNumber`)
-) TYPE=MyISAM AUTO_INCREMENT=101;
+) ENGINE=MyISAM AUTO_INCREMENT=101;

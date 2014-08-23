@@ -24,4 +24,4 @@ CREATE TABLE `cookbook_history` (
   `type` int(11) default NULL,
   PRIMARY KEY  (`bug_history_id`),
   KEY `idx_bug_history_bug_id` (`bug_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

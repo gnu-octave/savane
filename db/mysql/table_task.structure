@@ -87,4 +87,4 @@ CREATE TABLE `task` (
   `custom_df5` int(11) NOT NULL default '0',
   PRIMARY KEY  (`bug_id`),
   KEY `idx_bug_group_id` (`group_id`)
-) TYPE=MyISAM AUTO_INCREMENT=101;
+) ENGINE=MyISAM AUTO_INCREMENT=101;

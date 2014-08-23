@@ -15,4 +15,4 @@ CREATE TABLE `people_job_status` (
   `status_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`status_id`)
-) TYPE=MyISAM AUTO_INCREMENT=4;
+) ENGINE=MyISAM AUTO_INCREMENT=4;

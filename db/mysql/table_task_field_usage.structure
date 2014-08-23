@@ -26,4 +26,4 @@ CREATE TABLE `task_field_usage` (
   `transition_default_auth` char(1) NOT NULL default 'A',
   KEY `idx_bug_fu_field_id` (`bug_field_id`),
   KEY `idx_bug_fu_group_id` (`group_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

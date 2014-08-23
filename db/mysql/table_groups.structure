@@ -109,4 +109,4 @@ CREATE TABLE `groups` (
   KEY `idx_groups_type` (`type`),
   KEY `is_public` (`is_public`),
   INDEX `idx_gidNumber` (`gidNumber`)
-) TYPE=MyISAM AUTO_INCREMENT=101;
+) ENGINE=MyISAM AUTO_INCREMENT=101;

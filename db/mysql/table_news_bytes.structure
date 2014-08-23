@@ -25,4 +25,4 @@ CREATE TABLE `news_bytes` (
   KEY `idx_news_bytes_forum` (`forum_id`),
   KEY `idx_news_bytes_group` (`group_id`),
   KEY `idx_news_bytes_approved` (`is_approved`)
-) TYPE=MyISAM AUTO_INCREMENT=101;
+) ENGINE=MyISAM AUTO_INCREMENT=101;

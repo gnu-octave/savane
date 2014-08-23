@@ -15,4 +15,4 @@ CREATE TABLE `people_job_category` (
   `category_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`category_id`)
-) TYPE=MyISAM AUTO_INCREMENT=9;
+) ENGINE=MyISAM AUTO_INCREMENT=9;

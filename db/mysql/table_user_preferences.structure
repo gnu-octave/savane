@@ -16,4 +16,4 @@ CREATE TABLE `user_preferences` (
   `preference_name` varchar(255) NOT NULL default '',
   `preference_value` text,
   PRIMARY KEY  (`user_id`,`preference_name`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

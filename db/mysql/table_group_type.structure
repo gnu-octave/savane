@@ -111,4 +111,4 @@ CREATE TABLE `group_type` (
   `support_rflags` int(1) default '2',
   `news_rflags` int(1) default '2',
   PRIMARY KEY  (`type_id`)
-) TYPE=MyISAM AUTO_INCREMENT=2;
+) ENGINE=MyISAM AUTO_INCREMENT=2;

@@ -17,4 +17,4 @@ CREATE TABLE `trackers_notification` (
   `event_id` int(11) NOT NULL default '0',
   `notify` int(11) NOT NULL default '1',
   KEY `user_id_idx` (`user_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

@@ -18,4 +18,4 @@ CREATE TABLE `trackers_notification_role` (
   `description` varchar(255) default NULL,
   `rank` int(11) NOT NULL default '0',
   KEY `role_id_idx` (`role_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

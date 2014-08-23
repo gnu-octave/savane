@@ -20,4 +20,4 @@ CREATE TABLE `patch_report_field` (
   `place_result` int(11) default NULL,
   `col_width` int(11) default NULL,
   KEY `report_id_idx` (`report_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;

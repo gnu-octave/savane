@@ -15,4 +15,4 @@ CREATE TABLE `user_lostpw` (
   `user_id` int(11) NOT NULL default '0',
   `date` timestamp NOT NULL,
   `count` int(1) NOT NULL default '0'
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
