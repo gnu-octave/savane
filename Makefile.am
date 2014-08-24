@@ -6,7 +6,7 @@ AUTOMAKE_OPTIONS = gnits
 ACLOCAL_AMFLAGS = -I autotools/m4
 
 # The list of subdirectories containing Makefiles.
-SUBDIRS = backend etc frontend lib autotools/m4 po
+SUBDIRS = backend etc frontend lib autotools/m4 po local
 
 EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
 	REQUIREMENTS INSTALL.verbose \

@@ -1,0 +1,44 @@
+Listen 127.0.0.1:50080
+ServerRoot @ABSSRCDIR@/local/apache2/
+PidFile pid
+DocumentRoot @ABSSRCDIR@/frontend/php
+
+# Ability to list a directory
+LoadModule dir_module /usr/lib/apache2/modules/mod_dir.so
+LoadModule autoindex_module /usr/lib/apache2/modules/mod_autoindex.so
+
+# Content-type: text/html for .html
+LoadModule mime_module /usr/lib/apache2/modules/mod_mime.so
+TypesConfig /etc/mime.types
+
+# PHP5
+LoadModule php5_module /usr/lib/apache2/modules/libphp5.so
+AddType application/x-httpd-php .php .phtml .php3
+
+# SetEnv
+LoadModule env_module /usr/lib/apache2/modules/mod_env.so
+
+# Log requests
+TransferLog logs/access_log
+
+<Directory "@ABSSRCDIR@/frontend/php">
+  SetEnv SAVANE_CONF @ABSSRCDIR@/local/savane/
+  DirectoryIndex index.php
+
+  AcceptPathInfo On
+  php_admin_flag register_globals off
+  php_admin_flag magic_quotes_gpc off
+  php_admin_flag file_uploads on
+
+  php_admin_flag allow_url_fopen off
+  php_admin_flag display_errors on
+  php_admin_flag log_errors on
+  # Set error_reporting=E_ALL|E_NOTICE:
+  php_value error_reporting 8191
+  php_admin_value disable_functions exec,passthru,popen,shell_exec,system
+  php_admin_value sendmail_path @ABSSRCDIR@/tests/minimal_configs/fakesendmail.sh
+
+  <Files ~ "^(users|us|u|projects|pr|p|file)$">
+    SetHandler application/x-httpd-php
+  </Files>
+</Directory>

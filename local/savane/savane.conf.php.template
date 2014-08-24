@@ -1,0 +1,43 @@
+<?php
+
+$use_pwqcheck = FALSE;
+
+##
+## When using the test database (or connecting with a Unix-Socket),
+##  use ":/path/to/socket"
+$sys_dbhost=":@ABSSRCDIR@/local/db/sock";
+
+#
+# When using a remote database (or TCP connection), use these:
+#
+# leave 'sys_dbhost' empty for 'localhost'.
+# $sys_dbhost="";
+# leave 'sys_dbuser' empty for current user.
+# $sys_dbuser="";
+
+
+#
+# Name of the configuration project.
+# Must be a name of a valid (existing) project/group in the database.
+# This name must match the "unix_group_name" value of the project.
+#
+# NOTE:
+#  In GNU Savannah's production database, this project is called 'administration'.
+#  In the sample database in './db/mysql/bootstrap.sql', the project is
+#    called 'siteadmin'.
+#  In this template file, use a variable - it will be replaced by running
+#   'make' (see Makefile.am for details).
+$sys_unix_group_name="@ADMINPROJECTNAME@";
+
+$sys_incdir="@ABSSRCDIR@/etc/site-specific-content";
+
+# Name of the website - appears in many page titles.
+$sys_name="GNU Savannah(Local)";
+
+#$sys_debug_on=true;
+
+# No redirect to brother website
+$sys_debug_nobasehost=true;
+
+#$$sys_debug_noformcheck=true;
+?>

@@ -67,6 +67,23 @@ if test -z "$SV_DB_CMD"; then
   AC_MSG_ERROR([mysql client not found])
 fi
 
+# Look for Apache2 and Mysqlserver, needed for local testing.
+AC_PATH_PROG([APACHE2_SERVER_BIN],[apache2],[],
+	     [$PATH$PATH_SEPARATOR/usr/sbin$PATH_SEPARATOR/usr/local/sbin/])
+AC_SUBST([APACHE2_SERVER_BIN])
+AC_PATH_PROG([MYSQLD_SAFE_BIN],[mysqld_safe],[],
+	     [$PATH$PATH_SEPARATOR/usr/sbin$PATH_SEPARATOR/usr/local/sbin/])
+AC_SUBST([MYSQLD_SAFE_BIN])
+AC_PATH_PROG([MYSQL_INSTALLDB_BIN],[mysql_install_db],[],
+	     [$PATH$PATH_SEPARATOR/usr/sbin$PATH_SEPARATOR/usr/local/sbin/])
+AC_SUBST([MYSQL_INSTALLDB_BIN])
+AC_PATH_PROG([MYSQLADMIN_BIN],[mysqladmin],[],
+	     [$PATH$PATH_SEPARATOR/usr/sbin$PATH_SEPARATOR/usr/local/sbin/])
+AC_SUBST([MYSQLADMIN_BIN])
+AC_PATH_PROG([MYSQL_BIN],[mysql],[],
+	     [$PATH$PATH_SEPARATOR/usr/sbin$PATH_SEPARATOR/usr/local/sbin/])
+AC_SUBST([MYSQL_BIN])
+
 AC_ARG_WITH([db-name], AS_HELP_STRING([--with-db-name],
   [name of the database (default: 'savane')]),
   SV_DB_NAME="$withval",
@@ -115,7 +132,8 @@ backend/system-specific/darwin/Makefile \
 etc/Makefile \
 frontend/Makefile \
 frontend/php/images/Makefile \
-lib/Makefile])
+lib/Makefile \
+local/Makefile])
 AC_CONFIG_FILES([po/Makefile], [AM_POSTPROCESS_PO_MAKEFILE])
 
 AC_CONFIG_FILES([frontend/php/include/ac_config.php])
