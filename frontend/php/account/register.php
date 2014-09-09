@@ -323,7 +323,7 @@ else
 
   print '<p><span class="preinput">'._("Email Address:").'</span><br />&nbsp;&nbsp;';
   print '<input size="30" type="text" name="form_email" value="'.htmlentities($form_email, ENT_QUOTES , 'UTF-8').'" />';
-  print '<br /><span class="text">'._("This email address will be verified before account activation. Do not use a hotmail account here.").'</span></p>';
+  print '<br /><span class="text">'._("This email address will be verified before account activation. Check your spam filters. Do not use a hotmail or comcast address here.").'</span></p>';
 
   if ($GLOBALS['sys_registration_text_spam_test'])
   {
