@@ -20,7 +20,7 @@
 
 require_once('../include/init.php');
 
-$HTML->header(array('title' => _("Savannah hosting requirements")));
+$HTML->header(array('title' => _("Hosting requirements")));
 
 utils_get_content("register/requirements");
 
