@@ -7,6 +7,7 @@
 #                          Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
+# Copyright (C) 2015  Karl Berry (tiny reordering, downcasing)
 #
 # This file is part of Savane.
 # 
@@ -321,26 +322,27 @@ function pagemenu_group ()
   unset($ret);
 
   $ret = pagemenu_submenu_entry(_("Main"),$GLOBALS['sys_home'].'projects/'.$project->getUnixName().'/').
-    pagemenu_submenu_entry(_("View Members"),$GLOBALS['sys_home'].'project/memberlist.php?group='.$project->getUnixName()).
+    pagemenu_submenu_entry(_("View members"),$GLOBALS['sys_home'].'project/memberlist.php?group='.$project->getUnixName()).
     pagemenu_submenu_entry(_("Search"),$GLOBALS['sys_home'].'project/search.php?group='.$project->getUnixName());  
   
   if (member_check(0, $group_id, 'A'))
     {
       # If admin, print a link to the admin main page and an extra useless
-      # link to main page
+      # link to main page.  use &nbsp; to avoid bad line breaks in
+      # stone age menu.
       $ret .= 
 	pagemenu_submenu_entry_separator().
 	pagemenu_submenu_entry('<strong>'._("Administer:").'</strong>',$GLOBALS['sys_home'].'project/admin/?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Edit Public Info"),$GLOBALS['sys_home'].'project/admin/editgroupinfo.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Select Features"),$GLOBALS['sys_home'].'project/admin/editgroupfeatures.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Manage Members"),$GLOBALS['sys_home'].'project/admin/useradmin.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Manage Squads"),$GLOBALS['sys_home'].'project/admin/squadadmin.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Set Permissions"),$GLOBALS['sys_home'].'project/admin/userperms.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Set Notifications"),$GLOBALS['sys_home'].'project/admin/editgroupnotifications.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Show History"),$GLOBALS['sys_home'].'project/admin/history.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Copy Configuration"),$GLOBALS['sys_home'].'project/admin/conf-copy.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Post Jobs"),$GLOBALS['sys_home'].'people/createjob.php?group='.$project->getUnixName(),1,_("Post a request for contribution")).
-	pagemenu_submenu_entry(_("Edit Jobs"),$GLOBALS['sys_home'].'people/editjob.php?group='.$project->getUnixName(),1,_("Edit previously posted request for contribution"));
+	pagemenu_submenu_entry(_("Edit public info"),$GLOBALS['sys_home'].'project/admin/editgroupinfo.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Select features"),$GLOBALS['sys_home'].'project/admin/editgroupfeatures.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Manage&nbsp;members"),$GLOBALS['sys_home'].'project/admin/useradmin.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Manage&nbsp;squads"),$GLOBALS['sys_home'].'project/admin/squadadmin.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Set&nbsp;permissions"),$GLOBALS['sys_home'].'project/admin/userperms.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Set&nbsp;notifications"),$GLOBALS['sys_home'].'project/admin/editgroupnotifications.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Show&nbsp;history"),$GLOBALS['sys_home'].'project/admin/history.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Copy&nbsp;configuration"),$GLOBALS['sys_home'].'project/admin/conf-copy.php?group='.$project->getUnixName()).
+	pagemenu_submenu_entry(_("Post&nbsp;jobs"),$GLOBALS['sys_home'].'people/createjob.php?group='.$project->getUnixName(),1,_("Post a request for contribution")).
+	pagemenu_submenu_entry(_("Edit jobs"),$GLOBALS['sys_home'].'people/editjob.php?group='.$project->getUnixName(),1,_("Edit previously posted request for contribution"));
     } 
   pagemenu_submenu_content($ret);
   pagemenu_submenu_end();
@@ -355,7 +357,7 @@ function pagemenu_group ()
 			     $project->getUrl("homepage"), 
 			     0,
 			     1,
-			     _("Browse Project Homepage (outside of Savane)"));
+			     _("Browse project homepage (outside of Savane)"));
       pagemenu_submenu_end();
     }
 
@@ -366,7 +368,7 @@ function pagemenu_group ()
 			     $project->getArtifactUrl("files"), 
 			     CONTEXT == 'download',
 			     1,
-			     _("Download Area: files released"));
+			     _("Visit download area: files released"));
       pagemenu_submenu_end();
     }
 
@@ -417,11 +419,11 @@ function pagemenu_group ()
   # MAILING LIST
   if ($project->usesMail())
     {
-      pagemenu_submenu_title(_("Mailing Lists"), 
+      pagemenu_submenu_title(_("Mailing lists"), 
 			     $project->getArtifactUrl("mail"),
 			     CONTEXT == 'mail',
 			     1,
-			     _("List existing Mailing Lists"));
+			     _("List existing mailing lists"));
       if ($is_admin)
 	{
 	  $ret = '';
@@ -429,7 +431,7 @@ function pagemenu_group ()
 	    pagemenu_submenu_entry(_("Browse"),
 				   $GLOBALS['sys_home'].'mail/?group='.$project->getUnixName(),
 				   
-				   _("List existing Mailing Lists")).
+				   _("List existing mailing lists")).
 	    pagemenu_submenu_entry_separator().
 	    pagemenu_submenu_entry('<strong>'._("Configure:").'</strong>',
 				   $GLOBALS['sys_home'].'mail/admin/?group='.$project->getUnixName());
@@ -496,22 +498,22 @@ function pagemenu_group ()
 	  if ($bzr)
 	    { $tool = "bzr"; }
 
-	  pagemenu_submenu_title(_("Source Code"), 
+	  pagemenu_submenu_title(_("Source code"), 
 				 $project->getArtifactUrl($tool),
 				 CONTEXT == $tool,
 				 1,
-				 _("Source Code Management"));
+				 _("Source code management"));
 	}
       else
 	{
 	  
-	  pagemenu_submenu_title(_("Source Code"), 
+	  pagemenu_submenu_title(_("Source code"), 
 				 '#', # non-link
 				 (CONTEXT == 'cvs' || CONTEXT == 'arch'
 				  || CONTEXT == 'svn' || CONTEXT == 'git'
                                   || CONTEXT == 'hg' || CONTEXT == 'bzr'),
 				 1,
-				 _("Source Code Management"));
+				 _("Source code management"));
 	}
       
       $ret = '';
@@ -727,7 +729,7 @@ function pagemenu_group ()
       $ret = '';
       $ret .= pagemenu_submenu_entry(_("Browse"),
 				     $GLOBALS['sys_home'].'news/?group='.$project->getUnixName());
-      $ret .= pagemenu_submenu_entry(_("Atom Feed"),
+      $ret .= pagemenu_submenu_entry(_("Atom feed"),
 				     $GLOBALS['sys_home'].'news/atom.php?group='.$project->getUnixName());
       $ret .= pagemenu_submenu_entry(_("Submit"),
 				     $GLOBALS['sys_home'].'news/submit.php?group='.$project->getUnixName(),
@@ -771,17 +773,15 @@ function pagemenu_group_trackers ($tracker)
       $tracker == "patch" ||
       $tracker == "task")
 	  {
+	    $ret .= pagemenu_submenu_entry(_("Submit new"),
+					   $GLOBALS['sys_home'].$tracker.'/?func=additem&amp;group='.$project->getUnixName(),
+					   group_restrictions_check($group_id, $tracker));
 
 	    $ret .= pagemenu_submenu_entry(_("Browse"),
 					   $GLOBALS['sys_home'].$tracker.'/?group='.$project->getUnixName());
 
-	    $ret .= pagemenu_submenu_entry(_("Reset to all open ones"),
+	    $ret .= pagemenu_submenu_entry(_("Reset to open"),
 					   $GLOBALS['sys_home'].$tracker.'/?func=browse&amp;set=open&amp;group='.$project->getUnixName());
-
-
-	    $ret .= pagemenu_submenu_entry(_("Submit"),
-					   $GLOBALS['sys_home'].$tracker.'/?func=additem&amp;group='.$project->getUnixName(),
-					   group_restrictions_check($group_id, $tracker));
 
 	    $ret .= pagemenu_submenu_entry(_("Digest"),
 					   $GLOBALS['sys_home'].$tracker.'/?func=digest&amp;group='.$project->getUnixName());
@@ -790,7 +790,7 @@ function pagemenu_group_trackers ($tracker)
 					   $GLOBALS['sys_home'].$tracker.'/export.php?group='.$project->getUnixName(),
 					   member_check(0, $group_id));
 
-	    $ret .= pagemenu_submenu_entry(_("View Statistics"),
+	    $ret .= pagemenu_submenu_entry(_("Get statistics"),
 					   $GLOBALS['sys_home'].$tracker.'/reporting.php?group='.$project->getUnixName());
 
 	    # At the end of the submenu, for cohesion with the "search" in the
@@ -870,29 +870,29 @@ function pagemenu_group_trackers ($tracker)
       $ret .= pagemenu_submenu_entry_separator().
 	pagemenu_submenu_entry('<strong>'._("Configure:").'</strong>',
 			       $GLOBALS['sys_home'].$tracker.'/admin/?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Select Fields"),
+	pagemenu_submenu_entry(_("Select fields"),
 			       $GLOBALS['sys_home'].$tracker.'/admin/field_usage.php?group='.$project->getUnixName(),
 			       1,
 			       _("Define what fields you want to use in this tracker")).
-	pagemenu_submenu_entry(_("Edit Fields Values"),
+	pagemenu_submenu_entry(_("Edit field values"),
 			       $GLOBALS['sys_home'].$tracker.'/admin/field_values.php?group='.$project->getUnixName(),
 			       1,
 			       _("Define the set of possible values for the fields you have decided to use in this tracker")).
-	pagemenu_submenu_entry(_("Edit Query Forms"),
+	pagemenu_submenu_entry(_("Edit query forms"),
 			       $GLOBALS['sys_home'].$tracker.'/admin/editqueryforms.php?group='.$project->getUnixName(),
 			       1,
 			       _("Define project-wide query form: what search criteria to use and what item fields to show in the query form table")).
-	pagemenu_submenu_entry(_("Set Permissions"),
+	pagemenu_submenu_entry(_("Set&nbsp;permissions"),
 			       $GLOBALS['sys_home'].$tracker.'/admin/userperms.php?group='.$project->getUnixName(),
 			       1,
 			       _("Defines posting restrictions")).
-	pagemenu_submenu_entry(_("Set Notifications"),
+	pagemenu_submenu_entry(_("Set&nbsp;notifications"),
 			       $GLOBALS['sys_home'].$tracker.'/admin/notification_settings.php?group='.$project->getUnixName()).
-	pagemenu_submenu_entry(_("Copy Configuration"),
+	pagemenu_submenu_entry(_("Copy&nbsp;configuration"),
 			       $GLOBALS['sys_home'].$tracker.'/admin/conf-copy.php?group='.$project->getUnixName(),
 			       1,
 			       _("Copy the configuration of another tracker")).
-	pagemenu_submenu_entry(_("Other Settings"),
+	pagemenu_submenu_entry(_("Other settings"),
 			       $GLOBALS['sys_home'].$tracker.'/admin/other_settings.php?group='.$project->getUnixName(),
 			       1,
 			       _("Modify the preamble shown on the item submission form"));
