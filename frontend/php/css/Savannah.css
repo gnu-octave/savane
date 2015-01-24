@@ -1,9 +1,7 @@
 /*
- *
- * Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
- *                         Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
- *                         Sylvain Beucler <beuc--beuc.net>
- *
+ * Copyright 2002-2005 Mathieu Roy <yeupou--gnu.org>
+ *                     St@'ephane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
+ *                     Sylvain Beucler <beuc--beuc.net>
  *
  * This file is part of Savane.
  * 
@@ -20,7 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id$
+ * For debugging/development of css, setting network.http.use-cache to
+ * false was apparently both necessary and sufficient --karl, 23jan15.
  *
 */
 
@@ -369,4 +368,3 @@ div.inputfield {
 	font-size: smaller;
 	vertical-align: top;
 }
-
