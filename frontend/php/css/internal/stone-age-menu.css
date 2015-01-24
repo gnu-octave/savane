@@ -1,6 +1,7 @@
-/* <one line to give a brief idea of what this does.>
+/* stone age menu css overrides.
  * 
- * Copyright 2006     (c) Mathieu Roy <yeupou--gnu.org>
+ * Copyright 2006     Mathieu Roy <yeupou--gnu.org>
+ * Copyright 2015     Karl Berry
  * See the changelog file for a detailed list of changes
  *
  *  http://gna.org/p/savane
@@ -20,16 +21,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id$
- *
 */
 
-/* This is supposed to provide an old fashioned top menu for
-   crappy/old browsers
-   Needlessly to say, nothing fancy should be here. Only removal of fancy
-   things.
+/* This is supposed to provide the stone age menu.
+   Of course, nothing fancy should be here. Only removal of fancy things.
 */
-
 
 .topmenu {
 	border: none;
@@ -53,6 +49,8 @@ li.topmenuitemmainitem {
         position: static; 
 }
 
+/* a little extra space between items helps readability */
 li.topmenuitemmainitem a { 
 	padding: 0; 
+	margin-right: .3em;
 }
