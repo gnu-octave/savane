@@ -530,9 +530,7 @@ switch ($func)
 				     $reassign_change_project,
 				     $reassign_change_artifact);
        }
-     
 
-	    
      # show browse item page, unless the user want to get back
      # to the 
      # same report, to make something else
@@ -541,14 +539,22 @@ switch ($func)
 	 include '../include/trackers_run/browse.php';
        }
      else
-       {
-	 $_POST = $_FILES = array();
-	 $form_id = $depends_search = $reassign_change_project_search = $add_cc
-	   = $input_file = $changed = $vfl = $details = $comment = null;
-	 $nocache = 1;
-	 include '../include/trackers_run/mod.php';
+       { # ends up including tracker item number in url, if present
+	 if (preg_match("/:\/\/($sys_default_domain)|($sys_https_host)/",
+			$_SERVER[HTTP_REFERER]))
+           {
+	     header('Location: ' . $_SERVER[HTTP_REFERER]);
+	   }
+         else
+           {
+	     $_POST = $_FILES = array();
+	     $form_id = $depends_search =
+             $reassign_change_project_search = $add_cc =
+             $input_file = $changed = $vfl = $details = $comment = null;
+	     $nocache = 1;
+ 	     include '../include/trackers_run/mod.php';
+           }
        }
-     
      break;
    }
       
