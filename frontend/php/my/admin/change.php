@@ -5,6 +5,7 @@
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2013  Sylvain Beucler
+# Copyright 2016 Karl Berry
 # 
 # This file is part of Savane.
 # 
@@ -52,7 +53,7 @@ if ($item == 'delete')
   $res_check = db_execute("SELECT group_id FROM user_group WHERE user_id=?", array(user_getid()));
   if (db_numrows($res_check) != 0)
     {      
-      exit_error(_("You must quit groups that your are member of before requesting account deletion. If you registered a project that was not approved or discarded yet, you must ask admins to cancel the registration"));
+      exit_error(_("You must quit groups of which you are a member before requesting account deletion. If you registered a project that was not approved or discarded yet, you must ask admins to cancel that registration"));
     }
   
 }
@@ -534,16 +535,22 @@ else if ($item == "email")
     {
       $title = _("Change Email Address");
       $input_title = _('New email address:');
-      $preamble = _("Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file.").'</p><p>'._("We need to maintain an accurate email address for each user due to the level of access we grant via this account. If we need to reach a user for issues related to this server, it is important that we be able to do so.").'</p><p>'._("Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.");
+      $preamble = _("Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file.").'</p><p>'._("We need to maintain an accurate email address for each user due to the level of access we grant via this account. If we need to reach a user for issues related to this server, it is important that we be able to do so.").'</p><p>'._("Submitting the form below will mail a confirmation url to the new email address; visiting this link will complete the email change. The old address will also receive an email message, this one with a url to discard the request.");
     }
   else if ($step == "confirm")
     {
-      $title = _("Confirm Email change");
+      $title = _("Confirm Email Change");
       $preamble = _('Click update to confirm your e-mail change');
       $input_title = _('Confirmation hash:');
       $input_specific = "<input type='text' readonly='readonly' name='confirm_hash' value='"
 	. htmlentities($confirm_hash, ENT_QUOTES) . "' />";
       $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
+    }
+  else if ($step == "discard")
+    {
+      # avoid php warning about title not defined,
+      # <http://savannah.gnu.org/support/?108964>.
+      $title = _("Discard Email Change");
     }
 }
 else if ($item == "delete")
@@ -568,7 +575,11 @@ else if ($item == "delete")
     }
 }
 
-
+# fallback
+if (!$title)
+{
+     $title = "Unknown user settings item ($item)";
+}
 
 ########################################################################
 # Actually prints the HTML page
