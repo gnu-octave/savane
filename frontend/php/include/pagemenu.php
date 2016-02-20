@@ -7,7 +7,7 @@
 #                          Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2015  Karl Berry (tiny reordering, downcasing)
+# Copyright (C) 2015, 2016 Karl Berry (tiny reordering, downcasing, #devtools)
 #
 # This file is part of Savane.
 # 
@@ -508,7 +508,7 @@ function pagemenu_group ()
 	{
 	  
 	  pagemenu_submenu_title(_("Source code"), 
-				 '#', # non-link
+  $GLOBALS['sys_home'].'projects/'.$project->getUnixName().'/#devtools',
 				 (CONTEXT == 'cvs' || CONTEXT == 'arch'
 				  || CONTEXT == 'svn' || CONTEXT == 'git'
                                   || CONTEXT == 'hg' || CONTEXT == 'bzr'),

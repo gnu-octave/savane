@@ -7,6 +7,7 @@
 #                         Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
+# Copyright (C) 2016  Karl Berry (#devtools anchor for "Source code")
 #
 # This file is part of Savane.
 # 
@@ -179,7 +180,7 @@ if ($project->Uses("news")) {
 
   print $HTML->box_top(_("Latest News")
 		       . "&nbsp;<a href='{$GLOBALS['sys_home']}news/atom.php?group=$group'"
-		       . " style='display: inline'><img"
+		       . " style='display: inline'><img alt='rss feed'"
 		       . " src='{$GLOBALS['sys_home']}images/common/feed16.png' /></a>");
   print news_show_latest($group_id,4,"true");
   print $HTML->box_bottom();
@@ -451,7 +452,8 @@ if ($project->Uses("patch") ||
     $project->Uses("task") ||
     $project->Uses("patch"))
 {
-  print $HTML->box_top(_("Development Tools"));
+  print $HTML->box_top("<div id='devtools'>" . _("Development Tools")
+                       . "</div>");
   $i = 1;
   $j = $i;
 
