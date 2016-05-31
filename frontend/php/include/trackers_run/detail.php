@@ -93,7 +93,7 @@ if (db_numrows($result) > 0)
       <tr>
           <td class="preinput" width="15%">'._("Submitted by:").'&nbsp;</td>
           <td width="35%">'.utils_user_link(user_getname(db_result($result,0,'submitted_by')), user_getrealname(db_result($result,0,'submitted_by'))).'</td>
-          <td colspan="'.($fields_per_line).'" align="center"  width="50%" valign="top"><span class="noprint">'.form_submit(_("Submit Changes").'" class="bold', "submit").'</span></td>
+          <td colspan="'.($fields_per_line).'" align="center"  width="50%" valign="top"><span class="noprint">'.form_submit(_("Submit Changes"), "submit", ' class="bold"').'</span></td>
       </tr>
       <tr>
           <td class="preinput" width="15%">'._("Submitted on:").'&nbsp;</td>
@@ -387,7 +387,7 @@ if (db_numrows($result) > 0)
               # votes.
               # The number of remaining points must be 100 - others votes
 
-              print '<span class="preinput">'._("Your vote:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="new_vote" size="3" maxlength="3" value="'.htmlspecialchars(stripslashes($new_vote)).'" /> '.sprintf(ngettext("/ %s remaining vote", "/ %s remaining votes", $votes_remaining), $votes_remaining);
+              print '<span class="preinput">'._("Your vote:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="new_vote" size="3" maxlength="3" value="'.htmlspecialchars($new_vote).'" /> '.sprintf(ngettext("/ %s remaining vote", "/ %s remaining votes", $votes_remaining), $votes_remaining);
               print '</p>';
             }
           else
@@ -412,7 +412,8 @@ if (db_numrows($result) > 0)
 
   #  ################################  Submit
 
-  print '<div align="center" class="noprint">'.form_submit(_("Submit Changes").'" class="bold', "submit").'</form></div>
+  print '<div align="center" class="noprint">'.
+  form_submit(_("Submit Changes"), "submit", ' class="bold"').'</form></div>
 ';
 
 

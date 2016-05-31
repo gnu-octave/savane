@@ -96,8 +96,7 @@ if ($group_id && member_check(0, $group_id, 'N3'))
 	   if (db_numrows($res) > 0) {
 	     $from = user_getrealname(db_result($res, 0, 'submitted_by'),1).' <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
 	     
-	     // Run stripslashes to avoid slashes added by magic quotes and 
-	     sendmail_mail($from, $to, $summary, stripslashes($details), $group, 'news');
+	     sendmail_mail($from, $to, $summary, $details, $group, 'news');
 	   }
         }
 

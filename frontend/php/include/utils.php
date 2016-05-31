@@ -28,12 +28,6 @@ $GLOBALS['ffeedback'] = '';
 
 define('FB_ERROR', 1);
 
-function utils_safeinput ($string)
-{
-  return safeinput($string);
-}
-
-
 # This function permit including site specific content with ease
 function utils_get_content_filename ($file)
 {

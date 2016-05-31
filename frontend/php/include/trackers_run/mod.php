@@ -148,7 +148,7 @@ if (db_numrows($result) > 0)
       <tr>
           <td class="preinput" width="15%">'._("Submitted by:").'&nbsp;</td>
           <td width="35%">'.utils_user_link(user_getname(db_result($result,0,'submitted_by')), user_getrealname(db_result($result,0,'submitted_by'))).'</td>
-          <td colspan="'.($fields_per_line).'" width="50%" align="center" valign="top"><span class="noprint">'.form_submit(_("Submit Changes and Browse Items").'" class="bold', "submit").'</span></td>
+          <td colspan="'.($fields_per_line).'" width="50%" align="center" valign="top"><span class="noprint">'.form_submit(_("Submit Changes and Browse Items"), "submit", 'class="bold"').'</span></td>
       </tr>
       <tr>
           <td class="preinput" width="15%">'._("Submitted on:").'&nbsp;</td>
@@ -223,12 +223,10 @@ if (db_numrows($result) > 0)
 
       # If nocache is set, we were explicetely asked to rely only
       # on database content
-      # If we rely on submitted by form content, due to magic_quotes,
-      # we need to run both stripslashes and htmlspecialchars
       if (empty($$field_name) || $nocache)
 	{ $field_value = db_result($result,0,$field_name); }
       else
-	{ $field_value = htmlspecialchars(stripslashes($$field_name)); }
+	{ $field_value = htmlspecialchars($$field_name); }
       list($sz,) = trackers_data_get_display_size($field_name);
       $label = trackers_field_label_display($field_name,$group_id,false,false);
       
@@ -391,7 +389,7 @@ if (db_numrows($result) > 0)
   # The good thing is they do not have to scroll when starting.
   # There is one more click but people feel more in control (well, at least
   # the one that were vocal about Savane UI design)
-  print '<span class="noprint">';
+  # print '<span class="noprint">';
   print html_hidsubpart_header("postcomment", 
 			       _("Post a Comment"));
 
@@ -400,7 +398,7 @@ if (db_numrows($result) > 0)
   # managers and technician are expected to be serious enough
   
   print '<p class="noprint"><span class="preinput"> '.sprintf(_("Add a New Comment %s:"), markup_info("rich")).'</span><br /> &nbsp;&nbsp;&nbsp;';
-  print trackers_field_textarea('comment',  htmlspecialchars(stripslashes($comment)));
+  print trackers_field_textarea('comment',  htmlspecialchars($comment));
   print '</p>';
   
   print '<p class="noprint"><span class="preinput">';
@@ -645,10 +643,10 @@ if (db_numrows($result) > 0)
   printf (_("(Note: for %s users, you can use their login name rather than their email addresses.)"), $GLOBALS['sys_name']);
 
   print '</p><p class="noprint"><span class="preinput">'
-    ._("Add Email Addresses (comma as separator):").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="add_cc" size="40" value="'.htmlspecialchars(stripslashes($add_cc)).'" />&nbsp;&nbsp;&nbsp;
+    ._("Add Email Addresses (comma as separator):").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="add_cc" size="40" value="'.htmlspecialchars($add_cc).'" />&nbsp;&nbsp;&nbsp;
         <br />
         <span class="preinput">'
-    ._("Comment:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="cc_comment" size="40" maxlength="255" value="'.htmlspecialchars(stripslashes($cc_comment)).'" />';
+    ._("Comment:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="cc_comment" size="40" maxlength="255" value="'.htmlspecialchars($cc_comment).'" />';
   print '<p></p>';
   show_item_cc_list($item_id, $group_id);
   print '<p>&nbsp;</p>';
@@ -672,7 +670,7 @@ if (db_numrows($result) > 0)
 # Show how many vote he already gave and allows to remove or give more
 # votes.
 # The number of remaining points must be 100 - others votes
-      print '<span class="preinput">'._("Your vote:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="new_vote" size="3" maxlength="3" value="'.htmlspecialchars(stripslashes($new_vote)).'" /> '.sprintf(ngettext("/ %s remaining vote", "/ %s remaining votes", $votes_remaining), $votes_remaining);
+      print '<span class="preinput">'._("Your vote:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="new_vote" size="3" maxlength="3" value="'.htmlspecialchars($new_vote).'" /> '.sprintf(ngettext("/ %s remaining vote", "/ %s remaining votes", $votes_remaining), $votes_remaining);
       print '</p>';
       print '<p>&nbsp;</p>';
       print html_hidsubpart_footer();
@@ -779,7 +777,10 @@ if (db_numrows($result) > 0)
 
   print '<p>&nbsp;</p>';
 
-  print '<div align="center" class="noprint">'.form_submit(_("Submit Changes and Browse Items").'" class="bold', "submit").' '.form_submit(_("Submit Changes and Return to this Item"), "submitreturn").'</form></div>';
+  print '<div align="center" class="noprint">'.
+    form_submit(_("Submit Changes and Browse Items"), "submit", 'class="bold"').
+    ' '.
+    form_submit(_("Submit Changes and Return to this Item"), "submitreturn").'</form></div>';
 
 
 # ################################ History

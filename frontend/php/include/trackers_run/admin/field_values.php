@@ -784,9 +784,6 @@ if ($group_id && user_ismember($group_id,'A'))
 #  Allow change of canned responses
       trackers_header_admin(array ('title'=>_("Modify Canned Response")));
 
-      $sql="SELECT bug_canned_id,title,body,order_id FROM ".ARTIFACT."_canned_responses WHERE ".
-	"group_id='".addslashes($group_id)."' AND bug_canned_id='".addslashes($item_canned_id)."'";
-
       $result=db_execute('SELECT bug_canned_id,title,body,order_id
 			  FROM '.ARTIFACT.'_canned_responses
 			  WHERE group_id = ? AND bug_canned_id = ?',

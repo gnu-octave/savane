@@ -99,8 +99,8 @@ else
 	    '<a href="?delete='.db_result($result,$i,'bookmark_id').'">'.
 	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Delete this bookmark").'" /></a></span>';
 	  print '<a href="'.db_result($result,$i,'bookmark_url').'">'.
-            stripslashes(db_result($result,$i,'bookmark_title')).'</a> ';
-	  print '<br /><span class="smaller">'.stripslashes(db_result($result,$i,'bookmark_url'));
+            htmlentities(db_result($result,$i,'bookmark_title')).'</a> ';
+	  print '<br /><span class="smaller">'.htmlentities(db_result($result,$i,'bookmark_url'));
 	  print '</span></li>';
         }
   print $HTML->box_bottom(1);

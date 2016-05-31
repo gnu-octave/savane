@@ -104,7 +104,7 @@ if (user_isloggedin())
 	    '<input type="text" name="new_votes['.$row['vote_id'].']" size="3" maxlength="3" value="'.$row['howmuch'].'" /> / '.($row['howmuch']+$remaining_votes).
 	    '&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$GLOBALS['sys_home'].$row['tracker'].'/?func=detailitem&amp;item_id='.$row['item_id'].'">'.
 	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/contexts/'.$icon.'.png" class="icon" alt="'.$row['tracker'].'" />'.
-	    ' '.stripslashes(db_result($res_item, 0, 'summary')).', '.sprintf(ngettext("%s vote", "%s votes", db_result($res_item, 0, 'vote')), db_result($res_item, 0, 'vote')).'&nbsp;<span class="xsmall">('.$prefix .' #'.$row['item_id'].', '.group_getname(db_result($res_item, 0, 'group_id')).')</span></a></div>';
+	    ' '.htmlentities(db_result($res_item, 0, 'summary')).', '.sprintf(ngettext("%s vote", "%s votes", db_result($res_item, 0, 'vote')), db_result($res_item, 0, 'vote')).'&nbsp;<span class="xsmall">('.$prefix .' #'.$row['item_id'].', '.group_getname(db_result($res_item, 0, 'group_id')).')</span></a></div>';
 	  
 	  
 	}

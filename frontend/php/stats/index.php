@@ -68,9 +68,9 @@ $form_submit = '<input class="bold" value="'._("Apply").'" name="update" type="s
 # The strings are two dates.
 # Example: "From 12. September 2005 till 14. September 2005"
 print html_show_displayoptions(sprintf(_("From %s till %s."),
-				       calendar_selectbox("day",$since_day,"since_day").calendar_selectbox("month",$since_month,"since_month").'<input type="text" value="'.addslashes($since_year).'" name="since_year" size="4" maxlength="4" />',
+				       calendar_selectbox("day",$since_day,"since_day").calendar_selectbox("month",$since_month,"since_month").'<input type="text" value="'.htmlentities($since_year).'" name="since_year" size="4" maxlength="4" />',
 				       
-				       calendar_selectbox("day",$until_day,"until_day").calendar_selectbox("month",$until_month,"until_month").'<input type="text" value="'.addslashes($until_year).'" name="until_year" size="4" maxlength="4" />'),
+				       calendar_selectbox("day",$until_day,"until_day").calendar_selectbox("month",$until_month,"until_month").'<input type="text" value="'.htmlentities($until_year).'" name="until_year" size="4" maxlength="4" />'),
 			       $form_opening,
 			       $form_submit);
 

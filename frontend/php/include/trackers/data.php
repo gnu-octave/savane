@@ -1002,9 +1002,9 @@ function trackers_data_copy_default_values($field, $group_id, $by_field_id=false
       for ($i=0; $i<$rows; $i++)
 	{
 
-	  $value_id = addslashes(db_result($res,$i,'value_id'));
+	  $value_id = db_result($res,$i,'value_id');
 	  $value = db_result($res,$i,'value');
-	  $description = addslashes(db_result($res,$i,'description'));
+	  $description = db_result($res,$i,'description');
 	  $order_id = db_result($res,$i,'order_id');
 	  $status  = db_result($res,$i,'status');
 
@@ -1692,7 +1692,7 @@ function trackers_data_handle_update ($group_id,
       $is_text = (trackers_data_is_text_field($field) || trackers_data_is_text_area($field));
       if  ($is_text)
 	{
-	  $differ = ($old_value != stripslashes(htmlspecialchars($value)));
+	  $differ = ($old_value != htmlspecialchars($value));
 	}
       else if (trackers_data_is_date_field($field))
 	{
@@ -1726,10 +1726,9 @@ function trackers_data_handle_update ($group_id,
 	    {
 	      $upd_list[$field] = htmlspecialchars($value);
 	      trackers_data_add_history($field,
-					addslashes($old_value),
+					$old_value,
 					$value,
 					$item_id);
-	      $value = stripslashes($value);
 	    }
 	  else
 	    {
@@ -1809,12 +1808,13 @@ function trackers_data_handle_update ($group_id,
     {
       $change_exists = 1;
       fb(_("Comment added"), 0);
+      $dtext = htmlspecialchars($details);
       trackers_data_add_history('details',
-				htmlspecialchars($details),
+				$dtext,
 				'',
 				$item_id,
 				$vfl['comment_type_id']);
-      $changes['details']['add'] = $details;
+      $changes['details']['add'] = $dtext;
       $changes['details']['type'] =
 	trackers_data_get_value('comment_type_id',$group_id, $vfl['comment_type_id']);
       
@@ -1844,7 +1844,6 @@ function trackers_data_handle_update ($group_id,
 	{
         $change_exists = 1;
         $upd_list['details'] = $details;
-
 	# We should use "details" but since details are used for comment
 	# (which is really nasty), we simply cant.
 
@@ -1864,8 +1863,8 @@ function trackers_data_handle_update ($group_id,
 				  false,
 				  false,
 				  true);
-	$changes['realdetails']['add'] = stripslashes($change);
-	$changes['realdetails']['del'] = stripslashes($del_cut);
+	$changes['realdetails']['add'] = $change;
+	$changes['realdetails']['del'] = $del_cut;
 
 	}
     }

@@ -32,7 +32,7 @@ if ($group_id && user_ismember($group_id,'A'))
 
   if ($update && $from_group_id != 100)
     {
-      trackers_conf_copy(addslashes($group_id), ARTIFACT, addslashes($from_group_id));
+      trackers_conf_copy($group_id, ARTIFACT, $from_group_id);
     }
   
 

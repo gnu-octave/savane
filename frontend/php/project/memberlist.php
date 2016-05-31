@@ -38,12 +38,12 @@ function specific_print_role ($row, $title)
 
 
 $detailed = sane_get("detailed");
-$form_tgrp = sane_all("form_grp");
+$form_grp = sane_all("form_grp");
 
 
 if ((!$group_id) && $form_grp)
 {
-  $group_id=$form_grp;
+  $group_id = htmlentities($form_grp);
 }
      
      site_project_header(array('title'=>_("Project Memberlist"),

@@ -88,7 +88,7 @@ while ($field_name = trackers_list_all_fields())
 	  if (empty($$field_name))
 	    { $field_value = trackers_data_get_default_value($field_name); }
 	  else
-	    { $field_value = htmlspecialchars(stripslashes($$field_name)); }
+	    { $field_value = htmlspecialchars($$field_name); }
 
 	  list($sz,) = trackers_data_get_display_size($field_name);
 
@@ -221,10 +221,10 @@ if (user_isloggedin())
   print sprintf(_("(Note: for %s users, you can use their login name rather than their email addresses.)"), $GLOBALS['sys_name']);
   
   print '<p><span class="preinput">'
-    ._("Add Email Addresses (comma as separator):").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="add_cc" size="40" value="'.htmlspecialchars(stripslashes($add_cc)).'" />&nbsp;&nbsp;&nbsp;
+    ._("Add Email Addresses (comma as separator):").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="add_cc" size="40" value="'.htmlspecialchars($add_cc).'" />&nbsp;&nbsp;&nbsp;
         <br />
         <span class="preinput">'
-    ._("Comment:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="cc_comment" value="'.htmlspecialchars(stripslashes($cc_comment)).'" size="40" maxlength="255" />';
+    ._("Comment:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="cc_comment" value="'.htmlspecialchars($cc_comment).'" size="40" maxlength="255" />';
   print '<p></p>';
 }
 

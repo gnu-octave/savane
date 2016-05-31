@@ -648,9 +648,6 @@ function trackers_extract_field_list($post_method=true)
   reset($superglobal);
   while ( list($key, $val) = each($superglobal))
     {
-      if (get_magic_quotes_gpc())
-	$val = stripslashes($val);
-
       if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
 	{
 	  // Must build the date field key.
@@ -1458,8 +1455,8 @@ function trackers_attach_file($item_id,
   # Check file size:
   #  - first with filesize(), that can result appropriate result for big files
   #  unlike strlen. If it is too big, we stop here.
-  #  - then with strlen after the call the addslashes(): the check must be
-  #  made on the final size for import in the database.
+  #  - then with strlen: the check must be made on the final size for import
+  #  in the database.
   #
   # Note: in english, use the expression kilobytes, and not kB, because
   # feedback is in lowercase for the whole string.

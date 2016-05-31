@@ -57,7 +57,7 @@ function form_header ($action, $form_id=false, $method="post", $extra=false)
 function form_input ($type, $name, $value="", $extra=false)
 {
   if ($value != "")
-    { $value = 'value="'.$value.'"'; }
+    { $value = 'value="'.htmlentities($value).'"'; }
   if ($extra)
     { $extra = " $extra"; };
     

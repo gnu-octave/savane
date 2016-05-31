@@ -27,7 +27,7 @@ require_once('include/init.php');
 require_once('include/sendmail.php');
 
 # Extract the user name
-$res_user=user_get_result_set_from_unix(safeinput(ereg_replace("\?.*", "", basename($_SERVER['REQUEST_URI']))));
+$res_user = user_get_result_set_from_unix(ereg_replace("\?.*", "", basename($_SERVER['REQUEST_URI'])));
 
 if (db_numrows($res_user) < 1) {
 
@@ -36,7 +36,7 @@ if (db_numrows($res_user) < 1) {
 } else {
 
 	# set up the group_id
-	$user_id=db_result($res_user,0,'user_id');
+	$user_id = db_result($res_user,0,'user_id');
 
 	# now show the project page
 	include ('include/user_home.php');
