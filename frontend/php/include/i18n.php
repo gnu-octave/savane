@@ -1,8 +1,7 @@
 <?php
 # Configure locale using browser preferences, via gettext and strftime
 # 
-# <one line to give a brief idea of what this does.>
-# 
+#  Copyright 2016 Karl Berry (disable languages)
 #  Copyright 2003-2006 (c) Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
 #                          Mathieu Roy <yeupou--gnu.org>
 #
@@ -39,27 +38,30 @@ if (isset($GLOBALS['sys_default_locale'])) {
 
 # Table of supported languages :
 # "lang" => "associated prefered sublanguage"
+# 11jun16 karl disabled all languages since translations are incomplete
+# (and the only way to select them is with the inconvenient
+# Accept-Language: browser header). https://savannah.gnu.org/support/?108827
 $supportedLanguages = array(
-			    "de"	=> "DE.UTF-8",
-			    "de_DE"	=> "DE.UTF-8",
-			    "ca"        => "ES.UTF-8",
+			    #"de"	=> "DE.UTF-8",
+			    #"de_DE"	=> "DE.UTF-8",
+			    #"ca"        => "ES.UTF-8",
 			    "en"	=> "US.UTF-8",
-			    "en_GB"	=> "GB.UTF-8",
-                            "es"        => "ES.UTF-8",
-			    "fr"	=> "FR.UTF-8",
-			    "fr_FR"	=> "FR.UTF-8",
-			    "it"	=> "IT.UTF-8",
-			    "it_IT"     => "IT.UTF-8",
-			    "ja"	=> "JP.UTF-8",
-			    "ja_JP"	=> "JP.UTF-8",
-			    "ko"	=> "KR.UTF-8",
-			    "ko_KR"	=> "KR.UTF-8",
-			    "pt"	=> "BR.UTF-8",
-			    "pt_BR"     => "BR.UTF-8",
-			    "ru"	=> "RU.UTF-8",
-			    "ru_RU"     => "RU.UTF-8",
-			    "sv"	=> "SE.UTF-8",
-			    "sv_SE"     => "SE.UTF-8",
+			    #"en_GB"	=> "GB.UTF-8",
+                            #"es"        => "ES.UTF-8",
+			    #"fr"	=> "FR.UTF-8",
+			    #"fr_FR"	=> "FR.UTF-8",
+			    #"it"	=> "IT.UTF-8",
+			    #"it_IT"     => "IT.UTF-8",
+			    #"ja"	=> "JP.UTF-8",
+			    #"ja_JP"	=> "JP.UTF-8",
+			    #"ko"	=> "KR.UTF-8",
+			    #"ko_KR"	=> "KR.UTF-8",
+			    #"pt"	=> "BR.UTF-8",
+			    #"pt_BR"     => "BR.UTF-8",
+			    #"ru"	=> "RU.UTF-8",
+			    #"ru_RU"     => "RU.UTF-8",
+			    #"sv"	=> "SE.UTF-8",
+			    #"sv_SE"     => "SE.UTF-8",
 			    );
 
 # Try to find the best supported language from user's navigator preferences :
