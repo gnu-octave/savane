@@ -1,10 +1,10 @@
 <?php
 # <one line to give a brief idea of what this does.>
-# 
-#  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
 #
+#  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
 # Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Modified 2016 Karl Berry (trivial wording changes)
 # 
 # This file is part of Savane.
 # 
@@ -204,7 +204,11 @@ site_user_header(array('title'=>_("Mail Notification Settings"),'context'=>'acco
 
 
 print '<h3>'._("Notification Exceptions").'</h3>';
-print '<p>'._("When you post and update items, you are automatically added into items Carbon-Copy list to receive notifications regarding future updates. You can always remove yourself from the item Carbon-Copy list.").'</p><p>'._("If an item is assigned to you, you will receive notifications as long as you are assignee but, however, you will not be added to the Carbon-Copy list. If do not post any comment or update to the item while you are assignee, if the item get reassigned, you will not receive further updates notifications.").'</p><p>'._("Here, you can tune your notification settings. For instance, you can decide in which circonstances you do not want to be notified even if you are in the Carbon-Copy list of an item.").'</p>
+print '<p>'._("When you post or update an item, you are automatically added to its Carbon-Copy list to receive notifications regarding future updates. You can always remove yourself from an item Carbon-Copy list.")
+  .'</p><p>'
+  ._("If an item is assigned to you, you will receive notifications as long as you are the assignee; however, you will not be added to the Carbon-Copy list. If you do not post any comment or update to the item while you are the assignee, and the item gets reassigned, you will not receive further update notifications.")
+  .'</p><p>'
+  ._("Here, you can tune your notification settings.").'</p>
 ';
 
 
