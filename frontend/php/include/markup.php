@@ -627,9 +627,10 @@ function _markup_inline($line)
   # we can expect web browsers to support)
   $protocols = "https?|ftp|sftp|file|afs|nfs";
 
-  # Prepare usual links: prefix every "www." with "http://"
-  # unless there is a // before
-  $line = preg_replace('/\b(www\.)/i', 'http://$1', $line);
+  # Prepare usual links: prefix "www." with "http://"
+  # if it is preceded by [ or whitespace or at the beginning of line.
+  # (don't want to prefix in cases like "//www.." or "ngwww...")
+  $line = preg_replace('/(^|\s|\[)(www\.)/i', '$1http://$2', $line); 
 
   # replace the @ sign with an HTML entity, if it is used within
   # an url (e.g. for pointers to mailing lists). This way, the
