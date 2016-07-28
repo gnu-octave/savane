@@ -75,6 +75,81 @@ if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
 }
 
 
+# Cleans our input values, centeral place to filter for XSS is here.
+# This should be called by any function that touches $_GET, $_POST,
+# $_REQUEST, $_COOOKIE or any other data that comes from the user.
+function sane_clean($values) {
+  # Unset variables that users are not allowed to set in any cases
+  unset($values['feedback_html']);
+
+  # Keep only numerical characters in the item_id
+  # (Set both the global and the _REQUEST vars, because the global may be
+  # unregistered by register_globals_off())
+  if (isset($values['item_id']) && !ctype_digit($values['item_id']))
+  {
+    preg_match("/(\d+)/", $values['item_id'], $match);
+    if(isset($matches))
+    {
+      $values['item_id'] = $match[0];
+    }
+    else
+    {
+      unset($values['item_id']);
+    }
+  }
+
+  # Keep only numerical characters in the export_id
+  # (Set both the global and the _REQUEST vars, because the global may be
+  # unregistered by register_globals_off())
+  if (isset($values['export_id']) && !ctype_digit($values['export_id']))
+  {
+    preg_match("/(\d+)/", $values['export_id'], $match);
+    if(isset($matches))
+    {
+      $values['export_id'] = $match[0];
+    }
+    else
+    {
+      unset($values['export_id']);
+    }
+  }
+
+
+  # Keep only numerical characters in the group_id
+  # (Set both the global and the _REQUEST vars, because the global may be
+  # unregistered by register_globals_off())
+  if (isset($values['group_id']) && !ctype_digit($values['group_id']))
+  {
+    preg_match("/(\d+)/", $values['group_id'], $match);
+    if(isset($matches))
+    {
+      $values['group_id'] = $match[0];
+    }
+    else
+    {
+      unset($values['group_id']);
+    }
+  }
+
+  # Keep only numerical characters in the user_id
+  # (Set both the global and the _REQUEST vars, because the global may be
+  # unregistered by register_globals_off())
+  if (isset($values['userid']) && !ctype_digit($values['userid']) && !is_array($values['userid']))
+  {
+    preg_match("/(\d+)/", $values['userid'], $match);
+    if(isset($matches))
+    {
+      $values['userid'] = $match[0];
+    }
+    else
+    {
+      unset($values['userid']);
+    }
+  }
+
+  return $values;
+}
+
 
 ###########################################################
 # Functions to access user input
@@ -110,7 +185,7 @@ function sane_import($method, $names) {
       }
   }
 
-  return $values;
+  return sane_clean($values);
 }
 
 # Backward security function. This will sanitize input already passed via
