@@ -134,16 +134,16 @@ function sane_clean($values) {
   # Keep only numerical characters in the user_id
   # (Set both the global and the _REQUEST vars, because the global may be
   # unregistered by register_globals_off())
-  if (isset($values['userid']) && !ctype_digit($values['userid']) && !is_array($values['userid']))
+  if (isset($values['user_id']) && !ctype_digit($values['user_id']) && !is_array($values['user_id']))
   {
-    preg_match("/(\d+)/", $values['userid'], $match);
+    preg_match("/(\d+)/", $values['user_id'], $match);
     if(isset($matches))
     {
-      $values['userid'] = $match[0];
+      $values['user_id'] = $match[0];
     }
     else
     {
-      unset($values['userid']);
+      unset($values['user_id']);
     }
   }
 
