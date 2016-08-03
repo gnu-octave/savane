@@ -114,6 +114,21 @@ function sane_clean($values) {
     }
   }
 
+  # Keep only numerical characters in the comingfrom
+  # (Set both the global and the _REQUEST vars, because the global may be
+  # unregistered by register_globals_off())
+  if (isset($values['comingfrom']) && !ctype_digit($values['comingfrom']))
+  {
+    preg_match("/(\d+)/", $values['comingfrom'], $match);
+    if(isset($matches))
+    {
+      $values['comingfrom'] = $match[0];
+    }
+    else
+    {
+      unset($values['comingfrom']);
+    }
+  }
 
   # Keep only numerical characters in the group_id
   # (Set both the global and the _REQUEST vars, because the global may be
