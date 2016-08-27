@@ -81,7 +81,7 @@ $form->addElement('select', 'group_type', 'Group type', $types);
 // TODO: default group type
 $form->setDefaults(array('group_type' => 2));
 $form->addElement('select', 'license', 'Project license', $LICENSE);
-$form->addElement('textarea', 'license_other', 'Other license or precisions');
+$form->addElement('textarea', 'license_other', 'Other license and/or details');
 
 $form->addElement('header', 'title_checklist', _('Checklist - **see <a href="http://savannah.gnu.org/maintenance/HowToGetYourProjectApprovedQuickly">How To Get Your Project Approved Quickly</a>**'));
 # <savannah-specific>
