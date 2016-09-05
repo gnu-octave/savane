@@ -12,7 +12,12 @@
 # You can also change the development status
 
 
-$LICENSE['gpl'] = 'GNU General Public License V2 or later';
+// CAUTION: IT'S VERY IMPORTANT THAT NO HTML BLANK LINE APPEARS ON THIS
+// FILE.
+// DO NOT PUT ANY WHITESPACE OUTSIDE PHP TAGS
+// OR MANY REDIRECTIONS WILL NOT WORK
+
+$LICENSE['gpl'] = 'GNU General Public License v2 or later';
 $LICENSE['lgpl'] = 'GNU Lesser General Public License';
 $LICENSE['fdl'] = 'GNU Free Documentation License';
 $LICENSE['mbsd'] = 'Modified BSD License';
@@ -23,30 +28,43 @@ $LICENSE['imatrix'] = 'The license of the iMatix Standard Function Library';
 $LICENSE['w3c'] = 'The W3C Software Notice and License';
 $LICENSE['berkeley'] = 'The Berkeley Database License';
 $LICENSE['python16'] = 'The License of Python 1.6a2 and earlier versions';
+$LICENSE['python2'] = 'The License of Python 2.0.1, 2.1.1, and newer versions';
 $LICENSE['cartistic'] = 'The Clarified Artistic License';
+$LICENSE['perl'] = 'The license of Perl (disjunction of the Artistic License and the GNU GPL)';
 $LICENSE['expat'] = 'Expat License (sometime refered to as MIT License)';
-$LICENSE['affero'] = 'Affero General Public License V1 or later';
+$LICENSE['affero'] = 'Affero General Public License v1 or later';
+$LICENSE['classpath'] = 'GNU General Public License v2 or later with GNU Classpath special exception';
+$LICENSE['public domain'] = 'Public domain';
 $LICENSE['website'] = 'WebSite Only';
 $LICENSE['other'] = 'Other';
+$LICENSE['dual-gpl'] = 'GNU General Public License v2 or later (+ dual licensing)';
+$LICENSE['gplv3orlater'] = 'GNU General Public License v3 or later';
+$LICENSE['agpl'] = 'GNU Affero General Public License v3 or later';
 
 /* should be equal to '0' when no url exists */ 
-$LICENSE_URL['gpl'] = 'http://www.gnu.org/copyleft/gpl.html';
+$LICENSE_URL['gpl'] = 'http://www.gnu.org/licenses/old-licenses/gpl-2.0.html';
 $LICENSE_URL['lgpl'] = 'http://www.gnu.org/copyleft/lesser.html';
 $LICENSE_URL['fdl'] = 'http://www.gnu.org/copyleft/fdl.html';
 $LICENSE_URL['mbsd'] = 'http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5';
-$LICENSE_URL['x11'] = 'http://www.x.org/terms.htm';
+$LICENSE_URL['x11'] = 'http://www.xfree86.org/3.3.6/COPYRIGHT2.html#3';
 $LICENSE_URL['cryptix'] = 'http://www.cryptix.org/docs/license.html';
 $LICENSE_URL['zlib'] = 'ftp://ftp.freesoftware.com/pub/infozip/zlib/zlib_license.html';
 $LICENSE_URL['imatrix'] = '0';
 $LICENSE_URL['w3c'] = 'http://www.w3.org/Consortium/Legal/copyright-software.html';
 $LICENSE_URL['berkeley'] = 'http://www.sleepycat.com/license.net';
 $LICENSE_URL['python16'] = 'http://www.python.org/doc/Copyright.html';
+$LICENSE_URL['python2'] = 'http://www.python.org/2.0.1/license.html';
 $LICENSE_URL['cartistic'] = 'http://www.statistica.unimib.it/utenti/dellavedova/software/artistic2.html';
+$LICENSE_URL['perl'] = 'http://www.gnu.org/philosophy/license-list.html#PerlLicense';
 $LICENSE_URL['expat'] = 'http://www.gnu.org/licenses/license-list.html#Expat';
 $LICENSE_URL['affero'] = 'http://www.affero.org/oagpl.html';
+$LICENSE_URL['classpath'] = 'http://www.gnu.org/software/classpath/license.html';
+$LICENSE_URL['public domain'] = '0';
 $LICENSE_URL['website'] = '0';
 $LICENSE_URL['other'] = '0';
-
+$LICENSE_URL['dual-gpl'] = 'http://www.gnu.org/licenses/gpl.html';
+$LICENSE_URL['gplv3orlater'] = 'http://www.gnu.org/licenses/gpl.html';
+$LICENSE_URL['agpl'] = 'http://www.fsf.org/licensing/licenses/agpl-3.0.html';
 
 $DEVEL_STATUS[0] = '0 - Undefined';
 $DEVEL_STATUS[1] = '1 - Planning';
@@ -59,5 +77,3 @@ $DEVEL_STATUS[6] = '6 - Mature';
 # for 'N/A'
 # $DEVEL_STATUS[7] = 'N/A';
 $DEVEL_STATUS[8] = '? - Orphaned/Unmaintained';
- 
-?>
