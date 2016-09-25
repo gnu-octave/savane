@@ -40,12 +40,14 @@ else
 {
   if ($tarball['error'] != 0)
     exit_error(sprintf(_("Error %s during upload"), $tarball['error']));
-  if (!move_uploaded_file($tarball['tmp_name'], '/var/www/submissions_uploads/' . $tarball['name']))
+
+  if (!move_uploaded_file($tarball['tmp_name'], $GLOBALS['sys_upload_dir'] . '/' . $tarball['name']))
     exit_error(_("Cannot move file to the download area."));
+
   $HTML->header(array('title' => _("Temporary upload")));
   echo "<p>" . _("Here's your temporary tarball URL:")
     . " "
-    . "http://savannah.gnu.org/submissions_uploads/".rawurlencode($tarball['name'])
+    . "https://" . $GLOBALS['sys_default_domain'] . "/submissions_uploads/".rawurlencode($tarball['name'])
     . "</p>";
 }
 

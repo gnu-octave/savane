@@ -100,6 +100,9 @@ $use_pwqcheck = TRUE;
 // implied, so we can safely admit any 24 characters long passwords.
 $pwqcheck_args = 'match=0 max=256 min=24,24,11,8,7';
 
+// Default uploads directory for './register2/upload.html'.
+$sys_upload_dir = "/var/www/submissions_uploads" ;
+
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');
 # Backward compatibility for PHP4
