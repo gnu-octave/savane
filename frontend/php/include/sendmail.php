@@ -339,6 +339,21 @@ function sendmail_mail ($from,
       $subject = "[".utils_get_tracker_prefix($savane_tracker)." #".$savane_item_id."] ".$subject; 
     }
 
+   # agn,28-sep-2016
+   # If email debugging is on - ignore the recipient list,
+   # and send to the specified email address.
+   # This variable should be set in `.savane.conf.php`.
+   if (isset($GLOBALS['sys_debug_email_override_address']))
+     {
+       $adr = $GLOBALS['sys_debug_email_override_address'];
+       $message = "Savannah Debug: email override is turned on\n" .
+                  "Original recipient list:\n" .
+                  sendmail_encode_recipients($recipients) .
+                 "\n------------\n\n" . $message ;
+       $recipients = array($adr);
+       $list = array(); # no recipients with custom subject lines
+     }
+
    # Beuc - 20050316
    # That is what I intended to do:
 
