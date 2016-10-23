@@ -1,20 +1,76 @@
 #! @PERL@
 
-use strict;
-use Savane;
+# Called by ssh through AuthorizedKeysCommand configuration.
+# Reads /etc/libnss-mysql.cfg to share the same configuration
+# using the database config from it.
+# Looks up the ssh keys for the user from the database.
+# The one argument passed is the name of the user.
 
-# imported
-our $dbd;
+# Copyright 2016 Bob Proulx <bob@proulx.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use POSIX;
+use DBI;
+use IO::File;
+use strict;
+
+my $dbconf = "/etc/libnss-mysql.cfg";
+my $dbuser;
+my $dbpass;
+my $dbname;
+my $dbhost;
 
 my $user = $ARGV[0];
-exit(0) unless $user;
 
-my ($authorized_keys) = $dbd->selectrow_array(q[
-    SELECT authorized_keys
-    FROM user
-    WHERE user_name = ?], undef, $user);
+open(FILE, "<$dbconf")
+    or die "Error: Could not open \"$dbconf\": $!";
 
-print join("\n", split('###', $authorized_keys));
-print "\n";
+my $line;
+while ($line = <FILE>) {
+    chomp($line);
+    $line =~ s/\s*#.*//;
+    if ($line =~ m/\bhost\b/) {
+        # host 208.118.235.78
+        $dbhost = (split(' ',$line))[1];
+    } elsif ($line =~ m/\bdatabase\b/) {
+        # database savane
+        $dbname = (split(' ',$line))[1];
+    } elsif ($line =~ m/\busername\b/) {
+        # username nss-user
+        $dbuser = (split(' ',$line))[1];
+    } elsif ($line =~ m/\bpassword\b/) {
+        # password XXXXXX
+        $dbpass = (split(' ',$line))[1];
+    }
+}
+
+my $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost", $dbuser, $dbpass,
+                       { PrintError => 0, AutoCommit => 0 })
+    or die "Error: connect: $DBI::errstr\n";
+
+my $sql = "SELECT authorized_keys FROM user WHERE user_name = ?";
+my $query = $dbh->prepare($sql);
+$query->execute($user)
+    or die $dbh->errstr;
+$dbh->commit
+    or die $dbh->errstr;
+while (my @row = $query->fetchrow_array()) {
+    my $keys = $row[0];
+    printf("%s\n", join("\n", split('###', $keys)));
+}
+
+$dbh->disconnect() or die $dbh->errstr;
 
 exit(0);
