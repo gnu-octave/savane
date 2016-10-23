@@ -2,3 +2,4 @@ sv_groups
 sv_membersh
 sv_users
 sv_assign_uid_gid
+sv_get_authorized_keys
