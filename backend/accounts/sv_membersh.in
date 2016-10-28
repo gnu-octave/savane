@@ -50,13 +50,13 @@ our $regexp_sftp = "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec
 
 our $use_rsync = "0";
 our $bin_rsync = "rsync";
-our $regexp_rsync = "^rsync --server --sender ";
-our $regexp_dir_rsync = "^(/srv/cvs|/sources|/web)";
+our $regexp_rsync = "^rsync --server";
+our $regexp_dir_rsync = "^(/upload)|(/var/ftp)";
 
 our $use_svn = "0";
 our $bin_svn = "svnserve";
 our $regexp_svn = "^svnserve -t";
-our @prepend_args_svn = ( '-r', '/srv/svn' );
+our @prepend_args_svn = ( '-r', '/svn' );
 
 our $use_git = "0";
 our $bin_git = "git-shell";
@@ -73,13 +73,35 @@ our $dir_hg = "/srv/hg";
 # of $dir_hg:
 our $regexp_hg = '^hg -R ([a-zA-Z0-9-_][a-zA-Z0-9-_/]*) serve --stdio$';
 
-# Default configuration
-$use_cvs = "1";
-$use_svn = "1";
-$use_git = "1";
-$use_hg = '1';
-$use_bzr = '1';
-$use_rsync = '1';
+# Open configuration file
+if (-e "/etc/membersh-conf.pl") {
+    do "/etc/membersh-conf.pl" or die "System misconfiguration, contact administrators. Exiting";
+} else {
+    die "System misconfiguration, contact administrators. Exiting";
+} 
+
+# A configuration file /etc/membersh-conf.pl must exists.
+# Here come an example:
+#
+# $use_cvs = "1";
+# $bin_cvs = "/usr/bin/cvs";
+# 
+# $use_scp = "1";
+# $bin_scp = "/usr/bin/scp";
+# $regexp_scp = "^scp .*-t (/upload)|(/var/ftp)";
+
+# $use_sftp = "1";
+# $bin_sftp = "/usr/lib/sftp-server";
+# $regexp_sftp = "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server)";
+#
+# $use_rsync = "1";
+# $bin_rsync = "/usr/bin/rsync";
+# $regexp_rsync = "^rsync --server";
+# $regexp_dir_rsync = "^(/upload)|(/var/ftp)";
+# # For read-only rsync:
+# #$regexp_rsync = '^rsync --server --sender ';
+
+
 
 if ($#ARGV == 1 and $ARGV[0] eq "-c") {
     if ($use_cvs and $ARGV[1] eq 'cvs server') {
