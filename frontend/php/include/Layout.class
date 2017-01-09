@@ -294,8 +294,6 @@ class Layout extends Error
     print '
 <body>
 <div class="realbody">
-<!--2016 Fundraiser Banner-->
-<iframe src="//static.fsf.org/nosvn/banners/2016fundraiser/index.html" width="100%" height="100%" scrolling="no" style="overflow: hidden; border: 0 none;"></iframe>
 ';
     sitemenu($params);
 
