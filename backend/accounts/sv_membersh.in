@@ -4,7 +4,7 @@
 # Copyright 2004-2005 (c) Loic Dachary <loic--gnu.org>
 #                         Mathieu Roy <yeupou--gnu.org>
 #                         Timothee Besset <ttimo--ttimo.net>
-# Copyright (C) 2007, 2008  Sylvain Beucler
+# Copyright (C) 2007, 2008, 2017  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
 #
 # This file is part of Savane.
@@ -42,7 +42,7 @@ our $bin_cvs = "cvs";
  
 our $use_scp = "0";
 our $bin_scp = "scp";
-our $regexp_scp = "^(scp .*-t (-- )?/upload)|(scp .*-t (-- )?/var/ftp)";
+our $regexp_scp = "^scp( -[prv])* -t (-- )?/(upload|var/ftp)";
 
 our $use_sftp = "0";
 our $bin_sftp = "sftp-server";

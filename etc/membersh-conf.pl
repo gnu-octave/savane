@@ -7,7 +7,7 @@
 # 
 # $use_scp = "1";
 # $bin_scp = "/usr/bin/scp";
-# $regexp_scp = "^scp .*-t (/upload)|(/var/ftp)";
+# $regexp_scp = "^scp( -[prv])* -t (-- )?/(upload|var/ftp)";
 
 # $use_sftp = "1";
 # $bin_sftp = "/usr/lib/sftp-server";
