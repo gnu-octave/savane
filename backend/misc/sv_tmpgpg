@@ -1,70 +1,80 @@
-#!/usr/bin/env python
-# Generate a project GPG keyring on the fly
+#!/usr/bin/perl -T
+
+# Called through Savnanah such as:
+#   https://savannah.gnu.org/project/memberlist-gpgkeys.php?group=administration
+# Which then calls this script to dump out the gpg keys.
+
+# Copyright 2017 Bob Proulx <bob@proulx.com>
 #
-# Copyright (C) 2010  Sylvain Beucler
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# This file is part of Savane.
-#
-# Savane is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-#
-# Savane is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License
+# You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyme import core, constants
-import os, sys, tempfile, shutil, glob
-import ConfigParser
+use POSIX;
+use DBI;
+use IO::File;
+use strict;
 
-cp = ConfigParser.RawConfigParser()
-cp.read('/etc/savane/savane.ini')
+my $config = "/etc/savane/savane.ini";
+my $dbuser = "savannahscripts";
+my $dbpass = "nU9H35OE";
+my $dbname = "savane";
+my $dbhost = "internal0";
 
-import MySQLdb
-MySQLdb.charset = 'UTF-8'
-conn = MySQLdb.connect(host=cp.get('database', 'HOST'),
-                       user=cp.get('database', 'USER'),
-                       passwd=cp.get('database', 'PASSWORD'),
-                       db=cp.get('database', 'NAME'),
-                       use_unicode=True)
+my $group_id = int($ARGV[0]);
 
-if len(sys.argv) < 2:
-   sys.stderr.write("Usage: %s group_id\n" % sys.argv[0])   sys.exit(1)
-group_id = sys.argv[1]
+open(FILE, "<$config")
+    or die "Error: Could not open \"$config\": $!";
 
+my $line;
+while ($line = <FILE>) {
+    chomp($line);
+    $line =~ s/\s*#.*//;
+    if ($line =~ m/^HOST=/) {
+        # HOST=208.118.235.78
+        $dbhost = (split('=',$line))[1];
+    } elsif ($line =~ m/^NAME=/) {
+        # NAME=savane
+        $dbname = (split('=',$line))[1];
+    } elsif ($line =~ m/^USER=/) {
+        # USER=savannahscripts
+        $dbuser = (split('=',$line))[1];
+    } elsif ($line =~ m/^PASSWORD=/) {
+        # PASSWORD=******
+        $dbpass = (split('=',$line))[1];
+    }
+}
 
-tdir = tempfile.mkdtemp()
-core.set_engine_info(constants.PROTOCOL_OpenPGP, None, tdir)
-c = core.Context()
+my $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost", $dbuser, $dbpass,
+                       { PrintError => 0, AutoCommit => 0 })
+    or die "Error: connect: $DBI::errstr\n";
 
+my $sql = "
+SELECT gpg_key
+    FROM user JOIN user_group ON user.user_id = user_group.user_id
+        WHERE admin_flags<>'P' AND status='A' AND group_id=?
+";
 
-# Get a list of users that are members of a project
-conn.query("""
-SELECT gpg_key FROM user JOIN user_group ON user.user_id = user_group.user_id
-WHERE admin_flags<>'P' AND status='A' AND group_id=%d;
-""" % int(group_id));
-res = conn.store_result()
+my $query = $dbh->prepare($sql);
+$query->execute($group_id)
+    or die $dbh->errstr;
+$dbh->commit
+    or die $dbh->errstr;
 
+while (my @row = $query->fetchrow_array()) {
+    my $keys = $row[0];
+    printf("%s\n", join("\n", split('###', $keys)));
+}
 
-for row in res.fetch_row(maxrows=0, how=1):
-    key_txt = row['gpg_key']
+$dbh->disconnect() or die $dbh->errstr;
 
-    status = c.op_import(core.Data(str(key_txt)))
-    result = c.op_import_result()
-
-data_export = core.Data()
-c.op_export(None, 0, data_export)
-data_export.seek(0, os.SEEK_SET)
-keyring_txt = data_export.read()
-
-sys.stdout.write(keyring_txt)
-
-shutil.rmtree(tdir)
-
-# Page display:
-# gpg --homedir /tmp/t --batch --quiet --no-tty --no-options --no-default-keyring --list-keys  --display-charset=utf-8 --keyring `pwd`/out
+exit(0);
