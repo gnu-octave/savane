@@ -28,6 +28,8 @@ Disallow: /patch/?func=search&group=
 Disallow: /support/?func=search&group=
 Disallow: /task/?func=search&group=
 
+# Disallow dynamically generated gpg key page
+Disallow: /project/memberlist-gpgkeys.php
 
 ## Extended syntax ('*' wildcard)
 
