@@ -3,6 +3,7 @@
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 # 
@@ -30,7 +31,7 @@ extract(sane_import('post',
     'form_keep_only_one_session',
     'form_timezone', 'user_theme', 'theme_rotate_jump',
     'form_reverse_comments_order', 'form_stone_age_menu', 'form_nonfixed_feedback',
-    'form_use_bookmarks', 'form_email_hide',
+    'form_use_bookmarks', 'form_email_hide', 'form_email_encrypted'
     )));
 
 if ($update and $user_theme != "random" and $user_theme != "rotate")
@@ -78,6 +79,12 @@ if ($update)
     { user_set_preference("use_bookmarks", 1); }
   else
     { user_unset_preference("use_bookmarks"); }
+
+  # Encryption preferences
+  if ($form_email_encrypted == "1")
+    { user_set_preference("email_encrypted", 1); }
+  else
+    { user_unset_preference("email_encrypted"); }
 
   # Relative position feedback
   if ($form_nonfixed_feedback == "1")
@@ -287,6 +294,15 @@ print '<input type="checkbox" name="form_email_hide" value="1" '.($row_user['ema
 
 print '<p class="smaller">'._("When checked, the only way for users to get in touch with you would be to use the form available to logged-in users. It is generally a bad idea to choose this option, especially if you are a project administrator.").'</p>';
 
+print '<input type="checkbox" name="form_email_encrypted" value="1" '
+.(user_get_preference("email_encrypted") ? 'checked="checked"':'').' /> '
+._("Encrypt emails when resetting password");
+
+print '<p class="smaller">'
+._("When checked, Savannah will encrypt email messages
+with your registered public GPG key when resetting password is requested.
+If no suitable key is available, the messages still go unencrypted.")
+.'</p>';
 
 print $HTML->box_bottom();
 print "<br />\n";
