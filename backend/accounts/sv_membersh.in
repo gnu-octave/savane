@@ -151,12 +151,18 @@ if ($#ARGV == 1 and $ARGV[0] eq "-c") {
 
     } elsif ($use_bzr and $ARGV[1] =~ m:$regexp_bzr:) {
 
-	# bzr wants to write a ~/.bzr.log.  Suppress that (see
-	# https://bugs.edge.launchpad.net/bzr/+bug/106117 for more).
-	$ENV{'BZR_LOG'} = '/dev/null';
+	# rgm@gnu 2013/06/06. Let's try logging + logrotate to limit the size.
+	$ENV{'BZR_LOG'} = '/var/log/bzr/bzr.log';
 	$ENV{'HOME'} = '/var/lib/bzr';
+	# rgm@gnu addition 2013/08/28.
+	# https://lists.ubuntu.com/archives/bazaar/2013q3/075681.html
+	$ENV{'LANG'} = 'en_US.ISO8859-1';
+	# rgm@gnu addition 2013/06/05.
+	$ENV{'BZR_PLUGIN_PATH'} = '-user:+core:-site';
 	# authorize 'bzr serve' in SSH tunnel mode
-        exec($bin_bzr, '--no-plugins', 'serve', '--inet', '--directory='.$dir_bzr, '--allow-writes')
+	# rgm@gnu removed '--no-plugins' 2013/06/05.
+	exec($bin_bzr, 'serve', '--client-timeout=3600', '--inet',
+		'--directory='.$dir_bzr, '--allow-writes')
 	    or die("Failed to exec '$bin_bzr serve --inet --directory=$dir_bzr --allow-writes': $!");
 
     } elsif ($use_hg and $ARGV[1] =~ m:$regexp_hg:) {
