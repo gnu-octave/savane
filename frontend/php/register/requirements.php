@@ -1,10 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Display hosting requirements
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#  Copyright 2005-2006 (c) Sylvain Beucler <beuc--beuc.net>
-#                          Mathieu Roy <yeupou--gnu.org>
-# 
+# Copyright (C) 2007  Sylvain Beucler
+#
 # This file is part of Savane.
 # 
 # Savane is free software: you can redistribute it and/or modify
@@ -20,19 +18,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require_once('../include/init.php');
 
-require_once('../include/init.php');  # Initial db and session library, opens session
-#session_require(array(isloggedin=>1));
-$HTML->header(array('title' => _("Step 1: Services and Requirements")));
+$HTML->header(array('title' => _("Hosting requirements")));
 
-
-# get site-specific content
 utils_get_content("register/requirements");
-
-print '<form action="basicinfo.php" method="post">';
-print '<div align="center">';
-print '<input type=submit name="Submit" value="'._("Step 2: Project Description and Dependencies (Requires Login)").'" />';
-print '</div>';
-print '</form>';
 
 $HTML->footer(array());
