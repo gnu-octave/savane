@@ -26,8 +26,8 @@
 # along with the Savane project; if not, write to the Free Software
 msgid ""
 msgstr ""
-"Project-Id-Version: ca\n"
-"Report-Msgid-Bugs-To: savane-dev@gna.org\n"
+"Project-Id-Version: savane-3102a04d5\n"
+"Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
 "POT-Creation-Date: 2017-05-22 12:26+0300\n"
 "PO-Revision-Date: 2006-09-29 11:22+0200\n"
 "Last-Translator: Ajuntament de Santa Coloma de Gramenet <catala-savane@grame."

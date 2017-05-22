@@ -22,8 +22,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Savane\n"
-"Report-Msgid-Bugs-To: savane-dev@gna.org\n"
+"Project-Id-Version: savane-3102a04d5\n"
+"Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
 "POT-Creation-Date: 2017-05-22 12:26+0300\n"
 "PO-Revision-Date: 2011-04-19 12:15+0100\n"
 "Last-Translator: Joerg Kohne <joeko (AT) online (PUNKT) de>\n"
