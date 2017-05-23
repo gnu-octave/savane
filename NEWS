@@ -1,6 +1,8 @@
 Clean-up branch - v.3.1-cleanup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+2017-05-23 3.1-cleanup2
+
 [CONFIGURATION]
 
 * .mo (translation files) will be installed in /usr/local/share/locale

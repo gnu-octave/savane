@@ -3,7 +3,7 @@
 
 EXTRA_DIST = \
 	     apache2/conf/apache2.conf.template \
-	     savane/savane.php.conf.template
+	     savane/savane.conf.php.template
 
 all:
 	@echo ""

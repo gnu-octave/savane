@@ -1,22 +1,23 @@
 # Autotools -> ExtUtils::MakeMaker integration
 all:
-	make -f Makefile.perl
+	$(MAKE) -f Makefile.perl VPATH=.:$(srcdir)
 
 MANIFEST:
-	make -f Makefile.perl manifest
+	$(MAKE) -f Makefile.perl manifest VPATH=.:$(srcdir)
 install-data-local: MANIFEST
-	make -f Makefile.perl install
+	$(MAKE) -f Makefile.perl install VPATH=.:$(srcdir)
 
 uninstall-local:
-	$(PERL) uninstall.pl Savane
+	PERLLIB=$(DESTDIR)/$(prefix)/lib/perl $(PERL) $(srcdir)/uninstall.pl Savane
+	$(RM) `find $(DESTDIR)/$(prefix)/lib/perl -name perllocal.pod`
 
 CLEANFILES = Savane-*.tar.gz MANIFEST MANIFEST.bak
 clean-local:
-	-make -f Makefile.perl clean
-	-rm -f Makefile.perl.old
+	$(MAKE) -f Makefile.perl clean VPATH=.:$(srcdir)
+	$(RM) Makefile.perl.old
 
 all MANIFEST install-local clean-local: Makefile.perl
 Makefile.perl:
-	$(PERL) Makefile.PL PREFIX=$(prefix)
+	$(PERL) $(srcdir)/Makefile.PL PREFIX=$(prefix)
 
-EXTRA_DIST = Makefile.PL Savane.pm Savane/
+EXTRA_DIST = Makefile.PL Savane.pm Savane/ uninstall.pl

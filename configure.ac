@@ -21,7 +21,7 @@
 # (public domain)
 
 AC_INIT([GNU Savannah],
-        [3.1-cleanup1],
+        [3.1-cleanup2],
 	[savannah-hackers-public@gnu.org], [],
 	[https://savannah.gnu.org/projects/administration])
 

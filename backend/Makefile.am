@@ -30,4 +30,6 @@ bin_SCRIPTS = \
 	accounts/sv_homedirs \
 	accounts/sv_authorized_keys
 
+EXTRA_DIST = $(bin_SCRIPTS)
+
 SUBDIRS = system-specific
