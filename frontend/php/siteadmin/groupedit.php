@@ -160,7 +160,7 @@ $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
 print '<p><span class="preinput">'._("Public?").'</span><br />
-'._("A private project will be completly invisible from the web interface.").'
+'._("A private project will be completely invisible from the web interface.").'
 '._("You must clear the HTML repository field below when setting the private flag otherwise unpredictable result will occur.").'</em><br />';
 print '<select name="form_public">';
 print '<option '.(($row_grp['is_public'] == 1)?'selected ':'').'value="1">'._("Yes").'</option>';

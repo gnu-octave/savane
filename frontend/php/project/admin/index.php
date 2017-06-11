@@ -116,7 +116,7 @@ $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 # Public info
 print '<a href="history.php?group='.$group.'">'._("Show History").'</a>';
-print '<p class="smaller">'._("This allows you to keep tracks of important changes occuring on your project configuration.").'</p>';
+print '<p class="smaller">'._("This allows you to keep tracks of important changes occurring on your project configuration.").'</p>';
 
 print $HTML->box_bottom();
 

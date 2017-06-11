@@ -1441,7 +1441,7 @@ function trackers_attach_file($item_id,
   $current_upload_size_comment = '';
   if ($current_upload_size < 0)
     {
-      fb(sprintf(_("Unexpected error, disregarding file %s attachement"), $input_file_name), 1);
+      fb(sprintf(_("Unexpected error, disregarding file %s attachment"), $input_file_name), 1);
       return false;
     }
   if ($current_upload_size > 0)
@@ -1722,19 +1722,19 @@ function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on, $ite
 
   if (!$result)
     {
-      fb(_("Failed to delete dependancy.").db_error($result), 0);
+      fb(_("Failed to delete dependency.").db_error($result), 0);
       return false;
     }
   else
     {
       fb(_("Dependency Removed."));
       trackers_data_add_history("Dependencies",
-				"Removed dependancy to ".$item_depends_on_artifact." #".$item_depends_on,
+				"Removed dependency to ".$item_depends_on_artifact." #".$item_depends_on,
 				"-",
 				$item_id,
 				0,0,1);
       trackers_data_add_history("Dependencies",
-				"Removed dependancy from ".ARTIFACT." #".$item_id,
+				"Removed dependency from ".ARTIFACT." #".$item_id,
 				"-",
 				$item_depends_on,
 				0,0,1);

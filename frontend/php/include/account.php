@@ -50,7 +50,7 @@ is at least partially based on information found in a character string: %s.
 EOF
                         ), $matches[1]);
     } else {
-      $help .= _("Checks for common substrigs are disabled.");
+      $help .= _("Checks for common substrings are disabled.");
     }
   } # preg_match($args, "/match=([^ ]*)/ ", $matches)
 

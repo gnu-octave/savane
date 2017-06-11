@@ -411,7 +411,7 @@ function utils_fileextension($filename)
 	}
       if ($arch_type == "rch.".$ext)
 	{
-	  $long_ext = sprintf(_("arch independant %s"), $long_ext);
+	  $long_ext = sprintf(_("arch independent %s"), $long_ext);
 	}
       if ($arch_type == "386.".$ext)
 	{

@@ -234,7 +234,7 @@ if (user_get_preference("skipcc_postcomment")) { $checked = 'checked="checked"';
 print form_input("checkbox", "form_skipcc_postcomment", "1", $checked).' '._("I post a comment").'<br />&nbsp;&nbsp;';
 $checked = '';
 if (user_get_preference("skipcc_updateitem")) { $checked = 'checked="checked"'; }
-print form_input("checkbox", "form_skipcc_updateitem", "1", $checked).' '._("I update a field, add dependancies, attach file, etc").'<br />';
+print form_input("checkbox", "form_skipcc_updateitem", "1", $checked).' '._("I update a field, add dependencies, attach file, etc").'<br />';
 $checked = '';
 
 print '<span class="preinput">'._("Remove me from Carbon-Copy when:").'</span><br />&nbsp;&nbsp;';

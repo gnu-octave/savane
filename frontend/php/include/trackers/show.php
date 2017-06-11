@@ -59,17 +59,27 @@ function show_item_list ($result_arr,
       if ($offset > 0)
 	{
 	  $nav_bar .=
-	     '<span class="xsmall"><a href="'.$url.'&amp;offset=0#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/first.png" border="0" alt="'._("Begin").'" />'._("Begin").'</a>'.
-	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
-	     '<a href="'.$url.'&amp;offset='.($offset-$chunksz).
-	     '#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/previous.png" border="0" alt="'._("Previous Results").'" />'._("Previous Results").'</a></span>';
+	     '<span class="xsmall"><a href="'.$url
+             .'&amp;offset=0#results"><img src="'.$GLOBALS['sys_home'].'images/'
+             .SV_THEME.'.theme/arrows/first.png" border="0" alt="'
+             ._("Begin").'" />'._("Begin").'</a>'
+	     .'&nbsp;&nbsp;&nbsp;&nbsp;'
+	     .'<a href="'.$url.'&amp;offset='.($offset-$chunksz)
+	     .'#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+             .'.theme/arrows/previous.png" border="0" alt="'
+             ._("Previous Results").'" />'._("Previous Results").'</a></span>';
 	}
       else
 	{
 	  $nav_bar .=
-	     '<span class="xsmall"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/firstgrey.png" border="0" alt="'._("Begin").'" /><em>'._("Begin").'</em>'.
-	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
-	     '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/previousgrey.png" border="0" alt="'._("Previous Results").'" /><em>'._("Previous Results").'</em></span>';
+	     '<span class="xsmall"><img src="'.$GLOBALS['sys_home']
+             .'images/'.SV_THEME.'.theme/arrows/firstgrey.png" border="0" alt="'
+             ._("Begin").'" /><em>'._("Begin").'</em>'
+	     .'&nbsp;&nbsp;&nbsp;&nbsp;'
+	     .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+             .'.theme/arrows/previousgrey.png" border="0" alt="'
+             ._("Previous Results").'" /><em>'._("Previous Results")
+             .'</em></span>';
 	}
     }
 
@@ -78,8 +88,11 @@ function show_item_list ($result_arr,
 
   #fb("$offset_last offset_last");
 
-  $nav_bar .= " &nbsp;  &nbsp; &nbsp; &nbsp; ".sprintf(ngettext("%d matching item", "%d matching items", $total_rows), $total_rows);
-  $nav_bar .= " - ".sprintf(_("Items %s to %s"), ($offset+1), ($offset_last+1))."  &nbsp; &nbsp; &nbsp; &nbsp; ";
+  $nav_bar .= " &nbsp;  &nbsp; &nbsp; &nbsp; "
+              .sprintf(ngettext("%d matching item", "%d matching items",
+                                $total_rows), $total_rows);
+  $nav_bar .= " - ".sprintf(_("Items %s to %s"), ($offset+1), ($offset_last+1))
+              ."  &nbsp; &nbsp; &nbsp; &nbsp; ";
 
 
   # If all items are on screen, no next/end pointer at all
@@ -97,16 +110,23 @@ function show_item_list ($result_arr,
 
 	  $nav_bar .=
 	     '<span class="xsmall"><a href="'.$url.'&amp;offset='.($offset+$chunksz).
-	     '#results">'._("Next Results").'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/next.png" border="0" alt="'._("Next Results").'" /></a>'.
-	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
-	     '<a href="'.$url.'&amp;offset='.($offset_end).
-	     '#results">'._("End").'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/last.png" border="0" alt="'._("End").'" /></a></span>';
+	     '#results">'._("Next Results").'<img src="'.$GLOBALS['sys_home']
+             .'images/'.SV_THEME.'.theme/arrows/next.png" border="0" alt="'
+             ._("Next Results").'" /></a>'.'&nbsp;&nbsp;&nbsp;&nbsp;'
+	     .'<a href="'.$url.'&amp;offset='.($offset_end)
+	     .'#results">'._("End").'<img src="'.$GLOBALS['sys_home'].'images/'
+             .SV_THEME.'.theme/arrows/last.png" border="0" alt="'
+             ._("End").'" /></a></span>';
 	}
       else
 	{
-	  $nav_bar .= '<span class="xsmall"><em>'._("Next Results").'</em><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/nextgrey.png" border="0" alt="'._("Next Results").'" />'.
-	     '&nbsp;&nbsp;&nbsp;&nbsp;'.
-	     '<em>'._("End").'</em><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/lastgrey.png" border="0" alt="'._("End").'" /></span>';
+	  $nav_bar .= '<span class="xsmall"><em>'._("Next Results")
+             .'</em><img src="'.$GLOBALS['sys_home'].'images/'
+             .SV_THEME.'.theme/arrows/nextgrey.png" border="0" alt="'
+             ._("Next Results").'" />'.'&nbsp;&nbsp;&nbsp;&nbsp;'
+	     .'<em>'._("End").'</em><img src="'.$GLOBALS['sys_home']
+             .'images/'.SV_THEME.'.theme/arrows/lastgrey.png" border="0" alt="'
+             ._("End").'" /></span>';
 	}
     }
   $nav_bar .= '</h3>';
@@ -123,7 +143,10 @@ function show_item_list ($result_arr,
     {
       $thisitem_id = $thisitem['bug_id'];
 
-      print '<tr class="'.utils_get_priority_color($result_arr[$thisitem_id]["priority"], $result_arr[$thisitem_id]["status_id"]).'">'."\n";
+      print '<tr class="'
+            .utils_get_priority_color($result_arr[$thisitem_id]["priority"],
+                                      $result_arr[$thisitem_id]["status_id"])
+            .'">'."\n";
 
       for ($j=0; $j<$nb_of_fields; $j++)
 	{
@@ -132,7 +155,9 @@ function show_item_list ($result_arr,
 	    {
 	      # Dirty workaround to have boxes selected by default in the
 	      # form_input
-	      print '<td class="center">'.form_input("checkbox", "items_for_digest[]", "$thisitem_id\" checked=\"checked").'</td>';
+	      print '<td class="center">'
+                    .form_input("checkbox", "items_for_digest[]",
+                                "$thisitem_id\" checked=\"checked").'</td>';
 	      continue;
 	    }
 
@@ -796,7 +821,12 @@ function show_dependent_item ($item_id, $dependson=0)
 			    $dstatus))
 	{
 	  $dstatus[$current_group_id.$tracker.$content[$key]['resolution_id']] = 
-	    db_result(db_execute("SELECT value FROM ".$tracker."_field_value WHERE bug_field_id='108' AND (group_id=? OR group_id=100) AND value_id=? ORDER BY bug_fv_id DESC LIMIT 1", array($group_id, $content[$key]['resolution_id'])), 0, 'value');
+	    db_result(db_execute("SELECT value FROM ".$tracker
+                                 ."_field_value WHERE bug_field_id='108' "
+                                 ."AND (group_id=? OR group_id=100) AND value_id=? "
+                                 ."ORDER BY bug_fv_id DESC LIMIT 1",
+                                 array($group_id, $content[$key]['resolution_id'])),
+                      0, 'value');
 	}
       $status = $dstatus[$current_group_id.$tracker.$content[$key]['resolution_id']];
       
@@ -809,7 +839,7 @@ function show_dependent_item ($item_id, $dependson=0)
 	{
 	  print '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_dependancy&amp;item_id='.$item_id.'&amp;item_depends_on='.$current_item_id.
 	    '&amp;item_depends_on_artifact='.$tracker.'">'.
-	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Delete this dependancy?").'" class="icon" /></a></span>';
+	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Delete this dependency?").'" class="icon" /></a></span>';
 	}
 	  
       # Link to the item

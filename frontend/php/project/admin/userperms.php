@@ -448,7 +448,7 @@ if ($project->Uses("news"))
 print '<h3>'._("Group trackers posting restrictions").'</h3>';
 
 print '<p>';
-print _("Here you can set the minimal authentification level required in order to post on the trackers.");
+print _("Here you can set the minimal authentication level required in order to post on the trackers.");
 print '</p>';
 
 print html_build_list_table_top ($title_arr);

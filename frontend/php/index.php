@@ -46,26 +46,42 @@ if ($conn && empty($sys_group_id))
       if (!db_numrows($result))
 	{
 	  # No valid database
-	  fb(sprintf(_("Installation incomplete: while the connection to the SQL server is ok, the database '%s' was not found. Please, create it according to the documentation shipped with your Savane package"), $GLOBALS['sys_dbname']), 1);
+	  fb(sprintf(_(
+"Installation incomplete: while the connection to the SQL server is
+ok, the database '%s' was not found. Please, create it according to
+the documentation shipped with your Savane package"),
+             $GLOBALS['sys_dbname']), 1);
 	}
-      else if (db_result(db_query("SELECT count(*) AS count FROM user"), 0, 'count') < 2)
+      else if (db_result(db_query("SELECT count(*) AS count FROM user"),
+                         0, 'count') < 2)
 	{ // 2 = 1 default "None" user + 1 normal user
-	  fb(_("Installation incomplete: you must now create for yourself a user account. Once it is done, you will have to login and register the local administration project"), 1);
+	  fb(_(
+"Installation incomplete: you must now create for yourself a user
+account. Once it is done, you will have to login and register the
+local administration project"), 1);
 	}
       else
 	{
 	  # Not logged-in, probably no user account
-	  fb(sprintf(_("Installation incomplete: you have to login and register the local administration project (or maybe <em>%s</em>, from the <em>sys_unix_group_name</em> configuration parameter, is not the right projet name?)"), $sys_unix_group_name), 1);
+	  fb(sprintf(_(
+"Installation incomplete: you have to login and register the local
+administration project (or maybe <em>%s</em>, from the
+<em>sys_unix_group_name</em> configuration parameter, is not the right
+project name?)"), $sys_unix_group_name), 1);
 	}
     }
   else
     {    
       # No admin groups
-      fb(_("Installation incomplete: you must now register the local administration project, select \"Register New Project\" in the left menu"), 1);
+      fb(_(
+"Installation incomplete: you must now register the local
+administration project, select \"Register New Project\" in the left
+menu"), 1);
     }
   # I18N
   # The string is a URL on localhost, e.g. http://127.0.0.1/testconfig.php
-  fb(sprintf(_("By the way, have you checked the setup of your web server at %s?"), 'http://127.0.0.1'.$GLOBALS['sys_home'].'testconfig.php'), 1);
+  fb(sprintf(_("By the way, have you checked the setup of your web server at %s?"),
+             'http://127.0.0.1'.$GLOBALS['sys_home'].'testconfig.php'), 1);
 }
 
 $HTML->header(array('title'=>_("Welcome"), 'notopmenu'=>1));

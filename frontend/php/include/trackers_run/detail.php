@@ -51,7 +51,8 @@ if (db_numrows($result) > 0)
 	}
       elseif (db_result($result,0,'submitted_by') == user_getid())
 	{
-	  $private_intro = _("This item is private. However, you are allowed to read it as you submitted it.");
+	  $private_intro = _(
+"This item is private. However, you are allowed to read it as you submitted it.");
 	}
       else
 	{
@@ -63,7 +64,9 @@ if (db_numrows($result) > 0)
   # add a message
   if (!group_restrictions_check($group_id, ARTIFACT, 2))
     {
-      $private_intro .= ' '._("You are not allowed to post comments on this tracker with your current authentification level.");
+      $private_intro .= ' '
+._("You are not allowed to post comments on this tracker with your current
+authentication level.");
     }
 
 
@@ -71,9 +74,13 @@ if (db_numrows($result) > 0)
 
   print '<p>'.$private_intro.'</p>';
 
-  print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'), db_result($result,0,'status_id')).'">'.sprintf(_("<em>%s</em>:"), $item_link).' '.db_result($result,0,'summary').'</h2>';
+  print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'),
+                                               db_result($result,0,'status_id'))
+        .'">'.sprintf("<em>%s</em>:", $item_link).' '
+        .db_result($result,0,'summary').'</h2>';
 
-  print form_header($_SERVER['PHP_SELF'], $form_id, "post", 'enctype="multipart/form-data" name="item_form"');
+  print form_header($_SERVER['PHP_SELF'], $form_id, "post",
+                    'enctype="multipart/form-data" name="item_form"');
   print form_input("hidden", "func", "postaddcomment");
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "item_id", $item_id);
@@ -92,13 +99,19 @@ if (db_numrows($result) > 0)
   <table cellpadding="0" width="100%">
       <tr>
           <td class="preinput" width="15%">'._("Submitted by:").'&nbsp;</td>
-          <td width="35%">'.utils_user_link(user_getname(db_result($result,0,'submitted_by')), user_getrealname(db_result($result,0,'submitted_by'))).'</td>
-          <td colspan="'.($fields_per_line).'" align="center"  width="50%" valign="top"><span class="noprint">'.form_submit(_("Submit Changes"), "submit", ' class="bold"').'</span></td>
+          <td width="35%">'
+          .utils_user_link(user_getname(db_result($result,0,'submitted_by')),
+                           user_getrealname(db_result($result,0,'submitted_by')))
+          .'</td>
+          <td colspan="'.($fields_per_line)
+          .'" align="center"  width="50%" valign="top"><span class="noprint">'
+          .form_submit(_("Submit Changes"), "submit", ' class="bold"').'</span></td>
       </tr>
       <tr>
           <td class="preinput" width="15%">'._("Submitted on:").'&nbsp;</td>
           <td width="35%">'.utils_format_date(db_result($result,0,'date')).'</td>
-          <td colspan="'.($fields_per_line).'" align="center"  width="50%" valign="top">&nbsp;</td>
+          <td colspan="'.($fields_per_line)
+          .'" align="center"  width="50%" valign="top">&nbsp;</td>
       </tr>';
   $votes = db_result($result,0,'vote');
 
@@ -263,14 +276,18 @@ if (db_numrows($result) > 0)
       
       if (!$item_discussion_lock)
 	{
-	  print '<p class="noprint"><span class="preinput"> '.sprintf(_("Add a New Comment %s:"), markup_info("rich")).'</span><br /> &nbsp;&nbsp;&nbsp;';
+	  print '<p class="noprint"><span class="preinput"> '
+                .sprintf(_("Add a New Comment %s:"), markup_info("rich"))
+                .'</span><br /> &nbsp;&nbsp;&nbsp;';
 	  print trackers_field_textarea('comment', '');
 	  print '</p>';
 	  
 	  if (!user_isloggedin())
 	    {
 	      print '<h2 class="warn">'._("You are not logged in").'</h2><p>';
-	      printf (_("Please %slog in,%s so followups can be emailed to you."),'<a href="'.$GLOBALS['sys_home'].'account/login.php?uri='.urlencode($_SERVER['REQUEST_URI']).'">','</a>');
+	      printf (_("Please %slog in,%s so followups can be emailed to you."),
+                      '<a href="'.$GLOBALS['sys_home'].'account/login.php?uri='
+                      .urlencode($_SERVER['REQUEST_URI']).'">','</a>');
 	      print '</p>';
 	    }
 	}
@@ -301,12 +318,17 @@ if (db_numrows($result) > 0)
       !$item_discussion_lock)
     {
       print '<p class="noprint">';
-      print sprintf(_("(Note: upload size limit is set to %s kB, after insertion of the required escape characters.)"), $GLOBALS['sys_upload_max']);
+      print sprintf(_(
+"(Note: upload size limit is set to %s kB, after insertion of the required
+escape characters.)"), $GLOBALS['sys_upload_max']);
       
-      print '</p><p class="noprint"><span class="preinput"> '._("Attach File(s):").'</span><br />
-      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" /> <input type="file" name="input_file2" size="10" />
+      print '</p><p class="noprint"><span class="preinput"> '
+            ._("Attach File(s):").'</span><br />
+      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" />
+      <input type="file" name="input_file2" size="10" />
       <br />
-      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file3" size="10" /> <input type="file" name="input_file4" size="10" />
+      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file3" size="10" />
+      <input type="file" name="input_file4" size="10" />
       <br />
       <span class="preinput">'._("Comment:").'</span><br />
       &nbsp;&nbsp;&nbsp;<input type="text" name="file_description" size="60" maxlength="255" />
@@ -345,10 +367,17 @@ if (db_numrows($result) > 0)
   if (user_isloggedin() && !$item_discussion_lock)
     {
       print '<p class="noprint">';
-      printf (_("(Note: for %s users, you can use their login name rather than their email addresses.)"), $GLOBALS['sys_name']);
+      printf (_(
+"(Note: for %s users, you can use their login name rather than their email
+addresses.)"), $GLOBALS['sys_name']);
       print '</p><p class="noprint">
-	   <span class="preinput">'._("Add Email Addresses (comma as separator):").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="add_cc" size="30" /><br />
-	   <span class="preinput">'._("Comment:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="cc_comment" size="40" maxlength="255" /><p>';
+	   <span class="preinput">'
+            ._("Add Email Addresses (comma as separator):")
+            .'</span><br />&nbsp;&nbsp;&nbsp;'
+            .'<input type="text" name="add_cc" size="30" /><br />
+	   <span class="preinput">'._("Comment:")
+            .'</span><br />&nbsp;&nbsp;&nbsp;'
+            .'<input type="text" name="cc_comment" size="40" maxlength="255" /><p>';
     }
 
   show_item_cc_list($item_id, $group_id);
@@ -387,17 +416,25 @@ if (db_numrows($result) > 0)
               # votes.
               # The number of remaining points must be 100 - others votes
 
-              print '<span class="preinput">'._("Your vote:").'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="new_vote" size="3" maxlength="3" value="'.htmlspecialchars($new_vote).'" /> '.sprintf(ngettext("/ %s remaining vote", "/ %s remaining votes", $votes_remaining), $votes_remaining);
+              print '<span class="preinput">'._("Your vote:")
+                    .'</span><br />&nbsp;&nbsp;&nbsp;'
+                    .'<input type="text" name="new_vote" size="3" maxlength="3" value="'
+                    .htmlspecialchars($new_vote).'" /> '
+                    .sprintf(ngettext("/ %s remaining vote",
+                                      "/ %s remaining votes", $votes_remaining),
+                             $votes_remaining);
               print '</p>';
             }
           else
             {
-              print '<span class="warn">'._("Only logged-in users can vote.").'</span></p>';
+              print '<span class="warn">'._("Only logged-in users can vote.")
+                    .'</span></p>';
             }
          }
        else
          {
-            print '<span class="warn">'._("Only project members can vote.").'</span></p>';
+            print '<span class="warn">'._("Only project members can vote.")
+                  .'</span></p>';
          }
 
       print '</p>';
@@ -407,7 +444,9 @@ if (db_numrows($result) > 0)
 
   # Minimal anti-spam
   if (!user_isloggedin()) {
-    print '<p class="noprint">Please enter the title of <a href="http://en.wikipedia.org/wiki/George_Orwell">George Orwell</a>\'s famous dystopian book (it\'s a date): <input type="text" name="check" /></p>';
+    print '<p class="noprint">Please enter the title of <a
+href="https://en.wikipedia.org/wiki/George_Orwell">George Orwell</a>\'s famous
+dystopian book (it\'s a date): <input type="text" name="check" /></p>';
   }
 
   #  ################################  Submit

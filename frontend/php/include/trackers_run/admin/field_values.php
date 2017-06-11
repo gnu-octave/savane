@@ -260,7 +260,7 @@ if ($group_id && user_ismember($group_id,'A'))
 	      $title_arr[]=_("Description");
 	      $title_arr[]=_("Rank");
 	      $title_arr[]=_("Status");
-	      $title_arr[]=_("Occurences");
+	      $title_arr[]=_("Occurrences");
 
 
 	      $hdr = html_build_list_table_top ($title_arr);

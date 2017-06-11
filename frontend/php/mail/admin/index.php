@@ -305,7 +305,7 @@ while ($row = db_fetch_array($result))
   $checked = '';
   if ($row['is_public'] == "0")
     { $checked = ' checked="checked"'; }
-  print '<br />&nbsp;&nbsp;&nbsp;'.form_input("radio", "is_public[$id]", '0', $checked).' '._("Private List (not advertised, suscribing requires approval)");;
+  print '<br />&nbsp;&nbsp;&nbsp;'.form_input("radio", "is_public[$id]", '0', $checked).' '._("Private List (not advertised, subscribing requires approval)");
   
   $checked = '';
   if ($row['is_public'] == "9")
