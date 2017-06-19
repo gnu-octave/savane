@@ -54,9 +54,11 @@ $HTML->header(array('title' => sprintf(_("%s hosting request"), $GLOBALS['sys_na
 
 if (db_numrows(db_execute("SELECT type_id FROM group_type")) < 1) {
 	# group_type is empty; it's not possible to register projects
-	print _("No group type has been set. Admins need to create at least one group type. They can make it so clicking on the link \"Group Type Admin\", on the Administration section of the left side menu, while logged in as admin");
+	print _("No group type has been set. Admins need to create at least one
+group type. They can make it so clicking on the link &ldquo;Group Type
+Admin,&rdquo; on the Administration section of the left side menu, while logged
+in as admin");
 } else {
-	# get site-specific content
 #	utils_get_content("register/index");
 }
 
@@ -181,17 +183,6 @@ if ($form->validate())
   $message = confirmation_gen_email ($type_base_host, $user_realname, $user_email, $type_admin_email_address, $form_license, $form_license_other, $form_full_name, $unix_name, $type, $form_purpose, $form_required_sw, $form_comments);
 
   $message_user = "$message";
-/*
-  $message_user = "$message"
-     ."\n\n\n\n"
-     ."*"._("In case you have to register your project again").".\n\n"
-     .sprintf(_("Please be aware that if your registration does not fulfill all the requirements, the %s administrators may ask you to register your project again."),$GLOBALS['sys_name'])
-     ._("You can use the following URL to do a new registration starting with the values used in this registration process.")."\n"
-     ._("Copy and paste AS ONE SINGLE URL the following content:")."\n"
-     ."----RERegistration-URL-BEGIN-----\n"
-     ."http://".$project->getTypeBaseHost().$GLOBALS['sys_home']."register/basicinfo.php?re_purpose=".rawurlencode($form_purpose)."&re_require_sw=".rawurlencode($form_required_sw)."&re_comments=".rawurlencode($form_comments)."&re_full_name=".rawurlencode($form_full_name)."&re_unix_name=".rawurlencode($unix_name)."\n"
-     ."----RERegistration-URL-END-------\n";
-*/
 
   $message_admin = "A new project has been registered at ".$GLOBALS['sys_name']." 
 This project account will remain inactive until a site admin approves or discards the registration.

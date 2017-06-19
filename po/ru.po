@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.1-cleanup2\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2017-05-24 15:02+0000\n"
+"POT-Creation-Date: 2017-06-24 13:40+0000\n"
 "PO-Revision-Date: 2010-10-22 15:44+0300\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <>\n"
@@ -60,174 +60,176 @@ msgstr "Мои запросы на поддержку"
 
 #: frontend/php/register/index.php:57
 msgid ""
-"No group type has been set. Admins need to create at least one group type. "
-"They can make it so clicking on the link \"Group Type Admin\", on the "
-"Administration section of the left side menu, while logged in as admin"
+"No group type has been set. Admins need to create at least one\n"
+"group type. They can make it so clicking on the link &ldquo;Group Type\n"
+"Admin,&rdquo; on the Administration section of the left side menu, while "
+"logged\n"
+"in as admin"
 msgstr ""
 
-#: frontend/php/register/index.php:66
+#: frontend/php/register/index.php:68
 msgid "Project name"
 msgstr "Название проекта"
 
-#: frontend/php/register/index.php:67
+#: frontend/php/register/index.php:69
 msgid "Full name"
 msgstr "Полное название"
 
-#: frontend/php/register/index.php:68
+#: frontend/php/register/index.php:70
 msgid "Short/system name"
 msgstr "Краткое/системное имя:"
 
-#: frontend/php/register/index.php:69
+#: frontend/php/register/index.php:71
 msgid "(used in URLs, mailing lists names, etc.)"
 msgstr "(используется в URL, названиях списков рассылки и т.д.)"
 
-#: frontend/php/register/index.php:71
+#: frontend/php/register/index.php:73
 msgid "Project information"
 msgstr "Сведения о проекте"
 
-#: frontend/php/register/index.php:72
+#: frontend/php/register/index.php:74
 msgid "~20-lines technical description"
 msgstr ""
 
-#: frontend/php/register/index.php:73
+#: frontend/php/register/index.php:75
 #, fuzzy
 msgid "What is your project?"
 msgstr "Покинуть этот проект?"
 
-#: frontend/php/register/index.php:74
+#: frontend/php/register/index.php:76
 msgid "(purpose, topic, programming language...)"
 msgstr ""
 
-#: frontend/php/register/index.php:75
+#: frontend/php/register/index.php:77
 msgid "What is special about it?"
 msgstr ""
 
-#: frontend/php/register/index.php:86
+#: frontend/php/register/index.php:88
 msgid ""
 "Checklist - **see <a href=\"http://savannah.gnu.org/maintenance/"
 "HowToGetYourProjectApprovedQuickly\">How To Get Your Project Approved "
 "Quickly</a>**"
 msgstr ""
 
-#: frontend/php/register/index.php:88
+#: frontend/php/register/index.php:90
 msgid "My project runs primarily on a completely free OS"
 msgstr ""
 
-#: frontend/php/register/index.php:89
+#: frontend/php/register/index.php:91
 #, fuzzy
 msgid "My license is compatible with the GNU GPL or GFDL"
 msgstr "Лицензии, совместимые с нашими правилами"
 
-#: frontend/php/register/index.php:90
+#: frontend/php/register/index.php:92
 #, fuzzy
 msgid "My dependencies are compatible with my project license"
 msgstr "Лицензии, совместимые с нашими правилами"
 
-#: frontend/php/register/index.php:91
+#: frontend/php/register/index.php:93
 msgid ""
 "All my files include valid copyright notices [<a href=\"http://www.gnu.org/"
 "prep/maintain/html_node/Copyright-Notices.html\">1</a>]"
 msgstr ""
 
-#: frontend/php/register/index.php:92
+#: frontend/php/register/index.php:94
 msgid ""
 "All my files include a license header [<a href=\"http://www.gnu.org/licenses/"
 "gpl-howto.html\">1</a>] [<a href=\"http://www.gnu.org/licenses/fdl-howto.html"
 "\">2</a>]"
 msgstr ""
 
-#: frontend/php/register/index.php:93
+#: frontend/php/register/index.php:95
 msgid "Origin and license of media files is specified"
 msgstr ""
 
-#: frontend/php/register/index.php:94
+#: frontend/php/register/index.php:96
 msgid "My tarball includes a copy of the license"
 msgstr ""
 
-#: frontend/php/register/index.php:96
+#: frontend/php/register/index.php:98
 msgid "I read carefully and don't check this one"
 msgstr ""
 
-#: frontend/php/register/index.php:97
+#: frontend/php/register/index.php:99
 msgid "I agree with the <a href=\"requirements.php\">hosting requirements</a>"
 msgstr ""
 
-#: frontend/php/register/index.php:99
+#: frontend/php/register/index.php:101
 #: frontend/php/include/trackers_run/add.php:51
 msgid "Details"
 msgstr "Детали"
 
-#: frontend/php/register/index.php:100
-#: frontend/php/include/trackers_run/detail.php:329
+#: frontend/php/register/index.php:102
+#: frontend/php/include/trackers_run/detail.php:351
 #: frontend/php/include/trackers_run/mod.php:494
 msgid "Dependencies"
 msgstr "Зависимости"
 
-#: frontend/php/register/index.php:101
+#: frontend/php/register/index.php:103
 msgid "name + license + website for each dependency"
 msgstr ""
 
-#: frontend/php/register/index.php:102
+#: frontend/php/register/index.php:104
 msgid "Other Comments"
 msgstr "Другие комментарии"
 
-#: frontend/php/register/index.php:103
+#: frontend/php/register/index.php:105
 msgid "Tarball (.tar.gz) URL"
 msgstr ""
 
-#: frontend/php/register/index.php:104
+#: frontend/php/register/index.php:106
 msgid ""
 "(Need a place to upload? <a href=\"upload.php\" target=\"_blank\">Open "
 "upload window</a>)"
 msgstr ""
 
-#: frontend/php/register/index.php:105
+#: frontend/php/register/index.php:107
 msgid "Register project"
 msgstr "Зарегистрировать проект"
 
-#: frontend/php/register/index.php:107
+#: frontend/php/register/index.php:109
 #, fuzzy
 msgid "Invalid full name"
 msgstr "Неправильное имя пользователя."
 
-#: frontend/php/register/index.php:108
+#: frontend/php/register/index.php:110
 #, fuzzy
 msgid "Invalid Unix name"
 msgstr "Неправильное имя пользователя."
 
-#: frontend/php/register/index.php:109
+#: frontend/php/register/index.php:111
 #, fuzzy
 msgid "A project with that name already exists."
 msgstr "Имя пользователя занято."
 
-#: frontend/php/register/index.php:113
+#: frontend/php/register/index.php:115
 #, fuzzy
 msgid "Please recheck your project"
 msgstr "Зарегистрируйте свой проект на %s"
 
-#: frontend/php/register/index.php:115
+#: frontend/php/register/index.php:117
 #, fuzzy
 msgid ":)"
 msgstr ": "
 
-#: frontend/php/register/index.php:116
+#: frontend/php/register/index.php:118
 msgid "Please accept the hosting requirements"
 msgstr ""
 
-#: frontend/php/register/index.php:118
+#: frontend/php/register/index.php:120
 #, fuzzy
 msgid "This is too short!"
 msgstr "%s - слишком короткий"
 
-#: frontend/php/register/index.php:119
+#: frontend/php/register/index.php:121
 msgid "Please give us a link to your project latest release"
 msgstr ""
 
-#: frontend/php/register/index.php:158
+#: frontend/php/register/index.php:160
 msgid "Unable to update database, please contact administrators"
 msgstr "Неправильный параметры, пожалуйста, свяжитесь с администратором."
 
-#: frontend/php/register/index.php:167
+#: frontend/php/register/index.php:169
 msgid "Setting you as project admin failed"
 msgstr ""
 
@@ -531,7 +533,7 @@ msgstr "Открыт(а,о)"
 msgid "Closed"
 msgstr "Закрыт(а,о)"
 
-#: frontend/php/my/items.php:128 frontend/php/include/utils.php:819
+#: frontend/php/my/items.php:128 frontend/php/include/utils.php:824
 msgid "Lowest"
 msgstr "Нижний"
 
@@ -595,7 +597,7 @@ msgstr "Новость"
 #: frontend/php/project/admin/squadadmin.php:312
 #: frontend/php/project/admin/squadadmin.php:347
 #: frontend/php/include/my/general.php:552
-#: frontend/php/include/trackers/show.php:766
+#: frontend/php/include/trackers/show.php:791
 #: frontend/php/include/user_home.php:364
 #: frontend/php/include/people/general.php:365
 msgid "None found"
@@ -800,8 +802,8 @@ msgstr[1] "Всего %s"
 msgstr[2] "Всего %s"
 
 #: frontend/php/my/votes.php:114
-#: frontend/php/include/trackers_run/detail.php:96
-#: frontend/php/include/trackers_run/detail.php:416
+#: frontend/php/include/trackers_run/detail.php:108
+#: frontend/php/include/trackers_run/detail.php:455
 #: frontend/php/include/trackers_run/admin/notification_settings.php:130
 msgid "Submit Changes"
 msgstr "Сохранить изменения"
@@ -905,7 +907,7 @@ msgid "I post a comment"
 msgstr "Оставить комментарий"
 
 #: frontend/php/my/admin/change_notifications.php:237
-msgid "I update a field, add dependancies, attach file, etc"
+msgid "I update a field, add dependencies, attach file, etc"
 msgstr ""
 
 #: frontend/php/my/admin/change_notifications.php:240
@@ -1011,7 +1013,7 @@ msgid ""
 "Stone age menu activated, it will be effective the next time a page is loaded"
 msgstr ""
 
-#: frontend/php/my/admin/index.php:121 frontend/php/include/utils.php:1317
+#: frontend/php/my/admin/index.php:121 frontend/php/include/utils.php:1322
 msgid "Database successfully updated"
 msgstr "База данных успешно обновлена"
 
@@ -1870,46 +1872,47 @@ msgstr ""
 msgid "Serious configuration problem: sys_unix_group_name is empty."
 msgstr ""
 
-#: frontend/php/index.php:49
+#: frontend/php/index.php:50
 #, php-format
 msgid ""
-"Installation incomplete: while the connection to the SQL server is ok, the "
-"database '%s' was not found. Please, create it according to the "
-"documentation shipped with your Savane package"
+"Installation incomplete: while the connection to the SQL server is\n"
+"ok, the database '%s' was not found. Please, create it according to\n"
+"the documentation shipped with your Savane package"
 msgstr ""
 
-#: frontend/php/index.php:53
+#: frontend/php/index.php:59
 msgid ""
-"Installation incomplete: you must now create for yourself a user account. "
-"Once it is done, you will have to login and register the local "
-"administration project"
+"Installation incomplete: you must now create for yourself a user\n"
+"account. Once it is done, you will have to login and register the\n"
+"local administration project"
 msgstr ""
 
-#: frontend/php/index.php:58
+#: frontend/php/index.php:67
 #, php-format
 msgid ""
-"Installation incomplete: you have to login and register the local "
-"administration project (or maybe <em>%s</em>, from the "
-"<em>sys_unix_group_name</em> configuration parameter, is not the right "
-"projet name?)"
+"Installation incomplete: you have to login and register the local\n"
+"administration project (or maybe <em>%s</em>, from the\n"
+"<em>sys_unix_group_name</em> configuration parameter, is not the right\n"
+"project name?)"
 msgstr ""
 
-#: frontend/php/index.php:64
+#: frontend/php/index.php:77
 msgid ""
-"Installation incomplete: you must now register the local administration "
-"project, select \"Register New Project\" in the left menu"
+"Installation incomplete: you must now register the local\n"
+"administration project, select \"Register New Project\" in the left\n"
+"menu"
 msgstr ""
 
-#: frontend/php/index.php:68
+#: frontend/php/index.php:83
 #, php-format
 msgid "By the way, have you checked the setup of your web server at %s?"
 msgstr ""
 
-#: frontend/php/index.php:71 frontend/php/account/lostlogin.php:57
+#: frontend/php/index.php:87 frontend/php/account/lostlogin.php:57
 msgid "Welcome"
 msgstr "Добро пожаловать"
 
-#: frontend/php/index.php:88 frontend/php/include/project_home.php:181
+#: frontend/php/index.php:104 frontend/php/include/project_home.php:181
 #: frontend/php/include/news/forum.php:157
 msgid "Latest News"
 msgstr "Последние новости"
@@ -2307,8 +2310,8 @@ msgstr "Показать историю"
 
 #: frontend/php/project/admin/index.php:119
 msgid ""
-"This allows you to keep tracks of important changes occuring on your project "
-"configuration."
+"This allows you to keep tracks of important changes occurring on your "
+"project configuration."
 msgstr ""
 
 #: frontend/php/project/admin/index.php:128
@@ -2510,8 +2513,8 @@ msgstr "Длинное описание:"
 
 #: frontend/php/project/admin/userperms.php:451
 msgid ""
-"Here you can set the minimal authentification level required in order to "
-"post on the trackers."
+"Here you can set the minimal authentication level required in order to post "
+"on the trackers."
 msgstr ""
 
 #: frontend/php/project/admin/userperms.php:459
@@ -2977,7 +2980,7 @@ msgid ""
 msgstr ""
 
 #: frontend/php/news/approve.php:157
-#: frontend/php/include/trackers_run/detail.php:94
+#: frontend/php/include/trackers_run/detail.php:101
 #: frontend/php/include/trackers_run/mod.php:149
 msgid "Submitted by:"
 msgstr ""
@@ -3351,7 +3354,7 @@ msgid "Public List"
 msgstr "Полный список"
 
 #: frontend/php/mail/admin/index.php:308
-msgid "Private List (not advertised, suscribing requires approval)"
+msgid "Private List (not advertised, subscribing requires approval)"
 msgstr ""
 
 #: frontend/php/mail/admin/index.php:313
@@ -3446,7 +3449,7 @@ msgid "Submitted By"
 msgstr ""
 
 #: frontend/php/search/index.php:231 frontend/php/siteadmin/lastlogins.php:45
-#: frontend/php/include/trackers/show.php:548
+#: frontend/php/include/trackers/show.php:573
 #: frontend/php/include/project/admin.php:42
 msgid "Date"
 msgstr "Дата"
@@ -4222,6 +4225,7 @@ msgid "%s looking for %s"
 msgstr ""
 
 #: frontend/php/people/index.php:108
+#: frontend/site-specific/gnu-content/people/index.php:24
 msgid "Projects Needing Help"
 msgstr "Проекты, нуждающиеся в помощи"
 
@@ -5298,7 +5302,7 @@ msgid ""
 msgstr ""
 
 #: frontend/php/siteadmin/groupedit.php:163
-msgid "A private project will be completly invisible from the web interface."
+msgid "A private project will be completely invisible from the web interface."
 msgstr ""
 
 #: frontend/php/siteadmin/groupedit.php:164
@@ -5318,9 +5322,11 @@ msgid "N/A"
 msgstr ""
 
 #: frontend/php/siteadmin/groupedit.php:177
-#: frontend/php/include/trackers/show.php:262
-msgid "Other"
-msgstr "Другой"
+#: frontend/site-specific/gnu-content/hashes.php:57
+#: frontend/site-specific/nongnu-content/hashes.php:57
+#, fuzzy
+msgid "Other license"
+msgstr "Другие комментарии:"
 
 #: frontend/php/siteadmin/groupedit.php:186
 msgid "If other:"
@@ -5638,73 +5644,67 @@ msgstr "%s для s390"
 msgid "every day"
 msgstr "каждый Понедельник"
 
-#: frontend/php/include/trackers_run/detail.php:54
+#: frontend/php/include/trackers_run/detail.php:55
 #: frontend/php/include/trackers_run/mod.php:59
 msgid ""
 "This item is private. However, you are allowed to read it as you submitted "
 "it."
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:58
+#: frontend/php/include/trackers_run/detail.php:59
 #: frontend/php/include/trackers_run/detail-sober.php:112
 msgid "This item is private."
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:66
+#: frontend/php/include/trackers_run/detail.php:68
 msgid ""
-"You are not allowed to post comments on this tracker with your current "
-"authentification level."
+"You are not allowed to post comments on this tracker with your current\n"
+"authentication level."
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:74
-#: frontend/php/include/trackers_run/mod.php:129
-#, fuzzy, php-format
-msgid "<em>%s</em>:"
-msgstr "<i>%s</i> подробности:"
-
-#: frontend/php/include/trackers_run/detail.php:99
+#: frontend/php/include/trackers_run/detail.php:111
 #: frontend/php/include/trackers_run/mod.php:154
 msgid "Submitted on:"
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:110
+#: frontend/php/include/trackers_run/detail.php:123
 #: frontend/php/include/trackers_run/mod.php:165
 msgid "Votes:"
 msgstr "Голосование:"
 
-#: frontend/php/include/trackers_run/detail.php:262
+#: frontend/php/include/trackers_run/detail.php:275
 #: frontend/php/include/trackers_run/mod.php:394
 msgid "Post a Comment"
 msgstr "Оставить комментарий"
 
-#: frontend/php/include/trackers_run/detail.php:266
+#: frontend/php/include/trackers_run/detail.php:280
 #: frontend/php/include/trackers_run/mod.php:400
 #, fuzzy, php-format
 msgid "Add a New Comment %s:"
 msgstr "Добавить комментарий:"
 
-#: frontend/php/include/trackers_run/detail.php:272
+#: frontend/php/include/trackers_run/detail.php:287
 msgid "You are not logged in"
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:273
+#: frontend/php/include/trackers_run/detail.php:288
 #, fuzzy, php-format
 msgid "Please %slog in,%s so followups can be emailed to you."
 msgstr ""
 "Пожалуйста, представьтесь системе, чтобы иметь возможность получать ответы "
 "по электронной почте."
 
-#: frontend/php/include/trackers_run/detail.php:279
+#: frontend/php/include/trackers_run/detail.php:296
 #: frontend/php/include/trackers_run/mod.php:446
 msgid "Discussion locked!"
 msgstr "Дискуссия заблокированна!"
 
-#: frontend/php/include/trackers_run/detail.php:288
+#: frontend/php/include/trackers_run/detail.php:305
 #: frontend/php/include/trackers_run/mod.php:457
 msgid "Discussion"
 msgstr "Дискуссия"
 
-#: frontend/php/include/trackers_run/detail.php:298
+#: frontend/php/include/trackers_run/detail.php:315
 #: frontend/php/include/trackers_run/add.php:201
 #: frontend/php/include/trackers_run/detail-sober.php:183
 #: frontend/php/include/trackers_run/mod.php:470
@@ -5712,24 +5712,22 @@ msgstr "Дискуссия"
 msgid "Attached Files"
 msgstr "Присоединенные файлы"
 
-#: frontend/php/include/trackers_run/detail.php:304
-#: frontend/php/include/trackers_run/add.php:202
-#: frontend/php/include/trackers_run/mod.php:473
+#: frontend/php/include/trackers_run/detail.php:322
 #, php-format
 msgid ""
-"(Note: upload size limit is set to %s kB, after insertion of the required "
+"(Note: upload size limit is set to %s kB, after insertion of the required\n"
 "escape characters.)"
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:306
+#: frontend/php/include/trackers_run/detail.php:326
 #: frontend/php/include/trackers_run/add.php:204
 #: frontend/php/include/trackers_run/mod.php:475
 #, fuzzy
 msgid "Attach File(s):"
 msgstr "Присоединить файл:"
 
-#: frontend/php/include/trackers_run/detail.php:311
-#: frontend/php/include/trackers_run/detail.php:351
+#: frontend/php/include/trackers_run/detail.php:333
+#: frontend/php/include/trackers_run/detail.php:378
 #: frontend/php/include/trackers_run/add.php:209
 #: frontend/php/include/trackers_run/add.php:227
 #: frontend/php/include/trackers_run/mod.php:480
@@ -5737,41 +5735,39 @@ msgstr "Присоединить файл:"
 msgid "Comment:"
 msgstr "Комментарий:"
 
-#: frontend/php/include/trackers_run/detail.php:343
+#: frontend/php/include/trackers_run/detail.php:365
 #: frontend/php/include/trackers_run/mod.php:641
 msgid "Mail Notification Carbon-Copy List"
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:348
-#: frontend/php/include/trackers_run/add.php:221
-#: frontend/php/include/trackers_run/mod.php:643
+#: frontend/php/include/trackers_run/detail.php:371
 #, php-format
 msgid ""
-"(Note: for %s users, you can use their login name rather than their email "
+"(Note: for %s users, you can use their login name rather than their email\n"
 "addresses.)"
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:350
+#: frontend/php/include/trackers_run/detail.php:375
 #: frontend/php/include/trackers_run/add.php:224
 #: frontend/php/include/trackers_run/mod.php:646
 msgid "Add Email Addresses (comma as separator):"
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:363
+#: frontend/php/include/trackers_run/detail.php:392
 #: frontend/php/include/trackers_run/mod.php:667
 #: frontend/php/include/pagemenu.php:261
 msgid "Votes"
 msgstr "Голосование"
 
-#: frontend/php/include/trackers_run/detail.php:365
+#: frontend/php/include/trackers_run/detail.php:394
 msgid "Do you think this task is very important?"
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:367
+#: frontend/php/include/trackers_run/detail.php:396
 msgid "If so, you can click here to add your encouragement to it."
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:369
+#: frontend/php/include/trackers_run/detail.php:398
 #, php-format
 msgid "This task has %s encouragement so far."
 msgid_plural "This task has %s encouragements so far."
@@ -5779,12 +5775,12 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: frontend/php/include/trackers_run/detail.php:390
+#: frontend/php/include/trackers_run/detail.php:419
 #: frontend/php/include/trackers_run/mod.php:673
 msgid "Your vote:"
 msgstr "Ваш голос:"
 
-#: frontend/php/include/trackers_run/detail.php:390
+#: frontend/php/include/trackers_run/detail.php:423
 #: frontend/php/include/trackers_run/mod.php:673
 #, php-format
 msgid "/ %s remaining vote"
@@ -5793,21 +5789,21 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: frontend/php/include/trackers_run/detail.php:395
+#: frontend/php/include/trackers_run/detail.php:430
 msgid "Only logged-in users can vote."
 msgstr ""
 
-#: frontend/php/include/trackers_run/detail.php:400
+#: frontend/php/include/trackers_run/detail.php:436
 #, fuzzy
 msgid "Only project members can vote."
 msgstr "Членство в проекте одобрено"
 
-#: frontend/php/include/trackers_run/detail.php:423
+#: frontend/php/include/trackers_run/detail.php:462
 #: frontend/php/include/trackers_run/mod.php:789
 msgid "History"
 msgstr "История"
 
-#: frontend/php/include/trackers_run/detail.php:431
+#: frontend/php/include/trackers_run/detail.php:470
 msgid "No item found with that id."
 msgstr ""
 
@@ -5957,9 +5953,25 @@ msgstr "Имя проекта"
 msgid "Mandatory Fields"
 msgstr ""
 
+#: frontend/php/include/trackers_run/add.php:202
+#: frontend/php/include/trackers_run/mod.php:473
+#, php-format
+msgid ""
+"(Note: upload size limit is set to %s kB, after insertion of the required "
+"escape characters.)"
+msgstr ""
+
 #: frontend/php/include/trackers_run/add.php:219
 msgid "Mail Notification CC"
 msgstr "Уведомление почтой CC"
+
+#: frontend/php/include/trackers_run/add.php:221
+#: frontend/php/include/trackers_run/mod.php:643
+#, php-format
+msgid ""
+"(Note: for %s users, you can use their login name rather than their email "
+"addresses.)"
+msgstr ""
 
 #: frontend/php/include/trackers_run/add.php:237
 msgid "Did you check to see if this item has already been submitted?"
@@ -6027,7 +6039,7 @@ msgstr "Закрытый элемент"
 
 #: frontend/php/include/trackers_run/digest.php:219
 #: frontend/php/include/html.php:848 frontend/php/include/html.php:859
-#: frontend/php/include/utils.php:670
+#: frontend/php/include/utils.php:675
 msgid "Anonymous"
 msgstr "Аноним"
 
@@ -6181,8 +6193,9 @@ msgid "Rank"
 msgstr ""
 
 #: frontend/php/include/trackers_run/admin/field_values.php:263
-msgid "Occurences"
-msgstr ""
+#, fuzzy
+msgid "Occurrences"
+msgstr "Зависимости"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:269
 msgid "Permanent"
@@ -6820,8 +6833,8 @@ msgid ""
 msgstr ""
 
 #: frontend/php/include/trackers_run/detail-sober.php:152
-#: frontend/php/include/trackers/show.php:407
-#: frontend/php/include/trackers/show.php:419
+#: frontend/php/include/trackers/show.php:432
+#: frontend/php/include/trackers/show.php:444
 #, php-format
 msgid "%s:"
 msgstr ""
@@ -6931,6 +6944,11 @@ msgid ""
 "technicians, reassign items over trackers and projects, changing priority "
 "and open/close items"
 msgstr ""
+
+#: frontend/php/include/trackers_run/mod.php:129
+#, fuzzy, php-format
+msgid "<em>%s</em>:"
+msgstr "<i>%s</i> подробности:"
 
 #: frontend/php/include/trackers_run/mod.php:151
 #: frontend/php/include/trackers_run/mod.php:781
@@ -7766,18 +7784,18 @@ msgstr ""
 msgid "Audience/Feature/Action updated"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:62
-#: frontend/php/include/trackers/show.php:70
+#: frontend/php/include/trackers/show.php:65
+#: frontend/php/include/trackers/show.php:77
 msgid "Begin"
 msgstr "Начать"
 
-#: frontend/php/include/trackers/show.php:65
-#: frontend/php/include/trackers/show.php:72 frontend/php/include/html.php:253
+#: frontend/php/include/trackers/show.php:70
+#: frontend/php/include/trackers/show.php:81 frontend/php/include/html.php:253
 #: frontend/php/include/html.php:258
 msgid "Previous Results"
 msgstr "Предыдущие результаты"
 
-#: frontend/php/include/trackers/show.php:81
+#: frontend/php/include/trackers/show.php:92
 #, php-format
 msgid "%d matching item"
 msgid_plural "%d matching items"
@@ -7785,41 +7803,50 @@ msgstr[0] "%d подходящий элемент"
 msgstr[1] "%d подходящих элемента"
 msgstr[2] "%d подходящих элементов"
 
-#: frontend/php/include/trackers/show.php:82
+#: frontend/php/include/trackers/show.php:94
 #, php-format
 msgid "Items %s to %s"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:100
-#: frontend/php/include/trackers/show.php:107
+#: frontend/php/include/trackers/show.php:113
+#: frontend/php/include/trackers/show.php:115
+#: frontend/php/include/trackers/show.php:123
+#: frontend/php/include/trackers/show.php:126
 #: frontend/php/include/html.php:266 frontend/php/include/html.php:270
 msgid "Next Results"
 msgstr "Следующие результаты"
 
-#: frontend/php/include/trackers/show.php:103
-#: frontend/php/include/trackers/show.php:109
+#: frontend/php/include/trackers/show.php:117
+#: frontend/php/include/trackers/show.php:119
+#: frontend/php/include/trackers/show.php:127
+#: frontend/php/include/trackers/show.php:129
 msgid "End"
 msgstr "Конец"
 
-#: frontend/php/include/trackers/show.php:258
+#: frontend/php/include/trackers/show.php:283
 msgid "For Everybody"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:259
+#: frontend/php/include/trackers/show.php:284
 #, fuzzy
 msgid "For Project Members Only"
 msgstr "Список участников проекта"
 
-#: frontend/php/include/trackers/show.php:263
-msgid "Undefined"
+#: frontend/php/include/trackers/show.php:287
+#, fuzzy
+msgid "Other audience"
+msgstr "Другие комментарии:"
+
+#: frontend/php/include/trackers/show.php:288
+msgid "Undefined audience"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:397
+#: frontend/php/include/trackers/show.php:422
 #, php-format
 msgid "From %s User Docs"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:543
+#: frontend/php/include/trackers/show.php:568
 #, fuzzy, php-format
 msgid "Follows %s latest change."
 msgid_plural "Follow %s latest changes."
@@ -7827,77 +7854,78 @@ msgstr[0] "Статистика для %s"
 msgstr[1] "Статистика для %s"
 msgstr[2] "Статистика для %s"
 
-#: frontend/php/include/trackers/show.php:549
+#: frontend/php/include/trackers/show.php:574
 msgid "Changed By"
 msgstr "Изменено"
 
-#: frontend/php/include/trackers/show.php:550
+#: frontend/php/include/trackers/show.php:575
 msgid "Updated Field"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:551
+#: frontend/php/include/trackers/show.php:576
 msgid "Previous Value"
 msgstr "Предыдущее значение"
 
-#: frontend/php/include/trackers/show.php:553
+#: frontend/php/include/trackers/show.php:578
 msgid "Replaced By"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:617
+#: frontend/php/include/trackers/show.php:642
 msgid "Automatic update due to transitions settings"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:662
+#: frontend/php/include/trackers/show.php:687
 msgid "No Changes Have Been Made to This Item"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:703
+#: frontend/php/include/trackers/show.php:728
 msgid "Items that depend on this one"
 msgstr ""
 
-#: frontend/php/include/trackers/show.php:705
+#: frontend/php/include/trackers/show.php:730
 msgid "Depends on the following items"
 msgstr "Зависит от следующих элементов:"
 
-#: frontend/php/include/trackers/show.php:766
+#: frontend/php/include/trackers/show.php:791
 #, fuzzy, php-format
 msgid "%s: %s"
 msgstr ": "
 
-#: frontend/php/include/trackers/show.php:812
-msgid "Delete this dependancy?"
+#: frontend/php/include/trackers/show.php:842
+#, fuzzy
+msgid "Delete this dependency?"
 msgstr "Удалить эту зависимость?"
 
-#: frontend/php/include/trackers/show.php:835
+#: frontend/php/include/trackers/show.php:865
 msgid "---- Private ----"
 msgstr "---- Личное ----"
 
-#: frontend/php/include/trackers/show.php:865
+#: frontend/php/include/trackers/show.php:895
 #, fuzzy
 msgid "Digest:"
 msgstr "Высший"
 
-#: frontend/php/include/trackers/show.php:874
+#: frontend/php/include/trackers/show.php:904
 #, fuzzy
 msgid "support dependencies"
 msgstr "Удалить эту зависимость?"
 
-#: frontend/php/include/trackers/show.php:877
+#: frontend/php/include/trackers/show.php:907
 #, fuzzy
 msgid "bug dependencies"
 msgstr "Удалить эту зависимость?"
 
-#: frontend/php/include/trackers/show.php:880
+#: frontend/php/include/trackers/show.php:910
 #, fuzzy
 msgid "task dependencies"
 msgstr "Удалить эту зависимость?"
 
-#: frontend/php/include/trackers/show.php:883
+#: frontend/php/include/trackers/show.php:913
 #, fuzzy
 msgid "patch dependencies"
 msgstr "Высший"
 
-#: frontend/php/include/trackers/show.php:886
+#: frontend/php/include/trackers/show.php:916
 #, fuzzy, php-format
 msgid "%s dependencies"
 msgstr "Зависимости"
@@ -7968,7 +7996,7 @@ msgstr ""
 
 #: frontend/php/include/trackers/general.php:1444
 #, php-format
-msgid "Unexpected error, disregarding file %s attachement"
+msgid "Unexpected error, disregarding file %s attachment"
 msgstr ""
 
 #: frontend/php/include/trackers/general.php:1451
@@ -8034,7 +8062,8 @@ msgid "CC Removed"
 msgstr "CC удален."
 
 #: frontend/php/include/trackers/general.php:1725
-msgid "Failed to delete dependancy."
+#, fuzzy
+msgid "Failed to delete dependency."
 msgstr "Не удалось удалить зависимость."
 
 #: frontend/php/include/trackers/general.php:1730
@@ -8219,7 +8248,7 @@ msgstr ""
 msgid "Other comments:"
 msgstr "Другие комментарии:"
 
-#: frontend/php/include/dnsbl.php:71
+#: frontend/php/include/dnsbl.php:72
 #, php-format
 msgid "Your IP address is blacklisted %s"
 msgstr "Ваш IP-адресс в черном списке %s"
@@ -8235,7 +8264,7 @@ msgid "The number of words required for a passphrase: %s."
 msgstr ""
 
 #: frontend/php/include/account.php:53
-msgid "Checks for common substrigs are disabled."
+msgid "Checks for common substrings are disabled."
 msgstr ""
 
 #: frontend/php/include/account.php:63
@@ -9504,144 +9533,144 @@ msgstr "каждую Суботту"
 msgid "every Sunday"
 msgstr "каждое Воскресенье"
 
-#: frontend/php/include/utils.php:50
+#: frontend/php/include/utils.php:55
 #, php-format
 msgid ""
 "Warning: Savane was not able to read \"%s\" site-specific information, "
 "please contact administrators"
 msgstr ""
 
-#: frontend/php/include/utils.php:119 frontend/php/include/utils.php:145
-#: frontend/php/include/utils.php:157
+#: frontend/php/include/utils.php:124 frontend/php/include/utils.php:150
+#: frontend/php/include/utils.php:162
 msgid "(seems invalid and will probably be ignored)"
 msgstr ""
 
-#: frontend/php/include/utils.php:124
+#: frontend/php/include/utils.php:129
 #, php-format
 msgid "(unknown to Savane, will fail if not valid at %s)"
 msgstr ""
 
-#: frontend/php/include/utils.php:163 frontend/php/include/utils.php:165
-#: frontend/php/include/utils.php:186 frontend/php/include/utils.php:188
+#: frontend/php/include/utils.php:168 frontend/php/include/utils.php:170
+#: frontend/php/include/utils.php:191 frontend/php/include/utils.php:193
 msgid "-unavailable-"
 msgstr ""
 
-#: frontend/php/include/utils.php:166 frontend/php/include/utils.php:189
+#: frontend/php/include/utils.php:171 frontend/php/include/utils.php:194
 msgid "This information is not provided to anonymous users"
 msgstr ""
 
-#: frontend/php/include/utils.php:331
+#: frontend/php/include/utils.php:336
 #, fuzzy, php-format
 msgid "%sMB"
 msgstr "Мб"
 
-#: frontend/php/include/utils.php:335
+#: frontend/php/include/utils.php:340
 #, fuzzy, php-format
 msgid "%skB"
 msgstr "Мб"
 
-#: frontend/php/include/utils.php:339
+#: frontend/php/include/utils.php:344
 #, php-format
 msgid "%sB"
 msgstr ""
 
-#: frontend/php/include/utils.php:399
+#: frontend/php/include/utils.php:404
 msgid "rpm package"
 msgstr ""
 
-#: frontend/php/include/utils.php:403
+#: frontend/php/include/utils.php:408
 msgid "debian package"
 msgstr ""
 
-#: frontend/php/include/utils.php:410
+#: frontend/php/include/utils.php:415
 #, php-format
 msgid "source %s"
 msgstr ""
 
-#: frontend/php/include/utils.php:414
-#, php-format
-msgid "arch independant %s"
-msgstr ""
+#: frontend/php/include/utils.php:419
+#, fuzzy, php-format
+msgid "arch independent %s"
+msgstr "Высший"
 
-#: frontend/php/include/utils.php:418
+#: frontend/php/include/utils.php:423
 #, php-format
 msgid "%s for i386 (ix86)"
 msgstr "%s для i386 (ix86)"
 
-#: frontend/php/include/utils.php:422
+#: frontend/php/include/utils.php:427
 #, php-format
 msgid "%s for i586"
 msgstr "%s для i586"
 
-#: frontend/php/include/utils.php:426
+#: frontend/php/include/utils.php:431
 #, php-format
 msgid "%s for i686"
 msgstr "%s для i686"
 
-#: frontend/php/include/utils.php:430
+#: frontend/php/include/utils.php:435
 #, php-format
 msgid "%s for Itanium 64"
 msgstr "%s для Itanium 64"
 
-#: frontend/php/include/utils.php:434
+#: frontend/php/include/utils.php:439
 #, php-format
 msgid "%s for Sparc"
 msgstr "%s для Sparc"
 
-#: frontend/php/include/utils.php:438
+#: frontend/php/include/utils.php:443
 #, php-format
 msgid "%s for Alpha"
 msgstr "%s для Alpha"
 
-#: frontend/php/include/utils.php:442
+#: frontend/php/include/utils.php:447
 #, php-format
 msgid "%s for PowerPC"
 msgstr "%s для PowerPC"
 
-#: frontend/php/include/utils.php:446
+#: frontend/php/include/utils.php:451
 #, php-format
 msgid "%s for s390"
 msgstr "%s для s390"
 
-#: frontend/php/include/utils.php:724
+#: frontend/php/include/utils.php:729
 msgid "Open Items Priority Colors:"
 msgstr ""
 
-#: frontend/php/include/utils.php:732
+#: frontend/php/include/utils.php:737
 msgid "Closed Items Priority Colors:"
 msgstr ""
 
-#: frontend/php/include/utils.php:779
+#: frontend/php/include/utils.php:784
 msgid "bugs"
 msgstr "ошибки"
 
-#: frontend/php/include/utils.php:782
+#: frontend/php/include/utils.php:787
 msgid "recipes"
 msgstr "рецепты"
 
-#: frontend/php/include/utils.php:785
+#: frontend/php/include/utils.php:790
 msgid "patches"
 msgstr "Заплатки (патчи)"
 
-#: frontend/php/include/utils.php:788
+#: frontend/php/include/utils.php:793
 #, fuzzy
 msgid "support requests"
 msgstr "Мои запросы на поддержку"
 
-#: frontend/php/include/utils.php:791
+#: frontend/php/include/utils.php:796
 #, fuzzy
 msgid "tasks"
 msgstr "Мои задачи"
 
-#: frontend/php/include/utils.php:823
+#: frontend/php/include/utils.php:828
 msgid "Medium"
 msgstr "Носитель"
 
-#: frontend/php/include/utils.php:827
+#: frontend/php/include/utils.php:832
 msgid "Highest"
 msgstr "Высший"
 
-#: frontend/php/include/utils.php:1311
+#: frontend/php/include/utils.php:1316
 msgid "Error updating database"
 msgstr "Ошибка при обновлении базы данных"
 
@@ -10109,6 +10138,1504 @@ msgstr ""
 msgid "Duplicate Post: this form was already submitted."
 msgstr ""
 
+#: frontend/site-specific/gnu-content/register/confirmation.php:24
+#, fuzzy
+msgid "Registration Complete!"
+msgstr "Дата регистрации"
+
+#: frontend/site-specific/gnu-content/register/confirmation.php:26
+#, php-format
+msgid ""
+"Your project has been submitted and is waiting to be reviewed by a\n"
+"%s\n"
+"administrator. You will shortly receive a mail message telling you whether\n"
+"your project has been approved, or you have to do some changes before it is\n"
+"approved."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:27
+msgid ""
+"Savannah is a hosting facility for the free software movement.  Our\n"
+"mission is to spread the freedom to copy and modify software."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:32
+#, php-format
+msgid ""
+"<strong>Important</strong>: check <a\n"
+"href=\"%s\">\n"
+"Project - How to get it approved quickly</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:38
+msgid ""
+"It contains a few advices to get your package compliant with\n"
+"our hosting policies. Following them will considerably speed up the\n"
+"registration process."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:43
+msgid ""
+"You are welcome to host your project in Savannah if it falls within one\n"
+"of these groups:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:47
+msgid "<strong>Software Project</strong>"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:48
+msgid ""
+"A free software package that can run on a completely free operating\n"
+"system, without depending on any nonfree software. You can only provide\n"
+"versions for nonfree operating systems if you also provide free\n"
+"operating systems versions with the same or more functionalities. Large\n"
+"software distributions are not allowed; they should be split into separate\n"
+"projects."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:55
+msgid "<strong>Free Documentation Projects</strong>"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:56
+msgid ""
+"Documentation for free software programs, released under a free\n"
+"documentation license."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:59
+msgid "<strong>Free Educational Textbook Projects</strong>"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:60
+msgid ""
+"Projects aimed to create educational textbooks, released under a free\n"
+"documentation license."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:63
+msgid "<strong>FSF/GNU projects</strong>"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:64
+msgid ""
+"Internal projects of the FSF and projects that have been approved\n"
+"by the GNU Project management."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:67
+msgid "<strong>GNU/Linux User Groups (GUG)</strong>"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:69
+#, php-format
+msgid ""
+"Organizational project for your user group. GUG need to be listed\n"
+"at <a href=\"%s\">GNU Users\n"
+"Groups page<a> - contact %s for details."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:79
+msgid ""
+"In the following 5 registration steps you will be asked to describe your\n"
+"project and choose a free license for it. Your project does not have to be\n"
+"part of the GNU project or be released under the GPL to be hosted here, but "
+"if\n"
+"you want to take the opportunity to make your project part of GNU, you can\n"
+"request that later on in the registration process."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:87
+#, php-format
+msgid ""
+"To keep compatibility among Savannah projects, we only accept free software\n"
+"licenses that are compatible with the GPL. The list of GPL-compatible "
+"licenses\n"
+"covers several of the most commonly used licenses; if you are not familiar\n"
+"with that list, please take some time to read <a\n"
+"href=\"%s\">GPL-compatible, free software licenses</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:96
+msgid ""
+"Keep in mind that your project is not approved automatically\n"
+"after you follow the registration steps, but it will have to be evaluated\n"
+"by one of the Savannah administrators. That process may take from one day\n"
+"to a week, depending on the current number of pending projects."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/index.php:102
+msgid ""
+"To ease handling the large number of projects we receive, whenever we ask "
+"you\n"
+"to provide more information that we think is missing from your registration\n"
+"or when we ask you to make some changes, your registration will be removed\n"
+"and you will have to register your project again after the changes are "
+"done.\n"
+"This does not imply that we are reluctant to host your project; it is "
+"fairly\n"
+"common for projects to undergo more than one registration before they\n"
+"are finally approved, so please be prepared for that."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:3
+msgid ""
+"Please read these usage terms carefully.  If you don't follow them,\n"
+"we will not accept your project; if we don't have enough information\n"
+"determine whether your project follows these terms, we will\n"
+"have to ask you to register the project again with more details.\n"
+"Once your project is accepted, you are expected to continue following\n"
+"these terms."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:10
+msgid ""
+"Our intent is to provide a permanent home for all versions of your project.\n"
+"We do reserve the right, however, to discontinue hosting a project."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:13
+#, fuzzy
+msgid "Use of project account"
+msgstr "Зарегистрируйте свой проект на %s"
+
+#: frontend/site-specific/gnu-content/register/requirements.php:16
+#, php-format
+msgid ""
+"The space given to you on this server is given for the expressed\n"
+"purpose of advancing free software that can run in free operating systems,\n"
+"documenting such software, or creating free educational textbooks.\n"
+"Using it to host or advertise nonfree software is considered harmful to\n"
+"free software.  For more information, please read the <a\n"
+"href=\"%s\">\n"
+"Philosophy of the GNU Project</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:27
+msgid ""
+"In order to preserve history and complete transparency, we will not\n"
+"remove projects with substantive content."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:30
+msgid "No dependencies on nonfree software"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:32
+msgid ""
+"To be hosted on Savannah, your project must be free software, and it\n"
+"must be kept independent of any nonfree software.  The package must\n"
+"not refer the user to any nonfree software; in particular, it must\n"
+"not automatically download or install any nonfree software."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:37
+msgid ""
+"The program should deliver its full functionality and convenience on a\n"
+"completely free platform based on a free operating system, such as\n"
+"GNU/Linux, working entirely with other free software.  Otherwise, it\n"
+"would be an inducement to install nonfree operating systems or other\n"
+"nonfree software."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:43
+msgid ""
+"It is ok for the program to run on nonfree platforms or nonfree\n"
+"operating systems, and to work with well-known nonfree applications,\n"
+"in addition to working with free software, provided it gives the free\n"
+"software at least as good support as it gives to other\n"
+"alternatives.  In other words, at no time, in no way, should your\n"
+"program put free software users at a disadvantage compared to those\n"
+"willing to use proprietary software."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:51
+msgid "Regarding Android phones"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:53
+msgid ""
+"Provided Savannah's maintainers have the capacity, projects running on\n"
+"Replicant may be hosted on Savannah.  Projects having dependencies on\n"
+"nonfree software, such as proprietary software drivers or AndroidOS,\n"
+"are not permissible"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:58
+msgid "No nonfree formats"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:60
+msgid ""
+"Using a format such as Flash, RealPlayer and QuickTime, that can in\n"
+"practice only be created or played using nonfree software is, in\n"
+"effect, to recommend use of that nonfree player software.  When the\n"
+"free software alternative is not as good as the proprietary one, using\n"
+"such a format is also implicitly recommending the nonfree solution.\n"
+"Therefore, your package shouldn't contain or recommend materials in\n"
+"these nonfree formats."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:68
+msgid "Advertisements"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:70
+msgid ""
+"In general, you may not advertise anything commercial on a site hosted\n"
+"here.  However, as exceptions, you can point people to commercial\n"
+"support offerings for your free software project, and you can mention\n"
+"fan items about your free software project that you sell directly to\n"
+"the users."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:76
+msgid "Speaking about free software"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:78
+msgid ""
+"Savannah is a free software hosting site: we host projects such as\n"
+"yours for the sake of the ideals of freedom and community that the\n"
+"free software movement stands for.  We offer Savannah hosting to free\n"
+"software packages, as free software packages; therefore, please\n"
+"describe your package clearly as a free software package.  Please\n"
+"label it as &ldquo;free software&rdquo; rather than as &ldquo;open\n"
+"source&rdquo;."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:86
+msgid ""
+"Savannah is part of the GNU Project, developer of the free software\n"
+"operating system GNU.  The GNU/Linux system (GNU with Linux as the\n"
+"kernel) runs Savannah now.  While using our hosting services, please\n"
+"acknowledge our work by referring to this system as &ldquo;GNU/Linux,&rdquo; "
+"not\n"
+"just &ldquo;Linux,&rdquo; when you mention it in connection with this\n"
+"package."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:94
+#, php-format
+msgid ""
+"If you'd like to help correct other confusions, you can find some\n"
+"suggestions in <a href=\"%s\">\n"
+"Words to Use with Care</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:100
+#, fuzzy
+msgid "Project naming"
+msgstr "Название проекта"
+
+#: frontend/site-specific/gnu-content/register/requirements.php:102
+msgid ""
+"Project identifiers should be reasonably descriptive, rather than\n"
+"terse abbreviations or confusingly general.  If we believe this to be an\n"
+"issue, we will discuss it with you."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:106
+msgid "Free software licenses"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:108
+msgid ""
+"You will be presented with a choice of free software licenses for\n"
+"your project.  For hosting on Savannah, you must use one of these\n"
+"licenses, which give the freedom to anyone to use, study, copy, and\n"
+"distribute the source code and distribute modified versions of it, and\n"
+"which are compatible with the GNU GPL.  We recommend GPLv3-or-later; in\n"
+"any case, we require the &ldquo;or any later version&rdquo; formulation\n"
+"for the GNU GPL, GNU AGPL, and GNU LGPL.  You will remain the copyright\n"
+"holder of whatever you create for your project."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:118
+#, php-format
+msgid ""
+"For manuals, we recommend GNU FDL version X-or-later, where X is the\n"
+"latest released version of the <a\n"
+"href=\"%s\">FDL</a>; other\n"
+"licensing compatible with that is acceptable."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:125
+#, php-format
+msgid ""
+"Proper license notices should be applied to, at least, each source\n"
+"(non-derived) file in your project.  For example, for the GPL, see the\n"
+"page on <a href=\"%s\">How to Use\n"
+"GNU Licenses</a>.  In the case of binary source files, such as images,\n"
+"it is ok for the license to be stated in a companion <tt>README</tt> or\n"
+"similar file.  It is desirable for derived files to also include license\n"
+"notices.  A copy of the full text of all applicable licenses should also\n"
+"be included in the project."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/register/requirements.php:136
+msgid ""
+"If you need to use another license that is not listed, let us know\n"
+"and we, or most likely the FSF licensing group, will review these\n"
+"requests on a case-by-case basis.  Software licenses must be\n"
+"GPL-compatible."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/my/groups.php:23
+#, php-format
+msgid ""
+"To remove a project, please contact the <a\n"
+"href=\"%s\">Savannah Hackers</a>\n"
+"indicating the new project location&mdash;we\n"
+"only remove projects if they are available at another place&mdash;and\n"
+"optionally the reason why you leave :)\n"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/page_header.php:25
+#: frontend/site-specific/nongnu-content/page_header.php:25
+msgid ""
+"Verbatim copying and distribution of this entire article\n"
+"is permitted in any medium, provided this notice is preserved."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/page_header.php:28
+#: frontend/site-specific/nongnu-content/page_header.php:28
+msgid ""
+"Savannah is a central point for development, distribution\n"
+"and maintenance of free software, both GNU and non-GNU."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/project/admin/index_misc.php:30
+#: frontend/site-specific/nongnu-content/project/admin/index_misc.php:27
+msgid "Miscellaneous..."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/project/admin/index_misc.php:32
+#: frontend/site-specific/nongnu-content/project/admin/index_misc.php:29
+msgid "Backup"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/project/admin/index_misc.php:34
+#: frontend/site-specific/nongnu-content/project/admin/index_misc.php:31
+msgid ""
+"You can get read-only access to your raw CVS files (the RCS\n"
+"<code>,v</code> ones) using rsync:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/project/admin/index_misc.php:45
+msgid "ftp.gnu.org area"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/project/admin/index_misc.php:49
+#, php-format
+msgid ""
+"Each GNU project has a download area at ftp.gnu.org. This area is not\n"
+"managed via Savannah.  Write to %s to get access."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/arch/index.php:25
+#, fuzzy
+msgid "Anonymous Arch Access"
+msgstr "Аноним"
+
+#: frontend/site-specific/gnu-content/arch/index.php:27
+msgid "This project's Arch repository can be accessed through http."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/arch/index.php:35
+#, fuzzy
+msgid "Project Member Arch Access"
+msgstr "Список участников проекта"
+
+#: frontend/site-specific/gnu-content/arch/index.php:37
+msgid ""
+"This project's Arch repository can be accessed throgh sftp for project "
+"members."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/arch/index.php:41
+#: frontend/site-specific/gnu-content/cvs/index.php:84
+msgid ""
+"The SSHv2 public key fingerprints for the machine hosting the cvs\n"
+"trees are:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/arch/index.php:54
+#: frontend/site-specific/gnu-content/svn/index.php:72
+#: frontend/site-specific/gnu-content/cvs/index.php:97
+#: frontend/site-specific/gnu-content/bzr/index.php:65
+#: frontend/site-specific/gnu-content/git/index.php:69
+#, fuzzy
+msgid "membername"
+msgstr "Запомнить меня"
+
+#: frontend/site-specific/gnu-content/arch/index.php:63
+#, fuzzy
+msgid "More Information"
+msgstr "Общая информация"
+
+#: frontend/site-specific/gnu-content/arch/index.php:66
+#, php-format
+msgid "For more information, see %s.</p>\n"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:36
+#: frontend/site-specific/nongnu-content/hashes.php:36
+msgid "GNU General Public License v2 or later"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:37
+#: frontend/site-specific/nongnu-content/hashes.php:37
+msgid "GNU Lesser General Public License"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:38
+#: frontend/site-specific/nongnu-content/hashes.php:38
+#, fuzzy
+msgid "GNU Free Documentation License"
+msgstr "Документация"
+
+#: frontend/site-specific/gnu-content/hashes.php:39
+#: frontend/site-specific/nongnu-content/hashes.php:39
+msgid "Modified BSD License"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:40
+#: frontend/site-specific/nongnu-content/hashes.php:40
+#, fuzzy
+msgid "X11 license"
+msgstr "Лицензия"
+
+#: frontend/site-specific/gnu-content/hashes.php:41
+#: frontend/site-specific/nongnu-content/hashes.php:41
+msgid "Cryptix General License"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:42
+#: frontend/site-specific/nongnu-content/hashes.php:42
+msgid "The license of ZLib"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:43
+#: frontend/site-specific/nongnu-content/hashes.php:43
+msgid "The license of the iMatix Standard Function Library"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:44
+#: frontend/site-specific/nongnu-content/hashes.php:44
+msgid "The W3C Software Notice and License"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:45
+#: frontend/site-specific/nongnu-content/hashes.php:45
+msgid "The Berkeley Database License"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:46
+#: frontend/site-specific/nongnu-content/hashes.php:46
+msgid "The License of Python 1.6a2 and earlier versions"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:47
+#: frontend/site-specific/nongnu-content/hashes.php:47
+msgid "The License of Python 2.0.1, 2.1.1, and newer versions"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:48
+#: frontend/site-specific/nongnu-content/hashes.php:48
+msgid "The Clarified Artistic License"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:50
+#: frontend/site-specific/nongnu-content/hashes.php:50
+msgid ""
+"The license of Perl (disjunction of the Artistic License and the GNU GPL)"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:51
+#: frontend/site-specific/nongnu-content/hashes.php:51
+msgid "Expat License (sometime refered to as MIT License)"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:52
+#: frontend/site-specific/nongnu-content/hashes.php:52
+msgid "Affero General Public License v1 or later"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:54
+#: frontend/site-specific/nongnu-content/hashes.php:54
+msgid ""
+"GNU General Public License v2 or later with GNU Classpath special exception"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:55
+#: frontend/site-specific/nongnu-content/hashes.php:55
+#, fuzzy
+msgid "Public domain"
+msgstr "Публичный форум"
+
+#: frontend/site-specific/gnu-content/hashes.php:56
+#: frontend/site-specific/nongnu-content/hashes.php:56
+msgid "WebSite Only"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:59
+#: frontend/site-specific/nongnu-content/hashes.php:59
+msgid "GNU General Public License v2 or later (+ dual licensing)"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:60
+#: frontend/site-specific/nongnu-content/hashes.php:60
+msgid "GNU General Public License v3 or later"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:61
+#: frontend/site-specific/nongnu-content/hashes.php:61
+msgid "GNU Affero General Public License v3 or later"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:88
+#: frontend/site-specific/nongnu-content/hashes.php:88
+msgid "0 - Undefined"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:89
+#: frontend/site-specific/nongnu-content/hashes.php:89
+msgid "1 - Planning"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:90
+#: frontend/site-specific/nongnu-content/hashes.php:90
+msgid "2 - Pre-Alpha"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:91
+#: frontend/site-specific/nongnu-content/hashes.php:91
+#, fuzzy
+msgid "3 - Alpha"
+msgstr "%s для Alpha"
+
+#: frontend/site-specific/gnu-content/hashes.php:92
+#: frontend/site-specific/nongnu-content/hashes.php:92
+msgid "4 - Beta"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:93
+#: frontend/site-specific/nongnu-content/hashes.php:93
+msgid "5 - Production/Stable"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:94
+#: frontend/site-specific/nongnu-content/hashes.php:94
+msgid "6 - Mature"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hashes.php:98
+#: frontend/site-specific/nongnu-content/hashes.php:98
+msgid "? - Orphaned/Unmaintained"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:26
+msgid "Anonymous / read-only Subversion access"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:28
+msgid ""
+"This project's Subversion repository can be checked out anonymously\n"
+"as follows.  The module you wish to check out must be specified as the\n"
+"<i>modulename</i>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:34
+msgid "Access using the SVN protocol:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:39
+#: frontend/site-specific/gnu-content/svn/index.php:45
+#: frontend/site-specific/gnu-content/svn/index.php:82
+#: frontend/site-specific/gnu-content/cvs/index.php:117
+#, fuzzy
+msgid "modulename"
+msgstr "Полное название"
+
+#: frontend/site-specific/gnu-content/svn/index.php:40
+msgid "Access using HTTP (slower):"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:47
+msgid ""
+"Typically, you'll want to use <tt>trunk</tt> for\n"
+"<em>modulename</em>. Refer to a project's specific instructions if\n"
+"you're unsure, or browse the repository with ViewVC."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:52
+msgid "Project member Subversion access via SSH"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:55
+msgid "Member access is performed using the Subversion over SSH method."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:59
+msgid ""
+"The SSHv2 public key fingerprints for the machine hosting the source\n"
+"trees are:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:75
+msgid "Software repository (over SSH):"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:85
+msgid "Importing into Subversion on Savannah"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:90
+#, php-format
+msgid ""
+"If your project already has an existing source repository that you\n"
+"want to move to Savannah, check the <a\n"
+"href=\"%s\">conversion\n"
+"documentation</a> and then submit a request for the\n"
+"migration in the <a\n"
+"href=\"%s\">Savannah\n"
+"Administration</a> project."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:102
+msgid "Exporting Subversion tree from Savannah"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:105
+msgid ""
+"You can access your subversion raw repository using read-only access via\n"
+"rsync, and then use that copy as a local svn repository:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/svn/index.php:115
+msgid "If you want a dump you can also use svnadmin:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:28
+#, fuzzy
+msgid "Anonymous CVS Access"
+msgstr "Аноним"
+
+#: frontend/site-specific/gnu-content/cvs/index.php:31
+msgid ""
+"This project's CVS repository can be checked out through anonymous\n"
+"CVS with the following instruction set. The module you wish\n"
+"to check out must be specified as the <i>modulename</i>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:38
+#: frontend/site-specific/gnu-content/cvs/index.php:100
+#, fuzzy
+msgid "Software repository:"
+msgstr "Просмотреть репозиторий исходных текстов"
+
+#: frontend/site-specific/gnu-content/cvs/index.php:45
+#: frontend/site-specific/gnu-content/cvs/index.php:110
+msgid "With other project modules:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:50
+msgid "&lt;<em>modulename</em>&gt;"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:54
+#: frontend/site-specific/gnu-content/cvs/index.php:120
+#, fuzzy
+msgid "Webpages repository:"
+msgstr "Просмотреть репозиторий веб-страниц"
+
+#: frontend/site-specific/gnu-content/cvs/index.php:65
+msgid ""
+"<em>Hint:</em>When you update your working copy from within the\n"
+"module's directory (with <em>cvs update</em>) you do not need the -d\n"
+"option anymore.  Simply use:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:76
+msgid "to preview and status check."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:78
+#, fuzzy
+msgid "Project Member CVS Access via SSH"
+msgstr "Список участников проекта"
+
+#: frontend/site-specific/gnu-content/cvs/index.php:80
+msgid ""
+"Member access is performed using the CVS over SSH method. The\n"
+"pserver method can only be used for anonymous access."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:132
+msgid "CVS Newbies"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:137
+#, php-format
+msgid ""
+"If you've never used CVS, you should read some documentation about\n"
+"it; a useful URL is %s. Using\n"
+"CVS is not complex but you have to understand what is going on. The\n"
+"best way to start is to ask a friend to show you the way."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:146
+#, php-format
+msgid ""
+"The basic information described further on this page is detailed in\n"
+"<a href=\"%s\">the savannah user doc</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:151
+msgid "What are CVS modules?"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:153
+#, php-format
+msgid ""
+"The CVS repository of each project is divided into modules which you can\n"
+"download separately.  The list of existing modules for this project can be\n"
+"obtained by looking at <a href=\"%s\">the root of the CVS repository</a>; "
+"each\n"
+"<strong>File</strong> listed there is the name of a module, which can "
+"substitute\n"
+"the generic &lt;<em>modulename</em>&gt; used below in the examples of the\n"
+"<em>co</em> command of CVS.  Note that <strong>.</strong> (dot) is always "
+"also\n"
+"a valid module name which stands for &ldquo;all available modules&rdquo; in "
+"a project.  Most\n"
+"projects have a module with the same name of the project, where the main\n"
+"software development takes place."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:167
+msgid "The same applies to the Webpages Repository."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:170
+msgid "Import your CVS tree"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:172
+msgid ""
+"If your project already has an existing CVS repository that you\n"
+"want to move to Savannah, make an appointment with us for the\n"
+"migration."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:177
+msgid "Symbolic Links in HTML CVS"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:182
+#, php-format
+msgid ""
+"As a special feature in CVS web repositories (only), a file named\n"
+"<tt>.symlinks</tt> can be put in any directory where you want to make "
+"symbolic\n"
+"links.  Each line of the file lists a real file name followed by the name of "
+"the\n"
+"symbolic link. The symbolic links are built twice an hour.  More information "
+"in\n"
+"<a href=\"%s\">GNU Webmastinrg Guidelines</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:192
+msgid "Web pages for GNU packages"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/cvs/index.php:194
+#, php-format
+msgid ""
+"When writing web pages for official GNU packages, please keep the\n"
+"<a href=\"%s\"> guidelines</a> in mind."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/page_footer.php:30
+#: frontend/site-specific/nongnu-content/page_footer.php:30
+#, fuzzy
+msgid "Source Code"
+msgstr "Исходный код"
+
+#: frontend/site-specific/gnu-content/page_footer.php:33
+#: frontend/site-specific/nongnu-content/page_footer.php:33
+msgid "Copyright &copy; 2017 &nbsp;Free Software Foundation, Inc."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/page_footer.php:37
+#: frontend/site-specific/nongnu-content/page_footer.php:37
+msgid ""
+"Verbatim copying and distribution of this entire article is\n"
+"permitted in any medium, provided this notice is preserved."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/page_footer.php:43
+#: frontend/site-specific/nongnu-content/page_footer.php:43
+#, php-format
+msgid ""
+"The <a href=\"%s\">Levitating,\n"
+"Meditating, Flute-playing Gnu</a> logo is a GNU GPL'ed image provided\n"
+"by the Nevrax Design Team."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/hg/index.php:25
+#, fuzzy
+msgid "Anonymous checkout:"
+msgstr "Аноним"
+
+#: frontend/site-specific/gnu-content/hg/index.php:32
+#: frontend/site-specific/gnu-content/git/index.php:84
+#, fuzzy
+msgid "More information"
+msgstr "Сведения о проекте"
+
+#: frontend/site-specific/gnu-content/menu.php:28
+#: frontend/site-specific/nongnu-content/menu.php:28
+#, fuzzy
+msgid "User Docs: FAQ"
+msgstr "Документация для пользователя (ЧаВо)"
+
+#: frontend/site-specific/gnu-content/menu.php:30
+#: frontend/site-specific/nongnu-content/menu.php:30
+#, fuzzy
+msgid "Help GNU"
+msgstr "помощь"
+
+#: frontend/site-specific/gnu-content/menu.php:31
+#: frontend/site-specific/nongnu-content/menu.php:31
+msgid "All GNU Packages"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:32
+#: frontend/site-specific/nongnu-content/menu.php:32
+msgid "Dev Resources"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:33
+#: frontend/site-specific/nongnu-content/menu.php:33
+#, fuzzy
+msgid "License List"
+msgstr "Лицензия"
+
+#: frontend/site-specific/gnu-content/menu.php:34
+#: frontend/site-specific/nongnu-content/menu.php:34
+msgid "GNU Mirrors"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:44
+#: frontend/site-specific/nongnu-content/menu.php:44
+#, fuzzy
+msgid "Support freedom"
+msgstr "Мои запросы на поддержку"
+
+#: frontend/site-specific/gnu-content/menu.php:45
+#: frontend/site-specific/nongnu-content/menu.php:45
+msgid "Help protect your freedom, join the Free Software Foundation"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:53
+#: frontend/site-specific/nongnu-content/menu.php:53
+msgid "Free Software Foundation"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:54
+#: frontend/site-specific/nongnu-content/menu.php:54
+#, fuzzy
+msgid "Coming Events"
+msgstr "Комментарии"
+
+#: frontend/site-specific/gnu-content/menu.php:56
+#: frontend/site-specific/nongnu-content/menu.php:56
+#, fuzzy
+msgid "Free Software Directory"
+msgstr "Каталог загрузки:"
+
+#: frontend/site-specific/gnu-content/menu.php:58
+#: frontend/site-specific/nongnu-content/menu.php:58
+msgid "Cryptographic software legal notice"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:60
+#: frontend/site-specific/nongnu-content/menu.php:60
+#, fuzzy
+msgid "Copyright infringement notification"
+msgstr "Управление уведомлениями"
+
+#: frontend/site-specific/gnu-content/menu.php:63
+#: frontend/site-specific/nongnu-content/menu.php:63
+msgid "Related Forges"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:66
+#: frontend/site-specific/nongnu-content/menu.php:66
+msgid "Savannah Non-GNU"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:69
+#: frontend/site-specific/nongnu-content/menu.php:69
+#, fuzzy
+msgid "GNU Savannah"
+msgstr "Связаться с нами"
+
+#: frontend/site-specific/gnu-content/menu.php:71
+#: frontend/site-specific/nongnu-content/menu.php:71
+msgid "Gna!"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/menu.php:73
+#: frontend/site-specific/nongnu-content/menu.php:73
+msgid "Puszcza"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:26
+msgid "Anonymous read-only access"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:28
+msgid ""
+"The Bazaar repositories for projects use separate directories for\n"
+"each branch. You can see the branch names in the repository by pointing\n"
+"a web browser to:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:35
+msgid ""
+"For a repository with separate branch directories (<tt>trunk</tt>,\n"
+"<tt>devel</tt>, &hellip;), use:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:41
+msgid "where <i>branch</i> is the name of the branch you want."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:45
+msgid "For a repository with only a top-level <tt>.bzr</tt> directory, use:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:52
+msgid "If you need the low-performance HTTP access, this is the url:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:58
+msgid "Developer write access (ssh)"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/bzr/index.php:73
+#, fuzzy
+msgid "More introductory documentation"
+msgstr "Документация администратора"
+
+#: frontend/site-specific/gnu-content/bzr/index.php:78
+#, php-format
+msgid "Check the <a href=\"%s\">UsingBzr</a> page at the documentation wiki."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/admin/groupedit_grouptype.php:25
+#, php-format
+msgid ""
+"To check if a package is official GNU software, see the file\n"
+"fencepost.gnu.org:/gd/gnuorg/maintainers.  If it is not listed there,\n"
+"and no official dubbing message has been sent, it must <b>not</b> be\n"
+"approved as &ldquo;Official GNU Software&rdquo;.  The type should be\n"
+"changed to non-GNU in this case.  If the submitter wants to offer the\n"
+"project to GNU, please point them to %s."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/admin/groupedit_intro.php:26
+#: frontend/site-specific/nongnu-content/admin/groupedit_intro.php:25
+msgid ""
+"When examining a submission, first check the description.  If the "
+"description\n"
+"is unclear, delete the project and ask the submitter to send a more "
+"detailed\n"
+"description.  If the software claims to be free software, check the "
+"submitted\n"
+"tarball, some people are confused and/or misled."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:24
+msgid "New mailing lists at Savannah"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:28
+#, php-format
+msgid ""
+"New mailing lists created through Savannah have the following\n"
+"features enabled by default, in addition to the usual\n"
+"<a href=\"%s\">GNU Mailman</a> defaults."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:35
+msgid ""
+"No footer is added to messages (<tt>footer</tt>, under\n"
+"&lsquo;Non-digest options&rsquo;)."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:38
+msgid ""
+"When a new member joins the list, their initial posting is held for\n"
+"the list owner's review (<tt>default_member_moderation</tt>, under\n"
+"&lsquo;Privacy &gt; Sender filters&rsquo;).  This is necessary because\n"
+"smart spam systems can now automatically subscribe to mailman lists and\n"
+"then start sending their junk mail.  However, provided the subscription\n"
+"is legitimate (as it usually will be), we strongly recommend\n"
+"<i>accept</i>ing their address for future postings."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:48
+#, php-format
+msgid ""
+"Automated (though asynchronous) spam deletion, through the <a\n"
+"href=\"%s\">listhelper system</a>.  More details about this:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:54
+msgid ""
+"The first time a person posts to a list under a particular email\n"
+"address, the message is held for review, potentially by the mailman list\n"
+"owner(s) (you), the listhelper automated system, and the listhelper\n"
+"human volunteers.  This is when spam is detected and deleted."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:59
+msgid ""
+"Therefore, if you are concerned about your list's messages being\n"
+"seen by the small group of listhelper volunteers, you should disable\n"
+"listhelper (remove listhelper@nongnu.org from the <tt>moderator</tt>\n"
+"field on the &lsquo;General Options&rsquo; page), and consequently deal\n"
+"with any incoming spam yourself."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:65
+msgid ""
+"By default, Mailman sends a &ldquo;request for approval&rdquo;\n"
+"notification on every message, and this is critical for listhelper's\n"
+"operation.  You will probably want to filter these from your inbox, with\n"
+"a pattern such as this:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:71
+msgid ""
+"(Despite appearances, that needs to match in the body of the message,\n"
+"not the headers.)  Alternatively, if you choose to turn off listhelper,\n"
+"you may also want to turn off this option (<tt>admin_immed_notify</tt>\n"
+"on the &lsquo;General Options&rsquo; page)."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:78
+#, php-format
+msgid "For more information, see the <a href=\"%s\">listhelper home page</a>"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/mail/about_list_creation.php:85
+msgid ""
+"Of course, as the list owner, you can make changes to the\n"
+"configuration at any time, but if in any doubt, please ask.  The\n"
+"defaults are set to minimize spam, list administrator overhead, and the\n"
+"chance of our mail server being blacklisted."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:27
+#: frontend/site-specific/nongnu-content/homepage.php:26
+#, php-format
+msgid ""
+"Welcome to <strong>Savannah</strong>, the software forge for people\n"
+"committed to <a href=\"%s\">free\n"
+"software</a>:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:34
+#: frontend/site-specific/nongnu-content/homepage.php:33
+msgid ""
+"We host free projects that run on free operating systems and without\n"
+"    any proprietary software dependencies."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:36
+#: frontend/site-specific/nongnu-content/homepage.php:35
+#, php-format
+msgid ""
+"Our service runs with 100% free software, including <a\n"
+"    href=\"/projects/administration/\">itself</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:38
+#: frontend/site-specific/nongnu-content/homepage.php:37
+msgid ""
+"Why\n"
+"    choose Savannah?"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:42
+msgid ""
+"Savannah aims to be a central point for development, maintenance and\n"
+"distribution of <a href=\"//www.gnu.org/software/\">official GNU\n"
+"software</a>.  In addition, for projects that support free software but\n"
+"are not part of GNU, we provide <a\n"
+"href=\"//savannah.nongnu.org/\">savannah.nongnu.org</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:48
+msgid ""
+"If you would like to use Savannah to host your project, then go to\n"
+"the <b>Register new project</b> menu entry."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:51
+#: frontend/site-specific/nongnu-content/homepage.php:61
+msgid ""
+"We strongly recommend all Savannah users subscribe to this\n"
+"mailing list:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:54
+#: frontend/site-specific/nongnu-content/homepage.php:64
+msgid ""
+"<a href=\"//lists.gnu.org/mailman/listinfo/savannah-announce\">\n"
+"    savannah-announce</a>:\n"
+"    low-volume notifications of important issues and changes at Savannah."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:59
+#: frontend/site-specific/nongnu-content/homepage.php:69
+msgid ""
+"And this mailing list is a place for Savannah users to communicate and\n"
+"ask questions:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:62
+#: frontend/site-specific/nongnu-content/homepage.php:72
+msgid ""
+"<a href=\"//lists.gnu.org/mailman/listinfo/savannah-users\">\n"
+"    savannah-users</a>:\n"
+"    help with using Savannah in general (not with a specific project)."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/homepage.php:68
+#: frontend/site-specific/nongnu-content/homepage.php:78
+#, fuzzy
+msgid "Happy hacking!"
+msgstr "Трекер поддержки"
+
+#: frontend/site-specific/gnu-content/account/index_ssh.php:27
+#, php-format
+msgid ""
+"Your %s password is used only for\n"
+"logging into the Savannah web interface.  It is not used for bzr, cvs,\n"
+"git, hg, rsync, scp, sftp or other services.  Only SSH keys are\n"
+"used for those purposes."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/account/editsshkeys.php:28
+#, fuzzy
+msgid "SSH Public Keys"
+msgstr "Публично-доступная область"
+
+#: frontend/site-specific/gnu-content/account/editsshkeys.php:32
+#, php-format
+msgid ""
+"To generate a public key, see the\n"
+"<a href=\"%s\">Savannah FAQ\n"
+"entry for SSH</a>.  Please use only RSA keys, not DSA keys."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/account/editsshkeys.php:39
+msgid "What you need to copy/paste looks like this:"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/account/editsshkeys.php:43
+msgid ""
+"This public key data is commonly located in\n"
+"<code>~/.ssh/id_rsa.pub</code>.  If questions, check the FAQ."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/account/editsshkeys.php:47
+#, php-format
+msgid ""
+"If your key gets truncated, it is probably because your browser\n"
+"limits the maximum length of the text fields. Try with <a\n"
+"href=\"%s\">IceCat</a> (or Firefox), which is known to work."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/contact.php:28
+#: frontend/site-specific/nongnu-content/contact.php:28
+msgid "Savannah contact"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/contact.php:31
+#: frontend/site-specific/nongnu-content/contact.php:31
+msgid ""
+"First and foremost: <strong>don't use the links here for contact about\n"
+"specific projects!</strong>"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/contact.php:34
+#: frontend/site-specific/nongnu-content/contact.php:34
+msgid ""
+"If you have a question about using a particular program hosted on\n"
+"Savannah, or a bug report, please please\n"
+"<b>visit&nbsp;the&nbsp;specific&nbsp;project&nbsp;page</b>&nbsp;(i.e.,&nbsp;"
+"<code>/projects/projname</code>)\n"
+"to find the appropriate contact.  Savannah administrators generally have\n"
+"no knowledge of specific projects and cannot help with questions about\n"
+"them, so it is a waste of everyone's time to write us."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/contact.php:41
+#: frontend/site-specific/nongnu-content/contact.php:41
+#, fuzzy
+msgid "Contact points for Savannah itself:"
+msgstr "Связаться с нами"
+
+#: frontend/site-specific/gnu-content/contact.php:46
+#: frontend/site-specific/nongnu-content/contact.php:46
+#, php-format
+msgid ""
+"For general help with and discussion about using Savannah (<b>not</b>\n"
+"about a specific project hosted here), you can use the <a\n"
+"href=\"%s\">savannah-users\n"
+"mailing list</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/contact.php:52
+#: frontend/site-specific/nongnu-content/contact.php:52
+msgid ""
+"To report an issue or submit a request about the Savannah\n"
+"infrastructure (once again: <b>not</b> for a specific project), the best\n"
+"way is to"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/contact.php:60
+#: frontend/site-specific/nongnu-content/contact.php:60
+msgid "submit a request to the Savannah administration tracker"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/contact.php:66
+#: frontend/site-specific/nongnu-content/contact.php:66
+#, php-format
+msgid ""
+"As an alternative to submitting a tracker item, you can send mail to the <a\n"
+"href=\"%s\">savannah-help-public</a>\n"
+"list, after <a\n"
+"href=\"%s\">searching\n"
+"the archives</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/faq/Savannah_-_Is_there_any_restriction_on_cryptographic_software.php:2
+#: frontend/site-specific/gnu-content/faq/Project_-_What_is_the_registration_process.php:2
+#: frontend/site-specific/gnu-content/faq/Project_-_Is_there_a_way_to_clean_it_all.php:2
+#: frontend/site-specific/gnu-content/faq/CVS_-_How_do_I_start_using_the_repository.php:2
+#: frontend/site-specific/gnu-content/faq/CVS_-_How_can_I_access_a_repository_from_behind_a_firewall_or_proxy.php:2
+#: frontend/site-specific/gnu-content/faq/Project_-_What_does_it_mean_to_become_a_GNU_package.php:2
+#: frontend/site-specific/gnu-content/faq/User_Account_-_How_do_I_use_GPG.php:2
+#: frontend/site-specific/gnu-content/faq/Savannah_-_Are_there_some_URL_shortcuts.php:2
+#: frontend/site-specific/gnu-content/faq/Project_-_How_do_I_add_searchterms.php:2
+#: frontend/site-specific/gnu-content/faq/CVS_-_How_can_I_import_an_existing_repository.php:2
+#: frontend/site-specific/gnu-content/faq/User_Account_-_Why_log_in.php:2
+#: frontend/site-specific/gnu-content/faq/Project_-_How_do_I_set_up_a_FAQ.php:2
+#: frontend/site-specific/gnu-content/faq/Mail_-_Lost_Mailman_password.php:2
+#: frontend/site-specific/gnu-content/faq/Savannah_-_Where_can_I_find_information_regarding_the_TLS_certificates.php:2
+#: frontend/site-specific/gnu-content/faq/Mail_-_Is_there_a_searchable_list_of_mailing_lists.php:2
+#: frontend/site-specific/gnu-content/faq/CVS_-_How_to_do_anonymous_access.php:2
+#: frontend/site-specific/gnu-content/faq/Mail_-_Where_can_I_retreive_mailing_lists_mboxes.php:2
+#: frontend/site-specific/gnu-content/faq/Homepage_-_How_do_I_upload_my_homepage.php:2
+#: frontend/site-specific/gnu-content/faq/User_Account_-_How_do_I_configure_my_SSH_access.php:2
+#: frontend/site-specific/gnu-content/faq/Mail_-_How_to_reset_list_admin_password.php:2
+#: frontend/site-specific/gnu-content/faq/Project_-_What_is_the_status_of_my_project_registration.php:2
+#: frontend/site-specific/gnu-content/faq/Project_-_How_to_get_it_approved_quickly.php:2
+#: frontend/site-specific/gnu-content/faq/Savannah_-_How_do_I_get_help.php:2
+#: frontend/site-specific/gnu-content/faq/Savannah_-_Are_there_some_delays_on_update.php:2
+#: frontend/site-specific/gnu-content/faq/CVS_-_How_can_I_import_my_project.php:2
+#: frontend/site-specific/gnu-content/faq/Savannah_-_Why_chosing_Savannah.php:2
+#: frontend/site-specific/gnu-content/faq/Savannah_-_Are_there_some_places_on_internet_to_get_more_information.php:2
+#: frontend/site-specific/gnu-content/faq/Download_Area_-_How_do_I_add_files.php:2
+#: frontend/site-specific/gnu-content/faq/Savannah_-_Hey_this_is_not_valid_HTML.php:2
+#: frontend/site-specific/gnu-content/faq/CVS_-_Is_it_possible_to_receive_an_email_for_each_commit.php:2
+#: frontend/site-specific/gnu-content/faq/User_Account_-_Lost_password.php:2
+#: frontend/site-specific/gnu-content/faq/Homepage_-_Are_PHP_and_MySQL_available.php:2
+#: frontend/site-specific/gnu-content/faq/Mail_-_Why_do_I_not_receive_email_from_Savannah.php:2
+#, php-format
+msgid "FAQ moved to %s"
+msgstr ""
+
+#: frontend/site-specific/gnu-content/people/createjob.php:24
+#, fuzzy
+msgid "Create a New Job"
+msgstr "Создать новую форму для запроса"
+
+#: frontend/site-specific/gnu-content/people/createjob.php:27
+msgid ""
+"Start by filling in the fields below. When you click continue, you\n"
+"will be shown a list of skills and experience levels that this job requires."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/people/index.php:27
+msgid ""
+"Browse through the category menu to find projects looking for your help."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/people/index.php:31
+msgid ""
+"If you're a project admin, log in, enter your project page, follow\n"
+"the project admin link (in the navigation bar) and you will find a\n"
+"<i>Post Jobs</i> section where you can submit help wanted requests\n"
+"to appear in this list."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/people/index.php:37
+#, php-format
+msgid ""
+"To suggest new job categories, visit the\n"
+"<a href=\"%s\"> support manager</a>."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/people/editresume.php:24
+#, fuzzy
+msgid "Edit Your Profile"
+msgstr "Профиль участника"
+
+#: frontend/site-specific/gnu-content/people/editresume.php:27
+msgid ""
+"Now you can edit/change the list of your skills and your resume.\n"
+"The list of skills can then be matched with the list of jobs in\n"
+"our system."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/people/index_group.php:26
+#, fuzzy, php-format
+msgid "Project Help Wanted for %s"
+msgstr "Нужна помощь"
+
+#: frontend/site-specific/gnu-content/people/index_group.php:30
+msgid "Here is a list of positions available for this project."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/people/editjob.php:25
+#, fuzzy
+msgid "Select Required Skills"
+msgstr "Необходимы навыки:"
+
+#: frontend/site-specific/gnu-content/people/editjob.php:28
+msgid ""
+"Here you can edit/change the list of skills attached to this posting,\n"
+"so that developers can match their skills against your requirements."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/git/index.php:31
+msgid "Note: this group has multiple Git repositories."
+msgstr ""
+
+#: frontend/site-specific/gnu-content/git/index.php:37
+#, fuzzy
+msgid "Anonymous clone:"
+msgstr "Аноним"
+
+#: frontend/site-specific/gnu-content/git/index.php:62
+#, fuzzy
+msgid "Member clone:"
+msgstr "Профиль участника"
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_grouptype.php:23
+msgid ""
+"To check if a project is a GNU project, read the\n"
+"fencepost.gnu.org:/gd/gnuorg/maintainers list. If the value of this flag is "
+"Y\n"
+"before moderation it mean that the project is either already a GNU project "
+"(in\n"
+"which case the user submitting the project probably added something in the\n"
+"comment to specify this) or want to apply for inclusion in the GNU project. "
+"If\n"
+"the value of this flag is N before moderation it means that this package "
+"does\n"
+"not want to apply for inclusion in the GNU project. If this flag is set to N "
+"by\n"
+"the moderator and the HTML repository field below is not empty, it must be\n"
+"located under the <b>/non-gnu/</b> directory."
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_outro.php:27
+msgid "Ask maintainers@gnu.org if this is a GNU package indeed"
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_outro.php:30
+msgid "Ask gnueval-input@gnu.org to evaluate for inclusion in the GNU project"
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_outro.php:33
+#, fuzzy
+msgid "Resend the admin mail notification"
+msgstr "Управление почтовыми уведомлениями"
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_sysname.php:22
+#, php-format
+msgid ""
+"The /webcvs subdirectory on which the project will have write access.\n"
+"Empty value means that no directory of /webcvs will be given to this "
+"project.\n"
+"Make sure you fully understand the <a href=\"%s\">\n"
+"rationale</a> associated with this value.\n"
+"Make sure the directory you enter here does <b>not overlap</b> with a "
+"directory\n"
+"already assigned to a project.\n"
+"Every non-GNU project must be located in the <b>/non-gnu/</b> subdirectory."
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_sysname.php:33
+msgid ""
+"Only change the project name <b>if it already exists</b> under another\n"
+"name in the GNU project. For instance if <code>gnuedma</code> was "
+"submitted,\n"
+"it should be changed to <code>edma</code> since the pages exists in\n"
+"<code>www.gnu.org/software/edma</code>."
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_sysname.php:39
+msgid ""
+"<i>auto</i> means that everything will be set according to the project type."
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/admin/groupedit_sysname.php:43
+msgid ""
+"Note: if you use the text field to set the Subdirectory, you need to\n"
+"give the complete url.  In this particular case, the System Name will\n"
+"not be added as subsubdirectory.  This field should be used only for\n"
+"web project. In fact, this field generally must be used for web\n"
+"project."
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/homepage.php:42
+#, php-format
+msgid ""
+"<strong>Savannah.nongnu.org</strong> is a central point for\n"
+"development, maintenance and distribution of <a\n"
+"href=\"%s\">free software</a>"
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/homepage.php:48
+msgid ""
+"If you would like to use Savannah to host your\n"
+"project, then go to the <b>Register new project</b> menu entry."
+msgstr ""
+
+#: frontend/site-specific/nongnu-content/homepage.php:54
+#, php-format
+msgid ""
+"It's not necessary for using Savannah, but if you would like to make\n"
+"your project part of the GNU system, please see the <a\n"
+"href=\"%s\">GNU Software\n"
+"Evaluation</a> web page.  New packages are welcome in GNU."
+msgstr ""
+
+#~ msgid "Other"
+#~ msgstr "Другой"
+
 #, fuzzy
 #~ msgid "Please report to %s"
 #~ msgstr "%sПожалуйста%s, сообщите %s"
@@ -10180,9 +11707,6 @@ msgstr ""
 #~ msgid "Full Name:"
 #~ msgstr "Полное имя"
 
-#~ msgid "Other License:"
-#~ msgstr "Другие комментарии:"
-
 #~ msgid "Project Deleted"
 #~ msgstr "Тип проекта"
 
@@ -10201,9 +11725,6 @@ msgstr ""
 
 #~ msgid "[Return to %s]"
 #~ msgstr "[Вернуться на %s]"
-
-#~ msgid "Admin documentation"
-#~ msgstr "Документация администратора"
 
 #, fuzzy
 #~ msgid "Password must be at least %s character."
@@ -10281,9 +11802,6 @@ msgstr ""
 #~ msgid "Administration"
 #~ msgstr "Администрация"
 
-#~ msgid "Help"
-#~ msgstr "помощь"
-
 #, fuzzy
 #~ msgid "Groups"
 #~ msgstr "Группа"
@@ -10347,10 +11865,6 @@ msgstr ""
 #~ msgstr "Документация"
 
 #, fuzzy
-#~ msgid "Other Documentation"
-#~ msgstr "Документация"
-
-#, fuzzy
 #~ msgid "%s open patch"
 #~ msgid_plural "%s open patches"
 #~ msgstr[0] "%s для Sparc"
@@ -10404,10 +11918,6 @@ msgstr ""
 
 #~ msgid "Permissions Management"
 #~ msgstr "Управление правами участников"
-
-#, fuzzy
-#~ msgid "Configure Notifications"
-#~ msgstr "Управление уведомлениями"
 
 #~ msgid "Email Notification Settings"
 #~ msgstr "Настройка оповещения по электронной почте"
@@ -10544,9 +12054,6 @@ msgstr ""
 #~ msgid "Add Files"
 #~ msgstr "Добавить файлы"
 
-#~ msgid "Public Areas"
-#~ msgstr "Публично-доступная область"
-
 #~ msgid "Project Administration Main Page"
 #~ msgstr "Главная страница управления проектом"
 
@@ -10607,9 +12114,6 @@ msgstr ""
 #~ msgid "--DOT--"
 #~ msgstr "--ТЧК--"
 
-#~ msgid "Preferences"
-#~ msgstr "Зависимости"
-
 #~ msgid "Your login is"
 #~ msgstr "Ваш логин"
 
@@ -10636,14 +12140,8 @@ msgstr ""
 #~ msgid "FAQ"
 #~ msgstr "ЧаВо"
 
-#~ msgid "User Docs (FAQ)"
-#~ msgstr "Документация для пользователя (ЧаВо)"
-
 #~ msgid "Local Server Admin Docs"
 #~ msgstr "Документация для администраторов локального сервера"
-
-#~ msgid "Comments"
-#~ msgstr "Комментарии"
 
 #~ msgid "Frequently Asked Questions"
 #~ msgstr "Часто задаваемые вопросы"

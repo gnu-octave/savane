@@ -174,7 +174,7 @@ print '<p><span class="preinput">'._("License:").' </span><br />';
 print _("Note: this has influence only if the group type of which this group belongs to accepts this information.").'<br /></em>';
 print '<select name="form_license">';
 print '<option value="none">'._("N/A").'</option>';
-print '<option value="other">'._("Other").'</option>';
+print '<option value="other">'._("Other license").'</option>';
 while (list($k,$v) = each($LICENSE))
 {
   print "<OPTION value=\"$k\"";

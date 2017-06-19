@@ -1,0 +1,1 @@
+../gnu-content/page_footer.php

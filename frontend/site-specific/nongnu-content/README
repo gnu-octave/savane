@@ -1,0 +1,10 @@
+PURPOSE
+
+This module is where we store content of the website
+nongnu.org. This directory is build on the model of the
+directory etc/site-specific-content provided by the savannah engine
+module.
+
+REPORT A PROBLEM, SEND A COMMENT
+
+Write us to savannah-hackers@gnu.org

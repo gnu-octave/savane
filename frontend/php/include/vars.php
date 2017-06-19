@@ -24,5 +24,4 @@ $LICENSE = array();
 $LICENSE_URL = array();
 $DEVEL_STATUS = array();
 
-# sys_incdir is normally safe (see pre.php)
-require($GLOBALS['sys_incdir'].'/hashes.txt');
+require(utils_get_content_filename('hashes'));

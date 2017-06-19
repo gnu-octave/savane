@@ -23,8 +23,9 @@
 # (sys_incdir should have been secured in pre.php)
 $DNSBL = array();
 $DNSBL_INFOURL = array();
-if (file_exists($GLOBALS['sys_incdir'].'/dnsbl.txt'))
-     require_once($GLOBALS['sys_incdir'].'/dnsbl.txt');
+$file = utils_get_content_filename ('dnsbl');
+if ($file != null)
+     require_once($file);
 
 require_once(dirname(__FILE__).'/session.php');
 

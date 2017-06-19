@@ -17,7 +17,7 @@
 POTFILES = 
 
 # Usually the message domain is the same as the package name.
-DOMAIN = $(PACKAGE)
+DOMAIN = savane
 
 # These options get passed to xgettext.
 XGETTEXT_OPTIONS =
@@ -152,7 +152,7 @@ $(DOMAIN).pot-update: $(POTFILES_DEPS) remove-potcdate.sed
 	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
 	      --msgid-bugs-address="$$msgid_bugs_address" \
 	      $(POTFILES) \
-	      `cd .. && find frontend/php/ -iname "*.php" -or -iname "*.class"` \
+	      `cd .. && find frontend/ -iname "*.php" -or -iname "*.class"` \
 	    ;; \
 	  *) \
 	    $(XGETTEXT) --default-domain=$(DOMAIN) --directory=$(top_srcdir) \
@@ -163,7 +163,7 @@ $(DOMAIN).pot-update: $(POTFILES_DEPS) remove-potcdate.sed
 	      --package-version='$(VERSION)' \
 	      --msgid-bugs-address="$$msgid_bugs_address" \
 	      $(POTFILES) \
-	      `cd .. && find frontend/php/ -iname "*.php" -or -iname "*.class"` \
+	      `cd .. && find frontend/ -iname "*.php" -or -iname "*.class"` \
 	    ;; \
 	esac
 	test ! -f $(DOMAIN).po || { \

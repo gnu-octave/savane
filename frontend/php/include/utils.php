@@ -31,7 +31,12 @@ define('FB_ERROR', 1);
 # This function permit including site specific content with ease
 function utils_get_content_filename ($file)
 {
-  if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
+  if (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.php'))
+    return $GLOBALS['sys_incdir'].'/php/'.$file.'.php';
+  elseif (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.txt'))
+    return $GLOBALS['sys_incdir'].'/php/'.$file.'.txt';
+# Fallback to legacy location.
+  elseif (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
     // there is localized version of the file :
     return $GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale'];
   elseif (is_file($GLOBALS['sys_incdir'].'/'.$file.'.txt'))

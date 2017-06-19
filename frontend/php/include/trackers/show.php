@@ -284,8 +284,8 @@ function show_item_list_sober ($result_arr,
   $possible_audiences['members'] = _("For Project Members Only");
 
   # Add unset cases to the arrays
-  $possible_contexts['unbound'] = _("Other");
-  $possible_audiences['unbound'] = _("Undefined");
+  $possible_contexts['unbound'] = _("Other audience");
+  $possible_audiences['unbound'] = _("Undefined audience");
 
   # Build sql specific part to group audiences between:
   #   project members / non project members
