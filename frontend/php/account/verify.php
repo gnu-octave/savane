@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Verify registration hash.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -79,7 +80,8 @@ if (!empty($update))
 site_header(array('title'=>_("Login")));
 
 print '<h3> '.sprintf(_("%s Account Verification"),$GLOBALS['sys_name']).'</h3>';
-print '<p>'._("In order to complete your registration, login now. Your account will then be activated for normal logins").'.</p>';
+print '<p>'._("In order to complete your registration, login now. Your account
+will then be activated for normal logins").'.</p>';
 
 
 print form_header($_SERVER["PHP_SELF"], $form_id);

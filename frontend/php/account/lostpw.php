@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Request password recovery.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2004 (c) Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2004 Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -36,16 +37,21 @@ $HTML->header(array('title'=>_("Lost Account Password")));
 
 print '<p><strong>'._("Lost your password?").'</strong></p>';
 
-//print '<p>'._("Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site.").'</p>';
-
-print '<p>'._("The form below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation hash for your account. Visiting the URL will allow you to change your password online and login.").'</p>';
-print '<p class="warn">'._("This will work only if your account was already successfully registered and activated. Note that accounts that are not activated within the three days next to their registration are automatically deleted.").'</p>';
+print '<p>'._("The form below will email a URL to the email address we have on
+file for you. In this URL is a 128-bit confirmation hash for your account.
+Visiting the URL will allow you to change your password online and
+login.").'</p>';
+print '<p class="warn">'._("This will work only if your account was already
+successfully registered and activated. Note that accounts that are not
+activated within the three days next to their registration are automatically
+deleted.").'</p>';
 
 print '<form action="lostpw-confirm.php" method="post">';
 print '<p><span class="preinput"> &nbsp;&nbsp;';
 print _("Login Name:");
 print ' &nbsp;&nbsp;</span><input type="text" name="form_loginname" /> &nbsp;&nbsp;';
-print '<input type="submit" name="send" value="'._("Send lost password hash").'" /></p>';
+print '<input type="submit" name="send" value="'._("Send lost password hash")
+       .'" /></p>';
 print '</form>';
 
 $HTML->footer(array());

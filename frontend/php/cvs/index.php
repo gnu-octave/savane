@@ -34,7 +34,7 @@ $project = project_get_object($group_id);
 
 if (!$project->Uses("cvs") && !$project->UsesForHomepage("cvs"))
 {
-  exit_error(_("This project has turned off this tool"));
+  exit_error(_("This project doesn't use this tool"));
 }
 
 // Enable cache for this page if the user isn't logged in, because

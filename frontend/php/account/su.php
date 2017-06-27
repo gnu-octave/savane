@@ -36,10 +36,14 @@ if ($action == "login" && user_can_be_super_user())
     {
       if (!$from_brother)
 	{
-	  header ("Location: ".su_getprotocol()."://".$GLOBALS['sys_brother_domain'].$GLOBALS['sys_home']."account/su.php?action=login&from_brother=1&uri=".urlencode($uri));
+	  header ("Location: ".su_getprotocol()."://"
+                  .$GLOBALS['sys_brother_domain'].$GLOBALS['sys_home']
+                  ."account/su.php?action=login&from_brother=1&uri="
+                  .urlencode($uri));
 	}
       else {
-	header("Location: ".su_getprotocol()."://".$GLOBALS['sys_brother_domain'].$uri);
+	header("Location: ".su_getprotocol()."://".$GLOBALS['sys_brother_domain']
+               .$uri);
       }
     }
   else {
@@ -61,11 +65,15 @@ elseif ($action == "logout" && user_is_super_user())
     {
       if (!$from_brother)
 	{
-	  header ("Location: ".su_getprotocol()."://".$GLOBALS['sys_brother_domain'].$GLOBALS['sys_home']."account/su.php?action=logout&from_brother=1&uri=".urlencode($uri));
+	  header ("Location: ".su_getprotocol()."://"
+                  .$GLOBALS['sys_brother_domain'].$GLOBALS['sys_home']
+                  ."account/su.php?action=logout&from_brother=1&uri="
+                  .urlencode($uri));
 	  exit;
 	}
       else {
-	header("Location: ".su_getprotocol()."://".$GLOBALS['sys_brother_domain'].$uri);
+	header("Location: ".su_getprotocol()."://"
+               .$GLOBALS['sys_brother_domain'].$uri);
       }
     }
   else {
@@ -81,7 +89,7 @@ elseif ($action == "logout" && !user_is_super_user() && $from_brother)
 
 else
 {
-  exit_error(_("What are you doing here?"));
+  exit_error(_("You shouldn't have come to this page."));
 }
 
 function su_getprotocol()

@@ -31,7 +31,7 @@ $project = project_get_object($group_id);
 
 if (!$project->Uses("git") && !$project->UsesForHomepage("git"))
 {
-  exit_error(_("This project has turned off this tool"));
+  exit_error(_("This project doesn't use this tool"));
 }
 
 

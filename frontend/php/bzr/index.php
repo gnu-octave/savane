@@ -32,7 +32,7 @@ $project = project_get_object($group_id);
 
 if (!$project->Uses("bzr") && !$project->UsesForHomepage("bzr"))
 {
-  exit_error(_("This project has turned off this tool"));
+  exit_error(_("This project doesn't use this tool"));
 }
 
 

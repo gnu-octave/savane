@@ -1,9 +1,10 @@
 <?php
 # Register an account, part 1 (part 2 is e-mail confirmation)
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gna.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gna.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -169,14 +170,6 @@ if (!empty($update) and form_check($form_id))
       $realname_is_valid = true;
     }
 
-  # Remove quotes from the realname, we do not want to allow that but
-  # it is not a blocker issue.
-  # Beuc 2007-02-24: enable quotes in realname, it's a perfect test for unsecure MySQL queries
-  # $GLOBALS['form_realname'] = strtr($_POST['form_realname'], "\'\"\,", "     ");
-
-
-  ####
-
 
   $krb5ret = '';
   if ($GLOBALS['sys_use_krb5'] == "yes")
@@ -189,7 +182,10 @@ if (!empty($update) and form_check($form_id))
 	}
       elseif($krb5ret == 1)
 	{ # KRB5_BAD_PASSWORD
-	    fb(sprintf(_("User is a kerberos principal but password do not match. Please use your kerberos password for the first login and then change your %s password. This is necessary to prevent someone from stealing your account name."),$GLOBALS['sys_name']),1);
+	    fb(sprintf(_("User is a kerberos principal but password do not
+match. Please use your kerberos password for the first login and then change
+your %s password. This is necessary to prevent someone from stealing your
+account name."), $GLOBALS['sys_name']), 1);
 
 	  $pw_is_valid = false;
 	}
@@ -265,20 +261,23 @@ if ($form_is_valid)
       form_clean($form_id);
 
       # send mail
-      $message = sprintf(_("Thank you for registering on the %s web site."),$GLOBALS['sys_name'])."\n"
-	."("._("Your login is not mentioned in this mail to prevent account creation by robots.").")\n\n"
-#	.sprintf(_("Your login is: %s"), addslashes(strtolower($_POST[form_loginname])))."\n\n"
-	._("In order to complete your registration, visit the following URL:\n\n")
-	. $GLOBALS['sys_https_url']
-	. $GLOBALS['sys_home']
+      $message = sprintf(_('Thank you for registering on the %s web site.
+(Your login is not mentioned in this mail to prevent account creation by robots.)
+
+In order to complete your registration, visit the following URL:'),
+        $GLOBALS['sys_name'])
+        ."\n"
+	. $GLOBALS['sys_https_url'] . $GLOBALS['sys_home']
 	. "account/verify.php?confirm_hash=$confirm_hash\n\n"
-	._("Enjoy the site").".\n\n"
-	. sprintf(_("-- the %s team.")."\n",$GLOBALS['sys_name']);
+	._("Enjoy the site.")."\n\n"
+	. sprintf(_("-- the %s team.")."\n\n",$GLOBALS['sys_name']);
 
       if ($krb5ret == 0) #KRB5_OK
 	{
-	  $message .= sprintf(_("P.S. Your password is now stored in encrypted form\nin the %s database.  "),$GLOBALS['sys_name']);
-	  $message .= sprintf(_("For better security we advise you\nto change your %s password as soon as possible.\n"),$GLOBALS['sys_name']);
+	  $message .= sprintf(_('P.S. Your password is now stored in encrypted form
+in the %s database.'), $GLOBALS['sys_name'])." ";
+	  $message .= _('For better security we advise you
+to change your password as soon as possible.'). "\n";
 	}
 
 
@@ -289,11 +288,18 @@ if ($form_is_valid)
 
     $HTML->header(array('title'=>_("Register Confirmation")));
 
-    print '<h3>'.$GLOBALS['sys_name'].' : '._("New Account Registration Confirmation").'</h3>'
-      .sprintf(_("Congratulations. You have registered on %s "),$GLOBALS['sys_name'])
-      .sprintf(_("Your login is: %s"), '<strong>'.user_getname($newuserid).'</strong>');
+    print '<h3>'.$GLOBALS['sys_name'].' : '
+      ._("New Account Registration Confirmation")."</h3>\n"
+      .sprintf(_("Congratulations. You have registered on %s."),
+               $GLOBALS['sys_name'])
+      ."\n".sprintf(_("Your login is %s."),
+        '<strong>'.user_getname($newuserid).'</strong>')."\n";
 
-    print '<p>'._("You are now being sent a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account.").' <span class="warn">'._("Accounts not confirmed after two days are deleted from the database.").'</span></p>';
+    print '<p>'._("You are now being sent a confirmation email to verify your
+email address. Visiting the link sent to you in this email will activate your
+account.").' <em>'
+._("Accounts not confirmed after two days are deleted from the
+database.").'</em></p>';
 
     }
 }
@@ -308,39 +314,53 @@ else
 
   print form_header($_SERVER['PHP_SELF'], htmlentities($form_id, ENT_QUOTES , 'UTF-8'));
   print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
-  print form_input("text", "form_loginname", htmlentities($form_loginname, ENT_QUOTES , 'UTF-8'));
+  print form_input("text", "form_loginname",
+                   htmlentities($form_loginname, ENT_QUOTES , 'UTF-8'));
 
-  print '<p><span class="preinput">'._("Password / passphrase:")." ".account_password_help().'</span><br />&nbsp;&nbsp;';
+  print '<p><span class="preinput">'._("Password / passphrase:")
+         ." ".account_password_help().'</span><br />&nbsp;&nbsp;';
   print form_input("password", "form_pw", htmlentities($form_pw, ENT_QUOTES , 'UTF-8'));
   print "</p>";
 
   print '<p><span class="preinput">'._("Re-type Password:").'</span><br />&nbsp;&nbsp;';
-  print form_input("password", "form_pw2", htmlentities($form_pw2, ENT_QUOTES , 'UTF-8'));
+  print form_input("password", "form_pw2",
+                   htmlentities($form_pw2, ENT_QUOTES , 'UTF-8'));
   print "</p>";
 
   print '<p><span class="preinput">'._("Real Name:").'</span><br />&nbsp;&nbsp;';
-  print '<input size="30" type="text" name="form_realname" value="'.htmlentities($form_realname, ENT_QUOTES , 'UTF-8').'" /></p>';
+  print '<input size="30" type="text" name="form_realname" value="'
+        .htmlentities($form_realname, ENT_QUOTES , 'UTF-8').'" /></p>';
 
   print '<p><span class="preinput">'._("Email Address:").'</span><br />&nbsp;&nbsp;';
-  print '<input size="30" type="text" name="form_email" value="'.htmlentities($form_email, ENT_QUOTES , 'UTF-8').'" />';
-  print '<br /><span class="text">'._("This email address will be verified before account activation. Check your spam filters. Do not use a hotmail or comcast address here.").'</span></p>';
+  print '<input size="30" type="text" name="form_email" value="'
+        .htmlentities($form_email, ENT_QUOTES , 'UTF-8').'" />';
+  print '<br /><span class="text">'
+._("This email address will be verified before account activation. Check your
+spam filters. Do not use a hotmail or comcast address here.")
+.'</span></p>';
 
   if ($GLOBALS['sys_registration_text_spam_test'])
   {
-      print '<p><span class="preinput">'._("Antispam test:").'</span><br />&nbsp;&nbsp;';
+      print '<p><span class="preinput">'._("Antispam test:")
+            .'</span><br />&nbsp;&nbsp;';
       print '<input size="30" type="text" name="form_year" value="'.$form_year.'" />';
       print '<br /><span class="text">'
-          ._("In what year was the GNU project announced?"
-             . " [<a href='http://www.gnu.org/gnu/gnu-history.html'>click for a hint</a>]")
+          .sprintf(
+_("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),
+   'https://www.gnu.org/gnu/gnu-history.html')
           . '</span></p>';
   }
   if ($GLOBALS['sys_registration_captcha'])
   {
-      print '<img id="captcha" src="' . $GLOBALS['sys_home'] . 'gencaptcha.php" alt="CAPTCHA" /><br />';
+      print '<img id="captcha" src="' . $GLOBALS['sys_home']
+            . 'gencaptcha.php" alt="CAPTCHA" /><br />';
       print '[ <a href="#" onclick="document.getElementById(\'captcha\').src = \'' .
-          $GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random(); return false">Different Image</a> ] ';
-      print '[ <a href="' . $GLOBALS['sys_home'] . 'playcaptcha.php">' . _("Play Captcha") . '</a> ]<br />';
-      print _("Antispam test:") . '<input type="text" name="captcha_code" size="10" maxlength="6" />';
+          $GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random(); '
+          .'return false">Different Image</a> ] ';
+      print '[ <a href="' . $GLOBALS['sys_home'] . 'playcaptcha.php">'
+            . _("Play Captcha") . '</a> ]<br />';
+      print _("Antispam test:")
+            . '<input type="text" name="captcha_code" size="10" maxlength="6" />';
 
   }
 
@@ -350,13 +370,13 @@ else
   #  this (to put it in site specific content probably).
   if ($sys_use_pamauth=="yes")
     {
-      print "<p>Instead of providing a new password you
+      print "<p>"._("Instead of providing a new password you
       may choose to authenticate via an <strong>AFS</strong> account you own
       at this site (this requires your new login name to be the
-      same as the AFS account name):";
+      same as the AFS account name):")."</p>";
 
-      print '<p>&nbsp;&nbsp;&nbsp;<INPUT type="checkbox"
-      name="form_usepam" value="1" > use AFS based authentication';
+      print '<p>&nbsp;&nbsp;&nbsp;<input type="checkbox"
+      name="form_usepam" value="1" > '._('use AFS based authentication')."</p>";
     }
 
 

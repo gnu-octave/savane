@@ -1,8 +1,9 @@
 <?php
 # Resend the confirmation hash to a pending (not yet validated) user
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
+# Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -18,7 +19,6 @@
 # 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# Copyright 1999-2000 (c) The SourceForge Crew
 
 require_once('../include/init.php');
 require_once('../include/database.php');
@@ -42,9 +42,11 @@ $row_user = db_fetch_array($res_user);
 if ($row_user['status'] == 'P') {
 
   # send mail
-  $message = sprintf(_("Thank you for registering on the %s web site."),$GLOBALS['sys_name'])."\n"
-    . _("In order to complete your registration, visit the following url:")."\n\n"
-    . $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."account/verify.php?confirm_hash=$row_user[confirm_hash]\n\n"
+  $message = sprintf(_("Thank you for registering on the %s web site."),
+                     $GLOBALS['sys_name'])."\n"
+    . _("In order to complete your registration, visit the following URL:")."\n\n"
+    . $GLOBALS['sys_https_url'].$GLOBALS['sys_home']
+    ."account/verify.php?confirm_hash=$row_user[confirm_hash]\n\n"
     . _("Enjoy the site").".\n\n"
     . sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
 	
@@ -57,8 +59,12 @@ if ($row_user['status'] == 'P') {
   $HTML->header(array('title'=>_("Account Pending Verification")));
 
   print '<h3>'._("Pending Account").'</h3>';
-  print '<p>'._("Your email confirmation has been resent. Visit the link in this email to complete the registration process.").'</p>';
-  print '<p><a href="'.$GLOBALS['sys_home'].'">['._("Return to Home Page").']</a></p>';
+  print '<p>'
+        ._("Your email confirmation has been resent. Visit the link in this
+email to complete the registration process.")
+        .'</p>';
+  print '<p><a href="'.$GLOBALS['sys_home'].'">['._("Return to Home Page")
+        .']</a></p>';
  
 } else {
   exit_error(_("Error"),_("This account is not pending verification."));

@@ -1,8 +1,9 @@
 <?php
 # 'Not found' error page with a Savane look&feel
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -24,17 +25,20 @@ require_once('include/init.php');
 site_header(array('title'=>_("Requested Page not Found (Error 404)")));
 
 
-print '<p class="warn">'.sprintf(_("The web page you are trying to access doesn't exist on %s."), $GLOBALS['sys_name']).'</p>';
-print '<p>'.sprintf(_("If you think that there's a broken link on %s that must be repaired, %sfile a support request%s, mentioning the URL you tried to access (%s)."),
+print '<p class="warn">'
+.sprintf(_("The web page you are trying to access doesn't exist on %s."),
+          $GLOBALS['sys_name']).'</p>';
+print '<p>'
+       .sprintf(_("If you think that there's a broken link on %s that must be
+repaired, <a href=\"%s\">file a support request</a>, mentioning the URL you
+tried to access (%s)."),
   $GLOBALS['sys_name'],
-  '<a href="'.$GLOBALS['sys_home'].'support/?group='.$GLOBALS['sys_unix_group_name'].'">',
-  '</a>',
+  $GLOBALS['sys_home'].'support/?group='.$GLOBALS['sys_unix_group_name'],
   $_SERVER['REQUEST_URI']).'</p>';
 
-print '<p>'.sprintf(_("Otherwise, you can return to the %s%s main page%s."),
-		    '<a href="'.$GLOBALS['sys_home'].'">',
-		    $GLOBALS['sys_name'],
-		    '</a>').'</p>';
+print '<p>'
+  .sprintf(_("Otherwise, you can return to the <a href=\"%s\>%s main page</a>."),
+           $GLOBALS['sys_home'], $GLOBALS['sys_name']).'</p>';
 
 
 $HTML->footer(array());

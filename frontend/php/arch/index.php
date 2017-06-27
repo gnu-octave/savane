@@ -30,7 +30,7 @@ if (!$group_id)
 $project = project_get_object($group_id);
 if (!$project->Uses("arch") && !$project->UsesForHomepage("arch"))
 {
-  exit_error(_("This project has turned off this tool"));
+  exit_error(_("This project doesn't use this tool"));
 }
 
 site_project_header(array('group'=>$group_id,'context'=>'arch'));

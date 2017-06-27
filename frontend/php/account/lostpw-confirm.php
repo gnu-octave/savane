@@ -1,23 +1,23 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2004-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Send confirmation message for password recovery.
+#
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2004-2005 Mathieu Roy <yeupou--gnu.org>
 #                          Joxean Koret <joxeankoret--yahoo.es>
-# Copyright 2017 (c) Ineiev <ineiev--gnu.org>
+# Copyright (C) 2017 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -49,8 +49,9 @@ if ($GLOBALS['sys_use_pamauth'] == "yes") {
   $row_pw = db_fetch_array();
   if ($row_pw['user_pw'] == 'PAM') {
     $HTML->header(array('title'=>"Lost Password Confirmation"));
-    print "<p>This account uses an AFS password. <strong>You cannot change your
-           AFS password via Savane</strong>. Contact the AFS managers.";
+    print "<p>"
+._('This account uses an AFS password. <strong>You cannot change your
+AFS password via Savane</strong>. Contact the AFS managers.');
     $HTML->footer(array());
     exit;
   }
@@ -64,7 +65,8 @@ $confirm_hash = md5(strval(time()) . strval(rand()));
 $res_user = db_execute("SELECT * FROM user WHERE user_name=? AND status='A'", array($form_loginname));
 if (db_numrows($res_user) < 1)
 {
-  exit_error(_("Invalid User"), _("This account does not exist or has not been activated"));
+  exit_error(_("Invalid User"),
+             _("This account does not exist or has not been activated"));
 }
 $row_user = db_fetch_array($res_user);
 
@@ -99,7 +101,8 @@ else
 {
   if ($email_notifications >= $notifications_max)
     {
-      exit_error(_("An email for your lost password has already been sent. Please wait one hour and try again."));
+      exit_error(_("An email for your lost password has already been sent.
+Please wait one hour and try again."));
     }
   else
     {
@@ -116,31 +119,45 @@ else
 db_execute("UPDATE user SET confirm_hash=? WHERE user_id=?",
 	   array($confirm_hash, $row_user['user_id']));
 
-$message = sprintf(_("Someone (presumably you) on the %s site requested a password change through email verification."),$GLOBALS['sys_default_domain']);
+$message = sprintf(_("Someone (presumably you) on the %s site requested
+a password change through email verification."), $GLOBALS['sys_default_domain']);
 $message .= ' ';
-$message .= _("If this was not you, this could pose a security risk for the system.")."\n\n";
-$message .= sprintf(_("The request came from %s"),gethostbyaddr($_SERVER['REMOTE_ADDR']))."\n";
-$message .= '(IP: '.$_SERVER['REMOTE_ADDR'].' port: '.$_SERVER['REMOTE_PORT'].")\n";
-$message .= _("with").' '.$_SERVER['HTTP_USER_AGENT']."\n\n";
-$message .= _("If you requested this verification, visit this URL\nto change your password:")."\n\n";
-$message .= $GLOBALS['sys_https_url'].$GLOBALS['sys_home']."account/lostlogin.php?confirm_hash=".$confirm_hash."\n\n";
+$message .= _("If this was not you, this could pose a security risk for the system.")
+            ."\n\n";
+$message .= sprintf(
+_('The request came from %s
+(IP: %s; port: %s)
+User agent: %s
+
+'), gethostbyaddr($_SERVER['REMOTE_ADDR']),
+    $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
+    $_SERVER['HTTP_USER_AGENT']);
+$message .=
+_("If you requested this verification, visit this URL to change your password:")
+."\n\n";
+$message .= $GLOBALS['sys_https_url'].$GLOBALS['sys_home']
+            ."account/lostlogin.php?confirm_hash=".$confirm_hash."\n\n";
 # FIXME: There should be a discard procedure
-#$message .= _("If you did not request this verification, please visit this URL to cancel it.")."\n\n";
-$message .= _("In any case make sure that you do not disclose this url to\n somebody else, e.g. do not mail this to a public mailinglist!\n\n");
+$message .= _("In any case make sure that you do not disclose this URL to
+somebody else, e.g. do not mail this to a public mailinglist!\n\n");
 $message .= sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
 
 # We should not add i18n to admin messages
 $message_for_admin =
-"Someone attempted to change a password via email verification\n"
-. "on ".$GLOBALS['sys_default_domain']."\n\n"
+sprintf(("Someone attempted to change a password via email verification\n"
+. "on %s\n\n"
 . "Someone is maybe trying to steal a user account.\n\n"
-. "The user affected is ".$form_loginname."\n\n"
-. "The request comes from ".gethostbyaddr($_SERVER['REMOTE_ADDR'])." "
-. "(IP: ".$_SERVER['REMOTE_ADDR']." port: ".$_SERVER['REMOTE_PORT'].") "
-. "with ".$_SERVER['HTTP_USER_AGENT']."\n\n"
-. "Date:"
-. gmdate('D, d M Y H:i:s \G\M\T')
-     . "\n";
+. "The user affected is %s\n\n"
+. "The request comes from %s "
+. "(IP: %s port: %s), user agent: %s\n\n"
+. "Date: %s"),
+   $GLOBALS['sys_default_domain'],
+   $form_loginname,
+   gethostbyaddr($_SERVER['REMOTE_ADDR']),
+   $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
+   $_SERVER['HTTP_USER_AGENT'],
+   gmdate('D, d M Y H:i:s \G\M\T'))
+. "\n";
 
 $encrypted_message = "";
 $gpg_error = "";
@@ -201,7 +218,9 @@ $HTML->header(array('title'=>_("Lost Password Confirmation")));
 
 
 print '<p>'._("An email has been sent to the address you have on file.").'</p>';
-print '<p>'._("Follow the instructions in the email to change your account password.").'</p>';
+print '<p>'
+._("Follow the instructions in the email to change your account password.")
+.'</p>';
 
 if($encrypted_message === "")
   {

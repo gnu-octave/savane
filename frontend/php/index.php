@@ -1,8 +1,9 @@
 <?php
 # Front page - news, latests projects, etc.
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2006, 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -75,7 +76,7 @@ project name?)"), $sys_unix_group_name), 1);
       # No admin groups
       fb(_(
 "Installation incomplete: you must now register the local
-administration project, select \"Register New Project\" in the left
+administration project, select &ldquo;Register New Project&rdquo; in the left
 menu"), 1);
     }
   # I18N
@@ -101,7 +102,8 @@ utils_get_content("homepage");
 
 print "\n<p>&nbsp;</p>\n";
 
-print $HTML->box_top('<a href="'.$GLOBALS['sys_home'].'news/" class="sortbutton">'._("Latest News").'</a>');
+print $HTML->box_top('<a href="'.$GLOBALS['sys_home'].'news/" class="sortbutton">'
+       ._("Latest News").'</a>');
 print news_show_latest($GLOBALS['sys_group_id'],9, "true"); 
 print $HTML->box_bottom();
 
