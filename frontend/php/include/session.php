@@ -94,6 +94,7 @@ function session_login_valid($form_loginname,
     }
 
   $usr = db_fetch_array($resq);
+  $GLOBALS['signal_pending_account'] = 0;
 
   # Check status first:
   # if allowpending (for verify.php) then allow
@@ -112,6 +113,8 @@ function session_login_valid($form_loginname,
 	{ 
 	  #account pending
 	  fb(_('Account Pending'), 1);
+          # We can't rely on $ffeedback because it's cleared after use.
+          $GLOBALS['signal_pending_account'] = 1;
 	  return false;
 	} 
       if ($usr['status'] == 'D' || $usr['status'] == 'S')

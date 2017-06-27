@@ -179,7 +179,7 @@ site_header(array('title'=>_("Login")));
 if (!empty($login) && !$success)
 {
 
-  if ("Account Pending" == $feedback)
+  if ($GLOBALS['signal_pending_account'] == 1)
     {
 
       print '<h3>'._("Pending Account").'</h3>';
