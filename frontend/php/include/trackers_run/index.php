@@ -541,9 +541,9 @@ switch ($func)
      else
        { # ends up including tracker item number in url, if present
 	 if (preg_match("/:\/\/($sys_default_domain)|($sys_https_host)/",
-			$_SERVER[HTTP_REFERER]))
+			$_SERVER['HTTP_REFERER']))
            {
-	     header('Location: ' . $_SERVER[HTTP_REFERER]);
+	     header('Location: ' . $_SERVER['HTTP_REFERER']);
 	   }
          else
            {
