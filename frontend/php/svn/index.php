@@ -1,8 +1,7 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Subversion instruction page.
 # 
-# Copyright 2005 (c) Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -20,59 +19,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once('../include/init.php');
+require_once('../include/http.php');
+require_once('../include/vcs.php');
 
+# TRANSLATORS: This string is used in the context of
+# "Browsing the Subversion repository" and "You can browse the Subversion repository",
+# "Getting a copy of the Subversion repository", see include/vcs.php.
+vcs_page (_('Subversion'), 'svn', $group_id);
 
-if (!$group_id)
-{
-  exit_no_group();
-}
-
-$project = project_get_object($group_id);
-
-if (!$project->Uses("svn") && !$project->UsesForHomepage("svn"))
-{
-  exit_error(_("This project doesn't use this tool"));
-}
-
-
-site_project_header(array('group'=>$group_id,'context'=>'svn'));
-
-
-
-# ####################### CVS Browsing
-
-
-$type = "SVN";
-if (($project->Uses("svn") &&
-     $project->getUrl("svn_viewcvs") != 'http://' &&
-     $project->getUrl("svn_viewcvs") != '') ||
-    ($project->UsesForHomepage("svn") &&
-     $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-     $project->getUrl("cvs_viewcvs_homepage") != ''))
-{
-  print '<h2>'.sprintf(_("Browsing the %s Repository"), $type).'</h2>';
-  print '<p>'.sprintf(_("You can Browse the %s repository of this project with your web browser. This gives you a good picture of the current status of the source files. You may also view the complete histories of any file in the repository as well as differences among two versions."), $type).'</p>';
-  
-  print '<ul>';
-  if ($project->Uses("svn") &&
-      $project->getUrl("svn_viewcvs") != 'http://' &&
-      $project->getUrl("svn_viewcvs") != '')
-    {
-      print '<li><a href="'.$project->getUrl("svn_viewcvs").'">'._("Browse Sources Repository").'</a></li>';
-    }
-  if ($project->UsesForHomepage("svn") &&
-      $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-      $project->getUrl("cvs_viewcvs_homepage") != ''
-      )
-    {
-      print '<li><a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a></li>';
-    }
-  print '</ul><p>&nbsp;</p>';
-  
-}
-
-print '<h2>'.sprintf(_("Getting a Copy of the %s Repository"),$type).'</h2>';
-
-utils_get_content("svn/index");
-
-site_project_footer(array());
+?>

@@ -1,9 +1,7 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# CVS instruction page.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2004 (c) Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -23,76 +21,11 @@
 
 require_once('../include/init.php');
 require_once('../include/http.php');
+require_once('../include/vcs.php');
 
+# TRANSLATORS: This string is used in the context of
+# "Browsing the CVS repository" and "You can browse the CVS repository",
+# "Getting a copy of the CVS repository", see include/vcs.php.
+vcs_page (_('CVS'), 'cvs', $group_id);
 
-if (!$group_id)
-{
-  exit_no_group();
-}
-
-$project = project_get_object($group_id);
-
-if (!$project->Uses("cvs") && !$project->UsesForHomepage("cvs"))
-{
-  exit_error(_("This project doesn't use this tool"));
-}
-
-// Enable cache for this page if the user isn't logged in, because
-// crawlers particularly like it:
-$file = utils_get_content_filename("cvs/index");
-if ($file != null and !user_isloggedin())
-  {
-    /* Get file stat */
-    $stat = stat($file);
-    $mtime = $stat['mtime'];
-    http_exit_if_not_modified($mtime);
-    header('Last-Modified: ' . date('r', $mtime));
-  }
-
-site_project_header(array('group'=>$group_id,'context'=>'cvs'));
-
-
-
-# ####################### CVS Browsing
-
-
-
-$type = "CVS";
-
-if (($project->Uses("cvs") && 
-     $project->getUrl("cvs_viewcvs") != 'http://' &&
-     $project->getUrl("cvs_viewcvs") != '') ||
-    ($project->UsesForHomepage("cvs") && 
-     $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-     $project->getUrl("cvs_viewcvs_homepage") != ''))
-{
-    
-  print '<h2>'.sprintf(_("Browsing the %s Repository"), $type).'</h2>';
-  print '<p>'.sprintf(_("You can Browse the %s repository of this project with your web browser. This gives you a good picture of the current status of the source files. You may also view the complete histories of any file in the repository as well as differences among two versions."), $type).'</p>';
-  
-  print '<ul>';
-  
-  if ($project->Uses("cvs") &&
-      $project->getUrl("cvs_viewcvs") != 'http://' &&
-      $project->getUrl("cvs_viewcvs") != '')
-    {
-      print '<li><a href="'.$project->getUrl("cvs_viewcvs").'">'._("Browse Sources Repository").'</a></li>';
-    }
-  if ($project->UsesForHomepage("cvs") &&
-      $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-      $project->getUrl("cvs_viewcvs_homepage") != ''
-      )
-    {
-      print '<li><a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a></li>';
-    }
-  print '</ul>';
-  print '<p>&nbsp;</p>';
-}
-
-
-print '<h2>'.sprintf(_("Getting a Copy of the %s Repository"),$type).'</h2>';
-
-
-utils_get_content("cvs/index");
-
-site_project_footer(array());
+?>
