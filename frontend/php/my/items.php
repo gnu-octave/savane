@@ -1,10 +1,10 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# List user's items.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
-#
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -66,7 +66,8 @@ else
   { $nogroups = 1; }
 
 # Get the list of squads the user is member of
-$result = db_execute("SELECT squad_id FROM user_squad WHERE user_id=?", array(user_getid()));
+$result = db_execute("SELECT squad_id FROM user_squad WHERE user_id=?",
+                     array(user_getid()));
 $rows = db_numrows($result);
 $usersquads = array();
 if ($result && $rows > 0)
@@ -119,29 +120,52 @@ if (!$open)
 
 site_user_header(array('context'=>'myitems'));
 
-print '<p>'._("This page contains lists of items assigned to or submitted by you.").'</p>';
+print '<p>'
+  ._("This page contains lists of items assigned to or submitted by you.")
+  .'</p>';
 
 # we get site-specific content
 utils_get_content("my/items");
 
-$fopen = '<select name="form_open"><option value="open" '.($open == "open" ? 'selected="selected"':'').'>'._("Open").'</option><option value="closed" '.($open == "closed" ? 'selected="selected"':'').'>'._("Closed").'</option></select> ';
-$fthreshold = '<select name="form_threshold"><option value="1" '.($threshold == 1 ? 'selected="selected"':'').'>'._("Lowest").'</option><option value="3" '.($threshold == 3 ? 'selected="selected"':'').'>'._("Low").'</option><option value="5" '.($threshold == 5 ? 'selected="selected"':'').'>'._("Normal").'</option><option value="7" '.($threshold == 7 ? 'selected="selected"':'').'>'._("High").'</option><option value="9" '.($threshold == 9 ? 'selected="selected"':'').'>'._("Immediate").'</option></select> ';
+# TRANSLATORS: This is used later as argument of "Show [%s] new items..."
+$fopen = '<select name="form_open"><option value="open" '
+         .($open == "open" ? 'selected="selected"':'').'>'._("Open");
+# TRANSLATORS: This is used later as argument of "Show [%s] new items..."
+$fopen .= '</option><option value="closed" '
+          .($open == "closed" ? 'selected="selected"':'').'>'._("Closed")
+          .'</option></select> ';
+
+# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
+$fthreshold = '<select name="form_threshold"><option value="1" '
+             .($threshold == 1 ? 'selected="selected"':'').'>'
+             ._("Lowest").'</option><option value="3" ';
+# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
+$fthreshold .= ($threshold == 3 ? 'selected="selected"':'').'>'._("Low")
+               .'</option><option value="5" '
+               .($threshold == 5 ? 'selected="selected"':'')
+               .'>'._("Normal").'</option><option value="7" ';
+# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
+$fthreshold .= ($threshold == 7 ? 'selected="selected"':'').'>'._("High")
+               .'</option><option value="9" ';
+# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
+$fthreshold .= ($threshold == 9 ? 'selected="selected"':'')
+               .'>'._("Immediate").'</option></select> ';
 
 $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
 $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
-print html_show_displayoptions(sprintf(_("Show %s new items or of %s priority at least."), $fopen, $fthreshold),
-				 $form_opening,
-				 $form_submit);
+$msg_text =sprintf(_("Show %s new items or of %s priority at least."),
+                   $fopen, $fthreshold);
+print html_show_displayoptions($msg_text, $form_opening, $form_submit);
 
 
  ################ RIGHT PART ############################
 
 print html_splitpage(1);
 
-print '<br /><div class="box"><div class="boxtitle">'._("Assigned to me").'</div>';
+print '<br /><div class="box"><div class="boxtitle">'._("Assigned to me")
+      .'</div>'."\n";
 print my_item_list("assignee", $threshold, $open);
-print '</div>';
-
+print '</div>'."\n";
 
 //   # Forums that are actively monitored
 //   print $HTML->box1_top(_("Monitored Forums"));
@@ -220,9 +244,10 @@ print '</div>';
 				    
 print html_splitpage(2);
 
-print '<br /><div class="box"><div class="boxtitle">'._("Submitted by me").'</div>';
+print '<br /><div class="box"><div class="boxtitle">'._("Submitted by me")
+      .'</div>'."\n";
 print my_item_list("submitter", $threshold, $open);
-print '</div>';
+print '</div>'."\n";
 
 print html_splitpage(3);
 
@@ -230,5 +255,5 @@ print html_splitpage(3);
 
 print "\n\n".show_priority_colors_key();
 
-
 $HTML->footer(array());
+?>

@@ -1,12 +1,11 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Modify user permissions.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2000-2003 (c) Free Software Foundation
-#                          Mathieu Roy <yeupou--gnu.org>
-#
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
+# Copyright 1999-2000 The SourceForge Crew
+# Copyright 2000-2003 Free Software Foundation
+# Copyright 2000-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright 2004-2006 Yves Perrin <yves.perrin--cern.ch>
+# Copyright 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -97,7 +96,9 @@ if ($update)
 
 
   # Get the members list, taking first the squads
-  $res_dev = db_execute("SELECT user_id,admin_flags FROM user_group WHERE group_id=? AND admin_flags<>'P' ORDER BY admin_flags DESC", array($group_id));
+  $res_dev = db_execute("SELECT user_id,admin_flags FROM user_group "
+                        ."WHERE group_id=? AND admin_flags<>'P' "
+                        ."ORDER BY admin_flags DESC", array($group_id));
 
   # Save the squads permissions to override users permissions if necessary
   $squad_permissions = array();
@@ -113,10 +114,12 @@ if ($update)
       # They should use admin interface instead or end su session
       if (user_is_super_user() && $row_dev['user_id'] == user_getid())
 	{
-	  fb(sprintf(_("Configuration for user #%s (you!) ignored to avoid incoherent flags status. End the superuser session to change your settings in this group or use the admin user interface."), $row_dev['user_id']), 1);
+# TRANSLATORS: the argument is user's number in the database.
+	  fb(sprintf(_("Configuration for user #%s (you!) ignored to avoid
+incoherent flags status. End the superuser session to change your settings in
+this group or use the admin user interface."), $row_dev['user_id']), 1);
 	  continue;
 	}
-
 
       $bugs_flags="bugs_user_{$row_dev['user_id']}";
       $task_flags="task_user_{$row_dev['user_id']}";
@@ -182,7 +185,8 @@ if ($update)
 	  # If it is not a squad, we then have to check if the user is 
 	  # member of any squad, and if he is, we have to check which
 	  # setting must be kept (see _compare_perms comments) 
-	  $result_user_squads = db_execute("SELECT squad_id FROM user_squad WHERE user_id=? AND group_id=?",
+	  $result_user_squads = db_execute("SELECT squad_id FROM user_squad "
+                                           ."WHERE user_id=? AND group_id=?",
 					   array($row_dev['user_id'], $group_id));
 	  if (db_numrows($result_user_squads))
 	    {
@@ -203,13 +207,16 @@ if ($update)
 		    _compare_perms($squad_permissions[$thissquad['squad_id'].'support'], 
 				   $permissions[$support_flags]);
 		  $out[$cookbook_flags] = 
-		    _compare_perms($squad_permissions[$thissquad['squad_id'].'cookbook'], 
+		    _compare_perms($squad_permissions[$thissquad['squad_id']
+                                                      .'cookbook'],
 				   $permissions[$cookbook_flags]);
 		  $out[$news_flags] = 
-		    _compare_perms($squad_permissions[$thissquad['squad_id'].'news'], 
+		    _compare_perms($squad_permissions[$thissquad['squad_id']
+                                                      .'news'],
 				   $permissions[$news_flags]);
 
-		  if ($squad_permissions[$thissquad['squad_id'].'privacy'] > $permissions[$privacy_flags])
+		  if ($squad_permissions[$thissquad['squad_id'].'privacy']
+                       > $permissions[$privacy_flags])
 		    { 
 		      $GLOBALS['did_squad_override'] = true;
 		      $permissions[$privacy_flags] = 
@@ -281,17 +288,22 @@ if ($update)
 
   if ($feedback_able)
     {
+# TRANSLATORS: the argument is a comma-separated list of users or squads.
       fb(sprintf(_("permissions of %s updated."), rtrim($feedback_able, ', ')));
-
     }
   if ($feedback_squad_override)
     {
-      fb(sprintf(_("personal permissions of %s were overridden by squad permissions."), rtrim($feedback_squad_override, ', ')));
+# TRANSLATORS: the argument is a comma-separated list of users.
+      fb(sprintf(
+_("personal permissions of %s were overridden by squad permissions."),
+                 rtrim($feedback_squad_override, ', ')));
     }
 
   if ($feedback_unable)
     {
-      fb(sprintf(_("failed to update %s permissions."), rtrim($feedback_unable, ', ')),1);
+# TRANSLATORS: the argument is a comma-separated list of users.
+      fb(sprintf(_("failed to update %s permissions."),
+                 rtrim($feedback_unable, ', ')),1);
     }
 
 
@@ -308,9 +320,12 @@ if ($update)
   )));
 
   # If the group entry do not exists, create it
-  if (!db_numrows(db_execute("SELECT groups_default_permissions_id FROM groups_default_permissions WHERE group_id=?", array($group_id))))
+  if (!db_numrows(db_execute("SELECT groups_default_permissions_id "
+                             ."FROM groups_default_permissions WHERE group_id=?",
+                             array($group_id))))
     {
-      db_execute("INSERT INTO groups_default_permissions (group_id) VALUES (?)", array($group_id));
+      db_execute("INSERT INTO groups_default_permissions (group_id) VALUES (?)",
+                 array($group_id));
     }
 
   # Update the table
@@ -445,11 +460,12 @@ if ($project->Uses("news"))
   $title_arr[]=_("News Manager");
 }
 
-print '<h3>'._("Group trackers posting restrictions").'</h3>';
-
-print '<p>';
-print _("Here you can set the minimal authentication level required in order to post on the trackers.");
-print '</p>';
+print '<h3>'._("Group trackers posting restrictions").'</h3>
+<p>';
+print _("Here you can set the minimal authentication level required in order to
+post on the trackers.");
+print '</p>
+';
 
 print html_build_list_table_top ($title_arr);
 
@@ -487,32 +503,42 @@ print '
     <td>'._("Posting comments").'</td>';
 if ($project->Uses("support")) 
 {
-  html_select_restriction_box("support", group_getrestrictions($group_id, "support", 2),'', '', 2);
+  html_select_restriction_box("support",
+                              group_getrestrictions($group_id, "support", 2),
+                              '', '', 2);
 }
 if ($project->Uses("bugs")) 
 {
-  html_select_restriction_box("bugs", group_getrestrictions($group_id, "bugs", 2),'', '', 2);
+  html_select_restriction_box("bugs", group_getrestrictions($group_id,
+                                                            "bugs", 2),
+                              '', '', 2);
 }
 if ($project->Uses("task")) 
 {
-  html_select_restriction_box("task", group_getrestrictions($group_id, "task", 2),'', '', 2);
+  html_select_restriction_box("task", group_getrestrictions($group_id, "task", 2),
+                              '', '', 2);
 }
 if ($project->Uses("patch")) 
 {
-  html_select_restriction_box("patch", group_getrestrictions($group_id, "patch", 2),'', '', 2);
+  html_select_restriction_box("patch", group_getrestrictions($group_id,
+                                                             "patch", 2),
+                              '', '', 2);
 }
-html_select_restriction_box("cookbook", group_getrestrictions($group_id, "cookbook", 2),'', '', 2);
+html_select_restriction_box("cookbook", group_getrestrictions($group_id,
+                                                              "cookbook", 2),
+                            '', '', 2);
 if ($project->Uses("news")) 
 {
 # not yet effective!
   print '<td align="center">---</td>';
-#  html_select_restriction_box("news", group_getrestrictions($group_id, "news", 2),'', '', 2);
 }
-print '  </tr>';
+print '  </tr>
+';
  
 print '
 </table>
-<p class="center">'.form_submit(_("Update Permissions")).'</p>';
+<p class="center">'.form_submit(_("Update Permissions")).'</p>
+';
 
 
 ########################### GROUP DEFAULTS
@@ -540,36 +566,46 @@ if ($project->Uses("news"))
   $title_arr[]=_("News Manager");
 }
 
-print '<p>&nbsp;</p>';
-print '<h3>'._("Group Default Permissions").'</h3>';
+print '<p>&nbsp;</p>
+<h3>'._("Group Default Permissions").'</h3>
+';
 member_explain_roles();
 print html_build_list_table_top ($title_arr);
 
 if ($project->Uses("support")) 
 {
-html_select_permission_box("support", group_getpermissions($group_id, "support"), "group");
+  html_select_permission_box("support", group_getpermissions($group_id,
+                                                             "support"),
+                             "group");
 }
 if ($project->Uses("bugs")) 
 {
-html_select_permission_box("bugs", group_getpermissions($group_id, "bugs"), "group");
+  html_select_permission_box("bugs", group_getpermissions($group_id, "bugs"),
+                             "group");
 }
 if ($project->Uses("task")) 
 {
-html_select_permission_box("task", group_getpermissions($group_id, "task"), "group");
+  html_select_permission_box("task", group_getpermissions($group_id, "task"),
+                             "group");
 }
 if ($project->Uses("patch")) 
 {
-html_select_permission_box("patch", group_getpermissions($group_id, "patch"), "group");
+  html_select_permission_box("patch", group_getpermissions($group_id, "patch"),
+                             "group");
 }
-html_select_permission_box("cookbook", group_getpermissions($group_id, "cookbook"), "group");
+html_select_permission_box("cookbook", group_getpermissions($group_id,
+                                                            "cookbook"),
+                           "group");
 if ($project->Uses("news")) 
 {
-html_select_permission_box("news", group_getpermissions($group_id, "news"), "group");
+  html_select_permission_box("news", group_getpermissions($group_id, "news"),
+                             "group");
 }
 
 print '  </tr>
 </table>
-<p class="center">'.form_submit(_("Update Permissions")).'</p>';
+<p class="center">'.form_submit(_("Update Permissions")).'</p>
+';
 
 
 ########################### PER SQUADS
@@ -591,12 +627,14 @@ $result = db_execute("SELECT user.user_name AS user_name,"
 . "WHERE user_group.group_id = ? AND user_group.admin_flags='SQD' "
 . "ORDER BY user.user_name", array($group_id));
 
-print '<p>&nbsp;</p>';
-print '<h3>'._("Permissions per squad").'</h3>';
+print '<p>&nbsp;</p>
+<h3>'._("Permissions per squad").'</h3>
+';
 
 if (!$result || db_numrows($result) < 1)
 {
-  print '<p class="warn">'._("No Squads Found").'</p>';
+  print '<p class="warn">'._("No Squads Found").'</p>
+';
 }
 else
 {
@@ -625,9 +663,10 @@ else
       $title_arr[]=_("News Manager");
     }
   
-  print '<p>';
-  print _("Squad Members will automatically obtain, at least, the Squad permissions.");
-  print '</p>';
+  print '<p>
+'._("Squad Members will automatically obtain, at least, the Squad permissions.")
+.'</p>
+';
 
   print html_build_list_table_top ($title_arr);
 
@@ -646,15 +685,19 @@ else
        }
      print '
   <tr class="'. utils_get_alt_row_color($i) .'">
-    <td align="center"><a name="'.$row['user_name'].'"></a>'.utils_user_link($row['user_name'], $row['realname']).'</td>';
+    <td align="center"><a name="'.$row['user_name'].'"></a>'
+.utils_user_link($row['user_name'], $row['realname']).'</td>';
 	 print '
     <td class="smaller">';
 
 	 print '
-      <input type="checkbox" name="privacy_user_'.$row['user_id'].'" value="1" '.(($row['privacy_flags']=='1')?'checked="checked"':'').' />&nbsp;'._("Private Items");
+      <input type="checkbox" name="privacy_user_'.$row['user_id']
+.'" value="1" '.(($row['privacy_flags']=='1')?'checked="checked"':'')
+.' />&nbsp;'._("Private Items");
       
 	 print '
-    </td>';
+    </td>
+';
 
      if ($project->Uses("support")) 
        {
@@ -678,13 +721,15 @@ else
 	 html_select_permission_box("news", $row);
        }
 
-     print '  </tr>';
+     print '  </tr>
+';
 
    }
 
   print '
 </table>
-<p class="center">'.form_submit(_("Update Permissions")).'</p>';
+<p class="center">'.form_submit(_("Update Permissions")).'</p>
+';
 
 }
 
@@ -704,16 +749,19 @@ $result = db_execute("SELECT user.user_name AS user_name,"
 . "user_group.news_flags, "
 . "user_group.support_flags "
 . "FROM user JOIN user_group ON user.user_id=user_group.user_id "
-. "WHERE user_group.group_id = ? AND user_group.admin_flags<>'P' AND user_group.admin_flags<>'SQD' "
+. "WHERE user_group.group_id = ? AND user_group.admin_flags<>'P' "
+. "AND user_group.admin_flags<>'SQD' "
 . "ORDER BY user.user_name", array($group_id));
 
-print '<p>&nbsp;</p>';
-print '<h3>'._("Permissions per member").'</h3>';
+print '<p>&nbsp;</p>
+<h3>'._("Permissions per member").'</h3>
+';
 
 if (!$result || db_numrows($result) < 1)
 {
   # Unusual case! No point in changing permissions of an orphaned project
-  print '<p class="warn">'._("No Members Found").'</p>';
+  print '<p class="warn">'._("No Members Found").'</p>
+';
 }
 else
 {
@@ -745,7 +793,8 @@ else
     }
   print '<p class="warn">';
   print _("Projects Admins are always allowed to read private items.");
-  print '</p>';
+  print '</p>
+';
 
   print html_build_list_table_top ($title_arr);
 
@@ -764,7 +813,9 @@ else
        }
      print '
   <tr class="'. utils_get_alt_row_color($i) .'">
-    <td align="center"><a name="'.$row['user_name'].'"></a>'.utils_user_link($row['user_name'], $row['realname']).'</td>';
+    <td align="center"><a name="'.$row['user_name'].'"></a>'
+.utils_user_link($row['user_name'], $row['realname']).'</td>
+';
 	 print '
     <td class="smaller">';
      if ($row['user_id'] == user_getid())
@@ -774,23 +825,27 @@ else
      else
        {
 	 $extra = ($row['admin_flags'] == 'A' ) ?'checked="checked"':'';
-	 print form_input("checkbox", "admin_user_".$row['user_id'], "A", $extra).'&nbsp;'._("Admin");
+	 print form_input("checkbox", "admin_user_"
+               .$row['user_id'], "A", $extra).'&nbsp;'._("Admin");
        }
      if ($row['admin_flags'] != 'A')
        {
 	 $extra = ($row['privacy_flags'] == '1' ) ?'checked="checked"':'';
-	 print '<br />'.form_input("checkbox", "privacy_user_".$row['user_id'], "1", $extra).'&nbsp;'._("Private Items");
+	 print '<br />'.form_input("checkbox", "privacy_user_"
+               .$row['user_id'], "1", $extra).'&nbsp;'._("Private Items");
        }
      else
        {
 	 print form_input("hidden", 'privacy_user_'.$row['user_id'], 1);
        }
      print '
-    </td>';
+    </td>
+';
      print '<td align="center">';
      $extra = ($row['onduty'] == '1' ) ? 'checked="checked"' : '';
      print form_input("checkbox", "onduty_user_".$row['user_id'], 1, $extra);
-     print '</td>';
+     print '</td>
+';
      if ($project->Uses("support")) 
        {
 	 html_select_permission_box("support", $row);
@@ -813,7 +868,8 @@ else
 	 html_select_permission_box("news", $row);
        }
 
-     print '  </tr>';
+     print '  </tr>
+';
 
    }
 
@@ -823,3 +879,4 @@ else
 }
 
 site_project_footer(array());
+?>

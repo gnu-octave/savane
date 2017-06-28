@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Cancelling notifications.
 # 
-# Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -80,7 +81,9 @@ site_user_header(array('title'=>_("Cancel Mail Notifications"),
 
 # The following text is in two gettext string, because the first part is also
 # shown in My Admin index.
-print '<p>'._("Here, you can cancel all mail notifications.").' '._("Beware: this process cannot be undone, you will be definitely removed from carbon-copy lists of any items of the selected groups.").'<p>';
+print '<p>'._("Here, you can cancel all mail notifications. Beware: this
+process cannot be undone, you will be definitely removed from carbon-copy lists
+of any items of the selected groups.").'<p>'."\n";
 
 # Find all CC the users is registered to receive, list them per groups.
 $groups_with_cc = array();
@@ -108,7 +111,8 @@ GROUP BY groups.group_name",
 
 if (!count($groups_with_cc))
 {
-  print '<p class="warn">'._("You are not registered on any Carbon-Copy list.").'</p>';
+  print '<p class="warn">'
+        ._("You are not registered on any Carbon-Copy list.").'</p>'."\n";
   site_user_footer(array());
   exit;
 }
@@ -127,12 +131,15 @@ foreach ($groups_with_cc as $thisunixname => $thisname)
 
   print '<span class="trash">';
   print utils_link($_SERVER['PHP_SELF'].'?cancel='.$groups_with_cc_gid[$thisunixname],
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Cancel CC for this group").'" />');
+		   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                   .'.theme/misc/trash.png" border="0" alt="'
+                   ._("Cancel CC for this group").'" />');
   print '</span>';
   
   # I18N
   # The variables are: session identifier, time, remote host
-  print  '<a href="'.$GLOBALS['sys_home'].'projects/'.$thisunixname.'/">'.$thisname.'</a><br />';
+  print  '<a href="'.$GLOBALS['sys_home'].'projects/'.$thisunixname
+         .'/">'.$thisname.'</a><br />'."\n";
 }
 
 # Allow to kill sessions apart the current one,
@@ -144,13 +151,17 @@ if ($i > 3)
   print $HTML->box_nextitem(utils_get_alt_row_color($i));
  print '<span class="trash">';
   print utils_link($_SERVER['PHP_SELF'].'?cancel=any',
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Cancel All CC").'" />');
+		   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                   .'.theme/misc/trash.png" border="0" alt="'
+                   ._("Cancel All CC").'" />');
   print '</span>';
-  print '<em>'.sprintf(_("All Carbon-Copies over %s"), $GLOBALS['sys_name']).'</em><br />&nbsp;';
+# TRANSLATORS: the argument is site name (like Savannah).
+  print '<em>'.sprintf(_("All Carbon-Copies over %s"), $GLOBALS['sys_name'])
+              .'</em><br />&nbsp;';
 
 }
 
 print $HTML->box_bottom();
 
-
 site_user_footer(array());
+?>

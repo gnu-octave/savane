@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Search within current group.
 # 
-# Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -31,11 +32,20 @@ site_project_header(array('group'=>$group_id,
 # change that right now. So we ask the user to provide input.
 # But it has to be kept in mind that we want this page to allow a search
 # over all trackers, in the end.
-print '<p>'.sprintf(_("With the following form, you can perform a search in the items summaries and details of a given tracker of the project %s. If you need to perform more complex search, use the query forms in Browse items page of this tracker. If you want to perform a site-wide search, use the search box in the left menu."), group_getname($group_id)).'</p>';
+
+# TRANSLATORS: the argument is the name of the group to look within.
+print '<p>'.sprintf(_("With the following form, you can perform a search in the
+items summaries and details of a given tracker of the project %s. If you need
+to perform more complex search, use the query forms in Browse items page of
+this tracker. If you want to perform a site-wide search, use the search box in
+the left menu."), group_getname($group_id)).'</p>
+';
 # use the string alltrackers to say we want a search to be performed over 
 # all of them
 # (this must not be in a boxoption, it is no option, it is the only purpose of
 # the page)
-print '<p>'.search_box('', '', 45).'</p>';
+print '<p>'.search_box('', '', 45).'</p>
+';
 
 site_project_footer(array());
+?>

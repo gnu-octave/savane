@@ -1,10 +1,10 @@
 <?php
 # Page showing selected job posts.
 #
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Sylvain Beucler <beuc--beuc.net>
-# Copyright 2013 (c) Ineiev <ineiev--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2006-2008 Beucler <beuc--beuc.net>
+# Copyright (C) 2013, 2017 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -44,13 +44,11 @@ if($show_any)
 
 if ($group_id)
 {
-  site_project_header(array('title'=>_('Project Help Wanted'),'group'=>$group_id,'context'=>'people'));
+  site_project_header(array('title'=>_('Project Help Wanted'),
+                      'group'=>$group_id,'context'=>'people'));
 
-  # we get site-specific content
   utils_get_content("people/index_group");
-
   print people_show_project_jobs($group_id);
-
 }
 else if ($categories || $types || $show_any)
 {
@@ -87,7 +85,7 @@ else if ($categories || $types || $show_any)
   if ($error)
     {
       print site_header(array('title'=>_('Project Help Wanted'),
-                              'context'=>_('people')));
+                              'context'=>'people'));
       fb(_("That category does not exist"),1);
     } else {
       if($cat_names == '')
@@ -96,21 +94,20 @@ else if ($categories || $types || $show_any)
         $group_types = 'Groups';
       # TRANSLATORS: The first %s is enumeration of group types,
       # the second %s is enumeration of job categories.
-      $title = sprintf(_('%s looking for %s'), $group_types, $cat_names);
+      $title = sprintf(_('%1$s looking for %2$s'), $group_types, $cat_names);
       print site_header(array('title'=>$title));
-      print '<p>Click job titles for more detailed descriptions.</p>';
-
+      print '<p>'._("Click job titles for more detailed descriptions.").'</p>
+';
       print people_show_jobs($categories, $types, $show_any);
     }
 }
 else
 {
-  print site_header(array('title'=>_('Projects Needing Help'), 'context'=>_('people')));
-
-  # we get site-specific content
+  print site_header(array('title'=>_('Projects Needing Help'),
+                          'context'=>'people'));
   utils_get_content("people/index");
-
   print people_show_table();
 }
 
 site_project_footer(array());
+?>

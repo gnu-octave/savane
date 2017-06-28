@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Handle open sessions.
 # 
-# Copyright 2004 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2004 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -103,16 +104,21 @@ while ($row = db_fetch_array($res))
   print '<span class="trash">';
   if ($session_hash != $row['session_hash'])
     {
-      print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dsession_hash='.$dsession_hash.'&amp;dip_addr='.$row['ip_addr'].'&amp;dtime='.$row['time'],
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Kill this session").'" />');
+      print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dsession_hash='
+                       .$dsession_hash.'&amp;dip_addr='.$row['ip_addr']
+                       .'&amp;dtime='.$row['time'],
+		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                       .'.theme/misc/trash.png" border="0" alt="'
+                       ._("Kill this session").'" />');
     }
   else
-    { print _("Current session"); }
+    print _("Current session").' ';
   print '</span>';
 
-  # I18N
-  # The variables are: session identifier, time, remote host
-  print sprintf(_("Session %s opened on %s from %s"), $dsession_hash, utils_format_date($row['time']), gethostbyaddr($row['ip_addr']))."<br />&nbsp;";
+  # TRANSLATORS: The variables are session identifier, time, remote host.
+  print sprintf(_('Session %1$s opened on %2$s from %3$s'), $dsession_hash,
+                utils_format_date($row['time']), gethostbyaddr($row['ip_addr']))
+        ."<br />&nbsp;";
 
 }
 
@@ -125,7 +131,9 @@ if ($i > 3)
   print $HTML->box_nextitem(utils_get_alt_row_color($i));
   print '<span class="trash">';
   print utils_link($_SERVER['PHP_SELF'].'?func=del&amp;dkeep_one=1',
-		       '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Kill all sessions").'" />');
+		   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                   .'.theme/misc/trash.png" border="0" alt="'
+                   ._("Kill all sessions").'" />');
   print '</span>'; 
   print '<em>'._("All sessions apart from the current one").'</em><br />&nbsp;';
 
@@ -133,5 +141,5 @@ if ($i > 3)
 
 print $HTML->box_bottom();
 
-
 site_user_footer(array());
+?>

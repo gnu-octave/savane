@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Manage squads.
 # 
-#  Copyright 2006 (c)      Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -66,17 +67,21 @@ if (!$squad_id)
 
 	      if ($valid && db_numrows(db_execute("SELECT user_id FROM user WHERE "
 						  . "user_name LIKE ?",
-						  array($groupx.'-'.$form_loginname))) > 0)
+						  array($groupx.'-'
+                                                        .$form_loginname))) > 0)
 		{
 		  fb(_("That username already exists."),1);
 		  $valid = false;
 		}
 	      
-	      if ($valid && db_numrows(db_execute("SELECT group_list_id FROM mail_group_list WHERE "
+	      if ($valid && db_numrows(db_execute("SELECT group_list_id "
+                                                  . "FROM mail_group_list WHERE "
 						  . "list_name LIKE ?",
-						  array($group.'-'.$form_loginname))) > 0)
+						  array($group.'-'
+                                                        .$form_loginname))) > 0)
 		{
-		  fb(_("That username is blocked to avoid conflict with mailing-list addresses."),1);
+		  fb(
+_("That username is blocked to avoid conflict with mailing-list addresses."),1);
 		  $valid = false;
 		}
 
@@ -89,14 +94,15 @@ if (!$squad_id)
                       'user_name' => strtolower($group."-".$form_loginname),
 		      'user_pw' => 'ignored',
 		      'realname' => $form_realname,
-		      'email' => $GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'],
+		      'email' => $GLOBALS['sys_mail_replyto'].'@'
+                                 .$GLOBALS['sys_mail_domain'],
 		      'add_date' => time(),
 		      'status' => 'SQD',
 		      'email_hide' => 1,
 		    ), DB_AUTOQUERY_INSERT);
 		  if (db_affected_rows($result) > 0)
 		    { 
-		      fb("Squad created"); 
+		      fb(_("Squad created"));
 		      $created_squad_id = db_insertid($result);
 		      
                       # Now assign the squad to the group
@@ -109,7 +115,7 @@ if (!$squad_id)
 		      
 		    }
 		  else
-		    { fb("Error during squad creation"); }
+		    { fb(_("Error during squad creation")); }
 		  
 		}
 	    }
@@ -124,7 +130,8 @@ if (!$squad_id)
         . "user.realname AS realname, "
         . "user.user_id AS user_id "
 	. "FROM user,user_group WHERE "
-	. "user.user_id=? AND user_group.group_id=? AND user_group.admin_flags='SQD' "
+	. "user.user_id=? AND user_group.group_id=? "
+        . "AND user_group.admin_flags='SQD' "
 	. "ORDER BY user.user_name", array($squad_id_to_delete, $group_id));
       
       if (!db_numrows($delete_result))
@@ -141,52 +148,73 @@ if (!$squad_id)
     . "user.realname AS realname, "
     . "user.user_id AS user_id "
     . "FROM user,user_group WHERE "
-    . "user.user_id=user_group.user_id AND user_group.group_id=? AND user_group.admin_flags='SQD' "
+    . "user.user_id=user_group.user_id AND user_group.group_id=? "
+    . "AND user_group.admin_flags='SQD' "
     . "ORDER BY user.user_name", array($group_id));
   $rows = db_numrows($result);
 
-  site_project_header(array('title'=>_("Manage Squads"),'group'=>$group_id,'context'=>'ahome'));
+  site_project_header(array('title'=>_("Manage Squads"),
+                            'group'=>$group_id,'context'=>'ahome'));
 
-  print '<p>'._("Squads can be assigned items, share permissions. Creating squads is useful if you want to assign some items to several members at once.").'</p>';
+  print '<p>'
+._("Squads can be assigned items, share permissions. Creating squads is useful
+if you want to assign some items to several members at once.").'</p>
+';
   
-  print '<a name="form"></a>';
-  print '<h3>'._("Squads List").'</h3>';
+  print '<h3 id="form">'._("Squads List").'</h3>
+';
 
   if ($rows < 1)
     {
-      print '<p class="warn">'._("None found").'</p>';
+      print '<p class="warn">'._("None found").'</p>
+';
     }
   else
     {
-      print '<ul>';
+      print '<ul>
+';
       while ($squad= db_fetch_array($result)) 
 	{
-	  print '<li><a href="?squad_id='.$squad['user_id'].'&amp;group_id='.$group_id.'">'.$squad['realname'].' &lt;'.$squad['user_name'].'&gt;</a></li>';
+	  print '<li><a href="?squad_id='.$squad['user_id'].'&amp;group_id='
+                .$group_id.'">'.$squad['realname'].' &lt;'
+                .$squad['user_name'].'&gt;</a></li>
+';
 	}
-      print '</ul>';
+      print '</ul>
+';
     }
 
   # Limit squad creation to the group size (yes, one can easily override this
   # restriction by creating fake users, but the point is only to incitate
   # to create squads only if necessary, not to really enforce something 
   # important)
-  print '<h3>'._("Create a New Squad").'</h3>';
+  print '<h3>'._("Create a New Squad").'</h3>
+';
   
-  if ($rows < db_numrows(db_execute("SELECT user_id FROM user_group WHERE group_id=? AND admin_flags<>'P' AND admin_flags<>'SQD'", array($group_id))))
+  if ($rows < db_numrows(db_execute("SELECT user_id FROM user_group "
+                                    ."WHERE group_id=? AND admin_flags<>'P' "
+                                    ."AND admin_flags<>'SQD'", array($group_id))))
     {  
       print form_header($_SERVER["PHP_SELF"].'#form', $form_id);
       print form_input("hidden", "group_id", $group_id);
-      print '<p><span class="preinput">'._("Squad Login Name:").'</span><br />&nbsp;&nbsp;';
-      print $group."-".form_input("text", "form_loginname", $form_loginname).'</p>';
+      print '<p><span class="preinput">'._("Squad Login Name:")
+            .'</span><br />&nbsp;&nbsp;';
+      print $group."-".form_input("text", "form_loginname", $form_loginname)
+            .'</p>
+';
       
-      print '<p><span class="preinput">'._("Real Name:").'</span><br />&nbsp;&nbsp;';
-      print form_input("text", "form_realname", $form_realname).'</p>'; 
+      print '<p><span class="preinput">'._("Real Name:").'</span>
+<br />&nbsp;&nbsp;';
+      print form_input("text", "form_realname", $form_realname).'</p>
+'; 
       
       print form_footer();
     }
   else
     {
-      print '<p class="warn">'._("You cannot have more squads than members").'</p>';
+      print '<p class="warn">'
+._("You cannot have more squads than members").'</p>
+';
     }
 
 }
@@ -218,7 +246,7 @@ else
 				      array($form_realname, $squad_id));
 	  if (db_affected_rows($result_update) > 0)
 	    { 
-	      fb("Squad name updated"); 
+	      fb(_("Squad name updated")); 
 	      group_add_history('Squad name update',
 				db_result($result, 0, 'realname'),
 				$group_id);
@@ -232,8 +260,12 @@ else
   # Request squad deletion
   if ($update_delete_step1)
     {
-      site_project_header(array('title'=>_("Manage Squads"),'group'=>$group_id,'context'=>'ahome'));
-      print '<p>'._('This action cannot be undone, the squad login name will no longer be available.').'</p>';
+      site_project_header(array('title'=>_("Manage Squads"),
+                          'group'=>$group_id,'context'=>'ahome'));
+      print '<p>'
+._('This action cannot be undone, the squad login name will no longer be
+available.').'</p>
+';
 
       print form_header($_SERVER["PHP_SELF"]);
       print form_input("hidden", "group_id", $group_id);
@@ -241,8 +273,11 @@ else
       # the software will try show the squad details, even if it has been
       # removed, while we want the list of existing squads
       print form_input("hidden", "squad_id_to_delete", $squad_id);
-      print '<p><span class="preinput">'._("Do you really want to delete this squad account:").'</span><br />&nbsp;&nbsp;';
-      print form_input("checkbox", "deletionconfirmed", "yes").' '._("Yes, I really do").'</p>';
+      print '<p><span class="preinput">'
+._("Do you really want to delete this squad account:").'</span>
+<br />&nbsp;&nbsp;';
+      print form_input("checkbox", "deletionconfirmed", "yes")
+.' '._("Yes, I really do").'</p>';
       print form_submit(_("Update"), "update_delete_step2");
       site_project_footer(array());
       exit;
@@ -253,9 +288,12 @@ else
     {
       foreach ($user_ids as $user) {
 	if (member_squad_add($user, $squad_id, $group_id)) 
+# TRASNLATORS: the argument is user's name.
 	  { fb(sprintf(_("User %s added to the squad."), user_getname($user))); }
 	else
-	  { fb(sprintf(_("User %s is already part of the squad."), user_getname($user)),1); }
+# TRASNLATORS: the argument is user's name.
+	  { fb(sprintf(_("User %s is already part of the squad."),
+                       user_getname($user)),1); }
       }
     }
 
@@ -264,35 +302,46 @@ else
     {
       foreach ($user_ids as $user) {
 	if (member_squad_remove($user, $squad_id, $group_id)) 
+# TRASNLATORS: the argument is user's name.
 	  { fb(sprintf(_("User %s removed from the squad."), user_getname($user))); }
 	else
+# TRASNLATORS: the argument is user's name.
 	  { fb(sprintf(_("User %s is not part of the squad."), user_getname($user)),1); }
       }
     }
-  
 
-  site_project_header(array('title'=>_("Manage Squads"),'group'=>$group_id,'context'=>'ahome'));
+  site_project_header(array('title'=>_("Manage Squads"),'group'=>$group_id,
+                      'context'=>'ahome'));
   
   ## GENERAL
   print form_header($_SERVER["PHP_SELF"]);
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "squad_id", $squad_id);
-  print '<p><span class="preinput">'._("Real Name:").'</span><br />&nbsp;&nbsp;';
-  print form_input("text", "form_realname", db_result($result, 0, 'realname')).' &lt;'.db_result($result, 0, 'user_name').'&gt;</p>'; 	
-  print form_submit(_("Update"), "update_general").' '.form_submit(_("Delete Squad"), "update_delete_step1").'</form>';	   
+  print '<p><span class="preinput">'._("Real Name:")
+        .'</span><br />&nbsp;&nbsp;';
+  print form_input("text", "form_realname", db_result($result, 0, 'realname'))
+        .' &lt;'.db_result($result, 0, 'user_name').'&gt;</p>
+';
+  print form_submit(_("Update"), "update_general").' '
+        .form_submit(_("Delete Squad"), "update_delete_step1").'</form>
+';
 
 
   ## REMOVE USERS
-  print '<h3>'._("Removing members").'</h3>';
+  print '<h3>'._("Removing members").'</h3>
+';
 
   $result_delusers = db_execute("SELECT user.user_id AS user_id, "
 			       . "user.user_name AS user_name, "
 			       . "user.realname AS realname "
 			       . "FROM user,user_squad "
-			       . "WHERE user.user_id=user_squad.user_id AND user_squad.squad_id=?"
+			       . "WHERE user.user_id=user_squad.user_id "
+                               . "AND user_squad.squad_id=?"
 			       . " ORDER BY user.user_name", array($squad_id));
 
-  print "<p>"._("To remove members from the squad, select their name and click on the button below.");
+  print "<p>"
+._("To remove members from the squad, select their names and push the button
+below.")."</p>\n";
   print form_header($_SERVER["PHP_SELF"]);
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "squad_id", $squad_id);
@@ -312,21 +361,26 @@ else
     print '<option>'._("None found").'</option>';
   }
   print '</select>';
-  print '<br />'.form_submit(_("Remove Members"), "remove_from_squad").'</form>';	   
-
+  print '<br />
+'.form_submit(_("Remove Members"), "remove_from_squad").'</form>
+';
   
   ## ADD USERS
-  print '<h3>'._("Adding members").'</h3>';
+  print '<h3>'._("Adding members").'</h3>
+';
   
   $result_addusers =  db_execute("SELECT user.user_id AS user_id, "
 			       . "user.user_name AS user_name, "
 			       . "user.realname AS realname "
 			       . "FROM user,user_group "
-			       . "WHERE user.user_id=user_group.user_id AND user_group.group_id=? "
+			       . "WHERE user.user_id=user_group.user_id "
+                               . "AND user_group.group_id=? "
 			       . "  AND admin_flags<>'P' AND admin_flags<>'SQD' "
 			       . "ORDER BY user.user_name", array($group_id));
   
-  print "<p>"._("To add members to the squad, select their name and click on the button below.");
+  print "<p>"
+._("To add members to the squad, select their name and push the button below.")
+."</p>\n";
   print form_header($_SERVER["PHP_SELF"]);
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "squad_id", $squad_id);
@@ -338,23 +392,30 @@ else
       if (array_key_exists($thisuser['user_id'], $already_in_squad))
 	{ continue; }
       
-      print '<option value="'.$thisuser['user_id'].'">'.$thisuser['realname'].' &lt;'.$thisuser['user_name'].'&gt;</option>';
+      print '<option value="'.$thisuser['user_id'].'">'
+            .$thisuser['realname'].' &lt;'.$thisuser['user_name'].'&gt;</option>
+';
       $exists=1;
     }
   
   if (!$exists) {
     # Show none if the list is empty
-    print '<option>'._("None found").'</option>';
+    print '<option>'._("None found").'</option>
+';
   }
-  print '</select>';
-  print '<br />'.form_submit(_("Add Members"), "add_to_squad").'</form>';	   
+  print '</select>
+';
+  print '<br />
+'.form_submit(_("Add Members"), "add_to_squad").'</form>
+';
 
-  ## PERMISSIONS LINK
-  print '<h3>'._("Setting permissions").'</h3>';
+  print '<h3>'._("Setting permissions").'</h3>
+';
 
-  print '<a href="userperms.php?group='.$group.'#'.db_result($result, 0, 'user_name').'">'._("Go the the 'Set Permissions' page").'</a>';
-
-
-
+  print '<p><a href="userperms.php?group='.$group.'#'
+        .db_result($result, 0, 'user_name').'">'
+        ._("Set Permissions").'</a></p>
+';
 }
 site_project_footer(array());
+?>

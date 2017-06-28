@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Handle bookmarks.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2004-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2004-2005 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -60,14 +61,16 @@ if ($edit)
 	  
 	  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
 	  print '<span class="preinput">'._("Title:").'</span>';
-	  print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="title" value="'.$title.'" size="50" />';
+	  print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="title" value="'
+                .$title.'" size="50" />';
 	  print '<br />';
 	  print '<span class="preinput">'._("Address:").'</span>';
-	  print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="url" value="'.$url.'" size="50" />';
+	  print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="url" value="'
+                .$url.'" size="50" />';
 
 	  print '<input type="hidden" name="edit" value="'.$edit.'" /></p>';
 	  print '<p><input type="submit" name="update" value="'._("Update").'" /></p>';
-print '</form>';
+          print '</form>';
 
 	}
       else 
@@ -91,18 +94,28 @@ else
   
   print '<br />';
   print $HTML->box_top(_("Saved Bookmarks"),'',1);
+  print '
+<ul>
+';
   for ($i=0; $i<$rows; $i++)
         {
           print '<li class="'.utils_get_alt_row_color($i).'">';
-	  print '<span class="trash"><a href="?edit='.db_result($result,$i,'bookmark_id').'">'.
-	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/edit.png" alt="'._("Edit this bookmark").'" /></a>'.
-	    '<a href="?delete='.db_result($result,$i,'bookmark_id').'">'.
-	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Delete this bookmark").'" /></a></span>';
+	  print '<span class="trash"><a href="?edit='
+                .db_result($result,$i,'bookmark_id').'">'
+	    .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+            .'.theme/misc/edit.png" alt="'._("Edit this bookmark").'" /></a>'."\n"
+	    .'<a href="?delete='.db_result($result,$i,'bookmark_id').'">'
+	    .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+            .'.theme/misc/trash.png" alt="'._("Delete this bookmark")
+            .'" /></a></span>'."\n";
 	  print '<a href="'.db_result($result,$i,'bookmark_url').'">'.
             htmlentities(db_result($result,$i,'bookmark_title')).'</a> ';
-	  print '<br /><span class="smaller">'.htmlentities(db_result($result,$i,'bookmark_url'));
-	  print '</span></li>';
+	  print "\n".'<br /><span class="smaller">'
+                .htmlentities(db_result($result,$i,'bookmark_url'));
+	  print '</span></li>'."\n";
         }
+  print '</ul>
+';
   print $HTML->box_bottom(1);
 }
 

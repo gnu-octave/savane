@@ -2,6 +2,7 @@
 # Atom feed generator for news items
 
 # Copyright (C) 2008  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 
 # This file is part of Savane.
 
@@ -29,7 +30,6 @@ if (empty($group_id))
   exit;
 }
 
-
 // Cache control
 $result = db_execute("
   SELECT date_last_edit FROM news_bytes
@@ -44,7 +44,6 @@ if ($row = db_fetch_array($result))
   $mtime = $row['date_last_edit'];
 http_exit_if_not_modified($mtime);
 header('Last-Modified: ' . date('r', $mtime));
-
 
 require_once('../include/news/general.php');
 $group_obj = project_get_object($group_id);
@@ -62,7 +61,9 @@ $result = db_execute("
 
 
 $id = "http://$sys_default_domain{$sys_home}news/atom.php?group=$group";
-$title = $group_obj->getPublicName()." - News";
+# TRANSLATORS: this is page title, the argument is group name
+# (like "GNU Coreutils").
+$title = sprintf(_("%s - News"), $group_obj->getPublicName());
 $last_updated = date('c', $mtime);
 $is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? true : false;
 $myself = ($is_https ? 'https://' : 'http://')
@@ -87,7 +88,8 @@ print '<?xml version="1.0" encoding="utf-8"?>
 
 while ($row = db_fetch_array($result))
 {
-  $id = "http://$sys_default_domain{$sys_home}forum/forum.php?forum_id={$row['forum_id']}";
+  $id = "http://$sys_default_domain{$sys_home}"
+        ."forum/forum.php?forum_id={$row['forum_id']}";
   $title = $row['summary'];
   $updated = date('c', $row['date']);
   $author = $row['realname'];
@@ -111,3 +113,4 @@ while ($row = db_fetch_array($result))
 
 // Feed footer
 print "</feed>";
+?>

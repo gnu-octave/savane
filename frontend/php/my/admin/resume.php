@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Resume editor.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -45,8 +46,9 @@ if ($update_profile)
   else 
     {
       $people_resume = utils_unconvert_htmlspecialchars($people_resume);
-      $result = db_execute("UPDATE user SET people_view_skills=?, people_resume=? ".
-	 "WHERE user_id=?", array($people_view_skills, $people_resume, user_getid()));
+      $result = db_execute("UPDATE user SET people_view_skills=?, "
+         ."people_resume=? WHERE user_id=?", array($people_view_skills,
+                                                   $people_resume, user_getid()));
       if (!$result || db_affected_rows($result) < 1) 
 	{
 	  fb(_("Update failed"), 1);
@@ -78,9 +80,11 @@ else if ($update_skill_inventory)
     } 
   else 
     {
-      $result = db_execute("UPDATE people_skill_inventory SET skill_level_id=?,skill_year_id=? ".
-	 "WHERE user_id=? AND skill_inventory_id=?",
-	 array($skill_level_id, $skill_year_id, user_getid(), $skill_inventory_id));
+      $result = db_execute("UPDATE people_skill_inventory "
+         ."SET skill_level_id=?,skill_year_id=? "
+	 ."WHERE user_id=? AND skill_inventory_id=?",
+	 array($skill_level_id, $skill_year_id, user_getid(),
+               $skill_inventory_id));
       
       if (!$result || db_affected_rows($result) < 1) 
 	{
@@ -98,7 +102,8 @@ else if ($update_skill_inventory)
       exit_error(_("Missing information: Fill in all required fields"));
     }
 
-  $result = db_execute("DELETE FROM people_skill_inventory WHERE user_id=? AND skill_inventory_id=?",
+  $result = db_execute("DELETE FROM people_skill_inventory "
+                       ."WHERE user_id=? AND skill_inventory_id=?",
 		       array(user_getid(), $skill_inventory_id));
   if (!$result || db_affected_rows($result) < 1) 
     {
@@ -108,18 +113,18 @@ else if ($update_skill_inventory)
     {
      fb(_("User Skill Deleted successfully"));
     }
-
 }
 
 
 # Fill in the info to edit the resume
 
-site_user_header(array('title'=>_("Edit Your Resume & Skills"),'context'=>'account'));
+site_user_header(array('title'=>_("Edit Your Resume & Skills"),
+                       'context'=>'account'));
 
-
-print '<p>'._("Details about your experience and skills may be of interest to others users or visitors.").'</p>';
-
-
+print '<p>'
+._("Details about your experience and skills may be of interest to others users
+or visitors.").'</p>
+';
 
 $result = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
 if (!$result || db_numrows($result) < 1)
@@ -134,24 +139,29 @@ utils_get_content("people/editresume");
 $viewableoptions = array("0" => _("No"),
 			 "1" => _("Yes"));
 
-
-
 print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">'
-.'<h3>'._("Publicly Viewable").'</h3>'
-.'<span class="preinput">'._("Do you want your resume to be activated:").'</span>&nbsp;&nbsp;'
+.'<h3>'._("Publicly Viewable").'</h3>
+'
+.'<span class="preinput">'._("Do you want your resume to be activated:")
+.'</span>&nbsp;&nbsp;'
 .html_build_select_box_from_array(array("0" => _("No"),"1" => _("Yes")),
 				  'people_view_skills',
 				  db_result($result,0,'people_view_skills'));
 
-print '<h3>'.sprintf(_("Resume - Description of Experience %s"), markup_info("full")).'</h3>
-	<textarea name="people_resume" rows="15" cols="60" wrap="soft">'. db_result($result,0,'people_resume') .'</textarea>';
+print '<h3>'._("Resume - Description of Experience").'</h3>
+<p>'.markup_info("full").'</p>
+<textarea name="people_resume" rows="15" cols="60" wrap="soft">'
+. db_result($result,0,'people_resume') .'</textarea>
+';
 
-print '<br /><br /><div class="center"><input type="submit" name="update_profile" value="'._("Update Profile").'" /></div></form>';
+print '<br /><br />
+<div class="center"><input type="submit" name="update_profile" value="'
+._("Update Profile").'" /></div></form>';
 
 print '<h3>'._("Skills").'</h3>';
 
 #now show the list of desired skills
 people_edit_skill_inventory(user_getid());
 
-
 site_user_footer(array());
+?>

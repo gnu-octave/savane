@@ -1,11 +1,12 @@
 <?php
 # Generic user settings editor
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2013  Sylvain Beucler
-# Copyright 2016 Karl Berry
+# Copyright (C) 2016 Karl Berry
+# Copyright (C) 2017 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -53,7 +54,9 @@ if ($item == 'delete')
   $res_check = db_execute("SELECT group_id FROM user_group WHERE user_id=?", array(user_getid()));
   if (db_numrows($res_check) != 0)
     {      
-      exit_error(_("You must quit groups of which you are a member before requesting account deletion. If you registered a project that was not approved or discarded yet, you must ask admins to cancel that registration"));
+      exit_error(_("You must quit groups of which you are a member before
+requesting account deletion. If you registered a project that was not approved
+or discarded yet, you must ask admins to cancel that registration."));
     }
   
 }
@@ -107,7 +110,8 @@ if ($update)
       $success = 1;
 
       # check against old pw
-      db_execute("SELECT user_pw, status FROM user WHERE user_id=?", array(user_getid()));
+      db_execute("SELECT user_pw, status FROM user WHERE user_id=?",
+                 array(user_getid()));
       $row_pw = db_fetch_array();
 
       # CERN_SPECIFIC: sys_use_pamauth have to be included in the
@@ -159,7 +163,9 @@ if ($update)
 	  # Update only if everything was ok before
 	  if ($success)
 	    {
-	      $success = db_autoexecute('user', array('user_pw' => account_encryptpw($newvalue)),
+	      $success = db_autoexecute('user',
+                                        array('user_pw' =>
+                                              account_encryptpw($newvalue)),
 				        DB_AUTOQUERY_UPDATE,
 				        "user_id=?", array(user_getid()));
 	      if ($success)
@@ -197,9 +203,11 @@ if ($update)
 	      
               # Build a new confirm hash
 	      $confirm_hash = substr(md5($session_hash . time()),0,16);
-	      $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
+	      $res_user = db_execute("SELECT * FROM user WHERE user_id=?",
+                                     array(user_getid()));
 	      if (db_numrows($res_user) < 1)
-		{ exit_error("Invalid User","That user does not exist."); }
+		exit_error(_("Invalid User"),
+                           _("That user does not exist."));
 	      
 	      $row_user = db_fetch_array($res_user);
 	      $success = db_autoexecute('user', array('confirm_hash' => $confirm_hash,
@@ -221,19 +229,40 @@ if ($update)
 		    { $url = 'https://'.$GLOBALS['sys_https_host']; }
 		  else
 		    { $url = 'http://'.$GLOBALS['sys_default_domain']; }
-		  $url .= $GLOBALS['sys_home'].'my/admin/change.php?item=email&confirm_hash='.$confirm_hash;
-		  $message = sprintf(_("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:"), $GLOBALS['sys_name']) . "\n\n"
-		    . $url."&step=confirm\n\n"
-		    . sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
+		  $url .= $GLOBALS['sys_home'].'my/admin/change.php?'
+                          .'item=email&confirm_hash='.$confirm_hash;
+# TRANSLATORS: the argument is site name (like Savannah).
+		  $message = sprintf(
+_('You have requested a change of email address on %s.
+Please visit the following URL to complete the email change:'),
+                                     $GLOBALS['sys_name']) . "\n\n"
+		    . $url."&step=confirm\n\n";
+# TRANSLATORS: the argument is site name (like Savannah).
+                  $message .= sprintf(_("-- the %s team."),
+                                      $GLOBALS['sys_name']) . "\n";
+
+# TRANSLATORS: the argument is site name (like Savannah).
+		  $warning_message = sprintf(
+_('Someone, presumably you, has requested a change of email address on %s.
+If it wasn\'t you, maybe someone is trying to steal your account...
+
+Your current address is %s, the supposedly new address is %s.'
+), $GLOBALS['sys_name'], $row_user['email'], $newvalue).'
+
+' . _('If you did not request that change, please visit the following URL
+to discard the email change and report the problem to us:')
+."\n\n"
+		    . $url."&step=discard\n\n";
+
+# TRANSLATORS: the argument is site name (like Savannah).
+                 $warning_message .=
+		    sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
 		  
-		  $warning_message = sprintf(_("Someone, presumably you, has requested a change of email address on %s.\nIf it wasn't you, maybe someone is trying to steal your account...\n\nYour current address is %s, the supposedly new address is %s.\n\n"), $GLOBALS['sys_name'], $row_user['email'], $newvalue)
-		    . _("If you did not request that change, please visit the following URL to discard\nthe email change and report the problem to us:")."\n\n"
-		    . $url."&step=discard\n\n"
-		    . sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
-		  
-		  $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
+		  $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@"
+                                           .$GLOBALS['sys_mail_domain'],
 					   $newvalue,
-					   $GLOBALS['sys_name'] .' '._("Verification"),
+					   $GLOBALS['sys_name'] .' '
+                                           ._("Verification"),
 					   $message);
 		  
 	      # yeupou--gnu.org 2003-11-09:
@@ -247,7 +276,8 @@ if ($update)
 	      # on.
 	      # The next step is probably to print the mail change request
 	      # on account/ with the possibility to discard
-		  sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
+		  sendmail_mail($GLOBALS['sys_mail_replyto']."@"
+                                .$GLOBALS['sys_mail_domain'],
 				$row_user['email'],
 				$GLOBALS['sys_name'] .' '._("Verification"),
 				$warning_message);
@@ -255,16 +285,18 @@ if ($update)
 		  
 		  if ($success)
 		    {
+# TRANSLATORS: the argument is email address.
 		      sprintf(_("Confirmation mailed to %s."), $newvalue);
-		      fb(_("Follow the instructions in the email to complete the email change."));
+		      fb(
+_("Follow the instructions in the email to complete the email change."));
 		    }
 		  else
 		    {
-		      fb(_("The system reported a failure when trying to send the confirmation mail. Please retry and report that problem to administrators."), 1);
+		      fb(_("The system reported a failure when trying to send
+the confirmation mail. Please retry and report that problem to
+administrators."), 1);
 		    }
 		}
-
-
 	    }
 	}
       else if ($step == "confirm")
@@ -281,18 +313,18 @@ if ($update)
 				   array($confirm_hash));
 	    if (db_numrows($res_user) > 1)
 	      {
-		$ffeedback = (" This confirm hash exists more than once.");
+		$ffeedback = (' '._("This confirm hash exists more than once."));
 	      }
 	    else if (db_numrows($res_user) < 1)
 	      {
-		exit_error(" Invalid confirmation hash.");
+		exit_error(' '._("Invalid confirmation hash."));
 	      }
 	    else
 	      {
 		$success = true;
 	      }
 	  } else {
-	    exit_error(" Invalid confirmation hash.");
+	    exit_error(' '._("Invalid confirmation hash."));
 	  }
 	  if ($success)
 	    {
@@ -323,12 +355,15 @@ if ($update)
 	   if ($success)
 	     { fb(_("Address change process discarded.")); }
 	   else
-	     { fb(_("Failed to discard the address change process, please contact administrators."), 1); }
+	     { fb(
+_("Failed to discard the address change process, please contact
+administrators."), 1); }
 	
 	}
       else
 	{
-	  fb(_("Unable to understand what to do, parameters are probably missing"), 1);
+	  fb(
+_("Unable to understand what to do, parameters are probably missing"), 1);
 	}
     }
   else if ($item == "delete")
@@ -341,9 +376,10 @@ if ($update)
 	{
           # Build a new confirm hash
 	  $confirm_hash = substr(md5($session_hash . time()),0,16);
-	  $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
+	  $res_user = db_execute("SELECT * FROM user WHERE user_id=?",
+                                 array(user_getid()));
 	  if (db_numrows($res_user) < 1)
-	    { exit_error("Invalid User","That user does not exist."); }
+	    exit_error(_("Invalid User"), _("That user does not exist."));
 	  
 	  $row_user = db_fetch_array($res_user);
 	  
@@ -363,17 +399,30 @@ if ($update)
 		{ $url = 'https://'.$GLOBALS['sys_https_host']; }
 	      else
 		{ $url = 'http://'.$GLOBALS['sys_default_domain']; }
-	      $url .= $GLOBALS['sys_home'].'my/admin/change.php?item=delete&confirm_hash='.$confirm_hash;
+	      $url .= $GLOBALS['sys_home'].'my/admin/change.php?'
+                      .'item=delete&confirm_hash='.$confirm_hash;
 	      
-	      $message = sprintf(_("Someone, presumably you, has requested your %s account deletion.\nIf it wasn't you, it probably means that someone stole your account.\n\n"), $GLOBALS['sys_name']).
-		sprintf(_("If you did request your %s account deletion, visit the following URL to finish\nthe deletion process:"), $GLOBALS['sys_name']) . "\n\n"
+# TRANSLATORS: the argument is site name (like Savannah).
+	      $message = sprintf(
+_('Someone, presumably you, has requested your %s account deletion.
+If it wasn\'t you, it probably means that someone stole your account.'),
+                                 $GLOBALS['sys_name']).'
+
+';
+# TRANSLATORS: the argument is site name (like Savannah).
+              $message .= sprintf(
+_('If you did request your %s account deletion, visit the following URL to finish
+the deletion process:'), $GLOBALS['sys_name']) . "\n\n"
 		. $url."&step=confirm\n\n"
-		
-		. _("If you did not request that change, please visit the following URL to discard\nthe process and report ASAP the problem to us:")."\n\n"
-		. $url."&step=discard\n\n"
-		. sprintf(_("-- the %s team."), $GLOBALS['sys_name']) . "\n";
+._('If you did not request that change, please visit the following URL to discard
+the process and report ASAP the problem to us:')."\n\n"
+		. $url."&step=discard\n\n";
+# TRANSLATORS: the argument is site name (like Savannah).
+              $message .= sprintf(_("-- the %s team."), $GLOBALS['sys_name'])
+                          . "\n";
 	      
-	      $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
+	      $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@"
+                                       .$GLOBALS['sys_mail_domain'],
 				       $row_user['email'],
 				       $GLOBALS['sys_name'] .' '._("Verification"),
 				       $message);
@@ -381,11 +430,14 @@ if ($update)
 	      
 	      if ($success)
 		{
-		  fb(_("Follow the instructions in the email to complete the account deletion."));
+		  fb(
+_("Follow the instructions in the email to complete the account deletion."));
 		}
 	      else
 		{
-		  fb(_("The system reported a failure when trying to send the confirmation mail. Please retry and report that problem to administrators."), 1);
+		  fb(_("The system reported a failure when trying to send the
+confirmation mail. Please retry and report that problem to administrators."),
+                     1);
 		}
 	    
 	    }
@@ -398,15 +450,16 @@ if ($update)
       else if ($step == "confirm2")
 	{
 	  $success = 1;
-	  $res_user = db_execute("SELECT * FROM user WHERE confirm_hash=?", array($confirm_hash));
+	  $res_user = db_execute("SELECT * FROM user WHERE confirm_hash=?",
+                                 array($confirm_hash));
 	  if (db_numrows($res_user) > 1)
 	    {
-	      $ffeedback = ("This confirm hash exists more than once.");
+	      $ffeedback = (_("This confirm hash exists more than once."));
 	      $success = 0;
 	    }
 	  if (db_numrows($res_user) < 1)
 	    {
-	      exit_error("Invalid confirmation hash.");
+	      exit_error(_("Invalid confirmation hash."));
 	      $success = 0;
 	    }
 	  if ($success)
@@ -423,12 +476,16 @@ if ($update)
 	   if ($success)
 	     { fb(_("Account deletion process discarded.")); }
 	   else
-	     { fb(_("Failed to discard account deletion process, please contact administrators."), 1); }
+	     fb(
+_("Failed to discard account deletion process, please contact administrators."),
+                1);
 	}
 
       else
 	{
-	  fb(_("Unable to understand what to do, parameters are probably missing"), 1);
+	  fb(
+_("Unable to understand what to do, parameters are probably missing"),
+             1);
 	}
     }
 
@@ -437,7 +494,8 @@ if ($update)
   # configuration page.
   if ($success)
     {
-      session_redirect($GLOBALS['sys_home']."my/admin/?feedback=".rawurlencode($feedback));
+      session_redirect($GLOBALS['sys_home']."my/admin/?feedback="
+                       .rawurlencode($feedback));
     }
 
 }
@@ -473,8 +531,11 @@ else if ($item == "timezone")
 
   require_once('../../include/timezones.php');
   $title = _("Change Timezone");
-  $input_title = _("No matter where you live, you can see all dates and times as if it were in your neighborhood:");
-  $input_specific = html_build_select_box_from_arrays ($TZs,$TZs,'newvalue',user_get_timezone(), true, 'GMT');
+  $input_title = _("No matter where you live, you can see all dates and times
+as if it were in your neighborhood:");
+  $input_specific = html_build_select_box_from_arrays ($TZs, $TZs, 'newvalue',
+                                                       user_get_timezone(),
+                                                       true, 'GMT');
 }
 else if ($item == "password")
 {
@@ -497,9 +558,10 @@ else if ($item == "password")
   # AFS CERN Stuff
   if ($sys_use_pamauth == "yes") {
     $input4_title = "<br />Instead of providing a new Savannah password you
-      may choose to authenticate via an <strong>AFS</strong> account you own
-      at this site (this requires your Savannah login name to be the
-      same as the AFS account name). In this case, you don't need to fill the two \"New Password\" fields. Instead, check the following box:"; 
+may choose to authenticate via an <strong>AFS</strong> account you own
+at this site (this requires your Savannah login name to be the
+same as the AFS account name). In this case, you don't need to fill the
+two &ldquo;New Password&rdquo; fields. Instead, check the following box:"; 
 
     db_execute("SELECT user_pw FROM user WHERE user_id=?", array(user_getid()));
     $row_pw = db_fetch_array();
@@ -517,13 +579,17 @@ else if ($item == "gpgkey")
 {
   ################# GPG Key
 
-  $res_user = db_execute("SELECT gpg_key FROM user WHERE user_id=?", array(user_getid()));
+  $res_user = db_execute("SELECT gpg_key FROM user WHERE user_id=?",
+                         array(user_getid()));
   $row_user = db_fetch_array($res_user);
 
 
   $title = _("Change GPG Key");
-  $input_title = _("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):");
-  $input_specific = '<textarea cols="70" rows="10" wrap="virtual" name="newvalue">'.$row_user['gpg_key'].'</textarea>';
+  $input_title =
+_("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):");
+  $input_specific = '<textarea cols="70" rows="10" '
+                    .'wrap="virtual" name="newvalue">'.$row_user['gpg_key']
+                    .'</textarea>';
 
 }
 else if ($item == "email")
@@ -535,14 +601,28 @@ else if ($item == "email")
     {
       $title = _("Change Email Address");
       $input_title = _('New email address:');
-      $preamble = _("Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file.").'</p><p>'._("We need to maintain an accurate email address for each user due to the level of access we grant via this account. If we need to reach a user for issues related to this server, it is important that we be able to do so.").'</p><p>'._("Submitting the form below will mail a confirmation url to the new email address; visiting this link will complete the email change. The old address will also receive an email message, this one with a url to discard the request.");
+      $preamble = _("Changing your email address will require confirmation from
+your new email address, so that we can ensure we have a good email address on
+file.").'</p>
+<p>'
+._("We need to maintain an accurate email address for each user due to the
+level of access we grant via this account. If we need to reach a user for
+issues related to this server, it is important that we be able to do so.")
+.'</p>
+<p>'
+._("Submitting the form below will mail a confirmation URL to the new email
+address; visiting this link will complete the email change. The old address
+will also receive an email message, this one with a URL to discard the
+request.").'</p>
+';
     }
   else if ($step == "confirm")
     {
       $title = _("Confirm Email Change");
       $preamble = _('Click update to confirm your e-mail change');
       $input_title = _('Confirmation hash:');
-      $input_specific = "<input type='text' readonly='readonly' name='confirm_hash' value='"
+      $input_specific = "<input type='text' readonly='readonly' "
+        ."name='confirm_hash' value='"
 	. htmlentities($confirm_hash, ENT_QUOTES) . "' />";
       $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
     }
@@ -562,7 +642,8 @@ else if ($item == "delete")
     {
       $title = _("Delete Account");
       $input_title = _('Do you really want to delete your user account:');
-      $input_specific = form_input("checkbox", "newvalue", "deletionconfirmed").' '._("Yes, I really do");
+      $input_specific = form_input("checkbox", "newvalue", "deletionconfirmed")
+                        .' '._("Yes, I really do");
       $preamble = _("This process will require email confirmation.");
     }
   else if ($step == "confirm")
@@ -570,7 +651,8 @@ else if ($item == "delete")
       $title = _("Confirm account deletion");
       $preamble = _('Click update to confirm your account deletion');
       $input_title = _('Confirmation hash:');
-      $input_specific = "<input type='text' readonly='readonly' name='confirm_hash' value='$confirm_hash' />";
+      $input_specific = "<input type='text' readonly='readonly' "
+                        ."name='confirm_hash' value='$confirm_hash' />";
       $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
     }
 }
@@ -578,7 +660,7 @@ else if ($item == "delete")
 # fallback
 if (!$title)
 {
-     $title = "Unknown user settings item ($item)";
+     $title = sprintf (_("Unknown user settings item (%s)"), $item);
 }
 
 ########################################################################
@@ -600,7 +682,8 @@ print '<span class="preinput">'.$input_title.'</span>';
 # Print the usual input unless we have something specific
 if (!$input_specific)
 {
-  print '<br />&nbsp;&nbsp;&nbsp;<input name="'.$form_item_name.'" type="'.$input_type.'" />';
+  print '<br />&nbsp;&nbsp;&nbsp;<input name="'.$form_item_name
+        .'" type="'.$input_type.'" />';
 }
 else
 {
@@ -611,7 +694,8 @@ else
 if ($input2_type)
 {
   print '<br /><span class="preinput">'.$input2_title.'</span>';
-  print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input2_type.'" name="'.$form_item2_name.'" />';
+  print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input2_type
+        .'" name="'.$form_item2_name.'" />';
 
 }
 
@@ -619,14 +703,16 @@ if ($input2_type)
 if ($input3_type)
 {
   print '<br /><span class="preinput">'.$input3_title.'</span>';
-  print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input3_type.'" name="'.$form_item3_name.'" />';
+  print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input3_type
+        .'" name="'.$form_item3_name.'" />';
 }
 
 # Add one more input if required
 if ($input4_type)
 {
   print '<br /><span class="preinput">'.$input4_title.'</span>';
-  print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input4_type.'" name="'.$form_item4_name.'" />';
+  print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input4_type
+        .'" name="'.$form_item4_name.'" />';
 }
 
 print '<p><input type="hidden" name="item" value="'.$item.'" /></p>';
@@ -635,3 +721,4 @@ print '</form>';
 
 
 site_user_footer(array());
+?>

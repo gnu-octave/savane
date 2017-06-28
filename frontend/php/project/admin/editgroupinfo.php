@@ -1,10 +1,11 @@
 <?php
 # Edit project name/description/maturity
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2000-2003 (c) Free Software Foundation
-#                         Mathieu Roy <yeupou--gnu.org>
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+#
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2000-2003 Free Software Foundation
+# Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -25,7 +26,8 @@ require_once('../../include/init.php');
 require_once('../../include/vars.php');
 
 extract(sane_import('post', array('update',
-  'form_group_name', 'form_shortdesc', 'form_longdesc', 'form_devel_status', 'upgrade_gpl')));
+  'form_group_name', 'form_shortdesc', 'form_longdesc', 'form_devel_status',
+  'upgrade_gpl')));
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -53,7 +55,8 @@ if ($update)
     { fb(_("Update failed."), 1); }
 
   if ($row_grp['license'] == 'gpl' and $upgrade_gpl) {
-    db_execute("UPDATE groups SET license='gplv3orlater' WHERE group_id=?", array($group_id));
+    db_execute("UPDATE groups SET license='gplv3orlater' WHERE group_id=?",
+               array($group_id));
   }
 }
 
@@ -67,7 +70,8 @@ if (db_numrows($res_grp) < 1)
 $row_grp = db_fetch_array($res_grp);
 
 
-site_project_header(array('title'=>_("Editing Public Info"),'group'=>$group_id,'context'=>'ahome'));
+site_project_header(array('title'=>_("Editing Public Info"),
+                          'group'=>$group_id,'context'=>'ahome'));
 
 
 
@@ -81,19 +85,22 @@ print '
 <br />&nbsp;&nbsp;&nbsp;'.form_input("text", 
 				     "form_group_name", 
 				     $row_grp['group_name'],
-				     'size="60" maxlen="254"').'</p>';
-
+				     'size="60" maxlen="254"').'</p>
+';
 print '
-<p><span class="preinput">'.sprintf(_("Short Description %s:"), markup_info("none", ", 255 Characters Max")).'</span>
+<p><span class="preinput">'._("Short Description").' '
+.markup_info("none", ", 255 Characters Max").'</span>
 <br />&nbsp;&nbsp;&nbsp;'.form_textarea("form_shortdesc",
 					$row_grp['short_description'],
-					'cols="70" rows="3" wrap="virtual"').'</p>';
-
+					'cols="70" rows="3" wrap="virtual"').'</p>
+';
 print '
-<p><span class="preinput">'.sprintf(_("Long Description %s:"), markup_info("full")).'</span>
+<p><span class="preinput">'._("Long Description").' '
+.markup_info("full").'</span>
 <br />&nbsp;&nbsp;&nbsp;'.form_textarea("form_longdesc",
 					$row_grp['long_description'],
-					'cols="70" rows="10" wrap="virtual"').'</p>';
+					'cols="70" rows="10" wrap="virtual"').'</p>
+';
 
 $type_id = $row_grp['type'];
 $result1 = db_execute("SELECT * FROM group_type WHERE type_id=?", array($type_id));
@@ -107,7 +114,8 @@ if ($project->CanUse("devel_status"))
 {
   print '
 <p><span class="preinput">'
-    ._("Development Status:").'</span><br />&nbsp;&nbsp;&nbsp;<select name="form_devel_status">';
+    ._("Development Status:")
+    .'</span><br />&nbsp;&nbsp;&nbsp;<select name="form_devel_status">';
   while (list($k,$v) = each($DEVEL_STATUS))
     {
       print '<option value="'.$k.'"';
@@ -116,21 +124,27 @@ if ($project->CanUse("devel_status"))
       print '>'.$v;
       print '</option>';
     }
-  print '</select></p>';
+  print '</select></p>
+';
 }
 
 
 echo '<p><span class="preinput">'
     ._("License:").'</span><br />&nbsp;&nbsp;
-License changes are moderated by the site administrators. Please contact them to change your project license.</p>';
+'._('License changes are moderated by the site administrators. Please contact
+them to change your project license.')
+.'</p>'
+;
 
 if ($project->getLicense() == 'gpl') {
-  print '<p><span class="preinput">'._("GNU GPL v3:").'</span><br />&nbsp;&nbsp;';
+  print '<p><span class="preinput">'._("GNU GPL v3:").'</span>
+<br />&nbsp;&nbsp;';
   html_build_checkbox("upgrade_gpl");
-  print " Upgrade license to &quot;GNU GPLv3 or later&quot;";
-  print "</p>";
+  print " "._("Upgrade license to &quot;GNU GPLv3 or later&quot;");
+  print "</p>\n";
 }
 
 print form_footer();
 
 site_project_footer(array());
+?>

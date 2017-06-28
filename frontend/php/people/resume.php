@@ -1,5 +1,5 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Display resume.
 # 
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
@@ -35,7 +35,6 @@ $result=db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));
 if (!$result || (db_numrows($result) < 1))
 {
   exit_error(_("User not found"));
-  
 }
 else if (db_result($result,0,'people_view_skills') != 1)
 {
@@ -45,13 +44,16 @@ else if (db_result($result,0,'status') == 'D' && !user_is_super_user())
 {
   exit_error(_("This account was deleted."));
 }
-
-site_header(array('title'=>sprintf(_("%s Resume & Skills"),db_result($result, 0, 'realname')),
+# TRANSLATORS: the argument is user's name.
+site_header(array('title'=>sprintf(_("%s Resume & Skills"),
+                                   db_result($result, 0, 'realname')),
 		  'context'=>'people'));
 
-
-print '<p>'.sprintf(_("Follows Resume & Skills of %s."), utils_user_link(db_result($result, 0, 'user_name'),db_result($result, 0, 'realname'))).'</p>';
-# we get site-specific content
+# TRANSLATORS: the argument is user's name.
+print '<p>'.sprintf(_("Follows Resume & Skills of %s."),
+                    utils_user_link(db_result($result, 0, 'user_name'),
+                                    db_result($result, 0, 'realname'))).'</p>
+';
 utils_get_content("people/viewprofile");
 
 print '<h3>'._("Resume").'</h3>';
@@ -60,9 +62,5 @@ print markup_full(htmlspecialchars(db_result($result,0,'people_resume')));
 print '<h3>'._("Skills").'</h3>';
 print people_show_skill_inventory($user_id);
 
-
 site_footer(array());
-
-
-
 ?>

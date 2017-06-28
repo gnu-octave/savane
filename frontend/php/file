@@ -1,9 +1,10 @@
 <?php # -*- PHP -*-
 # Provide an url with a valid filename that browsers will use (save as...)
 # 
-# Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
-# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
+# Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -43,9 +44,10 @@ if ($result && db_numrows($result) > 0) {
   $artifact = db_result($result,0,'artifact');
 }
 
-# print "FID = ".$file_id." ITID = ".$item_id." UID = ".user_getid()."\n";
+# TRANSLATORS: the argument is artifact ID.
 if (!ctype_alnum($artifact))
-  util_die('Invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
+  util_die(sprintf(_('Invalid artifact %s'),
+                   '<em>' . htmlspecialchars($artifact) . '</em>'));
 $result=db_execute("SELECT group_id, privacy FROM $artifact WHERE bug_id=?",
 		   array($item_id));
 
@@ -59,7 +61,8 @@ if ($result && db_numrows($result) > 0) {
 
 # ---
 
-$result = db_execute("SELECT description,filename,filesize,filetype,date FROM trackers_file WHERE file_id=? LIMIT 1",
+$result = db_execute("SELECT description,filename,filesize,filetype,date "
+                     ."FROM trackers_file WHERE file_id=? LIMIT 1",
 		     array($file_id));
 
 if ($result && db_numrows($result) > 0) 
@@ -72,7 +75,7 @@ if ($result && db_numrows($result) > 0)
   # This should have been checked before, but it is harmless to check it
   # one more time
   if (db_result($result,0,'filesize') == 0) 
-    { exit_error(_("Nothing in here, file has a null size")); } 
+    exit_error(_("Nothing in here, file is empty"));
 
   # Check if the filename in database match with the one in the url.
   # We do not want to allow broken url, that may lead a user he will download
@@ -80,13 +83,14 @@ if ($result && db_numrows($result) > 0)
   # something completely different like "mystupidvirus.scr".
   if (db_result($result,0,'filename') != basename(rawurldecode($_SERVER['PHP_SELF'])))
     {
-      exit_error(_("The filename in the url does not match the filename registered in the database"));
+      exit_error(
+_("The filename in the URL does not match the filename registered in the database"));
     }
 
   $path = $sys_trackers_attachments_dir . '/' . $file_id;
   if (!is_readable($path))
     {
-      exit_error(_("The file can't be found."));
+      exit_error(_("No access to the file."));
     }
 
   # Download the patch with the correct filetype
@@ -96,9 +100,10 @@ if ($result && db_numrows($result) > 0)
   header('Content-Description: '. db_result($result,0,'description'));
   # Dump file to the browser
   readfile($sys_trackers_attachments_dir . '/' . $file_id);
-} 
+}
 else
 {
   header('HTTP/1.0 404 Not Found');
   echo _("Couldn't find attached file")." (file #$file_id)";
 }
+?>

@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# News subnissions.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -30,12 +31,14 @@ extract(sane_import('post',
 
 if (!group_restrictions_check($group_id, "news"))
     {
-      exit_error(sprintf(_("Action Unavailable: %s"), group_getrestrictions_explained($group_id, ARTIFACT)));
+      exit_error(sprintf(_("Action Unavailable: %s"),
+                 group_getrestrictions_explained($group_id, ARTIFACT)));
     }
 
 if (!group_restrictions_check($group_id, "news"))
     {
-      exit_error(sprintf(_("Action Unavailable: %s"), group_getrestrictions_explained($group_id, "news")));
+      exit_error(sprintf(_("Action Unavailable: %s"),
+                 group_getrestrictions_explained($group_id, "news")));
     }
 
 
@@ -77,11 +80,13 @@ if ($update)
     }
   else
     {
-      $feedback = _("News Posted: it will need to be approved by a news manager of this project before it shows on the project front page.");
+      $feedback = _("News Posted: it will need to be approved by a news manager
+of this project before it shows on the project front page.");
 
       form_clean($form_id);
 
-      session_redirect($GLOBALS['sys_home'].'news/?group='.$group.'&feedback='.urlencode($feedback));
+      session_redirect($GLOBALS['sys_home'].'news/?group='.$group
+                       .'&feedback='.urlencode($feedback));
     }
 }
 
@@ -101,14 +106,20 @@ print '<p class="warn">'
 ._("A news manager of this project will have to review and approve the news.")
      ."</p>\n<p>"
 ._("You may include URLs, emails, that will be made clickable, but not HTML.")
-     .'	</p>'.
+     .'</p>
+'.
 form_header($_SERVER['PHP_SELF'], $form_id).
 form_input("hidden", "group_id", $group_id).'
-               	<span class="preinput">'._("Subject:").'</span><br/>&nbsp;&nbsp;
-		<input type="text" name="summary" value="'.$summary.'" size="65" maxlenght="80" />
-		<br />
-		<span class="preinput">'.sprintf(_("Details %s:"), markup_info("full")).'</span><br />&nbsp;&nbsp;
-		<textarea name="details" rows="20" cols="65" wrap="soft">'.$details.'</textarea><br />'.
+<span class="preinput">'._("Subject:").'</span><br/>&nbsp;&nbsp;
+<input type="text" name="summary" value="'.$summary
+.'" size="65" maxlenght="80" />
+<br />
+<span class="preinput">'._("Details").' '.markup_info("full")
+.'</span><br />&nbsp;&nbsp;
+<textarea name="details" rows="20" cols="65" wrap="soft">
+'.$details.'</textarea><br />
+'.
 form_footer();
 
 site_project_footer(array());
+?>

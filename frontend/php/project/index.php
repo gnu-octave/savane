@@ -1,12 +1,11 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# /project/index.php
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2000-2003 (c) Free Software Foundation
-#                          Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2000-2003 Free Software Foundation
+# Copyright (C) 2000-2003 Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2006-2008 Sylvain Beucler
 #
-#  Copyright 2004      (c) ...
-# 
 # This file is part of Savane.
 # 
 # Savane is free software: you can redistribute it and/or modify
@@ -28,3 +27,4 @@ require_once('../include/init.php');
 register_globals_off();
 
 header ("Location: ".$GLOBALS['sys_home']."projects/".$group);
+?>

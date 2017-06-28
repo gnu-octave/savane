@@ -185,6 +185,19 @@ function people_job_category_box($name='category_id',$checked='xyxy')
 function people_add_to_job_inventory($job_id,$skill_id,$skill_level_id,$skill_year_id)
 {
   global $feedback;
+
+# Add current job names to i18n.
+  $job_categories_as_of_2017_06 = array(_("None"),
+                                        _("Developer"),
+                                        _("Project Manager"),
+                                        _("Unix Admin"),
+                                        _("Doc Writer"),
+                                        _("Tester"),
+                                        _("Support Manager"),
+                                        _("Graphic/Other Designer"),
+                                        _("Translator"),
+                                        _("Other"));
+
   if (user_isloggedin())
     {
       #check if they've already added this skill

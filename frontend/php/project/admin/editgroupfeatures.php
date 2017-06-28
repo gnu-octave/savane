@@ -1,9 +1,10 @@
 <?php
 # Enable and configure a group's available services
 # 
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -158,7 +159,8 @@ if ($update)
 	  ($field == "url_bzr_viewcvs" && $project->CanUse("bzr")))
 	{
 	  if ($type == "use" ||
-	      ($type == "use" && $field_name == "extralink_documentation" && $project->CanModifyUrl("extralink_documentation")))
+	      ($type == "use" && $field_name == "extralink_documentation"
+               && $project->CanModifyUrl("extralink_documentation")))
 	    {
 	      $upd_list[$field] = $$field;
 	    }
@@ -174,7 +176,9 @@ if ($update)
 		  $upd_list[$field] = $$field;
 		}
 	    }
-	  elseif ($type == "dir" && $field == "dir_download" && $project->CanUse("download") && $project->CanModifyDir("download_dir"))
+	  elseif ($type == "dir" && $field == "dir_download"
+                  && $project->CanUse("download")
+                  && $project->CanModifyDir("download_dir"))
 	    {
 	      $upd_list[$field] = $$field;
 	    }
@@ -192,14 +196,16 @@ if ($update)
 
       if ($result == true)
 	{ 
-	  session_redirect($_SERVER['PHP_SELF']."?group=$group&feedback=".rawurlencode(_("Update failed.")));
+	  session_redirect($_SERVER['PHP_SELF']."?group=$group&feedback="
+                           .rawurlencode(_("Update failed.")));
 	}
       else
 	{ 
 	  # To avoid the fact that we $project was already set and 
 	  # that $project =& new Project($group_id); no longer works,
 	  # we force reloading the page with a redirection
-	  session_redirect($_SERVER['PHP_SELF']."?group=$group&feedback=".rawurlencode(_("Update successful.")));
+	  session_redirect($_SERVER['PHP_SELF']."?group=$group&feedback="
+                           .rawurlencode(_("Update successful.")));
 	}
     }
   else
@@ -208,12 +214,8 @@ if ($update)
     }
 }
 
-# FIXME: this does no longer seem to work, so we do a redirect instead
-#$project =& new Project($group_id); # do not mess with previous values
-
-
-site_project_header(array('title'=>_("Select Features"),'group'=>$group_id,'context'=>'ahome'));
-
+site_project_header(array('title'=>_("Select Features"),'group'=>$group_id,
+                    'context'=>'ahome'));
 
 function specific_line ($artifact, $explanation, $use, $increment=1)
 {
@@ -223,8 +225,10 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
   global $i, $project;
   if ($increment)
 	{ $i++; }
-  print '<tr>';
-  print ' <td class="'.utils_get_alt_row_color($i).'">'.$explanation.'</td>';
+  print '<tr>
+';
+  print ' <td class="'.utils_get_alt_row_color($i).'">'.$explanation.'</td>
+';
   print ' <td class="'.utils_get_alt_row_color($i).'">';
   # print the checkbox to de/activate it
   # (viewcvs cannot be activated or deactivated, they are not in the menu)
@@ -238,9 +242,11 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
   print ' <td class="'.utils_get_alt_row_color($i).'">';
   if (!preg_match("/extralink/", $artifact))
     {
-      print '<a href="'.group_get_artifact_url($artifact).'">'.group_get_artifact_url($artifact).'</a>';
+      print '<a href="'.group_get_artifact_url($artifact).'">'
+            .group_get_artifact_url($artifact).'</a>';
     }
-  print '</td>';
+  print '</td>
+';
   # if allowed from the group type, add a text field to put a non-standard
   # url.
   # (news cannot be activated and using a non-standard url, it would
@@ -273,12 +279,18 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
     }
   else
     { print "---"; }
-  print '</td>';
-  print '</tr>';
+  print '</td>
+</tr>
+';
 }
 
-print _("You can activate or deactivate feature/artifact for your project. In some case, depending on the system administrator's choices, you can even use change the URL for a feature/artifact. If the field 'alternative address' is empty, the standard is used.");
-print '<p></p>';
+print '<p>';
+print _("You can activate or deactivate feature/artifact for your project. In
+some case, depending on the system administrator's choices, you can even use
+change the URL for a feature/artifact. If the field &ldquo;alternative
+address&rdquo; is empty, the standard is used.");
+print '</p>
+';
 
 print form_header($_SERVER['PHP_SELF']).form_input("hidden", "group_id", $group_id);
 
@@ -294,11 +306,13 @@ print html_build_list_table_top ($title_arr);
 if ($project->CanUse("homepage"))
 {
   specific_line("homepage", _("Homepage"), $project->Uses("homepage"));
-  specific_line("cvs_viewcvs_homepage", _("Homepage Source Code Web Browsing"), 0, 0);
+  specific_line("cvs_viewcvs_homepage",
+                _("Homepage Source Code Web Browsing"), 0, 0);
 }
 
 if ($project->CanModifyUrl("extralink_documentation"))
-{ specific_line("extralink_documentation", _("Documentation"), $project->Uses("extralink_documentation")); }
+{ specific_line("extralink_documentation", _("Documentation"),
+                $project->Uses("extralink_documentation")); }
 
 if ($project->CanUse("download"))
 { specific_line("download", _("Download Area"), $project->Uses("download")); }
@@ -306,13 +320,17 @@ if ($project->CanUse("download"))
 if ($project->CanUse("download") && $project->CanModifyDir("download_dir"))
 {
   $i++; print '<tr>';
-  print ' <td class="'.utils_get_alt_row_color($i).'">'._("Download Area Directory").'</td>';
+  print ' <td class="'.utils_get_alt_row_color($i).'">'
+._("Download Area Directory").'</td>
+';
   print ' <td class="'.utils_get_alt_row_color($i).'">';
   print "---";
-  print '</td>';
+  print '</td>
+';
   print ' <td class="'.utils_get_alt_row_color($i).'">';
   print $project->getTypeDir("download");
-  print ' </td>';
+  print ' </td>
+';
 
   print ' <td class="'.utils_get_alt_row_color($i).'">';
 
@@ -321,8 +339,9 @@ if ($project->CanUse("download") && $project->CanModifyDir("download_dir"))
 		       $project->getDir("download"), 
 		       'size="20"');
 
-  print ' </td>';
-  print '</tr>';
+  print ' </td>
+</tr>
+';
 }
 
 if ($project->CanUse("support"))
@@ -386,3 +405,4 @@ $HTML->box1_bottom();
 print form_footer();
 
 site_project_footer(array());
+?>

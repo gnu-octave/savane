@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# User's start page.
 # 
-# Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -34,7 +35,11 @@ if (user_isloggedin())
 {
   site_user_header(array('context'=>'my'));
 
-  print '<p>'._("Here's a list of recent items (< 16 days) we think you should have a look at. These are items recently posted on trackers you manage that are still unassigned or assigned to you and news posted on a project you are member of.").'</p>';
+  print '<p>'
+	._("Here's a list of recent items (< 16 days) we think you should have
+a look at. These are items recently posted on trackers you manage that are
+still unassigned or assigned to you and news posted on a project you are member
+of.").'</p>';
 
   # Get the list of projects the user is member of
 
@@ -65,7 +70,8 @@ if (user_isloggedin())
     { $nogroups = 1; }
 
   # Get the list of squads the user is member of
-  $result = db_execute("SELECT squad_id FROM user_squad WHERE user_id=?", array(user_getid()));
+  $result = db_execute("SELECT squad_id FROM user_squad WHERE user_id=?",
+                       array(user_getid()));
   $rows = db_numrows($result);
   $usersquads = array();
   if ($result && $rows > 0)
@@ -127,21 +133,30 @@ if (user_isloggedin())
 
   if ($result && $rows > 0)
     {
-      print '<br /><div class="box"><div class="boxtitle">'._("News Waiting for Approval").'</div>';
+      print '
+<br /><div class="box"><div class="boxtitle">'
+            ._("News Waiting for Approval").'</div>'."\n";
       for ($j=0; $j<$rows; $j++)
 	{
 	  print '<div class="'.utils_get_alt_row_color($j).'">';
-	  print '<a href="'.$GLOBALS['sys_home'].'news/approve.php?approve=1&amp;id='.db_result($result, $j, 'id').'&amp;group='.group_getunixname(db_result($result, $j, 'group_id')).'">'.db_result($result, $j, 'summary').'</a><br />';
+	  print '<a href="'.$GLOBALS['sys_home'].'news/approve.php?approve=1&amp;id='
+                .db_result($result, $j, 'id').'&amp;group='
+                .group_getunixname(db_result($result, $j, 'group_id')).'">'
+                .db_result($result, $j, 'summary').'</a><br />'."\n";
 	  # FIXME: num. of new comments?
-	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), utils_format_date(db_result($result,$j,'date'))).'</span>';
-	  print '</div>';
+# TRANSLATORS: the first argument is project name, the second is date.
+	  print '<span class="smaller">'
+           .sprintf(_('Project %1$s, %2$s'),
+                    group_getname(db_result($result, $j, 'group_id')),
+                    utils_format_date(db_result($result,$j,'date'))).'</span>';
+	  print "\n".'</div>'."\n";
 	}
-      print '</div>';
+      print '</div>'."\n";
     }
 
 
   #### Latest Approved News
-  print '<br /><div class="box"><div class="boxtitle">'._("News").'</div>';
+  print '<br /><div class="box"><div class="boxtitle">'._("News").'</div>'."\n";
   reset($usergroups);
   reset($usergroups_groupid);
   # Build an sql request that will fetch any relevant news
@@ -162,10 +177,16 @@ if (user_isloggedin())
       for ($j=0; $j<$rows; $j++)
 	{
 	  print '<div class="'.utils_get_alt_row_color($j).'">';
-	  print '<a href="'.$GLOBALS['sys_home'].'forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').'">'.db_result($result, $j, 'summary').'</a><br />';
+	  print '<a href="'.$GLOBALS['sys_home'].'forum/forum.php?forum_id='
+                .db_result($result, $j, 'forum_id').'">'
+                .db_result($result, $j, 'summary').'</a><br />';
 	  # FIXME: num. of new comments?
-	  print '<span class="smaller">'.sprintf(_("Project %s, %s"), group_getname(db_result($result, $j, 'group_id')), utils_format_date(db_result($result,$j,'date'))).'</span>';
-	  print '</div>';
+# TRANSLATORS: the first argument is project name, the second is date.
+	  print '<span class="smaller">'
+                .sprintf(_('Project %1$s, %2$s'),
+                         group_getname(db_result($result, $j, 'group_id')),
+                         utils_format_date(db_result($result,$j,'date'))).'</span>';
+	  print '</div>'."\n";
 	}
     }
   else
@@ -183,15 +204,17 @@ if (user_isloggedin())
   # shown only if the user is tracker manager somewhere and if any item found
   # (so the title is included in the function called)
 
-  print '<br /><div class="box"><div class="boxtitle">'._("New and Unassigned Items").'</div>';
+  print '<br /><div class="box"><div class="boxtitle">'
+        ._("New and Unassigned Items").'</div>'."\n";
   print my_item_list("unassigned");
-  print '</div>';
+  print '</div>'."\n";
 
 
   ### Items newly assigned (not necessarily new items)
-  print '<br /><div class="box"><div class="boxtitle">'._("New and Assigned Items").'</div>';
+  print '<br /><div class="box"><div class="boxtitle">'
+        ._("New and Assigned Items").'</div>'."\n";
   print my_item_list("newlyassigned");
-  print '</div>';
+  print '</div>'."\n";
 
   print html_splitpage(3);
 
@@ -199,15 +222,12 @@ if (user_isloggedin())
 
   print "\n\n".show_priority_colors_key();
 
-
   $HTML->footer(array());
 
 }
 else
 {
-
   exit_not_logged_in();
-
 }
 
 ?>

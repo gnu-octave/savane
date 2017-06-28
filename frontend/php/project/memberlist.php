@@ -1,13 +1,12 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# List members.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2000-2003 (c) Free Software Foundation
-#                          Mathieu Roy <yeupou--at--gnu.org>
-#
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Lorenzo Hernandez Garcia-Hierro
-#                                      <lorenzohgh--tuxedo-es.org >
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2000-2003 Free Software Foundation
+# Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2000-2006 Lorenzo Hernandez Garcia-Hierro
+#                                      <lorenzohgh--tuxedo-es.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -53,23 +52,38 @@ if ((!$group_id) && $form_grp)
 $checked = '';
 if ($detailed)
 { $checked = " selected=\"selected\""; }
-# I18N
-# %s currently is "basic" or "detailed"
   $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
   $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
-print html_show_displayoptions(sprintf(_("Browse with the %s memberlist."), '<select name="detailed"><option value="0">'._("basic").'</option><option value="1"'.$checked.'>'._("detailed").'</option></select>').'<input type="hidden" name="group" value="'.$group.'" />',
+# TRANSLATORS: this is used in context of "Browser with the %s memberlist."
+$selector = 
+ '<select name="detailed"><option value="0">'._("basic").'</option><option value="1"'
+ .$checked.'>';
+# TRANSLATORS: this is used in context of "Browser with the %s memberlist."
+$selector .= _("detailed").'</option></select>'
+ .'<input type="hidden" name="group" value="'.$group.'" />';
+# TRANSLATORS: the argument is "basic" or "detailed".
+print html_show_displayoptions(sprintf(_("Browse with the %s memberlist."),
+                                       $selector),
 			       $form_opening,
 			       $form_submit);
 
 
 if (!member_check(0,$group_id))
 {
-  print '<p>'.sprintf(_("If you would like to contribute to this project by becoming a member, use the %srequest for inclusion%s form."),
-	 '<a href="'.$GLOBALS['sys_home'].'my/groups.php?words='.group_getname($group_id).'#searchgroup">', '</a>').'</p>';
+  print '<p>'.sprintf(_("If you would like to contribute to this project by
+becoming a member, use the <a href=\"%s\">request for inclusion</a> form."),
+	 $GLOBALS['sys_home'].'my/groups.php?words='
+         .group_getname($group_id).'#searchgroup').'</p>
+';
 }
 else
 {
-  print '<p>'._("Note that you can 'watch' a member of your project. It allows you, for instance, to be the backup of someone when they are away from the office, or to review all their activities on this project: you will receive a copy of their mail notifications related to this project.").'</p>';
+  print '<p>'._("Note that you can &ldquo;watch&rdquo; a member of your
+project. It allows you, for instance, to be the backup of someone when they are
+away from the office, or to review all their activities on this project: you
+will receive a copy of their mail notifications related to this
+project.").'</p>
+';
 
 }
 
@@ -83,7 +97,9 @@ foreach ($activeness as $active)
       # The best would be to print non-specific roles but roles in any case.
       # It requires more, so we will see if there are people interested in that
       # or not.
-      print '<p>'._("On this page are only presented specific roles, roles which are not attributed by default when joining this project.").'</p>';
+      print '<p>'._("On this page are only presented specific roles, roles
+which are not attributed by default when joining this project.").'</p>
+';
     }
   
     # list members
@@ -97,7 +113,8 @@ foreach ($activeness as $active)
        . "user_group.admin_flags AS admin_flags, "
        . "user.email AS email "
        . "FROM user,user_group "
-       . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
+       . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  "
+       . "AND user_group.admin_flags <> 'P' "
        . "AND user_group.onduty = $active "
        . "ORDER BY user.user_name ", array($group_id));
     }
@@ -116,7 +133,8 @@ foreach ($activeness as $active)
        . "user_group.support_flags AS support_flags, "
        . "user.email AS email "
        . "FROM user,user_group "
-       . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  AND user_group.admin_flags <> 'P' "
+       . "WHERE user.user_id=user_group.user_id AND user_group.group_id = ?  "
+       . "AND user_group.admin_flags <> 'P' "
        . "AND user_group.onduty = $active "
        . "ORDER BY user.user_name", array($group_id));
     }
@@ -130,7 +148,6 @@ foreach ($activeness as $active)
   # yeupou--gnu.org, 2004-11-04, remove email from this page; this data
   #  is accessible elsewhere, via links. It saves us extra tests on whether
   # users want to hide their email or not.
-  #$title_arr[]=_("Email");
   $title_arr[]=_("Resume and Skills");
   if (user_ismember($group_id))
     {
@@ -141,9 +158,11 @@ foreach ($activeness as $active)
     continue;
   
   if ($active)
-    print '<h3>Active members on duty</h3>';
+    print '<h3>'._('Active members on duty').'</h3>
+';
   else
-    print '<h3>Currently inactive members</h3>';
+    print '<h3>'._('Currently inactive members').'</h3>
+';
   
   echo html_build_list_table_top ($title_arr);
 
@@ -186,7 +205,11 @@ foreach ($activeness as $active)
 	      $icon_alt = _("Project Member");      
 	    }
 	  
-	  print "\t\t".'<td><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" class="icon" /></span></td><td>'.utils_user_link($row_memb['user_name'], $row_memb['realname'])."</td>\n";
+	  print "\t\t".'<td><span class="help" title="'.$icon_alt
+                .'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                .'.theme/roles/'.$icon.'.png" alt="'.$icon_alt
+                .'" class="icon" /></span></td>
+<td>'.utils_user_link($row_memb['user_name'], $row_memb['realname'])."</td>\n";
 	  
           # Role
 	  if ($detailed)
@@ -200,7 +223,8 @@ foreach ($activeness as $active)
 	      else
 		{
                   # Print only not by default role.
-		  specific_print_role($row_memb['support_flags'], _("support tracker"));
+		  specific_print_role($row_memb['support_flags'],
+                                      _("support tracker"));
 		  specific_print_role($row_memb['bugs_flags'], _("bug tracker"));
 		  specific_print_role($row_memb['task_flags'], _("task tracker"));
 		  specific_print_role($row_memb['patch_flags'], _("patch tracker"));
@@ -210,15 +234,12 @@ foreach ($activeness as $active)
 	      print "</td>\n";
 	    }
 	  
-      # Email
-# yeupou--gnu.org, 2004-11-04, remove email from this page; this data
-# is accessible elsewhere, via links. It saves us extra tests on whether
-# users want to hide their email or not.
-
           # Skills
 	  if ($row_memb['people_view_skills'] == 1)
 	    {
-	      print "\t\t<td align=\"middle\"><a href=\"".$GLOBALS['sys_home']."people/resume.php?user_id=".$row_memb['user_id']."\">"._("View Skills")."</a></td>\n";
+	      print "\t\t<td align=\"middle\"><a href=\"".$GLOBALS['sys_home']
+                    ."people/resume.php?user_id=".$row_memb['user_id']."\">"
+                    ._("View Skills")."</a></td>\n";
 	    }
 	  else
 	    {
@@ -228,10 +249,16 @@ foreach ($activeness as $active)
 	  if (user_ismember($group_id))
 	    {
 	      $thisuser = user_getid();
-	      if ($row_memb['user_id'] != $thisuser && !trackers_data_is_watched($thisuser,$row_memb['user_id'],$group_id))
+	      if ($row_memb['user_id'] != $thisuser
+                  && !trackers_data_is_watched($thisuser,$row_memb['user_id'],
+                                               $group_id))
 		{
                   # permit to add a watchee only if not already in the watched list
-		  print "\t\t<td align=\"middle\"><a href=\"".$GLOBALS['sys_home']."my/groups.php?func=addwatchee&amp;group_id=$group_id&amp;watchee_id=".$row_memb['user_id']."\">"._("Watch partner")."</a></td>\n";
+		  print "\t\t<td align=\"middle\"><a href=\""
+                        .$GLOBALS['sys_home']."my/groups.php?"
+                        ."func=addwatchee&amp;group_id=$group_id&amp;watchee_id="
+                        .$row_memb['user_id']."\">"._("Watch partner")
+                        ."</a></td>\n";
 		}
 	      else
 		{
@@ -241,14 +268,18 @@ foreach ($activeness as $active)
 	  print "\t<tr>\n";
 	}
     }
-  print "\t</table>";
+  print "\t</table>
+";
 }
 
 if ($project->getGPGKeyring())
 {
-  print '<p>'.sprintf(_('You may also be interested in the %sGPG Keyring of this project%s'), '<a href="memberlist-gpgkeys.php?group='.$group.'">','</a>').'</p>';
+  print '<p>'
+.sprintf(_('You may also be interested in the <a href=\"%s\">GPG Keyring of
+this project</a>'), 'memberlist-gpgkeys.php?group='.$group).'</p>
+';
 
 }
 
-
 site_project_footer(array());
+?>

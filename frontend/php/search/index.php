@@ -1,22 +1,23 @@
 <?php
 # Display search form and search results
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                         Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -32,7 +33,8 @@ extract(sane_import('request',
 if (!$words)
 {
   search_send_header();
-  print '<p>'._("Enter your search words above.").'</p>';
+  print '<p>'._("Enter your search words above.").'</p>
+';
   $HTML->footer(array());
   exit;
 }
@@ -50,15 +52,6 @@ if ($type_of_search == 'soft')
       # No result? Stop here.
       search_failed();
     }
-/*  // Some users had noted this was a little much and would rather have it display the lone result.
-    elseif (($rows == 1) && ($GLOBALS['offset'] == 0))
-    {
-      # Only one result? Redirect, but only if this is the first
-      # page to be displayed. Otherwise, if the last page contains
-      # just one row, the user will be redirected.
-      $project = db_result($result, 0, 'unix_group_name');
-      header("Location: ../projects/$project");
-    }*/
   else
     {
       # More results? Print them in the respect of max_rows setting.
@@ -82,15 +75,20 @@ if ($type_of_search == 'soft')
 	{
 	  $res_type = db_execute("SELECT name FROM group_type WHERE type_id=?",
 				 array(db_result($result, $i, 'type')));
-	  
-	  print	'<tr class="'. html_get_alt_row_color($i).'"><td><a href="../projects/'.db_result($result, $i, 'unix_group_name').'">'
-	    . db_result($result, $i, 'group_name').'</a></td>'
-	    . '<td>'.db_result($result,$i,'short_description').'</td>'
-	    . '<td>'.db_result($res_type, 0, 'name')."</td></tr>\n";
+
+	  print	'<tr class="'. html_get_alt_row_color($i)
+                .'"><td><a href="../projects/'.db_result($result, $i,
+                                                         'unix_group_name').'">'
+	    . db_result($result, $i, 'group_name').'</a></td>
+<td>'.db_result($result,$i,'short_description').'</td>
+<td>'.db_result($res_type, 0, 'name')."</td>\n</tr>\n";
 	}
       print "</table>\n";
-      
-      print '<p> Note that <strong>private</strong> projects are not shown on this page </p>';
+
+      print '<p>'
+._('Note that <strong>private</strong> projects are not shown on this page.')
+.'</p>
+';
     }
 
 }
@@ -126,11 +124,12 @@ else if ($type_of_search == "people")
 
       for ( $i = 0; $i < $rows; $i++ )
 	{
-	  $namequery = eregi_replace('[^a-z]+', '+', db_result($result,$i,'realname'));
+	  $namequery = eregi_replace('[^a-z]+', '+', db_result($result,$i,
+                                                               'realname'));
 	  print	"<tr class=\"". html_get_alt_row_color($i) ."\"><td>".
 	    utils_user_link(db_result($result, $i, 'user_name'))
 
-	    . "<td>".db_result($result,$i,'realname')."</td></tr>\n";
+	    . "</td>\n<td>".db_result($result,$i,'realname')."</td>\n</tr>\n";
 	}
       print "</table>\n";
     }
@@ -207,11 +206,13 @@ else if ($type_of_search == 'bugs' ||
     {
       search_failed();
     }
-  elseif (($rows == 1) && ($GLOBALS['offset'] == 0 && (db_result($result, 0, 'privacy') != "2")))
+  elseif (($rows == 1) && ($GLOBALS['offset'] == 0
+          && (db_result($result, 0, 'privacy') != "2")))
     {
       # no automatic redirection for private item, use the usual listing
       $bug = db_result($result, 0, 'bug_id');
-      Header("Location: ".$GLOBALS['sys_home'].$type_of_search."/?func=detailitem&item_id=$bug");
+      Header("Location: ".$GLOBALS['sys_home'].$type_of_search
+             ."/?func=detailitem&item_id=$bug");
     }
   else
     {
@@ -220,7 +221,6 @@ else if ($type_of_search == 'bugs' ||
 	{ $rows = $GLOBALS['max_rows']; }
 
       search_send_header();
-
       print_search_heading();
 
       $title_arr = array();
@@ -247,14 +247,18 @@ else if ($type_of_search == 'bugs' ||
 	  else
 	    {
 
-	      $url = $GLOBALS['sys_home'].$type_of_search."/?func=detailitem&amp;item_id=".db_result($result, $i, "bug_id");
+	      $url = $GLOBALS['sys_home'].$type_of_search
+                     ."/?func=detailitem&amp;item_id=".db_result($result, $i,
+                                                                 "bug_id");
 
 	      print	'<tr class="'.html_get_alt_row_color($j).'">'
-		. '<td><a href="'.$url.'">#'.db_result($result, $i, "bug_id").'</a></td>'
-		. '<td><a href="'.$url.'">'.db_result($result, $i, "summary").'</a></td>'
-		. '<td><a href="'.$url.'">'.group_getname(db_result($result, $i, "group_id")).'</a></td>'
-		. "<td>".utils_user_link(db_result($result, $i, "user_name"))."</td>"
-		. "<td>".utils_format_date(db_result($result,$i,"date"))."</td></tr>";
+		. '<td><a href="'.$url.'">#'.db_result($result, $i, "bug_id")
+                .'</a></td>
+<td><a href="'.$url.'">'.db_result($result, $i, "summary").'</a></td>
+<td><a href="'.$url.'">'.group_getname(db_result($result, $i, "group_id"))
+.'</a></td>
+<td>'.utils_user_link(db_result($result, $i, "user_name"))."</td>
+<td>".utils_format_date(db_result($result,$i,"date"))."</td>\n</tr>\n";
 	      $j++;
 	    }
 	}
@@ -264,12 +268,14 @@ else if ($type_of_search == 'bugs' ||
 else
 {
   search_send_header();
-  print '<h2 class="error">'._("Error").' - '._("Invalid Search!!").'</h1>';
-
+  print '<p class="error">'._("Error").' - '._("Invalid Search!!").'</p>
+';
 }
 
 # Print prev/next links
-$nextprev_url = $GLOBALS['sys_home']."search/?type_of_search=$type_of_search&amp;words=".urlencode($words);
+$nextprev_url = $GLOBALS['sys_home']
+                ."search/?type_of_search=$type_of_search&amp;words="
+                .urlencode($words);
 if (isset($type))
 {  $nextprev_url .= "&amp;type=$type"; }
 if ($group_id)
@@ -278,3 +284,4 @@ if ($group_id)
 html_nextprev($nextprev_url,$rows,$rows_returned);
 
 site_footer(Array());
+?>

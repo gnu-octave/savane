@@ -1,9 +1,10 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Manage group members.
 # 
-#  Copyright 2003-2005 (c) Frederik Orellana <frederik.orellana--cern.ch>
-#                          Derek Feichtinger <derek.feichtinger--cern.ch>
-#                          Mathieu Roy <yeupou--gnu.org>
+#  Copyright (C) 2003-2005 Frederik Orellana <frederik.orellana--cern.ch>
+#  Copyright (C) 2003-2005 Derek Feichtinger <derek.feichtinger--cern.ch>
+#  Copyright (C) 2003-2005 Mathieu Roy <yeupou--gnu.org>
+#  Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -20,7 +21,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 require_once('../../include/init.php');
 require_once('../../include/sendmail.php');
 
@@ -35,9 +35,11 @@ if (!$group_id)
 function show_pending_users_list ($result, $group_id)
 {
   print "<h3>"._("Users Pending for Group")."</h3>
-	<p>
-        "._("Users that have requested to be member of the group are listed here. To approve their requests, select their name and click on the button below. To discard requests, go to the next section called \"Removing users from group\".")."
-	<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
+<p>"._("Users that have requested to be member of the group are listed
+here. To approve their requests, select their name and click on the button
+below. To discard requests, go to the next section called &ldquo;Removing users
+from group.&rdquo;")."</p>
+<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"approve_for_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
@@ -56,19 +58,23 @@ function show_pending_users_list ($result, $group_id)
 
   print "</select>
 	<input type=\"HIDDEN\" name=\"group_id\" VALUE=\"$group_id\" />
-	<P>
-	<input type=\"submit\" name=\"Submit\" value=\""._("Approve users for group")."\" />
-	</form>";
+	<p>
+	<input type=\"submit\" name=\"Submit\" value=\""
+._("Approve users for group")."\" />
+	</p>
+</form>
+";
 }
-
 
 function show_all_users_remove_list ($result, $result2, $group_id)
 {
+  $exists = false;
   print "
         <h3>"._("Removing users from group")."</h3>
-	<p>
-        "._("To remove users, select their name and click on the button below. The administrators of a project cannot be removed unless they quit. Pending users are at the bottom of the list.")."
-	<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
+<p>"._("To remove users, select their name and click on the button
+below. The administrators of a project cannot be removed unless they quit.
+Pending users are at the bottom of the list.")."</p>
+<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"remove_from_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
@@ -77,7 +83,7 @@ function show_all_users_remove_list ($result, $result2, $group_id)
       {
 	print "<option value=".$usr['user_id'].">".$usr['realname'].
 	  " &lt;".$usr['user_name']."&gt;</option>\n";
-	$exists=1;
+	$exists=true;
       }
   }
 
@@ -86,7 +92,7 @@ function show_all_users_remove_list ($result, $result2, $group_id)
       {
 	print "<option value=".$usr['user_id'].">"._("Pending:")." ".$usr['realname'].
 	  " &lt;".$usr['user_name']."&gt;</option>\n";
-	$exists=1;
+	$exists=true;
       }
   }
 
@@ -99,8 +105,10 @@ function show_all_users_remove_list ($result, $result2, $group_id)
 	<br />
 	<input type=\"HIDDEN\" name=\"group_id\" VALUE=\"$group_id\" />
 	<p>
-	<input type=\"submit\" name=\"Submit\" value=\""._("Remove users from group")."\" />
-	</form>";
+	<input type=\"submit\" name=\"Submit\" value=\""
+._("Remove users from group")."\" />
+	</p>
+</form>";
 
 }
 
@@ -108,16 +116,19 @@ function show_all_users_add_searchbox ($group_id, $previous_search)
 {
   print '
         <h3><a name="searchuser"></a>'._("Adding users to group").'</h3>
-	<p>
-        '._("You can search one or several users to add in the whole users database with the following search tool. A list of users, depending on the names you'll type in this form, will be generated.").'
+<p>'._("You can search one or several users to add in the whole users
+database with the following search tool. A list of users, depending on the
+names you'll type in this form, will be generated.").'
 
-	<form action="'.$_SERVER['PHP_SELF'].'#searchuser" method="post">
+<form action="'.$_SERVER['PHP_SELF'].'#searchuser" method="post">
 	<input type="hidden" name="action" value="add_to_group_list" />
-        <input type="text" size="35" name="words" value="'.$previous_search.'" /><br />
+        <input type="text" size="35" name="words" value="'
+        .$previous_search.'" /><br />
 	<p>
 	<input type="hidden" name="group_id" value="'.$group_id.'" />
 	<input type="submit" name="Submit" value="'._("Search users").'" />
-	</form>';
+	</p>
+</form>';
 }
 
 
@@ -126,8 +137,7 @@ function show_all_users_add_list ($result, $group_id)
 {
   print _("Below is the result of your search in the users database.")."
 
-	<P></P>
-	<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
+<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"add_to_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
@@ -147,10 +157,9 @@ function show_all_users_add_list ($result, $group_id)
 	<input type=\"HIDDEN\" name=\"group_id\" VALUE=\"$group_id\" />
 	<p>
 	<input type=\"submit\" name=\"Submit\" value=\""._("Add users to group")."\" />
-	</form>";
+	</p>
+</form>";
 }
-
-
 
 # Administrative functions
 
@@ -181,15 +190,14 @@ if ($action=='approve_for_group' && $user_ids) {
       # As mail content sent to a user different from the one browsing the 
       # page, this cannot be translated.
       $title = "Project membership approved";
-      $message = sprintf("You've been approved as a member of the group %s on %s,\nwhere you are registered as %s.", group_getname($group_id), $GLOBALS['sys_name'], user_getname($user)) . "\n\n".
+      $message = sprintf("You've been approved as a member of the group %s on %s,
+where you are registered as %s.", group_getname($group_id), $GLOBALS['sys_name'],
+                         user_getname($user)) . "\n\n".
 	 sprintf("-- the %s team.", $GLOBALS['sys_name'])."\n";
-      $message = sprintf("You've been approved as a member of the group %s on %s,\nwhere you are registered as %s.", group_getname($group_id), $GLOBALS['sys_name'], user_getname($user)) . "\n\n".
+      $message = sprintf("You've been approved as a member of the group %s on %s,
+where you are registered as %s.", group_getname($group_id), $GLOBALS['sys_name'],
+                         user_getname($user)) . "\n\n".
 	sprintf("-- the %s team.",$GLOBALS['sys_name'])."\n";
-#      $title = _("Project membership approved");
-#      $message = sprintf(_("You've been approved as a member of the group %s on %s,\nwhere you are registered as %s."), group_getname($group_id), $GLOBALS['sys_name'], user_getname($user)) . "\n\n".
-#	 sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
-#      $message = sprintf(_("You've been approved as a member of the group %s on %s,\nwhere you are registered as %s."), group_getname($group_id), $GLOBALS['sys_name'], user_getname($user)) . "\n\n".
-#	 sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
 
       sendmail_mail($GLOBALS['sys_mail_replyto'] . "@".$GLOBALS['sys_mail_domain'],
 		    $email,
@@ -201,7 +209,8 @@ if ($action=='approve_for_group' && $user_ids) {
 
 ############
 # Start the page
-site_project_header(array('title'=>_("Manage Members"),'group'=>$group_id,'context'=>'ahome'));
+site_project_header(array('title'=>_("Manage Members"),'group'=>$group_id,
+                          'context'=>'ahome'));
 
 
 # Show a form so a user can be approved for this group
@@ -210,31 +219,38 @@ $result =  db_execute("SELECT user.user_id AS user_id, "
 		      . "user.user_name AS user_name, "
 		      . "user.realname AS realname "
 		      . "FROM user,user_group "
-		      . "WHERE user.user_id=user_group.user_id AND user_group.group_id=? AND admin_flags='P'"
+		      . "WHERE user.user_id=user_group.user_id "
+                      . "AND user_group.group_id=? AND admin_flags='P'"
 		    . "ORDER BY user.user_name", array($group_id));
 
 show_pending_users_list($result, $group_id);
 
-print '<br />';
+print '<br />
+';
 
 # Show a form so a user can be removed from this group
 $result =  db_execute("SELECT user.user_id AS user_id, "
 		      . "user.user_name AS user_name, "
 		      . "user.realname AS realname "
 		      . "FROM user,user_group "
-		      . "WHERE user.user_id=user_group.user_id AND user_group.group_id=? AND admin_flags<>'A' AND admin_flags<>'P' AND admin_flags<>'SQD'"
+		      . "WHERE user.user_id=user_group.user_id "
+                      . "AND user_group.group_id=? AND admin_flags<>'A' "
+                      . "AND admin_flags<>'P' AND admin_flags<>'SQD'"
 		      . "ORDER BY user.user_name", array($group_id));
 
 $result2 =  db_execute("SELECT user.user_id AS user_id, "
 		       . "user.user_name AS user_name, "
 		       . "user.realname AS realname "
 		       . "FROM user,user_group "
-		       . "WHERE user.user_id=user_group.user_id AND user_group.group_id=? AND admin_flags='P' AND admin_flags<>'SQD'"
+		       . "WHERE user.user_id=user_group.user_id "
+                       . "AND user_group.group_id=? AND admin_flags='P' "
+                       . "AND admin_flags<>'SQD'"
 		       . "ORDER BY user.user_name", array($group_id));
 
 show_all_users_remove_list($result, $result2, $group_id);
 
-print '<br />';
+print '<br />
+';
 
 # Show a form so a user can be added to this group
 
@@ -245,7 +261,8 @@ if ($words) {
     $keywords, array('user_name', 'realname', 'user_id'), 'OR');
   $result = db_execute("SELECT user_id, user_name, realname "
 		       . "FROM user "
-		       . "WHERE $kw_sql AND (status='A') ORDER BY user_name LIMIT 0,26",
+		       . "WHERE $kw_sql AND (status='A') "
+                       . "ORDER BY user_name LIMIT 0,26",
 		       $kw_sql_params);
 }
 
@@ -256,3 +273,4 @@ if ($words) {
 }
 
 site_project_footer(array());
+?>

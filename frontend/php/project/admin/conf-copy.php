@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Copy configuration (for group admins).
 # 
-# Copyright 2004-2004 (c) Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2004 Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -32,20 +33,23 @@ if ($group_id && user_ismember($group_id,'A'))
       trackers_conf_copy($group_id, $artifact, $from_group_id);
     }
   
-  site_project_header(array('context'=>'ahome','group'=>$group_id,'title'=>_("Copy Configuration")));
-
+  site_project_header(array('context'=>'ahome','group'=>$group_id,
+                            'title'=>_("Copy Configuration")));
   
-  print '<h3>'.("Support Trackers Configuration Copy").'</h3>';
+  print '<h3>'._("Support Trackers Configuration Copy").'</h3>
+';
   conf_form($group_id, "support");
-  print '<h3>'.("Bugs Trackers Configuration Copy").'</h3>';
+  print '<h3>'._("Bugs Trackers Configuration Copy").'</h3>
+';
   conf_form($group_id, "bugs");
-  print '<h3>'.("Task Trackers Configuration Copy").'</h3>';
+  print '<h3>'._("Task Trackers Configuration Copy").'</h3>
+';
   conf_form($group_id, "task");
-  print '<h3>'.("Patch Trackers Configuration Copy").'</h3>';
+  print '<h3>'._("Patch Trackers Configuration Copy").'</h3>
+';
   conf_form($group_id, "patch");
   
   site_project_footer(array());
-
 }
 else
 {
@@ -54,3 +58,4 @@ else
   else
     { exit_permission_denied(); }
 }
+?>

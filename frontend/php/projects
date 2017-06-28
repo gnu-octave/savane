@@ -1,9 +1,9 @@
 <?php # -*- PHP -*-
 # Project homepage
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2000-2003 (c) Free Software Foundation
-# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2000-2003 Free Software Foundation
+# Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
 #
 # This file is part of Savane.
@@ -36,7 +36,7 @@ $res_grp=db_execute("SELECT * FROM groups WHERE unix_group_name=?", array($pathi
 if (db_numrows($res_grp) < 1) {
 
 	echo db_error();
-	exit_error("Invalid Group","That group does not exist.");
+	exit_error(_("Invalid Group"),_("That group does not exist."));
 
 } else {
 
@@ -49,3 +49,4 @@ if (db_numrows($res_grp) < 1) {
 	# now show the project page
 	require('include/project_home.php');
 }
+?>

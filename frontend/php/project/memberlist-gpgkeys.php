@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Get group keyring.
 # 
-# Copyright 2005 (c) Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2005 Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -23,7 +24,6 @@ require_once('../include/init.php');
 
 extract(sane_import('get', array('download')));
 
-
 $project=project_get_object($group_id);
 $keyring = $project->getGPGKeyring();
 
@@ -36,21 +36,22 @@ if (!$download) {
 			    'group'=>$group_id,
 			    'context'=>'keys'));
 
-
-#  print '<p>'._("Below is the content of this project's keyring. These are the successfully registered keys of project members.").'</p>';
-#  print nl2br(htmlspecialchars($keyring));
-  print '<p>'.sprintf(_("You can %sdownload the keyring%s and import it with the command %s"), '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group.'&amp;download=1">', '</a>', '<em>gpg --import &lt;file&gt;</em>').'</p>';
+  print '<p>'
+.sprintf(_("You can <a href=\"%s\">download the keyring</a> and import it with
+the command %s."), $_SERVER['PHP_SELF'].'?group='.$group.'&amp;download=1',
+'<em>gpg --import &lt;file&gt;</em>').'</p>';
 
   site_project_footer(array());
 
 } else {
 
 # Download the keyring
-  $result = db_execute("SELECT keyring FROM groups_gpg_keyrings WHERE unix_group_name=? LIMIT 1", array($group));
+  $result = db_execute("SELECT keyring FROM groups_gpg_keyrings "
+                       ."WHERE unix_group_name=? LIMIT 1", array($group));
 
   header('Content-Type: application/pgp-keys');
   header('Content-Disposition: attachment; filename='.$group.'-keyring.gpg');
   header('Content-Description: GPG Keyring of the project '.$group);
-  #print db_result($result,0,'keyring');
   passthru('/usr/local/bin/sv_tmpgpg ' . $group_id);
 }
+?>

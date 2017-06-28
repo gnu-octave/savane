@@ -1,20 +1,21 @@
 <?php
 # Offer project members keyring for download
-# 
-# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+#
+# Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -44,6 +45,11 @@ if (!db_result($result,0,'gpg_key'))
 
 # If we get here, a key exists. Simply print it.
 header('Content-Type: application/pgp-keys');
-header('Content-Disposition: attachment; filename='.db_result($result, 0, 'user_name').'-key.gpg');
-header('Content-Description: GPG Key of the user '.db_result($result, 0, 'user_name'));
+header('Content-Disposition: attachment; filename='
+       .db_result($result, 0, 'user_name').'-key.gpg');
+# TRANSLATORS: the argument is user's name.
+header('Content-Description: '
+       .sprintf(_('GPG Key of the user %s'),
+       db_result($result, 0, 'user_name'));
 print db_result($result,0,'gpg_key');
+?>

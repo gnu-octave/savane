@@ -1,7 +1,8 @@
 <?php
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -37,18 +38,19 @@ else
 
 $project=project_get_object($group_id);
 if (!$project->Uses("news"))
-{ exit_error(_("This project has turned off the news tool.")); }
+  exit_error(_("This project doesn't use this tool."));
  
 site_project_header(array('group'=>$group_id,
 			  'context'=>'news'));
 
 
-/* permit to the user to specify something */
+/* permit the user to specify something */
 
 $form_opening = '<form action="'. $_SERVER['PHP_SELF'] .'#options" method="get">';
-# I18N
-# %s is an input field
-$form = sprintf(_("Print summaries for the %s latest news."), '<input type="text" name="limit" size="4" value="'.$limit.'" />');
+$form = sprintf(
+ngettext("Show summaries for the %s latest news.",
+         "Show summaries for the %s latest news.", $limit),
+ '<input type="text" name="limit" size="4" value="'.$limit.'" />');
 if (isset($group))
 { $form .= '<input type="hidden" name="group" value="'.$group.'" />'; }
 $form_submit = '<input class="bold" type="submit" value="'._("Apply").'"  />';
@@ -71,3 +73,4 @@ if ($limit < news_total_number($group_id))
 }
 
 site_project_footer(array());
+?>

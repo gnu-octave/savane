@@ -1,9 +1,10 @@
 <?php
 # Add and edit project mailing lists
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2006  BBN Technologies Corp
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -72,9 +73,14 @@ $grp=project_get_object($group_id);
 # Check first if the group type set up is acceptable. Otherwise, the form
 # will probably be puzzling to the user (ex: no input text for the list
 # name)
-if (!$grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname")) || $grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname")) == "@")
+
+$ml_address =
+  $grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname"));
+
+if (!$ml_address || $ml_address == "@")
 {
-  exit_error("Mailing-list are misconfigured. Post a support request to ask your site administrator to review group type setup.");
+  exit_error(_("Mailing-list are misconfigured. Post a support request to ask
+your site administrator to review group type setup."));
 }
 
 
@@ -99,20 +105,26 @@ if ($post_changes)
 	
 	// Name shorter than two characters are not acceptable (only
 	// check if the chosen format requires %NAME substitution)
-	if (strpos($grp->getTypeMailingListFormat("%NAME", $newlist_format_index), "%NAME") !== false
+	if (strpos($grp->getTypeMailingListFormat("%NAME", $newlist_format_index),
+                   "%NAME") !== false
 	    && (!$list_name['new'] || strlen($list_name['new']) < 2))
 	  {
+# TRANSLATORS: the argument is the new mailing list name entered by the user.
 	    if (strlen($list_name['new']) > 0)
-	      fb(sprintf(_("You must provide list name that is two or more characters long: %s"), $list_name['new']), 1);
+	      fb(sprintf(
+_("You must provide list name that is two or more characters long: %s"),
+                         $list_name['new']), 1);
 	    continue;
 	  }
 	
 	// Site may have a strict policy on list names: checks now
-	$new_list_name = $grp->getTypeMailingListFormat(strtolower($list_name['new']), $newlist_format_index);
+	$new_list_name = $grp->getTypeMailingListFormat(strtolower($list_name['new']),
+                                                        $newlist_format_index);
 	
 	// Check if it is a valid name
 	if (!account_namevalid($new_list_name, 1, 1, 1, _("list name"),80))
 	  {
+# TRANSLATORS: the argument is the new mailing list name entered by the user.
 	    fb(sprintf(_("Invalid list name: %s"), $new_list_name), 1);
 	    continue;
 	  }
@@ -122,12 +134,15 @@ if ($post_changes)
 	if (db_numrows(db_execute("SELECT user_id FROM user WHERE "
 				  . "user_name LIKE ?", array($new_list_name))) > 0)
 	  {
-	    fb(sprintf(_("List name %s is reserved, to avoid conflicts with user accounts."), $new_list_name), 1);
+	    fb(sprintf(
+_("List name %s is reserved, to avoid conflicts with user accounts."),
+                       $new_list_name), 1);
 	    continue;
 	  }
 	
 	// Check if the list does not exists already
-	$result = db_execute("SELECT group_id FROM mail_group_list WHERE lower(list_name)=?", array($new_list_name));
+	$result = db_execute("SELECT group_id FROM mail_group_list "
+                             ."WHERE lower(list_name)=?", array($new_list_name));
 	
 	if (db_numrows($result) > 0)
 	  {
@@ -139,7 +154,9 @@ if ($post_changes)
 		// assuming that group type configuration is well-done
 		// and disallow list name to persons not supposed to
 		// use some names
-		fb(sprintf(_("List %s is already in the database. We will create an alias"), $new_list_name));
+		fb(sprintf(
+_("List %s is already in the database. We will create an alias"),
+                           $new_list_name));
 		$status = LIST_STATUS_CREATED;
 	      }
 	    else
@@ -264,18 +281,22 @@ if ($post_changes)
 }
 
 
-$result = db_execute("SELECT list_name,group_list_id,is_public,description,password,status ".
-		     "FROM mail_group_list ".
-		     "WHERE group_id=? ORDER BY list_name ASC",
+$result = db_execute("SELECT list_name,group_list_id,is_public,"
+                             ."description,password,status "
+		     ."FROM mail_group_list "
+		     ."WHERE group_id=? ORDER BY list_name ASC",
 		     array($group_id));
 
 
 // Show the form to modify lists status
-site_project_header(array('title'=>_("Update Mailing List"),'group'=>$group_id,'context'=>'amail'));
+site_project_header(array('title'=>_("Update Mailing List"),
+                          'group'=>$group_id,'context'=>'amail'));
 
 
 print '<p>';
-print _("You can administer lists information from here. Please note that private lists are only displayed for members of your project, but not for visitors who are not logged in.")."<br />\n";
+print _("You can administer lists information from here. Please note that
+private lists are only displayed for members of your project, but not for
+visitors who are not logged in.")."<br />\n";
 print "</p>\n";
 
 
@@ -291,7 +312,9 @@ while ($row = db_fetch_array($result))
   
 # Description
   print '<span class="preinput">'._("Description:").'</span>';
-  print '<br />&nbsp;&nbsp;&nbsp;'.form_input("text", "description[$id]", $row['description'], 'maxlenght="120" size="50"');
+  print '<br />&nbsp;&nbsp;&nbsp;'
+        .form_input("text", "description[$id]", $row['description'],
+                    'maxlenght="120" size="50"');
   
 # Status: private or public list, or planned for deletion.
 # It may be weird to have the last one here, but that is how things
@@ -300,17 +323,23 @@ while ($row = db_fetch_array($result))
   $checked = '';
   if ($row['is_public'] == "1")
     { $checked = ' checked="checked"'; }
-  print '<br />&nbsp;&nbsp;&nbsp;'.form_input("radio", "is_public[$id]", '1', $checked).' '._("Public List");
+  print '<br />&nbsp;&nbsp;&nbsp;'
+        .form_input("radio", "is_public[$id]", '1', $checked).' '
+        ._("Public List");
   
   $checked = '';
   if ($row['is_public'] == "0")
     { $checked = ' checked="checked"'; }
-  print '<br />&nbsp;&nbsp;&nbsp;'.form_input("radio", "is_public[$id]", '0', $checked).' '._("Private List (not advertised, subscribing requires approval)");
+  print '<br />&nbsp;&nbsp;&nbsp;'
+        .form_input("radio", "is_public[$id]", '0', $checked).' '
+        ._("Private List (not advertised, subscribing requires approval)");
   
   $checked = '';
   if ($row['is_public'] == "9")
     { $checked = ' checked="checked"'; }
-  print '<br />&nbsp;&nbsp;&nbsp;'.form_input("radio", "is_public[$id]", '9', $checked).' '._("To be deleted (warning, this cannot be undone!)");
+  print '<br />&nbsp;&nbsp;&nbsp;'
+        .form_input("radio", "is_public[$id]", '9', $checked).' '
+        ._("To be deleted (warning, this cannot be undone!)");
   
 # At this point we have no way to know if the backend brigde to 
 # mailman is used or not. We will propose the password change only
@@ -323,8 +352,12 @@ while ($row = db_fetch_array($result))
       $checked = '';
       if ($row['password'] == "1")
 	{ $checked = ' checked="checked"'; }
-      print '<br />&nbsp;&nbsp;&nbsp;'.form_input("checkbox", "reset_password[$id]", "1", $checked).' '._("Requested").' - <em>'._("this will have no effect if this list is not managed by Mailman via Savane").'</em>';
-      
+# TRANSLATORS: this string relates to the previous, it means
+# [checkbox] "request resetting admin password".
+      print '<br />&nbsp;&nbsp;&nbsp;'
+            .form_input("checkbox", "reset_password[$id]", "1", $checked).' '
+._("Requested - <em> this will have no effect if this list is not managed by
+Mailman via Savane</em>");
     }
   else
     {
@@ -340,10 +373,11 @@ print '<br /><br />';
 utils_get_content("mail/about_list_creation");
 
 print '
-			<p>
-			<input type="hidden" name="post_changes" value="y" />
-			<input type="hidden" name="group_id" value="'.$group_id.'" />
-			<h3>'._('Create a new mailing list:').'</h3> ';
+<p>
+<input type="hidden" name="post_changes" value="y" />
+<input type="hidden" name="group_id" value="'.$group_id.'" />
+</p>
+<h3>'._('Create a new mailing list:').'</h3> ';
 
 $project_list_format  = $grp->getTypeMailingListFormat();
 $project_list_formats = split(',', $project_list_format);
@@ -354,7 +388,8 @@ foreach ($project_list_formats as $format)
   if (count($project_list_formats) > 1)
     print "<input type='radio' name='newlist_format_index' value='$i'> ";
   $input = str_replace('%NAME',
-		       '<input type="text" name="list_name[new]" value="" size="25" maxlenght="70" />',
+		       '<input type="text" name="list_name[new]" '
+                       .'value="" size="25" maxlenght="70" />',
 		       $format);
   print $grp->getTypeMailingListAddress($input);
   print '<br />';
@@ -362,11 +397,13 @@ foreach ($project_list_formats as $format)
 }
 
 print '<p></p>';
-print			_('Is Public?').' '._('(visible to non-members)').'<BR>
-			<INPUT TYPE="RADIO" NAME="is_public[new]" VALUE="1" CHECKED> Yes<BR>
-			<INPUT TYPE="RADIO" NAME="is_public[new]" VALUE="0"> No<P></P>
-			<strong>'._('Description:').'</strong><BR>
-			<INPUT TYPE="TEXT" NAME="description[new]" VALUE="" SIZE="40" MAXLENGTH="80"><BR>';
+print			_('Is Public?').' '._('(visible to non-members)')
+.'<br />
+  <input type="radio" name="is_public[new]" value="1" checked> yes<br />
+  <input type="radio" name="is_public[new]" value="0"> no<p></p>
+  <strong>'._('description:').'</strong><br />
+  <input type="text" name="description[new]" value="" size="40" maxlength="80">
+  <br />';
 
 print '<br /><br />'.form_footer();
 site_project_footer(array()); 

@@ -1,9 +1,9 @@
 <?php # -*- PHP -*-
 # User homepage
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2000-2003 (c) Free Software Foundation
-# Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2000-2003 Free Software Foundation
+# Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
 #
 # This file is part of Savane.
@@ -27,11 +27,12 @@ require_once('include/init.php');
 require_once('include/sendmail.php');
 
 # Extract the user name
-$res_user = user_get_result_set_from_unix(ereg_replace("\?.*", "", basename($_SERVER['REQUEST_URI'])));
+$res_user = user_get_result_set_from_unix(
+              ereg_replace("\?.*", "", basename($_SERVER['REQUEST_URI'])));
 
 if (db_numrows($res_user) < 1) {
 
-	exit_error("Invalid User","That user does not exist.");
+	exit_error(_("Invalid User"),_("That user does not exist."));
 
 } else {
 
@@ -41,3 +42,4 @@ if (db_numrows($res_user) < 1) {
 	# now show the project page
 	include ('include/user_home.php');
 }
+?>
