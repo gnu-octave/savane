@@ -119,6 +119,8 @@ Please wait one hour and try again."));
 db_execute("UPDATE user SET confirm_hash=? WHERE user_id=?",
 	   array($confirm_hash, $row_user['user_id']));
 
+# TRANSLATORS: the argument is a domain (like "savannah.gnu.org"
+# vs. "savannah.nongnu.org").
 $message = sprintf(_("Someone (presumably you) on the %s site requested
 a password change through email verification."), $GLOBALS['sys_default_domain']);
 $message .= ' ';
@@ -126,12 +128,9 @@ $message .= _("If this was not you, this could pose a security risk for the syst
             ."\n\n";
 $message .= sprintf(
 _('The request came from %s
-(IP: %s; port: %s)
-User agent: %s
-
-'), gethostbyaddr($_SERVER['REMOTE_ADDR']),
+(IP: %s; port: %s; user agent: %s'), gethostbyaddr($_SERVER['REMOTE_ADDR']),
     $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
-    $_SERVER['HTTP_USER_AGENT']);
+    $_SERVER['HTTP_USER_AGENT'])."\n\n";
 $message .=
 _("If you requested this verification, visit this URL to change your password:")
 ."\n\n";

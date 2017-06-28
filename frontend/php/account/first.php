@@ -24,20 +24,24 @@
 require_once('../include/init.php');
 register_globals_off();
 
+# TRANSLATORS: the argument is system name (like Savannah).
 site_user_header(array('title'=>sprintf(_("Welcome to %s"),$GLOBALS['sys_name']),
                        'context'=>'account'));
 
+# TRANSLATORS: the argument is system name (like Savannah).
 print '<p>'.sprintf(_("You are now a registered user on %s."),
                     $GLOBALS['sys_name']).'</p>';
 
+# TRANSLATORS: the argument is system name (like Savannah).
 print '<p>'
   .sprintf(_("As a registered user, you can participate fully in the activities
 on the site.  You may now post items to issue trackers in %s, sign on as a
 project member, or even start your own project."), $GLOBALS['sys_name']).'</p>';
 
+# TRANSLATORS: the second argument is system name (like Savannah).
 print '<p>'
-  .sprintf(_("You should take some time to read the <a href=\"%s\">Savane User
-Guide</a> so that you may take full advantage of %s."),
+  .sprintf(_('You should take some time to read the <a href="%1$s">Savane User
+Guide</a> so that you may take full advantage of %2$s.'),
            $GLOBALS['sys_home'].'userguide/',$GLOBALS['sys_name']).'</p>';
 
 print '<p>'._("Enjoy the site.").'</p>';

@@ -25,6 +25,7 @@ require_once('include/init.php');
 site_header(array('title'=>_("Requested Page not Found (Error 404)")));
 
 
+# TRANSLATORS: the argument is system name (like Savannah).
 print '<p class="warn">'
 .sprintf(_("The web page you are trying to access doesn't exist on %s."),
           $GLOBALS['sys_name']).'</p>';
@@ -36,6 +37,7 @@ tried to access (%s)."),
   $GLOBALS['sys_home'].'support/?group='.$GLOBALS['sys_unix_group_name'],
   $_SERVER['REQUEST_URI']).'</p>';
 
+# TRANSLATORS: the second argument is system name (like Savannah).
 print '<p>'
   .sprintf(_("Otherwise, you can return to the <a href=\"%s\>%s main page</a>."),
            $GLOBALS['sys_home'], $GLOBALS['sys_name']).'</p>';

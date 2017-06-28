@@ -41,14 +41,14 @@ $row_user = db_fetch_array($res_user);
 # only mail if pending
 if ($row_user['status'] == 'P') {
 
-  # send mail
   $message = sprintf(_("Thank you for registering on the %s web site."),
                      $GLOBALS['sys_name'])."\n"
     . _("In order to complete your registration, visit the following URL:")."\n\n"
     . $GLOBALS['sys_https_url'].$GLOBALS['sys_home']
     ."account/verify.php?confirm_hash=$row_user[confirm_hash]\n\n"
-    . _("Enjoy the site").".\n\n"
-    . sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
+    . _("Enjoy the site.")."\n\n";
+# TRANSLATORS: the argument is the name of the system (like "Savannah").
+  $message .= sprintf(_("-- the %s team."),$GLOBALS['sys_name'])."\n";
 	
 	
   sendmail_mail($GLOBALS['sys_mail_replyto'] . "@".$GLOBALS['sys_mail_domain'],

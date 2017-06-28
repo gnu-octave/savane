@@ -73,6 +73,9 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
     }
   else #
     {
+# TRANSLATORS: the first argument is a domain (like "savannah.gnu.org"
+# vs. "savannah.nongnu.org"); the second argument
+# is a URL ("[URL label]" transforms to a link).
       fb(sprintf(_("Savane thinks your cookies are not activated for %s.
 Please activate cookies in your web browser for this website
 and [%s try to login again]."), $sys_default_domain,
@@ -285,6 +288,9 @@ if (!empty($GLOBALS['sys_brother_domain']))
 
   print '<p><input type="checkbox" name="brotherhood" value="1" tabindex="1" '
         .$checked.'/><span class="preinput">';
+
+# TRANSLATORS: the argument is a domain (like "savannah.gnu.org"
+# vs. "savannah.nongnu.org").
   printf (_("Login also in %s").'</span><br />', $GLOBALS['sys_brother_domain']);
 }
 

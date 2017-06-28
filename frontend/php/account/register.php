@@ -182,6 +182,7 @@ if (!empty($update) and form_check($form_id))
 	}
       elseif($krb5ret == 1)
 	{ # KRB5_BAD_PASSWORD
+# TRANSLATORS: the argument is the name of the system (like "Savannah").
 	    fb(sprintf(_("User is a kerberos principal but password do not
 match. Please use your kerberos password for the first login and then change
 your %s password. This is necessary to prevent someone from stealing your
@@ -256,11 +257,9 @@ if ($form_is_valid)
     {
 
       $newuserid = db_insertid($result);
-
-      # clean id
       form_clean($form_id);
 
-      # send mail
+# TRANSLATORS: the argument is the name of the system (like "Savannah").
       $message = sprintf(_('Thank you for registering on the %s web site.
 (Your login is not mentioned in this mail to prevent account creation by robots.)
 
@@ -269,11 +268,13 @@ In order to complete your registration, visit the following URL:'),
         ."\n"
 	. $GLOBALS['sys_https_url'] . $GLOBALS['sys_home']
 	. "account/verify.php?confirm_hash=$confirm_hash\n\n"
-	._("Enjoy the site.")."\n\n"
-	. sprintf(_("-- the %s team.")."\n\n",$GLOBALS['sys_name']);
+	._("Enjoy the site.")."\n\n";
+# TRANSLATORS: the argument is the name of the system (like "Savannah").
+	$message .= sprintf(_("-- the %s team.")."\n\n",$GLOBALS['sys_name']);
 
       if ($krb5ret == 0) #KRB5_OK
 	{
+# TRANSLATORS: the argument is the name of the system (like "Savannah").
 	  $message .= sprintf(_('P.S. Your password is now stored in encrypted form
 in the %s database.'), $GLOBALS['sys_name'])." ";
 	  $message .= _('For better security we advise you
@@ -289,9 +290,10 @@ to change your password as soon as possible.'). "\n";
     $HTML->header(array('title'=>_("Register Confirmation")));
 
     print '<h3>'.$GLOBALS['sys_name'].' : '
-      ._("New Account Registration Confirmation")."</h3>\n"
-      .sprintf(_("Congratulations. You have registered on %s."),
-               $GLOBALS['sys_name'])
+      ._("New Account Registration Confirmation")."</h3>\n";
+# TRANSLATORS: the argument is the name of the system (like "Savannah").
+    printf(_("Congratulations. You have registered on %s."),
+           $GLOBALS['sys_name'])
       ."\n".sprintf(_("Your login is %s."),
         '<strong>'.user_getname($newuserid).'</strong>')."\n";
 
