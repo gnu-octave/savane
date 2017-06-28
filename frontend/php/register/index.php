@@ -4,6 +4,7 @@
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -58,10 +59,8 @@ if (db_numrows(db_execute("SELECT type_id FROM group_type")) < 1) {
 group type. They can make it so clicking on the link &ldquo;Group Type
 Admin,&rdquo; on the Administration section of the left side menu, while logged
 in as admin");
-} else {
-#	utils_get_content("register/index");
-}
-
+} else
+  utils_get_content("register/index");
 
 $form = new GPLQuickForm('change_date');
 
