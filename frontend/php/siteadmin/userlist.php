@@ -1,9 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# List users.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -20,70 +20,85 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# We don't internationalize messages in this file because they are
+# for Savannah admins who use English.
+function no_i18n($string)
+{
+  return $string;
+}
 
 require_once('../include/init.php');
 
-site_admin_header(array('title'=>_("User List"),'context'=>'admuser'));
+site_admin_header(array('title'=>no_i18n("User List"),'context'=>'admuser'));
 
 extract(sane_import('get', array('user_name_search', 'offset', 'text_search',
 				 'action', 'user_id')));
 extract(sane_import('request', array('search')));
 
 # Administrative functions
-$out='NOTHING';
 if ($action=='delete') 
 {
   db_execute("UPDATE user SET status='D' WHERE user_id=?", array($user_id));
-  $out = _("DELETE");
+# TRANSLATORS: this message is used as status in contect of
+# 'Status updated to DELETE for user %s'
+  $out = no_i18n("DELETE");
 } 
 else if ($action=='activate') 
 {
   
   db_execute("UPDATE user SET status='A' WHERE user_id=?", array($user_id));
-  $out = _("ACTIVE");
+# TRANSLATORS: this message is used as status in contect of
+# 'Status updated to ACTIVE for user %s'
+  $out = no_i18n("ACTIVE");
 } 
 else if ($action=='suspend') 
 {
   db_execute("UPDATE user SET status='S' WHERE user_id=?", array($user_id));
-  $out = _("SUSPEND");
+# TRANSLATORS: this message is used as status in contect of
+# 'Status updated to SUSPEND for user %s'
+  $out = no_i18n("SUSPEND");
 }
+else
+  $action = false;
 
 if ($action) 
 {
-  print '<h3>'._("Action done").' :</h3>';
+  print '<h3>'.no_i18n("Action done").' :</h3>';
   print '<p>';
-  printf(_("Status updated to %s for user %s"), $out, $user_id);
-  print '</p>';
+# TRANSLATORS: the first argument is status (DELETE, ACTIVE, SUSPEND),
+# the second argument is user id (number).
+  printf(no_i18n('Status updated to %1$s for user %2$s.'), $out, $user_id);
+  print '</p>
+';
   print db_error();
 }
 
 
 # Search users 
-$abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
+$abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N',
+                   'O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1',
+                   '2','3','4','5','6','7','8','9');
 
-print '<h3>'._("User Search").'</h3>';
-
-print '<p>'._("Display users beginning with").' : ';
+print '<h3>'.no_i18n("User Search").'</h3>
+<p>'.no_i18n("Display users beginning with").': ';
 
 for ($i=0; $i < count($abc_array); $i++)
   print '<a href="'.$_SERVER["PHP_SELF"].'?user_name_search='.
         $user_name_search.$abc_array[$i].'">'.
         $user_name_search.$abc_array[$i].'</a> ';
 
-print '<br />'._("or search by email, username, realname or userid").' :';
+print '<br />'.no_i18n("Search by email, username, realname or userid").':';
 print '
 <form name="usersrch" action="'.$_SERVER["PHP_SELF"].'" method="GET">
   <input type="text" name="text_search" value="'.$text_search.'" />
   <input type="hidden" name="usersearch" value="1" />
-  <input type="submit" value="'._("Search").'" />
+  <input type="submit" value="'.no_i18n("Search").'" />
 </form>
-</p>';
-
-
+</p>
+';
 
 # Show list of users
 
-print '<h3>'._("User list for:").' ';
 
 $MAX_ROW=100;
 if (!$offset) 
@@ -93,12 +108,16 @@ else
 
 if (!$group_id) 
 {
-  print '<strong>'._("All Groups").'</strong></h3>';
-  
+# TRANSLATORS: this message is used in the context
+# of 'User List for All Groups'.
+  $group_listed = no_i18n("All Groups");
   
   if ($user_name_search) 
     {
-      $result = db_execute("SELECT user_name,user_id,status,people_view_skills FROM user WHERE user_name LIKE ? ORDER BY user_name LIMIT ?,?", array($user_name_search.'%', $offset, $MAX_ROW+1));
+      $result = db_execute("SELECT user_name,user_id,status,people_view_skills "
+                           ."FROM user WHERE user_name LIKE ? "
+                           ."ORDER BY user_name LIMIT ?,?",
+                           array($user_name_search.'%', $offset, $MAX_ROW+1));
     } 
   elseif ($text_search)
     $result = db_execute("SELECT user_name,user_id,status,people_view_skills
@@ -110,16 +129,20 @@ if (!$group_id)
                                 $offset, $MAX_ROW+1));
   else 
     {
-      $result = db_execute("SELECT user_name,user_id,status,people_view_skills FROM user ORDER BY user_name LIMIT ?,?", array($offset, $MAX_ROW+1));
+      $result = db_execute("SELECT user_name,user_id,status,people_view_skills "
+                           ."FROM user ORDER BY user_name LIMIT ?,?",
+                           array($offset, $MAX_ROW+1));
     }
   
 }
 else
 {
   # Show list for one group
-  print " <strong>" . group_getname($group_id) . "</strong></h3>";
+  $group_listed = group_getname($group_id);
    
-  $result = db_execute("SELECT user.user_id AS user_id, user.user_name AS user_name, user.status AS status ,user.people_view_skills AS people_view_skills"
+  $result = db_execute("SELECT user.user_id AS user_id, user.user_name "
+                     . "AS user_name, user.status AS status, "
+                     . "user.people_view_skills AS people_view_skills "
 		     . "FROM user,user_group "
 		     . "WHERE user.user_id=user_group.user_id AND "
 		     . "user_group.group_id=? ORDER BY user.user_name LIMIT ?,?",
@@ -127,14 +150,18 @@ else
   
 }
 
+# TRANSLATORS: the argument is group name or 'All Groups'.
+print '<h3>'.sprintf(no_i18n("User List for %s"),
+                     '<strong>'.$group_listed.'</strong>')."</h3>\n";
+
 $rows = $rows_returned = db_numrows($result);
 
 $title_arr=array();
-$title_arr[]=_("Id");
-$title_arr[]=_("User");
-$title_arr[]=_("Status");
-$title_arr[]=_("Member Profile");
-$title_arr[]=_("Action");
+$title_arr[]=no_i18n("Id");
+$title_arr[]=no_i18n("User");
+$title_arr[]=no_i18n("Status");
+$title_arr[]=no_i18n("Member Profile");
+$title_arr[]=no_i18n("Action");
 
 print html_build_list_table_top ($title_arr);
 
@@ -142,8 +169,9 @@ $inc = 0;
 if ($rows_returned < 1) 
 {
   print '<tr class="'.utils_get_alt_row_color($inc++).'"><td colspan="7">';
-  print _("No matches");
-  print '.</td></tr>';
+  print no_i18n("No matches");
+  print '.</td></tr>
+';
   
 } 
 else 
@@ -154,38 +182,47 @@ else
   for ($i = 0; $i < $rows; $i++) 
     {
       $usr = db_fetch_array($result);
-      print '<tr class="'.utils_get_alt_row_color($inc++).'"><td>'.$usr['user_id'].'</td><td><a href="usergroup.php?user_id='.$usr['user_id'].'">';
+      print '<tr class="'.utils_get_alt_row_color($inc++).'"><td>'
+            .$usr['user_id'].'</td><td><a href="usergroup.php?user_id='
+            .$usr['user_id'].'">';
       print "$usr[user_name]</a>";
-      print "</td><td>\n";
+      print "</td>\n<td>\n";
       
       switch ($usr['status']) 
 	{
-	case 'A': print _("Active"); break;
-	case 'D': print _("Deleted"); break;
-	case 'S': print _("Suspended"); break;
-	case 'SQD': print _("Active (Squad)"); break;
-	case 'P': print _("Pending"); break;
-	default: print _("Unknown status")." : ".$usr['status']; break;
+	case 'A': print no_i18n("Active"); break;
+	case 'D': print no_i18n("Deleted"); break;
+	case 'S': print no_i18n("Suspended"); break;
+	case 'SQD': print no_i18n("Active (Squad)"); break;
+	case 'P': print no_i18n("Pending"); break;
+	default: print no_i18n("Unknown status")." : ".$usr['status']; break;
 	}
       if ($usr['people_view_skills'] == 1 ) 
 	{
-	  print '<td><a href="'.$GLOBALS['sys_home'].'people/resume.php?user_id='.$usr['user_id'].'">['._("View").']</a></td>';
+	  print '<td><a href="'.$GLOBALS['sys_home']
+                .'people/resume.php?user_id='.$usr['user_id'].'">['.no_i18n("View")
+                .']</a></td>
+';
 	} 
       else 
 	{
-	  print '<td>('._("Private").')</td>';
+	  print '<td>('.no_i18n("Private").')</td>
+';
 	}
       print '<td>';
       if ($usr['status'] != 'D')
-	{ print '<a href="?action=delete&user_id='.$usr['user_id'].'">['._("Delete").']</a> '; }
+	{ print '<a href="?action=delete&user_id='.$usr['user_id'].'">['
+                .no_i18n("Delete").']</a> '; }
       if ($usr['status'] != 'S') 
-	{ print '<a href="?action=suspend&user_id='.$usr['user_id'].'">['._("Suspend").']</a> '; }
+	{ print '<a href="?action=suspend&user_id='.$usr['user_id'].'">['
+                .no_i18n("Suspend").']</a> '; }
       if ($usr['status'] != 'A' && $usr['status'] != 'SQD')
-	{ print '<a href="?action=activate&user_id='.$usr['user_id'].'">['._("Activate").']</a> '; }
-      print "</td></tr>\n";
+	{ print '<a href="?action=activate&user_id='.$usr['user_id'].'">['
+                .no_i18n("Activate").']</a> '; }
+      print "</td>\n</tr>\n";
     }
 }
-print "</table>";
+print "</table>\n";
 
 html_nextprev($_SERVER['PHP_SELF'].
               '?user_name_search='.urlencode($user_name_search).
@@ -193,5 +230,5 @@ html_nextprev($_SERVER['PHP_SELF'].
               '&amp;text_search='.urlencode($text_search),
               $rows, $rows_returned);
 
-
 $HTML->footer(array());
+?>

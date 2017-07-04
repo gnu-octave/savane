@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Trigger group creation.
 # 
-# Copyright 2004 (c) Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2004 Mathieu Roy <yeupou--at--gnu.org>
+# Copyright 2017 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -18,6 +19,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# We don't internationalize messages in this file because they are
+# for Savannah admins who use English.
+function no_i18n($string)
+{
+  return $string;
+}
 
 require_once('../include/init.php');
 require_once('../include/proj_email.php');
@@ -31,11 +38,14 @@ if ($GLOBALS['sys_group_id'] != $group_id)
 #   If a project can use a feature for its group type, assume he would
 #   use it by default
 #   Exception: the patch tracker is deprecated, so it is ignored.
-$group_type = db_result(db_execute("SELECT type FROM groups WHERE group_id=?", array($group_id)),0,'type');
-$res_type = db_execute("SELECT * FROM group_type WHERE type_id=?", array($group_type));
+$group_type = db_result(db_execute("SELECT type FROM groups WHERE group_id=?",
+                                   array($group_id)),0,'type');
+$res_type = db_execute("SELECT * FROM group_type WHERE type_id=?",
+                       array($group_type));
 $user_id = user_getid();
 
-$to_update = array("homepage", "download", "cvs", "forum","mailing_list","task","news","support","bug");
+$to_update = array("homepage", "download", "cvs", "forum","mailing_list",
+                   "task","news","support","bug");
 $upd_list = array();
 while (list(,$field) = each($to_update))
 {
@@ -48,7 +58,8 @@ while (list(,$field) = each($to_update))
       { $field = 'bugs'; }
   $field = 'use_'.$field;
 
-  fb(sprintf(_("%s will be set to %s"),$field, $value));
+# TRANSLATORS: the first argument is field, the second is value.
+  fb(sprintf(no_i18n('%1$s will be set to %2$s'),$field, $value));
   $upd_list[$field] = $value;
 }
 
@@ -59,13 +70,13 @@ if ($upd_list)
 
   if (!$result)
     { 
-      fb(_("No field to update or SQL error"));
-
+      fb(no_i18n("No field to update or SQL error"));
     }
   else
     { 
       fb_dbsuccess();  
-      group_add_history('Set Active Features to the default for the Group Type',user_getname($user_id),$group_id);
+      group_add_history('Set Active Features to the default for the Group Type',
+                        user_getname($user_id),$group_id);
     }
 }
 
@@ -79,7 +90,8 @@ $upd_list = array();
 
 # Build the notification list
 $res_admins = db_execute("SELECT user.user_name FROM user,user_group WHERE "
-			 . "user.user_id=user_group.user_id AND user_group.group_id=? AND "
+			 . "user.user_id=user_group.user_id "
+                         . "AND user_group.group_id=? AND "
 			 . "user_group.admin_flags='A'", array($group_id));
 if (db_numrows($res_admins) > 0)
 {
@@ -102,33 +114,35 @@ if (db_numrows($res_admins) > 0)
 if ($upd_list)
 {
   # strip the excess comma at the end of the update field list
-  $result=db_affected_rows(db_autoexecute('groups', $upd_list, DB_AUTOQUERY_UPDATE, "group_id=?", array($group_id)));
+  $result=db_affected_rows(db_autoexecute('groups', $upd_list,
+                                          DB_AUTOQUERY_UPDATE, "group_id=?", 
+                                          array($group_id)));
 
   if (!$result)
     { 
-      fb(_("No field to update or SQL error"));
-
+      fb(no_i18n("No field to update or SQL error"));
     }
   else
     { 
       fb_dbsuccess();  
-      group_add_history('Set Mail Notification to a sensible default',user_getname($user_id),$group_id);
+      group_add_history('Set Mail Notification to a sensible default',
+                        user_getname($user_id),$group_id);
     }
 }
-
 
 ################
 # Send email and do site specific triggered stuff that comes along
 send_new_project_email($group_id);
-fb(_("Mail sent, site-specific triggers executed"));
+fb(no_i18n("Mail sent, site-specific triggers executed"));
 
 if ($GLOBALS['sys_group_id'] != $group_id)
 { 
-  site_admin_header(array('title'=>"Project Creation Trigger"));
+  site_admin_header(array('title'=>no_i18n("Project Creation Trigger")));
   site_admin_footer(array());
 }
 else
 {
-  site_header(array('title'=>_("Local Administration Project Approved")));
+  site_header(array('title'=>no_i18n("Local Administration Project Approved")));
   site_footer(array());
 }
+?>

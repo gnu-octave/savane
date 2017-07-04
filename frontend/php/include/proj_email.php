@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Send site admins email about approved group.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2004 (c) Mathieu Roy <yeupou---gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2004 Mathieu Roy <yeupou---gnu.org>
+# Copyright (C) 2017 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -19,6 +20,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# We don't internationalize messages in this file because they are
+# for Savannah admins who use English. (no_i18n() is defined elsewhere).
 
 require_once(dirname(__FILE__).'/sendmail.php');
 
@@ -28,17 +31,25 @@ function send_new_project_email($group_id)
 			array($group_id));
 
   if (db_numrows($res_grp) < 1) {
-    echo ("Group [ $group_id ] does not exist. Shame on you, sysadmin.");
+# TRANSLATORS: the argument is group id (number).
+    exit_error (sprintf(
+no_i18n("Group [ %s ] does not exist. Shame on you, sysadmin."),
+                $group_id));
   }
 
   $row_grp = db_fetch_array($res_grp);
 
-  $res_admins = db_execute("SELECT user.user_name,user.email FROM user,user_group WHERE "
-			   . "user.user_id=user_group.user_id AND user_group.group_id=? AND "
+  $res_admins = db_execute("SELECT user.user_name,user.email "
+                           . "FROM user,user_group WHERE "
+			   . "user.user_id=user_group.user_id "
+                           . "AND user_group.group_id=? AND "
 			   . "user_group.admin_flags='A'", array($group_id));
 
   if (db_numrows($res_admins) < 1) {
-    echo ("Group [ $group_id ] does not seem to have any administrators.");
+# TRANSLATORS: the argument is group id (number).
+    exit_error (sprintf(
+no_i18n("Group [ %s ] does not seem to have any administrators."),
+                $group_id));
   }
 
   # send one email per admin
@@ -46,11 +57,9 @@ function send_new_project_email($group_id)
   while ($row_admins = db_fetch_array($res_admins)) {
     $message = approval_gen_email($row_grp['group_name'],$row_grp['unix_group_name']);
 
-
     sendmail_mail($GLOBALS['sys_email_adress'],
 		  $row_admins['email'],
-		  "Project Approved",
+		  no_i18n("Project Approved"),
 		  $message);
-    
   }
 }

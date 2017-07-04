@@ -1,9 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Show last logins.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -23,26 +23,37 @@
 
 require_once('../include/init.php');
 register_globals_off();
-site_admin_header(array('title'=>_("Check Last Logins"),'context'=>'admhome'));
+
+# We don't internationalize messages in this file because they are
+# for Savannah admins who use English.
+function no_i18n($string)
+{
+  return $string;
+}
+
+site_admin_header(array('title'=>no_i18n("Check Last Logins"),
+                  'context'=>'admhome'));
 
 $res_logins = db_query("SELECT session.user_id AS user_id,"
 	. "session.ip_addr AS ip_addr,"
 	. "session.time AS time,"
 	. "user.user_name AS user_name FROM session,user "
 	. "WHERE session.user_id=user.user_id AND "
-	. "session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 250");
+	. "session.user_id>0 AND session.time>0 ORDER BY session.time "
+        . "DESC LIMIT 250");
 
 if (db_numrows($res_logins) < 1) {
-	$feedback = "No records found, There must be an error somewhere.";
+	$feedback = no_i18n("No records found, there must be an error somewhere.");
 
 } else {
 
-	print '<p>'._("Follow most recent logins:").'</p>';
+	print '<p>'.no_i18n("Follow most recent logins:").'</p>
+';
 
 	$title_arr=array();
-	$title_arr[]=_("User Name");
-	$title_arr[]=_("Ip");
-	$title_arr[]=_("Date");
+	$title_arr[]=no_i18n("User Name");
+	$title_arr[]=no_i18n("Ip");
+	$title_arr[]=no_i18n("Date");
 	print html_build_list_table_top ($title_arr);
 
 	$inc=0;
@@ -50,10 +61,13 @@ if (db_numrows($res_logins) < 1) {
 		print '<tr class="'.utils_get_alt_row_color($inc++).'">';
 		print "<td>$row_logins[user_name]</td>";
 		print "<td>$row_logins[ip_addr]</td>";
-		print "<td>" . utils_format_date($row_logins['time']) . "</td>";
-		print '</tr>';
+		print "<td>" . utils_format_date($row_logins['time'])
+                      . "</td>\n";
+		print '</tr>
+';
 	}
-
-	print '</table>';
+	print '</table>
+';
 }
 $HTML->footer(array());
+?>

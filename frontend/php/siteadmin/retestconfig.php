@@ -1,9 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -22,7 +21,15 @@
 
 require_once('../include/init.php');
 register_globals_off();
-site_admin_header(array('title'=>_("Home"),'context'=>'admhome'));
+
+# We don't internationalize messages in this file because they are
+# for Savannah admins who use English.
+function no_i18n($string)
+{
+  return $string;
+}
+
+site_admin_header(array('title'=>no_i18n("Home"),'context'=>'admhome'));
 
 # Include the /testconfig.php that can be run on 127.0.0.1
 # when Savane is not yet running itself.
@@ -30,3 +37,4 @@ $inside_siteadmin = true;
 include('../testconfig.php');
 
 site_admin_footer(array());
+?>

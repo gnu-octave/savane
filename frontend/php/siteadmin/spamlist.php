@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# List spam items.
 # 
-# Copyright 2006      (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -24,6 +25,13 @@ require_once('../include/init.php');
 register_globals_off();
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+# We don't internationalize messages in this file because they are
+# for Savannah admins who use English.
+function no_i18n($string)
+{
+  return $string;
+}
+
 ###### See if we were asked to perform anything
 extract(sane_import('get', array('ban_user_id', 'wash_user_id', 'wash_ip',
 				 'max_rows', 'offset')));
@@ -31,7 +39,7 @@ extract(sane_import('get', array('ban_user_id', 'wash_user_id', 'wash_ip',
 if ($ban_user_id)
 {
   if (!user_exists($ban_user_id))
-    { fb(_("User not found"), 1); }
+    { fb(no_i18n("User not found"), 1); }
   else
     {
       user_delete($ban_user_id);
@@ -41,18 +49,20 @@ if ($ban_user_id)
 if ($wash_user_id)
 {
   if (!user_exists($wash_user_id))
-    { fb(_("User not found"), 1); }
+    { fb(no_i18n("User not found"), 1); }
   else
     {
       # Update the user spamscore field
-      db_execute("UPDATE user SET spamscore='0' WHERE user_id=?", array($wash_user_id));
+      db_execute("UPDATE user SET spamscore='0' WHERE user_id=?",
+                  array($wash_user_id));
 
       # Previous comment flagged as spam will stay as such.
       # We just changed the affected user id that it wont affect this guy
       # any more.
       # We assume that message flagged as spam really were.
       # (we may change that in the future, depending on user experience)
-      db_execute("UPDATE trackers_spamscore SET affected_user_id='100' WHERE affected_user_id=?",
+      db_execute("UPDATE trackers_spamscore SET affected_user_id='100' "
+                 ."WHERE affected_user_id=?",
 		 array($wash_user_id));      
       
     }
@@ -67,17 +77,24 @@ if ($wash_ip)
 
 ###### Start HTML
 
-site_admin_header(array('title'=>_("Monitor Spams"),'context'=>'admhome'));
+site_admin_header(array('title'=>no_i18n("Monitor Spam"),'context'=>'admhome'));
 
-print '<h3>'.html_anchor(_("Suspected users"), "users_results").'</h3>';
-print '<p>'._("Follow the list of users that post content that as been flagged as spam, ordered by their spam score. If the user is an obvious spammer, you can ban him immediately. If it was flagged by mistake, you can wash his reputation.").' <span class="warn">'._("Banning an user is a one-way-ticket process. Be careful. For efficiency purpose, there won't be any warnings.").'</span></p>';
+print '<h3>'.html_anchor(no_i18n("Suspected users"), "users_results").'</h3>
+';
+print '<p>'.no_i18n("Follow the list of users that post content that as been flagged
+as spam, ordered by their spam score. If the user is an obvious spammer, you
+can ban him immediately. If it was flagged by mistake, you can wash his
+reputation.").' <span class="warn">'.no_i18n("Banning an user is a one-way-ticket
+process. Be careful. For efficiency purpose, there won't be any
+warnings.").'</span></p>
+';
 $title_arr=array();
-$title_arr[]=_("User");
-$title_arr[]=_("Score");
-$title_arr[]=_("Ban user");
-$title_arr[]=_("Wash score");
-$title_arr[]=_("Incriminated content");
-$title_arr[]=_("Flagged by");
+$title_arr[]=no_i18n("User");
+$title_arr[]=no_i18n("Score");
+$title_arr[]=no_i18n("Ban user");
+$title_arr[]=no_i18n("Wash score");
+$title_arr[]=no_i18n("Incriminated content");
+$title_arr[]=no_i18n("Flagged by");
 
 if (!isset($max_rows))
 { $max_rows = 50; }
@@ -89,10 +106,13 @@ if (!isset($offset))
 else
 { $offset = intval($offset); }
 
-$result = db_execute("SELECT user_name,realname,user_id,spamscore FROM user WHERE status='A' AND spamscore > 0 ORDER BY spamscore DESC LIMIT ?,?", array($offset,($max_rows+1)));
+$result = db_execute("SELECT user_name,realname,user_id,spamscore FROM user "
+                     ."WHERE status='A' AND spamscore > 0 ORDER BY spamscore "
+                     ."DESC LIMIT ?,?", array($offset,($max_rows+1)));
 if (!db_numrows($result))
 {
-  print '<p>'._("No suspects found").'</p>';
+  print '<p>'.no_i18n("No suspects found").'</p>
+';
 } 
 else 
 {
@@ -110,7 +130,13 @@ else
       if ($i > $max_rows)
 	{ break; }
 
-      $res_score = db_execute("SELECT trackers_spamscore.artifact,trackers_spamscore.item_id,trackers_spamscore.comment_id,user.user_name FROM trackers_spamscore,user WHERE trackers_spamscore.affected_user_id=? AND user.user_id=trackers_spamscore.reporter_user_id LIMIT 50", array($entry['user_id']));
+      $res_score = db_execute("SELECT trackers_spamscore.artifact,"
+                              ."trackers_spamscore.item_id,"
+                              ."trackers_spamscore.comment_id,"
+                              ."user.user_name FROM trackers_spamscore,user "
+                              ."WHERE trackers_spamscore.affected_user_id=? "
+                              ."AND user.user_id=trackers_spamscore.reporter_user_id "
+                              ."LIMIT 50", array($entry['user_id']));
       $flagged_by = '';
       $incriminated_content = '';
       $seen_before = array();
@@ -122,13 +148,20 @@ else
 	      $seen_before[$entry_score['user_name']] = true;
 	    }
 	  
-	  if (!isset($seen_before[$entry_score['artifact'].$entry_score['item_id'].'C'.$entry_score['comment_id']]))
+	  if (!isset($seen_before[$entry_score['artifact'].$entry_score['item_id']
+                     .'C'.$entry_score['comment_id']]))
 	    {
 	      # only put the string "here" for each item, otherwise it gets
 	      # overlong when we have to tell comment #nnn of item #nnnn
-	      $incriminated_content .= utils_link($GLOBALS['sys_home'].$entry_score['artifact'].'/?item_id='.$entry_score['item_id'].'&amp;func=viewspam&amp;comment_internal_id='.$entry_score['comment_id'].'#spam'.$entry_score['comment_id'],
-						 _("here")).', ';	 
-	      $seen_before[$entry_score['artifact'].$entry_score['item_id'].'C'.$entry_score['comment_id']] = true;
+	      $incriminated_content .= utils_link($GLOBALS['sys_home']
+                                    .$entry_score['artifact'].'/?item_id='
+                                    .$entry_score['item_id']
+                                    .'&amp;func=viewspam&amp;comment_internal_id='
+                                    .$entry_score['comment_id'].'#spam'
+                                    .$entry_score['comment_id'],
+						 no_i18n("here")).', ';	 
+	      $seen_before[$entry_score['artifact'].$entry_score['item_id']
+                           .'C'.$entry_score['comment_id']] = true;
 	    }
 	  
 	}
@@ -136,35 +169,49 @@ else
       $incriminated_content = rtrim($incriminated_content, ', ');
       
       print '<tr class="'.utils_get_alt_row_color($i).'">';
-      print '<td width="25%">'.utils_user_link($entry['user_name'], $entry['realname']).'</td>';
-      print '<td width="5%" class="center">'.$entry['spamscore'].'</td>';
-      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?ban_user_id='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Ban user").'" />').'</td>';
-      print '<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?wash_user_id='.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'._("Wash score").'" />').'</td>';
-      print '<td width="30%">'.$incriminated_content.'</td>';
-      print '<td width="30%">'.$flagged_by.'</td>';	
-      print '</tr>';
+      print '<td width="25%">'.utils_user_link($entry['user_name'],
+             $entry['realname']).'</td>
+<td width="5%" class="center">'.$entry['spamscore'].'</td>
+<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?ban_user_id='
+.$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home']
+.'images/'.SV_THEME.'.theme/misc/trash.png" alt="'.no_i18n("Ban user").'" />').'</td>
+<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF']
+.'?wash_user_id='.$entry['user_id'].'#users_results', '<img src="'
+.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'
+.no_i18n("Wash score").'" />').'</td>
+<td width="30%">'.$incriminated_content.'</td>
+<td width="30%">'.$flagged_by.'</td>
+</tr>
+';
     }
-  print '</table>';
-  
+  print '</table>
+';
   
   # More results than $max? Print next/prev
   html_nextprev($_SERVER['PHP_SELF'].'?', $max_rows, $i, "users");      
-  
 }
 
 print '<p>&nbsp;</p>';
-print '<h3>'.html_anchor(_("Banned IPs"), "ip_results").'</h3>';
-print '<p>'._("Follow the list of IPs that are currently banned because content their owner posted was flagged as spam. This ban affect only anonymous users and do not prevent them to log in. IPs are automatically removed by a cronjob from this list after a few hours delay but, from here, you can force the removal to be done instantly.").'</p>';
+print '<h3>'.html_anchor(no_i18n("Banned IPs"), "ip_results").'</h3>
+';
+print '<p>'.no_i18n("Follow the list of IPs that are currently banned because content
+their owner posted was flagged as spam. This ban affect only anonymous users
+and do not prevent them to log in. IPs are automatically removed by a cronjob
+from this list after a few hours delay but, from here, you can force the
+removal to be done instantly.").'</p>
+';
 
-$result = db_execute("SELECT ip FROM trackers_spamban WHERE 1 GROUP BY ip ORDER BY ip LIMIT ?,?",
+$result = db_execute("SELECT ip FROM trackers_spamban WHERE 1 GROUP BY ip "
+                     ."ORDER BY ip LIMIT ?,?",
 		     array($offset,$max_rows+1));
 if (!db_numrows($result)) 
 {
-  print '<p>'._("No IP banned").'</p>';
+  print '<p>'.no_i18n("No IP banned").'</p>';
 } 
 else 
 {
-  print '<div class="box"><div class="boxtitle">'._("IPs").'</div><div class="boxitem">';
+  print '<div class="box"><div class="boxtitle">'.no_i18n("IPs")
+.'</div><div class="boxitem">';
   
   $i = 0;
   while ($entry = db_fetch_array($result)) 
@@ -182,34 +229,15 @@ else
 	{ print ', '; }
 
       print utils_link($_SERVER['PHP_SELF'].'?wash_ip='.$entry['ip'].'#ip_results',
-		       $entry['ip'].' <img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'._("Wash IP").'" />');
+		       $entry['ip'].' <img src="'.$GLOBALS['sys_home'].'images/'
+                       .SV_THEME.'.theme/bool/ok.png" alt="'.no_i18n("Wash IP").'" />');
       
     }
   print '</div>';
     
   # More results than $max? Print next/prev
   html_nextprev($_SERVER['PHP_SELF'].'?', $max_rows, $i, "ip");   
-
-
 }
 
-
-
-# NOT YET SURE IF WE WANT THE ADMIN TO WASTE TIME TO CHECK SUSPECTED CONTENT
-# We would then get an enormous list. If there is a non-spam flagged by 
-# mistake, the admin can simply browse the item page and unflag it. 
-# 
-# This part would only make sense if we implement a two time item submission
-# process (not approved before spamassassin check). Then the admin could
-# want to manually speed up the process
-# 
-#print '<h3>'._("Suspected content").'</h3>';
-#$title_arr=array();
-#$title_arr[]=_("Item");
-#$title_arr[]=_("Score");
-#$title_arr[]=_("Posted by");
-#$title_arr[]=_("Flagged by");
-#print html_build_list_table_top ($title_arr);
-#print '</table>';
-
 $HTML->footer(array());
+?>

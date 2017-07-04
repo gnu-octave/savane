@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Display forum message.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -27,13 +28,15 @@ register_globals_off();
 
 extract(sane_import('request', array('msg_id')));
 
+
 if ($msg_id) {
 	$msg_id = intval($msg_id);
-	/*
-		Figure out which group this message is in, for the sake of the admin links
-	*/
-	$result=db_execute("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id ".
-			   "FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id=?",
+# Figure out which group this message is in, for the sake of the admin links
+	$result=db_execute("SELECT forum_group_list.group_id,forum_group_list"
+                           .".forum_name,forum.group_forum_id,forum.thread_id "
+			   ."FROM forum_group_list,forum "
+                           ."WHERE forum_group_list.group_forum_id="
+                           ."forum.group_forum_id AND forum.msg_id=?",
 			   array($msg_id));
 
 	$forum_id=db_result($result,0,'group_forum_id');
@@ -44,58 +47,59 @@ if ($msg_id) {
 
 	print "<p>";
 
-	$sql="SELECT user.user_name,forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
-		"FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id=?;";
+	$sql="SELECT user.user_name,forum.group_forum_id,forum.thread_id,"
+              ."forum.subject,forum.date,forum.body "
+              ."FROM forum,user WHERE user.user_id=forum.posted_by "
+              ."AND forum.msg_id=?;";
 
 	$result = db_execute($sql, array($msg_id));
 
-	if (!$result || db_numrows($result) < 1) {
-		/*
-			Message not found
-		*/
-		return 'message not found.\n';
-	}
+	if (!$result || db_numrows($result) < 1)
+          exit_error (_('Message not found.'));
 
 	$title_arr=array();
-	$title_arr[]='Message: '.$msg_id;
+# TRANSLATORS: the argment is message id.
+	$title_arr[]=_('Message %s').$msg_id;
 
 	print html_build_list_table_top ($title_arr);
 
-	print "<tr><td>\n";
-	print '<strong>'.db_result($result,0, "subject").'</strong>';
-	print ' ('._("posted by").' '.utils_user_link(db_result($result,0, "user_name")).", ";
-	print utils_format_date(db_result($result,0, "date")).')';
+	print "<tr>\n<td>\n";
+# TRANSLATORS: the first argument is subject, the second is user's name,
+# the third is date.
+        printf (_('%1$s (posted by %2$s, %3$s)'),
+                '<strong>'.db_result($result,0, "subject").'</strong>',
+                utils_user_link(db_result($result,0, "user_name")),
+                utils_format_date(db_result($result,0, "date")));
 	print '<p>';
 	print markup_rich(db_result($result,0, 'body'));
-	print '</p></td></tr></table>';
-
-	/*
-		Show entire thread
-	*/
-
+	print '</p>
+</td>
+</tr>
+</table>
+';
+	# Show entire thread
 	#highlight the current message in the thread list
 	$current_message=$msg_id;
 	print show_thread(db_result($result,0, 'thread_id'));
-
-	/*
-		Show post followup form
-	*/
 
 	print '<p>&nbsp;<p>';
 
    if ($GLOBALS['sys_enable_forum_comments'])
    {
-      print '<a name="followup"></a>';
-	   print '<center><h3>'._("Post a followup to this message").'</h3></center>';
+	# Show post followup form
+     print '<p id="followup">'._("Post a followup to this message")
+ .'</p>
+';
 
-      show_post_form(db_result($result, 0, 'group_forum_id'),db_result($result, 0, 'thread_id'), $msg_id, db_result($result,0, 'subject'));
+      show_post_form(db_result($result, 0, 'group_forum_id'),
+                     db_result($result, 0, 'thread_id'), $msg_id,
+                     db_result($result,0, 'subject'));
    }
-
 } else {
 
-	forum_header(array('title'=>'Must choose a message first'));
-	print '<h1>You must choose a message first</H1>';
-
+	forum_header(array('title'=>_('Must choose a message first')));
+	print '<p>'._('You must choose a message first').'</p>';
 }
 
-forum_footer(array()); 
+forum_footer(array());
+?>
