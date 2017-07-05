@@ -1,15 +1,15 @@
 <?php /*-*-PHP-*-*/
 # 
-# <one line to give a brief idea of what this does.>
+# Page layout.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2000-2003 (c) Free Software Foundation
-#                          Mathieu Roy <yeupou--gnu.org>
-#                          Stéphane Urbanoski <s.urbanovski--ac-nancy-metz.fr>
-#                          Derek Feichtinger <derek.feichtinger--cern.ch>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2000-2003 Free Software Foundation
+# Copyright (C) 2000-2003 Stéphane Urbanoski <s.urbanovski--ac-nancy-metz.fr>
+# Copyright (C) 2000-2003 Derek Feichtinger <derek.feichtinger--cern.ch>
 #
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -264,12 +264,10 @@ class Layout extends Error
   {
     print '<p class="footer">';
     utils_get_content("page_footer");
-
-    # Powered by is no longer translated: it allows us to search on google
-    # for a simple string to find public site running Savane, which would be
-    # more complicated if it was i18n-ized
+# TRANSLATORS: the argument is version of Savane (like 3.2).
     print ' </p>
- <div align="right">'.utils_link($GLOBALS['savane_url'], sprintf("Powered by Savane %s", $GLOBALS['savane_version'])).'</div>'; 
+ <div align="right"><p>'.utils_link($GLOBALS['savane_url'],
+  sprintf(_("Powered by Savane %s"), $GLOBALS['savane_version'])).'</p></div>'; 
 
 # yeupou--gnu.org 2005-09-16:
 # Dirty hack to get rid of serious issue in MSIE handling of
@@ -369,3 +367,4 @@ class Layout extends Error
 # It is in pagemenu.php
 
 }
+?>
