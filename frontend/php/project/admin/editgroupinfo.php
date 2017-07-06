@@ -70,7 +70,7 @@ if (db_numrows($res_grp) < 1)
 $row_grp = db_fetch_array($res_grp);
 
 
-site_project_header(array('title'=>_("Editing Public Info"),
+site_project_header(array('title'=>_("Editing Public Information"),
                           'group'=>$group_id,'context'=>'ahome'));
 
 

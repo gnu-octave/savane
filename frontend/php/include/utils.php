@@ -1,22 +1,25 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>,
-#                          Tobias Toedter <t.toedter--gmx.net>
+# Utility functions.
+#
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>,
+# Copyright (C) 2002-2006 Tobias Toedter <t.toedter--gmx.net>
+# Copyright (C) 2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
+# Copyright (C) 2006, 2007, 2008, 2010 Sylvain Beucler
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -52,7 +55,8 @@ function utils_get_content ($file)
   if ($file != null)
     include($file);
   else
-    fb(sprintf(_("Warning: Savane was not able to read \"%s\" site-specific information, please contact administrators"), $file), 1);
+    fb(sprintf(_("Warning: Savane was not able to read site-specific
+information from file \"%s\", please contact administrators"), $file), 1);
 }
 
 # Make sure that to avoid malicious file paths
@@ -60,12 +64,15 @@ function utils_check_path ($path)
 {
   if (eregi(".*\.\.\/.*", $path))
     {
-      exit_error('Error','Malformed url');
+      exit_error(_('Error'),
+# TRANSLATORS: the argument is file path.
+                 sprintf(_('Malformed file path %s'), $path));
     }
 }
 
 # Add unavailable css class to a link if required
-function utils_link ($url, $title, $defaultclass=0, $available=1, $help=0, $extra='')
+function utils_link ($url, $title, $defaultclass=0, $available=1, $help=0,
+                     $extra='')
 {
   if (!$available)
     { $defaultclass = 'unavailable'; }
@@ -83,7 +90,7 @@ function utils_link ($url, $title, $defaultclass=0, $available=1, $help=0, $extr
 }
 
 # Make an clean email link depending on the authentification level of the user,
-# Dont use this on normal text, just on field where only an email address is
+# Don't use this on normal text, just on field where only an email address is
 # expected. THis may corrupt the text and does extensive search.
 function utils_email ($address, $nohtml=0)
 {
@@ -95,7 +102,7 @@ function utils_email ($address, $nohtml=0)
       # Remove eventual extra white spaces
       $address = trim($address);
 
-      # If we have < > in the address, only this content must go in the 
+      # If we have < > in the address, only this content must go in the
       # mailto
       $realaddress = null;;
       if (preg_match("/\<([\w\d\-\@\.]*)\>/", $address, $matches))
@@ -106,27 +113,29 @@ function utils_email ($address, $nohtml=0)
 	{
           # We found a real address and it is a user login
 	  if ($realaddress && user_exists(user_getid($realaddress)))
-	    {
-	      return utils_user_link($realaddress, user_getrealname(user_getid($realaddress)));  
-	    }
-	  
+            return utils_user_link($realaddress,
+                                   user_getrealname(user_getid($realaddress)));
+
           # The whole address is a user login
 	  if (user_exists(user_getid($address)))
 	    {
-	      return utils_user_link($address, user_getrealname(user_getid($address)));
+	      return utils_user_link($address,
+                                     user_getrealname(user_getid($address)));
 	    }
 
 	  # No @, no real addresses and spaces inside? Looks like someone
 	  # forgot commas
 	  if (!$realaddress && strpos($address, " "))
 	    {
-	      return htmlspecialchars($address).
-		' <span class="warn">'._("(seems invalid and will probably be ignored)").'</span>';
+	      return htmlspecialchars($address).' <span class="warn">'
+                ._("(seems invalid and will probably be ignored)").'</span>';
 	    }
 
 	  # No @ but and not a login? P
-	  return htmlspecialchars($address).
-	    ' <span class="warn">'.sprintf(_("(unknown to Savane, will fail if not valid at %s)"), $GLOBALS['sys_mail_domain']).'</span>';
+# TRANSLATORS: the argument is mail domain (like localhost or sv.gnu.org).
+	  return htmlspecialchars($address).' <span class="warn">'
+            .sprintf(_("(unknown to Savane, will fail if not valid at %s)"),
+                     $GLOBALS['sys_mail_domain']).'</span>';
 
 	}
 
@@ -137,30 +146,28 @@ function utils_email ($address, $nohtml=0)
 
       # We found a real address that is syntexically correct
       if ($realaddress && validate_email($realaddress))
-	{
-	  return '<a href="mailto:'.htmlspecialchars($realaddress).'">'.htmlspecialchars($address).'</a>';
-
-	}
+	return '<a href="mailto:'.htmlspecialchars($realaddress).'">'
+               .htmlspecialchars($address).'</a>';
 
       # We found real address but it does not seem correct
       # Print a warning
       if ($realaddress)
 	{
-	  return htmlspecialchars($address).
-	    ' <span class="warn">'._("(seems invalid and will probably be ignored)").'</span>';
+	  return htmlspecialchars($address).' <span class="warn">'
+            ._("(seems invalid and will probably be ignored)").'</span>';
 	}
 
 
       # We have no realaddress found, only one string that is an address
       if (validate_email($address))
 	{
-	  return '<a href="mailto:'.htmlspecialchars($address).'">'.htmlspecialchars($address).'</a>';
+	  return '<a href="mailto:'.htmlspecialchars($address).'">'
+                 .htmlspecialchars($address).'</a>';
 	}
-       
-      # Nothing was valid, print a warning
-      return htmlspecialchars($address).
-	' <span class="warn">'._("(seems invalid and will probably be ignored)").'</span>';
 
+      # Nothing was valid, print a warning
+      return htmlspecialchars($address).' <span class="warn">'
+        ._("(seems invalid and will probably be ignored)").'</span>';
     }
   else
     {
@@ -171,29 +178,29 @@ function utils_email ($address, $nohtml=0)
 			_("This information is not provided to anonymous users"),
 			1);
     }
-
 }
 
 # like the previous but does no extended search, just print as it comes
 function utils_email_basic ($address, $nohtml=0)
 {
-  if (user_isloggedin() || CONTEXT == 'forum' || CONTEXT == 'news' || CONTEXT == ''/*frontpage*/)
+  if (user_isloggedin() || CONTEXT == 'forum' || CONTEXT == 'news'
+      || CONTEXT == ''/*frontpage*/)
     {
       if ($nohtml)
 	{ return htmlspecialchars($address); }
-	  
-      
+
+
       # Make mailto without trying to find out whether it makes sense
-      return '<a href="mailto:'.htmlspecialchars($address).'">'.htmlspecialchars($address).'</a>';
+      return '<a href="mailto:'.htmlspecialchars($address).'">'
+             .htmlspecialchars($address).'</a>';
     }
-  
+
   if ($nohtml)
     { return _("-unavailable-"); }
-  
+
   return utils_help(_("-unavailable-"),
 		    _("This information is not provided to anonymous users"),
 		    1);
-
 }
 # Found out if a string is pure ASCII or not
 function utils_is_ascii ($string)
@@ -207,38 +214,28 @@ function utils_altrow ($i)
   return html_get_alt_row_color ($i);
 }
 
-function utils_cutstring ($string, $lenght=35)
+function utils_cutstring ($string, $length=35)
 {
   $string = rtrim($string);
-  if (strlen($string) > $lenght)
+  if (strlen($string) > $length)
     {
-      $string = substr($string, 0, $lenght);
+      $string = substr($string, 0, $length);
       $string = substr($string, 0, strrpos($string, ' '));
       $string .= "...";
     }
   return $string;
 }
 
-# Same as the previous but does not try to cut after a white space
-# (useful to cut a string with one long word, like URL)
-function utils_cutlink ($string, $lenght=35)
+# Same as the previous but is used for links and does not try to cut
+# because it annoys users who can't safely
+# copy/paste a complete paragraph with the links intact (check
+# 105807@sv)
+function utils_cutlink ($string, $length=35)
 {
   $url = $string;
   unset($help);
-  # In printer mode, return as it were, because the link must be intact on
-  # the printout
-  // Disable cutting because it annoys users who can't safely
-  // copy/paste a complete paragraph with the links intact (check
-  // 105807@sv)
-  #if (!sane_all("printer") && strlen($string) > $lenght)
-  #  {
-  #    $string = substr($string, 0, $lenght)."...";
-  #    $help = ' title="'.$url.'"';
-  #  }
-  # return '<a href="'.$url.'"'.$help.'>'.$string.'</a>';
   return '<a href="'.$url.'">'.$string.'</a>';
 }
-
 
 ##
 # Returns a formatted date for a unix timestamp
@@ -276,8 +273,9 @@ function utils_format_date($timestamp, $format="default")
     case 'minimal':
       {
         # To be used where place is really lacking, like in feature boxes.
-        # (Nowhere else, it is too uninformative)
-	# Let's use a non-ambiguous format, such as ISO 8601's YYYY-MM-DD extended calendar format
+        # (Nowhere else, it is too uninformative.)
+	# Let's use a non-ambiguous format, such as ISO 8601's YYYY-MM-DD
+        # extended calendar format.
 	# Previously we used %x, where MM and DD can be swapped
 	# depending on locale, and users reported confusion.
 	return strftime('%Y-%m-%d', $timestamp);
@@ -294,11 +292,10 @@ function utils_format_date($timestamp, $format="default")
   return false;
 }
 
-
 # Convert a date as used in the bug tracking system and other services (YYYY-MM-DD)
-# into a Unix time
-# Returns a list with two values: the unix time and a boolean saying whether the conversion
-# went well (true) or bad (false)
+# into a Unix time.
+# Return a list with two values: the unix time and a boolean saying whether
+# the conversion went well (true) or bad (false)
 function utils_date_to_unixtime ($date)
 {
   $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
@@ -306,7 +303,8 @@ function utils_date_to_unixtime ($date)
     { return array(0,false); }
   list(,$year,$month,$day) = $match;
   $time = mktime(0, 0, 0, $month, $day, $year);
-  dbg("DBG Matching date $date -> year $year, month $month,day $day -> time = $time<br />");
+  dbg("DBG Matching date $date -> year $year, month $month,"
+      ."day $day -> time = $time<br />");
   return array($time,true);
 }
 
@@ -333,61 +331,86 @@ function utils_filesize($filename, $file_size=0)
 
   if ($file_size >= 1048576)
     {
-      $file_size = sprintf(_("%sMB"), round($file_size / 1048576));
+# TRANSLATORS: this expresses file size.
+      $file_size = sprintf(_("%sMiB"), round($file_size / 1048576));
     }
   elseif ($file_size >= 1024)
     {
-      $file_size = sprintf(_("%skB"), round($file_size / 1024));
+# TRANSLATORS: this expresses file size.
+      $file_size = sprintf(_("%sKiB"), round($file_size / 1024));
     }
   else
     {
+# TRANSLATORS: this expresses file size.
       $file_size = sprintf(_("%sB"), round($file_size));
     }
 
   return $file_size;
 }
 
-/**
- * Return human readable sizes
- * This is public domain, original version from:
- * @author      Aidan Lister <aidan@php.net>
- * @version     1.1.0
- * @link        http://aidanlister.com/repos/v/function.size_readable.php
- * @param       int    $size        Size
- * @param       int    $unit        The maximum unit
- * @param       int    $retstring   The return string format
- * @param       int    $si          Whether to use SI prefixes
- */
+# Return human readable sizes
+# This is public domain, original version from:
+# Author:      Aidan Lister <aidan@php.net>
+# Version:     1.1.0
+# Link:        http://aidanlister.com/repos/v/function.size_readable.php
+# Param:       int    $size        Size
+# Param:       int    $unit        The maximum unit
+# Param:       int    $retstring   The return string format
+# Param:       int    $si          Whether to use SI prefixes
 function utils_size_readable($size, $unit = null, $retstring = null, $si = false)
 {
     // Units
     if ($si === true) {
-        $sizes = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+        $sizes = array(
+# TRANSLATORS: this is file size unit (no prefix).
+                      _('B'),
+# TRANSLATORS: this is file size unit (with SI prefix.)
+                      _('kB'),
+# TRANSLATORS: this is file size unit (with SI prefix.)
+                      _('MB'),
+# TRANSLATORS: this is file size unit (with SI prefix.)
+                      _('GB'),
+# TRANSLATORS: this is file size unit (with SI prefix.)
+                      _('TB'),
+# TRANSLATORS: this is file size unit (with SI prefix.)
+                      _('PB'));
         $mod   = 1000;
     } else {
-        $sizes = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+        $sizes = array(
+# TRANSLATORS: this is file size unit (no prefix).
+                      _('B'),
+# TRANSLATORS: this is file size unit (with binary prefix.)
+                      _('KiB'),
+# TRANSLATORS: this is file size unit (with binary prefix.)
+                      _('MiB'),
+# TRANSLATORS: this is file size unit (with binary prefix.)
+                      _('GiB'),
+# TRANSLATORS: this is file size unit (with binary prefix.)
+                      _('TiB'),
+# TRANSLATORS: this is file size unit (with binary prefix.)
+                      _('PiB'));
         $mod   = 1024;
     }
     $ii = count($sizes) - 1;
- 
+
     // Max unit
     $unit = array_search((string) $unit, $sizes);
     if ($unit === null || $unit === false) {
         $unit = $ii;
     }
- 
+
     // Return string
     if ($retstring === null) {
         $retstring = '%01.2f%s';
     }
- 
+
     // Loop
     $i = 0;
     while ($unit != $i && $size >= 1024 && $i < $ii) {
         $size /= $mod;
         $i++;
     }
- 
+
     return sprintf($retstring, $size, $sizes[$i]);
 }
 
@@ -401,10 +424,14 @@ function utils_fileextension($filename)
     }
   if ($ext=='rpm')
     {
+# TRANSLATORS: this is used in contexts like "rpm package for i386 (ix86)"
+# or "source rpm package".
       $long_ext = _("rpm package");
     }
   if ($ext=='deb')
     {
+# TRANSLATORS: this is used in contexts like "debian package for i386 (ix86)"
+# or "source debian package".
       $long_ext = _("debian package");
     }
   if ($ext=='deb' || $ext=='rpm')
@@ -412,42 +439,62 @@ function utils_fileextension($filename)
       $arch_type = substr(basename($filename), strrpos(basename($filename),".") - 3);
       if ($arch_type == "src.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("source %s"), $long_ext);
 	}
       if ($arch_type == "rch.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("arch independent %s"), $long_ext);
 	}
       if ($arch_type == "386.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for i386 (ix86)"), $long_ext);
 	}
       if ($arch_type == "586.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for i586"), $long_ext);
 	}
       if ($arch_type == "686.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for i686"), $long_ext);
 	}
       if ($arch_type == "a64.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for Itanium 64"), $long_ext);
 	}
       if ($arch_type == "arc.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for Sparc"), $long_ext);
 	}
       if ($arch_type == "pha.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for Alpha"), $long_ext);
 	}
       if ($arch_type == "ppc.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for PowerPC"), $long_ext);
 	}
       if ($arch_type == "390.".$ext)
 	{
+# TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
+# package'.
 	  $long_ext = sprintf(_("%s for s390"), $long_ext);
 	}
       $ext = $long_ext;
@@ -483,25 +530,27 @@ function utils_unconvert_htmlspecialchars($string)
 
 function utils_remove_htmlheader($string)
 {
-  $string = eregi_replace('(^.*<html[^>]*>.*<body[^>]*>)|(</body[^>]*>.*</html[^>]*>.*$)', '', $string);
+  $string = eregi_replace(
+    '(^.*<html[^>]*>.*<body[^>]*>)|(</body[^>]*>.*</html[^>]*>.*$)', '',
+    $string);
   return $string;
 }
 
-function utils_result_column_to_array($result, $col=0)
+# Take a result set and turn the optional column into an array.
+function utils_result_column_to_array($result, $col=0, $localize=false)
 {
-  /*
-		Takes a result set and turns the optional column into
-		an array
-  */
   $rows=db_numrows($result);
 
   if ($rows > 0)
     {
       $arr=array();
       for ($i=0; $i<$rows; $i++)
-	{
-	  $arr[$i]=db_result($result,$i,$col);
-	}
+        {
+          $val = db_result($result,$i,$col);
+          if ($localize)
+            $val = gettext ($val);
+          $arr[$i] = $val;
+        }
     }
   else
     {
@@ -510,11 +559,9 @@ function utils_result_column_to_array($result, $col=0)
   return $arr;
 }
 
+# backwards compatibility
 function result_column_to_array($result, $col=0)
 {
-  /*
-		backwards compatibility
-  */
   return utils_result_column_to_array($result, $col);
 }
 
@@ -584,96 +631,18 @@ function utils_line_wrap ($text, $wrap = 78, $break = "\n")
   return implode($break, $result);
 }
 
-function utils_make_links($data='', $deprecated=0)
-{
-#  fb("Using deprecated function utils_make_links(), please post a bug report", 1);
-  # Group_id may be necessary for recipe #nnn links
-  global $group_id;
-
-  if ($group_id)
-    {
-      $comingfrom = "&amp;comingfrom=$group_id";
-    }
-
-  if (empty($data))
-    { return $data; }
-
-  $lines = split("\n",$data);
-  foreach ($lines as $key => $line)
-    {
-      # 1 and 2 could maybe be replaced by a better regexp, as they may in
-      # some very rare case, break content. But we havent found such case.
-      # Feel free to propose better regexp.
-
-      # 1. Don't mess with HTML links already there by escaping
-      # the protocol separator with ":##"
-      $line = eregi_replace("(<a href=\"[a-z]+)://([^<[:space:]]+)://([^<[:space:]]+)</a>", '\1:##\2:##\3</a>', $line);
-      $line = eregi_replace("(<a href=\"[a-z]+)://([^<\"[:space:]]+)\"", '\1:##\2"', $line);
-
-      # 2. Dont mess with links surrounded by < >
-      # (Which are in fact html special chars)
-      $line = str_replace('&gt;', ' ##>', $line);
-      $line = str_replace('&lt;', '<## ', $line);
-
-      # Make usual links: prefix every "www." with "http://"
-      $line = eregi_replace("(^|[[:space:]]+)www\.","\\1http://www.",$line);
-
-      # replace the @ sign with an HTML entity, if it is used within
-      # an url (e.g. for pointers to mailing lists). This way, the
-      # @ sign doesn't get mangled in the e-mail markup code
-      # below. See bug #2689 on http://gna.org/ for reference.
-      $line = eregi_replace("([a-z]+://[^<>[:space:]]+)@", "\\1&#64;", $line);
-
-      # Don't mess with HTML links already there by escaping
-      # the protocol separator with ":##"
-      $line = eregi_replace("(<a href=\"[a-z]+)://([^<[:space:]]+)://([^<[:space:]]+)</a>", '\1:##\2:##\3</a>', $line);
-      $line = eregi_replace("(<a href=\"[a-z]+)://([^<\"[:space:]]+)\"", '\1:##\2"', $line);
-
-      # do a markup for normal links, e.g. http://test.org
-      $line = eregi_replace("([a-z]+://[^<>[:space:]]+[a-z0-9/]+)", '<a href="\1">\1</a>', $line);
-
-      # do a markup for mail links, e.g. info@support.org
-      $line = eregi_replace("([a-z0-9_+-.]+@([a-z0-9_+-]+\.)+[a-z]+)", '<a href="mailto:\1">\1</a>', $line);
-
-      # Revert the escaping of already provided HTML links, done above
-      $line = str_replace(":##", "://", $line);
-      $line = str_replace(' ##>', '&gt;', $line);
-      $line = str_replace('<## ', '&lt;', $line);
-
-
-      # Links between items
-      # FIXME: it should be i18n, but in a clever way, meaning that everytime
-      # a form is submitted with such string, the string get converted in
-      # english so we always get the links found without having a regexp
-      # including every possible language.
-      $line = eregi_replace("(bugs|bug)[ ]?#([0-9]+)", '<a href="'.$GLOBALS['sys_home']."bugs/?func=detailitem&amp;item_id=\\2\" class=\"italic\">bug&nbsp;#\\2</a>", $line);
-      $line = eregi_replace("(support|sr)[ ]?#([0-9]+)", '<a href="'.$GLOBALS['sys_home']."support/?func=detailitem&amp;item_id=\\2\" class=\"italic\">sr&nbsp;#\\2</a>", $line);
-      $line = eregi_replace("task[ ]?#([0-9]+)", '<a href="'.$GLOBALS['sys_home']."task/?func=detailitem&amp;item_id=\\1\" class=\"italic\">task&nbsp;#\\1</a>", $line);
-      $line = eregi_replace("(recipe|rcp)[ ]?#([0-9]+)", '<a href="'.$GLOBALS['sys_home']."cookbook/?func=detailitem$comingfrom&amp;item_id=\\2\" class=\"italic\">recipe&nbsp;#\\2</a>", $line);
-      $line = eregi_replace("patch[ ]?#([0-9]+)", '<a href="'.$GLOBALS['sys_home']."patch/?func=detailitem&amp;item_id=\\1\" class=\"italic\">patch&nbsp;#\\1</a>", $line);
-      # In this case, we make the link pointing to support, it wont matter,
-      # the download page is in every tracker and does not check if the tracker
-      # is actually used
-      $line = eregi_replace("file[ ]?#([0-9]+)", '<a href="'.$GLOBALS['sys_home']."support/download.php?file_id=\\1\" class=\"italic\">file&nbsp;#\\1</a>", $line);
-      $line = eregi_replace("comment[ ]?#([0-9]+)", '<a href="#comment\\1">comment&nbsp;#\\1</a>', $line);
-
-      $lines[$key] = $line;
-    }
-  return join("\n", $lines);
-}
-
 function utils_user_link ($username, $realname=false, $noneisanonymous=false)
 {
   if ($username == 'None' || empty($username))
     {
-      
       # Would be nice to always return _("Anonymous"); but in some cases it is
       # really none (assigned_to).
       if (!$noneisanonymous)
-	{ return $username; }
+# TRANSLATORS: Displayed when no user is selected.
+        return _('None');
       else
-	{ return _("Anonymous"); }
-
+# TRANSLATORS: anonymous user.
+        return _("Anonymous");
     }
   else
     {
@@ -730,23 +699,24 @@ function show_priority_colors_key()
 
   for ($i=1; $i<10; $i++)
     {
-      print '<span class="'.utils_get_priority_color($i).'">&nbsp;'.$i.'&nbsp;</span>'."\n";
+      print '<span class="'.utils_get_priority_color($i).'">&nbsp;'.$i
+            .'&nbsp;</span>'."\n";
     }
 
-  print '<br />';
+  print "<br />\n";
   print _("Closed Items Priority Colors:")."<br />&nbsp;&nbsp;&nbsp;\n";
 
   for ($i=11; $i<20; $i++)
     {
-      print '<span class="'.utils_get_priority_color($i).'">&nbsp;'.($i-10).'&nbsp;</span>'."\n";
+      print '<span class="'.utils_get_priority_color($i).'">&nbsp;'.($i-10)
+            .'&nbsp;</span>'."\n";
     }
 
-  print  "</p>";
+  print  "</p>\n";
 }
 
 function get_priority_color ($index, $closed="")
 { return utils_get_priority_color($index, $closed); }
-
 
 function utils_get_tracker_icon ($tracker)
 {
@@ -769,8 +739,6 @@ function utils_get_tracker_prefix ($tracker)
     { return "recipe"; }
   return $tracker;
 }
-
-
 
 ##
 # Returns the translation for the given tracker, if available.
@@ -801,8 +769,6 @@ function utils_get_tracker_name($tracker)
   return $name;
 }
 
-
-
 function utils_get_priority_color ($index, $closed="")
 {
   global $bgpri;
@@ -813,193 +779,15 @@ function utils_get_priority_color ($index, $closed="")
   return $bgpri[$index];
 }
 
-function build_priority_select_box ($name="priority", $checked_val="5")
-{
-  /*
-		Return a select box of standard priorities.
-		The name of this select box is optional and so is the default checked value
-  */
-
-  print "<select name=\"$name\">\n";
-  print '<option value="1"'.($checked_val=="1" ?" selected":"").'>1 - '._("Lowest").'</option>';
-  print '<option value="2"'.($checked_val=="2" ?" selected":"").'>2</option>';
-  print '<option value="3"'.($checked_val=="3" ?" selected":"").'>3</option>';
-  print '<option value="4"'.($checked_val=="4" ?" selected":"").'>4</option>';
-  print '<option value="5"'.($checked_val=="5" ?" selected":"").'>5 - '._("Medium").'</option>';
-  print '<option value="6"'.($checked_val=="6" ?" selected":"").'>6</option>';
-  print '<option value="7"'.($checked_val=="7" ?" selected":"").'>7</option>';
-  print '<option value="8"'.($checked_val=="8" ?" selected":"").'>8</option>';
-  print '<option value="9"'.($checked_val=="9" ?" selected":"").'>9 - '._("Highest").'</option>';
-  print '</select>';
-
-
-}
-
-# deprecated name
-function GraphResult($result,$title)
-{
-  utils_graph_result($result, $title);
-}
-
-# DEPRECATED:
-function utils_graph_result ($result,$title)
-{
-
-  /*
-	GraphResult by Tim Perdue, PHPBuilder.com
-
-	Takes a database result set.
-	The first column should be the name,
-	and the second column should be the values
-
-	####
-	####   Be sure to include (HTML_Graphs.php) before hitting these graphing functions
-	####
-  */
-
-  /*
-		db_ should be replaced with your database, aka mysql_ or pg_
-  */
-  $rows=db_numrows($result);
-
-  if ((!$result) || ($rows < 1))
-    {
-      print 'None Found.';
-    }
-  else
-    {
-      $names=array();
-      $values=array();
-
-      for ($j=0; $j<db_numrows($result); $j++)
-	{
-	  if (db_result($result, $j, 0) != '' && db_result($result, $j, 1) != '' )
-	    {
-	      $names[$j]= db_result($result, $j, 0);
-	      $values[$j]= db_result($result, $j, 1);
-	    }
-	}
-
-      /*
-		This is another function detailed below
-      */
-      GraphIt($names,$values,$title);
-    }
-}
-
-
-# DEPRECATED: deprecated name
-function GraphIt ($name_string,$value_string,$title)
-{
-  utils_graph_it($name_string,$value_string,$title);
-}
-
-
-# DEPRECATED:
-function utils_graph_it ($name_string,$value_string,$title)
-{
-
-  /*
-		GraphIt by Tim Perdue, PHPBuilder.com
-  */
-  $counter=count($name_string);
-
-  /*
-		Can choose any color you wish
-  */
-  $bars=array();
-
-  for ($i = 0; $i < $counter; $i++)
-    {
-      $bars[$i]=$GLOBALS['COLOR_LTBACK1'];
-    }
-
-  $counter=count($value_string);
-
-  /*
-		Figure the max_value passed in, so scale can be determined
-  */
-
-  $max_value=0;
-
-  for ($i = 0; $i < $counter; $i++)
-    {
-      if ($value_string[$i] > $max_value)
-	{
-	  $max_value=$value_string[$i];
-	}
-    }
-
-  if ($max_value < 1)
-    {
-      $max_value=1;
-    }
-
-  /*
-		I want my graphs all to be 800 pixels wide, so that is my divisor
-  */
-
-  $scale=(400/$max_value);
-
-  /*
-		I create a wrapper table around the graph that holds the title
-  */
-
-  $title_arr=array();
-  $title_arr[]=$title;
-
-  print html_build_list_table_top ($title_arr);
-  print '<TR><TD>';
-  /*
-		Create an associate array to pass in. I leave most of it blank
-  */
-
-  $vals =  array(
-		 'vlabel'=>'',
-		 'hlabel'=>'',
-		 'type'=>'',
-		 'cellpadding'=>'',
-		 'cellspacing'=>'0',
-		 'border'=>'',
-		 'width'=>'',
-		 'background'=>'',
-		 'vfcolor'=>'',
-		 'hfcolor'=>'',
-		 'vbgcolor'=>'',
-		 'hbgcolor'=>'',
-		 'vfstyle'=>'',
-		 'hfstyle'=>'',
-		 'noshowvals'=>'',
-		 'scale'=>$scale,
-		 'namebgcolor'=>'',
-		 'valuebgcolor'=>'',
-		 'namefcolor'=>'',
-		 'valuefcolor'=>'',
-		 'namefstyle'=>'',
-		 'valuefstyle'=>'',
-		 'doublefcolor'=>'');
-
-  /*
-		This is the actual call to the HTML_Graphs class
-  */
-
-  html_graph($name_string,$value_string,$bars,$vals);
-
-  print '
-		</TD></TR></TABLE>
-		<!-- end outer graph table -->';
-}
-
-
-
+# Very simple, plain way to show a generic result set.
+# Accepts a result set and title.
+# Makes certain items into HTML links.
 function utils_show_result_set ($result,$title="Untitled",$linkify=false)
 {
   global $group_id,$HTML;
-  /*
-		Very simple, plain way to show a generic result set
-		Accepts a result set and title
-		Makes certain items into HTML links
-  */
+
+  if ($title == "Untitled")
+    $title = _("Untitled");
 
   if  ($result)  {
     $rows  =  db_numrows($result);
@@ -1023,39 +811,45 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false)
 	print '<tr class="'. html_get_alt_row_color($j) .'">';
 	for ($i = 0; $i < $cols; $i++)
 	  {
+            $link = $linkend = '';
 	    if ($linkify && $i == 0)
 	      {
 		$link = '<a href="'.$_SERVER['PHP_SELF'].'?';
 		$linkend = '</a>';
-		if ($linkify == "bug_cat")
-		  {
-		    $link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='.db_result($result, $j, 'bug_category_id').'">';
-		  } else if($linkify == "bug_group")
-		    {
-		      $link .= 'group_id='.$group_id.'&bug_group_mod=y&bug_group_id='.db_result($result, $j, 'bug_group_id').'">';
-		    } else if($linkify == "patch_cat")
-		      {
-			$link .= 'group_id='.$group_id.'&patch_cat_mod=y&patch_cat_id='.db_result($result, $j, 'patch_category_id').'">';
-		      } else if($linkify == "support_cat")
-			{
-			  $link .= 'group_id='.$group_id.'&support_cat_mod=y&support_cat_id='.db_result($result, $j, 'support_category_id').'">';
-			} else if($linkify == "pm_project")
-			  {
-			    $link .= 'group_id='.$group_id.'&project_cat_mod=y&project_cat_id='.db_result($result, $j, 'group_project_id').'">';
-			  }
-		else
-		  {
-		    $link = $linkend = '';
-		  }
+		switch ($linkify)
+                  {
+                    case "bug_cat":
+                      $link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='
+                               .db_result($result, $j, 'bug_category_id').'">';
+                      break;
+                    case "bug_group":
+                      $link .= 'group_id='.$group_id
+                               .'&bug_group_mod=y&bug_group_id='
+                               .db_result($result, $j, 'bug_group_id').'">';
+                      break;
+                    case "patch_cat":
+                      $link .= 'group_id='.$group_id
+                               .'&patch_cat_mod=y&patch_cat_id='
+                               .db_result($result, $j, 'patch_category_id').'">';
+                      break;
+                    case "support_cat":
+                      $link .= 'group_id='.$group_id
+                               .'&support_cat_mod=y&support_cat_id='
+                               .db_result($result, $j, 'support_category_id').'">';
+                      break;
+                    case "pm_project":
+                      $link .= 'group_id='.$group_id
+                               .'&project_cat_mod=y&project_cat_id='
+                               .db_result($result, $j, 'group_project_id').'">';
+                      break;
+		    default:
+                      $link = $linkend = '';
+                 }
 	      }
-	    else
-	      {
-		$link = $linkend = '';
-	      }
-	    print '<td>'.$link . db_result($result,  $j,  $i) . $linkend.'</td>';
-
+	    print '<td>'.$link . db_result($result,  $j,  $i) . $linkend
+                  ."</td>\n";
 	  }
-	print '</tr>';
+	print "</tr>\n";
       }
     print "</table>\n";
   }
@@ -1103,7 +897,9 @@ function utils_split_emails($addresses)
 function validate_email ($address)
 {
   # FIXME: this allows in domain names some characters that are not allowed
-  return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'. '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.' . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
+  return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'
+               . '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.'
+               . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
 }
 
 # Verification of comma separated list of email addresses
@@ -1121,20 +917,10 @@ function validate_emails ($addresses)
 function utils_is_valid_filename ($file)
 {
   if (ereg("[]~`! ~@#\"$%^,&*();=|[{}<>?/]",$file))
-    {
-      return false;
-    }
-  else
-    {
-      if (strstr($file,'..'))
-	{
-	  return false;
-	}
-      else
-	{
-	  return true;
-	}
-    }
+    return false;
+  if (strstr($file,'..'))
+    return false;
+  return true;
 }
 
 # add debugging information
@@ -1149,7 +935,8 @@ function util_debug ($msg)
 	  $location = $backtrace[1]['function'];
 	}
       else {
-	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '', $backtrace[0]['file']);
+	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '',
+                                     $backtrace[0]['file']);
 	$location = "$relative_path:{$backtrace[0]['line']}";
       }
       $GLOBALS['debug'] .= "(" . $location . ") $msg<br />";
@@ -1168,22 +955,23 @@ function dbg ($msg)
 	  $location = $backtrace[1]['function'];
 	}
       else {
-	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '', $backtrace[0]['file']);
+	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '',
+                                     $backtrace[0]['file']);
 	$location = "$relative_path:{$backtrace[0]['line']}";
       }
       $GLOBALS['debug'] .= "(" . $location . ") $msg<br />";
     }
 }
 
-# temporary debug
-# use it instead of 'echo' so you can easily spot and remove them later after debugging is done
+# Temporary debug.
+# Use it instead of 'echo' so you can easily spot and remove them later after
+# debugging is done.
 function temp_dbg($msg) {
   print '<pre>';
   debug_print_backtrace();
   var_dump($msg);
   print '</pre>';
 }
-
 
 # die with debug information
 function util_die($msg) {
@@ -1200,7 +988,6 @@ function util_die($msg) {
       die($msg);
     }
 }
-
 
 /**
  * Modified to print any given backtrace.
@@ -1227,11 +1014,11 @@ function utils_debug_print_mybacktrace($backtrace=null)
       // Unset call to debug_print_backtrace
       array_shift($backtrace);
     }
-  
+
   if (empty($backtrace)) {
     return '';
   }
-  
+
   // Iterate backtrace
   $calls = array();
   foreach ($backtrace as $i => $call) {
@@ -1243,9 +1030,10 @@ function utils_debug_print_mybacktrace($backtrace=null)
     }
     $location = $call['file'] . ':' . $call['line'];
     $function = (isset($call['class'])) ?
-      $call['class'] . (isset($call['type']) ? $call['type'] : '.') . $call['function'] :
+      $call['class'] . (isset($call['type']) ? $call['type'] : '.')
+        . $call['function'] :
       $call['function'];
-    
+
     $params = '';
     if (isset($call['args'])) {
       $args = array();
@@ -1260,18 +1048,16 @@ function utils_debug_print_mybacktrace($backtrace=null)
             }
             $params = implode(', ', $args);
     }
-    
+
     $calls[] = sprintf('#%d  %s(%s) called at [%s]',
 		       $i,
 		       $function,
 		       $params,
 		       $location);
   }
-  
+
   echo implode("\n", $calls), "\n";
 }
-
-
 
 # alias
 function util_feedback ($msg, $error=0)
@@ -1322,7 +1108,6 @@ function fb_dbsuccess()
   fb(_("Database successfully updated"));
 }
 
-
 # alias
 function utils_help ($text, $explanation_array, $noarray=0)
 {
@@ -1340,15 +1125,14 @@ function help ($text, $explanation_array, $noarray=0)
       while (list($word,$explanation) = each($explanation_array))
 	{
 	  $text = str_replace($word,
-			      '<span class="help" title="'.$explanation.'">'.$word.'</span>',
+			      '<span class="help" title="'.$explanation.'">'
+                              .$word.'</span>',
 			      $text);
 	}
       return $text;
     }
 
-
   return '<span class="help" title="'.$explanation_array.'">'.$text.'</span>';
-
 }
 
 # Analyse if we do need MSIE dirtyhacks
@@ -1363,7 +1147,7 @@ function utils_is_broken_msie ()
     {
       return $GLOBALS['are_we_using_broken_msie'];
     }
-  
+
   # Otherwise, find out, assuming that by default we dont use broken MSIE
   $is_broken = false;
 
@@ -1372,7 +1156,7 @@ function utils_is_broken_msie ()
     {
       $msie = strpos($_SERVER['HTTP_USER_AGENT'], "MSIE");
       if ($msie !== false)
-	{ 
+	{
 	  // Avoid MSIE > 6: look for the first integer after the MSIE
 	  // string, in the next characters
 	  $msie = substr($_SERVER['HTTP_USER_AGENT'], $msie, 10);
@@ -1380,10 +1164,10 @@ function utils_is_broken_msie ()
 	  if ($msie_version[1] < 7)
 	    {
 	      $is_broken = true;
-	    }     
+	    }
 	}
     }
-  
+
   # Save for later
   $GLOBALS['are_we_using_broken_msie'] = $is_broken;
 
@@ -1391,8 +1175,9 @@ function utils_is_broken_msie ()
   return $is_broken;
 }
 
-# alias 
+# alias
 function is_broken_msie()
 {
   return utils_is_broken_msie();
 }
+?>

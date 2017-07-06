@@ -1,21 +1,22 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-#  Copyright 2005-2006 (c) Tobias Toedter <t.toedter--gmx.net>
-#                          Mathieu Roy <yeupou--gnu.org>
-# 
+# Markup functions.
+#
+# Copyright (C) 2005-2006 Tobias Toedter <t.toedter--gmx.net>
+# Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
+#
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -25,9 +26,8 @@
 ##    markup_full() for full formatting, including headers
 
 
-
 ## Will tell the user what is the level of markup available in a uniformized
-# way. 
+# way.
 # Takes as argument the level, being full / rich / basic / none
 # To avoid making page looking strange, we will put that only on textarea
 # where it is supposed to be the most useful
@@ -41,29 +41,30 @@ function markup_info($level, $additionnal_string=false)
   elseif ($level == 'rich')
     {
       $string = _("Rich Markup");
-      $text = _("Rich and basic text tags are available in this input field.");      
+      $text = _("Rich and basic text tags are available in this input field.");
     }
-  elseif ($level == 'full') 
+  elseif ($level == 'full')
     {
       $string = _("Full Markup");
-      $text = _("Every tags are available in this input field.");      
+      $text = _("Every tags are available in this input field.");
     }
   elseif ($level == 'none')
     {
       $string = _("No Markup");
-      $text = _("No tags are available in this input field.");    
+      $text = _("No tags are available in this input field.");
     }
 
   if ($level != 'none')
     {
-      $text .= " "._("Check the Markup Reminder in Related Recipes for a description of these tags.");
+      $text .= " "
+._("Check the Markup Reminder in Related Recipes for a description of these tags.");
     }
 
-  return '<span class="smaller">('.utils_help('<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/edit.png" border="0" class="icon" alt="'.$string.'" />'.$string, 
-		    $text,
-		    true).$additionnal_string.')</span>';
+  return '<span class="smaller">('.utils_help('<img src="'.$GLOBALS['sys_home']
+         .'images/'.SV_THEME
+         .'.theme/misc/edit.png" border="0" class="icon" alt="'
+         .'" />'.$string, $text, true).$additionnal_string.')</span>';
 }
-
 
 ##
 # Converts special markup characters in the input text to real HTML
@@ -88,8 +89,6 @@ function markup_basic($text)
   return join("\n", $result);
 }
 
-
-
 ##
 # Converts special markup characters in the input text to real HTML
 #
@@ -104,8 +103,6 @@ function markup_rich($text)
 {
   return markup_full($text, false);
 }
-
-
 
 ##
 # Converts special markup characters in the input text to real HTML
@@ -137,12 +134,12 @@ function markup_full($text, $allow_headings=true)
       # We also need to bufferize the verbatim content, as we want to now
       # its exact number of lines
       #
-      # yeupou, 2006-10-31: we need a verbatim count, because actually 
+      # yeupou, 2006-10-31: we need a verbatim count, because actually
       # we may want to put at least one verbatim block into another, for
       # instance in the recipe that explain the verbatim tag
       if (preg_match('/([+]verbatim[+])/', $line) and !$verbatim)
         {
-          $verbatim = 1;  
+          $verbatim = 1;
 	  $verbatim_buffer = '';
 	  $verbatim_buffer_linecount = 0;
 
@@ -152,13 +149,13 @@ function markup_full($text, $allow_headings=true)
 	    { array_unshift($context_stack, '</textarea>'); }
 	  else
 	    { array_unshift($context_stack, '</pre>'); }
-	  
+
 	  # Jump to the next line, assuming that we can ignore the rest of the
 	  # line
 	  continue;
         }
 
-      # Increment the verbatim count if we find a verbatim closing in a 
+      # Increment the verbatim count if we find a verbatim closing in a
       # verbatim environment
       if (preg_match('/([+]verbatim[+])/', $line) and $verbatim)
         { $verbatim++; }
@@ -180,11 +177,15 @@ function markup_full($text, $allow_headings=true)
 	      # Use a text input if it is not multiline
 	      if ($verbatim_buffer_linecount < 2)
 		{
-		  $result[] = '<input type="text" class="verbatim" readonly="readonly" size="60" value="'.$verbatim_buffer.'" />';
+		  $result[] = '<input type="text" class="verbatim"'
+                              .' readonly="readonly" size="60" value="'
+                              .$verbatim_buffer.'" />';
 		}
 	      else
-		{		  
-		  $result[] = '<textarea class="verbatim" readonly="readonly" rows="'.$verbatim_buffer_linecount.'" cols="80">'.$verbatim_buffer.'</textarea>';
+		{
+		  $result[] = '<textarea class="verbatim" readonly="readonly" rows="'
+                              .$verbatim_buffer_linecount.'" cols="80">'
+                              .$verbatim_buffer.'</textarea>';
 		}
 	    }
 	  else
@@ -193,13 +194,13 @@ function markup_full($text, $allow_headings=true)
 	    }
 	  $verbatim_buffer = '';
 	  $verbatim_buffer_linecount = 0;
-	  
+
 	  # Jump to the next line, assuming that we can ignore the rest of the
 	  # line
 	  continue;
         }
 
-      # Decrement the verbatim count if we find a verbatim closing in a 
+      # Decrement the verbatim count if we find a verbatim closing in a
       # verbatim environment
       if (preg_match('/([-]verbatim[-])/', $line) and $verbatim > 1)
 	  { $verbatim--; }
@@ -220,9 +221,9 @@ function markup_full($text, $allow_headings=true)
       else
         {
 	  # Otherwise, normal run, do the markup
-          $result[] = _full_markup($line, $allow_headings, $context_stack, $quoted_text);	  
+          $result[] = _full_markup($line, $allow_headings, $context_stack,
+                                   $quoted_text);
 	}
-
     }
 
   # make sure that all previously used contexts get their
@@ -307,7 +308,7 @@ function markup_textoutput ($text)
   foreach ($lines as $line)
     {
       # Handle named hyperlink.
-      $line = 
+      $line =
 	preg_replace(
               # find the opening brace '['
 		     '/\['
@@ -321,12 +322,12 @@ function markup_textoutput ($text)
               # followed by any character (non-greedy) and the
               # next closing brace ']'
 		     .'(.+?)\]/', '$3 <$1>', $line);
-      
+
       # Remove savane-specific tags
       $line = preg_replace('/\+('.$savane_tags.')\+/', '', $line);
       $line = preg_replace('/\-('.$savane_tags.')\-/', '', $line);
       $result[] = $line;
-      
+
     }
 
   return join("\n", $result);
@@ -450,7 +451,6 @@ function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
 }
 
 
-
 ##
 # Internal function for recognizing and formatting headings
 #
@@ -491,7 +491,6 @@ function _markup_headings($line, &$context_stack, &$start_paragraph)
     }
   return $line;
 }
-
 
 
 ##
@@ -630,7 +629,7 @@ function _markup_inline($line)
   # Prepare usual links: prefix "www." with "http://"
   # if it is preceded by [ or whitespace or at the beginning of line.
   # (don't want to prefix in cases like "//www.." or "ngwww...")
-  $line = preg_replace('/(^|\s|\[)(www\.)/i', '$1http://$2', $line); 
+  $line = preg_replace('/(^|\s|\[)(www\.)/i', '$1http://$2', $line);
 
   # replace the @ sign with an HTML entity, if it is used within
   # an url (e.g. for pointers to mailing lists). This way, the
@@ -642,7 +641,8 @@ function _markup_inline($line)
   # surrounding them with braces []
   # (& = begin of html entities, it means a end of string unless
   # it is &amp; which itself is the entity for &)
-  $line = preg_replace('/(^|\s|[^\[])(('.$protocols.'):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
+  $line = preg_replace('/(^|\s|[^\[])(('.$protocols
+                       .'):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
     '$1[$2]', $line);
 
   # do a markup for mail links, e.g. info@support.org
@@ -699,10 +699,10 @@ function _markup_inline($line)
     # followed by any character (non-greedy) and the
     # next closing brace ']'
     .'(.+?)\]/', '<a href="$1">$3</a>', $line);
- 
+
   # Add support for unnamed hyperlinks, e.g.
-  # [http://gna.org/] -> <a href="http://gna.org/">http://gna.org/</a> 
-  # We make sure the lenght of the string is not too long, otherwise we cut
+  # [http://gna.org/] -> <a href="http://gna.org/">http://gna.org/</a>
+  # We make sure the string is not too long, otherwise we cut
   # it.
   # (Supposedly, preg_replace_callback is faster than preg_replace //e but
   # it seems less reliable)
@@ -747,3 +747,4 @@ function _markup_inline($line)
 
   return $line;
 }
+?>

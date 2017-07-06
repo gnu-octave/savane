@@ -1,21 +1,22 @@
 <?php /*-*-PHP-*-*/
 # Quick HTML_QuickForm clone without the GPL-incompatible license
-# 
+#
 # Copyright (C) 2007  Cliss XXI
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -151,14 +152,15 @@ class GPLQuickForm_Element
 	    if ($this->frozen)
 	      {
 		print $value['d'];
-		print "<input type='hidden' name='{$this->name}[d]' value='{$value['d']}' />";
-		print " ";
+		print "<input type='hidden' name='{$this->name}[d]' "
+                      ."value='{$value['d']}' /> ";
 		$month = mktime(0, 0, 0, $value['M'], 1, 2001);
 		print strftime('%b', $month);
-		print "<input type='hidden' name='{$this->name}[M]' value='{$value['M']}' />";
-		print " ";
+		print "<input type='hidden' name='{$this->name}[M]' "
+                      ."value='{$value['M']}' /> ";
 		print $value['Y'];
-		print "<input type='hidden' name='{$this->name}[Y]' value='{$value['Y']}' />";
+		print "<input type='hidden' name='{$this->name}[Y]' "
+                      ."value='{$value['Y']}' />\n";
 	      }
 	    else
 	      {
@@ -171,9 +173,9 @@ class GPLQuickForm_Element
 		    $selected = '';
 		    if ($i == $value['d'])
 		      $selected = 'selected="selected"';
-		    print "<option value='$i' $selected>$label</option>";
+		    print "<option value='$i' $selected>$label</option>\n";
 		  }
-		print "</select>";
+		print "</select>\n";
 		print "<select name='{$this->name}[M]'>";
 		for ($i = 1; $i <= 12; $i++)
 		  {
@@ -181,18 +183,19 @@ class GPLQuickForm_Element
 		    $selected = '';
 		    if ($i == $value['M'])
 		      $selected = 'selected="selected"';
-		    print "<option value='$i' $selected>".strftime('%b', $month)."</option>";
+		    print "<option value='$i' $selected>"
+                          .strftime('%b', $month)."</option>\n";
 		  }
-		print "</select>";
+		print "</select>\n";
 		print "<select name='{$this->name}[Y]'>";
 		for ($i = 2001; $i <= intval(date('Y')) + 3; $i++)
 		  {
 		    $selected = '';
 		    if ($i == $value['Y'])
 		      $selected = 'selected="selected"';
-		    print "<option value='$i' $selected>$i</option>";
+		    print "<option value='$i' $selected>$i</option>\n";
 		  }
-		print "</select>";
+		print "</select>\n";
 	      }
 	    break;
 
@@ -200,18 +203,21 @@ class GPLQuickForm_Element
 	    if ($this->frozen)
 	      print "*****";
 	    else
-	      print "<input type='password' name='{$this->name}' value='" . htmlspecialchars($value, ENT_QUOTES) . "' />";
+	      print "<input type='password' name='{$this->name}' value='"
+                    . htmlspecialchars($value, ENT_QUOTES) . "' />\n";
 	    break;
 
 	  case 'text':
 	    if ($this->frozen)
 	      {
 		print "$value";
-		print "<input type='hidden' name='{$this->name}' value='" . htmlspecialchars($value, ENT_QUOTES) . "' />";
+		print "<input type='hidden' name='{$this->name}' value='"
+                      . htmlspecialchars($value, ENT_QUOTES) . "' />\n";
 	      }
 	    else
 	      {
-		print "<input type='text' name='{$this->name}' value='" . htmlspecialchars($value, ENT_QUOTES) . "' />";
+		print "<input type='text' name='{$this->name}' value='"
+                      . htmlspecialchars($value, ENT_QUOTES) . "' />\n";
 	      }
 	    break;
 
@@ -221,7 +227,8 @@ class GPLQuickForm_Element
 		if ($value != NULL)
 		  {
 		    print $this->select_options[$value];
-		    print "<input type='hidden' name='{$this->name}' value='$value' />";
+		    print "<input type='hidden' name='{$this->name}'"
+                          ." value='$value' />\n";
 		  }
 	      }
 	    else
@@ -232,9 +239,9 @@ class GPLQuickForm_Element
 		    $selected = '';
 		    if ($id == $value)
 		      $selected = "selected='selected'";
-		    print "<option value='$id' $selected>$text</option>";
+		    print "<option value='$id' $selected>$text</option>\n";
 		  }
-		print "</select>";
+		print "</select>\n";
 	      }
 	    break;
 
@@ -242,9 +249,10 @@ class GPLQuickForm_Element
 	    $readonly = "";
 	    if ($this->frozen)
 	      $readonly = "readonly='readonly'";
-	    print "<textarea name='{$this->name}' wrap='virtual' cols='60' rows='10' $readonly>"
+	    print "<textarea name='{$this->name}' wrap='virtual' "
+              . "cols='60' rows='10' $readonly>"
 	      . htmlspecialchars($value, ENT_QUOTES)
-	      . "</textarea>";
+	      . "</textarea>\n";
 	    break;
 
 	  case 'checkbox':
@@ -256,11 +264,13 @@ class GPLQuickForm_Element
 	    $disabled = "";
 	    if ($this->frozen)
 	      $disabled = 'disabled="disabled"';
-	    print "<input type='checkbox' name='{$this->name}' value='$value' $checked $disabled />";
+	    print "<input type='checkbox' name='{$this->name}' "
+                  . "value='$value' $checked $disabled />\n";
 	    break;
 	  }
-	print '</td>';
-	print '</tr>';
+	print '</td>
+</tr>
+';
       }
   }
 }
@@ -272,7 +282,8 @@ class GPLQuickForm
   private $method = '';
   private $in = array();
 
-  private $requiredNote = '<span style="font-size: smaller"><span style="color: red">*</span> required field</span>';
+  private $requiredNote = 
+   '<span style="font-size: smaller"><span style="color: red">*</span> required field</span>';
   private $jsWarnings_pref = 'The form is not valid';
   private $jsWarnings_post = '';
   private $elements = array();
@@ -282,7 +293,9 @@ class GPLQuickForm
   {
     $this->name = $name;
     $this->method = $method;
-    
+    $this->requiredNote = '<span style="font-size: smaller">'
+           .'<span style="color: red">*</span> '._('required field').'</span>';
+
     switch ($method)
       {
       case "get":
@@ -294,7 +307,7 @@ class GPLQuickForm
 	break;
       }
   }
-  
+
   public function setRequiredNote($html_text)
   {
     $this->requiredNote = $html_text;
@@ -361,7 +374,7 @@ class GPLQuickForm
 
   public function freeze($elts_to_freeze=null)
   {
-    
+
     if ($elts_to_freeze == NULL)
       $elts_to_freeze = array_keys($this->elements);
     else if (!is_array($elts_to_freeze))
@@ -384,8 +397,8 @@ class GPLQuickForm
       }
   }
 
-  // string $element, string $message, string $type, [string $format = null], [string $validation = 'server'], [boolean $reset = false], [boolean $force = false]
-  public function addRule($name, $error_message, $type, $type_param=null, $side='server')
+  public function addRule($name, $error_message, $type, $type_param=null,
+                          $side='server')
   {
     $this->rules[] = array($name, $error_message, $type, $type_param, $side);
   }
@@ -393,11 +406,11 @@ class GPLQuickForm
   {
     $elt_is_valid = array();
     $form_is_valid = true;
-    
+
     if (empty($this->in))
       // form not submitted yet
       return false;
-    
+
     foreach($this->rules as $rule)
       {
 	list ($name, $error_message, $type, $type_param, $side) = $rule;
@@ -471,8 +484,8 @@ class GPLQuickForm
 
   public function display()
   {
-    print "<form id='$this->name' action='{$_SERVER['PHP_SELF']}' method='$this->method'>";
-    print "
+    print "<form id='$this->name' action='{$_SERVER['PHP_SELF']}'"
+          ." method='$this->method'>
 <style type='text/css'><!--
 #$this->name .label {
   text-align: right;
@@ -487,13 +500,14 @@ class GPLQuickForm
 // -->
 </style>
 ";
-    print '<table>';
+    print '<table>
+';
     foreach ($this->elements as $element)
       $element->display();
     $there_is_a_required_field = 1;
     if ($there_is_a_required_field)
-      print "<tr><td /><td class='element'>$this->requiredNote</td></tr>";
-    print '</table>';
-    print "</form>";
+      print "<tr><td /><td class='element'>$this->requiredNote</td></tr>\n";
+    print "</table>\n</form>\n";
   }
 }
+?>

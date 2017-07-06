@@ -1,25 +1,25 @@
 <?php
 # Common, reuseable HTML code
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Paul Pogonyshev <pogonyshev--gmx.net>
+#
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2002-2006 Pogonyshev <pogonyshev--gmx.net>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2013 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2013, 2017 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -34,18 +34,22 @@ require_once(dirname(__FILE__).'/form.php');
 # too much
 function html_show_displayoptions ($content, $form_opening=0, $submit=0)
 {
-  return html_show_boxoptions(_("Display Criteria"), $content, $form_opening, $submit);
+  return html_show_boxoptions(_("Display Criteria"), $content, $form_opening,
+                              $submit);
 }
 
 function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 {
 
-  $script_hide = <<<EOF
-document.getElementById('boxoptionscontent').style.display='none';   document.getElementById('boxoptionslinkhide').style.display='none';   document.getElementById('boxoptionslinkshow').style.display='inline';
-EOF;
-  $script_show = <<<EOF
-document.getElementById('boxoptionscontent').style.display='inline'; document.getElementById('boxoptionslinkhide').style.display='inline'; document.getElementById('boxoptionslinkshow').style.display='none';
-EOF;
+  $script_hide =
+"document.getElementById('boxoptionscontent').style.display='none'; "
+."document.getElementById('boxoptionslinkhide').style.display='none'; "
+."document.getElementById('boxoptionslinkshow').style.display='inline';";
+
+  $script_show =
+"document.getElementById('boxoptionscontent').style.display='inline'; "
+."document.getElementById('boxoptionslinkhide').style.display='inline'; "
+."document.getElementById('boxoptionslinkshow').style.display='none';";
 
   $ret = '
 <fieldset class="boxoptions">
@@ -57,20 +61,32 @@ EOF;
   # in quite an ugly thing when the font scale change.
   $ret .= '
   <script type="text/javascript">';
-  
+
   extract(sane_import('request', array('boxoptionwanted')));
 
   if ($boxoptionwanted != 1)
     {
       $ret .= '
-    document.write(\'<span onclick="'.addslashes($script_hide).'" id="boxoptionslinkhide" style="display: none"><span class="minusorplus">(-)</span>'.htmlspecialchars($legend, ENT_QUOTES).'</span>\');
-    document.write(\'<span onclick="'.addslashes($script_show).'" id="boxoptionslinkshow" style="display: inline"><span class="minusorplus">(+)</span>'.htmlspecialchars($legend, ENT_QUOTES).'</span>\');';
+    document.write(\'<span onclick="'.addslashes($script_hide)
+    .'" id="boxoptionslinkhide" style="display: none">'
+    .'<span class="minusorplus">(-)</span>'
+    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');
+    document.write(\'<span onclick="'.addslashes($script_show)
+    .'" id="boxoptionslinkshow" style="display: inline">'
+    .'<span class="minusorplus">(+)</span>'
+    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');';
     }
   else
     {
       $ret .= '
-    document.write(\'<span onclick="'.addslashes($script_hide).'" id="boxoptionslinkhide" style="display: inline"><span class="minusorplus">(-)</span>'.htmlspecialchars($legend, ENT_QUOTES).'</span>\');
-    document.write(\'<span onclick="'.addslashes($script_show).'" id="boxoptionslinkshow" style="display: none"><span class="minusorplus">(+)</span>'.htmlspecialchars($legend, ENT_QUOTES).'</span>\');';
+    document.write(\'<span onclick="'.addslashes($script_hide)
+    .'" id="boxoptionslinkhide" style="display: inline">'
+    .'<span class="minusorplus">(-)</span>'
+    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');
+    document.write(\'<span onclick="'.addslashes($script_show)
+    .'" id="boxoptionslinkshow" style="display: none">'
+    .'<span class="minusorplus">(+)</span>'
+    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');';
 
     }
   $ret .= '
@@ -124,9 +140,9 @@ EOF;
   return $ret;
 }
 
-# Function to create a an area in the page that can be hidden or shown 
+# Function to create a an area in the page that can be hidden or shown
 # in one click with a javascript
-# Per policy, this must work with a browser that does not support at all 
+# Per policy, this must work with a browser that does not support at all
 # javascript
 # This is useful on item pages because we have some info that is not
 # essential to be shown (like CC list etc), but still very nice be able to
@@ -137,54 +153,65 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
 
   # Try to find a deployed value that match the unique id
   # If found, override the deployed setting (the deployed setting should be
-  # used to set a default behavior, but if in the case we explicitely 
+  # used to set a default behavior, but if in the case we explicitely
   # use an array to determine what is deployed, this matters more)
-  if (is_array($is_deployed) && 
+  if (is_array($is_deployed) &&
       array_key_exists($uniqueid, $is_deployed))
     {
       $deployed = $is_deployed[$uniqueid];
     }
 
-  $script_hide = <<<EOF
-document.getElementById('hidsubpartcontent$uniqueid').style.display='none';   document.getElementById('hidsubpartlinkhide$uniqueid').style.display='none';   document.getElementById('hidsubpartlinkshow$uniqueid').style.display='block';
-EOF;
-  $script_show = <<<EOF
-document.getElementById('hidsubpartcontent$uniqueid').style.display='inline'; document.getElementById('hidsubpartlinkhide$uniqueid').style.display='block'; document.getElementById('hidsubpartlinkshow$uniqueid').style.display='none';
-EOF;
+  $script_hide =
+ "document.getElementById('hidsubpartcontent$uniqueid').style.display='none'; "
+."document.getElementById('hidsubpartlinkhide$uniqueid').style.display='none'; "
+."document.getElementById('hidsubpartlinkshow$uniqueid').style.display='block';";
+  $script_show = 
+"document.getElementById('hidsubpartcontent$uniqueid').style.display='inline'; "
+."document.getElementById('hidsubpartlinkhide$uniqueid').style.display='block'; "
+."document.getElementById('hidsubpartlinkshow$uniqueid').style.display='none';";
 
-  # put the #uniqueid at the begin because
-  # several browsers cant cope when
-  # there are several times the same
-  # anchor in a page
   $ret = '
-  <h3><a name="'.$uniqueid.'"></a>
+  <h3 id="'.$uniqueid.'">
   <script type="text/javascript">';
 
     if (!$deployed)
     {
       $ret .= '
-    document.write(\'<a onclick="'.addslashes($script_hide).'" id="hidsubpartlinkhide'.$uniqueid.'" style="display: none" href="#'.$uniqueid.'"><span class="minusorplus">(-)</span> '.htmlspecialchars($title, ENT_QUOTES).'</a>\');
-    document.write(\'<a onclick="'.addslashes($script_show).'" id="hidsubpartlinkshow'.$uniqueid.'" style="display: block" href="#'.$uniqueid.'"><span class="minusorplus">(+)</span> '.htmlspecialchars($title, ENT_QUOTES).'</a>\');';
+    document.write(\'<a onclick="'.addslashes($script_hide)
+  .'" id="hidsubpartlinkhide'.$uniqueid.'" style="display: none" href="#'
+  .$uniqueid.'"><span class="minusorplus">(-)</span> '
+  .htmlspecialchars($title, ENT_QUOTES).'</a>\');
+    document.write(\'<a onclick="'.addslashes($script_show)
+  .'" id="hidsubpartlinkshow'.$uniqueid.'" style="display: block" href="#'
+  .$uniqueid.'"><span class="minusorplus">(+)</span> '
+  .htmlspecialchars($title, ENT_QUOTES).'</a>\');';
     }
   else
     {
       $ret .= '
-    document.write(\'<a onclick="'.addslashes($script_hide).'" id="hidsubpartlinkhide'.$uniqueid.'" style="display: block" href="#'.$uniqueid.'"><span class="minusorplus">(-)</span> '.htmlspecialchars($title, ENT_QUOTES).'</a>\');
-    document.write(\'<a onclick="'.addslashes($script_show).'" id="hidsubpartlinkshow'.$uniqueid.'" style="display: none" href="#'.$uniqueid.'"><span class="minusorplus">(+)</span> '.htmlspecialchars($title, ENT_QUOTES).'</a>\');';
-
+    document.write(\'<a onclick="'.addslashes($script_hide)
+  .'" id="hidsubpartlinkhide'.$uniqueid.'" style="display: block" href="#'
+  .$uniqueid.'"><span class="minusorplus">(-)</span> '
+  .htmlspecialchars($title, ENT_QUOTES).'</a>\');
+    document.write(\'<a onclick="'.addslashes($script_show)
+  .'" id="hidsubpartlinkshow'.$uniqueid.'" style="display: none" href="#'
+  .$uniqueid.'"><span class="minusorplus">(+)</span> '
+  .htmlspecialchars($title, ENT_QUOTES).'</a>\');';
     }
     $ret .= '
   </script>
   <noscript>
-    <a id="hidsubpartlinkshow'.$uniqueid.'" href="#'.$uniqueid.'">'.$title.'</a>
+    <a href="#'.$uniqueid.'">'.$title.'</a>
   </noscript>
-  </h3>';
+  </h3>
+';
 
     if (!$deployed)
       {
 	$ret .= '
 <script type="text/javascript">
-  document.write(\'<span id="hidsubpartcontent'.$uniqueid.'" style="display: none">\');
+  document.write(\'<span id="hidsubpartcontent'.$uniqueid
+  .'" style="display: none">\');
 </script>
 <noscript>
   <span id="hidsubpartcontent'.$uniqueid.'">
@@ -209,10 +236,6 @@ function html_hidsubpart_footer ()
 ';
 
 }
-
-
-
-
 
 function html_splitpage ($how)
 {
@@ -245,39 +268,50 @@ function html_nextprev ($search_url, $rows, $rows_returned, $varprefix=false)
 
   if (($rows_returned > $rows) || ($offset != 0))
     {
-      print "\n<br /><h5 class=\"nextprev\">\n";
+      print "\n<br /><p class=\"nextprev\">\n";
 
       if ($offset != 0)
 	{
-	  print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='.($offset-$rows).'&amp;'.$varprefix.'max_rows='.$max_rows.'#'.$varprefix.'results">';
-	  print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/previous.png" border="0" alt="'._("Previous Results").'" />'._("Previous Results").'</a>';
+	  print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
+                .($offset-$rows).'&amp;'.$varprefix.'max_rows='.$max_rows
+                .'#'.$varprefix.'results">';
+	  print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                .'.theme/arrows/previous.png" border="0" alt="" />'
+                ._("Previous Results").'</a>';
 
 	}
       else
 	{
-	  print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/previousgrey.png" border="0" alt="'._("Previous Results").'" /><em>'._("Previous Results").'</em>';
+	  print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                .'.theme/arrows/previousgrey.png" border="0" alt="" /><em>'
+                ._("Previous Results").'</em>';
 	}
 
       print "&nbsp; &nbsp; &nbsp;";
 
       if ($rows_returned > $rows)
 	{
-	  print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='.($offset+$rows).'&amp;'.$varprefix.'max_rows='.$max_rows.'#'.$varprefix.'results">';
-	  print _("Next Results").' <img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/next.png" border="0" alt="'._("Next Results").'" /></a>';
+	  print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
+                .($offset+$rows).'&amp;'.$varprefix.'max_rows='.$max_rows
+                .'#'.$varprefix.'results">';
+	  print _("Next Results").' <img src="'.$GLOBALS['sys_home'].'images/'
+                .SV_THEME.'.theme/arrows/next.png" border="0" alt="" /></a>';
 	}
       else
 	{
-	  print '<em>'._("Next Results").'</em> <img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/nextgrey.png" border="0" alt="'._("Next Results").'" />';
+	  print '<em>'._("Next Results").'</em> <img src="'.$GLOBALS['sys_home']
+                .'images/'.SV_THEME
+                .'.theme/arrows/nextgrey.png" border="0" alt="" />';
 	}
 
-      print "</h5>\n";
+      print "</p>\n";
     }
 }
 
 function html_anchor ($content, $name)
 {
   if (!$name) { $name = $content; };
-  return '<a name="'.$name.'" href="#'.$name.'">'.$content.'</a>';
+  return '<a id="'.$name.'" href="#'.$name.'">'.$content.'</a>';
 }
 
 ##
@@ -314,17 +348,18 @@ function html_feedback($bottom)
                  'document.getElementById(\'feedbackback'.$suffix.
                  '\').style.visibility=\'hidden\';"';
 
-  # With MSIE  the feedback will be be 
+  # With MSIE  the feedback will be be
   # in relative position, so the hiding link will not make sense
   if (is_broken_msie() && empty($_GET['printer']))
     { $script_hide = ''; }
   # Users can choose the same behavior, disallowing the fixed positionning
   # of the feedback (less convenient as the feedback gets easily hidden,
-  # requires to scroll to be accessed, but seems prefered by users of 
+  # requires to scroll to be accessed, but seems prefered by users of
   # mozilla that slow scrolling down/up when there is such fixed box on the
   # page)
   if (user_get_preference("nonfixed_feedback"))
-    { $script_hide = 'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"'; }
+    $script_hide = 
+       'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"';
 
   print '<div '.$script_show.
         ' id="feedbackback'.$suffix.'" class="feedbackback">'.
@@ -383,7 +418,8 @@ function html_feedback_bottom()
 function html_image ($src,$args,$display=1)
 {
   GLOBAL $img_attr;
-  $return = ('<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'.$src.'"');
+  $return = ('<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'
+             .$src.'"');
   reset($args);
   while(list($k,$v) = each($args))
     {
@@ -399,23 +435,29 @@ function html_image ($src,$args,$display=1)
     {
 
      #Check to see if we've already fetched the image data
- if(!$img_attr[$src] && is_file($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME.'.theme/'.$src))
-   {
-     list($width, $height, $type, $img_attr[$src]) = @getimagesize($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME.'.theme/'.$src);
-     
-   }
- else
-   {
-     if (is_file($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME.'.theme/'.$src))
+     if(!$img_attr[$src] && is_file($GLOBALS['sys_www_topdir'].'/images/'
+                                    .SV_THEME.'.theme/'.$src))
        {
-	 list($width, $height, $type, $img_attr[$src])  = @getimagesize($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME.'.theme/'.$src);
-       }
-   }
- $return .= ' ' . $img_attr[$src];
-}
+          list($width, $height, $type, $img_attr[$src]) =
+            @getimagesize($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME
+                          .'.theme/'.$src);
 
-# ## insert alt tag if there isn't one
-  if (!$args['alt']) $return .= " alt=\"$src\"";
+        }
+      else
+        {
+          if (is_file($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME.'.theme/'
+                      .$src))
+            {
+              list($width, $height, $type, $img_attr[$src])  =
+              @getimagesize($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME
+                            .'.theme/'.$src);
+            }
+        }
+      $return .= ' ' . $img_attr[$src];
+    }
+
+# Insert alt tag if there isn't one.
+  if (!$args['alt']) $return .= " alt=\"\"";
 
   $return .= (' />');
   if ($display)
@@ -428,14 +470,12 @@ function html_image ($src,$args,$display=1)
     }
 }
 
+/* Take an array of titles and builds.
+   The first row of a new table.
+
+   Optionally take a second array of links for the titles. */
 function html_build_list_table_top ($title_arr,$links_arr=false,$table=true)
 {
-  /*
-		Takes an array of titles and builds
-		The first row of a new table
-
-		Optionally takes a second array of links for the titles
-  */
   GLOBAL $HTML;
   $return = '';
 
@@ -454,7 +494,9 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$table=true)
       for ($i=0; $i<$count; $i++)
 	{
 	  $return .= '
-			<th class="boxtitle"><a class="sortbutton" href="'.$links_arr[$i].'">'.$title_arr[$i].'</a></th>';
+<th class="boxtitle"><a class="sortbutton" href="'.$links_arr[$i].'">'
+          .$title_arr[$i].'</a></th>
+';
 	}
     }
   else
@@ -462,10 +504,12 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$table=true)
       for ($i=0; $i<$count; $i++)
 	{
 	  $return .= '
-			<th class="boxtitle">'.$title_arr[$i].'</th>';
+<th class="boxtitle">'.$title_arr[$i].'</th>
+';
 	}
     }
-  return $return.'</tr>';
+  return $return.'</tr>
+';
 }
 
 function html_get_alt_row_color ($i)
@@ -489,20 +533,19 @@ function utils_get_alt_row_color ($i)
 
 
 
-function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz',$samevals = 0)
+/* Take one array, with the first array being the "id" or value
+   and the array being the text you want displayed.
+
+   The second parameter is the name you want assigned to this form element.
+
+   The third parameter is the value of the item that should be checked.  */
+function html_build_select_box_from_array ($vals,$select_name,
+                                           $checked_val='xzxz',$samevals = 0)
 {
-  /*
-		Takes one array, with the first array being the "id" or value
-		and the array being the text you want displayed
-
-		The second parameter is the name you want assigned to this form element
-
-		The third parameter is optional. Pass the value of the item that should be checked
-  */
 
   $return = '';
   $return .= '
-		<select name="'.$select_name.'">';
+<select name="'.$select_name.'">';
 
   $rows=count($vals);
 
@@ -527,11 +570,39 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
       $return .= '>'.$vals[$i].'</option>';
     }
   $return .= '
-		</select>';
+</select>
+';
 
   return $return;
 }
 
+/* The infamous '100 row' has to do with the
+SQL Table joins done throughout all this code.
+There must be a related row in users, categories, etc, and by default that
+row is 100, so almost every pop-up box has 100 as the default
+Most tables in the database should therefore have a row with an id of 100 in it
+so that joins are successful
+
+There is now another infamous row called the Any row. It is not
+in any table as opposed to 100. it's just here as a convenience mostly
+when using select boxes in queries (bug, task,...). The 0 value is reserved
+for Any and must not be used in any table.
+
+Params:
+
+Takes two arrays, with the first array being the "id" or value
+and the other array being the text you want displayed.
+
+The third parameter is the name you want assigned to this form element.
+
+The fourth parameter is the value of the item that should be checked.
+
+The fifth parameter is a boolean - whether or not to show the '100 row'.
+
+The sixth parameter is what to call the '100 row', defaults to none.
+The 7th parameter is a boolean - whether or not to show the 'Any row'.
+
+The 8th parameter is what to call the 'Any row' defaults to 'Any'. */
 function html_build_select_box_from_arrays ($vals,
 					    $texts,
 					    $select_name,
@@ -542,41 +613,14 @@ function html_build_select_box_from_arrays ($vals,
 					    $text_any='Any', #8
 					    $show_unknown=false)
 {
-  /*
-
-  The infamous '100 row' has to do with the
-			SQL Table joins done throughout all this code.
-		There must be a related row in users, categories, etc, and by default that
-			row is 100, so almost every pop-up box has 100 as the default
-		Most tables in the database should therefore have a row with an id of 100 in it
-			so that joins are successful
-
-		There is now another infamous row called the Any row. It is not
-		in any table as opposed to 100. it's just here as a convenience mostly
-		when using select boxes in queries (bug, task,...). The 0 value is reserved
-		for Any and must not be used in any table.
-
-		Params:
-
-		Takes two arrays, with the first array being the "id" or value
-		and the other array being the text you want displayed
-
-		The third parameter is the name you want assigned to this form element
-
-		The fourth parameter is optional. Pass the value of the item that should be checked
-
-		The fifth parameter is an optional boolean - whether or not to show the '100 row'
-
-		The sixth parameter is optional - what to call the '100 row' defaults to none
-		The 7th parameter is an optional boolean - whether or not to show the 'Any row'
-
-		The 8th parameter is optional - what to call the 'Any row' defaults to nAny	*/
-
-
+  if ($text_100 == 'None')
+    $text_100 = _('None');
+  if ($text_any == 'Any')
+    $text_any = _('Any');
 
   $return = '';
   $return .= '
-		<select name="'.$select_name.'">';
+<select name="'.$select_name.'">';
 
 
   # We want the "Default" on item initial post, only at this momement
@@ -599,14 +643,9 @@ function html_build_select_box_from_arrays ($vals,
       $return .= "\n<option value=\"100\" $selected>$text_100 </option>";
     }
 
-
   $rows=count($vals);
   if (count($texts) != $rows)
-    {
-      $return .= 'ERROR - uneven row counts';
-    }
-
-
+    $return .= _('ERROR - number of values differs from number of texts');
 
   for ($i=0; $i<$rows; $i++)
     {
@@ -617,64 +656,77 @@ function html_build_select_box_from_arrays ($vals,
 	   ($vals[$i] == '0' && !$show_any))
 	{
 	  $return .= '
-				<option value="'.$vals[$i].'"';
+<option value="'.$vals[$i].'"';
 	  if ($vals[$i] == $checked_val)
 	    {
 	      $return .= ' selected="selected"';
 	    }
 	  $return .= '>'.$texts[$i].'</option>';
-
        }
-
     }
   $return .= '
-		</select>';
+</select>
+';
   return $return;
 }
 
-function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='None',$show_any=false,$text_any='Any',$show_unknown=false)
+/* Take a result set, with the first column being the "id" or value
+and the second column being the text you want displayed.
+
+The second parameter is the name you want assigned to this form element.
+
+The third parameter is the value of the item that should
+be checked.
+
+The fourth parameter is a boolean - whether or not to show
+the '100 row'.
+
+The fifth parameter is what to call the '100 row' defaults to none. */
+function html_build_select_box ($result, $name, $checked_val="xzxz",
+                                $show_100=true,$text_100='None',$show_any=false,
+                                $text_any='Any',$show_unknown=false)
 {
-  /*
-		Takes a result set, with the first column being the "id" or value
-		and the second column being the text you want displayed
-
-		The second parameter is the name you want assigned to this form element
-
-		The third parameter is optional. Pass the value of the item that should be checked
-
-		The fourth parameter is an optional boolean - whether or not to show the '100 row'
-
-		The fifth parameter is optional - what to call the '100 row' defaults to none
-  */
-
-  return html_build_select_box_from_arrays (utils_result_column_to_array($result,0),utils_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unknown);
+  return html_build_select_box_from_arrays (utils_result_column_to_array($result),
+                                            utils_result_column_to_array($result, 1),
+                                            $name,$checked_val,$show_100,$text_100,
+                                            $show_any,$text_any,$show_unknown);
 }
 
-function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',$show_100=true,$text_100='None', $show_any=false,$text_any='Any',$show_value=true)
+# The same as html_build_select_box, but the items are localized.
+function html_build_localized_select_box ($result, $name, $checked_val="xzxz",
+                                          $show_100=true,$text_100='None',
+                                          $show_any=false,$text_any='Any',
+                                          $show_unknown=false)
 {
-  /*
-		Takes a result set, with the first column being the "id" or value
-		and the second column being the text you want displayed
+  return html_build_select_box_from_arrays (utils_result_column_to_array($result),
+                                            utils_result_column_to_array($result,
+                                            1, true),
+                                            $name,$checked_val,$show_100,$text_100,
+                                            $show_any,$text_any,$show_unknown);
+}
 
-		The second parameter is the name you want assigned to this form element
+/* Takes a result set, with the first column being the "id" or value
+and the second column being the text you want displayed.
 
-		The third parameter is an array of checked values;
+The second parameter is the name you want assigned to this form element.
 
-		The fourth parameter is optional. Pass the size of this box
+The third parameter is an array of checked values.
 
-		Fifth to eigth params determine whether to show None and Any
+The fourth parameter is the size of this box.
 
-		Ninth param determine whether to show numeric values next to
-		the menu label (default true for backward compatibility
-  */
+Fifth to eigth params determine whether to show None and Any.
 
+Ninth param determine whether to show numeric values next to
+the menu label (default true for backward compatibility.  */
+function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
+                                         $show_100=true,$text_100='None',
+                                         $show_any=false,$text_any='Any',
+                                         $show_value=true)
+{
   $checked_count=count($checked_array);
-  #      print '-- '.$checked_count.' --';
   $return = '
-		<SELECT NAME="'.$name.'" MULTIPLE SIZE="'.$size.'">';
-  /*
-		Put in the Any box
-  */
+<select name="'.$name.'" multiple size="'.$size.'">';
+  # Put in the Any box
   if ($show_any)
     {
       $return .= '
@@ -689,9 +741,7 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
       $return .= '>'.$text_any.'</option>';
     }
 
-  /*
-		Put in the default NONE box
-  */
+  # Put in the default NONE box
   if ($show_100)
     {
       $return .= '
@@ -714,9 +764,7 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 	{
 	  $return .= '
 				<option value="'.db_result($result,$i,0).'"';
-	  /*
-				Determine if it's checked
-	  */
+          # Determine if it's checked
 	  $val=db_result($result,$i,0);
 	  for ($j=0; $j<$checked_count; $j++)
 	    {
@@ -730,7 +778,8 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 	}
     }
   $return .= '
-		</SELECT>';
+</select>
+';
   return $return;
 }
 
@@ -762,24 +811,29 @@ function html_select_permission_box ($artifact, $row, $level="member")
   if ($default)
     {
       print '
-        <option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'.$default.'</option>';
+        <option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'
+        .$default.'</option>';
     }
   print '
-        <option value="9"'.(($value == 9)?" selected=\"selected\"":"").'>'._("None").'</option>';
+        <option value="9"'.(($value == 9)?" selected=\"selected\"":"")
+        .'>'._("None").'</option>';
   if ($artifact != "news")
     {
       print '
-        <option value="1"'.(($value == 1)?" selected=\"selected\"":"").'>'._("Technician").'</option>';
+        <option value="1"'.(($value == 1)?" selected=\"selected\"":"").'>'
+        ._("Technician").'</option>';
     }
 
   print '
-        <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'._("Manager").'</option>';
+        <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'
+        ._("Manager").'</option>';
 
 
   if ($artifact != "news")
     {
       print '
-        <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'._("Techn. & Manager").'</option>';
+        <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'
+        ._("Techn. & Manager").'</option>';
     }
 
   print '
@@ -801,7 +855,8 @@ function html_select_permission_box ($artifact, $row, $level="member")
 }
 
 
-function html_select_restriction_box ($artifact, $row, $level="group", $notd=0, $event=1)
+function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
+                                      $event=1)
 {
   # event = 1 : posting items
   # event = 2 : posting comments
@@ -838,17 +893,21 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0, 
   if ($default)
     {
       print '
-        <option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'.$default.'</option>';
+        <option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'
+        .$default.'</option>';
     }
   print '
-        <option value="5"'.(($value == 5)?" selected=\"selected\"":"").'>'._("Project Member").'</option>';
+        <option value="5"'.(($value == 5)?" selected=\"selected\"":"").'>'
+        ._("Project Member").'</option>';
   print '
-        <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'._("Logged-in User").'</option>';
+        <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'
+        ._("Logged-in User").'</option>';
   print '
-        <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'._("Anonymous").'</option>';
-
+        <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'
+        ._("Anonymous").'</option>';
   print '
-      </select>';
+      </select>
+';
 
   if (!$value && $level == "group" && $event == 1)
     {
@@ -864,36 +923,62 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0, 
   if (!$notd)
     {
       print '
-    </td>';
+    </td>
+';
     }
 }
 
 
-# This function must now every type of directory that can be built by the
+# This function must know every type of directory that can be built by the
 # backend.
 # FIXME: in a future, we may create a table of method associating
 # method -> perl module -> sub name
 function html_select_typedir_box ($input_name, $current_value)
 {
+  # Probably this shouldn't be localized since it's for siteadmin's eyes only.
   print '<br />&nbsp;&nbsp;
       <select name="'.$input_name.'">
-        <option value="basicdirectory"'.(($current_value == "basicdirectory")?" selected":"").'>'._("Basic Directory").'</option>
-        <option value="basiccvs"'.(($current_value == "basiccvs")?" selected=\"selected\"":"").'>'._("Basic Cvs Directory").'</option>
-        <option value="basicsvn"'.(($current_value == "basicsvn")?" selected=\"selected\"":"").'>'._("Basic Subversion Directory").'</option>
-        <option value="basicgit"'.(($current_value == "basicgit")?" selected=\"selected\"":"").'>'._("Basic Git Directory").'</option>
-        <option value="basichg"'.(($current_value == "basichg")?" selected=\"selected\"":"").'>'._("Basic Mercurial Directory").'</option>
-        <option value="basicbzr"'.(($current_value == "basicbzr")?" selected=\"selected\"":"").'>'._("Basic Bazaar Directory").'</option>
-        <option value="cvsattic"'.(($current_value == "cvsattic")?" selected=\"selected\"":"").'>'._("Cvs Attic/Gna").'</option>
-        <option value="svnattic"'.(($current_value == "svnattic")?" selected=\"selected\"":"").'>'._("Subversion Attic/Gna").'</option>
-        <option value="svnatticwebsite"'.(($current_value == "svnatticwebsite")?" selected=\"selected\"":"").'>'._("Subversion Subdirectory Attic/Gna").'</option>
-        <option value="savannah-gnu"'.(($current_value == "savannah-gnu")?" selected=\"selected\"":"").'>'._("Savannah GNU").'</option>
-        <option value="savannah-nongnu"'.(($current_value == "savannah-nongnu")?" selected=\"selected\"":"").'>'._("Savannah non-GNU").'</option>
+        <option value="basicdirectory"'
+        .(($current_value == "basicdirectory")?" selected":"").'>'
+        .("Basic Directory").'</option>
+        <option value="basiccvs"'
+        .(($current_value == "basiccvs")?" selected=\"selected\"":"").'>'
+        .("Basic CVS Directory").'</option>
+        <option value="basicsvn"'
+        .(($current_value == "basicsvn")?" selected=\"selected\"":"").'>'
+        .("Basic Subversion Directory").'</option>
+        <option value="basicgit"'
+        .(($current_value == "basicgit")?" selected=\"selected\"":"").'>'
+        .("Basic Git Directory").'</option>
+        <option value="basichg"'
+        .(($current_value == "basichg")?" selected=\"selected\"":"").'>'
+        .("Basic Mercurial Directory").'</option>
+        <option value="basicbzr"'
+        .(($current_value == "basicbzr")?" selected=\"selected\"":"").'>'
+        .("Basic Bazaar Directory").'</option>
+        <option value="cvsattic"'
+        .(($current_value == "cvsattic")?" selected=\"selected\"":"").'>'
+        .("CVS Attic/Gna").'</option>
+        <option value="svnattic"'
+        .(($current_value == "svnattic")?" selected=\"selected\"":"").'>'
+        .("Subversion Attic/Gna").'</option>
+        <option value="svnatticwebsite"'
+        .(($current_value == "svnatticwebsite")?" selected=\"selected\"":"").'>'
+        .("Subversion Subdirectory Attic/Gna").'</option>
+        <option value="savannah-gnu"'
+        .(($current_value == "savannah-gnu")?" selected=\"selected\"":"").'>'
+        .("Savannah GNU").'</option>
+        <option value="savannah-nongnu"'
+        .(($current_value == "savannah-nongnu")?" selected=\"selected\"":"").'>'
+        .("Savannah non-GNU").'</option>
       </select> [BACKEND SPECIFIC]
 ';
 
   # put some information
-  print '<br /><span class="smaller">Basic directory will make the backend using DownloadMakeArea(), defined in Savannah::Download; <br /> CVS directory will make the backend using CvsMakeArea(), defined in Savannah::Cvs;<br />
-(If you need to build directories with another method, the solution is to write a new sub in the appropriate perl module, please send a mail to savane-dev@gna.org to get information about that)</span><br /><br />';
+  print '<p><span class="smaller">Basic directory will make the backend
+using DownloadMakeArea(), defined in Savannah::Download; <br /> CVS directory
+will make the backend using CvsMakeArea(), defined in Savannah::Cvs.
+</span><p>';
 
 }
 
@@ -938,41 +1023,6 @@ function html_select_theme_box ($input_name="user_theme", $current=0)
 
 }
 
-function html_build_priority_select_box ($name='priority', $checked_val='5')
-{
-  /*
-		Return a select box of standard priorities.
-		The name of this select box is optional and so is the default checked value
-  */
-    ?>
-     <SELECT NAME="<?php print $name; ?>">
-	<option value="1"<?php if ($checked_val=="1")
-	  {print " selected=\"selected\"";} ?>>1 - Lowest</option>
-				    <option value="2"<?php if ($checked_val=="2")
-				      {print " selected=\"selected\"";} ?>>2</option>
-								<option value="3"<?php if ($checked_val=="3")
-								  {print " selected=\"selected\"";} ?>>3</option>
-											    <option value="4"<?php if ($checked_val=="4")
-											      {print " selected=\"selected\"";} ?>>4</option>
-															<option value="5"<?php if ($checked_val=="5")
-															  {print " selected=\"selected\"";} ?>>5 - Medium</option>
-																		    <option value="6"<?php if ($checked_val=="6")
-																		      {print " selected=\"selected\"";} ?>>6</option>
-																						<option value="7"<?php if ($checked_val=="7")
-																						  {print " selected=\"selected\"";} ?>>7</option>
-																									    <option value="8"<?php if ($checked_val=="8")
-																									      {print " selected=\"selected\"";} ?>>8</option>
-																													<option value="9"<?php if ($checked_val=="9")
-																													  {print " selected=\"selected\"";} ?>>9 - Highest</option>
-																																    </SELECT>
-																																    <?php
-
-																																    }
-function html_buildpriority_select_box ($name='priority', $checked_val='5')
-{
-  return html_build_priority_select_box($name, $checked_val);
-}
-
 function html_build_checkbox ($name, $is_checked=0)
 {
   print  '<input type="checkbox" name="'.$name.'" value="1"';
@@ -1009,31 +1059,24 @@ function site_footer($params)
   html_footer($params);
 }
 
-/*
-	Project pages functions
-	----------------------------------------------------------------
-*/
 
+# Project page functions
 
-/*! 	@function site_project_header
-	@abstract everything required to handle security and state checks for a project web page
-	@param params array() must contain $context and $group
-	@result text - prints HTML to the screen directly
-*/
+# Everything required to handle security and state checks for a project web page
+# Params array() must contain $context and $group
+# Result text - prints HTML to the screen directly
 function site_project_header($params)
 {
   global $group_id;
-
-  #get the project object
   $project=project_get_object($group_id);
 
-  #group doesn't exist
   if ($project->isError())
     {
-      exit_error("Invalid Group $group_id","That group does not exist.");
+# TRANSLATORS: the argument is group id (a number).
+      exit_error(sprintf(_("Invalid Group %s"), $group_id),
+                 _("That group does not exist."));
     }
 
-  #group is private
   if (!$project->isPublic())
     {
       #if its a private group, you must be a member of that group
@@ -1050,49 +1093,37 @@ function site_project_header($params)
   html_header($params);
 }
 
-/*!     @function site_project_footer
-	@abstract currently a simple shim that should be on every project page,
-		rather than a direct call to site_footer() or theme_footer()
-	@param params array() empty
-	@result text - prints HTML to the screen directly
-*/
+# Currently a simple shim that should be on every project page,
+#   rather than a direct call to site_footer() or theme_footer()
+# Param params array() empty
+# Result text - prints HTML to the screen directly
 function site_project_footer($params)
 {
   html_footer($params);
 }
 
-/*
-	User pages functions
-	----------------------------------------------------------------
-*/
+# User page functions
 
-/*!     @function site_user_header
-	@abstract everything required to handle security and
-		add navigation for user pages like /my/ and /account/
-	@param params array() must contain $user_id
-	@result text - prints HTML to the screen directly
-*/
+# Everything required to handle security and
+#   add navigation for user pages like /my/ and /account/
+# Params array() must contain $user_id
+# Result text - prints HTML to the screen directly
 function site_user_header($params)
 {
   session_require(array('isloggedin'=>'1'));
   html_header($params);
 }
 
-/*!     @function site_user_footer
-	@abstract currently a simple shim that should be on every user page,
-		rather than a direct call to site_footer() or theme_footer()
-	@param params array() empty
-	@result text - prints HTML to the screen directly
-*/
+# Currently a simple shim that should be on every user page,
+#   rather than a direct call to site_footer() or theme_footer()
+# Params array() empty
+# Result text - prints HTML to the screen directly
 function site_user_footer($params)
 {
   html_footer($params);
 }
 
-/*
-	Administrative pages functions
-	----------------------------------------------------------------
-*/
+# Administrative page functions
 
 function site_admin_header($params)
 {
@@ -1105,20 +1136,28 @@ function site_admin_footer($params)
   html_footer($params);
 }
 
-function show_group_type_box($name='group_type',$checked_val='xzxz', $show_select_one=false)
+function show_group_type_box($name='group_type',$checked_val='xzxz',
+                             $show_select_one=false)
 {
   $result=db_query("SELECT * FROM group_type");
-  return html_build_select_box($result,'group_type',$checked_val,$show_select_one, "> "._("Choose one below"));
+  return html_build_select_box($result,'group_type',$checked_val,
+                               $show_select_one, "> "._("Choose one below"));
 }
-
 
 function html_member_explain_roles ()
 {
-
-  print _("Technicians, and only technicians, can be assigned tracker's items. They cannot reassign items, change the status or priority of items.");
-  print '<p>';
-  print _("Trackers Managers can fully manage the trackers items, including assigning items to technicians, reassign items over trackers and projects, changing priority and status of items - but they cannot configure the trackers.");
-  print '<p>';
-  print _("Project Admins can manage members, configure the trackers, post jobs, and add mailing-list. They actually also have manager rights on every tracker and are allowed to read private items.");
-  print '<p>';
+  print '<p>'
+._("Technicians, and only technicians, can be assigned tracker's items. They
+cannot reassign items, change the status or priority of items.");
+  print "</p>\n<p>";
+  print _("Trackers Managers can fully manage the trackers items, including
+assigning items to technicians, reassign items over trackers and projects,
+changing priority and status of items - but they cannot configure the
+trackers.");
+  print "</p>\n<p>";
+  print _("Project Admins can manage members, configure the trackers, post
+jobs, and add mailing-list. They actually also have manager rights on every
+tracker and are allowed to read private items.");
+  print "</p>\n";
 }
+?>

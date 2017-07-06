@@ -1,8 +1,9 @@
 <?php
 # Setup a minimal environment (database, configuration file...)
 #
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gna.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gna.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of the Savane project
 #
@@ -113,7 +114,8 @@ if (version_compare(PHP_VERSION, '5.0', '<')) require_once(dirname(__FILE__).'/p
 if (getenv('SAVANE_CONF') and file_exists(getenv('SAVANE_CONF').'/.savane.conf.php'))
 { include(getenv('SAVANE_CONF').'/.savane.conf.php'); }
 // deprecated:
-elseif (getenv('SV_LOCAL_INC_PREFIX') and file_exists(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'))
+elseif (getenv('SV_LOCAL_INC_PREFIX')
+        and file_exists(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'))
 { include(getenv('SV_LOCAL_INC_PREFIX').'/.savane.conf.php'); }
 else
 {
@@ -178,9 +180,11 @@ if ($sys_debug_on == true) {
 
     print '<pre>';
     print '<hr />';
-    print utils_size_readable(memory_get_usage(false)) . '/' . utils_size_readable(memory_get_peak_usage(false))
+    print utils_size_readable(memory_get_usage(false)) . '/'
+      . utils_size_readable(memory_get_peak_usage(false))
       . ' now/peak memory usage<br />';
-    print utils_size_readable(memory_get_usage(true))  . '/' . utils_size_readable(memory_get_peak_usage(true))
+    print utils_size_readable(memory_get_usage(true))  . '/'
+      . utils_size_readable(memory_get_peak_usage(true))
       . ' now/peak real memory usage<br />';
     print '<hr />';
 
@@ -246,7 +250,8 @@ if ($sys_debug_on == true) {
     default:                  print "Unknown error ($errno)"; break;
     }
     print '</strong>';
-    print ": $errstr in <strong>$errfile</strong> on line <strong>$errline</strong><br />\n";
+    print ": $errstr in <strong>$errfile</strong> on line "
+          . "<strong>$errline</strong><br />\n";
     print '<pre>';
 
     // Write my own backtrace function to avoid printing
@@ -361,7 +366,8 @@ if (isset($GLOBALS['sys_unix_group_name']))
 }
 
 if (!isset($sys_group_id)) {
-  fb("Your \$sys_unix_group_name configuration variable refers to a non-existing project. Please update the configuration.", FB_ERROR);
+  fb(_("Your \$sys_unix_group_name configuration variable refers to a
+non-existing project. Please update the configuration."), FB_ERROR);
 }
 
 # determine if they're logged in
@@ -383,7 +389,8 @@ if (user_isloggedin())
 }
 
 # redirect them from http to https if they said so at login time
-if (!session_issecure() && isset($_COOKIE['redirect_to_https']) && $GLOBALS['sys_https_host'])
+if (!session_issecure() && isset($_COOKIE['redirect_to_https'])
+    && $GLOBALS['sys_https_host'])
      header('Location: https://'.$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI']);
 
 /**************************************************************
@@ -435,9 +442,11 @@ user_guess();
 
 # if we got an item_id and no group_id we need to get the appropriate
 # group_id
-if (!isset($group_id) && !isset($group) && isset($item_id) && in_array(ARTIFACT, array('bugs', 'patch', 'task', 'cookbook', 'support')))
+if (!isset($group_id) && !isset($group) && isset($item_id)
+    && in_array(ARTIFACT, array('bugs', 'patch', 'task', 'cookbook', 'support')))
 {
-  $result = db_execute("SELECT group_id FROM ".ARTIFACT." WHERE bug_id=?", array($item_id));
+  $result = db_execute("SELECT group_id FROM ".ARTIFACT." WHERE bug_id=?",
+                       array($item_id));
   if (db_numrows($result))
     {  
       $group_id = db_result($result,0,'group_id');
@@ -475,7 +484,11 @@ if (!isset($group_id) && !isset($group) && isset($forum_id))
 # (FIXME: in the future it could follow the naming scheme of trackers)
 if (!isset($group_id) && isset($msg_id))
 {
-  $result = db_execute("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id=?",
+  $result = db_execute("SELECT forum_group_list.group_id,"
+                       ."forum_group_list.forum_name,forum.group_forum_id,"
+                       ."forum.thread_id FROM forum_group_list,forum "
+                       ."WHERE forum_group_list.group_forum_id="
+                       ."forum.group_forum_id AND forum.msg_id=?",
 		       array($msg_id));
   if ($result)
     {  $group_id = db_result(($result),0,'group_id'); }
@@ -548,14 +561,13 @@ if (isset($group_id))
   if (isset($group_id) && empty($no_redirection) && !$sys_debug_nobasehost)
     {
       $project = project_get_object($group_id);
-      if (strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0 && $project->getTypeBaseHost())
+      if (strcasecmp($_SERVER['HTTP_HOST'], $project->getTypeBaseHost()) != 0
+          && $project->getTypeBaseHost())
 	{
-	  header ('Location: http'.(session_issecure()?'s':'').'://'.$project->getTypeBaseHost().$_SERVER["REQUEST_URI"]);
+	  header ('Location: http'.(session_issecure()?'s':'').'://'
+                  .$project->getTypeBaseHost().$_SERVER["REQUEST_URI"]);
 	  exit;
 	}
     }
 }
-
-# If requires/include for an artifact exists, load them all
-# In any case, set the ARTIFACT constant.
-#require_directory(get_module_include_dir($_SERVER['SCRIPT_NAME']));
+?>

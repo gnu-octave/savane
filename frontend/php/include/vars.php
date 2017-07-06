@@ -1,8 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Set variables.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2004 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2004 Mathieu Roy <yeupou--gnu.org>
 # 
 # This file is part of Savane.
 # 

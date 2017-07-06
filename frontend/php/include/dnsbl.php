@@ -1,7 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Check against blacklists.
 # 
-# Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -52,10 +53,11 @@ function dnsbl_check()
   # Go through the list
   foreach ($DNSBL as $key => $address)
     {
+      $extrainfo = '';
       if (gethostbyname("$ip_reversed.$address") != "$ip_reversed.$address")
 	{
 	  if ($DNSBL_INFOURL[$key])
-	    { $extrainfo = ", ".$DNSBL_INFOURL[$key].$ip; }
+	    { $extrainfo = $DNSBL_INFOURL[$key].$ip; }
 	 
 	  # FIXME: if it is a logged-in user that was blacklisted, maybe
 	  # it would be worth warning the site admin.
@@ -67,9 +69,19 @@ function dnsbl_check()
 	    }
 	  
 	  # Log error
-	  exit_log("rejected data from ".$ip." - found in ".$address.$extrainfo);
+          $log_msg = "rejected data from ".$ip." - found in ".$address;
+          if ($extrainfo != '')
+            $log_msg .= ", ".$extrainfo;
+
+	  exit_log($log_msg);
 	  # Finally, block here
-	  exit_error(sprintf(_("Your IP address is blacklisted %s"), $extrainfo));
+          if ($extrainfo != '')
+# TRANSLATORS: the argument is reason why the address is blocked.
+            exit_error(sprintf(_("Your IP address is blacklisted: %s"),
+                       $extrainfo));
+          else
+            exit_error(_("Your IP address is blacklisted"));
 	}
     }
 }
+?>

@@ -54,12 +54,12 @@ if (($project->Uses($vcs_exfix) &&
      $project->getUrl("cvs_viewcvs_homepage") != ''))
 {
 # TRANSLATORS: The argument is a name of VCS (like Arch, CVS, Git, Subversion).
-  print '<h2>'.sprintf(_("Browsing the %s Repository"), $vcs_name).'</h2>';
+  print '<h2>'.sprintf(_("Browsing the %s Repository"), $vcs_name)."</h2>\n";
 # TRANSLATORS: The argument is a name of VCS (like Arch, CVS, Git, Subversion).
   print '<p>'.sprintf(_("You can Browse the %s repository of this project with
 your web browser. This gives you a good picture of the current status of the
 source files. You may also view the complete histories of any file in the
-repository as well as differences among two versions."), $vcs_name).'</p>';
+repository as well as differences among two versions."), $vcs_name)."</p>\n";
   
   print '<ul>';
 
@@ -68,7 +68,7 @@ repository as well as differences among two versions."), $vcs_name).'</p>';
       $project->getUrl($vcs_exfix."_viewcvs") != '')
     {
       print '<li><a href="'.$project->getUrl($vcs_exfix."_viewcvs").'">'
-            ._("Browse Sources Repository").'</a></li>';
+            ._("Browse Sources Repository")."</a></li>\n";
     }
   if ($project->UsesForHomepage($vcs_exfix) &&
       $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
@@ -76,13 +76,14 @@ repository as well as differences among two versions."), $vcs_name).'</p>';
       )
     {
       print '<li><a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'
-            ._("Browse Web Pages Repository").'</a></li>';
+            ._("Browse Web Pages Repository")."</a></li>\n";
     }
-  print '</ul><p>&nbsp;</p>';
+  print "</ul>\n<p>&nbsp;</p>\n";
   
 }
-
-print '<h2>'.sprintf(_("Getting a Copy of the %s Repository"),$vcs_name).'</h2>';
+# TRANSLATORS: The argument is a name of VCS (like Arch, CVS, Git, Subversion).
+print '<h2>'.sprintf(_("Getting a Copy of the %s Repository"),$vcs_name)
+      ."</h2>\n";
 
 utils_get_content($vcs_exfix."/index");
 

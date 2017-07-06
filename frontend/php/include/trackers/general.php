@@ -1,24 +1,25 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
+# General tracker functions.
 #
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
+#
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -27,7 +28,7 @@ require_once(dirname(__FILE__).'/../calendar.php');
 require_once(dirname(__FILE__).'/../sendmail.php');
 require_once(dirname(__FILE__).'/data.php');
 require_once(dirname(__FILE__).'/format.php');
- 
+
 # Return the file that should be included, according to the URL
 # requested. If the file start with ?, it's an index.
 function trackers_include()
@@ -186,12 +187,14 @@ function trackers_list_all_fields($sort_func=false,$by_field_id=false)
 
 function trackers_field_label_display ($field_name, $group_id,$break=false,$ascii=false, $tab=25)
 {
-  
+
   $label = trackers_data_get_label($field_name).':';
   $output = '';
 
   if (!$ascii)
-    { $output .= '<span class="preinput"><span class="help" title="'.trackers_data_get_description($field_name).'">'.$label.'</span></span>'; }
+    $output .= '<span class="preinput"><span class="help" title="'
+               .trackers_data_get_description($field_name).'">'.$label
+               .'</span></span>';
 
   if ($break)
     { $output .= ($ascii?"\n":'<br />'); }
@@ -223,26 +226,25 @@ function trackers_field_display ($field_name,
                                  $show_unknown=false,
 				 $tab=25)
 {
-  /*
-          Display a bug field either as a read-only value or as a read-write
-          making modification possible
-          - field_name : name of the bug field (column name)
-          - group_id : the group id (project id)
-          - value: the current value stored in this field (for select boxes type of field
-                  it is the value_id actually. It can also be an array with mutliple values.
-          - break: true if a break line is to be inserted between the field label
-                 and the field value
-          - label: if true display the field label.
-          - ro: true if only the field value is to be displayed. Otherwise
-                 display an HTML select box, text field or text area to modify the value
-          - ascii: if true do not use any HTML decoration just plain text (if true
-                 then read-only (ro) flag is forced to true as well)
-          - show_none: show the None entry in the select box if true (value_id 100)
-          - text_none: text associated with the none value_id to display in the select box
-          - show_any: show the Any entry in the select box if true (value_id 0)
-          - text_any: text associated with the any value_id  tp display in the select box
-          - allowed_transition_only: print only transition allowed
-  */
+/*
+  Display a bug field either as a read-only value or as a read-write
+  making modification possible
+  - field_name : name of the bug field (column name)
+  - group_id : the group id (project id)
+  - value: the current value stored in this field (for select boxes type of field
+          it is the value_id actually. It can also be an array with mutliple values.
+  - break: true if a break line is to be inserted between the field label
+         and the field value
+  - label: if true display the field label.
+  - ro: true if only the field value is to be displayed. Otherwise
+         display an HTML select box, text field or text area to modify the value
+  - ascii: if true do not use any HTML decoration just plain text (if true
+         then read-only (ro) flag is forced to true as well)
+  - show_none: show the None entry in the select box if true (value_id 100)
+  - text_none: text associated with the none value_id to display in the select box
+  - show_any: show the Any entry in the select box if true (value_id 0)
+  - text_any: text associated with the any value_id  tp display in the select box
+  - allowed_transition_only: print only transition allowed */
 
   global $sys_datefmt;
   $output = '';
@@ -285,7 +287,7 @@ function trackers_field_display ($field_name,
 	  if (trackers_data_is_username_field($field_name))
 	    {
 	      $show_none=true;
-	      $text_none='None';
+	      $text_none=_('None');
 	    }
 
 	  if (is_array($value))
@@ -322,7 +324,8 @@ function trackers_field_display ($field_name,
 	else
 	  {
 	    $output .= trackers_field_date($field_name,
-					   (($value == 0) ? '' : strftime("%Y-%m-%d",$value)));
+					   (($value == 0) ? '' :
+                                            strftime("%Y-%m-%d",$value)));
 	  }
 	}
       break;
@@ -338,7 +341,8 @@ function trackers_field_display ($field_name,
       if ($ascii)
 	{ $output .= utils_unconvert_htmlspecialchars($value); }
       else
-	{ $output .= ($ro ? markup_full($value):trackers_field_textarea($field_name,$value)); }
+	{ $output .= ($ro ? markup_full($value):
+                      trackers_field_textarea($field_name,$value)); }
       break;
 
     default:
@@ -380,17 +384,18 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
 	{ $year = ($today[5]+1900); }
 
       # FIXME: order of year/day/month must be local specific
-      $html = calendar_selectbox("day", $day, $field_name.'_dayfd').calendar_selectbox("month", $month, $field_name.'_monthfd').' <input type="text" name="'.$field_name.'_yearfd" size="4" maxlength="4" value="'.$year.'" />';
+      $html = calendar_selectbox("day", $day, $field_name.'_dayfd')
+              .calendar_selectbox("month", $month, $field_name.'_monthfd')
+              .' <input type="text" name="'.$field_name
+              .'_yearfd" size="4" maxlength="4" value="'.$year.'" />';
     }
   return($html);
 
 }
 
-function trackers_multiple_field_date($field_name,$date_begin='',$date_end='',$size=0,$maxlength=0,$ro=false)
+function trackers_multiple_field_date($field_name,$date_begin='',$date_end='',
+                                      $size=0,$maxlength=0,$ro=false)
 {
-
-  # CAUTION!!!! The Javascript below assumes that the date always appear
-  # in a field called 'bug_form'
 
   # FIXME: this is broken, should be made as trackers_field_date
 
@@ -405,11 +410,11 @@ function trackers_multiple_field_date($field_name,$date_begin='',$date_end='',$s
 	list($size, $maxlength) = trackers_data_get_display_size($field_name);
 
       $html = 'Start:<br /><input type="text" name="'.$field_name.
-	 '" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
+	 '" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_begin.'">'.
 	'(yyyy-mm-dd)'.
 	'</td></tr><tr><td>'.
-	'End:<br /><INPUT TYPE="text" name="'.$field_name.'_end'.
-	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
+	'End:<br /><input type="text" name="'.$field_name.'_end'.
+	'" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_end.'">'.
 	
 	'(yyyy-mm-dd)';
 
@@ -426,11 +431,12 @@ function trackers_field_date_operator($field_name,$value='',$ro=false)
   if ($ro)
     $html = htmlspecialchars($value);
   else
-    $html = '<SELECT name="'.$field_name.'_op">'.
-      '<OPTION VALUE=">"'.(($value == '>') ? ' SELECTED':'').'>&gt;</OPTION>'.
-      '<OPTION VALUE="="'.(($value == '=') ? ' SELECTED':'').'>=</OPTION>'.
-      '<OPTION VALUE="<"'.(($value == '<') ? ' SELECTED':'').'>&lt;</OPTION>'.
-      '</SELECT>';
+    $html = '<select name="'.$field_name.'_op">
+<option value=">"'.(($value == '>') ? ' selected':'').'>&gt;</option>
+<option value="="'.(($value == '=') ? ' selected':'').'>=</option>
+<option value="<"'.(($value == '<') ? ' selected':'').'>&lt;</option>
+</select>
+';
   return($html);
 
 }
@@ -514,7 +520,8 @@ function trackers_field_box ($field_name,
 	  $trans_result = db_execute(
             "SELECT from_value_id,to_value_id,is_allowed,notification_list
 	     FROM trackers_field_transition
-	     WHERE group_id=? AND artifact=? AND field_id=? AND (from_value_id=? OR from_value_id='0')",
+	     WHERE group_id=? AND artifact=? AND field_id=?
+             AND (from_value_id=? OR from_value_id='0')",
 	    array($group_id, ARTIFACT, $field_id, $checked));
 	  $forbidden_to_id = array();
 	  $allowed_to_id = array();
@@ -542,8 +549,12 @@ function trackers_field_box ($field_name,
 		  {
 		    $value_id = $val_row['value_id'];
 		    $value   = $val_row['value'];
-		    if ((($default_auth == 'A') && (!array_key_exists($value_id, $forbidden_to_id))) ||
-			(($default_auth == 'F') && (array_key_exists($value_id, $allowed_to_id))) ||
+		    if ((($default_auth == 'A')
+                          && (!array_key_exists($value_id, $forbidden_to_id)))
+                        ||
+			(($default_auth == 'F')
+                          && (array_key_exists($value_id, $allowed_to_id)))
+                        ||
 			($value_id == $checked))
 		      {
 			$val_label[$value_id] = $value;
@@ -566,7 +577,8 @@ function trackers_field_box ($field_name,
 
 # if no transition defined use 'normal' code
 
-      return html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unknown);
+      return html_build_select_box ($result,$box_name,$checked,$show_none,
+                                    $text_none,$show_any, $text_any,$show_unknown);
 
     }
 }
@@ -589,13 +601,16 @@ function trackers_multiple_field_box($field_name,
     { return _("Internal error: no group id"); }
   else
     {
-      $result = trackers_data_get_field_predefined_values($field_name,$group_id,$checked);
+      $result = trackers_data_get_field_predefined_values($field_name,$group_id,
+                                                          $checked);
 
       if ($box_name == '')
 	{
 	  $box_name = $field_name.'[]';
 	}
-      return html_build_multiple_select_box($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,$show_value);
+      return html_build_multiple_select_box($result,$box_name,$checked,6,
+                                            $show_none,$text_none, $show_any,
+                                            $text_any,$show_value);
     }
 }
 
@@ -616,13 +631,15 @@ function trackers_multiple_field_box2 ($field_name,
     { return _("Internal error: no group id"); }
   else
     {
-      $result = trackers_data_get_field_predefined_values($field_name,$group_id,$checked);
+      $result = trackers_data_get_field_predefined_values($field_name,$group_id,
+                                                          $checked);
 
       if ($box_name == '')
 	{
 	  $box_name = $field_name.'[]';
 	}
-      return html_build_checkbox($result,$box_name,$checked,6,$show_none,$text_none, $show_any,$text_any,$show_value);
+      return html_build_checkbox($result,$box_name,$checked,6,$show_none,
+                                 $text_none, $show_any,$text_any,$show_value);
     }
 
 
@@ -653,7 +670,7 @@ function trackers_extract_field_list($post_method=true)
 	  // Must build the date field key.
 	  $field_name = $found[1];
 	  $field_name_part = $found[2];
-	  
+
 	  // We also must increment $day and $month, because the select
 	  // start from zero
 
@@ -682,7 +699,8 @@ function trackers_extract_field_list($post_method=true)
 
 # Check whether a field was shown to the submitter
 # (useful if a field is mandatory if shown to the submitter)
-function trackers_check_is_shown_to_submitter ($field_name, $group_id, $submitter_id)
+function trackers_check_is_shown_to_submitter ($field_name, $group_id,
+                                               $submitter_id)
 {
   if ($submitter_id == 100)
     {
@@ -732,7 +750,8 @@ function trackers_check_empty_fields($field_array, $new_item=true)
 	{ continue; }
 
       # Check if it is empty
-      $is_empty = (trackers_data_is_select_box($field_name) ? ($val==100) : ($val==''));
+      $is_empty = (trackers_data_is_select_box($field_name) ? ($val==100)
+                                                            : ($val==''));
       if (!$is_empty)
 	{ continue; }
 
@@ -766,12 +785,15 @@ function trackers_check_empty_fields($field_array, $new_item=true)
 	    {
 	      # Save that information for further mandatory checks,
 	      # to avoid avoid a SQL request per field checked
-	      $submitter_res = db_execute("SELECT submitted_by FROM ".ARTIFACT." WHERE bug_id=? AND group_id=?",
+	      $submitter_res = db_execute("SELECT submitted_by FROM ".ARTIFACT
+                                          ." WHERE bug_id=? AND group_id=?",
 					  array($item_id, $group_id));
-	      $mandatorycheck_submitter_id = db_result($submitter_res,0,'submitted_by');
+	      $mandatorycheck_submitter_id = db_result($submitter_res,0,
+                                                       'submitted_by');
 	    }
 
-	  if (trackers_check_is_shown_to_submitter($field_name, $group_id, $mandatorycheck_submitter_id))
+	  if (trackers_check_is_shown_to_submitter($field_name, $group_id,
+                                                   $mandatorycheck_submitter_id))
 	    {
 	      $is_mandatory = 1;
 	    }
@@ -790,11 +812,28 @@ function trackers_check_empty_fields($field_array, $new_item=true)
       # reset the entry.
       if ($new_item)
 	{
-	  fb(sprintf(ngettext("The field '%s' is mandatory. Fill it and re-submit the form.","The fields '%s' are mandatory. Fill them and re-submit the form.", count($previous_form_bad_fields)), join(', ',$previous_form_bad_fields)), 1);
+          if (count($previous_form_bad_fields) > 1)
+# TRANSLATORS: The argument is comma-separated list of field names.
+            $msg = sprintf(_("These fields are mandatory: %s.
+Fill them and re-submit the form."), join(', ',$previous_form_bad_fields));
+          else
+            $msg = sprintf(_("The field %s is mandatory.
+Fill it and re-submit the form."), $previous_form_bad_fields);
+
+	  fb($msg, 1);
 	}
       else
 	{
-	  fb(sprintf(ngettext("The field '%s' is mandatory. It has been reset to its previous value. Check it and re-submit the form.","The fields '%s' are mandatory. They have been reset to their previous value. Check them and re-submit the form.", count($previous_form_bad_fields)), join(', ',$previous_form_bad_fields)), 1);
+          if (count($previous_form_bad_fields) > 1)
+# TRANSLATORS: The argument is comma-separated list of field names.
+            $msg = sprintf(_("These fields are mandatory: %s.
+They have been reset to their previous value.
+Check them and re-submit the form."), join(', ',$previous_form_bad_fields));
+          else
+            $msg = sprintf(_("The field %s is mandatory.
+It has been reset to its previous value.
+Check it and re-submit the form."), $previous_form_bad_fields);
+	  fb($msg, 1);
 	}
 
       return false;
@@ -837,206 +876,16 @@ function trackers_canned_response_box ($group_id,$name='canned_response')
 	}
       else
 	{
-	  return form_input("hidden", "canned_response", "100")._("No canned response available");
+	  return form_input("hidden", "canned_response", "100")
+                   ._("No canned response available");
 	}
     }
 }
 
-
-//   Previous overcomplicated code, 
-//   see task #4080 and task #3632
-// function trackers_build_notification_matrix($user_id)
-// {
-//   # Build the notif matrix indexed with roles and events labels (not id)
-//   $res_notif = trackers_data_get_notification_with_labels($user_id);
-//   while ($arr = db_fetch_array($res_notif))
-//     {
-//       $arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
-//     }
-//   return $arr_notif;
-// }
-//
-//
-//   Previous overcomplicated code, 
-//   see task #4080 and task #3632
-// function trackers_check_notification($user_id, $role, $changes=false)
-// {
-//
-//   $send = false;
-//   $arr_notif = trackers_build_notification_matrix($user_id);
-//   if (!$arr_notif)
-//     { return true; }
-//
-//   #echo "==== DBG Checking Notif. for $user_id (role=$role)<br />";
-//   $user_name = user_getname($user_id);
-//
-//   #----------------------------------------------------------
-//   # If it's a new bug only (changes is false) check the NEW_ITEM event and
-//   # ignore all other events
-//   if ($changes==false)
-//     {
-//       if ($arr_notif[$role]['NEW_ITEM'])
-// 	{
-// 	  #echo "DBG NEW_ITEM notified<br />";
-// 	  return true;
-// 	}
-//       else
-// 	{
-// 	  #echo "DBG No notification<br />";
-// 	  return false;
-// 	}
-//     }
-//
-//   #----------------------------------------------------------
-//   #Check: I_MADE_IT  (I am the author of the change )
-//   # Check this one first because if the user said no she doesn't want to be
-//   # aware of any of her change in this role and we can return immediately.
-//   if (($user_id == user_getid()) && !$arr_notif[$role]['I_MADE_IT'])
-//     {
-//       #echo "DBG Dont want to receive my own changes<br />";
-//       return false;
-//     }
-//
-//   #----------------------------------------------------------
-//   # Check :  NEW_COMMENT  A new followup comment is added
-//   if ($arr_notif[$role]['NEW_COMMENT'] && isset($changes['details']))
-//     {
-//       #echo "DBG NEW_COMMENT notified<br />";
-//       return true;
-//     }
-//
-//   #----------------------------------------------------------
-//   #Check: NEW_FILE  (A new file attachment is added)
-//   if ($arr_notif[$role]['NEW_FILE'] && isset($changes['attach']))
-//     {
-//       #echo "DBG NEW_FILE notified<br />";
-//       return true;
-//     }
-//
-//   #----------------------------------------------------------
-//   #Check: CLOSED  (The bug is closed)
-//   # Rk: this one has precedence over PSS_CHANGE. So notify even if PSS_CHANGE
-//   # says no.
-//   if ($arr_notif[$role]['CLOSED'] && ($changes['status_id']['add'] == 'Closed'))
-//     {
-//       #echo "DBG CLOSED bug notified<br />";
-//       return true;
-//     }
-//
-//   #----------------------------------------------------------
-//   #Check: PSS_CHANGE  (Priority,Status,Severity changes)
-//   if ($arr_notif[$role]['PSS_CHANGE'] &&
-//       (isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity'])) )
-//     {
-//       #echo "DBG PSS_CHANGE notified<br />";
-//       return true;
-//     }
-//
-//
-//   #----------------------------------------------------------
-//   # Check :  ROLE_CHANGE (I'm added to or removed from this role)
-//   # Rk: This event is meanningless for Commenters. It also is for submitter but may be
-//   # one day the submitter will be changeable by the project admin so test it.
-//   # Rk #2: check this one at the end because it is the most CPU intensive and this
-//   # event seldomly happens
-//   if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
-//       (($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
-//       ($role == 'SUBMITTER') )
-//     {
-//       #echo "DBG ROLE_CHANGE for submitter notified<br />";
-//       return true;
-//     }
-//
-//   if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
-//       (($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
-//       ($role == 'ASSIGNEE') )
-//     {
-//       #echo "DBG ROLE_CHANGE for role assignee notified<br />";
-//       return true;
-//     }
-//
-//   $arr_cc_changes = array();
-//   if (isset($changes['CC']['add']))
-//     $arr_cc_changes = split(',',$changes['CC']['add']);
-//   $arr_cc_changes[] = $changes['CC']['del'];
-//   $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);
-//   $are_anyother_user_in_cc_changes =
-//      (!$is_user_in_cc_changes || count($arr_cc_changes)>1);
-//
-//   if ($arr_notif['CC']['ROLE_CHANGE'] && ($role == 'CC'))
-//     {
-//       if ($is_user_in_cc_changes)
-// 	{
-// 	  #echo "DBG ROLE_CHANGE for cc notified<br />";
-// 	  return true;
-// 	}
-//     }
-//
-//   #----------------------------------------------------------
-//   #Check: CC_CHANGE  (CC_CHANGE is added or removed)
-//   # check this right after because  role cahange for cc can contradict
-//   # thee cc_change notification. If the role change on cc says no notification
-//   # then it has precedence over a cc_change
-//   if ($arr_notif[$role]['CC_CHANGE'] && isset($changes['CC']))
-//     {
-//       # its enough to test role against 'CC' because if we are at that point
-//       # it means that the role_change for CC was false or that role is not CC
-//       # So if role is 'CC' and we are here it means that the user asked to not be
-//       # notified on role_change as CC, unless other users are listed in the cc changes
-//       if (($role != 'CC') || (($role == 'CC') && $are_anyother_user_in_cc_changes))
-// 	{
-// 	  #echo "DBG CC_CHANGE notified<br />";
-// 	  return true;
-// 	}
-//     }
-//
-//   #----------------------------------------------------------
-//   #Check: CHANGE_OTHER  (Any changes not mentioned above)
-//   # *** THIS ONE MUST ALWAYS BE TESTED LAST
-
-//   # Delete all tested fields from the $changes array. If any remains then it
-//   # means a notification must be sent
-//   unset($changes['details']);
-//   unset($changes['attach']);
-//   unset($changes['priority']);
-//   unset($changes['severity']);
-//   unset($changes['status_id']);
-//   unset($changes['CC']);
-//
-// # assignee and submitter related changes can't be unset globally. 
-// # What needs to be unset is only what has been handled in this particular
-// # call of the function
-
-//   if (($changes['assigned_to']['add'] == $user_name) && ($role == 'ASSIGNEE')) {    unset($changes['assigned_to']['add']);
-//   }
-//   if (($changes['assigned_to']['del'] == $user_name) && ($role == 'ASSIGNEE')) {    unset($changes['assigned_to']['del']);
-//   }
-//   if (count($changes['assigned_to']) == 0) { unset($changes['assigned_to']);}
-//
-//                                                                               
-//   if (($changes['submitted_by']['add'] == $user_name) && ($role == 'SUBMITTER')) {
-//     unset($changes['submitted_by']['add']);
-//   }
-//   if (($changes['submitted_by']['del'] == $user_name) && ($role == 'SUBMITTER')) {
-//     unset($changes['submitted_by']['del']);
-//   }
-//   if (count($changes['submitted_by']) == 0) { unset($changes['submitted_by']);}
-//
-//   if ($arr_notif[$role]['ANY_OTHER_CHANGE'] && count($changes))
-//     {
-//       #echo "DBG ANY_OTHER_CHANGE notified<br />";
-//       return true;
-//     }
-//
-//   # Sorry, no notification...
-//   #echo "DBG No notification!!<br />";
-//   return false;
-// }
-
 function trackers_build_notification_list($item_id, $group_id, $changes, $artifact=null)
 {
   # Should be notified any person in the CC list and the assignee
-  # 
+  #
   #   - unless this person is the one that made the update and does not
   #   want to be get notifs for his own work
   #   - unless this person wants to know only if the item is closed and the
@@ -1061,24 +910,26 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
     { $addresses_to_skip[$current_uid] = true; }
 
   # The current assignee will always be included (unless indeed if it is the
-  # current user that does not want CC) no matter what: why would be 
+  # current user that does not want CC) no matter what: why would be
   # assignee if he is not interested in the item updates, for god sakes!
   # As this function is called after updated was handled, if the update
   # changed the assignee, the new assignee is the current assignee.
-  # The previous assignee may or may not receive updates, if he update the 
+  # The previous assignee may or may not receive updates, if he update the
   # item (if so, he is in CC)
-  $assignee_uid = db_result(db_execute("SELECT assigned_to from $artifact WHERE bug_id=?",
+  $assignee_uid = db_result(db_execute("SELECT assigned_to from $artifact
+                                       WHERE bug_id=?",
 				     array($item_id)),
 			    0, 'assigned_to');
-  # assignee to 100 == unassigned 
-  if ($assignee_uid != "100" && 
+  # assignee to 100 == unassigned
+  if ($assignee_uid != "100" &&
       !array_key_exists($assignee_uid, $addresses_to_skip))
     { $addresses[$assignee_uid] = true; }
 
-  # Now go through the CC list: 
+  # Now go through the CC list:
   # (automatically added CC will be in numerical
   # form and email = added_by)
-  $result = db_execute("SELECT email,added_by FROM {$artifact}_cc WHERE bug_id=? GROUP BY email LIMIT 150",
+  $result = db_execute("SELECT email,added_by FROM {$artifact}_cc
+                        WHERE bug_id=? GROUP BY email LIMIT 150",
 		       array($item_id));
   $rows = db_numrows($result);
   for ($i=0; $i < $rows; $i++)
@@ -1091,7 +942,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
 
       # The CC may have been added in the form like:
       #    THIS NAME <this@address.net>
-      # So the validation check must be made only on the part in < >, if 
+      # So the validation check must be made only on the part in < >, if
       # it exists
       if (preg_match("/\<([\w\d\-\@\.]*)\>/", $email, $realaddress))
 	{ $email = $realaddress[1]; }
@@ -1101,7 +952,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
       # save time, later to makre sure we do not make dupes
       # Ignore if already registered
       if (array_key_exists($email, $addresses))
-	{ continue; }      
+	{ continue; }
       # Ignore if in the to be ignored list
       if (array_key_exists($email, $addresses_to_skip))
 	{ continue; }	
@@ -1124,7 +975,7 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
 
       # If we have a valid username, convert it to an uid
       if (!ctype_digit($email) && user_getid($email))
-	{ 
+	{
 	  # since is is will be registered, we can ignore it in further check
 	  $addresses_to_skip[$email] = true;
 	  $email = user_getid($email);
@@ -1132,44 +983,47 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
 
       # If we have a string that contains @, try to find it in the database
       # and convert it to an uid if found
-      if (!ctype_digit($email) && 
+      if (!ctype_digit($email) &&
 	  strpos($email, "@"))
-	{ 
-	  $res = db_execute("SELECT user_id FROM user WHERE email=? LIMIT 1", array($email));
+	{
+	  $res = db_execute("SELECT user_id FROM user
+                             WHERE email=? LIMIT 1", array($email));
 	  if ($res != false and db_numrows($res) > 0) {
 	    $email_search = db_result($res, 0, 'user_id');
-	    
+
 	    if ($email_search)
 	      {
 		$addresses_to_skip[$email] = true;
-		$email = $email_search; 
+		$email = $email_search;
 	      }
 	  }
 	}
-      
+
       # Ignore if already registered
       if (array_key_exists($email, $addresses))
-	{ continue; }  	  
+	{ continue; }
       # Ignore if in the to be ignored list
       if (array_key_exists($email, $addresses_to_skip))
-	{ continue; }	 
+	{ continue; }
 
       # Check specific users prefs, if we have a UID
       if (ctype_digit($email))
-	 { 
+	 {
 	   $should_not_skip = false;
 
 	   # Do not want to be notified unless the item is closed
 	   # (first check values, then check prefs, as it requires an
 	   # an extra SQL select)
-	   
+
 	   $unless_closed = user_get_preference("notify_item_closed", $email);
-	   $unless_status_changed = user_get_preference("notify_item_statuschanged", $email);
-	    
+	   $unless_status_changed = user_get_preference("notify_item_statuschanged",
+                                                        $email);
+
 	   if ((!$unless_closed && !$unless_status_changed))
 	     { $should_not_skip = true; }
-	   
-	   if ($unless_closed && isset($changes['status_id']) && $changes['status_id']['add-val'] == '3') 
+
+	   if ($unless_closed && isset($changes['status_id'])
+               && $changes['status_id']['add-val'] == '3')
 	     { $should_not_skip = true; }
 
 	   if ($unless_status_changed && isset($changes['resolution_id']))
@@ -1178,8 +1032,8 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
 
 	   if (!$should_not_skip)
 	     {
-	       $addresses_to_skip[$email] = true;	       
-	       continue; 
+	       $addresses_to_skip[$email] = true;
+	       continue;
 	     }
 	 }
 
@@ -1192,7 +1046,8 @@ function trackers_build_notification_list($item_id, $group_id, $changes, $artifa
   return (array_keys($addresses));
 }
 
-function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$force_exclude_list=false, $artifact=0)
+function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,
+                                 $force_exclude_list=false, $artifact=0)
 {
   global $sys_datefmt, $int_probablyspam;
 
@@ -1210,15 +1065,16 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
     util_die('Invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
 
   $result = db_execute("SELECT * from $artifact WHERE bug_id=?", array($item_id));
-  $bug_href = "http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']."$artifact/?$item_id";
-  
+  $bug_href = "http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']
+              ."$artifact/?$item_id";
+
   if ($result && db_numrows($result) > 0)
   {
 
     $group_id = db_result($result,0,'group_id');
-    
+
     unset($content_type);
-  # CERN SPECIFIC (at least for now) BEGIN 
+  # CERN SPECIFIC (at least for now) BEGIN
   # Maybe later we ll implement a way to select mail templates, or prepared
   # mail format (like: text / html).
   # But it will have to be done in a well planned way that take into account
@@ -1231,7 +1087,8 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
   # The upstream code cannot be cluttered by tons of things like that.
   # This is a one time exception, or almost, needed because this cannot
   # be directly merged in a generic way right now.
-  if ($GLOBALS['sys_default_domain'] == "savannah.cern.ch" || !empty($GLOBALS['sys_debug_cerntest']))
+  if ($GLOBALS['sys_default_domain'] == "savannah.cern.ch"
+      || !empty($GLOBALS['sys_debug_cerntest']))
   {
     $content_type = group_get_preference($group_id, "notif_content");
     if ($content_type == "")
@@ -1239,12 +1096,16 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
         # by default select maximum
 	$content_type = '2';
       }
-    
+
     # Now, if the content type is 0, go on with Savane standard notif.
     # If it s something else, use trackers_mail_followup_cernspecifichack()
     if ($content_type > 0)
       {
-	return trackers_mail_followup_cernspecifichack($group_id,$bug_href,$result,$content_type,$item_id,$more_addresses,$changes,$force_exclude_list);
+	return trackers_mail_followup_cernspecifichack($group_id,$bug_href,
+                                                       $result,$content_type,
+                                                       $item_id,$more_addresses,
+                                                       $changes,
+                                                       $force_exclude_list);
       }
   }
   # CERN SPECIFIC (at least for now) END
@@ -1252,7 +1113,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
   # CONTENT OF THE MAIL MUST NOT BE TRANSLATED
 
   $body = '';
-  
+
   if ($changes)
     {
       $body = format_item_changes($changes, $item_id, $group_id)."\n";
@@ -1260,22 +1121,28 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
   else
     {
       $body .= "URL:\n  <".$bug_href.">\n\n";
-      $body .= trackers_field_display('summary', $group_id, db_result($result,0,'summary'),false,true,true,true)."\n";
+      $body .= trackers_field_display('summary', $group_id,
+                                      db_result($result,0,'summary'),false,
+                                      true,true,true)."\n";
       $body .= sprintf("%25s", "Project:").' '.group_getname($group_id)."\n";
-      $body .= trackers_field_display('submitted_by', $group_id, db_result($result,0,'submitted_by'),false,true,true,true)."\n";
-      $body .= trackers_field_display('date', $group_id, db_result($result,0,'date'),false,true,true,true)."\n";
-	  
+      $body .= trackers_field_display('submitted_by', $group_id,
+                                      db_result($result,0,'submitted_by'),false,
+                                      true,true,true)."\n";
+      $body .= trackers_field_display('date', $group_id,
+                                      db_result($result,0,'date'),false,true,
+                                      true,true)."\n";
+
       # All other regular fields now
       $i=0;
       while ($field_name = trackers_list_all_fields())
 	{
-	  
+
 	  # if the field is a special field or if not used by his project
 	  # then skip it. Otherwise print it in ASCII format.
 	  if (!trackers_data_is_special($field_name) &&
 	      trackers_data_is_used($field_name))
 	    {
-	      
+
 	      $body .= trackers_field_display($field_name,
 					      $group_id,
 					      db_result($result,0,$field_name),
@@ -1283,7 +1150,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
 					      true,
 					      true,
 					      true);
-	      
+
 	      $i++;
 	      $body .= "\n";
 	    }
@@ -1291,51 +1158,53 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
       $body .= "\n";
 
       # Now display other special fields
-      $body .= "    _______________________________________________________\n\nDetails:\n".trackers_field_display('details',
-														  $group_id,
-														  db_result($result,0,'details'),
-														  true,true,true,true);
-      
+      $body .=
+"    _______________________________________________________
+
+Details:\n".trackers_field_display('details',
+                                   $group_id,
+                                   db_result($result,0,'details'),
+                                   true,true,true,true);
+
       # Then output the history of bug details from newest to oldest
       $body .= "\n\n".format_item_details($item_id, $group_id, true);
-      
-      # Then output the CC list
-      # (No longer included, we do not want to send emails in clear text)
-      #$body .= "\n\n".format_item_cc_list($item_id, $group_id, true);
 
       # Then output the history of bug details from newest to oldest
       $body .= "\n\n".format_item_attached_files($item_id, $group_id, true);
     }
-  
+
   # Finally output the message trailer
   $body .= "\n    _______________________________________________________\n\n";
   $body .= "Reply to this item at:";
   $body .= "\n\n  <".$bug_href.">";
-  
+
   # See who is going to receive the notification.
   # Plus append any other email
   # given at the end of the list.
-  $arr_addresses = trackers_build_notification_list($item_id,$group_id,$changes,$artifact);
+  $arr_addresses = trackers_build_notification_list($item_id,$group_id,
+                                                    $changes,$artifact);
   $to = join(',',$arr_addresses);
-  $from = user_getrealname(0,1).' <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
+  $from = user_getrealname(0,1).' <'.$GLOBALS['sys_mail_replyto'].'@'
+          .$GLOBALS['sys_mail_domain'].'>';
   $subject = utils_unconvert_htmlspecialchars(db_result($result,0,'summary'));
-  
+
   if ($more_addresses)
     {
       $to .= ($to ? ',':'').$more_addresses;
     }
-  
+
   # If the item is private, take into account the exclude-list
   $exclude_list = '';
   if (db_result($result,0,'privacy') == '2')
     {
-      $exclude_list = db_result(db_execute("SELECT ".$artifact."_private_exclude_address
+      $exclude_list = db_result(db_execute("SELECT ".$artifact
+                                           ."_private_exclude_address
                                             FROM groups WHERE group_id=?",
 					   array($group_id)),
 				0, $artifact."_private_exclude_address");
 
     }
-  
+
   # Disallow mail notification for an address, private or not
   if ($force_exclude_list)
     {
@@ -1344,20 +1213,21 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,$
       else
 	{ $exclude_list = $force_exclude_list; }
     }
-  
+
   # Necessary to mention the comment id (for delayed mails)
   if ($GLOBALS['int_delayspamcheck_comment_id'])
     { $item_id .= ":".$GLOBALS['int_delayspamcheck_comment_id']; }
-  
-  sendmail_mail($from, $to, $subject, $body, group_getunixname($group_id), $artifact, $item_id, 0, 0, $exclude_list);
-  
+
+  sendmail_mail($from, $to, $subject, $body, group_getunixname($group_id),
+                $artifact, $item_id, 0, 0, $exclude_list);
+
   }
   else
     {
       fb(_("Could not send item update."), 0);
     }
 }
- 
+
 
 # Wrapper for trackers_attach_file that will find out if one or more files
 # were attached
@@ -1365,7 +1235,7 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
 {
   # Reset the global used to count the current upload size
   $GLOBALS['current_upload_size'] = 0;
-  
+
   $changed = false;
   $comment = '';
 
@@ -1375,7 +1245,7 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
   $files = sane_import('files', $filenames);
   extract(sane_import('post', array('file_description')));
   foreach ($files as $file)
-    { 
+    {
       if ($file['error'] != UPLOAD_ERR_OK)
 	{ continue; }
 
@@ -1388,8 +1258,8 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
 				      $file_description,
 				      $changes);
       if ($file_id)
-	{ 
-	  $comment .= "file #$file_id, "; 
+	{
+	  $comment .= "file #$file_id, ";
 	  $changes['attach'][] = array('name' => $file['name'],
 				       'size' => $file['size']);
 	}
@@ -1397,10 +1267,10 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
 
   if ($comment)
     {
-      $changed = true; 
+      $changed = true;
       $comment = "\n\n(".rtrim($comment, ", ").")";
     }
-  
+
   # Trash the used global
   unset($GLOBALS['current_upload_size']);
 
@@ -1425,12 +1295,14 @@ function trackers_attach_file($item_id,
 
   if (!is_writable($sys_trackers_attachments_dir))
     {
-      fb(sprintf(_("The upload directory '%s' is not writable."), $sys_trackers_attachments_dir), 1);
+      fb(sprintf(_("The upload directory '%s' is not writable."),
+                 $sys_trackers_attachments_dir), 1);
       return false;
     }
   if (!is_uploaded_file($input_file))
     {
-      fb(sprintf(_("File %s not attached: unable to open it"), $input_file_name), 1);
+      fb(sprintf(_("File %s not attached: unable to open it"),
+                 $input_file_name), 1);
       return false;
     }
 
@@ -1441,43 +1313,45 @@ function trackers_attach_file($item_id,
   $current_upload_size_comment = '';
   if ($current_upload_size < 0)
     {
-      fb(sprintf(_("Unexpected error, disregarding file %s attachment"), $input_file_name), 1);
+      fb(sprintf(_("Unexpected error, disregarding file %s attachment"),
+                 $input_file_name), 1);
       return false;
     }
   if ($current_upload_size > 0)
     {
       # Explanation added when an upload is refused, if the upload count
       # is involved
-      $current_upload_size_comment = ' '.sprintf(_("You already uploaded %s kilobytes."), $current_upload_size);
+      $current_upload_size_comment = ' '
+       .sprintf (ngettext("You already uploaded %s kilobyte.",
+                          "You already uploaded %s kilobytes.",
+                          $current_upload_size),
+                 $current_upload_size);
     }
 
 
-  # Check file size:
-  #  - first with filesize(), that can result appropriate result for big files
-  #  unlike strlen. If it is too big, we stop here.
-  #  - then with strlen: the check must be made on the final size for import
-  #  in the database.
-  #
+  # Check file size.
   # Note: in english, use the expression kilobytes, and not kB, because
   # feedback is in lowercase for the whole string.
   # We always add the current upload count
   $filesize = round(filesize($input_file) / 1024);
   $uploadsize = $filesize + $current_upload_size;
-  if ($uploadsize > $GLOBALS['sys_upload_max']) 
+  if ($uploadsize > $GLOBALS['sys_upload_max'])
   {
-    fb(sprintf(_("File %s not attached: the allowed upload size is %s kilobytes, after escaping characters as required. This file size is %s kilobytes."), $input_file_name, $GLOBALS['sys_upload_max'], $filesize).$current_upload_size_comment, 1);
+    fb(sprintf(ngettext("File %s not attached: its size is %s kilobyte.",
+                        "File %s not attached: its size is %s kilobytes.",
+                        $filesize), $input_file_name, $filesize).' '
+        .sprintf(ngettext("Maximum allowed file size is %s kilobyte,
+after escaping characters as required.",
+                          "Maximum allowed file size is %s kilobytes,
+after escaping characters as required.",
+                          $GLOBALS['sys_upload_max']),
+                 $GLOBALS['sys_upload_max']).$current_upload_size_comment, 1);
     return false;
   }
-  $filesize = round(filesize($input_file) / 1024);
-  $uploadsize = $filesize + $current_upload_size;
-  if ($uploadsize > $GLOBALS['sys_upload_max'])
-    {
-      fb(sprintf(_("File %s not attached: the allowed upload size is %s kilobytes. This file size is %s kilobytes."), $input_file_name, $GLOBALS['sys_upload_max'], $filesize).$current_upload_size_comment, 1);
-      return false;
-    }
   if (filesize($input_file) == 0)
     {
-      fb(sprintf(_("File %s is empty."), $input_file_name).$current_upload_size_comment, 1);
+      fb(sprintf(_("File %s is empty."), $input_file_name)
+         .$current_upload_size_comment, 1);
       return false;
     }
 
@@ -1511,30 +1385,24 @@ function trackers_attach_file($item_id,
 	}
 
       $file_id = db_insertid($res);
+# TRANSLATORS: the argument is file id (a number).
       fb(sprintf(_("file #%s attached"), $file_id));
-
-      # This was used in the past to generate email notification content.
-      # Nowadays, code used to generate email notification content
-      #$changes['attach']['description'] = $file_description;
-      #$changes['attach']['name'] = $input_file_name;
-      #$changes['attach']['size'] = $input_file_size;
-      #$changes['attach']['href'] = 'http://'.$GLOBALS['sys_default_domain'].$GLOBALS['sys_home'].ARTIFACT."/download.php?file_id=$file_id";
 
       trackers_data_add_history("Attached File",
 				"-",
 				"Added ".$input_file_name.", #".$file_id,
 				$item_id,
 				0,0,1);
-      
+
       # Add the guy in CC
-      if (user_isloggedin() && 
+      if (user_isloggedin() &&
 	  !user_get_preference("skipcc_updateitem"))
 	{
 	  trackers_add_cc($item_id,
 			  $group_id,
 			  user_getid(),
 			  "-UPD-");
-         # use a flag as comment, because if we 
+         # use a flag as comment, because if we
          # translate the string now, people will get
          # the translation of the submitter when they
          # read the item, not necessarily the one they
@@ -1547,7 +1415,8 @@ function trackers_attach_file($item_id,
 
 function trackers_exist_cc($item_id,$cc)
 {
-  $res = db_execute("SELECT bug_cc_id FROM ".ARTIFACT."_cc WHERE bug_id=? AND email=?",
+  $res = db_execute("SELECT bug_cc_id FROM ".ARTIFACT."_cc WHERE bug_id=?
+                    AND email=?",
 		    array($item_id, $cc));
   return (db_numrows($res) >= 1);
 }
@@ -1565,8 +1434,8 @@ function trackers_insert_cc($item_id,$cc,$added_by,$comment,$date)
 
   # Store the change in history only if the CC was a manual add, not a direct
   # effect of another action
-  if ($comment != "-SUB-" && 
-      $comment != "-UPD-" && 
+  if ($comment != "-SUB-" &&
+      $comment != "-UPD-" &&
       $comment != "-COM-")
     {
       trackers_data_add_history("Carbon-Copy",
@@ -1616,15 +1485,16 @@ function trackers_add_cc($item_id,$group_id,$email,$comment)
 function trackers_delete_cc($group_id=false,$item_id=false,$item_cc_id=false)
 {
   global $feedback,$ffeedback;
-  
+
 
   # Extract data about the CC
-  $res1 = db_execute("SELECT * from ".ARTIFACT."_cc WHERE bug_cc_id=?", array($item_cc_id));
+  $res1 = db_execute("SELECT * from ".ARTIFACT."_cc WHERE bug_cc_id=?",
+                     array($item_cc_id));
   if (!db_numrows($res1))
     {
       # No result? Stop here silently (assume that someone tried to remove
       # an already removed CC)
-      return false;      
+      return false;
     }
 
 
@@ -1659,13 +1529,14 @@ function trackers_delete_cc($group_id=false,$item_id=false,$item_cc_id=false)
 	      $user_id != $added_by)
 	    {
 	      fb(_("Not allowed to remove CC"), 1);
-	      return false;	    
+	      return false;
 	    }
 	}
     }
 
   # Now delete the CC address
-  $res2 = db_execute("DELETE FROM ".ARTIFACT."_cc WHERE bug_cc_id=?", array($item_cc_id));
+  $res2 = db_execute("DELETE FROM ".ARTIFACT."_cc WHERE bug_cc_id=?",
+                     array($item_cc_id));
   if (!$res2)
     {
       fb(_("Failed to remove CC"), 1);
@@ -1674,7 +1545,7 @@ function trackers_delete_cc($group_id=false,$item_id=false,$item_cc_id=false)
   else
     {
       fb(_("CC Removed"));
-      
+
       trackers_data_add_history("Carbon-Copy",
 				"Removed ".db_result($res1, 0, 'email'),
 				"-",
@@ -1692,14 +1563,16 @@ function trackers_delete_cc_by_user ($item_id, $user_id)
   #  - as username
   #  - as email
   # We will try them all, to make sure the user is properly removed from cc
-  
+
   # Must be a valid user
   if (!user_exists($user_id))
     { return false; }
 
   # Now try to remove
-  $result = db_execute("DELETE  FROM ".ARTIFACT."_cc WHERE bug_id=? AND (email=? OR email=? OR email=?)",
-		       array($item_id, $user_id, user_getname($user_id), user_getemail($user_id)));
+  $result = db_execute("DELETE  FROM ".ARTIFACT."_cc WHERE bug_id=?
+                        AND (email=? OR email=? OR email=?)",
+		       array($item_id, $user_id, user_getname($user_id),
+                             user_getemail($user_id)));
 
   # Return the success or failure
   return (db_numrows($result) >= 1);
@@ -1707,7 +1580,8 @@ function trackers_delete_cc_by_user ($item_id, $user_id)
 
 
 
-function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on, $item_depends_on_artifact, &$changes)
+function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on,
+                                     $item_depends_on_artifact, &$changes)
 {
 
   # Can be done only by at least technicians
@@ -1717,7 +1591,11 @@ function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on, $ite
 
   if (member_check(0,$group_id, member_create_tracker_flag(ARTIFACT).'1'))
     {
-      $result = db_execute("DELETE FROM ".ARTIFACT."_dependencies WHERE item_id=? AND is_dependent_on_item_id=? AND is_dependent_on_item_id_artifact=?", array($item_id, $item_depends_on, $item_depends_on_artifact));
+      $result = db_execute("DELETE FROM ".ARTIFACT."_dependencies WHERE item_id=?
+                            AND is_dependent_on_item_id=?
+                            AND is_dependent_on_item_id_artifact=?",
+                           array($item_id, $item_depends_on,
+                                 $item_depends_on_artifact));
     }
 
   if (!$result)
@@ -1729,7 +1607,9 @@ function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on, $ite
     {
       fb(_("Dependency Removed."));
       trackers_data_add_history("Dependencies",
-				"Removed dependency to ".$item_depends_on_artifact." #".$item_depends_on,
+				"Removed dependency to "
+                                .$item_depends_on_artifact." #"
+                                .$item_depends_on,
 				"-",
 				$item_id,
 				0,0,1);
@@ -1739,7 +1619,8 @@ function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on, $ite
 				$item_depends_on,
 				0,0,1);
 
-      $changes['Dependency Removed']['add'] = $item_depends_on_artifact." #".$item_depends_on;
+      $changes['Dependency Removed']['add'] = $item_depends_on_artifact." #"
+                                              .$item_depends_on;
 
       return true;
     }
@@ -1808,7 +1689,8 @@ function trackers_add_sort_criteria($criteria_list, $order, $msort)
     {
       if (!$msort)
 	{ unset($arr); }
-      if ( ($order == 'severity') || ($order == 'hours') || (trackers_data_is_date_field($order)) )
+      if ( ($order == 'severity') || ($order == 'hours')
+          || (trackers_data_is_date_field($order)) )
 	{
 	  # severity, effort and dates sorted in descending order by default
 	  $arr[] = $order.'<';
@@ -1841,8 +1723,10 @@ function trackers_criteria_list_to_query($criteria_list)
   // Undo the uid->user_name trick to avoid "Column 'submitted_by' in
   // order clause is ambiguous" error. This is pretty ugly. Also check
   // trackers_data_is_username_field().
-  $criteria_list = str_replace('submitted_by ','user_submitted_by.user_name ',$criteria_list);
-  $criteria_list = str_replace('assigned_to ','user_assigned_to.user_name ',$criteria_list);
+  $criteria_list = str_replace('submitted_by ','user_submitted_by.user_name ',
+                               $criteria_list);
+  $criteria_list = str_replace('assigned_to ','user_assigned_to.user_name ',
+                               $criteria_list);
   return $criteria_list;
 }
 
@@ -1866,7 +1750,8 @@ function trackers_criteria_list_to_text($criteria_list, $url)
 	  $morder = htmlspecialchars($morder);
 
 	  $arr_text[] = '<a href="'.$url.'&amp;morder='.$morder.'#results">'.
-	     trackers_data_get_label($attr).'</a><img class="icon" src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/'.
+	     trackers_data_get_label($attr).'</a><img class="icon" src="'
+             .$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/'.
 	     ((substr($crit, -1) == '>') ? 'down' : 'up').
 	     '.png" border="0" />';
 	}
@@ -1933,7 +1818,8 @@ function trackers_build_match_expression($field, &$to_match)
 	      $to_match = $matches[1].' '.$matches[2];
 
 	    }
-	  else if (preg_match("/\s*($int_reg)\s*-\s*($int_reg)/", $to_match, $matches))
+	  else if (preg_match("/\s*($int_reg)\s*-\s*($int_reg)/", $to_match,
+                   $matches))
 	    {
 	      # it's a range number1-number2
 	      $matches[1] = (string)((int)$matches[1]);
@@ -1984,7 +1870,8 @@ function trackers_build_match_expression($field, &$to_match)
 	      $params[] = $matches[2];
 	      $to_match = $matches[1].' '.$matches[2];
 	    }
-	  else if (preg_match("/\s*($flt_reg)\s*-\s*($flt_reg)/", $to_match, $matches) )
+	  else if (preg_match("/\s*($flt_reg)\s*-\s*($flt_reg)/", $to_match,
+                              $matches))
 	    {
 	      # it's a range number1-number2
 	      $matches[1] = (string)((float)$matches[1]);
@@ -2049,7 +1936,8 @@ function trackers_get_msgid ($artifact, $item_id, $latest="")
   if ($latest)
     { $latest = "ORDER BY id DESC LIMIT 1"; }
 
-  $result = db_execute("SELECT msg_id FROM trackers_msgid WHERE artifact=? AND item_id=? $latest",
+  $result = db_execute("SELECT msg_id FROM trackers_msgid WHERE artifact=? 
+                        AND item_id=? $latest",
 		       array($artifact, $item_id));
   $list = '';
   while ($id = db_fetch_array($result))
@@ -2076,7 +1964,9 @@ function trackers_get_msgid ($artifact, $item_id, $latest="")
   # The upstream code cannot be cluttered by tons of things like that.
   # This is a one time exception, or almost, needed because this cannot
   # be directly merged in a generic way right now.
-function trackers_mail_followup_cernspecifichack ($group_id, $bug_href, $result,$content_type, $item_id, $more_addresses=false, $changes=false,$force_exclude_list=false) {
+function trackers_mail_followup_cernspecifichack ($group_id, $bug_href,
+   $result,$content_type, $item_id, $more_addresses=false, $changes=false,
+   $force_exclude_list=false) {
   global $sys_datefmt;
 
   # MUST BE DEFINED HERE, dont ask me why
@@ -2090,10 +1980,10 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
 
       if ($changes)
 	{
-	  $body .= "\n==============================================================================\n";
-	  $body .= " LATEST MODIFICATIONS of ".ARTIFACT." #".$item_id.":\n";
-          $body .= "==============================================================================\n\n";
-
+	  $body .=
+"\n==============================================================================
+ LATEST MODIFICATIONS of ".ARTIFACT." #".$item_id.":
+==============================================================================\n\n";
 
    ### format_item_changes of savane 1.0.6
  # FIXME: strange, with %25s it does not behave exactly like
@@ -2122,7 +2012,8 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
 
   if ($out)
     {
-      $out = "Update of ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id." (project ".group_getunixname($group_id)."):\n\n".$out;
+      $out = "Update of ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
+             ." (project ".group_getunixname($group_id)."):\n\n".$out;
     }
 
 
@@ -2133,14 +2024,17 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
       if ($out)
         { $out .= $separator; }
 
-      $out_com = "Follow-up Comment #".db_numrows(trackers_data_get_followups($item_id));
+      $out_com = "Follow-up Comment #"
+                 .db_numrows(trackers_data_get_followups($item_id));
       if (!$out)
         {
-          $out_com .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id." (project ".group_getunixname($group_id).")";
+          $out_com .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
+                      ." (project ".group_getunixname($group_id).")";
         }
 
       $out_com .= ":\n\n";
-      if ($changes['details']['type'] != 'None' && $changes['details']['type'] != '(Error - Not Found)')
+      if ($changes['details']['type'] != 'None'
+          && $changes['details']['type'] != '(Error - Not Found)')
 	{
 	  $out_com .= '['.$changes['details']['type']."]\n";
 	}
@@ -2159,12 +2053,15 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
       $out_att = "Additional Item Attachment";
       if (!$out)
         {
-          $out_att .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id." (project ".group_getunixname($group_id).")";
+          $out_att .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
+                      ." (project ".group_getunixname($group_id).")";
         }
       $out_att .= ":\n\n";
-      $out_att .= sprintf("File name: %-30s Size:%d KB\n",$changes['attach']['name'],
+      $out_att .= sprintf("File name: %-30s Size:%d KB\n",
+                          $changes['attach']['name'],
 			  intval($changes['attach']['size']/1024) );
-      $out_att .= $changes['attach']['description']."\n".'<'.$changes['attach']['href'].'>';
+      $out_att .= $changes['attach']['description']."\n".'<'
+                  .$changes['attach']['href'].'>';
       unset($changes['attach']);
 
       $out .= $out_att;
@@ -2176,14 +2073,21 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
    $body .= "\n";
 	}
 
-      $body .= "\n==============================================================================\n";
-      $body .= " OVERVIEW of ".ARTIFACT." #".$item_id.":\n";
-      $body .= "==============================================================================\n\n";
-      $body .= "URL:\n  <".$bug_href.">\n\n";
-      $body .= trackers_field_display('summary', $group_id, db_result($result,0,'summary'),false,true,true,true)."\n";
+      $body .=
+"\n==============================================================================
+ OVERVIEW of ".ARTIFACT." #".$item_id.":
+==============================================================================\n
+URL:\n  <".$bug_href.">\n\n";
+      $body .= trackers_field_display('summary', $group_id,
+                                      db_result($result,0,'summary'),
+                                      false,true,true,true)."\n";
       $body .= sprintf("%25s", "Project:").' '.group_getname($group_id)."\n";
-      $body .= trackers_field_display('submitted_by', $group_id, db_result($result,0,'submitted_by'),false,true,true,true)."\n";
-      $body .= trackers_field_display('date', $group_id, db_result($result,0,'date'),false,true,true,true)."\n";
+      $body .= trackers_field_display('submitted_by', $group_id, 
+                                      db_result($result,0,'submitted_by'),
+                                      false,true,true,true)."\n";
+      $body .= trackers_field_display('date', $group_id,
+                                       db_result($result,0,'date'),
+                                      false,true,true,true)."\n";
 
       # All other regular fields now
       $i=0;
@@ -2211,7 +2115,8 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
       $body .= "\n";
 
       # Now display other special fields
-      $body .= "    _______________________________________________________\n\n".trackers_field_display('details',
+      $body .= "    _______________________________________________________\n\n"
+               .trackers_field_display('details',
 	                               $group_id,
 				       db_result($result,0,'details'),
                                        true,true,true,true);
@@ -2226,7 +2131,8 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
   if ($rows > 0)
     {
        unset($out);
-      $out .= "    _______________________________________________________\n\nFollow-up Comments:\n\n";
+      $out .= "    _______________________________________________________\n
+Follow-up Comments:\n\n";
 
   # Loop throuh the follow-up comments and format them
   for ($i=$rows-1; $i >= 0; $i--)
@@ -2252,7 +2158,8 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
 
          if (db_result($result, $i, 'realname'))
             {
-              $name = db_result($result, $i, 'realname')." <".db_result($result, $i, 'user_name').">";
+              $name = db_result($result, $i, 'realname')." <"
+                      .db_result($result, $i, 'user_name').">";
             }
           else
             {
@@ -2262,7 +2169,9 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
 			  utils_format_date(db_result($result, $i, 'date')),
 			  $name,
 			  $comment_type,
-			  utils_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+			  utils_unconvert_htmlspecialchars(db_result($result,
+                                                                     $i,
+                                                                     'old_value'))
 			  );
 
 	  }
@@ -2283,7 +2192,8 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
   if ($rows > 0)
     {
       unset($out);
-      $out .= "    _______________________________________________________\n\n"."Carbon-Copy List:\n\n";
+      $out .= "    _______________________________________________________\n\n"
+              ."Carbon-Copy List:\n\n";
       $fmt = "%-35s | %s\n";
       $out .= sprintf($fmt, 'CC Address', 'Comment');
       $out .= "------------------------------------+-----------------------------\n";
@@ -2304,7 +2214,6 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
 	{ $href_cc = $email; }
 
 	  $out .= sprintf($fmt, $email, db_result($result, $i, 'comment'));
-
     }
     # final touch...
   $out .= "\n";
@@ -2323,7 +2232,8 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
   if ($rows > 0)
     {
       unset($out);
-      $out .= "    _______________________________________________________\n\nFile Attachments:\n\n";
+      $out .= "    _______________________________________________________\n
+File Attachments:\n\n";
       $fmt = "\n-------------------------------------------------------\n".
 	 "Date: %s  Name: %s  Size: %s   By: %s\n%s\n%s";
  # Loop throuh the attached files and format them
@@ -2334,15 +2244,18 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project ".group_getname($group_i
       $item_file_id = db_result($result, $i, 'file_id');
 
 
-          $href = $GLOBALS['sys_home'].ARTIFACT."/download.php?file_id=$item_file_id";
+          $href = $GLOBALS['sys_home'].ARTIFACT
+                  ."/download.php?file_id=$item_file_id";
 
        $out .= sprintf($fmt,
 			  utils_format_date(db_result($result, $i, 'date')),
 			  db_result($result, $i, 'filename'),
-			  utils_filesize(0, intval(db_result($result, $i, 'filesize'))),
+			  utils_filesize(0, intval(db_result($result, $i,
+                                                             'filesize'))),
 			  db_result($result, $i, 'user_name'),
 			  db_result($result, $i, 'description'),
-			  '<http://'.$GLOBALS['sys_default_domain'].utils_unconvert_htmlspecialchars($href).'>');
+			  '<http://'.$GLOBALS['sys_default_domain']
+                          .utils_unconvert_htmlspecialchars($href).'>');
 
 			}
 
@@ -2355,8 +2268,10 @@ $body .= $out;
 
 
       # Finally output the message trailer
-      $body .= "\n==============================================================================\n\n";
-      $body .= "This item URL is:";
+      $body .=
+"\n==============================================================================
+
+This item URL is:";
       $body .= "\n  <".$bug_href.">";
 }
 
@@ -2365,12 +2280,15 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
   $was_new_item = false;
 
   if (user_isloggedin()) {
-    $body .= "Posted by: ".user_getrealname($user_id).' <'.user_getname($user_id).">";
+    $body .= "Posted by: ".user_getrealname($user_id).' <'
+             .user_getname($user_id).">";
   } else {
     $body .= "Posted by an anonymous user";
   }
   $body .= "\n";
-  $body .= "Related to: [".group_getname($group_id)." ".ARTIFACT." #".$item_id."] ".utils_unconvert_htmlspecialchars(db_result($result,0,'summary'))."\n";
+  $body .= "Related to: [".group_getname($group_id)." ".ARTIFACT." #".$item_id
+           ."] ".utils_unconvert_htmlspecialchars(db_result($result,0,'summary'))
+           ."\n";
   $body .= "URL: <".$bug_href.">\n\n";
 
   if ($changes) {
@@ -2381,7 +2299,8 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
     $was_followup = false;
     if ($changes['details']) {
       $body .= "Follow-up Comment:\n\n";
-      if ($changes['details']['type'] != 'None' && $changes['details']['type'] != '(Error - Not Found)') {
+      if ($changes['details']['type'] != 'None'
+          && $changes['details']['type'] != '(Error - Not Found)') {
         $body .= '['.$changes['details']['type']."]\n";
       }
       $body .= utils_unconvert_htmlspecialchars($changes['details']['add']);
@@ -2404,8 +2323,11 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
   if ($changes) {
     #Process special cases first: bug file attachment
     if ($changes['attach']) {
-      $body .= sprintf("Attachment of file: %s   Size:%d KB  ",$changes['attach']['name'], intval($changes['attach']['size']/1024) );
-      $body .= $changes['attach']['description']."\n".'<'.$changes['attach']['href'].'>';
+      $body .= sprintf("Attachment of file: %s   Size:%d KB  ",
+                       $changes['attach']['name'],
+                       intval($changes['attach']['size']/1024) );
+      $body .= $changes['attach']['description']."\n".'<'
+               .$changes['attach']['href'].'>';
       unset($changes['attach']);
       $body .= "\n";
     }
@@ -2431,14 +2353,18 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
     $body .= "\n";
   }
 
-  $body .= trackers_field_display('submitted_by', $group_id, db_result($result,0,'submitted_by'),false,true,true,true,false,'',false,'',false,false,-3)."\n";
+  $body .= trackers_field_display('submitted_by', $group_id,
+                                  db_result($result,0,'submitted_by'),
+                                 false,true,true,true,false,'',false,'',false,
+                                 false,-3)."\n";
 
   # All other regular fields now
   $i=0;
   while ($field_name = trackers_list_all_fields()) {
     # if the field is a special field or if not used by his project
     # then skip it. Otherwise print it in ASCII format.
-    if (!trackers_data_is_special($field_name) && trackers_data_is_used($field_name)) {
+    if (!trackers_data_is_special($field_name)
+        && trackers_data_is_used($field_name)) {
       $body .= trackers_field_display($field_name, $group_id,
                                       db_result($result,0,$field_name),
                                       false, true, true, true, false,
@@ -2461,7 +2387,8 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
       # prevent output of most recent if already shown
       if ($was_followup && ($i == $fu_rows-1)) { continue; }
       if (db_result($fu_result, $i, 'realname')) {
-        $name = db_result($fu_result, $i, 'realname')." <".db_result($fu_result, $i, 'user_name').">";
+        $name = db_result($fu_result, $i, 'realname')." <"
+                .db_result($fu_result, $i, 'user_name').">";
       } else {
         $name = "Anonymous"; # must no be translated, part of mails notifs
       }
@@ -2472,14 +2399,18 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
       }
       $body .= sprintf($fmt, $name,
                        utils_format_date(db_result($fu_result, $i, 'date')).$tz,
-                       utils_unconvert_htmlspecialchars(db_result($fu_result, $i, 'old_value'))
+                       utils_unconvert_htmlspecialchars(db_result($fu_result,
+                                                                  $i, 'old_value'))
                       );
     }
   }
 
   if (!$was_new_item) {
     # Now display Original Submission
-    $body .= "\n  -----Original Message-----".trackers_field_display('details', $group_id, db_result($result,0,'details'), true,true,true,true);
+    $body .= "\n  -----Original Message-----"
+             .trackers_field_display('details', $group_id,
+                                     db_result($result,0,'details'),
+                                     true,true,true,true);
   }
 }
 
@@ -2488,11 +2419,12 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
       # See who is going to receive the notification.
       # Plus append any other email
       # given at the end of the list.
-      $arr_addresses = trackers_build_notification_list($item_id,$group_id,$changes);
+      $arr_addresses = trackers_build_notification_list($item_id,$group_id,
+                                                        $changes);
       $to = join(',',$arr_addresses);
 # CERN SPECIFIC HACK
-      $from = '"noreply ['.user_getrealname(0,0).']" <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
-#      $from = user_getrealname(0,1).' <'.$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
+      $from = '"noreply ['.user_getrealname(0,0).']" <'
+              .$GLOBALS['sys_mail_replyto'].'@'.$GLOBALS['sys_mail_domain'].'>';
 
 # replace usernames with user_ids (as expected by sendmail_mail)
       $repl_addresses = '';
@@ -2526,7 +2458,11 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
       # If the item is private, take into account the exclude-list
       if (db_result($result,0,'privacy') == '2')
         {
-           $exclude_list = db_result(db_execute("SELECT ".ARTIFACT."_private_exclude_address FROM groups WHERE group_id=?", array($group_id)), 0, ARTIFACT."_private_exclude_address");
+           $exclude_list = db_result(db_execute("SELECT ".ARTIFACT
+                                                ."_private_exclude_address 
+                                                FROM groups WHERE group_id=?",
+                                                array($group_id)), 0,
+                                     ARTIFACT."_private_exclude_address");
 
         }
 
@@ -2539,13 +2475,9 @@ if ($content_type == '1') {   # for now means ROOT wishes (UGLY ... I know!)
           { $exclude_list = $force_exclude_list; }
       }
 
-      sendmail_mail($from, $to, $subject, $body, group_getunixname($group_id), ARTIFACT, $item_id, 0, 0, $exclude_list);
-
- # Done it upstream function already
- # else
- #   {
- #     fb(_("Could not send item update."), 0);
- #   }
- return true;
+      sendmail_mail($from, $to, $subject, $body, group_getunixname($group_id),
+                    ARTIFACT, $item_id, 0, 0, $exclude_list);
+  return true;
 }
 # CERN SPECIFIC (at least for now) END
+?>

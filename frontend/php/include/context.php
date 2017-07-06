@@ -1,10 +1,11 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Compute context for given URL.
 # 
-# Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
 #
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -336,8 +337,9 @@ function context_title ()
       break;
 
     case 'searchingroup': $title = _("Search"); break;
-
-    case 'people': $title = sprintf(_("People at %s"), $GLOBALS['sys_name']); break;
+# TRANSLATORS: the argument is site name (like Savannah).
+    case 'people': $title = sprintf(_("People at %s"), $GLOBALS['sys_name']);
+      break;
       
     case 'my': 
       switch (SUBCONTEXT)
@@ -354,19 +356,12 @@ function context_title ()
     default: $title = false;
     }
 	  
-
-#	case 'admin': $title = _("Site Administration"); break;
-  
   if (isset($group_id))
     {
       $project = project_get_object($group_id);
-      # I18N
-      # This is "<projectname> - <title>"
       $title = sprintf("%s - %s", $project->getPublicName(), $title);
     }
-  
   return $title;
-
 }
 
 function context_icon ()
@@ -415,3 +410,4 @@ function context_icon ()
     default: return 'main'; break;
     }
 }
+?>

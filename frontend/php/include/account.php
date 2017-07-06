@@ -1,9 +1,10 @@
 <?php
 # All the forms and functions to manage unix users
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017  Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -19,7 +20,6 @@
 # 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 require_once(dirname(__FILE__).'/pwqcheck.php');
 
@@ -44,11 +44,10 @@ function expand_pwqcheck_options() {
   if(preg_match("/match=([[:digit:]]*) /", $args, $matches)) {
     $help .= "<br />\n";
     if($matches[1]) {
-      $help .= sprintf(_(<<<EOF
-The length of common substring required to conclude that a password
-is at least partially based on information found in a character string: %s.
-EOF
-                        ), $matches[1]);
+      $help .= sprintf(
+_("The length of common substring required to conclude that a password
+is at least partially based on information found in a character string: %s."),
+                       $matches[1]);
     } else {
       $help .= _("Checks for common substrings are disabled.");
     }
@@ -62,24 +61,20 @@ EOF
       $help .=
         _("Passwords consisting of characters from one class only are not allowed.");
     } else {
-      $help .= sprintf(_(<<<EOF
-The minimum length for passwords consisting of characters from one class: %s.
-EOF
-                        ), $matches[1]);
+      $help .= sprintf(
+_("The minimum length for passwords consisting of characters from one class: %s."),
+                       $matches[1]);
     }
     $help .= "<br />\n";
     if($matches[2] == "disabled") {
-      $help .= _(<<<EOF
-Passwords consisting of characters from two classes that don't meet
-requirements for passphrases are not allowed.
-EOF
-                );
+      $help .=
+_("Passwords consisting of characters from two classes that don't meet
+requirements for passphrases are not allowed.");
     } else {
-      $help .= sprintf(_(<<<EOF
+      $help .= sprintf(
+_("
 The minimum length for passwords consisting of characters from two classes
-that don't meet requirements for passphrases: %s.
-EOF
-                        ), $matches[2]);
+that don't meet requirements for passphrases: %s."), $matches[2]);
     }
     $help .= "<br />\n";
     if($matches[3] == "disabled") {
@@ -90,29 +85,21 @@ EOF
     }
     $help .= "<br />\n";
     if($matches[4] == "disabled") {
-      $help .= _(<<<EOF
-Passwords consisting of characters from three classes are not allowed.
-EOF
-                );
+      $help .=
+ _("Passwords consisting of characters from three classes are not allowed.");
     } else {
-      $help .= sprintf(_(<<<EOF
-The minimum length for passwords consisting of characters
-from three classes: %s.
-EOF
-                        ), $matches[4]);
+      $help .= sprintf(
+_("The minimum length for passwords consisting of characters
+from three classes: %s."), $matches[4]);
    }
     $help .= "<br />\n";
     if($matches[5] == "disabled") {
-      $help .= _(<<<EOF
-Passwords consisting of characters from four classes are not allowed.
-EOF
-                );
+      $help .=
+_("Passwords consisting of characters from four classes are not allowed.");
     } else {
-      $help .= sprintf(_(<<<EOF
-The minimum length for passwords consisting of characters
-from four classes: %s.
-EOF
-                        ), $matches[5]);
+      $help .= sprintf(
+_("The minimum length for passwords consisting of characters
+from four classes: %s."), $matches[5]);
    }
   } # preg_match("/min=".$field.",".$field.",".$field.",".$field.",".$field." /",
   return $help;
@@ -120,15 +107,13 @@ EOF
 
 function account_password_help() {
   global $use_pwqcheck, $pwqcheck_args;
-  $help = _(<<<EOF
-Note: The password should be long enough
+  $help =
+_("Note: The password should be long enough
 or containing multiple character classes:
-symbols, digits (0-9), upper and lower case letters
-EOF
-);
+symbols, digits (0-9), upper and lower case letters.");
   if ($use_pwqcheck) {
     $pwqgen = exec("pwqgen");
-    $help .= " ".sprintf(_("(for instance: %s)."), htmlspecialchars($pwqgen));
+    $help .= " ".sprintf(_("For instance: %s."), htmlspecialchars($pwqgen));
     $help .= " <br />\n".sprintf(_("pwqcheck options are '%s':"),
                          htmlspecialchars($pwqcheck_args));
     $help .= expand_pwqcheck_options();
@@ -146,27 +131,31 @@ function account_pwvalid ($newpass, $oldpass = '', $user = '')
     /* Some really trivial and obviously-insufficient password strength checks -
      * we ought to use the pwqcheck(1) program instead. */
     $check = '';
+# TRANSLATORS: this string in used in the context "Bad password (%s)".
     if (strlen($newpass) < 7)
-      $check = 'way too short';
+      $check = _('way too short');
     else if (stristr($oldpass, $newpass) ||
 	     (strlen($oldpass) >= 4 && stristr($newpass, $oldpass)))
-      $check = 'is based on the old one';
+# TRANSLATORS: this string in used in the context "Bad password (%s)".
+      $check = _('based on the old one');
     else if (stristr($user, $newpass) ||
 	     (strlen($user) >= 4 && stristr($newpass, $user)))
-      $check = 'is based on the username';
-    else
-      $check = 'OK';
+# TRANSLATORS: this string in used in the context "Bad password (%s)".
+      $check = _('based on the username');
   }
 
-  if ($check != 'OK') {
-    $GLOBALS['register_error'] = "Bad password ($check)";
+  if ($check != '') {
+# TRANSLATORS: the argument describes the reason why the password is bad.
+    $GLOBALS['register_error'] = sprintf(_("Bad password (%s)", $check));
     fb($check, 1);
     return 0;
   }
   return 1;
 }
 
-function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1, $allow_dots=0, $nameof=0, $MAX_ACCNAME_LENGTH=16, $MIN_ACCNAME_LENGTH=3)
+function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
+                            $allow_dots=0, $nameof=0, $MAX_ACCNAME_LENGTH=16,
+                            $MIN_ACCNAME_LENGTH=3)
 {
   $underscore = '';
   $dashe = '';
@@ -177,7 +166,6 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1, $allow
   if (!$nameof) {
     $nameof = _("account name");
   }
-
 
   # By default, underscore are allowed, creating no specific issue for an
   # account name. It may creates trouble if the account is use to handle DNS...
@@ -208,14 +196,18 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1, $allow
   if (strlen($name) < $MIN_ACCNAME_LENGTH)
     {
       fb(sprintf(_("The %s is too short"), $nameof), 1);
-      fb(sprintf(ngettext("It must be at least %s character.", "It must be at least %s characters.", $MIN_ACCNAME_LENGTH), $MIN_ACCNAME_LENGTH),1);
+      fb(sprintf(ngettext("It must be at least %s character.",
+                          "It must be at least %s characters.",
+                          $MIN_ACCNAME_LENGTH), $MIN_ACCNAME_LENGTH),1);
       return 0;
     }
 
   if (strlen($name) > $MAX_ACCNAME_LENGTH)
     {
       fb(sprintf(_("The %s is too long"), $nameof), 1);
-      fb(sprintf(ngettext("It must be at most %s character.", "It must be at most %s characters.", $MAX_ACCNAME_LENGTH), $MAX_ACCNAME_LENGTH),1);
+      fb(sprintf(ngettext("It must be at most %s character.",
+                          "It must be at most %s characters.",
+                          $MAX_ACCNAME_LENGTH), $MAX_ACCNAME_LENGTH),1);
       return 0;
     }
 
@@ -228,30 +220,41 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1, $allow
 
   # must contain only legal characters and underscores, and maybe dashes and 
   # underscore, depending on the arguments
-  if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$underscore$dash$dot")
+  if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                   ."0123456789$underscore$dash$dot")
       != strlen($name))
     {
       $tolerated = '';
       if ($allow_underscores) 
-	{ $tolerated .= _("underscores").', '; }
+	{ $tolerated .= '_, '; }
       if ($allow_dashes) 
-	{ $tolerated .= _("dashes").', '; }
+	{ $tolerated .= '-, '; }
       if ($allow_dots) 
-	{ $tolerated .= _("dots").', '; }
+	{ $tolerated .= '., '; }
 
       if ($tolerated)
-	{ $tolerated = ' ('._("tolerated:").' '.rtrim($tolerated, ', ').')'; }
-
-      fb(sprintf(_("The %s must only contain alphanumerics%s."), $nameof, $tolerated),1);
+        {
+	  $tolerated = rtrim($tolerated, ', ');
+# TRANSLATORS: the second argument is comma-separated list of additional characters
+# (possibly single character).
+          fb(sprintf(_('The %1$s must only contain alphanumerics and %2$s.'),
+                     $nameof, $tolerated),1);
+        }
+      else
+      fb(sprintf(_("The %s must only contain alphanumerics."), $nameof, $tolerated),1);
 
       return 0;
     }
     
-  # illegal names
-  if (eregi("^((root)|(savane-keyrings)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)"
-	    . "|(uucp)|(apache)|(operator)|(invalid)|(games)|(mysql)|(httpd)|(nobody)|(dummy)|(opensource)"
-	    . "|(web)|(www)|(cvs)|(anoncvs)|(anonymous)|(shell)|(ftp)|(irc)|(debian)|(ns)|(download))$",$name))
+  # unacceptable names
+  if (eregi("^((root)|(savane-keyrings)|(bin)|(daemon)|(adm)"
+            . "|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)"
+	    . "|(uucp)|(apache)|(operator)|(invalid)|(games)"
+            . "|(mysql)|(httpd)|(nobody)|(dummy)|(opensource)"
+	    . "|(web)|(www)|(cvs)|(anoncvs)|(anonymous)|(shell)"
+            . "|(ftp)|(irc)|(debian)|(ns)|(download))$",$name))
     {
+# TRANSLATORS: the argument is name of account.
       fb(sprintf(_("That %s is reserved."), $nameof),1);
       return 0;
     }
@@ -440,7 +443,8 @@ function account_gensalt($salt_base64_length=16)
 {
   // Note: $salt_base64_length=16 for SHA-512, cf. crypt(3)
   $salt_byte_length = $salt_base64_length * 6 / 8;
-  return account_encode64(account_get_random_bytes($salt_byte_length), $salt_byte_length);
+  return account_encode64(account_get_random_bytes($salt_byte_length),
+                          $salt_byte_length);
 }
 
 # generate unix pw
@@ -479,13 +483,13 @@ function account_shellselects($current)
   for ($i = 0; $i < count($shells); $i++)
     {
       $this_shell = chop($shells[$i]);
-      echo "<option ".(($current == $this_shell)?"selected ":"")."value=$this_shell>$this_shell</option>\n";
+      echo "<option ".(($current == $this_shell)?"selected ":"")
+           ."value=$this_shell>$this_shell</option>\n";
     }
 }
-
 
 function account_validpw($stored_pw, $plain_pw)
 {
   return (crypt($plain_pw,$stored_pw) == $stored_pw);
 }
-
+?>

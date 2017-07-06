@@ -1,8 +1,8 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Calendar functions.
 # 
 # Took from Annif <http://gna.org/projects/annif/>
-# Copyright 2003 (c) Mathieu Roy <yeupou--at--gnu.org>
+# Copyright (C) 2003 Mathieu Roy <yeupou--at--gnu.org>
 #
 # This file is part of Savane.
 # 
@@ -22,6 +22,8 @@
 
 function calendar_month_name ($month)
 {
+# TRANSLATORS: names of months are used in selection boxes
+# like [day] [month] [year].
   switch ($month) 
     {
     case '1': 
@@ -51,8 +53,6 @@ function calendar_month_name ($month)
     } 
 }
 
-
-
 function calendar_every_weekday_name ($weekday)
 {
   # Start monday, not sunday...
@@ -74,7 +74,6 @@ function calendar_every_weekday_name ($weekday)
       return _("every Sunday"); break;
     }
 }
-
 
 function calendar_days_count ($month)
 {
@@ -115,10 +114,10 @@ function calendar_selectbox ($level, $checked_val='xxaz', $inputname=false)
 	}
     }
 
-
   return html_build_select_box_from_arrays($number,
 					   $text,
 					   $inputname, 
 					   $checked_val,
 					   0);
 }
+?>

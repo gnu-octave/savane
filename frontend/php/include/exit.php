@@ -1,10 +1,8 @@
 <?php
 # Generic functions to clean exit on error
 # 
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
 # 
 # This file is part of Savane.
 # 
@@ -61,11 +59,13 @@ function exit_not_logged_in()
   
   if ($GLOBALS['sys_https_host'])
     {  
-      header("Location: https://".$sys_https_host.$sys_home.'account/login.php?uri='.urlencode($REQUEST_URI));
+      header ("Location: https://".$sys_https_host.$sys_home
+              .'account/login.php?uri='.urlencode($REQUEST_URI));
     } 
   else 
     {
-      header ("Location: http://".$sys_default_domain.$sys_home."account/login.php?uri=".urlencode($REQUEST_URI));
+      header ("Location: http://".$sys_default_domain.$sys_home
+              ."account/login.php?uri=".urlencode($REQUEST_URI));
     }
   exit;
 }
@@ -88,7 +88,8 @@ function exit_log($message)
   $username = "anonymous user";
   if (user_isloggedin())
     {  $username = "user ".user_getname(); }
-  error_log($message." - ".$username." (".$_SERVER['REMOTE_ADDR'].") at ".$_SERVER['REQUEST_URI']);
+  error_log($message." - ".$username." (".$_SERVER['REMOTE_ADDR'].") at "
+            .$_SERVER['REQUEST_URI']);
 }
 
 # Function to standardize the HTTP error head
@@ -114,3 +115,4 @@ function exit_test_usesmail($group_id)
     exit_error(_("Error"),_("This Project Has Turned Off Mailing Lists"));
   }
 }
+?>

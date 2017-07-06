@@ -153,7 +153,7 @@ $fthreshold .= ($threshold == 9 ? 'selected="selected"':'')
 
 $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
 $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
-$msg_text =sprintf(_("Show %s new items or of %s priority at least."),
+$msg_text =sprintf(_("Show %s new items of %s priority at least."),
                    $fopen, $fthreshold);
 print html_show_displayoptions($msg_text, $form_opening, $form_submit);
 

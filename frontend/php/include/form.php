@@ -1,23 +1,23 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
-# 
+# Form functions.
+#
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
+#
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 require_once(dirname(__FILE__).'/dnsbl.php');
 require_once(dirname(__FILE__).'/spam.php');
@@ -33,10 +33,10 @@ function form_header ($action, $form_id=false, $method="post", $extra=false)
 {
   if ($extra)
     { $extra = " $extra"; };
-    
+
   # Keep previous form id, in case of form that are recreated on failure
   if (!$form_id)
-    { 
+    {
       mt_srand((double)microtime()*1000000);
       $form_id=md5(mt_rand(0,1000000));
     }
@@ -47,9 +47,10 @@ function form_header ($action, $form_id=false, $method="post", $extra=false)
     DB_AUTOQUERY_INSERT);
   if (db_affected_rows($result) != 1)
     { fb(_("System error while creating the form, report it to admins"), 1); }
-  
+
   return '
-  <form action="'.$action.'" method="'.$method.'"'.$extra.'>'.form_input("hidden","form_id",$form_id);
+  <form action="'.$action.'" method="'.$method.'"'.$extra.'>'
+       .form_input("hidden","form_id",$form_id);
 
 }
 
@@ -60,7 +61,7 @@ function form_input ($type, $name, $value="", $extra=false)
     { $value = 'value="'.htmlentities($value).'"'; }
   if ($extra)
     { $extra = " $extra"; };
-    
+
   return '
     <input type="'.$type.'" id="'.$name.'" name="'.$name.'" '.$value.$extra.' />';
 
@@ -71,7 +72,7 @@ function form_textarea ($name, $value="", $extra=false)
 {
   if ($extra)
     { $extra = " $extra"; };
-    
+
   return '
     <textarea name="'.$name.'"'.$extra.'>'.$value.'</textarea>';
 
@@ -85,7 +86,7 @@ function form_submit($text=false, $submit_name="update", $extra=false)
     { $text = _("Submit"); }
 
   # Add a trap for spammers: a text input that will have to be kept empty.
-  # This wont prevent tailored bots to spam, but that should prevent 
+  # This wont prevent tailored bots to spam, but that should prevent
   # the rest of them, which is good enough (task #4151).
   # Sure, some bots will someday implement CSS support, but the ones that does
   # not will not disappear as soon as this happen.
@@ -95,11 +96,8 @@ function form_submit($text=false, $submit_name="update", $extra=false)
       $trap = " ".form_input("text", "website", "http://");
       $GLOBALS['int_trapisset'] = true;
     }
-  
-  
+
   return form_input("submit", $submit_name, $text, $extra).$trap;
-
-
 }
 
 # Close the form, with submit button
@@ -119,7 +117,7 @@ function form_footer ($text=false, $submit_name="update")
 # We do need this extra check for anynomous users. Logged in users can forge
 # their id and remove all the form id of their user, if they wish. Its their
 # problem.
-# 
+#
 # form_check is also used as a cross-side request forgery (CSRF) protection.
 function form_check ($form_id)
 {
@@ -139,7 +137,7 @@ function form_check ($form_id)
   # See bug #6983
   # We must clean the form id right now. This is not how the form id mechanism
   # was designed.
-  # 
+  #
   # Originally, form id was supposed to be deleted only when we are sure
   # that the form was posted.
   # However, since apache & all are multithreaded, you can end up with the
@@ -149,7 +147,8 @@ function form_check ($form_id)
   # Now, the check will remove the id. If the remove fail, it means that
   # the form id no longer exists and then we exit. We will have only one
   # SQL request, reducing as much as possible delays.
-  $success = db_affected_rows(db_execute("DELETE FROM form WHERE user_id=? AND form_id=?",
+  $success = db_affected_rows(db_execute("DELETE FROM form WHERE user_id=?
+                                          AND form_id=?",
 					 array(user_getid(), $form_id)));
   if (!$success)
     {
@@ -160,7 +159,7 @@ function form_check ($form_id)
   # Always do a dnsbl check when such form is sent
   # (it will kill the submission if necessary)
   dnsbl_check();
-  
+
   # Also does a check against savane own blacklist
   # (will never forbid post to logged-in users)
   spam_bancheck();
@@ -175,10 +174,8 @@ function form_clean ($form_id)
   return 1;
 }
 
-
-
 # Check whether the trap field has been filled. If so, refuse the post.
-# This test should probably be made before remove form id, to be 
+# This test should probably be made before remove form id, to be
 # dumbuser-compliant
 function form_check_nobot ()
 {
@@ -188,6 +185,7 @@ function form_check_nobot ()
       # Not much explanation on the reject, since we are hunting spammers
       exit_log("filled the spam trap special field");
       exit_missing_param();
-    }  
+    }
   return 1;
 }
+?>

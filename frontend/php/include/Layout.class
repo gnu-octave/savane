@@ -222,12 +222,15 @@ class Layout extends Error
 <!DOCTYPE html
 	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="'.SV_LANG.'" xml:lang="'.SV_LANG.'">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="'.SV_LANG.'" xml:lang="'
+          .SV_LANG.'">
 <head>
   <title>'.$params['title'].'</title>
-  <meta name="Generator" content="Savane '.$GLOBALS['savane_version'].', see '.$GLOBALS['savane_url'].'" />
+  <meta name="Generator" content="Savane '.$GLOBALS['savane_version']
+          .', see '.$GLOBALS['savane_url'].'" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
-  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/'.$theme.'.css" />
+  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home']
+          .'css/'.$theme.'.css" />
 ';
     # We unfortunately have to maintain some browser-specifics hacks, since
     # MSIE is total crap in regards to standards. This should be an exception.
@@ -238,7 +241,8 @@ class Layout extends Error
     # actually do not matter)
     if (utils_is_broken_msie() && empty($_GET['printer']))
       {
-	print '  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/internal/msie-dirtyhacks.css" />
+	print '  <link rel="stylesheet" type="text/css" href="'
+              .$GLOBALS['sys_home'].'css/internal/msie-dirtyhacks.css" />
 ';
       }
 
@@ -246,11 +250,13 @@ class Layout extends Error
     # additional CSS
     if (!empty($GLOBALS['stone_age_menu']))
       { 
-	print '  <link rel="stylesheet" type="text/css" href="'.$GLOBALS['sys_home'].'css/internal/stone-age-menu.css" />
+	print '  <link rel="stylesheet" type="text/css" href="'
+              .$GLOBALS['sys_home'].'css/internal/stone-age-menu.css" />
 ';
       }
     
-    print '  <link rel="icon" type="image/png" href="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/icon.png" />
+    print '  <link rel="icon" type="image/png" href="'.$GLOBALS['sys_home']
+          .'images/'.SV_THEME.'.theme/icon.png" />
 ';
     utils_get_content("page_header");
   }
@@ -306,7 +312,8 @@ class Layout extends Error
   {
     print '
   <p class="backtotop">
-  '.utils_link("#top", '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/top.orig.png" border="0" alt="'._("Back to the top").'" />').'
+  '.utils_link("#top", '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+   .'.theme/arrows/top.orig.png" border="0" alt="'._("Back to the top").'" />').'
   </p>';
 
 # yeupou--gnu.org 2005-09-16:
