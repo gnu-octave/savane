@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 print '
-<p>'._('Copyright &copy; 2017 &nbsp;Free Software Foundation, Inc.').'
+'._('Copyright &copy; 2017 &nbsp;Free Software Foundation, Inc.').'
 
 <br />
 
@@ -35,15 +35,14 @@ printf (_('The <a href="%s">Levitating,
 Meditating, Flute-playing Gnu</a> logo is a GNU GPL\'ed image provided
 by the Nevrax Design Team.'), '//www.gnu.org/graphics/meditate.html');
 
-print '</p>
-<p align="right">
+print '<br />
+<span align="right">
 <a href="';
 
 echo 'http://git.savannah.gnu.org/cgit/administration/savane.git/plain/'
   . preg_replace(':/usr/src/savane/:', '', realpath($_SERVER['SCRIPT_FILENAME']));
 
-print'">'._('Source Code').'</a>
-</p>
+print'">'._('Source Code').'</a></span>
 ';
 
 ?>
