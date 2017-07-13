@@ -1,25 +1,24 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
+# Operate trackers.
 #
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
-#
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2002-2006 Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -60,11 +59,14 @@ extract(sane_import('post',
 	'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support', 'dependent_on_patch',
 	// Second button 'submit but then edit this item again'
 	'submitreturn',
+        # Button to preview comment
+        'preview'
 	)));
+
 // Spam-related
 extract(sane_import('get',
   array('comment_internal_id',
-	// delete_dependancy
+	// delete_dependency
 	'item_depends_on', 'item_depends_on_artifact',
 )));
 
@@ -98,9 +100,9 @@ $sober = false;
 
 $address = '';
 
-
 $func = $func or 'browse';
-
+if ($preview)
+  $submitreturn = 1;
 switch ($func)
 {
   
@@ -182,7 +184,6 @@ switch ($func)
 			  'bug_id' => 0,
 			  'type' => 'new',
 			  'user_id' => user_isloggedin() ? user_getid() : null,
-			  // 'date' => strftime("%Y-%m-%d %T"), // automatically filled by MySQL
 			  'form_id' => $fields['form_id'],
 			  'ip' => $_SERVER['REMOTE_ADDR'],
 			  'check_value' => $fields['check'],
@@ -343,15 +344,14 @@ switch ($func)
 
      $fields = sane_import('post', array('item_id', 'form_id', 'check', 'comment'));
      db_autoexecute('spam_stats',
-		    array('tracker' => ARTIFACT,
-			  'bug_id' => $fields['item_id'],
-			  'type' => 'comment',
-			  'user_id' => user_isloggedin() ? user_getid() : null,
-			  // 'date' => strftime("%Y-%m-%d %T"), // automatically filled by MySQL
-			  'form_id' => $fields['form_id'],
-			  'ip' => $_SERVER['REMOTE_ADDR'],
-			  'check_value' => $fields['check'],
-			  'details' => $fields['comment']));
+                    array('tracker' => ARTIFACT,
+                          'bug_id' => $fields['item_id'],
+                          'type' => 'comment',
+                          'user_id' => user_isloggedin() ? user_getid() : null,
+                          'form_id' => $fields['form_id'],
+                          'ip' => $_SERVER['REMOTE_ADDR'],
+                          'check_value' => $fields['check'],
+                          'details' => $fields['comment']));
 
      # Check for duplicates
      if (!form_check($form_id))
@@ -387,7 +387,7 @@ switch ($func)
 	   }
 	 if ($change_quotation_style)
 	   {
-	     if ($change_quotation_style == _("Quoted, ready to be copied/pasted into your new comment")) 
+	     if ($change_quotation_style == _("Quoted, ready to be copied/pasted into your new comment"))
 	       {
 		 $quotation_style = "quoted";
 		 fb(_("Previous comments will now be printed in a copy/paste-friendly mode."));
@@ -397,96 +397,96 @@ switch ($func)
 		 $quotation_style = false;
 	       }
 	   }
-	 
+
 	 include '../include/trackers_run/mod.php';
 	 break;
        }
-	    
+
      # Get the list of bug fields used in the form
      $vfl = trackers_extract_field_list();
 
+     $changed = 0;
      // Attach new file if there is one Do that first so it can update
      // the comment (attach_several_files will use sane_() functions
      // to get the the necessary info)
-     list($changed, $additional_comment) = 
-       trackers_attach_several_files($item_id,
-				     $group_id,
-				     $changes);
-     
-     // If there is an item for this comment, add the additional
-     // comment providing refs to the item
-     if (array_key_exists('comment', $vfl) && 
-	 $vfl['comment'] != '')
+     if (!$preview)
        {
-	 $vfl['comment'] .= $additional_comment;
-       }
+         list($changed, $additional_comment) =
+           trackers_attach_several_files($item_id, $group_id, $changes);
 
-     # data control layer
-     $changed |= trackers_data_handle_update($group_id,
-					     $item_id,
-					     $dependent_on_task,
-					     $dependent_on_bugs, # 4
-					     $dependent_on_support,
-					     $dependent_on_patch, # 6
-					     $canned_response,
-					     $vfl, # 8
-					     $changes,
-					     $address);
-     
-     # The update failed due to a missing field? Reprint it and squish
-     # the rest of the action normally done
-     if (!$changed && $previous_form_bad_fields)
-       {
-         # Mention if there was an attached file: we cannot
-         # pre-fill an HTML input file.
-	 $filenames = array();
-	 for ($i = 1; $i < 5; $i++)
-	   $filenames[] = "input_file$i";
-	 $files = sane_import('files', $filenames);
-	 foreach ($files as $file)
-	   {
-	     if ($file['error'] == UPLOAD_ERR_OK)
-	       {
-		 fb(sprintf(_("Warning: do not forget to re-attach your file '%s'"), $file['name']));
-	       }
-	   }
-	 
-         #copy the previous form values (taking into account dates) to redisplay them and initialize nocache to 0	 
-         foreach ($vfl as $fieldname => $value)
+         // If there is an item for this comment, add the additional
+         // comment providing refs to the item
+         if (array_key_exists('comment', $vfl)
+             && $vfl['comment'] != '')
+           $vfl['comment'] .= $additional_comment;
+
+         # data control layer
+         $changed |= trackers_data_handle_update($group_id,
+                                                 $item_id,
+                                                 $dependent_on_task,
+                                                 $dependent_on_bugs, # 4
+                                                 $dependent_on_support,
+                                                 $dependent_on_patch, # 6
+                                                 $canned_response,
+                                                 $vfl, # 8
+                                                 $changes,
+                                                 $address);
+
+         # The update failed due to a missing field? Reprint it and squish
+         # the rest of the action normally done
+         if (!$changed && $previous_form_bad_fields)
            {
-             if(trackers_data_is_date_field($fieldname))
-               { list($value, $ok) = utils_date_to_unixtime($value); }
-             $$fieldname = $value;
+             # Mention if there was an attached file: we cannot
+             # pre-fill an HTML input file.
+             $filenames = array();
+             for ($i = 1; $i < 5; $i++)
+               $filenames[] = "input_file$i";
+             $files = sane_import('files', $filenames);
+             foreach ($files as $file)
+               {
+                 if ($file['error'] == UPLOAD_ERR_OK)
+                   fb(sprintf(_("Warning: do not forget to re-attach your file '%s'"),
+                              $file['name']));
+               }
+
+             # Copy the previous form values (taking into account dates) to
+             # redisplay them and initialize nocache to 0.
+             foreach ($vfl as $fieldname => $value)
+               {
+                 if(trackers_data_is_date_field($fieldname))
+                   { list($value, $ok) = utils_date_to_unixtime($value); }
+                 $$fieldname = $value;
+               }
+             $nocache=0;
+
+             include '../include/trackers_run/mod.php';
+             break;
            }
-         $nocache=0;
 
-	 include '../include/trackers_run/mod.php';
-	 break;
-       }
+         # Add new cc if any
+         if ($add_cc)
+           {
+             # No notification needs to be sent when a cc is added,
+             # it is irrelevant to the item itself
+             trackers_add_cc($item_id,
+                             $group_id,
+                             $add_cc,
+                             $cc_comment, # 4
+                             $changes);
+           }
 
-     # Add new cc if any
-     if ($add_cc)
-       {
-         # No notification needs to be sent when a cc is added,
-         # it is irrelevant to the item itself
-	 trackers_add_cc($item_id,
-			 $group_id,
-			 $add_cc,
-			 $cc_comment, # 4
-			 $changes);
-       }
+         # Update vote (will do the necessary checks itself)
+         # Currently votes does not influence notifications
+         # (that could harass developers)
+         if (trackers_data_is_used("vote"))
+           {
+             trackers_votes_update($item_id,
+                                   $group_id,
+                                   $new_vote);
+           }
+       } # !$preview
 
-     # Update vote (will do the necessary checks itself)
-     # Currently votes does not influence notifications
-     # (that could harass developers)
-     if (trackers_data_is_used("vote")) 
-       {
-	 trackers_votes_update($item_id,
-			       $group_id,
-			       $new_vote);
-       }
-	    	    	    
-     # Now handle notification, after all necessary actions has been 
+     # Now handle notification, after all necessary actions has been
      if ($changed)
        {
          # Check if we re supposed to send all modifications to an address
@@ -538,7 +538,7 @@ switch ($func)
        {
 	 include '../include/trackers_run/browse.php';
        }
-     else
+     elseif (!$preview)
        { # ends up including tracker item number in url, if present
 	 if (preg_match("/:\/\/($sys_default_domain)|($sys_https_host)/",
 			$_SERVER['HTTP_REFERER']))
@@ -547,14 +547,16 @@ switch ($func)
 	   }
          else
            {
-	     $_POST = $_FILES = array();
-	     $form_id = $depends_search =
+             $_POST = $_FILES = array();
+             $form_id = $depends_search =
              $reassign_change_project_search = $add_cc =
              $input_file = $changed = $vfl = $details = $comment = null;
-	     $nocache = 1;
+             $nocache = 1;
  	     include '../include/trackers_run/mod.php';
            }
        }
+     else
+       include '../include/trackers_run/mod.php';
      break;
    }
       

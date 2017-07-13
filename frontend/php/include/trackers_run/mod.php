@@ -340,6 +340,8 @@ priority and open/close items")))."</p>\n";
 
   # Default picks
   $is_deployed["postcomment"] = false;
+  if ($preview)
+    $is_deployed["postcomment"] = true;
   $is_deployed["discussion"] = true;
   $is_deployed["attached"] = true;
   $is_deployed["dependencies"] = true;
@@ -384,16 +386,16 @@ priority and open/close items")))."</p>\n";
   # The good thing is they do not have to scroll when starting.
   # There is one more click but people feel more in control (well, at least
   # the one that were vocal about Savane UI design)
-  # print '<span class="noprint">';
   print html_hidsubpart_header("postcomment",
-			       _("Post a Comment"));
+			       _("Post a Comment"), $is_deployed['postcomment']);
 
   # The discussion lock will not prevent technicians and manager to comment
   # The point is too filter spams and to allow to stop flamewars, but
   # managers and technician are expected to be serious enough
 
   print '<p class="noprint"><span class="preinput"> '._("Add a New Comment")
-        . markup_info("rich").'</span><br /> &nbsp;&nbsp;&nbsp;';
+        . markup_info("rich");
+  print form_submit (_('Preview'), 'preview')."</span><br />&nbsp;&nbsp;&nbsp;\n";
   print trackers_field_textarea('comment',  htmlspecialchars($comment));
   print '</p>';
 
@@ -456,8 +458,9 @@ priority and open/close items")))."</p>\n";
 
   // FIXME: quoted is broken with the new markup feature
   $quotation_style = false;
-  print show_item_details($item_id,$group_id,0,$item_assigned_to,$quotation_style);
-
+  $new_comment = $preview? $comment: false;
+  print show_item_details($item_id,$group_id,0,$item_assigned_to,
+                          $quotation_style, $new_comment);
   print '<p>&nbsp;</p>';
   print html_hidsubpart_footer();
 

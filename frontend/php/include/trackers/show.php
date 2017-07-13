@@ -689,9 +689,12 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 }
 
 
-function show_item_details ($item_id, $group_id, $ascii=false, $item_assigned_to=false,$quoted=false)
+function show_item_details ($item_id, $group_id, $ascii=false,
+                            $item_assigned_to=false,$quoted=false,
+                            $new_comment = false)
 {
-  print format_item_details($item_id,$group_id,$ascii,$item_assigned_to,$quoted);
+  print format_item_details($item_id,$group_id,$ascii,$item_assigned_to,
+                            $quoted, $new_comment);
 }
 
 

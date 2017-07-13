@@ -1,30 +1,32 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 1999-2000 (c) The SourceForge Crew
-#  Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
+# Format tracker data.
 #
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_to=false,$quoted=false)
+function format_item_details ($item_id, $group_id, $ascii=false,
+                              $item_assigned_to=false,$quoted=false,
+                              $new_comment=false)
 {
   ## ASCII must not be translated
   #  Format the details rows from trackers_history
@@ -37,7 +39,12 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
   $i = 0;
   
   # Get original submission
-  $result = db_execute("SELECT user.user_id,user.user_name,user.realname,".ARTIFACT.".date,".ARTIFACT.".details,".ARTIFACT.".spamscore FROM ".ARTIFACT.",user WHERE  ".ARTIFACT.".submitted_by=user.user_id AND ".ARTIFACT.".bug_id=? AND ".ARTIFACT.".group_id=? LIMIT 1", array($item_id, $group_id));
+  $result = db_execute("SELECT user.user_id,user.user_name,user.realname,"
+                       .ARTIFACT.".date,".ARTIFACT.".details,".ARTIFACT
+                       .".spamscore FROM ".ARTIFACT.",user WHERE  ".ARTIFACT
+                       .".submitted_by=user.user_id AND ".ARTIFACT
+                       .".bug_id=? AND ".ARTIFACT.".group_id=? LIMIT 1",
+                       array($item_id, $group_id));
   $entry = db_fetch_array($result);
   $data[$i]['user_id'] = $entry['user_id'];
   $data[$i]['user_name'] = $entry['user_name'];
@@ -53,6 +60,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
   $result = trackers_data_get_followups($item_id);
   $svn_entries_exist = false;
   $max_entries = 0;
+  $hist_id = 0;
   if (db_numrows($result))
     {
       while ($entry = db_fetch_array($result))
@@ -65,6 +73,7 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	  $data[$i]['comment_type'] = $entry['comment_type'];
 	  $data[$i]['content'] = $entry['old_value'];
 	  $data[$i]['comment_internal_id'] = $entry['bug_history_id']; 
+	  $hist_id = $entry['bug_history_id'] + 1;
 
 	  $data[$i]['spamscore'] = $entry['spamscore'];   
 	  if ($entry['spamscore'] < 5)
@@ -83,7 +92,20 @@ function format_item_details ($item_id, $group_id, $ascii=false, $item_assigned_
 	    }
 	}
     }
-  
+
+  if ($new_comment)
+    {
+      $i++;
+      $max_entries++;
+      $data[$i]['user_id'] = user_getid();
+      $data[$i]['user_name'] = user_getname(user_getid(), 0);
+      $data[$i]['realname'] = user_getname(user_getid(), 1);
+      $data[$i]['date'] = time();
+      $data[$i]['comment_type'] = '';
+      $data[$i]['content'] = "*"._("This is a preview")."*\n\n". $new_comment;
+      $data[$i]['comment_internal_id'] = $hist_id;
+      $data[$i]['spamscore'] = '0';
+    }
 
   # Not in text output (mail notif) and if there are svn commits, 
   # find out if there is a relevant link to add
@@ -864,3 +886,4 @@ $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delet
   return($out);
 
 }
+?>
