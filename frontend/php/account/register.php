@@ -275,12 +275,13 @@ In order to complete your registration, visit the following URL:'),
       if ($krb5ret == 0) #KRB5_OK
 	{
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
-	  $message .= sprintf(_('P.S. Your password is now stored in encrypted form
+	  $message .= sprintf(_('P.S. Your password is now stored in hashed form
 in the %s database.'), $GLOBALS['sys_name'])." ";
-	  $message .= _('For better security we advise you
-to change your password as soon as possible.'). "\n";
+	  $message .= _('For better security we advise you to register
+an encryption-capable GPG key and enable encryption when sending password reset
+messages (if you do, please request password reset and make sure that you
+actually can read those messages).'). "\n";
 	}
-
 
       sendmail_mail($GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'],
 		    $form_email,
