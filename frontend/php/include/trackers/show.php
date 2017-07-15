@@ -79,9 +79,6 @@ function show_item_list ($result_arr,
     }
 
   $offset_last = min($offset+$chunksz-1, $total_rows-1);
-
-  #fb("$offset_last offset_last");
-
   $nav_bar .= " &nbsp;  &nbsp; &nbsp; &nbsp; "
               .sprintf(ngettext("%d matching item", "%d matching items",
                                 $total_rows), $total_rows);
@@ -266,7 +263,6 @@ function show_item_list_sober ($result_arr,
   # Built for scratch two groups of audiences possible for this page:
   # group members and non-group members
   $possible_audiences = array();
-  #$possible_audiences['everybody'] = _("For Everybody");
   $possible_audiences['nonmembers'] = _("For Everybody");
   $possible_audiences['members'] = _("For Project Members Only");
 
@@ -279,7 +275,6 @@ function show_item_list_sober ($result_arr,
   $sql_nonmembers = "AND (audience_anonymous=1 OR audience_loggedin=1)";
   $sql_members = "AND (audience_members=1 OR audience_technicians=1 "
                  ."OR audience_managers=1)";
-  #$sql_everybody = $sql_nonmembers." ".$sql_members;
   unset($sql_privateitem);
 
   # Go through the list of possible context and then possible actions
@@ -309,10 +304,6 @@ function show_item_list_sober ($result_arr,
 	    {
 	      $sql_audience = $sql_members;
 	    }
-	  #else
-	  #  {
-	  #    $sql_audience = $sql_everybody;
-	  #  }
 
 	  # Special deal for the item unbound
 	  if ($audience != 'unbound' && $context != 'unbound')

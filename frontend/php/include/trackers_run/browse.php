@@ -893,14 +893,6 @@ while ($thisarray = db_fetch_array($result))
     }
   }
 
-# DBG
-#while (list(,$thisitem) = each($result_array))
-#{
-#  $thisitem_id = $thisitem['bug_id'];
-#  print "TEST ".$thisitem_id.", ".$result_array[$thisitem_id]["summary"].", ".$result_array[$thisitem_id]["resolution_id"].", ".$result_array[$thisitem_id]["group_id"]." -- ";
-#}
-
-
 /* ==================================================
    Display the HTML search form
   ================================================== */

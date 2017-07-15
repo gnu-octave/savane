@@ -153,9 +153,6 @@ Follow-up Comments:\n\n";
   else
     {
       $title_arr=array();
-  #    $title_arr[]=_("Comment");
-  #    $title_arr[]=_("Posted By");
-
       $out .= html_build_list_table_top ($title_arr);
     }
 
@@ -305,7 +302,7 @@ to be run.")
 .sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'
 ."</td></tr>\n";
 	    }
-          # No go to the next comment
+          # Now go to the next comment.
 	  continue;
 	}
       # Now print a normal comment
@@ -901,9 +898,6 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
            {
 	     $out .= ' <span class="smaller">('.markup_basic($comment).')</span>';
            }
-#$href_cc,
-#			  utils_format_date(db_result($result, $i, 'date')),
-#			  $html_delete);
         }
     }
 

@@ -211,7 +211,6 @@ if ($post_changes)
           }
       }
     $sql = substr($sql,0,-1);
-    #print "<br /> DBG SQL = $sql";
 
     $res = db_execute($sql, $params);
     if ($res)
@@ -414,21 +413,6 @@ else if ($show_report)
              <span class="preinput">'._("Name:").' </span><br />&nbsp;&nbsp;&nbsp;
              <input type="text" name="rep_name" value="'
              .db_result($res,0,'name').'" size="20" maxlength="20" />';
-
-
-    /*
-                    &nbsp;&nbsp;&nbsp;&nbsp;<strong>'._("Scope:").' </strong>';
-    $scope = db_result($res,0,'scope');
-    if (user_ismember($group_id,'A'))
-      { print '<SELECT NAME="rep_scope">
-                          <option value="i"'.($scope=='i' ? 'selected':'').'>'._("Personal").'</option>
-                          <option value="p"'.($scope=='p' ? 'selected':'').'>'._("Project").'</option>
-                          </select>'; }
-     else {
-      print ($scope=='P' ? 'Project':'Personal').
-        '<input type="hidden" name="rep_scope" value="'.$scope.'" />'; }
-    */
-
     print '
 <p>
 <span class="preinput">'._("Description:")
@@ -509,14 +493,10 @@ else
   {
 # Front page
     trackers_header_admin(array ('title'=>_("Edit Query Forms")));
-
-#    print '<h2>'._("Manage Bug Reports").' '.help_button('trackers_admin_report_list',false).'</h2>';
-
     $res = db_execute("SELECT * FROM ".ARTIFACT."_report WHERE group_id=? "
                       .' AND (user_id=? OR scope=\'P\')',
                       array($group_id, user_getid()));
     $rows = db_numrows($res);
-#print "<br /> DBG sql = $sql";
 
     if ($rows)
       {

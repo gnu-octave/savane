@@ -60,7 +60,7 @@ function trackers_transition_get_update($group_id)
   return $field_transition;
 }
 
-# Return as an array the other field update pair field/value for a given transition.
+# Return an array the other field update pair field/value for a given transition.
 # No such transition, no update planned? Return false
 function trackers_transition_get_other_field_update ($transition_id)
 {
@@ -75,7 +75,6 @@ function trackers_transition_get_other_field_update ($transition_id)
   # workaround is to return the result as it is. It is ugly, feel free to
   # improve.
   return $result;
-  #return db_fetch_array($result);
 }
 
 # For a given transition, add/remove/update and "other field update", if necessary.

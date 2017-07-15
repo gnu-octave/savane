@@ -48,9 +48,6 @@ if ($result && db_numrows($result) > 0)
 $result = db_execute("SELECT privacy FROM ".ARTIFACT
                      ." WHERE bug_id=? AND group_id=?",
 		     array($item_id, $group_id));
-
-# print "FID = ".$file_id." ITID = ".$item_id." UID = ".user_getid()."\n";
-                                                                                
 if (db_numrows($result) > 0)
   {
     if ((db_result($result,0,'privacy') == '2') &&

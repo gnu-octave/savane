@@ -88,14 +88,6 @@ function trackers_data_get_all_fields ($group_id=false,$reload=false)
       $BF_USAGE_BY_NAME[$field_array['field_name'] ] = $field_array;
     }
 
-#Debug code
-#print "<br />DBG - At end of bug_get_all_fields: $rows";
-#reset($BF_USAGE_BY_NAME);
-#while (list($key, $val) = each($BF_USAGE_BY_NAME))
-#{
-#print "<br />DBG - $key -> use_it: $val[use_it], $val[place]";
-#}
-
 # rewind internal pointer of global arrays
   reset($BF_USAGE_BY_ID);
   reset($BF_USAGE_BY_NAME);
@@ -339,11 +331,6 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
 
           $current_fv_id = $in[$current_fv_name];
           $current_email = $in[$current_email_name];
-#      if ($current_email && !validate_email($current_email))
-#        {
-#          $local_feedback .= _("[".$tracker_name."]  notification address: ".$current_email." appeared Invalid");
-#          $current_email='';
-#        }
           $current_send_all_flag = $in[$current_send_all_name];
 
           $res_cat=db_autoexecute($tracker_name."_field_value",
@@ -425,7 +412,6 @@ function trackers_data_get_item_notification_info($item_id, $artifact, $updated)
     }
   if (trim($emailad) != "")
     $sendemail = 1;
-#  print "EMAILAD=$emailad SENDEMAIL=$sendemail";
   return array($emailad, $sendemail);
 }
 
@@ -1235,9 +1221,6 @@ function trackers_data_update_usage($field_name,
   $disp_size = isset($display_size) ? $display_size : null;
   $empty = isset($empty_ok) ? $empty_ok : null;
   $keep_hist = isset($keep_history) ? $keep_history : null;
-  #    }  else    {
-  #        $lbl = $desc = $disp_size = $empty = $keep_hist = "NULL";
-  #    }
 
   if (!isset($show_on_add))
     $show_on_add = 0;
@@ -2169,8 +2152,6 @@ Following are the information included in the original report:\n\n";
             }
         }
 
-      # Make sure there is no \' remaining.
-      #$comment = ereg_replace("'", " ", $comment);
       $result = db_autoexecute($reassign_change_artifact."_history",
         array(
           'bug_id' => $new_item_id,
@@ -2590,20 +2571,10 @@ function trackers_data_get_reports($group_id, $user_id=100, $sober=false)
 
   $sql = 'SELECT report_id,name FROM '.ARTIFACT.'_report WHERE ';
 
-#  if (!$user_id || ($user_id == 100))
-#    {
+  $sql .= "(group_id=? AND scope='P') OR scope=? ORDER BY scope DESC ,
+           report_id ASC ";
+  $sql_params = array($group_id, $system_scope);
 
- $sql .= "(group_id=? AND scope='P') OR scope=? ORDER BY scope DESC ,
-          report_id ASC ";
- $sql_params = array($group_id, $system_scope);
-
-  # OUTDATED: currently personal query forms are deactivated in the code
-#    }  else
-#      {
-#        $sql .= "(group_id=$group_id AND (user_id=$user_id OR scope='P')) OR ".
-#           "scope='S' ORDER BY scope,report_id";
-#      }
-# print "DBG sql report = $sql";
   return db_execute($sql, $sql_params);
 }
 

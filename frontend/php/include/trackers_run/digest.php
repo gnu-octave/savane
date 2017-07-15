@@ -231,7 +231,6 @@ elseif ($func == "digestget")
         if (isset($field_used["latestcomment"])
             && $field_used["latestcomment"] == 1)
           {
-#         $last_comment = db_result(db_query("SELECT old_value FROM ".ARTIFACT."_history WHERE bug_id='$item' AND field_name='details' ORDER BY bug_history_id DESC LIMIT 1"),0,'old_value');
             $detail_result = db_execute("SELECT old_value, mod_by, realname, "
                                         ."user_name FROM ".ARTIFACT."_history, "
                                         ."user WHERE bug_id=? "
