@@ -135,65 +135,6 @@ else if ($type_of_search == "people")
     }
 
 }
-/*else if ($type_of_search == 'forums')
-{
-
- FIXME: DEACTIVATED RIGHT NOW: no forums.
-
-  $array=explode(" ",$words);
-  $words1=implode($array,"%' $crit forum.body LIKE '%");
-  $words2=implode($array,"%' $crit forum.subject LIKE '%");
-
-  $sql =	"SELECT forum.msg_id,forum.subject,forum.date,user.user_name "
-     . "FROM forum,user "
-     . "WHERE user.user_id=forum.posted_by AND ((forum.body LIKE '%$words1%') "
-     . "OR (forum.subject LIKE '%$words2%')) AND forum.group_forum_id='$forum_id' "
-     . "GROUP BY msg_id,subject,date,user_name LIMIT $offset,26";
-  $result = db_query($sql);
-  $rows = $rows_returned = db_numrows($result);
-
-  if (!$result || $rows < 1)
-    {
-      #		$no_rows = 1;
-      search_failed();
-
-    }
-  elseif (($rows == 1) && ($GLOBALS['offset'] == 0))
-    {
-      $msg = db_result($result, 0, 'msg_id');
-      Header("Location: ".$GLOBALS['sys_home']."forum/message.php?msg_id=$msg");
-    }
-  else
-    {
-
-      if ( $rows_returned > $MAX_ROW)
-	{
-	  $rows = $MAX_ROW;
-	}
-
-      search_send_header();
-
-      $title_arr = array();
-      $title_arr[] = _("Thread");
-      $title_arr[] = _("Author");
-      $title_arr[] = _("Date");
-
-      print html_build_list_table_top ($title_arr);
-
-      print "\n";
-
-      for ( $i = 0; $i < $rows; $i++ )
-	{
-	  print	"<tr class=\"". html_get_alt_row_color($i) ."\"><td><a href=\"".$GLOBALS['sys_home']."forum/message.php?msg_id="
-	    . db_result($result, $i, "msg_id")."\"><img src=\"".$GLOBALS['sys_home']."images/contexts/mail.png\" border=0 height=12 width=10 /> "
-	    . db_result($result, $i, "subject")."</a></td>"
-	    . "<td>".db_result($result, $i, "user_name")."</td>"
-	    . "<td>".utils_format_date(db_result($result,$i,"date"))."</td></tr>\n";
-	}
-      print "</table>\n";
-    }
-
-} */
 else if ($type_of_search == 'bugs' ||
 	 $type_of_search == 'support' ||
 	 $type_of_search == 'patch' ||

@@ -1543,8 +1543,6 @@ function trackers_isvarany($var)
 # simply add it.
 function trackers_add_sort_criteria($criteria_list, $order, $msort)
 {
-  #echo "<br />DBG \$criteria_list=$criteria_list,\$order=$order";
-
   $found = false;
   if ($criteria_list)
     {
@@ -1554,7 +1552,6 @@ function trackers_add_sort_criteria($criteria_list, $order, $msort)
         {
           preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
           list(,$mattr,$mdir) = $match;
-          #echo "<br />DBG \$mattr=$mattr,\$mdir=$mdir";
           if ($mattr == $order)
             {
               if ( ($mdir == '>') || (!isset($mdir)) )
@@ -1584,7 +1581,6 @@ function trackers_add_sort_criteria($criteria_list, $order, $msort)
           $arr[] = $order.'>';
         }
     }
-  #echo "<br />DBG \$arr[]=".join(',',$arr);
   return(join(',', $arr));
 }
 
@@ -1779,11 +1775,8 @@ function trackers_build_match_expression($field, &$to_match)
       $expr = "$field = ?";
       $params[] = $to_match;
     }
-
-  #echo "<br />DBG expr to match for '$field' = $expr";
   $expr = ' ('.$expr.') ';
   return array($expr, $params);
-
 }
 
 # The function moved to data.
@@ -2243,7 +2236,6 @@ This item URL is:";
         }
 
       # Then output the history of bug details from newest to oldest.
-      # $body .= format_item_details($item_id, $group_id, true);
       $fu_result=trackers_data_get_followups($item_id);
       $fu_rows=db_numrows($fu_result);
       if ($fu_rows > 0)
