@@ -30,19 +30,6 @@ Header("Cache-Control: must-revalidate");
 
 extract(sane_import('request', array('from_brother')));
 
-# Block here potential robots.
-# 2006-12-04, yeupou: allows them to login, so they can post on trackers of
-# their projects. This is a compromise between the need to avoid spam by all
-# means and the fact that we still want to allow to work people in obvious
-# legit cases even if they are blacklisted.
-# They won't be able to use savane normally but only to post on the project
-# they are member of. The way to go for them is to ask their IP to be delisted,
-# not from us to maintain another list of exceptions. If they cant, it is sad
-# but we cannot encourage this because it would defeat the whole purpose of
-# DNSbl, while DNSbl seems to be the only truly effective way to get rid of
-# spams.
-#dnsbl_check();
-
 # Logged users have no business here.
 if (user_isloggedin() && !$from_brother)
   session_redirect($GLOBALS['sys_home']."my/");
@@ -52,12 +39,6 @@ extract(sane_import('request',
   array('form_loginname', 'form_pw', 'cookie_for_a_year',
         'stay_in_ssl', 'brotherhood',
         'uri', 'login', 'cookie_test')));
-
-#if (isset($GLOBALS['sys_https_host']) && !session_issecure())
-#{
-#  # Force use of TLS for login
-#  header('Location: '.$GLOBALS['sys_https_url'].$_SERVER['REQUEST_URI']);
-#}
 
 # Check cookie support.
 if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
