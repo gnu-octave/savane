@@ -131,18 +131,13 @@ function forum_header($params)
       if (!$result || db_numrows($result) < 1)
         {
           $is_news=0;
-          #print '<span class="error">'._("Error").' - '._("This news item was not found").'</span>';
-          #print "forum_name=$forum_name<br />";
           site_project_header($params);
-          #site_project_header(array('group'=>$group_id,'context'=>'forum'));
         }
       else
         {
           $is_news=1;
           #backwards shim for all "generic news" that used to be submitted
           #as of may, "generic news" is not permitted - only project-specific news
-
-          # FIXME: group_name is not set, it brokes the top menu.
 
           $params['group']=db_result($result,0,'group_id');
 
@@ -176,39 +171,6 @@ function forum_header($params)
 ';
         }
     }
-
-# Show horizontal forum links
-  if ($forum_id && $forum_name && $is_news)
-    print '<h3 class="clearr">'.html_anchor(_("Comments:"), "comments").'</h3>';
-  print '<P><strong>';
-
- # yeupou, 2006-09-22: deactivate for now, it does not seem to be
- # working and generate garbage (like mail sent to NOREPLY)
- if (0 && $forum_id && user_isloggedin())
-   {
-     print '<a href="'.$GLOBALS['sys_home'].'forum/monitor.php?forum_id='
-         .$forum_id.'">'
-         #'<img src="'.$GLOBALS['sys_home'].'images/ic/check.png" alt="monitor" />
-         ._("Monitor Forum (toggle)").'</a> | '
-         .'<a href="'.$GLOBALS['sys_home'].'forum/save.php?forum_id='
-         .$forum_id.'">'
-         #'<img src="'.$GLOBALS['sys_home'].'images/ic/save.png" alt="save" />
-         ._("Save Place").'</a> | '
-         .'<A HREF="'.$GLOBALS['sys_home'].'forum/who_monitors.php?forum_id='
-         .$forum_id.'?group_id='.$group_id.'">'
-         .'Who\'s monitoring</A> | '
-         .'<A HREF="'.$GLOBALS['sys_home'].'forum/forum.php?forum_id='
-         .$forum_id.'">'
-         .'View Forum</A>';
-   }
-
-      /*  This functionality is depreated
-  if (user_is_super_user()) alternatively: user_ismember($group_id, "F2")
-    {
-      print ' | <A HREF="'.$GLOBALS['sys_home'].'forum/admin/?group_id='.$group_id.'">Admin</A></strong>';
-    }
-      */
-  print '</strong></P>';
 }
 
 # Backward compatibility
@@ -357,10 +319,6 @@ function show_submessages($thread_id, $msg_id, $level,$et=0)
 #  thread get the same background color as the first message of that threat
       for ($i=0; $i<$rows; $i++)
         {
-                        /*
-                                Is this row's background shaded or not?
-                                $total_rows++;
-                        */
           $total_rows++;
 
           $ret_val .= '<tr class="'. utils_get_alt_row_color($total_rows)
@@ -639,27 +597,18 @@ function handle_monitoring($forum_id,$msg_id)
                * This is made in order to use a self written mailinglist which is integrated
                * Into the savannah forum. See sv_forums for details
                */
-              /* AH 2002-11-14 start */
               $decid = sprintf("%07d",$msg_id);
               $checksum = md5($decid);
               $gpkaid = $decid . substr($checksum,0,1) . substr($checksum,2,1)
                   .substr($checksum,26,1) . substr($checksum,28,1)
                   . substr($checksum,30,1);
 
-/* MH 2003-11-20 */
               $from=db_result($result,0,'realname')." <"
                               . db_result($result,0, 'email') . ">";
-              /*$to=$GLOBALS[sys_mail_replyto];*/ /* MH: To should be the mailinglist address! */
               $to=$GLOBALS['sys_lists_prefix']
                   . db_result($result,0,'unix_group_name')
                   ."_" . db_result($result,0,'forum_name') . "@"
                   . $GLOBALS['sys_default_domain'];
-/*                            $subject= "[" . db_result($result,0,'unix_group_name').
-                                "_" . db_result($result,0,'forum_name')."] ".
-                                utils_unconvert_htmlspecialchars(db_result($result,0,'subject')).
-                                "     #" . $gpkaid . "#";
-*/
-/* MH 2004-06-04 */
               $subject= "[" . $GLOBALS['sys_lists_prefix']
                         . db_result($result,0,'unix_group_name')
                         ." - " . db_result($result,0,'forum_name')."] "
@@ -680,13 +629,8 @@ function handle_monitoring($forum_id,$msg_id)
                 ."\nhttp://$GLOBALS[sys_default_domain]/forum/"
                 ."monitor.php?forum_id=$forum_id";
               $savannah_project=db_result($result,0,'unix_group_name');
-              #$savannah_artifact="Forum";
-              #$savannah_artifact_id=$forum_id;
               $savannah_artifact=0; # these must stay zero to not mess up the subject any further
               $savannah_artifact_id=0;
-              /*$reply_to=$GLOBALS['sys_lists_prefix'] . db_result($result,0,'unix_group_name').
-                  "_" . db_result($result,0,'forum_name') . "@" . $GLOBALS['sys_default_domain'];*/
-
               /* AH 04/08/2005:
                  BCC should not be used to address reciepients.
                  We use the Resent-To: header to address each person individually.
@@ -695,29 +639,18 @@ function handle_monitoring($forum_id,$msg_id)
 
               $toarray = explode(", ",$tolist);
               for($xx=0;$xx<count($toarray);$xx++)
-                {   /* LOOP OVER RECIPIENTS */
+                {
                   $additional_headers="Resent-To:" . $toarray[$xx]
                   ."\nPrecedence: bulk\nResent-From: MailingForum";
-
-# Custom extensions to the header:
-/*
-                          print "Just executed <br />".
-                          "sendmail_mail (from: $from, <br />to: $to, <br />subject: $subject, <br />message: $message, <br />".
-                                         "savannah_project: $savannah_project, <br />savannah_artifact: $savannah_artifact,<br />".
-                                         "savannah_artifact_id: $savannah_artifact_id, <br />reply_to: $reply_to,<br />".
-                                         "additional_headers: $additional_headers<br />";
-*/
 
                   sendmail_mail ($from, $to, $subject, $message,
                                  $savannah_project, $savannah_artifact,
                                  $savannah_artifact_id, $reply_to,
                                  $additional_headers);
                 }
-/* AH 2002-11-14 stop */
             }
           else
             {
-/* MH 2003-11-20: executing sendmail is deprecated */
               $from=$GLOBALS[sys_mail_replyto];
               $to=$GLOBALS[sys_mail_replyto];
               $subject="[" .db_result($result,0,'unix_group_name')
@@ -742,7 +675,6 @@ function handle_monitoring($forum_id,$msg_id)
                              $savannah_project, $savannah_artifact,
                              $savannah_artifact_id, $reply_to,
                              $additional_headers);
-/* MH 2003-11-14 stop */
             }
           ' email sent - people monitoring ';
         }

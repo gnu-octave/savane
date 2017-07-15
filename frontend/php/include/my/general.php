@@ -138,24 +138,7 @@ function my_item_list ($role="assignee", $threshold="5", $openclosed="open",
   $items_per_groups = array();
 
   $maybe_missed_rows = 0;
-
-  # We first need to run one sql per tracker for the current role
-  # Some roles (currently only "newlyassigned") require more than one
-  # sql to extract data (otherwise it would require very complex and slow
-  # sqls)
-  # Note: this is no longer true, as we deactivated the CPU consuming
-  # search on old items of newlyassigned
-  #if ($role != "newlyassigned")
-  #  {
-    $roles = array($role);
-  #  }
-  #else
-  #  {
-      # FIXME: newlyassigned-olditems IS TOO SLOW, SQL request takes hours
-      #$roles = array("newlyassigned-newitems", "newlyassigned-olditems");
-  #    $roles = array("newlyassigned-newitems");
-  #  }
-
+  $roles = array($role);
 
   while (list(, $currentrole) = each($roles))
     {
@@ -372,32 +355,6 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5",
           # item that may be very very old but
 	  # that were assigned recently to the
           # user
-
-          # For newly assigned, set the limit to 25, as we do 2 SQL requests
-          # per tracker
-	  /* $sql_limit = 25; not required as olditems is deactivated */
-
-          # Handle the old item newly assigned
-	  /*  if ($role == "newlyassigned-olditems")
-	    {
-	      # DEACTIVATED
-	      # TOO SLOW, too complicated
-
-              # Now handle the old item newly assigned
-	      $sql .= '(('.$tracker.'_history.bug_id='.$tracker.'.bug_id '.
-		'AND '.$tracker.'_history.new_value='.$uid.' '.
-		'AND '.$tracker.'_history.old_value<>'.$uid.' '.
-		'AND '.$tracker.'_history.mod_by<>'.$uid.' '.
-		'AND '.$tracker.'.date < '.$new_date_limit.' '.
-		'AND '.$tracker.'_history.field_name="assigned_to" '.
-		'AND '.$tracker.'_history.date > '.$new_date_limit.') OR ';
-
-	    } */
-
-          # Handle the others
-	  /* if ($role == "newlyassigned-newitems")
-	    { */
-
 	  $select = 'SELECT '.$tracker.'.bug_id,'.$tracker.'.date,'.$tracker
                    .'.priority,'.$tracker.'.resolution_id,'.$tracker
                    .'.summary,groups.group_id,groups.group_name,'
@@ -422,9 +379,6 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5",
                     .'.submitted_by<>?) ';
           $where_params[] = $new_date_limit;
           $where_params[] = $uid;
-
-	      /*   } */
-
 	}
 
       # Go thru the list of groups the user belongs to
@@ -472,12 +426,6 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5",
 
 	    }
 	}
-
-      /* if ($role == "newlyassigned-olditems")
-	{
-	  $sql .= ') GROUP BY bug_id ORDER BY '.$tracker.'_history.date DESC ';
-	} */
-
 
       # No SQL if not at least one project is not in hidden mode
       if (!$restrict_to_groups)
