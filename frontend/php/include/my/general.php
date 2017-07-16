@@ -575,10 +575,10 @@ function my_item_list_print ($role="assignee", $openclosed="open",
       print '<div class="boxitem"><span class="xsmall"><span class="warn">'
 ._("We found many items that match the current criteria. We had to set a limit
 at some point, some items that match the criteria may be missing for this
-list.").'</span></span></div>';
+list.")."</span></span></div>\n";
       if (!$condensed)
 	{
-	  print '<br />';
+	  print "<br />\n";
 	}
     }
 
@@ -606,14 +606,14 @@ list.").'</span></span></div>';
                         .'</strong>');
 	  print '<div class="'.utils_altrow(1).'"> '.$hide_url
                 .' <span class="smaller">'
-                .my_item_count($count,max(0, $count_diff)).'</span></div>';
+                .my_item_count($count,max(0, $count_diff))."</span></div>\n";
 	}
       else
 	{
 	  # In condensed mode, there is no hide url
 	  print '<div class="'.utils_altrow(1).'"> '
                 .sprintf(("%s: "), $group_data["group".$current_group_id])
-                .'</div>';
+                ."</div>\n";
 	}
 
       # Go thru the item list, unless asked to hide
@@ -665,12 +665,12 @@ list.").'</span></span></div>';
                 .'" /> '
 		.$item_data['summary'][$thisitem]
 		.'&nbsp;<span class="xsmall">('.$prefix .' #'.$current_item_id
-                .', '.$status.')</span></a></div>';
+                .', '.$status.")</span></a></div>\n";
 	    }
 	}
       # Add extra space to make the page easier to read
       if (!$condensed)
-        print '<br />';
+        print "<br />\n";
     }
 }
 ?>

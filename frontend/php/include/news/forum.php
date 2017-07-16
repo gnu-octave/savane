@@ -87,8 +87,7 @@ function forum_show_nested_messages ($thread_id, $msg_id)
 
   if ($result && $rows > 0)
     {
-      $ret_val .= '
-      <UL>';
+      $ret_val .= '<ul>';
       # iterate and show the messages in this result
       # for each message, recurse to show any submessages
       for ($i=0; $i<$rows; $i++)
@@ -97,7 +96,7 @@ function forum_show_nested_messages ($thread_id, $msg_id)
           $total_rows++;
 
           # show the actual nested message
-          $ret_val .= forum_show_a_nested_message ($result,$i).'<P>';
+          $ret_val .= forum_show_a_nested_message ($result,$i);
           if (db_result($result,$i,'has_followups') > 0)
             {
               # Call yourself if there are followups
@@ -106,8 +105,7 @@ function forum_show_nested_messages ($thread_id, $msg_id)
                                                                 'msg_id'));
             }
         }
-      $ret_val .= '
-      </UL>';
+      $ret_val .= "\n</ul>\n";
     }
   return $ret_val;
 }
@@ -169,7 +167,7 @@ function forum_header($params)
               utils_user_link(user_getname(db_result($result,0,'submitted_by')),
               user_getrealname(db_result($result,0,'submitted_by'))),
               utils_format_date(db_result($result,0,'date')))
-              .'</em></p>';
+              ."</em></p>\n";
           print markup_full(db_result($result,0,'details'));
 
 # could this fix the bug #409 ?
@@ -314,28 +312,28 @@ function show_thread($thread_id,$et=0)
       for ($i=0; $i<$rows; $i++)
         {
           $total_rows++;
-          $ret_val .= '<TR class="'. utils_get_alt_row_color($total_rows)
-              .'"><TD>'
-              .(($current_message != db_result($result, $i, 'msg_id'))?'<A HREF="'
+          $ret_val .= '<tr class="'. utils_get_alt_row_color($total_rows)
+              .'"><td>'
+              .(($current_message != db_result($result, $i, 'msg_id'))?'<a href="'
               .$GLOBALS['sys_home'].'forum/message.php?msg_id='
               .db_result($result, $i, 'msg_id').'">':'')
-              .'<IMG SRC="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-              .'.theme/contexts/mail.png" BORDER=0 HEIGHT=12 WIDTH=12 /> ';
+              .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+              .'.theme/contexts/mail.png" border=0 height=12 width=12 /> ';
           # See if this message is new or not
           if (get_forum_saved_date($forum_id) < db_result($result,$i,'date'))
             { $ret_val .= '<strong>'; }
 
-          $ret_val .= db_result($result, $i, 'subject') .'</A></TD>'
-              .'<TD>'.db_result($result, $i, 'user_name').'</TD>'
-              .'<TD>'.utils_format_date(db_result($result,$i,'date'))
-              .'</TD></TR>';
+          $ret_val .= db_result($result, $i, 'subject') ."</a></td>\n"
+              .'<td>'.db_result($result, $i, 'user_name')."</td>\n"
+              .'<td>'.utils_format_date(db_result($result,$i,'date'))
+              ."</td></tr>\n";
           # Show the body/message if requested
           if ($et == 1)
             {
               $ret_val .= '
-                  <TR class="'. utils_get_alt_row_color($total_rows)
-                  .'"><TD>&nbsp;</TD><TD COLSPAN=2>'.
-                  nl2br(db_result($result, $i, 'body')).'</TD><TR>';
+                  <tr class="'. utils_get_alt_row_color($total_rows)
+                  .'"><td>&nbsp;</td><td colspan=2>'.
+                  nl2br(db_result($result, $i, 'body')).'</td><tr>';
             }
 
           if (db_result($result,$i,'has_followups') > 0)
@@ -345,7 +343,7 @@ function show_thread($thread_id,$et=0)
                                            1,$et);
             }
         }
-      $ret_val .= '</TABLE>';
+      $ret_val .= "</table>\n";
     }
   return $ret_val;
 }
@@ -379,36 +377,36 @@ function show_submessages($thread_id, $msg_id, $level,$et=0)
                         */
           $total_rows++;
 
-          $ret_val .= '<TR class="'. utils_get_alt_row_color($total_rows)
-                      .'"><TD NOWRAP>';
+          $ret_val .= '<tr class="'. utils_get_alt_row_color($total_rows)
+                      .'"><td nowrap>';
           # How far should it indent?
 
           for ($i2=0; $i2<$level; $i2++)
             $ret_val .= ' &nbsp; &nbsp; &nbsp; ';
 
-          $ret_val .= '<IMG SRC="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-              .'.theme/contexts/mail.png" BORDER=0 HEIGHT=12 WIDTH=12 /> ';
+          $ret_val .= '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+              .'.theme/contexts/mail.png" border=0 height=12 width=12 /> ';
           # If it this is the message being displayed, don't show a link to it
           $ret_val .= (($current_message != db_result($result, $i, 'msg_id'))?
-                       '<A HREF="'.$GLOBALS['sys_home']
+                       '<a href="'.$GLOBALS['sys_home']
                       .'forum/message.php?msg_id='
                       .db_result($result, $i, 'msg_id').'">':'');
           # See if this message is new or not
           if (get_forum_saved_date($forum_id) < db_result($result,$i,'date'))
             $ret_val .= '<strong>';
 
-          $ret_val .= db_result($result, $i, 'subject').'</A></TD>'
-                  .'<TD>'.db_result($result, $i, 'user_name').'</TD>'
-                  .'<TD>'.utils_format_date(db_result($result, $i, 'date'))
-                  .'</TD></TR>';
+          $ret_val .= db_result($result, $i, 'subject')."</a></td>\n"
+                  .'<td>'.db_result($result, $i, 'user_name')."</td>\n"
+                  .'<td>'.utils_format_date(db_result($result, $i, 'date'))
+                  ."</td></tr>\n";
           # Show the body/message if requested
           if ($et == 1)
             {
               $ret_val .= '
-                                    <TR class="'
+                                    <tr class="'
                        .utils_get_alt_row_color($total_rows)
-                       .'"><TD>&nbsp;</TD><TD COLSPAN=2>'
-                       .nl2br(db_result($result, $i, 'body')).'</TD><TR>';
+                       .'"><td>&nbsp;</td><td colspan=2>'
+                       .nl2br(db_result($result, $i, 'body'))."</td><tr>\n";
             }
 
           if (db_result($result,$i,'has_followups') > 0)

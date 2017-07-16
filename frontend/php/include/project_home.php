@@ -261,7 +261,7 @@ administrator of the whole %s server."), $GLOBALS['sys_name'])."</div>\n";
                           $registration_count),
              "<strong>$registration_count</strong>");
       print $HTML->box_bottom();
-      print '<br />';
+      print "<br />\n";
     }
 }
 
@@ -282,7 +282,7 @@ activate, deactivate and configure your project's tools.")."</div>\n";
                                     'alt'=>'')).'&nbsp;'
                                       ._("Project Main Administration Page"));
   print $HTML->box_bottom();
-  print '<br />';
+  print "<br />\n";
 }
 
 

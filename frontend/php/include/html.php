@@ -129,8 +129,7 @@ function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 
   if ($form_opening && $submit)
     {
-      $ret .= '
-</form>';
+      $ret .= "\n</form>\n";
     }
 
   $ret .= '
@@ -364,7 +363,7 @@ function html_feedback($bottom)
 
   print '<div '.$script_show.
         ' id="feedbackback'.$suffix.'" class="feedbackback">'.
-        _("Show feedback again").'</div>';
+        _("Show feedback again")."</div>\n";
 
   # Only success
   if ($GLOBALS['feedback'] && !$GLOBALS['ffeedback'])
@@ -373,7 +372,7 @@ function html_feedback($bottom)
               $script_hide.'><span class="feedbacktitle"><img src="'.
               $GLOBALS['sys_home'].'images/'.SV_THEME.
               '.theme/bool/ok.png" class="feedbackimage" alt="" /> '.
-              _("Success:").'</span> '.$GLOBALS['feedback'].'</div>';
+              _("Success:").'</span> '.$GLOBALS['feedback']."</div>\n";
     }
 
   # Only errors
@@ -383,7 +382,7 @@ function html_feedback($bottom)
             $script_hide.'><span class="feedbackerrortitle"><img src="'.
             $GLOBALS['sys_home'].'images/'.SV_THEME.
             '.theme/bool/wrong.png" class="feedbackimage" alt="" /> '.
-            _("Error:").'</span><br/>'.$GLOBALS['ffeedback'].'</div>';
+            _("Error:").'</span><br/>'.$GLOBALS['ffeedback']."</div>\n";
     }
 
   # Errors and success
@@ -394,7 +393,7 @@ function html_feedback($bottom)
             '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.
             '.theme/bool/wrong.png" class="feedbackimage" alt="" /> '.
             _("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.
-            $GLOBALS['ffeedback'].'</div>';
+            $GLOBALS['ffeedback']."</div>\n";
     }
 
   # We empty feedback so there will be a bottom feedback only if something
@@ -496,8 +495,7 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$table=true)
 	{
 	  $return .= '
 <th class="boxtitle"><a class="sortbutton" href="'.$links_arr[$i].'">'
-          .$title_arr[$i].'</a></th>
-';
+          .$title_arr[$i]."</a></th>\n";
 	}
     }
   else
@@ -505,12 +503,10 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$table=true)
       for ($i=0; $i<$count; $i++)
 	{
 	  $return .= '
-<th class="boxtitle">'.$title_arr[$i].'</th>
-';
+<th class="boxtitle">'.$title_arr[$i]."</th>\n";
 	}
     }
-  return $return.'</tr>
-';
+  return $return."</tr>\n";
 }
 
 function html_get_alt_row_color ($i)
