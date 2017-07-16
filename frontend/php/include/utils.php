@@ -23,32 +23,30 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# Clean initialization for globals
+# Clean initialization for globals.
 $GLOBALS['feedback_count'] = 0;
 $GLOBALS['feedback'] = '';
 $GLOBALS['ffeedback'] = '';
 
 define('FB_ERROR', 1);
 
-# This function permit including site specific content with ease
+# Get path for site-specific content.
 function utils_get_content_filename ($file)
 {
   if (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.php'))
     return $GLOBALS['sys_incdir'].'/php/'.$file.'.php';
-  elseif (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.txt'))
+  if (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.txt'))
     return $GLOBALS['sys_incdir'].'/php/'.$file.'.txt';
 # Fallback to legacy location.
-  elseif (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
-    // there is localized version of the file :
+  if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
+    # There is a localized version of the file:
     return $GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale'];
-  elseif (is_file($GLOBALS['sys_incdir'].'/'.$file.'.txt'))
+  if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.txt'))
     return $GLOBALS['sys_incdir'].'/'.$file.'.txt';
-  else
-    return null;
+  return null;
 }
 
-# This function permit including site specific content with ease
+# Include site-specific content.
 function utils_get_content ($file)
 {
   $file = utils_get_content_filename($file);
@@ -59,7 +57,7 @@ function utils_get_content ($file)
 information from file \"%s\", please contact administrators"), $file), 1);
 }
 
-# Make sure that to avoid malicious file paths
+# Make sure that to avoid malicious file paths.
 function utils_check_path ($path)
 {
   if (eregi(".*\.\.\/.*", $path))
@@ -70,21 +68,21 @@ function utils_check_path ($path)
     }
 }
 
-# Add unavailable css class to a link if required
+# Add unavailable css class to a link if required.
 function utils_link ($url, $title, $defaultclass=0, $available=1, $help=0,
                      $extra='')
 {
   if (!$available)
-    { $defaultclass = 'unavailable'; }
+    $defaultclass = 'unavailable';
 
   $return = '<a href="'.$url.'"';
 
   if ($defaultclass)
-    { $return .= ' class="'.$defaultclass.'"'; }
+    $return .= ' class="'.$defaultclass.'"';
   if ($help)
-    { $return .= ' title="'.$help.'"'; }
+    $return .= ' title="'.$help.'"';
   if ($extra)
-    { $return .= ' '.$extra; }
+    $return .= ' '.$extra;
   $return .= '>'.$title.'</a>';
   return $return;
 }
@@ -97,118 +95,107 @@ function utils_email ($address, $nohtml=0)
   if (user_isloggedin())
     {
       if ($nohtml)
-	{ return $address; }
+        return $address;
 
-      # Remove eventual extra white spaces
+      # Remove eventual extra white spaces.
       $address = trim($address);
 
       # If we have < > in the address, only this content must go in the
       # mailto
       $realaddress = null;;
       if (preg_match("/\<([\w\d\-\@\.]*)\>/", $address, $matches))
-	{ $realaddress = $matches[1]; }
+        $realaddress = $matches[1];
 
-      # We have a user name
+      # We have a user name.
       if (!strpos($address, "@"))
-	{
-          # We found a real address and it is a user login
-	  if ($realaddress && user_exists(user_getid($realaddress)))
+        {
+          # We found a real address and it is a user login.
+          if ($realaddress && user_exists(user_getid($realaddress)))
             return utils_user_link($realaddress,
                                    user_getrealname(user_getid($realaddress)));
-
-          # The whole address is a user login
-	  if (user_exists(user_getid($address)))
-	    {
-	      return utils_user_link($address,
+          # The whole address is a user login.
+          if (user_exists(user_getid($address)))
+            {
+              return utils_user_link($address,
                                      user_getrealname(user_getid($address)));
-	    }
+            }
 
-	  # No @, no real addresses and spaces inside? Looks like someone
-	  # forgot commas
-	  if (!$realaddress && strpos($address, " "))
-	    {
-	      return htmlspecialchars($address).' <span class="warn">'
+          # No @, no real addresses and spaces inside? Looks like someone
+          # forgot commas.
+          if (!$realaddress && strpos($address, " "))
+            {
+              return htmlspecialchars($address).' <span class="warn">'
                 ._("(seems invalid and will probably be ignored)").'</span>';
-	    }
+            }
 
-	  # No @ but and not a login? P
+          # No @ but and not a login? P
 # TRANSLATORS: the argument is mail domain (like localhost or sv.gnu.org).
-	  return htmlspecialchars($address).' <span class="warn">'
+          return htmlspecialchars($address).' <span class="warn">'
             .sprintf(_("(unknown to Savane, will fail if not valid at %s)"),
                      $GLOBALS['sys_mail_domain']).'</span>';
-
-	}
+        }
 
       # If we are here, it means that we have an @ in the address,
       # Even if the address is invalid, the system is likely to try to
       # send the mail, and we have no way to know if the address is valid.
-      # We will only do a check on the address syntax
+      # We will only do a check on the address syntax.
 
-      # We found a real address that is syntexically correct
+      # We found a real address that is syntaxically correct.
       if ($realaddress && validate_email($realaddress))
-	return '<a href="mailto:'.htmlspecialchars($realaddress).'">'
+        return '<a href="mailto:'.htmlspecialchars($realaddress).'">'
                .htmlspecialchars($address).'</a>';
 
-      # We found real address but it does not seem correct
-      # Print a warning
+      # We found real address but it does not seem correct.
+      # Print a warning.
       if ($realaddress)
-	{
-	  return htmlspecialchars($address).' <span class="warn">'
+        {
+          return htmlspecialchars($address).' <span class="warn">'
             ._("(seems invalid and will probably be ignored)").'</span>';
-	}
-
-
-      # We have no realaddress found, only one string that is an address
+        }
+      # We have no realaddress found, only one string that is an address.
       if (validate_email($address))
-	{
-	  return '<a href="mailto:'.htmlspecialchars($address).'">'
+        {
+          return '<a href="mailto:'.htmlspecialchars($address).'">'
                  .htmlspecialchars($address).'</a>';
-	}
-
-      # Nothing was valid, print a warning
+        }
+      # Nothing was valid, print a warning.
       return htmlspecialchars($address).' <span class="warn">'
         ._("(seems invalid and will probably be ignored)").'</span>';
     }
-  else
-    {
-      if ($nohtml)
-	{ return _("-unavailable-"); }
-
-      return utils_help(_("-unavailable-"),
-			_("This information is not provided to anonymous users"),
-			1);
-    }
+  if ($nohtml)
+    return _("-unavailable-");
+  return utils_help(_("-unavailable-"),
+                    _("This information is not provided to anonymous users"),
+                    1);
 }
 
-# like the previous but does no extended search, just print as it comes
+# Like the previous, but does no extended search, just print as it comes.
 function utils_email_basic ($address, $nohtml=0)
 {
   if (user_isloggedin() || CONTEXT == 'forum' || CONTEXT == 'news'
       || CONTEXT == ''/*frontpage*/)
     {
       if ($nohtml)
-	{ return htmlspecialchars($address); }
-
-
-      # Make mailto without trying to find out whether it makes sense
+        return htmlspecialchars($address);
+      # Make mailto without trying to find out whether it makes sense.
       return '<a href="mailto:'.htmlspecialchars($address).'">'
              .htmlspecialchars($address).'</a>';
     }
 
   if ($nohtml)
-    { return _("-unavailable-"); }
-
+    return _("-unavailable-");
   return utils_help(_("-unavailable-"),
-		    _("This information is not provided to anonymous users"),
-		    1);
+                    _("This information is not provided to anonymous users"),
+                    1);
 }
-# Found out if a string is pure ASCII or not
+
+# Find out if a string is pure ASCII or not.
 function utils_is_ascii ($string)
 {
   return preg_match('%^(?: [\x09\x0A\x0D\x20-\x7E] )*$%xs', $string);
 }
 
-# Alias function
+# Alias function.
 function utils_altrow ($i)
 {
   return html_get_alt_row_color ($i);
@@ -227,9 +214,9 @@ function utils_cutstring ($string, $length=35)
 }
 
 # Same as the previous but is used for links and does not try to cut
-# because it annoys users who can't safely
+# because it annoys users who can't safely.
 # copy/paste a complete paragraph with the links intact (check
-# 105807@sv)
+# 105807@sv).
 function utils_cutlink ($string, $length=35)
 {
   $url = $string;
@@ -237,8 +224,7 @@ function utils_cutlink ($string, $length=35)
   return '<a href="'.$url.'">'.$string.'</a>';
 }
 
-##
-# Returns a formatted date for a unix timestamp
+# Return a formatted date for a unix timestamp.
 #
 # The given unix timestamp will be formatted according to
 # the $format parameter. Note that this parameter is not one
@@ -260,47 +246,46 @@ function utils_format_date($timestamp, $format="default")
     }
 
   # The installation configured a specific date format. This is not nice
-  # this will prevent locales from being used
+  # this will prevent locales from being used.
   if ($sys_datefmt)
     {
       return strftime($sys_datefmt, $timestamp);
     }
 
-  ## Go at task #2614 to discuss about this
-  # Used by default
+  # Go at task #2614 to discuss this.
+  # Used by default.
   switch ($format)
     {
     case 'minimal':
       {
         # To be used where place is really lacking, like in feature boxes.
         # (Nowhere else, it is too uninformative.)
-	# Let's use a non-ambiguous format, such as ISO 8601's YYYY-MM-DD
+        # Let's use a non-ambiguous format, such as ISO 8601's YYYY-MM-DD
         # extended calendar format.
-	# Previously we used %x, where MM and DD can be swapped
-	# depending on locale, and users reported confusion.
-	return strftime('%Y-%m-%d', $timestamp);
+        # Previously we used %x, where MM and DD can be swapped
+        # depending on locale, and users reported confusion.
+        return strftime('%Y-%m-%d', $timestamp);
       }
     case 'short':
     default:
       {
-	# %c  The preferred date and time representation for the current locale.
-	# Cf. strftime(3)
-	return strftime('%c', $timestamp);
+        # %c  The preferred date and time representation for the current locale.
+        # Cf. strftime(3)
+        return strftime('%c', $timestamp);
       }
     }
-
   return false;
 }
 
 # Convert a date as used in the bug tracking system and other services (YYYY-MM-DD)
 # into a Unix time.
 # Return a list with two values: the unix time and a boolean saying whether
-# the conversion went well (true) or bad (false)
+# the conversion went well (true) or bad (false).
 function utils_date_to_unixtime ($date)
 {
   $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
   if ($res == 0)
-    { return array(0,false); }
+    return array(0,false);
   list(,$year,$month,$day) = $match;
   $time = mktime(0, 0, 0, $month, $day, $year);
   dbg("DBG Matching date $date -> year $year, month $month,"
@@ -324,10 +309,9 @@ function utils_filesize($filename, $file_size=0)
 {
   # If file size is defined, assume that we just want an unit conversion.
 
-  # Round results: Savane is not a math software
-
+  # Round results: Savane is not a math software.
   if (!isset($file_size))
-    {   $file_size = filesize($filename); }
+    $file_size = filesize($filename);
 
   if ($file_size >= 1048576)
     {
@@ -344,11 +328,10 @@ function utils_filesize($filename, $file_size=0)
 # TRANSLATORS: this expresses file size.
       $file_size = sprintf(_("%sB"), round($file_size));
     }
-
   return $file_size;
 }
 
-# Return human readable sizes
+# Return human readable sizes.
 # This is public domain, original version from:
 # Author:      Aidan Lister <aidan@php.net>
 # Version:     1.1.0
@@ -359,64 +342,65 @@ function utils_filesize($filename, $file_size=0)
 # Param:       int    $si          Whether to use SI prefixes
 function utils_size_readable($size, $unit = null, $retstring = null, $si = false)
 {
-    // Units
-    if ($si === true) {
-        $sizes = array(
+  # Units.
+  if ($si === true)
+    {
+      $sizes = array(
 # TRANSLATORS: this is file size unit (no prefix).
-                      _('B'),
+                    _('B'),
 # TRANSLATORS: this is file size unit (with SI prefix.)
-                      _('kB'),
+                    _('kB'),
 # TRANSLATORS: this is file size unit (with SI prefix.)
-                      _('MB'),
+                    _('MB'),
 # TRANSLATORS: this is file size unit (with SI prefix.)
-                      _('GB'),
+                    _('GB'),
 # TRANSLATORS: this is file size unit (with SI prefix.)
-                      _('TB'),
+                    _('TB'),
 # TRANSLATORS: this is file size unit (with SI prefix.)
-                      _('PB'));
-        $mod   = 1000;
-    } else {
-        $sizes = array(
+                    _('PB'));
+      $mod   = 1000;
+    }
+  else
+    {
+      $sizes = array(
 # TRANSLATORS: this is file size unit (no prefix).
-                      _('B'),
+                    _('B'),
 # TRANSLATORS: this is file size unit (with binary prefix.)
-                      _('KiB'),
+                    _('KiB'),
 # TRANSLATORS: this is file size unit (with binary prefix.)
-                      _('MiB'),
+                    _('MiB'),
 # TRANSLATORS: this is file size unit (with binary prefix.)
-                      _('GiB'),
+                    _('GiB'),
 # TRANSLATORS: this is file size unit (with binary prefix.)
-                      _('TiB'),
+                    _('TiB'),
 # TRANSLATORS: this is file size unit (with binary prefix.)
-                      _('PiB'));
-        $mod   = 1024;
+                    _('PiB'));
+      $mod   = 1024;
     }
-    $ii = count($sizes) - 1;
+  $ii = count($sizes) - 1;
 
-    // Max unit
-    $unit = array_search((string) $unit, $sizes);
-    if ($unit === null || $unit === false) {
-        $unit = $ii;
-    }
-
-    // Return string
-    if ($retstring === null) {
-        $retstring = '%01.2f%s';
+  # Find maximum unit applicable.
+  $unit = array_search((string) $unit, $sizes);
+  if ($unit === null || $unit === false)
+    {
+      $unit = $ii;
     }
 
-    // Loop
-    $i = 0;
-    while ($unit != $i && $size >= 1024 && $i < $ii) {
-        $size /= $mod;
-        $i++;
+  if ($retstring === null)
+    {
+      $retstring = '%01.2f%s';
     }
-
-    return sprintf($retstring, $size, $sizes[$i]);
+  $i = 0;
+  while ($unit != $i && $size >= 1024 && $i < $ii)
+    {
+      $size /= $mod;
+      $i++;
+    }
+  return sprintf($retstring, $size, $sizes[$i]);
 }
 
 function utils_fileextension($filename)
 {
-
   $ext = substr(basename($filename), strrpos(basename($filename),".") + 1);
   if ($ext=='gz' || $ext=='bz2')
     {
@@ -438,65 +422,65 @@ function utils_fileextension($filename)
     {
       $arch_type = substr(basename($filename), strrpos(basename($filename),".") - 3);
       if ($arch_type == "src.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("source %s"), $long_ext);
-	}
+          $long_ext = sprintf(_("source %s"), $long_ext);
+        }
       if ($arch_type == "rch.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("arch independent %s"), $long_ext);
-	}
+          $long_ext = sprintf(_("arch independent %s"), $long_ext);
+        }
       if ($arch_type == "386.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for i386 (ix86)"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for i386 (ix86)"), $long_ext);
+        }
       if ($arch_type == "586.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for i586"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for i586"), $long_ext);
+        }
       if ($arch_type == "686.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for i686"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for i686"), $long_ext);
+        }
       if ($arch_type == "a64.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for Itanium 64"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for Itanium 64"), $long_ext);
+        }
       if ($arch_type == "arc.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for Sparc"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for Sparc"), $long_ext);
+        }
       if ($arch_type == "pha.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for Alpha"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for Alpha"), $long_ext);
+        }
       if ($arch_type == "ppc.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for PowerPC"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for PowerPC"), $long_ext);
+        }
       if ($arch_type == "390.".$ext)
-	{
+        {
 # TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 # package'.
-	  $long_ext = sprintf(_("%s for s390"), $long_ext);
-	}
+          $long_ext = sprintf(_("%s for s390"), $long_ext);
+        }
       $ext = $long_ext;
     }
   return $ext;
@@ -514,18 +498,13 @@ function utils_prep_string_for_sendmail($body)
 function utils_unconvert_htmlspecialchars($string)
 {
   if (strlen($string) < 1)
-    {
-      return '';
-    }
-  else
-    {
-      $string=str_replace('&nbsp;',' ',$string);
-      $string=str_replace('&quot;','"',$string);
-      $string=str_replace('&gt;','>',$string);
-      $string=str_replace('&lt;','<',$string);
-      $string=str_replace('&amp;','&',$string);
-      return $string;
-    }
+    return '';
+  $string=str_replace('&nbsp;',' ',$string);
+  $string=str_replace('&quot;','"',$string);
+  $string=str_replace('&gt;','>',$string);
+  $string=str_replace('&lt;','<',$string);
+  $string=str_replace('&amp;','&',$string);
+  return $string;
 }
 
 function utils_remove_htmlheader($string)
@@ -578,55 +557,53 @@ function utils_wrap_find_space($string,$wrap)
 
       #if that space is too far over, go back and start more to the left
       if (($pos > ($wrap+5)) || !$pos)
-	{
-	  $try++;
-	  $start=($wrap-($try*5));
-	  #if we've gotten so far left , just truncate the line
-	  if ($start<=10)
-	    {
-	      return $wrap;
-	    }
-	  $found=false;
-	}
+        {
+          $try++;
+          $start=($wrap-($try*5));
+          #if we've gotten so far left , just truncate the line
+          if ($start<=10)
+            {
+              return $wrap;
+            }
+          $found=false;
+        }
       else
-	{
-	  $found=true;
-	}
+        {
+          $found=true;
+        }
     }
-
   return $pos;
 }
 
 function utils_line_wrap ($text, $wrap = 78, $break = "\n")
 {
   $paras = explode("\n", $text);
-
   $result = array();
   $i = 0;
   while ($i < count($paras))
     {
       if (strlen($paras[$i]) <= $wrap)
-	{
-	  $result[] = $paras[$i];
-	  $i++;
-	}
+        {
+          $result[] = $paras[$i];
+          $i++;
+        }
       else
-	{
-	  $pos=utils_wrap_find_space($paras[$i],$wrap);
+        {
+          $pos=utils_wrap_find_space($paras[$i],$wrap);
 
-	  $result[] = substr($paras[$i], 0, $pos);
+          $result[] = substr($paras[$i], 0, $pos);
 
-	  $new = trim(substr($paras[$i], $pos, strlen($paras[$i]) - $pos));
-	  if ($new != '')
-	    {
-	      $paras[$i] = $new;
-	      $pos=utils_wrap_find_space($paras[$i],$wrap);
-	    }
-	  else
-	    {
-	      $i++;
-	    }
-	}
+          $new = trim(substr($paras[$i], $pos, strlen($paras[$i]) - $pos));
+          if ($new != '')
+            {
+              $paras[$i] = $new;
+              $pos=utils_wrap_find_space($paras[$i],$wrap);
+            }
+          else
+            {
+              $i++;
+            }
+        }
     }
   return implode($break, $result);
 }
@@ -640,50 +617,44 @@ function utils_user_link ($username, $realname=false, $noneisanonymous=false)
       if (!$noneisanonymous)
 # TRANSLATORS: Displayed when no user is selected.
         return _('None');
-      else
 # TRANSLATORS: anonymous user.
-        return _("Anonymous");
+      return _("Anonymous");
+    }
+  $re = '<a href="'.$GLOBALS['sys_home'].'users/'.$username.'">';
+  if ($realname)
+    {
+      $re .= $realname." &lt;".$username."&gt;";
     }
   else
     {
-      $re = '<a href="'.$GLOBALS['sys_home'].'users/'.$username.'">';
-      if ($realname)
-	{
-	  $re .= $realname." &lt;".$username."&gt;";
-	}
-      else
-	{
-	  $re .= $username;
-	}
-      $re .= '</a>';
-
-      return $re;
+      $re .= $username;
     }
+  $re .= '</a>';
+  return $re;
 }
 
 function utils_double_diff_array($arr1, $arr2)
 {
-  # first transform both arrays in hashes
+  # First transform both arrays in hashes.
   reset($arr1); reset($arr2);
   while ( list(,$v) = each($arr1))
-    { $h1[$v] = $v; }
+    $h1[$v] = $v;
   while ( list(,$v) = each($arr2))
-    { $h2[$v] = $v; }
+    $h2[$v] = $v;
 
   $deleted = array();
   while ( list($k,) = each($h1))
     {
       if (!isset($h2[$k]))
-	{ $deleted[] = $k; }
+        $deleted[] = $k;
     }
 
   $added = array();
   while ( list($k,) = each($h2))
     {
       if (!isset($h1[$k]))
-	{ $added[] = $k; }
+        $added[] = $k;
     }
-
   return array($deleted, $added);
 }
 
@@ -711,39 +682,38 @@ function show_priority_colors_key()
       print '<span class="'.utils_get_priority_color($i).'">&nbsp;'.($i-10)
             .'&nbsp;</span>'."\n";
     }
-
   print  "</p>\n";
 }
 
 function get_priority_color ($index, $closed="")
-{ return utils_get_priority_color($index, $closed); }
+{
+  return utils_get_priority_color($index, $closed);
+}
 
 function utils_get_tracker_icon ($tracker)
 {
   if ($tracker == "bugs")
-    { return "bug"; }
+    return "bug";
   if ($tracker == "support")
-    { return "help"; }
+    return "help";
   if ($tracker == "cookbook")
-    { return "man"; }
+    return "man";
   return $tracker;
 }
 
 function utils_get_tracker_prefix ($tracker)
 {
   if ($tracker == "bugs")
-    { return "bug"; }
+    return "bug";
   if ($tracker == "support")
-    { return "sr"; }
+    return "sr";
   if ($tracker == "cookbook")
-    { return "recipe"; }
+    return "recipe";
   return $tracker;
 }
 
-##
-# Returns the translation for the given tracker, if available.
+# Return the translation for the given tracker, if available.
 # Otherwise, return the input string.
-#
 function utils_get_tracker_name($tracker)
 {
   switch ($tracker)
@@ -772,9 +742,9 @@ function utils_get_tracker_name($tracker)
 function utils_get_priority_color ($index, $closed="")
 {
   global $bgpri;
-  # If the item is closed, add ten to the index number to get closed colors
+  # If the item is closed, add ten to the index number to get closed colors.
   if ($closed == 3)
-    { $index = $index + 10; }
+    $index = $index + 10;
 
   return $bgpri[$index];
 }
@@ -789,35 +759,34 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false)
   if ($title == "Untitled")
     $title = _("Untitled");
 
-  if  ($result)  {
-    $rows  =  db_numrows($result);
-    $cols  =  db_numfields($result);
+  if  ($result)
+    {
+      $rows  =  db_numrows($result);
+      $cols  =  db_numfields($result);
 
-    # Show title
-    print "<h4>$title</h4>\n";
-    print '<table border="0" width="100%" summary="'.$title.'">'."\n";
+      # Show title.
+      print "<h4>$title</h4>\n";
+      print '<table border="0" width="100%" summary="'.$title.'">'."\n";
 
-    /*  Create  the  headers  */
-    print "<tr>\n";
-    for ($i=0; $i < $cols; $i++)
-      {
-	print '<th>'.db_fieldname($result,  $i)."</th>\n";
-      }
-    print "</tr>\n";
+      # Create the headers.
+      print "<tr>\n";
+      for ($i=0; $i < $cols; $i++)
+        print '<th>'.db_fieldname($result,  $i)."</th>\n";
+      print "</tr>\n";
 
-    /*  Create the rows  */
-    for ($j = 0; $j < $rows; $j++)
-      {
-	print '<tr class="'. html_get_alt_row_color($j) .'">';
-	for ($i = 0; $i < $cols; $i++)
-	  {
-            $link = $linkend = '';
-	    if ($linkify && $i == 0)
-	      {
-		$link = '<a href="'.htmlentities ($_SERVER['PHP_SELF']).'?';
-		$linkend = '</a>';
-		switch ($linkify)
-                  {
+      # Create the rows.
+      for ($j = 0; $j < $rows; $j++)
+        {
+          print '<tr class="'. html_get_alt_row_color($j) .'">';
+          for ($i = 0; $i < $cols; $i++)
+            {
+              $link = $linkend = '';
+              if ($linkify && $i == 0)
+                {
+                  $link = '<a href="'.htmlentities ($_SERVER['PHP_SELF']).'?';
+                  $linkend = '</a>';
+                  switch ($linkify)
+                    {
                     case "bug_cat":
                       $link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='
                                .db_result($result, $j, 'bug_category_id').'">';
@@ -842,25 +811,24 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false)
                                .'&project_cat_mod=y&project_cat_id='
                                .db_result($result, $j, 'group_project_id').'">';
                       break;
-		    default:
+                    default:
                       $link = $linkend = '';
-                 }
-	      }
-	    print '<td>'.$link . db_result($result,  $j,  $i) . $linkend
-                  ."</td>\n";
-	  }
-	print "</tr>\n";
-      }
-    print "</table>\n";
-  }
-  else
+                   }
+                }
+              print '<td>'.$link . db_result($result,  $j,  $i) . $linkend
+                    ."</td>\n";
+            }
+          print "</tr>\n";
+        }
+      print "</table>\n";
+    }
+  else # !($result)
     {
       print db_error();
     }
 }
 
-
-# Clean up email address (remove spaces...) and put to lower case
+# Clean up email address (remove spaces...) and put to lower case.
 function utils_cleanup_emails ($addresses)
 {
   # It was previously removing white spaces:
@@ -874,18 +842,16 @@ function utils_cleanup_emails ($addresses)
 }
 
 # Clean up email address (remove spaces...) and add @... if it is a simple
-# login name
+# login name.
 function utils_normalize_email ($address)
 {
   $address = utils_cleanup_emails($address);
   if (validate_email($address))
     return $address;
-  else
-    return $address."@".$GLOBALS['sys_mail_domain'];
+  return $address."@".$GLOBALS['sys_mail_domain'];
 }
 
-
-# Clean up email address (remove spaces...) and split comma separated emails
+# Clean up email address (remove spaces...) and split comma separated emails.
 function utils_split_emails($addresses)
 {
   $addresses = utils_cleanup_emails($addresses);
@@ -893,7 +859,7 @@ function utils_split_emails($addresses)
   return split(',',$addresses);
 }
 
-# Email Verification
+# Email Verification.
 function validate_email ($address)
 {
   # FIXME: this allows in domain names some characters that are not allowed
@@ -902,14 +868,14 @@ function validate_email ($address)
                . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
 }
 
-# Verification of comma separated list of email addresses
+# Verification of comma separated list of email addresses.
 function validate_emails ($addresses)
 {
   $arr = utils_split_emails($addresses);
   while (list(, $addr) = each ($arr))
     {
       if (!validate_email($addr))
-	{ return false;}
+        return false;
     }
   return true;
 }
@@ -923,7 +889,7 @@ function utils_is_valid_filename ($file)
   return true;
 }
 
-# add debugging information
+# Add debugging information.
 function util_debug ($msg)
 {
   if ($GLOBALS['sys_debug_on'])
@@ -931,13 +897,13 @@ function util_debug ($msg)
       $backtrace = debug_backtrace(); // stacktrace
       $location = '';
       if (isset($backtrace[1]))
-	{
-	  $location = $backtrace[1]['function'];
-	}
+        {
+          $location = $backtrace[1]['function'];
+        }
       else {
-	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '',
+        $relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '',
                                      $backtrace[0]['file']);
-	$location = "$relative_path:{$backtrace[0]['line']}";
+        $location = "$relative_path:{$backtrace[0]['line']}";
       }
       $GLOBALS['debug'] .= "(" . $location . ") $msg<br />";
     }
@@ -948,17 +914,18 @@ function dbg ($msg)
 {
   if ($GLOBALS['sys_debug_on'])
     {
-      $backtrace = debug_backtrace(); // stacktrace
+      $backtrace = debug_backtrace();
       $location = '';
       if (isset($backtrace[1]))
-	{
-	  $location = $backtrace[1]['function'];
-	}
-      else {
-	$relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '',
-                                     $backtrace[0]['file']);
-	$location = "$relative_path:{$backtrace[0]['line']}";
-      }
+        {
+          $location = $backtrace[1]['function'];
+        }
+      else
+        {
+          $relative_path = str_replace($GLOBALS['sys_www_topdir'].'/', '',
+                                       $backtrace[0]['file']);
+          $location = "$relative_path:{$backtrace[0]['line']}";
+        }
       $GLOBALS['debug'] .= "(" . $location . ") $msg<br />";
     }
 }
@@ -966,15 +933,17 @@ function dbg ($msg)
 # Temporary debug.
 # Use it instead of 'echo' so you can easily spot and remove them later after
 # debugging is done.
-function temp_dbg($msg) {
+function temp_dbg($msg)
+{
   print '<pre>';
   debug_print_backtrace();
   var_dump($msg);
   print '</pre>';
 }
 
-# die with debug information
-function util_die($msg) {
+# Die with debug information.
+function util_die($msg)
+{
   if ($GLOBALS['sys_debug_on'])
     {
       print '<pre>';
@@ -989,92 +958,85 @@ function util_die($msg) {
     }
 }
 
-/**
- * Modified to print any given backtrace.
- * Original comments:
- * Replace debug_print_backtrace()
- *
- * @category    PHP
- * @package     PHP_Compat
- * @license     LGPL - http://www.gnu.org/licenses/lgpl.html
- * @copyright   2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
- * @link        http://php.net/function.debug_print_backtrace
- * @author      Laurent Laville <pear@laurent-laville.org>
- * @author      Aidan Lister <aidan@php.net>
- * @version     $Revision: 1.6 $
- * @since       PHP 5
- * @require     PHP 4.3.0 (debug_backtrace)
- */
+/*
+   Modified to print any given backtrace.
+   Original comments:
+   Replace debug_print_backtrace()
+
+   @category    PHP
+   @package     PHP_Compat
+   @license     LGPL - http://www.gnu.org/licenses/lgpl.html
+   @copyright   2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
+   @link        http://php.net/function.debug_print_backtrace
+   @author      Laurent Laville <pear@laurent-laville.org>
+   @author      Aidan Lister <aidan@php.net>
+   @version     $Revision: 1.6 $
+   @since       PHP 5
+   @require     PHP 4.3.0 (debug_backtrace) */
 function utils_debug_print_mybacktrace($backtrace=null)
 {
-  // Get backtrace
+  # Get backtrace.
   if ($backtrace === null)
     {
       $backtrace = debug_backtrace();
-      // Unset call to debug_print_backtrace
+      # Unset call to debug_print_backtrace.
       array_shift($backtrace);
     }
 
-  if (empty($backtrace)) {
+  if (empty($backtrace))
     return '';
-  }
 
-  // Iterate backtrace
+  # Iterate backtrace.
   $calls = array();
-  foreach ($backtrace as $i => $call) {
-    if (!isset($call['file'])) {
-      $call['file'] = '(null)';
-    }
-    if (!isset($call['line'])) {
-      $call['line'] = '0';
-    }
-    $location = $call['file'] . ':' . $call['line'];
-    $function = (isset($call['class'])) ?
+  foreach ($backtrace as $i => $call)
+    {
+      if (!isset($call['file']))
+        $call['file'] = '(null)';
+      if (!isset($call['line']))
+        $call['line'] = '0';
+      $location = $call['file'] . ':' . $call['line'];
+      $function = (isset($call['class'])) ?
       $call['class'] . (isset($call['type']) ? $call['type'] : '.')
         . $call['function'] :
       $call['function'];
 
-    $params = '';
-    if (isset($call['args'])) {
-      $args = array();
-            foreach ($call['args'] as $arg) {
-	      if (is_array($arg)) {
-		$args[] = print_r($arg, true);
-	      } elseif (is_object($arg)) {
-		$args[] = get_class($arg);
-	      } else {
-		$args[] = $arg;
-	      }
+      $params = '';
+      if (isset($call['args']))
+        {
+          $args = array();
+          foreach ($call['args'] as $arg)
+            {
+              if (is_array($arg))
+                $args[] = print_r($arg, true);
+              elseif (is_object($arg))
+                $args[] = get_class($arg);
+              else
+                $args[] = $arg;
             }
-            $params = implode(', ', $args);
+          $params = implode(', ', $args);
+        }
+      $calls[] = sprintf('#%d  %s(%s) called at [%s]',
+                         $i,
+                         $function,
+                         $params,
+                         $location);
     }
-
-    $calls[] = sprintf('#%d  %s(%s) called at [%s]',
-		       $i,
-		       $function,
-		       $params,
-		       $location);
-  }
-
   echo implode("\n", $calls), "\n";
 }
 
-# alias
 function util_feedback ($msg, $error=0)
 {
   fb($msg, $error);
 }
 
-# alias
 function feedback ($msg, $error=0)
 {
   fb($msg, $error);
 }
 
-# add feedback information
+# Add feedback information.
 function fb ($msg, $error=0)
 {
-  # Increment feedback count
   $GLOBALS['feedback_count']++;
 
   if ($GLOBALS['sys_debug_on'])
@@ -1082,10 +1044,7 @@ function fb ($msg, $error=0)
       $msg .= ' [#'.$GLOBALS['feedback_count'].']';
       dbg("Add feedback #".$GLOBALS['feedback_count']);
     }
-
   $msg .= "\n";
-
-  # feed
   if (!$error)
     {
       $GLOBALS['feedback'] .= $msg;
@@ -1096,25 +1055,24 @@ function fb ($msg, $error=0)
     }
 }
 
-# fb function to be used about database error when context of error is obvious
+# Fb function to be used about database error when context of error is obvious.
 function fb_dberror()
 {
   fb(_("Error updating database"),1);
 }
 
-# fb function to be used about database error when context of error is obvious
+# Fb function to be used about database success when context is obvious.
 function fb_dbsuccess()
 {
   fb(_("Database successfully updated"));
 }
 
-# alias
 function utils_help ($text, $explanation_array, $noarray=0)
 {
   return help($text, $explanation_array, $noarray);
 }
 
-# print help about a word
+# Print help about a word.
 #   $text  is the sentence where ballons are
 #   $explanation_array is the table word->explanation, must be in the
 #   array syntax.
@@ -1123,59 +1081,55 @@ function help ($text, $explanation_array, $noarray=0)
   if (!$noarray)
     {
       while (list($word,$explanation) = each($explanation_array))
-	{
-	  $text = str_replace($word,
-			      '<span class="help" title="'.$explanation.'">'
+        {
+          $text = str_replace($word,
+                              '<span class="help" title="'.$explanation.'">'
                               .$word.'</span>',
-			      $text);
-	}
+                              $text);
+        }
       return $text;
     }
-
   return '<span class="help" title="'.$explanation_array.'">'.$text.'</span>';
 }
 
-# Analyse if we do need MSIE dirtyhacks
+# Analyse if we do need MSIE dirtyhacks.
 # Put the result in cache so we wont over and over analyse user agent.
 # (This function will indeed think a browser that claims to be MSIE that it is
 # MSIE. Users of browsers like Opera that pretend to be MSIE should configure
-# properly their User Agent. There is nothing else to do about it)
+# properly their User Agent. There is nothing else to do about it).
 function utils_is_broken_msie ()
 {
-  # If already set, return what we found
+  # If already set, return what we found.
   if (isset($GLOBALS['are_we_using_broken_msie']))
     {
       return $GLOBALS['are_we_using_broken_msie'];
     }
 
-  # Otherwise, find out, assuming that by default we dont use broken MSIE
+  # Otherwise, find out, assuming that by default we dont use broken MSIE.
   $is_broken = false;
 
-  # Try to find the string MSIE
+  # Try to find the string MSIE.
   if (isset($_SERVER['HTTP_USER_AGENT']))
     {
       $msie = strpos($_SERVER['HTTP_USER_AGENT'], "MSIE");
       if ($msie !== false)
-	{
-	  // Avoid MSIE > 6: look for the first integer after the MSIE
-	  // string, in the next characters
-	  $msie = substr($_SERVER['HTTP_USER_AGENT'], $msie, 10);
-	  preg_match("/MSIE (\d*)/", $msie, $msie_version);
-	  if ((!isset ($msie_version[1]) || $msie_version[1] < 7))
-	    {
-	      $is_broken = true;
-	    }
-	}
+        {
+          # Avoid MSIE > 6: look for the first integer after the MSIE
+          # string, in the next characters.
+          $msie = substr($_SERVER['HTTP_USER_AGENT'], $msie, 10);
+          preg_match("/MSIE (\d*)/", $msie, $msie_version);
+          if ((!isset ($msie_version[1]) || $msie_version[1] < 7))
+            {
+              $is_broken = true;
+            }
+        }
     }
 
-  # Save for later
+  # Save globally.
   $GLOBALS['are_we_using_broken_msie'] = $is_broken;
-
-  # Return the result
   return $is_broken;
 }
 
-# alias
 function is_broken_msie()
 {
   return utils_is_broken_msie();

@@ -1,27 +1,27 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Define list of timezones.
+#
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 # Valid timezones for PHP from php.net, except the ones of the category
 # others that seems to be duplicates for theses ones. We can expect people
-# to know in which country/city they are. Knowning if they are at GMT+3 or 
+# to know in which country/city they are. Knowning if they are at GMT+3 or
 # GMT+4 may be more picky, so since there are differents ways to tell the
 # timezone, we will take the easy one.
 
@@ -480,3 +480,4 @@ $TZs[]='US/Mountain';
 $TZs[]='US/Pacific';
 $TZs[]='US/Pacific-New';
 $TZs[]='US/Samoa';
+?>

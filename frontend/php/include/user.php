@@ -20,7 +20,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 require_once(dirname(__FILE__).'/member.php');
 
 # Unset these globals until register_globals if off everywhere
@@ -38,49 +37,35 @@ function user_isloggedin()
 function user_can_be_super_user()
 {
   global $USER_IS_SUPER_USER;
-# members of sys_group_id  are admins and have super-user privs site-wide
+# Members of sys_group_id  are admins and have super-user privs site-wide.
   if (isset($USER_IS_SUPER_USER))
+      return $USER_IS_SUPER_USER;
+  if (user_isloggedin())
     {
+      $result=db_execute("SELECT * FROM user_group WHERE user_id=? "
+                         ."AND group_id=? AND admin_flags='A'",
+                         array(user_getid(), $GLOBALS['sys_group_id']));
+      if (!$result || db_numrows($result) < 1)
+        {
+          $USER_IS_SUPER_USER=false;
+          return $USER_IS_SUPER_USER;
+        }
+      # Matching row was found - set and save this knowledge for later.
+      $USER_IS_SUPER_USER=true;
       return $USER_IS_SUPER_USER;
     }
-  else
-    {
-      if (user_isloggedin())
-	{
-	  $result=db_execute("SELECT * FROM user_group WHERE user_id=? "
-                             ."AND group_id=? AND admin_flags='A'",
-			     array(user_getid(), $GLOBALS['sys_group_id']));
-	  if (!$result || db_numrows($result) < 1)
-	    {
-	      $USER_IS_SUPER_USER=false;
-	      return $USER_IS_SUPER_USER;
-	    }
-	  else
-	    {
-	      #matching row was found - set and save this knowledge for later
-	      $USER_IS_SUPER_USER=true;
-	      return $USER_IS_SUPER_USER;
-	    }
-	}
-      else
-	{
-	  $USER_IS_SUPER_USER=false;
-	  return $USER_IS_SUPER_USER;
-	}
-    }
+  $USER_IS_SUPER_USER=false;
+  return $USER_IS_SUPER_USER;
 }
 
 function user_is_super_user()
 {
 # User is superuser only if they want, otherwise they are going to see
-# things like any other user + a link in the left menu
+# things like any other user + a link in the left menu.
   if (user_can_be_super_user()
       && isset($_COOKIE["session_su"])
       && $_COOKIE["session_su"] == "wannabe")
-    {
-      return true;
-    }
-
+    return true;
  return false;
 }
 
@@ -89,13 +74,13 @@ function user_ismember($group_id,$type=0)
   return member_check(0, $group_id, $type);
 }
 
-# Check the user role in a project  - deprecated
+# Check the user role in a project  - deprecated.
 function user_check_ismember($user_id, $group_id, $type=0)
 {
   return member_check($user_id, $group_id, $type);
 }
 
-# Get the groups to which a user belongs
+# Get the groups to which a user belongs.
 function user_groups($uid)
 {
   $result = db_execute("SELECT * FROM user_group WHERE user_id=", array($uid));
@@ -107,7 +92,7 @@ function user_groups($uid)
   return $arr;
 }
 
-# Get the email of a user
+# Get the email of a user.
 function user_get_email($uid)
 {
   $result = db_execute("SELECT * FROM user WHERE user_id=?", array($uid));
@@ -115,26 +100,26 @@ function user_get_email($uid)
   return $val['email'];
 }
 
-# Check if a user belongs to a group - deprecated
+# Check if a user belongs to a group - deprecated.
 function user_is_group_member($uid, $gid)
 {
   return user_check_ismember($uid, $gid);
 }
 
-# Check if a user belongs to a group and is pending - deprecated
-# Return value: The whole row of user_group
+# Check if a user belongs to a group and is pending - deprecated.
+# Return value: The whole row of user_group.
 function user_is_group_pending($uid, $gid)
 {
   return member_check_is_pending($user_id, $group_id);
 }
 
-# Approve a pending user for a group - deprecated
+# Approve a pending user for a group - deprecated.
 function user_approve_for_group($uid, $gid)
 {
   return member_approve($uid, $gid);
 }
 
-# Add or update a user to/in a group - deprecated
+# Add or update a user to/in a group - deprecated.
 function user_add_to_group($uid, $gid, $admin_flags, $bug_flags,$forum_flags,
                            $project_flags, $patch_flags, $support_flags,
                            $doc_flags)
@@ -142,7 +127,7 @@ function user_add_to_group($uid, $gid, $admin_flags, $bug_flags,$forum_flags,
   return member_add($uid, $gid);
 }
 
-# Remove a user from a group - deprecated
+# Remove a user from a group - deprecated.
 function user_remove_from_group($uid, $gid)
 {
   return member_remove($uid, $gid);
@@ -164,63 +149,51 @@ function user_getname($user_id=0, $getrealname=0)
       $prefix = 'user';
       $column = 'user_name';
     }
-  # use current user if one is not passed in
+  # Use current user if one is not passed in.
   if (!$user_id && $getrealname == 0)
-    {
 # TRANSLATORS: "Not applicable".
-      return ($G_USER?$G_USER['user_name']:_("NA"));
-    }
-  else
-    {
-      if ($user_id == 0) {
-        if ($getrealname == 0) { return _("NA"); }
-        else { return _("anonymous"); }
-      }
+    return ($G_USER?$G_USER['user_name']:_("NA"));
 
-      # else must lookup name
-      if (!empty($USER_NAMES[$prefix."_$user_id"]))
-	{
-	  #user name was fetched previously
-	  return $USER_NAMES[$prefix."_$user_id"];
-	}
-      else
-	{
-	  #fetch the user name and store it for future reference
-	  $result = db_execute("SELECT user_id,user_name,realname "
-                               ."FROM user WHERE user_id=?",
-			       array($user_id));
-	  if ($result && db_numrows($result) > 0)
-	    {
-              #valid user - store and return
-              $USER_NAMES[$prefix."_$user_id"] = db_result($result,0,$column);
-              return $USER_NAMES[$prefix."_$user_id"];
-	    }
-	  else
-	    {
-              #invalid user - store and return
-              $USER_NAMES[$prefix."_$user_id"]="<strong>"._("Invalid User ID")
-                                               ."</strong>";
-              return $USER_NAMES[$prefix."_$user_id"];
-	    }
-	}
+  if ($user_id == 0)
+    {
+      if ($getrealname == 0)
+        return _("NA");
+      return _("anonymous");
     }
+  # Lookup name.
+  if (!empty($USER_NAMES[$prefix."_$user_id"]))
+    {
+      # User name was fetched previously.
+      return $USER_NAMES[$prefix."_$user_id"];
+    }
+  # Fetch the user name and store it for future reference.
+  $result = db_execute("SELECT user_id,user_name,realname "
+                       ."FROM user WHERE user_id=?",
+                       array($user_id));
+  if ($result && db_numrows($result) > 0)
+    {
+      # Valid user - store and return.
+      $USER_NAMES[$prefix."_$user_id"] = db_result($result,0,$column);
+      return $USER_NAMES[$prefix."_$user_id"];
+    }
+  # Invalid user - store and return.
+  $USER_NAMES[$prefix."_$user_id"]="<strong>"._("Invalid User ID")
+                                   ."</strong>";
+  return $USER_NAMES[$prefix."_$user_id"];
 }
 
 function user_getid($username=0)
 {
   if (!$username)
     {
-      # No username, return info for the current user
+      # No username, return info for the current user.
       global $G_USER;
       return ($G_USER?$G_USER['user_id']:0);
     }
-  else
-    {
-      $result = db_execute("SELECT user_id FROM user WHERE user_name=?",
-			   array($username));
-      if ($result and db_numrows($result) > 0)
-	return db_result($result,0,"user_id");
-    }
+  $result = db_execute("SELECT user_id FROM user WHERE user_name=?",
+                       array($username));
+  if ($result and db_numrows($result) > 0)
+    return db_result($result,0,"user_id");
 }
 
 function user_exists($user_id, $squad_only=false)
@@ -229,9 +202,9 @@ function user_exists($user_id, $squad_only=false)
   if ($result && db_numrows($result) > 0)
     {
       if (!$squad_only)
-	{ return true; }
-      else if ($squad_only && db_result($result, 0, 'status') == 'SQD')
-	{ return true; }
+        return true;
+      if (db_result($result, 0, 'status') == 'SQD')
+        return true;
     }
   return false;
 }
@@ -242,31 +215,25 @@ function user_getrealname($user_id=0, $rfc822_compliant=0)
   # rfc822 requires some characters to be escaped. We usually care about this
   # compliance only in email headers.
   if ($rfc822_compliant && ereg("\.|\,|\@|\/|\\|\||\;|\!", $ret))
-    { $ret = "\"$ret\""; }
+    $ret = "\"$ret\"";
   return $ret;
 }
 
 function user_getemail($user_id=0)
 {
   if (!$user_id)
-    { $user_id = user_getid(); }
+    $user_id = user_getid();
 
   $result = user_get_result_set($user_id);
   if ($result && db_numrows($result) > 0)
-    {
       return db_result($result,0,"email");
-    }
-  else
-    {
-      return false;
-    }
+  return false;
 }
 
 function user_get_result_set($user_id)
 {
-  #create a common set of user result sets,
-  #so it doesn't have to be fetched each time
-
+  # Create a common set of user result sets,
+  # so it doesn't have to be fetched each time.
   global $USER_RES;
   if (empty($USER_RES["_".$user_id."_"]))
     {
@@ -274,26 +241,22 @@ function user_get_result_set($user_id)
                                              array($user_id));
       return $USER_RES["_".$user_id."_"];
     }
-  else
-    {
-      return $USER_RES["_".$user_id."_"];
-    }
+  return $USER_RES["_".$user_id."_"];
 }
 
 function user_get_result_set_from_unix($user_name)
 {
-  #create a common set of user result sets,
-  #so it doesn't have to be fetched each time
-
+  # Create a common set of user result sets,
+  # so it doesn't have to be fetched each time.
   global $USER_RES;
   $res = db_execute("SELECT * FROM user WHERE user_name=?", array($user_name));
-  if (db_numrows($res)) {
-    $user_id = db_result($res,0,'user_id');
-    $USER_RES["_".$user_id."_"] = $res;
-    return $USER_RES["_".$user_id."_"];
-  } else {
-    return null;
-  }
+  if (db_numrows($res))
+    {
+      $user_id = db_result($res,0,'user_id');
+      $USER_RES["_".$user_id."_"] = $res;
+      return $USER_RES["_".$user_id."_"];
+    }
+  return null;
 }
 
 function user_get_timezone()
@@ -303,10 +266,7 @@ function user_get_timezone()
       $result=user_get_result_set(user_getid());
       return db_result($result,0,'timezone');
     }
-  else
-    {
-      return '';
-    }
+  return '';
 }
 
 function user_set_preference ($preference_name,$value)
@@ -317,45 +277,40 @@ function user_set_preference ($preference_name,$value)
       $preference_name=strtolower(trim($preference_name));
       if (db_numrows(db_execute("SELECT NULL FROM user_preferences "
                                 ."WHERE user_id=? AND preference_name=?",
-				array(user_getid(), $preference_name))) > 0)
-	$result=db_autoexecute('user_preferences',
-			       array('preference_value' => $value),
-			       DB_AUTOQUERY_UPDATE,
-			       "user_id=? AND preference_name=?",
-			       array(user_getid(), $preference_name));
+                                array(user_getid(), $preference_name))) > 0)
+        $result=db_autoexecute('user_preferences',
+                               array('preference_value' => $value),
+                               DB_AUTOQUERY_UPDATE,
+                               "user_id=? AND preference_name=?",
+                               array(user_getid(), $preference_name));
       else
-	$result=db_autoexecute('user_preferences',
-			       array('user_id' => user_getid(),
-				     'preference_name' => $preference_name,
-				     'preference_value' => $value),
-			       DB_AUTOQUERY_INSERT);
-
-# Update the Preference cache if it was setup by a user_get_preference
+        $result=db_autoexecute('user_preferences',
+                               array('user_id' => user_getid(),
+                                     'preference_name' => $preference_name,
+                                     'preference_value' => $value),
+                               DB_AUTOQUERY_INSERT);
+# Update the Preference cache if it was setup by a user_get_preference.
       if (isset($user_pref))
-	{ $user_pref[$preference_name] = $value; }
-
+        $user_pref[$preference_name] = $value;
       return true;
     }
-
   return false;
 }
+
 function user_unset_preference ($preference_name)
 {
   global $user_pref;
-  if (user_isloggedin()) {
-    $preference_name=strtolower(trim($preference_name));
-    $result=db_execute("DELETE FROM user_preferences WHERE user_id=? "
-                       ."AND preference_name=? LIMIT 1",
-                       array(user_getid(), $preference_name));
-
-    # Update the Preference cache if it was setup by a user_get_preference
-    if (isset($user_pref))
-      { unset($user_pref[$preference_name]); }
-
-    dbg("Remove pref $preference_name");
-    return true;
-  }
-  return false;
+  if (!user_isloggedin())
+    return false;
+  $preference_name=strtolower(trim($preference_name));
+  $result=db_execute("DELETE FROM user_preferences WHERE user_id=? "
+                     ."AND preference_name=? LIMIT 1",
+                     array(user_getid(), $preference_name));
+  # Update the Preference cache if it was setup by a user_get_preference.
+  if (isset($user_pref))
+    unset($user_pref[$preference_name]);
+  dbg("Remove pref $preference_name");
+  return true;
 }
 
 function user_get_preference ($preference_name, $user_id=false)
@@ -364,63 +319,53 @@ function user_get_preference ($preference_name, $user_id=false)
 
   if ($user_id)
     {
-      # looking for information without being the user
+      # Looking for information without being the user.
       $res = db_execute("SELECT preference_value FROM user_preferences
-			 WHERE user_id=? AND preference_name=?",
-			array($user_id, $preference_name));
+                         WHERE user_id=? AND preference_name=?",
+                        array($user_id, $preference_name));
       if(db_numrows($res) > 0)
-	return db_result($res,0,'preference_value');
-      else
-	return null;
+        return db_result($res,0,'preference_value');
+      return null;
     }
 
-  if (user_isloggedin())
-    {
-      $preference_name=strtolower(trim($preference_name));
-
-      # First check to see if we have already fetched the preferences
-    if ($user_pref) {
-      if (!empty($user_pref["$preference_name"])) {
-	#we have fetched prefs - return part of array
-	return $user_pref["$preference_name"];
-      } else {
-	#we have fetched prefs, but this pref hasn't been set
-	return false;
-      }
-    } else {
-      #we haven't returned prefs - go to the db
-      $result=db_execute("SELECT preference_name,preference_value"
-			 . " FROM user_preferences"
-			 . " WHERE user_id=?",
-			 array(user_getid()));
-      if (db_numrows($result) < 1) {
-	return false;
-      } else {
-	#iterate and put the results into an array
-	for ($i=0; $i<db_numrows($result); $i++) {
-	  $user_pref[db_result($result,$i,'preference_name')]=
-            db_result($result,$i,'preference_value');
-	}
-	if (isset($user_pref["$preference_name"])) {
-	  #we have fetched prefs - return part of array
-	  return $user_pref["$preference_name"];
-	} else {
-	  #we have fetched prefs, but this pref hasn't been set
-	  return false;
-	}
-      }
-    }
-  } else {
+  if (!user_isloggedin())
     return false;
-  }
+  $preference_name = strtolower(trim($preference_name));
+  # First check to see if we have already fetched the preferences.
+  if ($user_pref)
+    {
+      if (!empty($user_pref["$preference_name"]))
+        # We have fetched prefs - return part of array.
+        return $user_pref["$preference_name"];
+      # We have fetched prefs, but this pref hasn't been set.
+      return false;
+    }
+  # We haven't returned prefs - go to the DB.
+  $result=db_execute("SELECT preference_name,preference_value"
+                     . " FROM user_preferences"
+                     . " WHERE user_id=?",
+                     array(user_getid()));
+  if (db_numrows($result) < 1)
+    return false;
+  # Iterate and put the results into an array.
+  for ($i=0; $i<db_numrows($result); $i++)
+    {
+      $user_pref[db_result($result,$i,'preference_name')]=
+        db_result($result,$i,'preference_value');
+    }
+  if (isset($user_pref["$preference_name"]))
+    # We have fetched prefs - return part of array.
+    return $user_pref["$preference_name"];
+  # We have fetched prefs, but this pref hasn't been set.
+  return false;
 }
 
 # Find out if the user use the vote, very similar to
-# trackers_votes_user_remains_count
+# trackers_votes_user_remains_count.
 function user_use_votes ($user_id=false)
 {
   if (!$user_id)
-    { $user_id = user_getid(); }
+    $user_id = user_getid();
 
   $result = db_execute("SELECT vote_id FROM user_votes WHERE user_id=?",
                        array($user_id));
@@ -431,7 +376,6 @@ function user_use_votes ($user_id=false)
   return false;
 }
 
-##
 # Like context_guess, this will set a AUDIENCE constant that could be used
 # later to determine specific page context, for instance to know which
 # recipes are relevant.
@@ -439,10 +383,10 @@ function user_use_votes ($user_id=false)
 # The valid AUDIENCE names depends on include/trackers/cookbook.php
 # except that role specific "managers" and "technicians" will not be handled
 # here, as you can be both manager and technician, and since it implies that
-# you are member of the pro
+# you are member of the pro.
 function user_guess ()
 {
-  # $group_id should have been sanitized already
+  # $group_id should have been sanitized already.
   global $group_id;
 
   # Not logged in?
@@ -466,23 +410,22 @@ function user_guess ()
       return true;
     }
 
-  # Being member
+  # Being member.
   define('AUDIENCE', 'members');
   return true;
-
 }
 
 # Function that should always be used to remove an user account
 # This function should always be used in a secure context, when user_id
 # is 100% sure.
-# Best is to not to pass the user_id argument unless necessary
+# Best is to not to pass the user_id argument unless necessary.
 function user_delete ($user_id=false, $confirm_hash=false)
 {
   if (!$user_id)
-    { $user_id = user_getid(); }
+    $user_id = user_getid();
 
   # Serious deal, serious check of credentials: allowed only to superuser
-  # and owner of the account
+  # and owner of the account.
   if (!user_is_super_user() && $user_id != user_getid())
     {
       exit_permission_denied();
@@ -500,29 +443,27 @@ function user_delete ($user_id=false, $confirm_hash=false)
       $confirm_hash_param = array();
     }
 
-
   $success = db_autoexecute('user',
    array('user_pw' => '!',
-	 'realname' => '-X-',
-	 'status' => 'S',
-	 'email' => 'idontexist@example.net',
-	 'confirm_hash' => '',
-	 'authorized_keys' => '',
-	 'people_view_skills' => '0',
-	 'people_resume' => '',
-	 'timezone' => 'GMT',
-	 'theme' => '',
-	 'gpg_key' => '',
-	 'email_new' => ''),
+         'realname' => '-X-',
+         'status' => 'S',
+         'email' => 'idontexist@example.net',
+         'confirm_hash' => '',
+         'authorized_keys' => '',
+         'people_view_skills' => '0',
+         'people_resume' => '',
+         'timezone' => 'GMT',
+         'theme' => '',
+         'gpg_key' => '',
+         'email_new' => ''),
    DB_AUTOQUERY_UPDATE,
    "$confirm_hash_test user_id=?", array_merge($confirm_hash_param,
                                                array($user_id)));
-
   if ($success)
     {
       # Remove from any groups, if by any chances this was not done before
       # (normally, an user must quit groups before being allowed to delete his
-      # account)
+      # account).
       db_execute("DELETE FROM user_group WHERE user_id=?", array($user_id));
       db_execute("DELETE FROM user_squad WHERE user_id=?", array($user_id));
 
