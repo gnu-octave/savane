@@ -52,7 +52,7 @@ function specific_reports_list ($thisfield=0)
   global $group_id;
 
   if ($thisfield)
-    print '<p>&nbsp;</p><h3>'._("Other statistics:").'</h3>';
+    print "<p>&nbsp;</p>\n<h3>"._("Other statistics:")."</h3>\n";
   print "<ul>\n";
 
   if ($thisfield != 'aging')
@@ -85,7 +85,7 @@ if ($field)
     if ($field == 'aging')
       {
 # TRANSLATORS: aging statistics is statistics by date.
-        print '<h3>'._("Aging statistics:").'</h3>';
+        print '<h3>'._("Aging statistics:")."</h3>\n";
 
         $time_now=time();
         unset($content);
@@ -107,10 +107,10 @@ if ($field)
             $content[$key] = db_result($result, 0,0);
           }
 
-        print '<h5>'._("Average Turnaround Time for Closed Items").'</h5>';
+        print '<h4>'._("Average Turnaround Time for Closed Items")."</h4>\n";
         graphs_build($content,0,0);
         unset($content);
-        print "<p>&nbsp;&nbsp;</p>";
+        print "<p>&nbsp;&nbsp;</p>\n";
 
         for ($counter=1; $counter<=8; $counter++)
           {
@@ -128,10 +128,10 @@ if ($field)
             $content[$key] = db_result($result, 0,0);
           }
 
-        print '<h5>'._("Number of Items Opened").'</h5>';
+        print '<h4>'._("Number of Items Opened")."</h4>\n";
         graphs_build($content,0,0);
         unset($content);
-        print "<p>&nbsp;&nbsp;</p>";
+        print "<p>&nbsp;&nbsp;</p>\n";
 
         for ($counter=1; $counter<=8; $counter++)
           {
@@ -148,10 +148,10 @@ if ($field)
             $content[utils_format_date($end)] = db_result($result, 0,0);
           }
 
-        print "\n<h5>"._("Number of Items Still Open")."</h5>";
+        print "\n<h4>"._("Number of Items Still Open")."</h4>\n";
         graphs_build($content,0,0);
         unset($content);
-        print "<p>&nbsp;&nbsp;</p>";
+        print "<p>&nbsp;&nbsp;</p>\n";
       }
     else
       {
@@ -160,16 +160,16 @@ if ($field)
 
         # Title + field description
         # TRANSLATORS: the argument is field label.
-        print '<h3>'.sprintf(_("Statistics by '%s':"), $label).'</h3>'
+        print '<h3>'.sprintf(_("Statistics by '%s':"), $label)."</h3>\n"
           .'<p><em>'._('Field Description:').'</em> '
-          .trackers_data_get_description($field).'</p>';
+          .trackers_data_get_description($field)."</p>\n";
 
         # Make sure it is a correct field
         if (trackers_data_is_special($field) || !trackers_data_is_used($field)
             || !trackers_data_is_select_box($field))
           print '<p class="error">'
         # TRANSLATORS: the argument is field label.
-            .sprintf(_("Can't generate report for field %s"), $label).'</p>';
+            .sprintf(_("Can't generate report for field %s"), $label)."</p>\n";
         else
           {
             # First graph the bug distribution for Open item only.
@@ -178,7 +178,7 @@ if ($field)
 
             if ($field != 'status_id')
               {
-                print "\n<h5>".sprintf(_("Open Items"), $label)."</h5>";
+                print "\n<h4>".sprintf(_("Open Items"), $label)."</h4>\n";
 
                 # First graph the bug distribution for Open item only.
                 # Assigned to must be handle in a specific way.
@@ -230,11 +230,11 @@ if ($field)
                   graphs_build($result, $field);
                 else
                   print _("No item found.");
-                print "<p>&nbsp;&nbsp;</p>";
+                print "<p>&nbsp;&nbsp;</p>\n";
                }
 
             #Second  graph the bug distribution for all items
-            print "\n<h5>".sprintf(_("All Items"), $label)."</h5>";
+            print "\n<h4>".sprintf(_("All Items"), $label)."</h4>\n";
 
             if ($field == 'assigned_to')
               {

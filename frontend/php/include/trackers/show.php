@@ -123,7 +123,7 @@ function show_item_list ($result_arr,
              .'" /></span>';
 	}
     }
-  $nav_bar .= '</h3>';
+  $nav_bar .= "</h3>\n";
 
   # Print prev/next links
   print $nav_bar.'<a name="results"></a><br />';
@@ -149,7 +149,7 @@ function show_item_list ($result_arr,
 	      # form_input
 	      print '<td class="center">'
                     .form_input("checkbox", "items_for_digest[]",
-                                "$thisitem_id\" checked=\"checked").'</td>';
+                                "$thisitem_id\" checked=\"checked")."</td>\n";
 	      continue;
 	    }
 
@@ -219,7 +219,7 @@ function show_item_list ($result_arr,
 	}
       print "</tr>\n";
     }
-  print '</table>';
+  print "</table>\n";
   # Print prev/next links
   print "<br />".$nav_bar;
 }
@@ -427,7 +427,7 @@ function show_item_list_sober ($result_arr,
 		    $audience_content .= '&nbsp;&nbsp;<span class="smaller">('
 # TRANSLATORS: the argument is site name (like Savannah).
                       .sprintf(_("From %s User Docs"), $sys_name).')</span>';
-		  $audience_content .= '</li>';
+		  $audience_content .= "</li>\n";
 		}
 
 	      # If there was valid results, save the subcontext
@@ -436,10 +436,10 @@ function show_item_list_sober ($result_arr,
 
 	      $context_content .= '<li><span class="smaller">'
                                   .sprintf(("%s:"), $audience_label).'</span>';
-	      $context_content .= '<ul>';
+	      $context_content .= "<ul>\n";
 	      $context_content .= $audience_content;
-	      $context_content .= '</ul>';
-	      $context_content .= '</li>';
+	      $context_content .= "</ul>\n";
+	      $context_content .= "</li>\n";
 	    }
 	}
       # If there was valid results, print the context
@@ -568,7 +568,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 
 	  $title = sprintf(ngettext("Follows %s latest change.",
                                     "Follow %s latest changes.", $rows), $rows);
-	  print "\n".'<p>'.$title.'</p>';
+	  print "\n".'<p>'.$title."</p>\n";
 	}
 
       $title_arr=array();
@@ -610,16 +610,16 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
           # and date
           if ($date == $previous_date && $user == $previous_user)
             print "\n".'<tr class="'
-              .utils_get_alt_row_color($j).'"><td>&nbsp;</td>'
-              .'<td>&nbsp;</td>';
+              .utils_get_alt_row_color($j)."\"><td>&nbsp;</td>\n"
+              ."<td>&nbsp;</td>\n";
           else
             {
               $j++;
               print "\n".'<tr class="'. utils_get_alt_row_color($j).'">';
               print '<td align="center" class="smaller">'
-                    .utils_format_date($date).'</td>';
+                    .utils_format_date($date)."</td>\n";
               print '<td align="center" class="smaller">'
-                    .utils_user_link($user).'</td>';
+                    .utils_user_link($user)."</td>\n";
             }
 
           $previous_date = $date;
@@ -651,9 +651,10 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
  	      print markup_basic($value_id);
 	    }
 
-           print '</td><td class="smaller" align="center"><img src="'
+           print '</td>
+<td class="smaller" align="center"><img src="'
                  .$GLOBALS['sys_home'].'images/'.SV_THEME
-                 .'.theme/arrows/next.png" border="0" alt="=>" /></td>'
+                 .'.theme/arrows/next.png" border="0" alt="=>" />'."</td>\n"
                  .'<td class="smaller" align="left">';
 	  # New value
 	  if (trackers_data_is_select_box($field))
@@ -671,10 +672,10 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	      # It's a text zone then display directly
 	      print markup_basic($new_value_id);
 	    }
-	  print '</td>';
-	  print '</tr>';
+	  print "</td>\n";
+	  print "</tr>\n";
 	}
-      print '</table>';
+      print "</table>\n";
     }
   else
     {
@@ -887,7 +888,7 @@ function show_dependent_item ($item_id, $dependson=0)
       print '&nbsp;<span class="xsmall">('
             .utils_get_tracker_prefix($tracker).' #'.$current_item_id.', '
             .$fromgroup.$status.')</span></a>';
-      print '</div>';
+      print "</div>\n";
       $i++;
     }
   print $HTML->box_bottom(1);
@@ -927,6 +928,6 @@ function show_dependent_item ($item_id, $dependson=0)
                       "$linktitle", 'noprint').', ';
 	}
     }
-  print rtrim($content, ', ').'.</p>';
+  print rtrim($content, ', ').".</p>\n";
 }
 ?>

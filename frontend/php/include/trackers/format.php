@@ -186,7 +186,7 @@ Follow-up Comments:\n\n";
       print '<p class="center"><span class="xsmall">'
 .'(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/arrows/bottom.png" class="icon" alt="'.'" /> '
-.$jumpto_text.'</a>)</span></p>';
+.$jumpto_text."</a>)</span></p>\n";
     }
 
   # Loop throuh the follow-up comments and format them
@@ -270,13 +270,15 @@ Follow-up Comments:\n\n";
 ._("Why is this post is considered to be spam? Users may have reported it to be
 spam or, if it has been recently posted, it may just be waiting for spamchecks
 to be run.")
-.')</span><br /><span class="preinput">'._("Spam content:")
-.'</span><br /><br />'.nl2br($entry['content']).'</td>'
+.')</span><br />
+<span class="preinput">'._("Spam content:")
+.'</span><br />
+<br />'.nl2br($entry['content'])."</td>\n"
 .'<td class="'.$class.'extra">';
 	      
 	      $out .= '<a name="spam'.$entry['comment_internal_id'].'"></a>'
 		.utils_user_link($entry['user_name'], $entry['realname'], true)
-                .'<br />';
+                ."<br />\n";
 
 	      if ($is_admin)
 		{
@@ -289,19 +291,19 @@ to be run.")
 .'.theme/bool/ok.png" class="icon" alt="'.'" />'
 ._("Unflag as spam").'</a>)';
 		}
-	      $out .= '</td></tr>';
+	      $out .= "</td></tr>\n";
 	    }
 	  else
 	    {	   
 	      $out .= "\n".'<tr class="'.$class.'extra">'
-.'<td class="xsmall">&nbsp;</td>'
+."<td class=\"xsmall\">&nbsp;</td>\n"
 .'<td class="xsmall"><a name="spam'.$entry['comment_internal_id'].'" href="'
 .htmlentities ($_SERVER['PHP_SELF']).'?func=viewspam&amp;item_id='.$item_id
 .'&amp;comment_internal_id='.$entry['comment_internal_id'].'#spam'
 .$entry['comment_internal_id'].'" title="'
 .sprintf(_("Current spam score: %s"), $entry['spamscore']).'">'
 .sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'
-.'</td></tr>';
+."</td></tr>\n";
 	    }
           # No go to the next comment
 	  continue;
@@ -361,7 +363,7 @@ to be run.")
 	  if ($comment_type)
 	    {
 	      # put the comment type in strong
-	      $comment_type = '<strong>'.$comment_type.'</strong><br />';
+	      $comment_type = '<strong>'.$comment_type."</strong><br />\n";
 	    }
 	  
 	  $icon = '';
@@ -439,11 +441,11 @@ to be run.")
 		{
 		  if (ARTIFACT != "cookbook")
 		    {
-		      $out .= '<strong>'._("original submission:").'</strong>';
+		      $out .= '<strong>'._("original submission:")."</strong>\n";
 		    }
 		  else
 		    {
-		      $out .= '<strong>'._("recipe preview:").'</strong>';
+		      $out .= '<strong>'._("recipe preview:")."</strong>\n";
    		    }
 		}
 	      else	   
@@ -459,7 +461,7 @@ to be run.")
 	      $out .= sprintf(_("SVN revision %s:"), $entry['revision']);
 	    }
 	  
-	  $out .= '</a><br />'.$comment_type;
+	  $out .= "</a><br />\n".$comment_type;
 	  
 	  # Full markup only for original submission
 	  if ($comment_number < 1)
@@ -477,10 +479,10 @@ to be run.")
 	      $out .= '<p>(<a href="'.$svn_link.'?rev='.$entry['revision']
                       .'&amp;view=rev">'
                       .sprintf(_("Browse SVN revision %s"), $entry['revision'])
-                      .'</a>)</p>';
+                      ."</a>)</p>\n";
 	    }
 
-	  $out .='</td>';
+	  $out .="</td>\n";
 	  $out .= '<td class="'.$class.'extra">'
                   .utils_user_link($entry['user_name'],
                                    $entry['realname'], true);
@@ -517,14 +519,14 @@ to be run.")
 .'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
 .($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/misc/trash.png" class="icon" alt="'.'" />'
-._("Flag as spam").'</a>)<br /><br />';
+._("Flag as spam")."</a>)<br /><br />\n";
 	    }
-	  $out .= '</td></tr>';
+	  $out .= "</td></tr>\n";
 	}
     }
 
   # final touch...
-  $out .= ($ascii ? "\n\n\n" : "</table>");
+  $out .= ($ascii ? "\n\n\n" : "</table>\n");
 
   return $out;
 }
@@ -750,7 +752,7 @@ File Attachments:\n\n";
 	      $out .= ' - '
                 .markup_basic(db_result($result, $i, 'description'));
 	    }
-	  $out .= ')</span></div>';
+	  $out .= ")</span></div>\n";
 	}
     }
 

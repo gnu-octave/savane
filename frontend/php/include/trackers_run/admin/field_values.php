@@ -233,7 +233,7 @@ if ($list_value)
         if ($result && $rows > 0)
           {
             print "\n<h3>".html_anchor(_("Existing Values"),"existing")
-                  .'</h3>';
+                  ."</h3>\n";
 
             $title_arr=array();
             if (!$is_project_scope)
@@ -284,46 +284,46 @@ if ($list_value)
 # Show the value ID only for system wide fields which
 # value id are fixed and serve as a guide.
                 if (!$is_project_scope)
-                  $html .='<td>'.$value_id.'</td>';
+                  $html .='<td>'.$value_id."</td>\n";
 
 # The permanent values cant be modified (No link).
                 if ($status == 'P')
                   {
-                    $html .= '<td>'.$value.'</td>';
+                    $html .= '<td>'.$value."</td>\n";
                   }
                 else
                   {
                     $html .= '<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
                       .'?update_value=1'
                       .'&fv_id='.$item_fv_id.'&field='.$field
-                      .'&group_id='.$group_id.'">'.$value.'</A></td>';
+                      .'&group_id='.$group_id.'">'.$value."</a></td>\n";
                   }
 
-                $html .= '<td>'.$description.'&nbsp;</td>'
-                  .'<td align="center">'.$order_id.'</td>'
-                  .'<td align="center">'.$status_stg[$status].'</td>';
+                $html .= '<td>'.$description."&nbsp;</td>\n"
+                  .'<td align="center">'.$order_id."</td>\n"
+                  .'<td align="center">'.$status_stg[$status]."</td>\n";
 
                 if ($status == 'H' && $usage > 0)
                   {
                     $html .= '<td align="center"><strong class="warn">'.$usage
-                             .'</strong></td>';
+                             ."</strong></td>\n";
                   }
                 else
                   {
-                    $html .= '<td align="center">'.$usage.'</td>';
+                    $html .= '<td align="center">'.$usage."</td>\n";
                   }
 
                 if ($status == 'A' || $status == 'P')
                   {
                     $html = '<tr class="'
-                      .utils_get_alt_row_color($ia) .'">'.$html.'</tr>';
+                      .utils_get_alt_row_color($ia) .'">'.$html."</tr>\n";
                     $ia++;
                     $ha .= $html;
                   }
                 else
                   {
                     $html = '<tr class="'
-                      .utils_get_alt_row_color($ih) .'">'.$html.'</tr>';
+                      .utils_get_alt_row_color($ih) .'">'.$html."</tr>\n";
                     $ih++;
                     $hh .= $html;
                   }
@@ -335,41 +335,41 @@ if ($list_value)
               {
                 $hdr = '<p>'
 ._("No active value for this field. Create one or reactivate a hidden value (if
-any)").'</p>'.$hdr;
+any)")."</p>\n".$hdr;
               }
             else
               {
                 $ha = '<tr><td colspan="4" class="center"><strong>'
-                      ._("---- ACTIVE VALUES ----").'</strong></tr>'.$ha;
+                      ._("---- ACTIVE VALUES ----")."</strong></tr>\n".$ha;
               }
             if ($ih)
               {
-                $hh = '<tr><td colspan="4"> &nbsp;</td></tr>'
+                $hh = "<tr><td colspan=\"4\"> &nbsp;</td></tr>\n"
                       .'<tr><td colspan="4"><center><strong>'
-                      ._("---- HIDDEN VALUES ----").'</strong></center></tr>'
+                      ._("---- HIDDEN VALUES ----")."</strong></center></tr>\n"
                       .$hh;
               }
-            print $hdr.$ha.$hh.'</table>';
+            print $hdr.$ha.$hh."</table>\n";
           }
         else
           {
 # TRANSLATORS: the  argument is field label.
             printf ("\n<h2>"._("No values defined yet for %s")
-                   .'</h2>',trackers_data_get_label($field));
+                   ."</h2>\n",trackers_data_get_label($field));
           }
 
 # Only show the add value form if this is a project scope field.
         if ($is_project_scope)
           {
-            print '<br />';
+            print "<br />\n";
             print '<h3>'.html_anchor(_("Create a new field value"),"create")
-                  .'</h3>';
+                  ."</h3>\n";
 
             if ($ih)
               {
                 print '<p>'
 ._("Before you create a new value make sure there isn't one in the hidden list
-that suits your needs.").'</p>';
+that suits your needs.")."</p>\n";
               }
 
 # yeupou--gnu.org 2004-09-12: a red star should mark mandatory fields.
@@ -394,7 +394,7 @@ that suits your needs.").'</p>';
                      # TRANSLATORS: the argument is minimum rank value;
                      # the string is used like "Rank: (must be > %s)".
                       .sprintf(_("(must be &gt; %s)"),$none_rk)
-                      ."</strong><br /></p>";
+                      ."</strong></p>\n";
               }
 
             print '
@@ -410,7 +410,7 @@ that suits your needs.").'</p>';
         # If the project use custom values, propose to reset to the default.
         if (trackers_data_use_field_predefined_values($field,$group_id))
           {
-            print '<h3>'._("Reset values").'</h3>';
+            print '<h3>'._("Reset values")."</h3>\n";
             print '<p>'
 ._("You are currently using custom values. If you want to reset values to the
 default ones, use the following form:").'</p>
@@ -420,7 +420,7 @@ default ones, use the following form:").'</p>
 <input type="hidden" name="field" value="'.$field.'" />
 <input type="submit" name="submit" value="'._("Reset values").'" />
 </form>
-<p>'._("For your information, the default active values are:").'</p>';
+<p>'._("For your information, the default active values are:")."</p>\n";
 
             $default_result =
               trackers_data_get_field_predefined_values($field, '100',
@@ -515,7 +515,7 @@ allowed to customize it"),$field));
           {
             print "\n\n<p>&nbsp;</p><h3>"
               .html_anchor(_("Registered Transitions"),"registered")
-              .'</h3>';
+              ."</h3>\n";
 
             $title_arr=array();
             $title_arr[]=_("From");
@@ -541,14 +541,14 @@ allowed to customize it"),$field));
                 print '<tr class="'.utils_altrow($z).'">';
                 if (!empty($val_label[$transition['from_value_id']]))
                   print '<td align="center">'
-                    .$val_label[$transition['from_value_id']].'</td>';
+                    .$val_label[$transition['from_value_id']]."</td>\n";
                 else
                   # TRANSLATORS: this refers to transitions.
-                  print '<td align="center">'._("* - Any").'</td>';
+                  print '<td align="center">'._("* - Any")."</td>\n";
 
                 print '<td align="center">'
-                  .$val_label[$transition['to_value_id']].'</td>'
-                  .'<td align="center">'.$allowed.'</td>';
+                  .$val_label[$transition['to_value_id']]."</td>\n"
+                  .'<td align="center">'.$allowed."</td>\n";
 
                 if ($transition['is_allowed'] == 'A')
                   {
@@ -579,13 +579,15 @@ allowed to customize it"),$field));
                     print utils_link($GLOBALS['sys_home'].ARTIFACT
   ."/admin/field_values_transition-ofields-update.php?group=".$group
   ."&amp;transition_id=".$transition['transition_id'], $content);
-                    print '</td><td align="center">'
-                      .$transition['notification_list'].'</td>';
+                    print '</td>
+<td align="center">'
+                      .$transition['notification_list']."</td>\n";
                   }
                 else
                   {
-                    print '<td align="center">---------</td>'
-                      .'<td align="center">--------</td>';
+                    print '<td align="center">---------</td>
+<td align="center">--------</td>
+';
                   }
                 print '<td align="center">'
 .utils_link(htmlentities ($_SERVER['PHP_SELF'])
@@ -593,17 +595,17 @@ allowed to customize it"),$field));
 .$transition['transition_id'].'&amp;list_value=1&amp;field='.$field,
 '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/misc/trash.png" border="0" alt="'._("Delete this transition").'" />')
-.'</td>';
-                print '</tr>';
+."</td>\n";
+                print "</tr>\n";
               }
-            print '</table>';
+            print "</table>\n";
           }
         else
           {
             $reg_default_auth = '';
             printf ("\n\n<p>&nbsp;</p><h3>"
                     # TRANSLATORS: the argument is field.
-                    ._("No transition defined yet for %s").'</h3>',
+                    ._("No transition defined yet for %s")."</h3>\n",
                     trackers_data_get_label($field));
           }
 
@@ -633,11 +635,11 @@ transitions not registered are allowed. This setting can be changed when
 managing this field usage.");
           }
         print "\n\n<p>&nbsp;</p><h3>"
-.html_anchor(_("Create a transition"),"create").'</h3>';
+.html_anchor(_("Create a transition"),"create")."</h3>\n";
         print "<p>$transition_for_field</p>\n";
         print '<p>'
 ._("Once a transition created, it will be possible to set &ldquo;Other Fields
-Update&rdquo; for this transition.").'</p>';
+Update&rdquo; for this transition.")."</p>\n";
 
         $title_arr=array();
         $title_arr[]=_("From");
@@ -655,20 +657,22 @@ Update&rdquo; for this transition.").'</p>';
         $hdr = html_build_list_table_top ($title_arr);
         $from = '<td>'.trackers_field_box($field,'from',$group_id,false,
                                           false, false, 1, _("* - Any"))
-                .'</td>';
+                ."</td>\n";
         $to = '<td>'.trackers_field_box($field,'to',$group_id,false,false)
-              .'</td>';
+              ."</td>\n";
         print $hdr.'<tr>'.$from.$to;
         print '<td>'.html_build_select_box_from_arrays ($auth_val,$auth_label,
                                                         'allowed', 'allowed',
-                                                        false).'</td>';
+                                                        false)."</td>\n";
         $mlist   = '<td>'.'
 <input type="text" name="mail_list" value="" size="30" maxlength="60" />
-</td>';
-        print $mlist.'</tr></table>';
+</td>
+';
+        print $mlist."</tr>\n</table>\n";
         print '<div align="center"><input type="submit" name="submit" value="'
               ._("Update Transition").'" /></div>
-</form>';
+</form>
+';
       }
     else
       {
@@ -677,7 +681,7 @@ Update&rdquo; for this transition.").'</p>';
 # TRANSLATORS: the argument is field.
 _("The Bug field you requested '%s' is not used by your project or you are not
 allowed to customize it"),$field);
-        print '</h3>';
+        print "</h3>\n";
       }
   }
 elseif ($update_value)
@@ -698,7 +702,8 @@ elseif ($update_value)
     <input type="hidden" name="field" value="'.$field.'" />
     <input type="hidden" name="group_id" value="'.$group_id.'" />
     <p><span class="preinput">'
-._("Value:").' </span><br />'
+._("Value:").' </span><br />
+'
 .form_input("text", "title", db_result($res,0,'value'),
             'size="30" maxlength="60"')
 .'
@@ -733,12 +738,13 @@ elseif ($update_value)
 "This field value applies to %s items of your tracker.", $count)." ", $count);
         printf(
 _("If you hide this field value, the related items will have no value in the
-field '%s'."), $field).'</p>';
+field '%s'."), $field)."</p>\n";
       }
     print '
     <div class="center">
       <input type="submit" name="submit" value="'._("Submit").'" />
-    </p>';
+    </p>
+';
   }
 elseif ($create_canned || $delete_canned)
   {
@@ -752,7 +758,7 @@ elseif ($create_canned || $delete_canned)
     if($result && $rows > 0)
       {
         #   Links to update pages.
-        print "\n<h3>"._("Existing Responses:").'</h3><p>';
+        print "\n<h3>"._("Existing Responses:")."</h3>\n<p>\n";
 
         $title_arr=array();
         $title_arr[]=_("Title");
@@ -771,9 +777,9 @@ elseif ($create_canned || $delete_canned)
               .'?update_canned=1&amp;item_canned_id='
               .db_result($result, $i, 'bug_canned_id').'&amp;group_id='
               .$group_id.'">'
-              .db_result($result, $i, 'title').'</A></TD>'
-              .'<td>'.substr(db_result($result, $i, 'body'),0,360).'...'
-              .'<td>'.db_result($result, $i, 'order_id')
+              .db_result($result, $i, 'title')."</a></td>\n"
+              .'<td>'.substr(db_result($result, $i, 'body'),0,360)."...</td>\n"
+              .'<td>'.db_result($result, $i, 'order_id')."</td>\n"
               .'<td class="center"><a href="'
               .htmlentities ($_SERVER['PHP_SELF'])
               .'?delete_canned=1&amp;item_canned_id='
@@ -781,17 +787,18 @@ elseif ($create_canned || $delete_canned)
               .$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'
               .SV_THEME.'.theme/misc/trash.png" border="0" alt="'
               ._("Delete this canned answer").'" />
-              </a></td></tr>';
+              </a></td></tr>
+';
           }
-        print '</table>';
+        print "</table>\n";
       }
     else
-      print "\n<h3>"._("No canned bug responses set up yet").'</h3>';
+      print "\n<h3>"._("No canned bug responses set up yet")."</h3>\n";
 #       Escape to print the add response form.
 
     print '<h3>'._("Create a new response").'</h3>
-     <p>
-     '
+<p>
+'
 ._("Creating generic quick responses can save a lot of time when giving common
 responses.")
 .'</p>
@@ -810,7 +817,8 @@ responses.")
 <div class="center">
   <input type="submit" name="submit" value="'._("Submit").'" />
 </div>
-</form>';
+</form>
+';
   }
 elseif ($update_canned)
   {
@@ -852,7 +860,8 @@ common responses.").'</p>
 <div class="center">
   <input type="submit" name="submit" value="Submit" />
 </div>
-</form>';
+</form>
+';
       }
   }
 else
@@ -861,7 +870,7 @@ else
     trackers_header_admin(array ('title'=>_("Edit Fields Values")));
 
     # Add space to avoid overlaps.
-    print '<br />';
+    print "<br />\n";
 
 # Loop through the list of all used fields that are project manageable.
     $i=0;
@@ -884,10 +893,10 @@ else
               .'<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
               .'?group_id='.$group_id
               .'&list_value=1&field='.$field_name.'">'
-              .trackers_data_get_label($field_name).'</a></td>'
-              ."\n<td>".trackers_data_get_description($field_name).'</td>'
-              ."\n<td>".$scope_label.'</td>'
-              .'</tr>';
+              .trackers_data_get_label($field_name)."</a></td>\n"
+              ."\n<td>".trackers_data_get_description($field_name)."</td>\n"
+              ."\n<td>".$scope_label."</td>\n"
+              ."</tr>\n";
             $i++;
           }
       }
@@ -897,13 +906,13 @@ else
     print "<td><a href=\"";
     print htmlentities ($_SERVER['PHP_SELF'])
 ."?group_id=$group_id&amp;create_canned=1\">"
-._("Canned Responses").'</a></td>';
+._("Canned Responses")."</a></td>\n";
     print "\n<td>"
 ._("Create or change generic quick response messages for this issue tracker.
 These pre-written messages can then be used to quickly reply to item
-submissions.").' </td>';
-    print "\n<td>"._("Project").'</td></tr>';
-    print '</table>';
+submissions.")." </td>\n";
+    print "\n<td>"._("Project")."</td></tr>\n";
+    print "</table>\n";
   }
 
 trackers_footer(array());

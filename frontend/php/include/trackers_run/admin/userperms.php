@@ -72,30 +72,33 @@ if ($update)
 trackers_header_admin(array ('title'=>_("Set Permissions")));
 
 ########################### POSTING RESTRICTIONS
-print '<h3>'._("Posting Restrictions").'</h3>';
+print '<h3>'._("Posting Restrictions")."</h3>\n";
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group" value="'.$group.'" />';
 
 ## post restriction
 print '<span class="preinput">'
 ._("Authentication level required to be able to post new items on this tracker:")
-.' </span><br />';
+." </span><br />\n";
 print '&nbsp;&nbsp;&nbsp;';
 print html_select_restriction_box(ARTIFACT,
                                   group_getrestrictions($group_id, ARTIFACT),
                                   $group,'', 1);
 ## comment restriction
-print '<br /><br /><span class="preinput">'
+print '<br /><br />
+<span class="preinput">'
 ._("Authentication level required to be able to post comments (and to attach
 files) on this tracker:")
-.' </span><br />';
+." </span><br />\n";
 print '&nbsp;&nbsp;&nbsp;';
 print html_select_restriction_box(ARTIFACT,
                                   group_getrestrictions($group_id, ARTIFACT, 2),
                                   $group,'', 2);
 print '
 <p align="center"><input type="submit" name="update" value="'
-._("Update Permissions").'" /></p></form>';
+._("Update Permissions").'" /></p>
+</form>
+';
 
 trackers_footer(array());
 ?>

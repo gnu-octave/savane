@@ -44,11 +44,11 @@ $preamble = db_result($res_preamble,0,ARTIFACT.'_preamble');
 if ($preamble)
 {
   # The h3 is necessary to keep the layout correct in every case
-  print '<h3>'._("Preamble").'</h3>'
+  print '<h3>'._("Preamble")."</h3>\n"
     .markup_rich($preamble);
 }
 
-print '<h3>'._("Details").'</h3>';
+print '<h3>'._("Details")."</h3>\n";
 
 # Beginning of the submission form with fixed fields
 print form_header($_SERVER['PHP_SELF'], $form_id, "post",
@@ -162,11 +162,10 @@ while ($field_name = trackers_list_all_fields())
         $j++;
 
         print "\n<tr".$row_class.">"
-          .'<td valign="middle"'.$field_class.' width="15%">'.$label.'</td>'
+          .'<td valign="middle"'.$field_class.' width="15%">'.$label."</td>\n"
           .'<td valign="middle"'.$field_class.' colspan="'
           .(2*$fields_per_line-1).'" width="75%">'
-          .$value.$star.'</TD>'
-          ."\n</tr>";
+          .$value.$star."</td>\n</tr>\n";
         $i=0;
       }
     else
@@ -182,21 +181,21 @@ while ($field_name = trackers_list_all_fields())
 
         print ($i % $fields_per_line ? "\n":"\n<tr".$row_class.">");
         print '<td valign="middle"'.$field_class.' width="15%">'
-          .$label.'</td>'
+          .$label."</td>\n"
           .'<td valign="middle"'.$field_class.' width="35%">'
-          .$value.$star.'</td>';
+          .$value.$star."</td>\n";
         $i++;
-        print ($i % $fields_per_line ? "\n":"\n</tr>");
+        print ($i % $fields_per_line ? "\n":"</tr>\n");
       }
   } # while ($field_name = trackers_list_all_fields())
 
-print '</table>';
+print "</table>\n";
 print '<p class="warn"><span class="smaller">* '._("Mandatory Fields")
-      .'</span></p>';
+      ."</span></p>\n";
 
 #  possibility of attachment
-print '<p>&nbsp;</p>';
-print '<h3>'._("Attached Files").'</h3>';
+print "<p>&nbsp;</p>\n";
+print '<h3>'._("Attached Files")."</h3>\n";
 print sprintf(_("(Note: upload size limit is set to %s kB, after insertion of
 the required escape characters.)"), $GLOBALS['sys_upload_max']);
 
@@ -210,17 +209,18 @@ print '<p><span class="preinput"> '._("Attach Files:").'</span><br />
 <span class="preinput">'._("Comment:").'</span><br />
 &nbsp;&nbsp;&nbsp;<input type="text" name="file_description"
  size="60" maxlength="255" />
-</p><p>';
+</p>
+';
 
 # Cc addresses
 if (user_isloggedin())
 {
-  print '<p>&nbsp;</p>';
-  print '<h3>'._("Mail Notification CC").'</h3>';
+  print "<p>&nbsp;</p>\n";
+  print '<h3>'._("Mail Notification CC")."</h3>\n";
 
 # TRANSLATORS: the argument is site name (like Savannah).
-  print sprintf(_("(Note: for %s users, you can use their login name rather
-than their email addresses.)"), $GLOBALS['sys_name']);
+  print '<p>'.sprintf(_("(Note: for %s users, you can use their login name
+rather than their email addresses.)"), $GLOBALS['sys_name'])."</p>\n";
 
   print '<p><span class="preinput">'
     ._("Add Email Addresses (use comma as separator):")
@@ -232,24 +232,25 @@ than their email addresses.)"), $GLOBALS['sys_name']);
 ._("Comment:")
 .'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="cc_comment" value="'
 .htmlspecialchars($cc_comment).'" size="40" maxlength="255" />';
-  print '<p></p>';
+  print "</p>\n";
 }
 
 # Minimal anti-spam
 if (!user_isloggedin()) {
   print '<p class="noprint">Please enter the title of <a
 href="http://en.wikipedia.org/wiki/George_Orwell">George Orwell</a>\'s famous
-dystopian book (it\'s a date): <input type="text" name="check" /></p>';
+dystopian book (it\'s a date): <input type="text" name="check" /></p>
+';
 }
 
-print '<p>&nbsp;</p>';
+print "<p>&nbsp;</p>\n";
 print '<p><span class="warn">'
 ._("Did you check to see if this item has already been submitted?")
-.'</span></p>';
+."</span></p>\n";
 print '<div align="center">';
 print form_submit(false, "submit", 'class="bold"');
-print '</div>';
-print '</form>';
+print "</div>\n";
+print "</form>\n";
 
 trackers_footer(array());
 ?>

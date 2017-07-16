@@ -25,9 +25,9 @@ print '<p>'
 ._("With the following form, you can perform a search in the items summaries
 and details. If you need to perform more complex search, use the query forms in
 Browse items page.")
-.'</p>';
+."</p>\n";
 # this must not be in a boxoption, it is no option, it is the only purpose of
 # the page
-print '<p>'.search_box('', ARTIFACT, 45).'</p>';
+print '<p>'.search_box('', ARTIFACT, 45)."</p>\n";
 trackers_footer(array());
 ?>

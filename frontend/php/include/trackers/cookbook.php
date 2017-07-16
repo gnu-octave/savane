@@ -177,7 +177,7 @@ function cookbook_build_form ($which="audience")
         {
           # Normal output.
           $content .= '<input type="checkbox" name="recipe_'.$which.'_'.$field
-                      .'"'.$checked.' />'.$label."<br />";
+                      .'"'.$checked.' />'.$label."<br />\n";
         }
       else
         {
@@ -229,14 +229,14 @@ function cookbook_print_form ()
   # Prepare next background color change.
   $j++;
 
-  print "\n<tr".$row_class.">".
+  print "<tr".$row_class.">".
     '<td valign="middle" '.$field_class
     .' width="15%"><span class="preinput"><span class="help" title="'
-    .cookbook_describe("audience").'">'._("Audience:").'</span></span></td>'
+    .cookbook_describe("audience").'">'._("Audience:")."</span></span></td>\n"
     .'<td valign="middle" '.$field_class.' colspan="'.(2*$fields_per_line-1)
     .'" width="75%">'
-    .cookbook_build_form("audience").'</td>'
-    ."\n</tr>";
+    .cookbook_build_form("audience")."</td>\n"
+    ."</tr>\n";
 
   $i = 0;
 
@@ -254,22 +254,22 @@ function cookbook_print_form ()
   # Prepare next background color change.
   $j++;
 
-  print ($i % $fields_per_line ? '':"\n<tr".$row_class.">");
+  print ($i % $fields_per_line ? '':"<tr".$row_class.">");
   print '<td valign="middle"'.$field_class
     .' width="15%"><span class="preinput"><span class="help" title="'
     .cookbook_describe("context").'">'._("Feature:")
     .'</span></span></td><td valign="middle"'.$field_class
-    .' width="35%">'.cookbook_build_form("context").'</td>';
+    .' width="35%">'.cookbook_build_form("context")."</td>\n";
   $i++;
-  print ($i % $fields_per_line ? '':"\n</tr>");
-  print ($i % $fields_per_line ? '':"\n<tr".$row_class.">");
+  print ($i % $fields_per_line ? '':"\n</tr>\n");
+  print ($i % $fields_per_line ? '':"<tr".$row_class.">");
   print '<td valign="middle"'.$field_class
     .' width="15%"><span class="preinput"><span class="help" title="'
     .cookbook_describe("subcontext").'">'._("Action:")
     .'</span></span></td><td valign="middle"'.$field_class.' width="35%">'
-    .cookbook_build_form("subcontext").'</td>';
+    .cookbook_build_form("subcontext")."</td>\n";
   $i++;
-  print ($i % $fields_per_line ? '':"\n</tr>");
+  print ($i % $fields_per_line ? '':"</tr>\n");
 
   $i = 0;
   # Change background color.

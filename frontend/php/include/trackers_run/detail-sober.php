@@ -141,7 +141,7 @@ if (db_result($result,0,'category_id') != '100')
 
 print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'))
   .'"><em>'.$item_link.$category.':</em> '
-  .db_result($result,0,'summary').'</h2>';
+  .db_result($result,0,'summary')."</h2>\n";
 print markup_full(db_result($result,0,'details'));
 
 # latest update: when the item was posted or the latest history change
@@ -157,15 +157,16 @@ else
 
 print '<div align="right" class="smaller">'
 # TRANSLATORS: the argument is date.
-  .sprintf(_("Last update: %s"), utils_format_date($last_update)).'</div>';
+  .sprintf(_("Last update: %s"), utils_format_date($last_update))."</div>\n";
 
 if ($comingfrom)
   # Mention it is documentation from the site
-  print '<div align="right" class="smaller">'
+  print '<div align="right" class="smaller"><p>'
 # TRANSLATORS: the argument is site name (like Savannah).
-    .sprintf(_("This recipe comes from %s User Docs"), $sys_name).'</div>';
+    .sprintf(_("This recipe comes from %s User Docs"), $sys_name)
+    ."</p>\n</div>\n";
 
-print '<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>';
+print "<p>&nbsp;</p>\n";
 
 ##
 # Show attached files that may be useful to describe the content
@@ -175,14 +176,14 @@ if (db_numrows($result))
     print '<h3>'.html_anchor(_("Attached Files"), "attached")."</h3>\n";
     print format_item_attached_files($item_id,$group_id,false,true);
 
-    print '<p>&nbsp;</p>';
+    print "<p>&nbsp;</p>\n";
   }
 
 ##
 # Give info about the context
 if (ARTIFACT == 'cookbook')
   {
-    print '<h3>'.html_anchor(_("Audience and Context"), "context").'</h3>';
+    print '<h3>'.html_anchor(_("Audience and Context"), "context")."</h3>\n";
 
   # Obtain selected context
     $context_result = db_execute("SELECT * FROM cookbook_context2recipe
@@ -251,7 +252,7 @@ if (ARTIFACT == 'cookbook')
         if (!$is_user_good_audience)
           { print '<span class="warn">'; }
 
-        print '<br />&nbsp;&nbsp;&nbsp;'.$case_result['audience'].'<br />';
+        print '<br />&nbsp;&nbsp;&nbsp;'.$case_result['audience']."<br />\n";
 
         if (!$is_user_good_audience)
           { print '</span>'; }
@@ -261,14 +262,14 @@ if (ARTIFACT == 'cookbook')
         print '<span class="preinput"><span class="help" title="'
               .cookbook_describe("context").'">'._("Feature:")
               .'</span></span><br />&nbsp;&nbsp;&nbsp;'
-              .$case_result['context'].'<br />';
+              .$case_result['context']."<br />\n";
       }
     if ($case_result['subcontext'])
       {
         print '<span class="preinput"><span class="help" title="'
               .cookbook_describe("subcontext").'">'._("Action:")
               .'</span></span><br />&nbsp;&nbsp;&nbsp;'
-              .$case_result['subcontext'].'<br />';
+              .$case_result['subcontext']."<br />\n";
       }
 
   # Warn if the recipe have no chance to show up in related recipes
@@ -277,7 +278,7 @@ if (ARTIFACT == 'cookbook')
         !$case_result['subcontext'])
       print '<p>'._("(As there is at least one of the Audience/Feature/Action
 context information not set, this recipe will not show up in related recipes
-links)").'</p>';
+links)")."</p>\n";
 }
 
 ##
@@ -286,10 +287,10 @@ links)").'</p>';
 # posting a proper SR.
 if (member_check(0, $group_id))
   {
-    print '<h3>'.html_anchor(_("Item Edition"), "edit").'</h3>';
+    print '<h3>'.html_anchor(_("Item Edition"), "edit")."</h3>\n";
     print '<p>'.utils_link($GLOBALS['sys_home'].ARTIFACT
                          ."/edit.php?func=detailitem&amp;item_id=$item_id",
-                         _("Edit this page")).'</p>';
+                         _("Edit this page"))."</p>\n";
   }
 
 trackers_footer(array());

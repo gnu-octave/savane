@@ -75,12 +75,10 @@ authentication level.");
   trackers_header(array ('title'=>$item_name.", "
                            .utils_cutstring(db_result($result,0,'summary'))));
 
-  print '<p>'.$private_intro.'</p>';
-
+  print '<p>'.$private_intro."</p>\n";
   print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'),
                                                db_result($result,0,'status_id'))
-        .'">'.sprintf("<em>%s</em>:", $item_link).' '
-        .db_result($result,0,'summary').'</h2>';
+        .'">'.$item_link.': '.db_result($result,0,'summary')."</h2>\n";
 
   print form_header($_SERVER['PHP_SELF'], $form_id, "post",
                     'enctype="multipart/form-data" name="item_form"');
@@ -115,7 +113,8 @@ authentication level.");
           <td width="35%">'.utils_format_date(db_result($result,0,'date')).'</td>
           <td colspan="'.($fields_per_line)
           .'" align="center"  width="50%" valign="top">&nbsp;</td>
-      </tr>';
+      </tr>
+';
   $votes = db_result($result,0,'vote');
 
   if ($votes)
@@ -130,7 +129,7 @@ authentication level.");
 ';
     }
 
-  print '<tr><td colspan="'.($fields_per_line*2).'">&nbsp;</td></tr>';
+  print '<tr><td colspan="'.($fields_per_line*2)."\">&nbsp;</td></tr>\n";
 
   # Variables that will be used afterwards
   unset($item_assigned_to, $item_discussion_lock);
@@ -219,11 +218,11 @@ authentication level.");
 	  $j++;
 
 	  print "\n<tr".$row_class.">"
-	    .'<td valign="middle" '.$field_class.' width="15%">'.$label.'</td>'
+	    .'<td valign="middle" '.$field_class.' width="15%">'.$label."</td>\n"
 	    .'<td valign="middle" '.$field_class.' colspan="'
             .(2*$fields_per_line-1).'" width="75%">'
-	    .$value.'</td>'
-	    ."\n</tr>";
+	    .$value."</td>\n"
+	    ."</tr>\n";
 	  $i=0;
 	}
       else
@@ -240,11 +239,11 @@ authentication level.");
 
 	  print ($i % $fields_per_line ? '':"\n<tr".$row_class.">");
 	  print '<td valign="middle"'.$field_class.' width="15%">'
-            .$label.'</td>'
+            .$label."</td>\n"
 	    .'<td valign="middle"'.$field_class.' width="35%">'
-            .$value.'</td>';
+            .$value."</td>\n";
 	  $i++;
-	  print ($i % $fields_per_line ? '':"\n</tr>");
+	  print ($i % $fields_per_line ? '':"</tr>\n");
 	}
     }
   print '</table>';
@@ -291,24 +290,25 @@ authentication level.");
           print form_submit (_('Preview'), 'preview')
                 ."</span><br />&nbsp;&nbsp;&nbsp;\n";
 	  print trackers_field_textarea('comment', htmlspecialchars($comment));
-	  print '</p>';
+	  print "</p>\n";
 
 	  if (!user_isloggedin())
 	    {
-	      print '<h2 class="warn">'._("You are not logged in").'</h2><p>';
+	      print '<p class="warn"><strong>'
+                ._("You are not logged in")."</strong></p>\n<p>";
 	      printf (
 _("Please <a href=\"%s\">log in</a>, so followups can be emailed to you."),
                       $GLOBALS['sys_home'].'account/login.php?uri='
                       .urlencode($_SERVER['REQUEST_URI']));
-	      print '</p>';
+	      print "</p>\n";
 	    }
 	}
       else
 	{
-	  print '<p class="warn">'._("Discussion locked!").'</p>';
+	  print '<p class="warn">'._("Discussion locked!")."</p>\n";
 	}
 
-      print '<p>&nbsp;</p>';
+      print "<p>&nbsp;</p>\n";
       print html_hidsubpart_footer();
     }
 
@@ -320,7 +320,7 @@ _("Please <a href=\"%s\">log in</a>, so followups can be emailed to you."),
   print show_item_details($item_id,$group_id,0,$item_assigned_to, false,
                           $new_comment);
 
-  print '<p>&nbsp;</p>';
+  print "<p>&nbsp;</p>\n";
   print html_hidsubpart_footer();
 
   # ################################ Attached Files
@@ -336,7 +336,8 @@ _("Please <a href=\"%s\">log in</a>, so followups can be emailed to you."),
 "(Note: upload size limit is set to %s kB, after insertion of the required
 escape characters.)"), $GLOBALS['sys_upload_max']);
 
-      print '</p><p class="noprint"><span class="preinput"> '
+      print '</p>
+<p class="noprint"><span class="preinput"> '
             ._("Attach Files:").'</span><br />
       &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" />
       <input type="file" name="input_file2" size="10" />
@@ -347,7 +348,8 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
       <span class="preinput">'._("Comment:").'</span><br />
       &nbsp;&nbsp;&nbsp;<input type="text" name="file_description" '
       .'size="60" maxlength="255" />
-      </p><p>';
+      </p>
+<p>';
     }
   else
     {
@@ -356,7 +358,7 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
 
   show_item_attached_files($item_id,$group_id);
 
-  print '</p><p>&nbsp;</p>';
+  print "</p>\n<p>&nbsp;</p>\n";
   print html_hidsubpart_footer();
 
   # ################################ Dependencies
@@ -366,10 +368,10 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
 
   print show_item_dependency($item_id);
 
-  print '<p></p>';
+  print "<p></p>\n";
   print show_dependent_item($item_id);
 
-  print '</p><p>&nbsp;</p>';
+  print "</p>\n<p>&nbsp;</p>\n";
   print html_hidsubpart_footer();
 
   # ################################ Mail notification
@@ -383,7 +385,8 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
 _(
 "(Note: for %s users, you can use their login name
 rather than their email addresses.)"), $GLOBALS['sys_name']);
-      print '</p><p class="noprint">
+      print '</p>
+<p class="noprint">
 	   <span class="preinput">'
             ._("Add Email Addresses (comma as separator):")
             .'</span><br />&nbsp;&nbsp;&nbsp;'
@@ -391,12 +394,12 @@ rather than their email addresses.)"), $GLOBALS['sys_name']);
 	   <span class="preinput">'._("Comment:")
             .'</span><br />&nbsp;&nbsp;&nbsp;'
             .'<input type="text" name="cc_comment" size="40" maxlength="255" />'
-            .'<p>';
+            ."</p>\n";
     }
 
   show_item_cc_list($item_id, $group_id);
 
-  print '<p>&nbsp;</p>';
+  print "<p>&nbsp;</p>\n";
   print html_hidsubpart_footer();
 
   # ################################ Votes
@@ -412,7 +415,8 @@ rather than their email addresses.)"), $GLOBALS['sys_name']);
 	.sprintf(ngettext("This task has %s encouragement so far.",
 			  "This task has %s encouragements so far.", $votes),
 		 $votes)
-	.'</p><p class="noprint">';
+	.'</p>
+<p class="noprint">';
 
       if (trackers_data_is_showed_on_add("vote")
           || member_check(user_getid(), $group_id))
@@ -439,22 +443,21 @@ rather than their email addresses.)"), $GLOBALS['sys_name']);
                     .sprintf(ngettext("/ %s remaining vote",
                                       "/ %s remaining votes", $votes_remaining),
                              $votes_remaining);
-              print '</p>';
             }
           else
             {
               print '<span class="warn">'._("Only logged-in users can vote.")
-                    .'</span></p>';
+                    ."</span>";
             }
          }
        else
          {
             print '<span class="warn">'._("Only project members can vote.")
-                  .'</span></p>';
+                  ."</span>";
          }
 
-      print '</p>';
-      print '<p>&nbsp;</p>';
+      print "</p>\n";
+      print "<p>&nbsp;</p>\n";
       print html_hidsubpart_footer();
     }
 
@@ -462,12 +465,14 @@ rather than their email addresses.)"), $GLOBALS['sys_name']);
   if (!user_isloggedin()) {
     print '<p class="noprint">'._('Please enter the title of <a
 href="https://en.wikipedia.org/wiki/George_Orwell">George Orwell</a>\'s famous
-dystopian book (it\'s a date):').' <input type="text" name="check" /></p>';
+dystopian book (it\'s a date):').' <input type="text" name="check" /></p>
+';
   }
 
   #  ################################  Submit
   print '<div align="center" class="noprint">'.
-  form_submit(_("Submit Changes"), "submit", ' class="bold"').'</form></div>
+  form_submit(_("Submit Changes"), "submit", ' class="bold"').'</form>
+</div>
 ';
 
 # ################################ History

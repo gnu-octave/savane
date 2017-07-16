@@ -282,10 +282,12 @@ if ($new_report)
     { print _("Personal").' <input type="hidden" name="rep_scope" value="I" />'; }
   */
     print _("Project").' <input type="hidden" name="rep_scope" value="P" />';
-    print ' </p><p>
+    print '</p>
+<p>
      <span class="preinput">'._("Description:").'</span><br />
      <input type="text" name="rep_desc" value="" size="50" maxlength="120" />
-</p>';
+</p>
+';
 
     print html_build_list_table_top ($title_arr);
     $i=0;
@@ -325,13 +327,13 @@ if ($new_report)
         if ($field == 'submitted_by' || $field == 'assigned_to')
           $tf_report_val = 50;
 
-        print '<TR class="'. utils_get_alt_row_color($i) .'">';
-        print "\n<td>".trackers_data_get_label($field).'</td>'
-          ."\n<td>".trackers_data_get_description($field).'</td>'
-          ."\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search
+        print '<tr class="'. utils_get_alt_row_color($i) .'">';
+        print "\n<td>".trackers_data_get_label($field)."</td>\n"
+          ."<td>".trackers_data_get_description($field)."</td>\n"
+          ."<td align=\"center\">".'<input type="checkbox" name="'.$cb_search
           .'" value="1" /></td>'
           ."\n<td align=\"center\">".'<input type="text" name="'
-          .$tf_search.'" value="" size="5" maxlen="5" /></td>';
+          .$tf_search.'" value="" size="5" maxlen="5" />'."</td>\n";
 
         // If the current field is item id, we force its presence on the
         // report with rank 0. This field is mandatory: otherwise some
@@ -339,27 +341,28 @@ if ($new_report)
         if ($field == 'bug_id')
           {
             print "\n<td align=\"center\"><input type=\"hidden\" name=\""
-              .$cb_report."\" value=\"1\" />X</td>"
+              .$cb_report."\" value=\"1\" />X</td>\n"
               ."\n<td align=\"center\"><input type=\"hidden\" name=\""
-              .$tf_report."\" value=\"0\" />0</td>";
+              .$tf_report."\" value=\"0\" />0</td>\n";
           }
         else
           {
             print "\n<td align=\"center\">".'<input type="checkbox" name="'
-              .$cb_report.'" value="1" /></td>'
-              ."\n<td align=\"center\">".'<input type="text" name="'.$tf_report
-              .'" value="'.$tf_report_val.'" size="5" maxlen="5" /></td>';
+              .$cb_report.'" value="1" />'."</td>\n"
+              ."<td align=\"center\">".'<input type="text" name="'.$tf_report
+              .'" value="'.$tf_report_val.'" size="5" maxlen="5" />'."</td>\n";
           }
 
         print "\n<td align=\"center\">".'<input type="text" name="'
-              .$tf_colwidth.'" value="" size="5" maxlen="5" /></td>'
-          .'</tr>';
+              .$tf_colwidth.'" value="" size="5" maxlen="5" />'."</td>\n"
+          ."</tr>\n";
         $i++;
       }
-    print '</table>'
+    print "</table>\n"
       .'<p><center><input type="submit" name="submit" value="'
-      ._('Submit').'" /></center></p>'
-      .'</form>';
+      ._('Submit').'" /></center></p>
+</form>
+';
   } # if ($new_report)
 else if ($show_report)
   {
@@ -482,25 +485,25 @@ else if ($show_report)
             print "\n<td align=\"center\"><input type=\"hidden\" name=\""
               .$cb_report."\" value=\"1\" />X</td>"
               ."\n<td align=\"center\"><input type=\"hidden\" name=\""
-              .$tf_report."\" value=\"0\" />0</td>";
+              .$tf_report."\" value=\"0\" />0</td>\n";
           }
         else
           {
             print "\n<td align=\"center\">".'<input type="checkbox" name="'
               .$cb_report.'" value="1" '.$cb_report_chk.'  /></td>'
               ."\n<td align=\"center\">".'<input type="text" name="'.$tf_report
-              .'" value="'.$tf_report_val.'" size="5" maxlen="5" /></td>';
+              .'" value="'.$tf_report_val.'" size="5" maxlen="5" />'."</td>\n";
           }
         print "\n<td align=\"center\">".'<input type="text" name="'
           .$tf_colwidth.'" value="'.$tf_colwidth_val
-          .'" size="5" maxlen="5" /></td>'
-          .'</tr>';
+          .'" size="5" maxlen="5" />'."</td>\n"
+          ."</tr>\n";
         $i++;
       }
-    print '</table>'
+    print "</table>\n"
       .'<p><center><input type="submit" name="submit" value="'
-      ._("Submit").'" /></center>'
-      .'</form>';
+      ._("Submit").'" /></center>'."</p>\n"
+      ."</form>\n";
   } # if ($show_report)
 else
   {
@@ -535,7 +538,7 @@ else
             if ( ($arr['scope']=='P') && !user_ismember($group_id,'A') )
               {
                 print $arr['report_id'];
-                print "</td>\n<td>".$arr['name'].'</td>';
+                print "</td>\n<td>".$arr['name']."</td>\n";
               }
             else
               {
@@ -546,10 +549,10 @@ else
                 print '<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
                   .'?group='.$group
                   .'&show_report=1&report_id='.$arr['report_id'].'">'
-                  .$arr['name'].'</a></td>';
+                  .$arr['name']."</a></td>\n";
               }
 
-            print "\n<td>".$arr['description'].'</td>'
+            print "\n<td>".$arr['description']."</td>\n"
               ."\n<td align=\"center\">"
               .(($arr['scope']=='P') ? _("Project"):_("Personal")).'</td>'
               ."\n<td align=\"center\">";
@@ -565,21 +568,21 @@ else
                   .'&amp;delete_report=1&amp;report_id='.$arr['report_id']
                   .'&amp;rep_name='.$arr['name'].'">'
                   .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-                  .'.theme/misc/trash.png" border="0" /></A>';
+                  .'.theme/misc/trash.png" border="0" /></a>';
               }
 
-            print '</td></tr>';
+            print "</td>\n</tr>\n";
             $i++;
           }
-        print '</table>';
+        print "</table>\n";
       }
     else
       {
-        print '<p>'._("No query form defined yet.").'</p>';
+        print '<p>'._("No query form defined yet.")."</p>\n";
       }
     printf ('<p>'._("You can <a href=\"%s\"> create a new query form</a>.")
-            .'</p>', htmlentities ($_SERVER["PHP_SELF"])
-                     .'?group='.$group.'&new_report=1');
+            ."</p>\n", htmlentities ($_SERVER["PHP_SELF"]).'?group='.$group
+                       .'&new_report=1');
   }
 trackers_footer(array());
 ?>

@@ -328,68 +328,66 @@ function print_search_heading()
 {
   global $words,$type_of_search,$only_group_id;
   # Print the result
-  print '<h3>';
-  if ($words && $type_of_search)
-    {
-      # Print real words describing the type of search.
-      if ($type_of_search == "soft")
+  print '<h3 id="results">'._('Search results')."</h3>\n";
+  if (!($words && $type_of_search))
+    return;
+  print "<p>";
+  # Print real words describing the type of search.
+  if ($type_of_search == "soft")
 # TRANSLATORS: this string is the section to look in; it is used as the second
 # argument in 'Search results for %1$s (in %2$s)'.
-        $type_of_search_real = _("Projects");
-      elseif ($type_of_search == "support")
-# TRANSLATORS: this string is the section to look in; it is used as the second
-# argument in 'Search results for %1$s (in %2$s)'.
-# The HTML comment is used to differentiate the usages of the same English string.
-        $type_of_search_real = _("<!-- Search... in -->Support");
-      elseif ($type_of_search == "bugs")
+    $type_of_search_real = _("Projects");
+  elseif ($type_of_search == "support")
 # TRANSLATORS: this string is the section to look in; it is used as the second
 # argument in 'Search results for %1$s (in %2$s)'.
 # The HTML comment is used to differentiate the usages of the same English string.
-        $type_of_search_real = _("<!-- Search... in -->Bugs");
-      elseif ($type_of_search == "task")
+    $type_of_search_real = _("<!-- Search... in -->Support");
+  elseif ($type_of_search == "bugs")
 # TRANSLATORS: this string is the section to look in; it is used as the second
 # argument in 'Search results for %1$s (in %2$s)'.
 # The HTML comment is used to differentiate the usages of the same English string.
-        $type_of_search_real = _("<!-- Search... in -->Tasks");
-      elseif ($type_of_search == "patch")
+    $type_of_search_real = _("<!-- Search... in -->Bugs");
+  elseif ($type_of_search == "task")
 # TRANSLATORS: this string is the section to look in; it is used as the second
 # argument in 'Search results for %1$s (in %2$s)'.
 # The HTML comment is used to differentiate the usages of the same English string.
-        $type_of_search_real = _("<!-- Search... in -->Patches");
-      elseif ($type_of_search == "cookbook")
+    $type_of_search_real = _("<!-- Search... in -->Tasks");
+  elseif ($type_of_search == "patch")
 # TRANSLATORS: this string is the section to look in; it is used as the second
 # argument in 'Search results for %1$s (in %2$s)'.
 # The HTML comment is used to differentiate the usages of the same English string.
-        $type_of_search_real = _("<!-- Search... in -->Cookbook");
-      elseif ($type_of_search == "people")
+    $type_of_search_real = _("<!-- Search... in -->Patches");
+  elseif ($type_of_search == "cookbook")
 # TRANSLATORS: this string is the section to look in; it is used as the second
 # argument in 'Search results for %1$s (in %2$s)'.
 # The HTML comment is used to differentiate the usages of the same English string.
-        $type_of_search_real = _("<!-- Search... in -->People");
+    $type_of_search_real = _("<!-- Search... in -->Cookbook");
+  elseif ($type_of_search == "people")
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+# The HTML comment is used to differentiate the usages of the same English string.
+    $type_of_search_real = _("<!-- Search... in -->People");
 
-      if (!$only_group_id)
-        {
+  if (!$only_group_id)
+    {
 # TRANSLATORS: the first argument is string to look for,
 # the second argument is section (Project/Group|Support|Bugs|Task
 #   |Patch|Cookbook|People).
-          printf(_('Search results for %1$s in %2$s:'),
-                 '<strong>'.htmlspecialchars($words).'</strong>',
-                 $type_of_search_real);
-        }
-      else
-        {
+      printf(_('Search results for %1$s in %2$s:'),
+             '<strong>'.htmlspecialchars($words).'</strong>',
+             $type_of_search_real);
+    }
+  else
+    {
 # TRANSLATORS: the first argument is string to look for,
 # the second argument is section (Support|Bugs|Task
 #   |Patch|Cookbook|People), the third argument is
 # group name (like GNU Coreutils).
-          printf(_('Search results for %1$s in %2$s, for the Group %3$s:'),
-                 '<strong>'.htmlspecialchars($words).'</strong>',
-                 $type_of_search_real, group_getname($only_group_id));
-        }
+      printf(_('Search results for %1$s in %2$s, for the Group %3$s:'),
+             '<strong>'.htmlspecialchars($words).'</strong>',
+             $type_of_search_real, group_getname($only_group_id));
     }
-  else
-    print _("Search results:");
-  print '</h3><a name="results"></a>';
+  print "</p>\n";
 }
 
 function result_no_match ()

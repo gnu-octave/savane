@@ -611,7 +611,7 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
       }
 
     $labels .= '<td>'
-      .trackers_field_label_display($field,$group_id,false,false).'</td>';
+      .trackers_field_label_display($field,$group_id,false,false)."</td>\n";
     $boxes .= '<td><span class="smaller">';
 
     if (trackers_data_is_select_box($field))
@@ -664,14 +664,14 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
 # end of this row
   if ($ib % $fields_per_line == 0)
     {
-      $html_select .= $labels.'</tr>'.$boxes.'</tr>';
+      $html_select .= $labels."</tr>\n".$boxes."</tr>\n";
       $labels = $boxes = '';
     }
   } # while ($field = trackers_list_all_fields('cmp_place_query'))
 
 # Make sure the last few cells are in the table
 if ($labels)
-  $html_select .= $labels.'</tr>'.$boxes.'</tr>';
+  $html_select .= $labels."</tr>\n".$boxes."</tr>\n";
 
 # Fill the relevant sql bit to be used later
 # Sensible default case: order by item_id from the recent to the older
@@ -1014,7 +1014,7 @@ $form .= sprintf (_('Browse with the %1$s query form and %2$s selection.'),
 $form .= '<table cellpadding="0" cellspacing="5">
         <tr><td colspan="'.$fields_per_line.'" nowrap="nowrap">';
 $form .= $html_select;
-$form .= '</table>';
+$form .= "</table>\n";
 
 # If both 'summary' and 'original submission' are searched, propose an OR instead of AND
 if (($details_search == 1) && ($summary_search == 1))
@@ -1045,7 +1045,7 @@ if (($details_search == 1) && ($summary_search == 1))
                   rtrim(trackers_field_label_display("details",
                                                      $group_id, false,true),
                         ': '))
-          .'</p>';
+          ."</p>\n";
       }
     else
       {
@@ -1067,7 +1067,7 @@ if (($details_search == 1) && ($summary_search == 1))
                   rtrim(trackers_field_label_display("details", $group_id,
                                                      false,true),
                         ': '))
-          .'</p>';
+          ."</p>\n";
       }
 
     # Update the url
@@ -1128,8 +1128,8 @@ if (!$sober)
 <option value="1" '.($history_search ? 'selected="selected"':'').'>'
 # TRANSLATORS: this string is used as the argument in
 # 'Additional constraint %s'.
-                   ._("activated").'</option></select>';
-        $form_separator = '<br />&nbsp;&nbsp;&nbsp;';
+                   ._("activated")."</option></select>\n";
+        $form_separator = "<br />\n&nbsp;&nbsp;&nbsp;";
         $form_fieldname = html_build_select_box_from_arrays ($fname,
                                                              $flabel,
                                                              'history_field',
@@ -1213,14 +1213,14 @@ if (!$sober)
 "Warning: only %s items can be shown at once, unless using Printer Version.",
                  $chunksz), $chunksz).'</span>';
           }
-        $form .= '</p>';
+        $form .= "</p>\n";
       }
     else
       $form .= '<p class="smaller">'
 .sprintf(ngettext('Show %1$s item at once with a spam score lower than %2$s.',
                   'Show %1$s items at once with a spam score lower than %2$s.',
                   $chunksz),
-         $chunksz, $spamscore).'</p>';
+         $chunksz, $spamscore)."</p>\n";
   }
 
 # In sober mode, do not talk about sorting order, we will anyway not use
@@ -1259,7 +1259,7 @@ _("You can also <a href=\"%s\">activate multicolumn sort</a>."),
       $form .= " ".sprintf(_("Currently, results are sorted by %s."),
                            trackers_criteria_list_to_text($morder,
                                                           $url_nomorder));
-    $form .= '</p>';
+    $form .= "</p>\n";
   }
 
 # Print the form
