@@ -22,50 +22,45 @@
 require_once('../../include/init.php');
 require_once('../../include/sane.php');
 
-
 extract(sane_import('post', array('update', 'form_news_address')));
 
-if ($group_id && user_ismember($group_id,'A'))
-{
-  $grp=project_get_object($group_id);
+if(!$group_id)
+  exit_no_group();
 
-  if (!$grp->Uses("news"))
-    { exit_error(_("Error"),_("This Project Has Turned Off News Tracker")); }
-  
-  if ($update) 
-    { 
-      db_execute("UPDATE groups SET new_news_address=? WHERE group_id=?",
-		 array($form_news_address, $group_id));
-      fb(_("Updated"));
-    }
-  
-  site_project_header(array('group'=>$group_id,'context'=>'anews'));
+if (!user_ismember($group_id,'A'))
+  exit_permission_denied();
 
+$grp=project_get_object($group_id);
 
-  print '<p>'
+if (!$grp->Uses("news"))
+  exit_error(_("Error"),_("This Project Has Turned Off News Tracker"));
+
+if ($update)
+  {
+    db_execute("UPDATE groups SET new_news_address=? WHERE group_id=?",
+         array($form_news_address, $group_id));
+    fb(_("Updated"));
+  }
+site_project_header(array('group'=>$group_id,'context'=>'anews'));
+
+print '<p>'
 ._("You can view/change all of this tracker configuration from here.").'</p>
 ';
+$res_grp = db_execute("SELECT new_news_address FROM groups WHERE group_id=?",
+                      array($group_id));
+$row_grp = db_fetch_array($res_grp);
   
-  $res_grp = db_execute("SELECT new_news_address FROM groups WHERE group_id=?",
-                        array($group_id));
-  $row_grp = db_fetch_array($res_grp);
-  
-  
-  print '<h3>'._("News Tracker Email Notification Settings").'</h3>
+print '<h3>'._("News Tracker Email Notification Settings").'</h3>
 ';
-  print '
+print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />';
-  print '<span class="preinput">'._("Carbon-Copy List:").'</span>
+print '<span class="preinput">'._("Carbon-Copy List:").'</span>
 <br />&nbsp;&nbsp;<input type="text" name="form_news_address" value="'
 .$row_grp['new_news_address'].'" size="40" maxlength="255" />';
-  print '
+print '
 <p align="center"><input type="submit" name="update" value="'._("Update").'" />
 </form>
 ';
-
-  site_project_footer(array());
-}
-else
-  exit_permission_denied();
+site_project_footer(array());
 ?>

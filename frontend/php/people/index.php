@@ -43,71 +43,70 @@ if($show_any)
   }
 
 if ($group_id)
-{
-  site_project_header(array('title'=>_('Project Help Wanted'),
-                      'group'=>$group_id,'context'=>'people'));
-
-  utils_get_content("people/index_group");
-  print people_show_project_jobs($group_id);
-}
+  {
+    site_project_header(array('title'=>_('Project Help Wanted'),
+                        'group'=>$group_id,'context'=>'people'));
+    utils_get_content("people/index_group");
+    print people_show_project_jobs($group_id);
+  }
 else if ($categories || $types || $show_any)
-{
-  # Do check first
-  $error = 0;
-  $cat_names = '';
-  $cat_name = '';
-  for ($i = 0; $i < count($categories); ++$i)
-    {
-      $cat_name = people_get_category_name($categories[$i]);
-      if ($cat_name == 'Invalid ID')
-        {
-          $error = 1;
-          break;
-        }
-      if($cat_names != '')
-        $cat_names .= ', ';
-      $cat_names .= $cat_name;
-    }
-
-  $group_types = '';
-  for ($i = 0; $i < count($types); ++$i)
-    {
-      $cat_name = people_get_type_name($types[$i]);
-      if ($cat_name == 'Invalid ID')
-        {
-          $error = 1;
-          break;
-        }
-      if($group_types != '')
-        $group_types .= ', ';
-      $group_types .= $cat_name;
-    }
-  if ($error)
-    {
-      print site_header(array('title'=>_('Project Help Wanted'),
-                              'context'=>'people'));
-      fb(_("That category does not exist"),1);
-    } else {
-      if($cat_names == '')
-        $cat_names = 'people';
-      if($group_types == '')
-        $group_types = 'Groups';
-      # TRANSLATORS: The first %s is enumeration of group types,
-      # the second %s is enumeration of job categories.
-      $title = sprintf(_('%1$s looking for %2$s'), $group_types, $cat_names);
-      print site_header(array('title'=>$title));
-      print '<p>'._("Click job titles for more detailed descriptions.").'</p>
+  {
+    # Do check first
+    $error = 0;
+    $cat_names = '';
+    $cat_name = '';
+    for ($i = 0; $i < count($categories); ++$i)
+      {
+        $cat_name = people_get_category_name($categories[$i]);
+        if ($cat_name == 'Invalid ID')
+          {
+            $error = 1;
+            break;
+          }
+        if($cat_names != '')
+          $cat_names .= ', ';
+        $cat_names .= $cat_name;
+      }
+    $group_types = '';
+    for ($i = 0; $i < count($types); ++$i)
+      {
+        $cat_name = people_get_type_name($types[$i]);
+        if ($cat_name == 'Invalid ID')
+          {
+            $error = 1;
+            break;
+          }
+        if($group_types != '')
+          $group_types .= ', ';
+        $group_types .= $cat_name;
+      }
+    if ($error)
+      {
+        print site_header(array('title'=>_('Project Help Wanted'),
+                                'context'=>'people'));
+        fb(_("That category does not exist"),1);
+      }
+    else
+      {
+        if($cat_names == '')
+          $cat_names = 'people';
+        if($group_types == '')
+          $group_types = 'Groups';
+        # TRANSLATORS: The first %s is enumeration of group types,
+        # the second %s is enumeration of job categories.
+        $title = sprintf(_('%1$s looking for %2$s'), $group_types, $cat_names);
+        print site_header(array('title'=>$title));
+        print '<p>'._("Click job titles for more detailed descriptions.").'</p>
 ';
-      print people_show_jobs($categories, $types, $show_any);
-    }
-}
+        print people_show_jobs($categories, $types, $show_any);
+      }
+  }
 else
-{
-  print site_header(array('title'=>_('Projects Needing Help'),
-                          'context'=>'people'));
-  utils_get_content("people/index");
-  print people_show_table();
-}
-
+  {
+    print site_header(array('title'=>_('Projects Needing Help'),
+                            'context'=>'people'));
+    utils_get_content("people/index");
+    print people_show_table();
+  }
 site_project_footer(array());
 ?>

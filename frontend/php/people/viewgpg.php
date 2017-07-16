@@ -25,22 +25,16 @@ extract(sane_import('get', array('user_id')));
 
 # Check whether the user exists
 if (!(isset ($user_id) && $user_id))
-{
   exit_error(_("User not found."));
-}
 $result = db_execute("SELECT user_name,gpg_key FROM user WHERE user_id=?",
-		     array($user_id));
+                     array($user_id));
 
 if (!$result || db_numrows($result) < 1)
-{
   exit_error(_("User not found."));
-}
 
 # Check whether a gpg key was registered
 if (!db_result($result,0,'gpg_key'))
-{
   exit_error(_("This user hasn't registered a GPG key."));
-}
 
 # If we get here, a key exists. Simply print it.
 header('Content-Type: application/pgp-keys');

@@ -1,22 +1,22 @@
 <?php
 # Edit notifications.
-# 
+#
 #  Copyright (C) 2003-2004 Yves Perrin <Yves.Perrin@cern.ch>
 #  Copyright (C) 2003-2004 Mathieu Roy <yeupou--at--gnu.org>
 #  Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -32,52 +32,44 @@ extract(sane_import('post', array('update',
   'form_news_address',
   'form_frequency',
 )));
-# Other imports in trackers_data_*
 
 if ($update)
-{
-
-  group_add_history('Changed Group Notification Settings','',$group_id);
-
-  $res_new = trackers_data_post_notification_settings($group_id, "bugs");
-  $res_new = trackers_data_post_notification_settings($group_id, "support");
-  $res_new = trackers_data_post_notification_settings($group_id, "task");
-  $res_new = trackers_data_post_notification_settings($group_id, "patch");
-  $res_new = trackers_data_post_notification_settings($group_id, "cookbook");
-  db_execute("UPDATE groups SET "
-	     ."new_news_address=?"
-	     . " WHERE group_id=?",
-	     array($form_news_address ? $form_news_address : '', $group_id));
+  {
+    group_add_history('Changed Group Notification Settings','',$group_id);
+    $res_new = trackers_data_post_notification_settings($group_id, "bugs");
+    $res_new = trackers_data_post_notification_settings($group_id, "support");
+    $res_new = trackers_data_post_notification_settings($group_id, "task");
+    $res_new = trackers_data_post_notification_settings($group_id, "patch");
+    $res_new = trackers_data_post_notification_settings($group_id, "cookbook");
+    db_execute("UPDATE groups SET "
+             ."new_news_address=?"
+             . " WHERE group_id=?",
+             array($form_news_address ? $form_news_address : '', $group_id));
 
   ######### Reminder
-  if (group_set_preference($group_id, "batch_frequency", $form_frequency))
-    { fb(_("Successfully Updated Reminder Settings")); }
-  else
-    { fb(_("Failed to Update Reminder Setting"), 1); }
+    if (group_set_preference($group_id, "batch_frequency", $form_frequency))
+      fb(_("Successfully Updated Reminder Settings")); }
+    else
+      fb(_("Failed to Update Reminder Setting"), 1);
 
-  if (group_get_preference($group_id, "batch_lastsent") == "")
-    { 
-      if (group_set_preference($group_id, "batch_lastsent", "0"))
-	{ fb(_("Successfully set Timestamp of the Latest Reminder")); }
-      else
-	{ fb(_("Failed to Reset Timestamp of the Latest Reminder"), 1); }
-    }
-}
+    if (group_get_preference($group_id, "batch_lastsent") == "")
+      {
+        if (group_set_preference($group_id, "batch_lastsent", "0"))
+          fb(_("Successfully set Timestamp of the Latest Reminder"));
+        else
+          fb(_("Failed to Reset Timestamp of the Latest Reminder"), 1);
+      }
+  }
 
-# update info for page
+# Update info for page.
 $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 if (db_numrows($res_grp) < 1)
-{
   exit_no_group();
-}
 $row_grp = db_fetch_array($res_grp);
-
 
 site_project_header(array('title'=>_("Set Notifications"),'group'=>$group_id,
                     'context'=>'ahome'));
-
-# ####################################### General Description
-
+# General Description.
 print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />';
@@ -138,14 +130,13 @@ $frequency = array("0" => _("None"),
 
 print '<span class="preinput">'._("Frequency of reminders:")
       .'</span> &nbsp;&nbsp;';
-print html_build_select_box_from_array($frequency, 
-				       "form_frequency", 
-				       group_get_preference($group_id,
+print html_build_select_box_from_array($frequency,
+                                       "form_frequency",
+                                       group_get_preference($group_id,
                                                             "batch_frequency"));
 print '
 <p align="center"><input type="submit" name="update" value="'._("Update").'" />
 </form>
 ';
-
 site_project_footer(array());
 ?>

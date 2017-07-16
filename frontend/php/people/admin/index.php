@@ -30,60 +30,49 @@ if (!user_ismember(1,'A'))
   exit_permission_denied();
 
 if ($post_changes)
-{
-  /* Update the database */
-
-  if ($people_cat)
-    {
-      $result = db_execute("INSERT INTO people_job_category (name) VALUES (?)",
-                           array($cat_name));
-      if (!$result)
-        {
-          print db_error();
-          fb(_("Error inserting value"));
-        }
-
-      fb(_("Category Inserted"));
-
-    }
-  else if ($people_skills)
-    {
-
-      $result=db_execute("INSERT INTO people_skill (name) VALUES (?)",
-                         array($skill_name));
-      if (!$result)
-        {
-          print db_error();
-          fb(_("Error inserting value"));
-        }
-      fb(_("Skill Inserted"));
+  {
+    # Update the database.
+    if ($people_cat)
+      {
+        $result = db_execute("INSERT INTO people_job_category (name) VALUES (?)",
+                             array($cat_name));
+        if (!$result)
+          {
+            print db_error();
+            fb(_("Error inserting value"));
+          }
+        fb(_("Category Inserted"));
+      }
+    else if ($people_skills)
+      {
+        $result=db_execute("INSERT INTO people_skill (name) VALUES (?)",
+                           array($skill_name));
+        if (!$result)
+          {
+            print db_error();
+            fb(_("Error inserting value"));
+          }
+        fb(_("Skill Inserted"));
+      }
   }
 
-}
-/* Show UI forms */
-
+# Show UI forms.
 if ($people_cat)
-{
-  /* Show categories and blank row */
-
-  print site_header(array('title'=>_('Change Categories')));
-
-  print '<h2>'._("Add Job Categories").'</h2>
+  {
+    # Show categories and blank row.
+    print site_header(array('title'=>_('Change Categories')));
+    print '<h2>'._("Add Job Categories").'</h2>
 ';
-
-  /* List of possible categories for this group */
-  $result = db_query("SELECT category_id,name FROM people_job_category");
-  if ($result && db_numrows($result) > 0)
-    {
+    # List of possible categories for this group.
+    $result = db_query("SELECT category_id,name FROM people_job_category");
+    if ($result && db_numrows($result) > 0)
       utils_show_result_set($result,_("Existing Categories"),'people_cat');
-    }
-  else
-    {
-      print '<p>'._("No job categories")."</p>\n";
-      print db_error();
-    }
-
-  print '<h3>'._("Add a new job category:").'</h3>
+    else
+      {
+        print '<p>'._("No job categories")."</p>\n";
+        print db_error();
+      }
+    print '<h3>'._("Add a new job category:").'</h3>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <p><input type="hidden" name="people_cat" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
@@ -98,33 +87,28 @@ if ($people_cat)
 </form>
 ';
 
-  site_project_footer(array());
-}
+    site_project_footer(array());
+  } # $people_cat
 else if ($people_skills)
-{
-  /* Show people_groups and blank row */
-  print site_header(array('title'=>_('Change People Skills')));
-
-  print '<h2>'._("Add Job Skills").'</h2>
+  {
+    # Show people_groups and blank row.
+    print site_header(array('title'=>_('Change People Skills')));
+    print '<h2>'._("Add Job Skills").'</h2>
 ';
-
-  /* List of possible people_groups for this group */
-  $result = db_query("SELECT skill_id,name FROM people_skill");
-  print "<p>";
-  if ($result && db_numrows($result) > 0)
-    {
+    # List of possible people_groups for this group.
+    $result = db_query("SELECT skill_id,name FROM people_skill");
+    print "<p>";
+    if ($result && db_numrows($result) > 0)
       utils_show_result_set($result,_("Existing Skills"),"people_skills");
-    }
-  else
-    {
-      print db_error();
-      print "<p>"._("No Skills Found").'</p>
+    else
+      {
+        print db_error();
+        print "<p>"._("No Skills Found").'</p>
 ';
-    }
-
-  print '<h3>'._("Add a new skill:").'</h3>
+      }
+    print '<h3>'._("Add a new skill:").'</h3>
 ';
-  print '<p>
+    print '<p>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="people_skills" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
@@ -134,25 +118,18 @@ else if ($people_skills)
 .'</span></strong></p>
 <p><input type="submit" name="submit" value="'._("Add").'" /></p>
 </form>';
-
-  site_project_footer(array());
-
-}
-else
-{
-  /* Show main page */
-
-  print site_header(array('title'=>_('People Administration')));
-
-  print '<h2>'._("Help Wanted Administration").'</h2>';
-
-  print '<p><a href="'.htmlentities ($_SERVER['PHP_SELF'])
-        .'?people_cat=1">'._("Add Job Categories").'</a><br />';
-
-  print "\n<a href=\"";
-  print htmlentities ($_SERVER['PHP_SELF'])."?people_skills=1\">"
-        ._("Add Job Skills").'</a><br />';
-
-  site_project_footer(array());
-}
+    site_project_footer(array());
+  }
+else # ! $people_skills
+  {
+    # Show main page.
+    print site_header(array('title'=>_('People Administration')));
+    print '<h2>'._("Help Wanted Administration").'</h2>';
+    print '<p><a href="'.htmlentities ($_SERVER['PHP_SELF'])
+          .'?people_cat=1">'._("Add Job Categories").'</a><br />';
+    print "\n<a href=\"";
+    print htmlentities ($_SERVER['PHP_SELF'])."?people_skills=1\">"
+          ._("Add Job Skills").'</a><br />';
+    site_project_footer(array());
+  }
 ?>

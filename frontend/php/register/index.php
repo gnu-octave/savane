@@ -210,7 +210,12 @@ if ($form->validate())
   # get site-specific content. It will define confirmation_gen_email()
   utils_get_content("register/confirmation_mail");
 
-  $message = confirmation_gen_email ($type_base_host, $user_realname, $user_email, $type_admin_email_address, $form_license, $form_license_other, $form_full_name, $unix_name, $type, $form_purpose, $form_required_sw, $form_comments);
+  $message = confirmation_gen_email ($type_base_host, $user_realname,
+                                     $user_email, $type_admin_email_address,
+                                     $form_license, $form_license_other,
+                                     $form_full_name, $unix_name, $type,
+                                     $form_purpose, $form_required_sw,
+                                     $form_comments);
 
   $message_user = "$message";
 

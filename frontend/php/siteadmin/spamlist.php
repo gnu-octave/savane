@@ -189,7 +189,7 @@ else
 ';
   
   # More results than $max? Print next/prev
-  html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "users");      
+  html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "users");
 }
 
 print '<p>&nbsp;</p>';
@@ -238,7 +238,7 @@ else
   print '</div>';
     
   # More results than $max? Print next/prev
-  html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "ip");   
+  html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "ip");
 }
 
 $HTML->footer(array());
