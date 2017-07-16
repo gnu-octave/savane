@@ -72,18 +72,18 @@ if (!empty($update))
 site_header(array('title'=>_("Login")));
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
 print '<h3> '.sprintf(_("%s Account Verification"),$GLOBALS['sys_name'])
-      .'</h3>';
+      ."</h3>\n";
 print '<p>'._("In order to complete your registration, login now. Your account
-will then be activated for normal logins.").'</p>';
+will then be activated for normal logins.")."</p>\n";
 
 print form_header($_SERVER["PHP_SELF"], $form_id);
 print '<p><span class="preinput">'._("Login Name").':</span><br />&nbsp;&nbsp;';
 print form_input("text", "form_loginname");
-print '</p>';
+print "</p>\n";
 
 print '<p><span class="preinput">'._("Password").':</span><br />&nbsp;&nbsp;';
 print form_input("password", "form_pw");
-print '</p>';
+print "</p>\n";
 
 # Must accept all ways of providing confirm_hash (POST & GET), because
 # in the mail it is a POST but if the form fail (wrong password, etc), it will

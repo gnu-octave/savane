@@ -228,7 +228,7 @@ actually can read those messages).'). "\n";
 email address. Visiting the link sent to you in this email will activate your
 account.").' <em>'
 ._("Accounts not confirmed after two days are deleted from the
-database.").'</em></p>';
+database.")."</em></p>\n";
       }
   }
 # Not valid registration, or first time to page.
@@ -239,30 +239,30 @@ else
     print form_header($_SERVER['PHP_SELF'], htmlentities($form_id, ENT_QUOTES,
                                                          'UTF-8'));
     print '<p><span class="preinput">'._("Login Name:")
-          .'</span><br />&nbsp;&nbsp;';
+          .'</span>'."<br />\n".'&nbsp;&nbsp;';
     print form_input("text", "form_loginname",
                      htmlentities($form_loginname, ENT_QUOTES , 'UTF-8'));
     print '<p><span class="preinput">'._("Password / passphrase:")
            ." ".account_password_help().'</span><br />&nbsp;&nbsp;';
     print form_input("password", "form_pw", htmlentities($form_pw, ENT_QUOTES,
                                                          'UTF-8'));
-    print "</p>";
+    print "</p>\n";
     print '<p><span class="preinput">'._("Re-type Password:")
           .'</span><br />&nbsp;&nbsp;';
     print form_input("password", "form_pw2",
                      htmlentities($form_pw2, ENT_QUOTES , 'UTF-8'));
-    print "</p>";
+    print "</p>\n";
     print '<p><span class="preinput">'._("Real Name:").'</span><br />&nbsp;&nbsp;';
     print '<input size="30" type="text" name="form_realname" value="'
-          .htmlentities($form_realname, ENT_QUOTES , 'UTF-8').'" /></p>';
+          .htmlentities($form_realname, ENT_QUOTES , 'UTF-8')."\" /></p>\n";
     print '<p><span class="preinput">'._("Email Address:")
-          .'</span><br />&nbsp;&nbsp;';
+          .'</span>'."<br />\n".'&nbsp;&nbsp;';
     print '<input size="30" type="text" name="form_email" value="'
           .htmlentities($form_email, ENT_QUOTES , 'UTF-8').'" />';
-    print '<br /><span class="text">'
+    print "<br />\n".'<span class="text">'
 ._("This email address will be verified before account activation. Check your
 spam filters. Do not use a hotmail or comcast address here.")
-.'</span></p>';
+."</span></p>\n";
 
     if ($GLOBALS['sys_registration_text_spam_test'])
       {
@@ -270,11 +270,11 @@ spam filters. Do not use a hotmail or comcast address here.")
               .'</span><br />&nbsp;&nbsp;';
         print '<input size="30" type="text" name="form_year" value="'
               .$form_year.'" />';
-        print '<br /><span class="text">'
+        print "<br />\n".'<span class="text">'
               .sprintf(
 _("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),
      'https://www.gnu.org/gnu/gnu-history.html')
-            . '</span></p>';
+            . "</span></p>\n";
       }
     if ($GLOBALS['sys_registration_captcha'])
       {
@@ -284,7 +284,7 @@ _("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),
             .$GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random(); '
             .'return false">Different Image</a> ] ';
         print '[ <a href="' . $GLOBALS['sys_home'] . 'playcaptcha.php">'
-              . _("Play Captcha") . '</a> ]<br />';
+              . _("Play Captcha") . "</a> ]<br />\n";
         print _("Antispam test:")
               .'<input type="text" name="captcha_code" size="10" '
               .'maxlength="6" />';
@@ -298,11 +298,11 @@ _("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),
         print "<p>"._("Instead of providing a new password you
         may choose to authenticate via an <strong>AFS</strong> account you own
         at this site (this requires your new login name to be the
-        same as the AFS account name):")."</p>";
+        same as the AFS account name):")."</p>\n";
 
         print '<p>&nbsp;&nbsp;&nbsp;<input type="checkbox"
         name="form_usepam" value="1" > '._('use AFS based authentication')
-              ."</p>";
+              ."</p>\n";
       }
     print form_footer();
   }

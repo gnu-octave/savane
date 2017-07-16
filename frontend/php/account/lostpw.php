@@ -32,24 +32,24 @@ dnsbl_check();
 spam_bancheck();
 
 $HTML->header(array('title'=>_("Lost Account Password")));
-print '<p><strong>'._("Lost your password?").'</strong></p>';
+print '<p><strong>'._("Lost your password?")."</strong></p>\n";
 
 print '<p>'._("The form below will email a URL to the email address we have on
 file for you. In this URL is a 128-bit confirmation hash for your account.
 Visiting the URL will allow you to change your password online and
-login.").'</p>';
+login.")."</p>\n";
 print '<p class="warn">'._("This will work only if your account was already
 successfully registered and activated. Note that accounts that are not
 activated within the three days next to their registration are automatically
-deleted.").'</p>';
+deleted.")."</p>\n";
 
 print '<form action="lostpw-confirm.php" method="post">';
 print '<p><span class="preinput"> &nbsp;&nbsp;';
 print _("Login Name:");
 print ' &nbsp;&nbsp;</span><input type="text" name="form_loginname" /> &nbsp;&nbsp;';
 print '<input type="submit" name="send" value="'._("Send lost password hash")
-       .'" /></p>';
-print '</form>';
+       ."\" /></p>\n";
+print "</form>\n";
 
 $HTML->footer(array());
 ?>
