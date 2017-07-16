@@ -382,10 +382,10 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
                        '1',
                        db_result($result, $i, 'summary'));
       if ($priority > 4)
-	{
-	  print '</div>';
-	}
-      print '</div>';
+        {
+          print "</div>\n";
+        }
+      print "</div>\n";
     }
   print '</li><!-- end relatedrecipes -->';
 }
@@ -466,7 +466,7 @@ _("Superuser rights are required to perform site admin tasks"));
       print '<input type="hidden" name="uri" value="'
         . $_SERVER['REQUEST_URI'] . '" />';
       print '<input type="text" name="user_name" size=10/>';
-      print '</form>';
+      print "</form>\n";
     }
   $HTML->menu_entry($GLOBALS['sys_home'].'my/',
                     _("My Incoming Items"),
