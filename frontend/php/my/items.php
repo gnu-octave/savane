@@ -1,31 +1,28 @@
 <?php
 # List user's items.
-# 
+#
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 require_once('../include/init.php');
 require_once('../include/my/general.php');
 require_directory("trackers");
-
 register_globals_off();
 
 global $item_data, $group_data;
@@ -33,12 +30,12 @@ $item_data = array();
 $group_data = array();
 
 if (!user_isloggedin())
-{ exit_not_logged_in(); }
+  exit_not_logged_in();
 
-extract(sane_import('get', array('form_threshold', 'form_open', 'boxoptionwanted')));
+extract(sane_import('get', array('form_threshold', 'form_open',
+                    'boxoptionwanted')));
 
-
-# Get the list of projects the user is member of
+# Get the list of projects the user is member of.
 $result = db_execute("SELECT groups.group_name,"
   . "groups.group_id,"
   . "groups.unix_group_name,"
@@ -55,17 +52,17 @@ $usergroups_groupid = array();
 if ($result && $rows > 0)
   {
     for ($j=0; $j<$rows; $j++)
-	{
-	  unset($nogroups);
-	  $unixname = db_result($result,$j,'unix_group_name');
-	  $usergroups[$unixname] = db_result($result,$j,'group_name');
-	  $usergroups_groupid[$unixname] = db_result($result,$j,'group_id');
-	}
+        {
+          unset($nogroups);
+          $unixname = db_result($result,$j,'unix_group_name');
+          $usergroups[$unixname] = db_result($result,$j,'group_name');
+          $usergroups_groupid[$unixname] = db_result($result,$j,'group_id');
+        }
   }
 else
-  { $nogroups = 1; }
+  $nogroups = 1;
 
-# Get the list of squads the user is member of
+# Get the list of squads the user is member of.
 $result = db_execute("SELECT squad_id FROM user_squad WHERE user_id=?",
                      array(user_getid()));
 $rows = db_numrows($result);
@@ -74,57 +71,51 @@ if ($result && $rows > 0)
   {
     unset($nosquads);
     for ($j=0; $j<$rows; $j++)
-	{
-	  $usersquads[] = db_result($result,$j,'squad_id');
-	}
+        {
+          $usersquads[] = db_result($result,$j,'squad_id');
+        }
   }
 else
-  { $nosquads = 1; }
-
-
-
+  $nosquads = 1;
 $threshold = NULL;
 $open = NULL;
 
-# Extract arguments
+# Extract arguments.
 if ($form_threshold)
   {
-    # Check if the argument is valid: numeric > 0 and < 10 
+    # Check if the argument is valid: numeric > 0 and < 10.
     if (preg_match('/^[1-9]*$/i', $form_threshold))
-	{ 
-	  $threshold = $form_threshold;
-	  user_set_preference("my_items_threshold", $threshold);
-	}
+        {
+          $threshold = $form_threshold;
+          user_set_preference("my_items_threshold", $threshold);
+        }
   }
 if ($form_open)
   {
-    # Check if the argument is valid: open or closed
+    # Check if the argument is valid: open or closed.
     if ($form_open == 'open' || $form_open == 'closed')
-	{ 
-	  $open = $form_open;
-	  user_set_preference("my_items_open", $open);
-	}
+        {
+          $open = $form_open;
+          user_set_preference("my_items_open", $open);
+        }
   }
 
-# Extract configuration if needed
-if (!$threshold) 
-  { $threshold = user_get_preference("my_items_threshold"); }
-if (!$open) 
-  { $open = user_get_preference("my_items_open"); }
+# Extract configuration if needed.
+if (!$threshold)
+  $threshold = user_get_preference("my_items_threshold");
+if (!$open)
+  $open = user_get_preference("my_items_open");
 
-# Still nothing? Set the default settings
-if (!$threshold) 
-  { $threshold = 5; }
-if (!$open) 
-  { $open = "open"; }
+# Still nothing? Set the default settings.
+if (!$threshold)
+  $threshold = 5;
+if (!$open)
+  $open = "open";
 
 site_user_header(array('context'=>'myitems'));
-
 print '<p>'
   ._("This page contains lists of items assigned to or submitted by you.")
   .'</p>';
-
-# we get site-specific content
 utils_get_content("my/items");
 
 # TRANSLATORS: This is used later as argument of "Show [%s] new items..."
@@ -158,9 +149,7 @@ $msg_text =sprintf(_("Show %s new items of %s priority at least."),
                    $fopen, $fthreshold);
 print html_show_displayoptions($msg_text, $form_opening, $form_submit);
 
-
- ################ RIGHT PART ############################
-
+# Right part.
 print html_splitpage(1);
 
 print '<br /><div class="box"><div class="boxtitle">'._("Assigned to me")
@@ -240,21 +229,14 @@ print '</div>'."\n";
 //   print $HTML->box1_bottom();
 //   print '<br /><br />';
 
- ################ LEFT PART ############################
-
-				    
+# Left part.
 print html_splitpage(2);
 
 print '<br /><div class="box"><div class="boxtitle">'._("Submitted by me")
       .'</div>'."\n";
 print my_item_list("submitter", $threshold, $open);
 print '</div>'."\n";
-
 print html_splitpage(3);
-
-# End
-
 print "\n\n".show_priority_colors_key();
-
 $HTML->footer(array());
 ?>

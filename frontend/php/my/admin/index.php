@@ -6,17 +6,17 @@
 # Copyright (C) 2017 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -26,139 +26,108 @@
 # see bug #1987
 require_once('../../include/sane.php');
 extract(sane_import('post',
-  array(
-    'update',
-    'form_keep_only_one_session',
-    'form_timezone', 'user_theme', 'theme_rotate_jump',
-    'form_reverse_comments_order', 'form_stone_age_menu', 'form_nonfixed_feedback',
-    'form_use_bookmarks', 'form_email_hide', 'form_email_encrypted'
-    )));
+                    array('update',
+                          'form_keep_only_one_session',
+                          'form_timezone', 'user_theme', 'theme_rotate_jump',
+                          'form_reverse_comments_order', 'form_stone_age_menu',
+                          'form_nonfixed_feedback',
+                          'form_use_bookmarks', 'form_email_hide',
+                          'form_email_encrypted'
+                          )));
 
 if ($update and $user_theme != "random" and $user_theme != "rotate")
   {
     define('SV_THEME', $user_theme);
   }
-
 require_once('../../include/init.php');
 require_once('../../include/timezones.php');
-
 extract(sane_import('request', array('feedback')));
-
-#######################
-####################### UPDATE DATABASE
 
 session_require(array('isloggedin'=>1));
 
 if ($update)
-{
-  # Update theme
-  
-  if ($user_theme == "Default")
-    { $user_theme = ""; }
+  {
+    # Update theme.
+    if ($user_theme == "Default")
+      $user_theme = "";
 
-  if ($theme_rotate_jump == "1")
-    {
+    if ($theme_rotate_jump == "1")
       theme_rotate_jump();
-    }
-  setcookie("SV_THEME", $user_theme, time() + 60*60*24*365,
-            $GLOBALS['sys_url_topdir']);
+    setcookie("SV_THEME", $user_theme, time() + 60*60*24*365,
+              $GLOBALS['sys_url_topdir']);
 
-  # Update the rest
-  if ($form_timezone == 100)
-    { $form_timezone = "GMT"; }
+    # Update the rest.
+    if ($form_timezone == 100)
+      $form_timezone = "GMT";
 
-  $success = db_autoexecute('user',
-    array(
-      'email_hide' => ($form_email_hide ? "1" : "0"),
-      'theme' => $user_theme,
-      'timezone' => $form_timezone,
-    ), DB_AUTOQUERY_UPDATE,
-    "user_id=?", array(user_getid()));
+    $success = db_autoexecute('user',
+      array(
+        'email_hide' => ($form_email_hide ? "1" : "0"),
+        'theme' => $user_theme,
+        'timezone' => $form_timezone,
+      ), DB_AUTOQUERY_UPDATE,
+      "user_id=?", array(user_getid()));
 
-  # Integrated bookmarks
-  if ($form_use_bookmarks == "1")
-    { user_set_preference("use_bookmarks", 1); }
-  else
-    { user_unset_preference("use_bookmarks"); }
+    # Integrated bookmarks.
+    if ($form_use_bookmarks == "1")
+      user_set_preference("use_bookmarks", 1);
+    else
+      user_unset_preference("use_bookmarks");
 
-  # Encryption preferences
-  if ($form_email_encrypted == "1")
-    { user_set_preference("email_encrypted", 1); }
-  else
-    { user_unset_preference("email_encrypted"); }
+    # Encryption preferences.
+    if ($form_email_encrypted == "1")
+      user_set_preference("email_encrypted", 1);
+    else
+      user_unset_preference("email_encrypted");
 
-  # Relative position feedback
-  if ($form_nonfixed_feedback == "1")
-    { user_set_preference("nonfixed_feedback", 1); }
-  else
-    { user_unset_preference("nonfixed_feedback"); }
-
-  # Stone Age menu
-  if ($form_stone_age_menu == "1")
-    { 
-      user_set_preference("stone_age_menu", 1);
-      # Too late for the stone age menu to be effective
-      fb(
+    # Relative position feedback.
+    if ($form_nonfixed_feedback == "1")
+      user_set_preference("nonfixed_feedback", 1);
+    else
+      user_unset_preference("nonfixed_feedback");
+  # Stone Age menu.
+    if ($form_stone_age_menu == "1")
+      {
+        user_set_preference("stone_age_menu", 1);
+        # Too late for the stone age menu to be effective.
+        fb(
 _("Stone age menu activated, it will be effective the next time a page is
 loaded"));
-    }
-  else
-    { user_unset_preference("stone_age_menu"); }
+      }
+    else
+      user_unset_preference("stone_age_menu");
 
+    # Reversed comment order.
+    if ($form_reverse_comments_order == "1")
+      user_set_preference("reverse_comments_order", 1);
+    else
+      user_unset_preference("reverse_comments_order");
 
-  # Reversed comment order
-  if ($form_reverse_comments_order == "1")
-    { user_set_preference("reverse_comments_order", 1); }
-  else
-    { user_unset_preference("reverse_comments_order"); }
-
-  # Keep only one session comment order
-  if ($form_keep_only_one_session == "1")
-    { user_set_preference("keep_only_one_session", 1); }
-  else
-    { user_unset_preference("keep_only_one_session"); }
-
-
-  if ($success)
-    {
+  # Keep only one session comment order.
+    if ($form_keep_only_one_session == "1")
+      user_set_preference("keep_only_one_session", 1);
+    else
+      user_unset_preference("keep_only_one_session");
+    if ($success)
       fb(_("Database successfully updated"));
-    }
-  else
-    {
+    else
       fb(_("Failed to update the database"),1);
-    }
-}
+  }
 
-
-#######################
-####################### PRINT FORM + LINKS
-
-
+# Print form and links.
 site_user_header(array('context'=>'account'));
-
-
-# get global user vars
+# Get global user vars.
 $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
 $row_user = db_fetch_array($res_user);
 
 print '<p>'._("You can view/change all of your account features from here.")
       .'</p>
 ';
-
-# we get site-specific content
 utils_get_content("account/index_intro");
-
-
 print '<form action="'.htmlentities ($_SERVER["PHP_SELF"]).'" method="post">';
 
-#####################################################################
-#####################################################################
-
 print '<h3>'._("Significant Arrangements").'</h3>';
-
 print "\n".html_splitpage(1);
-
-############## Passwd / SSH
 
 print $HTML->box_top(_('Authentication Setup'));
 print '<a href="change.php?item=password">'._("Change Password").'</a>';
@@ -168,11 +137,11 @@ utils_get_content("account/index_passwd");
 print '</p>
 ';
 
-# get shared key count from db
+# Get shared key count from DB.
 $expl_keys = explode("###",$row_user['authorized_keys']);
 
 # If the last 'key' is empty, then it is because of a trailing separator;
-# so do not count it
+# so do not count it.
 $keynum = (sizeof($expl_keys));
 if ($expl_keys[$keynum-1] == "")
   $keynum--;
@@ -223,11 +192,8 @@ sessions each time you log in.").'</p>';
 print $HTML->box_bottom();
 print "<br />\n";
 
-
-################### Personal Record
+# Personal Record
 print html_splitpage(2);
-
-
 print $HTML->box_top(_('Identity Record'));
 
 print sprintf(_("Account #%s"), $row_user['user_id']);
@@ -262,7 +228,7 @@ print '<p class="smaller">'._("Your profile can be viewed by everybody.").'</p>'
 print $HTML->box_bottom();
 print "<br />\n";
 
-################### Email Related
+# Email-related
 print $HTML->box_top(_('Mail Setup'));
 
 print '<a href="change.php?item=email">'._("Change Email Address").'</a>';
@@ -289,14 +255,10 @@ print '<p class="smaller">'._("Here, you can cancel all mail notifications.")
       .'</p>
 ';
 
-
 print $HTML->box_bottom();
 print "<br />\n";
 
 print html_splitpage(3);
-
-#####################################################################
-#####################################################################
 
 print '<span class="clearr" /><p class="center">'
       .'<input type="submit" name="update" value="'
@@ -306,7 +268,6 @@ print "<br />\n";
 print '<h3>'._("Secondary Arrangements").'</h3>
 ';
 
-# warning about MSIE hacks
 if (is_broken_msie() && empty($_GET["printer"]))
 print '<p>'
 ._("Caution: your current web browser identifies itself as Microsoft Internet
@@ -319,7 +280,6 @@ encounter such troubles.").'</span></p>
 
 print html_splitpage(1);
 
-################### Account Deletion
 print $HTML->box_top(_('Account Deletion'));
 print '<a href="change.php?item=delete">'._("Delete Account").'</a>';
 # TRANSLATORS: the argument is site name (like Savannah).
@@ -333,10 +293,7 @@ and your current login will be forever lost."),
 print $HTML->box_bottom();
 print "<br />\n";
 
-################### Optional features
 print $HTML->box_top(_('Optional Features'));
-
-
 print '<input type="checkbox" name="form_use_bookmarks" value="1" '
       .(user_get_preference("use_bookmarks") ? 'checked="checked"':'')
       .' /> '._("Use integrated bookmarks");
@@ -374,16 +331,11 @@ If no suitable key is available, the messages still go unencrypted.")
 
 print $HTML->box_bottom();
 print "<br />\n";
-
-
 print html_splitpage(2);
-
-################### Prefs
-
 print $HTML->box_top(_('Cosmetics Setup'));
 
 # The select box comes before the name of the category so all the clickable
-# part of the form stays on a same line (better UI design)
+# part of the form stays on a same line (better UI design).
 print html_build_select_box_from_arrays($TZs,$TZs,'form_timezone',
                                         $row_user['timezone'], true, 'GMT');
 print ' '._("Timezone");
@@ -399,33 +351,31 @@ html_select_theme_box("user_theme", $row_user['theme']);
 print ' '._("Theme");
 
 if ("rotate"==$row_user['theme'])
-{
   print '<br /><input type="checkbox" name="theme_rotate_jump" value="1" /> '
         ._("Jump to the next theme").'';
-}
 print '<p class="smaller">'
 ._("Not satisfied with the default color theme of the interface?").'</p>
 ';
 
 if (!theme_guidelines_check(SV_THEME))
-{
-  print '<p class="smaller"><span class="warn">'
+  {
+    print '<p class="smaller"><span class="warn">'
 ._("The theme you are currently using does not follow the latest Savane CSS
 guidelines. As a result, page layout may be more or less severely broken. It is
 not advised to use this theme.").' ';
   # If the non-valid theme is the default one, tell users they should fill
-  # a support request
-  if (SV_THEME == $GLOBALS['sys_themedefault'])
-    {
+  # a support request.
+    if (SV_THEME == $GLOBALS['sys_themedefault'])
+      {
 # TRANSLATORS: the argument is site name (like Savannah).
-      print utils_link($GLOBALS['sys_home'].'support/?group='
-                       .$GLOBALS['sys_unix_group_name'],
-		       sprintf(_("%s administrators should be asked to take
+        print utils_link($GLOBALS['sys_home'].'support/?group='
+                         .$GLOBALS['sys_unix_group_name'],
+                         sprintf(_("%s administrators should be asked to take
 care of Savane CSS Guidelines, since it is the default theme"),
-                       $GLOBALS['sys_name']), "warn");
-    }
-  print '</span></p>';
-}
+                         $GLOBALS['sys_name']), "warn");
+      }
+    print '</span></p>';
+  }
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
@@ -481,6 +431,5 @@ print '<span class="clearr" /><p class="center">'
       ._("Update").'" /></p></span>';
 
 print '</form>';
-
 $HTML->footer(array());
 ?>
