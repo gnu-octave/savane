@@ -22,8 +22,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-
 function format_item_details ($item_id, $group_id, $ascii=false,
                               $item_assigned_to=false,$quoted=false,
                               $new_comment=false)
@@ -32,10 +30,8 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   #  Format the details rows from trackers_history
   global $sys_datefmt;
 
-
   ## Obtain data.
   $data = array();
-
   $i = 0;
   
   # Get original submission
@@ -116,14 +112,12 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   if (!$ascii && $svn_entries_exist)
     {
       global $project;
-      if ($project->getUrl("svn_viewcvs") != 'http://' && 
-	  $project->getUrl("svn_viewcvs") != '')
+      if ($project->getUrl("svn_viewcvs") != 'http://'
+	  && $project->getUrl("svn_viewcvs") != '')
 	{
-	  
 	  $svn_link .= $project->getUrl("svn_viewcvs");
 	}
     }  
-
 
   # Sort entries according to user config
   $user_pref_fromoldertonewer = 
@@ -152,7 +146,9 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   # Header first
   if ($ascii)
     {
-      $out .= "    _______________________________________________________\n\nFollow-up Comments:\n\n";
+      $out .= "    _______________________________________________________
+
+Follow-up Comments:\n\n";
     }
   else
     {
@@ -170,7 +166,8 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   $assignees_id[$assignee_id] = true;  
   if (member_check_squad($assignee_id, $group_id))
     {
-      $result_assignee_squad = db_execute("SELECT user_id FROM user_squad WHERE squad_id=? and group_id=?",
+      $result_assignee_squad = db_execute("SELECT user_id FROM user_squad
+                                           WHERE squad_id=? and group_id=?",
 					  array($assignee_id, $group_id));
       while ($row_assignee_squad = db_fetch_array($result_assignee_squad))
 	{
@@ -186,7 +183,10 @@ function format_item_details ($item_id, $group_id, $ascii=false,
       $jumpto_text = _("Jump to the original submission");
       if (ARTIFACT == "cookbook")
 	{ $jumpto_text = _("Jump to the recipe preview"); }
-      print '<p class="center"><span class="xsmall">(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/bottom.png" class="icon" alt="'.$jumpto_text.'" /> '.$jumpto_text.'</a>)</span></p>';
+      print '<p class="center"><span class="xsmall">'
+.'(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+.'.theme/arrows/bottom.png" class="icon" alt="'.$jumpto_text.'" /> '
+.$jumpto_text.'</a>)</span></p>';
     }
 
   # Loop throuh the follow-up comments and format them
@@ -266,40 +266,52 @@ function format_item_details ($item_id, $group_id, $ascii=false,
 	      # Should the item content, without making links, with no markup
 	      # It is only for checks purpose, nothing else
 	      $out .= "\n".'<tr class="'.$class.'">'.
-		'<td valign="top"><span class="warn">('._("Why is this post is considered to be spam? Users may have reported it to be spam or, if it has been recently posted, it may just be waiting for spamchecks to be run.").')</span><br /><span class="preinput">'._("Spam content:").'</span><br /><br />'.nl2br($entry['content']).'</td>'.
-		'<td class="'.$class.'extra">';
-
-
+		'<td valign="top"><span class="warn">('
+._("Why is this post is considered to be spam? Users may have reported it to be
+spam or, if it has been recently posted, it may just be waiting for spamchecks
+to be run.")
+.')</span><br /><span class="preinput">'._("Spam content:")
+.'</span><br /><br />'.nl2br($entry['content']).'</td>'
+.'<td class="'.$class.'extra">';
 	      
-	      $out .= '<a name="spam'.$entry['comment_internal_id'].'"></a>'.
-		utils_user_link($entry['user_name'], $entry['realname'], true).'<br />';
+	      $out .= '<a name="spam'.$entry['comment_internal_id'].'"></a>'
+		.utils_user_link($entry['user_name'], $entry['realname'], true)
+                .'<br />';
 
 	      if ($is_admin)
 		{
-		  $out .= '<br /><br />(<a name="spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=unflagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" class="icon" alt="'._("Unflag as spam").'" />'._("Unflag as spam").'</a>)';
+		  $out .= '<br /><br />(<a name="spam'
+.$entry['comment_internal_id'].'" title="'
+.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'
+.htmlentities ($_SERVER['PHP_SELF']).'?func=unflagspam&amp;item_id='.$item_id
+.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
+.($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+.'.theme/bool/ok.png" class="icon" alt="'._("Unflag as spam").'" />'
+._("Unflag as spam").'</a>)';
 		}
-
 	      $out .= '</td></tr>';
-		  
 	    }
 	  else
 	    {	   
-
-	      $out .= "\n".'<tr class="'.$class.'extra">'.
-		'<td class="xsmall">&nbsp;</td>'.
-		'<td class="xsmall"><a name="spam'.$entry['comment_internal_id'].'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=viewspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'">'.sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'.
-		'</td></tr>';
+	      $out .= "\n".'<tr class="'.$class.'extra">'
+.'<td class="xsmall">&nbsp;</td>'
+.'<td class="xsmall"><a name="spam'.$entry['comment_internal_id'].'" href="'
+.htmlentities ($_SERVER['PHP_SELF']).'?func=viewspam&amp;item_id='.$item_id
+.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#spam'
+.$entry['comment_internal_id'].'" title="'
+.sprintf(_("Current spam score: %s"), $entry['spamscore']).'">'
+.sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'
+.'</td></tr>';
 	    }
           # No go to the next comment
 	  continue;
 	}
-
       # Now print a normal comment
-      
       # Increment the comment count
       $i++;
       
-      $comment_type = isset($entry['comment_type']) ? $entry['comment_type'] : null;
+      $comment_type = isset($entry['comment_type']) ? $entry['comment_type']
+                                                      : null;
       $is_svn = false;
       if ($comment_type == 'SVN')
 	{ $is_svn = true; }
@@ -329,8 +341,8 @@ function format_item_details ($item_id, $group_id, $ascii=false,
             }
           else
             {
-              $name = "Anonymous"; 
               # must not be translated, part of mails notifs
+              $name = "Anonymous"; 
 	    }
 	  
 	  $out .= sprintf($fmt,
@@ -411,11 +423,13 @@ function format_item_details ($item_id, $group_id, $ascii=false,
 	  else
 	    {
 	      $text_to_markup = str_replace("\n", "&gt; ",
-					    wordwrap("\n".$entry['content'], 78, "\r\n"));
+					    wordwrap("\n".$entry['content'],
+                                            78, "\r\n"));
 	    }
 	  
 	  $out .= "\n".'<tr class="'.$class.'"><td valign="top">';
-	  $out .= '<a name="comment'.$comment_number.'" href="#comment'.$comment_number.'" class="preinput">';
+	  $out .= '<a name="comment'.$comment_number.'" href="#comment'
+                  .$comment_number.'" class="preinput">';
 	  $out .= utils_format_date($entry['date']);
 	  $out .= ', ';
 	  
@@ -460,41 +474,52 @@ function format_item_details ($item_id, $group_id, $ascii=false,
 	  # Add an svn link if relevant (it supports viewcvs syntax)
 	  if ($is_svn && $svn_link)
 	    {
-	      $out .= '<p>(<a href="'.$svn_link.'?rev='.$entry['revision'].'&amp;view=rev">'.sprintf(_("Browse SVN revision %s"), $entry['revision']).'</a>)</p>';
-
+	      $out .= '<p>(<a href="'.$svn_link.'?rev='.$entry['revision']
+                      .'&amp;view=rev">'
+                      .sprintf(_("Browse SVN revision %s"), $entry['revision'])
+                      .'</a>)</p>';
 	    }
 
 	  $out .='</td>';
-	  $out .= '<td class="'.$class.'extra">'.utils_user_link($entry['user_name'], $entry['realname'], true);
+	  $out .= '<td class="'.$class.'extra">'
+                  .utils_user_link($entry['user_name'],
+                                   $entry['realname'], true);
 	  
 	  if ($icon)
 	    {
-	      $out .= '<br /><span class="help" title="'.$icon_alt.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/'.$icon.'.png" alt="'.$icon_alt.'" /></span>';
+	      $out .= '<br /><span class="help" title="'.$icon_alt
+                      .'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                      .'.theme/roles/'.$icon.'.png" alt="'.$icon_alt
+                      .'" /></span>';
 	    }
 	  
 	  if ($poster_id != 100 && array_key_exists($poster_id, $assignees_id))
 	    {
-	      $out .= '<span class="help" title="'._("In charge of this item.").'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/roles/assignee.png" alt="'._("In charge of this item.").'" /></span>';
+	      $out .= '<span class="help" title="'._("In charge of this item.")
+                      .'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+                      .'.theme/roles/assignee.png" alt="'
+                      ._("In charge of this item.").'" /></span>';
 	    }
 
 	  # If not a member of the project, allow to mark as spam
 	  # For performance reason, do not check here if the user already
 	  # flagged the comment as spam, it will be done only if he tries to
 	  # to it twice
-	  if (!$is_svn && 
-	      user_isloggedin() && 
-	      !$icon && 
-	      $poster_id != user_getid() &&
-	      empty($_REQUEST['printer']))
+	  if (!$is_svn && user_isloggedin() && !$icon
+              && $poster_id != user_getid() && empty($_REQUEST['printer']))
 	    {
               # Surround by two line breaks, to keep that link clearly 
 	      # separated from 
 	      # anything else, to avoid clicks by error
-	      $out .= '<br /><br />(<a title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=flagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Flag as spam").'" />'._("Flag as spam").'</a>)<br /><br />';
+	      $out .= '<br /><br />(<a title="'
+.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'
+.htmlentities ($_SERVER['PHP_SELF']).'?func=flagspam&amp;item_id='.$item_id
+.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
+.($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+.'.theme/misc/trash.png" class="icon" alt="'._("Flag as spam").'" />'
+._("Flag as spam").'</a>)<br /><br />';
 	    }
-	  
 	  $out .= '</td></tr>';
-	  
 	}
     }
 
@@ -504,14 +529,9 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   return $out;
 }
 
-
-
 function format_item_changes ($changes,$item_id,$group_id)
 {
-
-
   # ASCII must not be translated
-
   global $sys_datefmt;
 
   # FIXME: strange, with %25s it does not behave exactly like
@@ -525,7 +545,6 @@ function format_item_changes ($changes,$item_id,$group_id)
   $out = '';
   while (list($field,$h) = each($changes))
     {
-
       # If both removed and added items are empty skip - Sanity check
       if (empty($h['del']) && empty($h['add']))
 	{ continue; }
@@ -548,9 +567,9 @@ function format_item_changes ($changes,$item_id,$group_id)
 
   if ($out)
     {
-      $out = "Update of ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id." (project ".group_getunixname($group_id)."):\n\n".$out;
+      $out = "Update of ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
+             ." (project ".group_getunixname($group_id)."):\n\n".$out;
     }
-
 
   # Process special cases: follow-up comments
   if (!empty($changes['details']))
@@ -558,14 +577,17 @@ function format_item_changes ($changes,$item_id,$group_id)
       if ($out)
         { $out .= $separator; }
 
-      $out_com = "Follow-up Comment #".db_numrows(trackers_data_get_followups($item_id));
+      $out_com = "Follow-up Comment #"
+                 .db_numrows(trackers_data_get_followups($item_id));
       if (!$out)
         {
-          $out_com .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id." (project ".group_getunixname($group_id).")";
+          $out_com .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
+                      ." (project ".group_getunixname($group_id).")";
         }
 
       $out_com .= ":\n\n";
-      if ($changes['details']['type'] != 'None' && $changes['details']['type'] != '(Error - Not Found)')
+      if ($changes['details']['type'] != 'None'
+          && $changes['details']['type'] != '(Error - Not Found)')
 	{
 	  $out_com .= '['.$changes['details']['type']."]\n";
 	}
@@ -574,7 +596,6 @@ function format_item_changes ($changes,$item_id,$group_id)
 
       $out .= $out_com;
     }
-
 
   # Process special cases: file attachment
   if (!empty($changes['attach']))
@@ -585,10 +606,10 @@ function format_item_changes ($changes,$item_id,$group_id)
       $out_att = "Additional Item Attachment";
       if (!$out)
         {
-          $out_att .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id." (project ".group_getunixname($group_id).")";
+          $out_att .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
+                      ." (project ".group_getunixname($group_id).")";
         }
       $out_att .= ":\n\n";
-
       
       foreach ($changes['attach'] as $file)
 	{ 
@@ -602,13 +623,10 @@ function format_item_changes ($changes,$item_id,$group_id)
     }
 
   return $out;
-
 }
-
 
 function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=false)
 {
-
   global $sys_datefmt, $HTML;
   $out = '';
 
@@ -643,7 +661,8 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
   # Header first
   if ($ascii)
     {
-      $out .= "    _______________________________________________________\n\nFile Attachments:\n\n";
+      $out .= "    _______________________________________________________\n
+File Attachments:\n\n";
     }
   else
     {
@@ -663,40 +682,39 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
   # Loop throuh the attached files and format them
   for ($i=0; $i < $rows; $i++)
     {
-
       $item_file_id = db_result($result, $i, 'file_id');
-      if ($ascii)
-	{
-	  $href = $GLOBALS['sys_home'].ARTIFACT."/download.php?file_id=$item_file_id";
-	}
-      else
-	{
-	  $href = $GLOBALS['sys_home'].ARTIFACT."/download.php?file_id=$item_file_id";
-	}
+      $href = $GLOBALS['sys_home'].ARTIFACT
+              ."/download.php?file_id=$item_file_id";
 
       if ($ascii)
 	{
 	  $out .= sprintf($fmt,
 			  utils_format_date(db_result($result, $i, 'date')),
 			  db_result($result, $i, 'filename'),
-			  utils_filesize(0, intval(db_result($result, $i, 'filesize'))),
+			  utils_filesize(0, intval(db_result($result, $i,
+                                                             'filesize'))),
 			  db_result($result, $i, 'user_name'),
 			  db_result($result, $i, 'description'),
-			  '<http://'.$GLOBALS['sys_default_domain'].utils_unconvert_htmlspecialchars($href).'>');
+			  '<http://'.$GLOBALS['sys_default_domain']
+                          .utils_unconvert_htmlspecialchars($href).'>');
 	}
       else
 	{
 	  $html_delete = '';
-	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2') && !$sober)
+	  if (member_check(0,$group_id,
+              member_create_tracker_flag(ARTIFACT).'2') && !$sober)
 	    {
-	      $html_delete = '<span class="trash"><a href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_file&amp;item_id='.$item_id.'&amp;item_file_id='.$item_file_id.'">'.
-		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
+	      $html_delete = '<span class="trash"><a href="'
+.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_file&amp;item_id='.$item_id
+.'&amp;item_file_id='.$item_file_id.'">'
+.'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
-
 
 	  if (!$sober)
 	    {
-	      $out .= '<div class="'.utils_get_alt_row_color($i).'">'.$html_delete;
+	      $out .= '<div class="'.utils_get_alt_row_color($i).'">'
+                      .$html_delete;
 	    }
 	  else
 	    {
@@ -707,14 +725,19 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
 
 	  if (!$sober)
 	    {
-	      $out .= sprintf(_('%s added by %s'), db_result($result, $i, 'filename').'</a>', utils_user_link(db_result($result, $i, 'user_name')));
+	      $out .= sprintf(_('%s added by %s'),
+                              db_result($result, $i, 'filename').'</a>',
+                              utils_user_link(db_result($result, $i,
+                                                        'user_name')));
 	    }
 	  else
 	    {
-	      $out .= '<a href="'.$href.'">'.db_result($result, $i, 'filename').'</a>';
+	      $out .= '<a href="'.$href.'">'.db_result($result, $i, 'filename')
+                      .'</a>';
 	    }
 
-	  $out .= ' <span class="smaller">('.utils_filesize(0, db_result($result, $i, 'filesize'));
+	  $out .= ' <span class="smaller">('
+                  .utils_filesize(0, db_result($result, $i, 'filesize'));
 
 	  if (db_result($result, $i, 'filetype'))
 	    {
@@ -731,30 +754,19 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
     }
 
   # final touch...
-
   if ($ascii || $sober)
-  {
     $out .= "\n";
-  }
   else
-  {
     $out .= $HTML->box_bottom(1);
-  }
 
   return($out);
-
 }
 
-
-
+# Show the files attached to this bug.
 function format_item_cc_list ($item_id,$group_id, $ascii=false)
 {
 # ASCII must not be translated
   global $sys_datefmt, $HTML;
-
-  /*
-          show the files attached to this bug
-  */
 
   $result=trackers_data_get_cc_list($item_id);
   $rows=db_numrows($result);
@@ -764,14 +776,8 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
   # No file attached -> return now
   if ($rows <= 0)
     {
-      if ($ascii)
-	{
-	  $out .= "";
-	}
-      else
-	{
-	  $out = '<span class="warn">'._("CC list is empty").'</span>';
-	}
+      if (!$ascii)
+        $out = '<span class="warn">'._("CC list is empty").'</span>';
       return $out;
     }
 
@@ -779,10 +785,12 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
   # based on output type (Ascii, HTML)
   if ($ascii)
     {
-      $out .= "    _______________________________________________________\n\n"."Carbon-Copy List:\n\n";
+      $out .= "    _______________________________________________________\n\n"
+              ."Carbon-Copy List:\n\n";
       $fmt = "%-35s | %s\n";
       $out .= sprintf($fmt, 'CC Address', 'Comment');
-      $out .= "------------------------------------+-----------------------------\n";
+      $out .=
+        "------------------------------------+-----------------------------\n";
     }
   else
     {
@@ -843,7 +851,6 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	  else
 	    { $comment = _('Updated the item'); }
 	}
-      
 
       if ($ascii)
 	{
@@ -851,32 +858,35 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	}
       else
 	{
-
 	  # show CC delete icon if one of the condition is met:
 	  # a) current user is a tracker manager
 	  # b) then CC name is the current user
 	  # c) the CC email address matches the one of the current user
 	  # d) the current user is the person who added a given name in CC list
-	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2') ||
-	      (user_getname(user_getid()) == $email) ||
-	      (user_getemail(user_getid()) == $email) ||
-	      (user_getname(user_getid()) == db_result($result, $i, 'user_name') ))
+	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2')
+              || (user_getname(user_getid()) == $email)
+              || (user_getemail(user_getid()) == $email)
+              || (user_getname(user_getid()) == db_result($result, $i,
+                                                          'user_name')))
             {
-$html_delete = '<span class="trash"><a href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_cc&amp;item_id='.$item_id.'&amp;item_cc_id='.$item_cc_id.'">'.
-		 '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
+              $html_delete = '<span class="trash"><a href="'
+.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_cc&amp;item_id='.$item_id
+.'&amp;item_cc_id='.$item_cc_id.'">'
+.'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 	  else
             {
 	      $html_delete = '';
 	    }
 
-          $out .= '<li class="'.utils_get_alt_row_color($i).'">'.$html_delete.
-	  sprintf(_('%s added by %s'), $email, utils_user_link(db_result($result, $i, 'user_name')));
+          $out .= '<li class="'.utils_get_alt_row_color($i).'">'.$html_delete
+	  .sprintf(_('%s added by %s'), $email,
+                   utils_user_link(db_result($result, $i, 'user_name')));
           if ($comment)
            {
 	     $out .= ' <span class="smaller">('.markup_basic($comment).')</span>';
            }
-
 #$href_cc,
 #			  utils_format_date(db_result($result, $i, 'date')),
 #			  $html_delete);
@@ -887,6 +897,5 @@ $html_delete = '<span class="trash"><a href="'.htmlentities ($_SERVER['PHP_SELF'
   $out .= ($ascii ? "\n" : $HTML->box_bottom(1));
 
   return($out);
-
 }
 ?>

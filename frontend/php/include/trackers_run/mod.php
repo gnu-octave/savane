@@ -741,7 +741,7 @@ managers.").'</p>
 	  $checked = '';
 	  if (!$GLOBALS['reassign_change_artifact'] && ARTIFACT == $art
               || $GLOBALS['reassign_change_artifact'] == $art)
-	    { $checked = ' selected="selected"'; }
+	      $checked = ' selected="selected"';
 	  $ret = '<option value="'.$art.'"'.$checked.'>'.$content."</option>\n";
 	  $checked = '';
           return $ret;
@@ -763,7 +763,7 @@ managers.").'</p>
         <span class="preinput">';
 
       if (!$reassign_change_project_search)
-	{  print _("Move to the project:"); }
+	print _("Move to the project:");
       else
 	{
 # Print a specific message if we are already at step 2 of

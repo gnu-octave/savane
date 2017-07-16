@@ -375,11 +375,19 @@ switch ($func)
        {
 	 if ($depends_search)
 	   {
-	     fb(sprintf(_("You provided search words to get a list of items this one may depend on. Below, in the section [%s Dependencies], you can now select the appropriate one(s) and submit the form."), $GLOBALS['sys_https_url'].$_SERVER['SCRIPT_NAME'].'#dependencies'));
+	     fb(sprintf(_("You provided search words to get a list of items
+this one may depend on. Below, in the section [%s Dependencies], you can now
+select the appropriate one(s) and submit the form."),
+                $GLOBALS['sys_https_url'].$_SERVER['SCRIPT_NAME']
+                .'#dependencies'));
 	   }
 	 if ($reassign_change_project_search)
 	   {
-	     fb(sprintf(_("You provided search words to get a list of projects this item should maybe reassigned to. Below, in the section [%s Reassign this item], you can now select the appropriate project and submit the form."), $GLOBALS['sys_https_url'].$_SERVER['SCRIPT_NAME'].'#reassign'));
+	     fb(sprintf(_("You provided search words to get a list of projects
+this item should maybe reassigned to. Below, in the section [%s Reassign this
+item], you can now select the appropriate project and submit the form."),
+                        $GLOBALS['sys_https_url'].$_SERVER['SCRIPT_NAME']
+                        .'#reassign'));
 	   }
 	 if ($canned_response == "!multiple!")
 	   {

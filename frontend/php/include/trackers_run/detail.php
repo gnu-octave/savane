@@ -1,23 +1,25 @@
 <?php
 # View a tracker item - alternate view. Used by cookbook.
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2001-2002 (c) Laurent Julliard, CodeX Team, Xerox
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                         Yves Perrin <yves.perrin--cern.ch>
+#
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2002-2006  Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -69,8 +71,8 @@ if (db_numrows($result) > 0)
 authentication level.");
     }
 
-
-  trackers_header(array ('title'=>$item_name.", ".utils_cutstring(db_result($result,0,'summary'))));
+  trackers_header(array ('title'=>$item_name.", "
+                           .utils_cutstring(db_result($result,0,'summary'))));
 
   print '<p>'.$private_intro.'</p>';
 
@@ -125,7 +127,6 @@ authentication level.");
           <td colspan="'.($fields_per_line).'" width="50%">&nbsp;</td>
       </tr>
 ';
-
     }
 
   print '<tr><td colspan="'.($fields_per_line*2).'">&nbsp;</td></tr>';
@@ -141,21 +142,21 @@ authentication level.");
       # if the field is a special field (not even summary, as the user
       # wont have the right to modify it)
       # or if not used by this project  then skip it.
-      if (trackers_data_is_special($field_name) ||
-	  !trackers_data_is_used($field_name))
+      if (trackers_data_is_special($field_name)
+          || !trackers_data_is_used($field_name))
 	{ continue; }
 
       # print the originator email field only if it was posted by
       # an anonymous user
-      if ($field_name == 'originator_email' && 
-	  db_result($result,0,'submitted_by') != '100')
+      if ($field_name == 'originator_email'
+	  && db_result($result,0,'submitted_by') != '100')
 	{ continue; }
 
       # Never show the special discussion lock field
       if ($field_name == 'discussion_lock')
 	{
 	  $item_discussion_lock = db_result($result,0,$field_name);
-	  continue; 
+	  continue;
 	}
 
       # display the bug field
@@ -163,19 +164,24 @@ authentication level.");
       # appear alone on a new line or it wont fit in the page
       $field_value = db_result($result,0,$field_name);
       list($sz,) = trackers_data_get_display_size($field_name);
-      
-      $field_display = trackers_field_display($field_name,$group_id,$field_value,false,true,true);
-      
+
+      $field_display = trackers_field_display($field_name,$group_id,
+                                              $field_value,false,true,true);
+
       $label = trackers_field_label_display($field_name,$group_id,false,false);
-      $value = trackers_field_display($field_name,$group_id,$field_value,false,false,true);
+      $value = trackers_field_display($field_name,$group_id,$field_value,false,
+                                      false,true);
 
       # Save the assigned to value for later.
       # Also make the user link for this same field
       if ($field_name == 'assigned_to')
 	{
-	  $item_assigned_to = trackers_field_display($field_name,$group_id,$field_value,false,false,true);
-	  
-	  $value = utils_user_link(user_getname($field_value), user_getrealname($field_value));
+	  $item_assigned_to = trackers_field_display($field_name,$group_id,
+                                                     $field_value,false,false,
+                                                     true);
+
+	  $value = utils_user_link(user_getname($field_value),
+                                   user_getrealname($field_value));
 	}
 
       # originator email
@@ -187,7 +193,8 @@ authentication level.");
       # Fields colors
       $field_class = '';
       $row_class = '';
-      if (!empty($previous_form_bad_fields) && array_key_exists($field_name, $previous_form_bad_fields))
+      if (!empty($previous_form_bad_fields)
+          && array_key_exists($field_name, $previous_form_bad_fields))
 	{
           # We highlight fields that were not properly/completely
 	  # filled.
@@ -202,19 +209,20 @@ authentication level.");
 	  # out of two, to keep the page light
 	  $row_class = ' class="'.utils_altrow($j+1).'"';
 	}
-      
+
       if ($sz > $max_size)
 	{
           # Field getting one line for itself
-	  
+
           # Each time change the background color
 	  $j++;
-	  
-	  print "\n<tr".$row_class.">".
-	    '<td valign="middle" '.$field_class.' width="15%">'.$label.'</td>'.
-	    '<td valign="middle" '.$field_class.' colspan="'.(2*$fields_per_line-1).'" width="75%">'.
-	    $value.'</td>'.
-	    "\n</tr>";
+
+	  print "\n<tr".$row_class.">"
+	    .'<td valign="middle" '.$field_class.' width="15%">'.$label.'</td>'
+	    .'<td valign="middle" '.$field_class.' colspan="'
+            .(2*$fields_per_line-1).'" width="75%">'
+	    .$value.'</td>'
+	    ."\n</tr>";
 	  $i=0;
 	}
       else
@@ -228,16 +236,16 @@ authentication level.");
  	      # there will be another field on this line.
 	      $j++;
 	    }
-	  
+
 	  print ($i % $fields_per_line ? '':"\n<tr".$row_class.">");
-	  print '<td valign="middle"'.$field_class.' width="15%">'.$label.'</td>'.
-	    '<td valign="middle"'.$field_class.' width="35%">'.$value.'</td>';
+	  print '<td valign="middle"'.$field_class.' width="15%">'
+            .$label.'</td>'
+	    .'<td valign="middle"'.$field_class.' width="35%">'
+            .$value.'</td>';
 	  $i++;
 	  print ($i % $fields_per_line ? '':"\n</tr>");
 	}
-      
     }
-
   print '</table>';
 
 # ############################### Determine which subpart must be deployed
@@ -262,7 +270,7 @@ authentication level.");
       while (list($entry,) = each($is_deployed))
 	{ $is_deployed[$entry] = true; }
     }
-  
+
 # ################################ Post a comment
 
   # For now hidden by default, assuming that people first read comments,
@@ -273,9 +281,8 @@ authentication level.");
   # the one that were vocal about Savane UI design)
   if (group_restrictions_check($group_id, ARTIFACT, 2))
     {
-      
       print html_hidsubpart_header("postcomment", _("Post a Comment"));
-      
+
       if (!$item_discussion_lock)
 	{
 	  print '<p class="noprint"><span class="preinput"> '
@@ -284,7 +291,7 @@ authentication level.");
                 ."</span><br />&nbsp;&nbsp;&nbsp;\n";
 	  print trackers_field_textarea('comment', htmlspecialchars($comment));
 	  print '</p>';
-	  
+
 	  if (!user_isloggedin())
 	    {
 	      print '<h2 class="warn">'._("You are not logged in").'</h2><p>';
@@ -298,7 +305,7 @@ authentication level.");
 	{
 	  print '<p class="warn">'._("Discussion locked!").'</p>';
 	}
-      
+
       print '<p>&nbsp;</p>';
       print html_hidsubpart_footer();
     }
@@ -307,7 +314,7 @@ authentication level.");
 
   print html_hidsubpart_header("discussion", _("Discussion"), 1);
   $new_comment = $preview? $comment: false;
- 
+
   print show_item_details($item_id,$group_id,0,$item_assigned_to, false,
                           $new_comment);
 
@@ -319,14 +326,14 @@ authentication level.");
   # deployed by default, important item info
   print html_hidsubpart_header("attached", _("Attached Files"), 1);
 
-  if (group_restrictions_check($group_id, ARTIFACT, 2) &&
-      !$item_discussion_lock)
+  if (group_restrictions_check($group_id, ARTIFACT, 2)
+      && !$item_discussion_lock)
     {
       print '<p class="noprint">';
       print sprintf(_(
 "(Note: upload size limit is set to %s kB, after insertion of the required
 escape characters.)"), $GLOBALS['sys_upload_max']);
-      
+
       print '</p><p class="noprint"><span class="preinput"> '
             ._("Attach File(s):").'</span><br />
       &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" />
@@ -336,7 +343,8 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
       <input type="file" name="input_file4" size="10" />
       <br />
       <span class="preinput">'._("Comment:").'</span><br />
-      &nbsp;&nbsp;&nbsp;<input type="text" name="file_description" size="60" maxlength="255" />
+      &nbsp;&nbsp;&nbsp;<input type="text" name="file_description" '
+      .'size="60" maxlength="255" />
       </p><p>';
     }
   else
@@ -349,8 +357,7 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
   print '</p><p>&nbsp;</p>';
   print html_hidsubpart_footer();
 
-
-  # ################################ Dependancies
+  # ################################ Dependencies
 
   # deployed by default, important item info
   print html_hidsubpart_header("dependencies", _("Dependencies"), 1);
@@ -363,10 +370,7 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
   print '</p><p>&nbsp;</p>';
   print html_hidsubpart_footer();
 
-
   # ################################ Mail notification
-
-
   print html_hidsubpart_header("cc", _("Mail Notification Carbon-Copy List"));
 
   if (user_isloggedin() && !$item_discussion_lock)
@@ -382,7 +386,8 @@ addresses.)"), $GLOBALS['sys_name']);
             .'<input type="text" name="add_cc" size="30" /><br />
 	   <span class="preinput">'._("Comment:")
             .'</span><br />&nbsp;&nbsp;&nbsp;'
-            .'<input type="text" name="cc_comment" size="40" maxlength="255" /><p>';
+            .'<input type="text" name="cc_comment" size="40" maxlength="255" />'
+            .'<p>';
     }
 
   show_item_cc_list($item_id, $group_id);
@@ -405,14 +410,15 @@ addresses.)"), $GLOBALS['sys_name']);
 		 $votes)
 	.'</p><p class="noprint">';
 
-      if (trackers_data_is_showed_on_add("vote") || member_check(user_getid(), $group_id))
+      if (trackers_data_is_showed_on_add("vote")
+          || member_check(user_getid(), $group_id))
         {
-
           if (user_isloggedin())
             {
-
-              $votes_given = trackers_votes_user_giventoitem_count(user_getid(), ARTIFACT, $item_id);
-              $votes_remaining = trackers_votes_user_remains_count(user_getid()) + $votes_given;
+              $votes_given = trackers_votes_user_giventoitem_count(user_getid(),
+                                 ARTIFACT, $item_id);
+              $votes_remaining =
+                trackers_votes_user_remains_count(user_getid()) + $votes_given;
               if (!$new_vote)
                 { $new_vote = $votes_given; }
 
@@ -423,7 +429,8 @@ addresses.)"), $GLOBALS['sys_name']);
 
               print '<span class="preinput">'._("Your vote:")
                     .'</span><br />&nbsp;&nbsp;&nbsp;'
-                    .'<input type="text" name="new_vote" size="3" maxlength="3" value="'
+                    .'<input type="text" name="new_vote" size="3" '
+                    .'maxlength="3" value="'
                     .htmlspecialchars($new_vote).'" /> '
                     .sprintf(ngettext("/ %s remaining vote",
                                       "/ %s remaining votes", $votes_remaining),
@@ -455,11 +462,9 @@ dystopian book (it\'s a date): <input type="text" name="check" /></p>';
   }
 
   #  ################################  Submit
-
   print '<div align="center" class="noprint">'.
   form_submit(_("Submit Changes"), "submit", ' class="bold"').'</form></div>
 ';
-
 
 # ################################ History
 
@@ -474,3 +479,4 @@ else
 {
   exit_error(_("No item found with that id."));
 }
+?>
