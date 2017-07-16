@@ -521,160 +521,64 @@ function pagemenu_group ()
 
       $ret = '';
       $count = 0;
-
+      function vcs_entry ($project, &$count, &$ret, $vcs, $vcs_name)
+      {
+        $count++;
+                 # TRANSLATORS: the argument is VCS name (like Git or Bazaar).
+        $ret .= pagemenu_submenu_entry(sprintf(_("Use %s"), $vcs_name),
+                                       $project->getArtifactUrl($vcs),
+                                       1,
+                  # TRANSLATORS: the argument is VCS name (like Git or Bazaar).
+                                       sprintf (_("%s Repository"), $vcs_name));
+        # Do we need links to browse repositories?
+        if ($project->Uses($vcs) &&
+            $project->getUrl($vcs."_viewcvs") != 'http://' &&
+            $project->getUrl($vcs."_viewcvs") != '')
+          {
+            $count++;
+            $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
+                                           $project->getUrl($vcs."_viewcvs"));
+          }
+        if ($project->UsesForHomepage($vcs) &&
+            $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
+            $project->getUrl("cvs_viewcvs_homepage") != '')
+          {
+            $count++;
+            $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
+                                           $project->getUrl("cvs_viewcvs_homepage"));
+          }
+      }
 
       if ($git)
-        {
-          $count++;
-          $ret .= pagemenu_submenu_entry(_("Use Git"),
-                                         $project->getArtifactUrl("git"),
-                                         1,
-                                         _("Source Code Manager: Git Repository"));
-          # Do we need links to browse repositories?
-          if ($project->Uses("git") &&
-              $project->getUrl("git_viewcvs") != 'http://' &&
-              $project->getUrl("git_viewcvs") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
-                                             $project->getUrl("git_viewcvs"));
-            }
-          if ($project->UsesForHomepage("git") &&
-              $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-              $project->getUrl("cvs_viewcvs_homepage") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
-                                             $project->getUrl("cvs_viewcvs_homepage"));
-            }
-        }
+        vcs_entry ($project, $count, $ret, 'git',
+# TRANSLATORS: this string is used as argument in messages 'Use %s' and
+# '%s Repository'.
+                   _('Git'));
       if ($hg)
-        {
-          $count++;
-          $ret .= pagemenu_submenu_entry(_("Use Mercurial"),
-                                         $project->getArtifactUrl("hg"),
-                                         1,
-                                         _("Source Code Manager: Mercurial Repository"));
-          # Do we need links to browse repositories?
-          if ($project->Uses("hg") &&
-              $project->getUrl("hg_viewcvs") != 'http://' &&
-              $project->getUrl("hg_viewcvs") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
-                                             $project->getUrl("hg_viewcvs"));
-            }
-          if ($project->UsesForHomepage("hg") &&
-              $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-              $project->getUrl("cvs_viewcvs_homepage") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
-                                             $project->getUrl("cvs_viewcvs_homepage"));
-            }
-        }
+        vcs_entry ($project, $count, $ret, 'hg',
+# TRANSLATORS: this string is used as argument in messages 'Use %s' and
+# '%s Repository'.
+                   _('Mercurial'));
       if ($bzr)
-        {
-          $count++;
-          $ret .= pagemenu_submenu_entry(_("Use Bazaar"),
-                                         $project->getArtifactUrl("bzr"),
-                                         1,
-                                         _("Source Code Manager: Bazaar Repository"));
-          # Do we need links to browse repositories?
-          if ($project->Uses("bzr") &&
-              $project->getUrl("bzr_viewcvs") != 'http://' &&
-              $project->getUrl("bzr_viewcvs") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
-                                             $project->getUrl("bzr_viewcvs"));
-            }
-          if ($project->UsesForHomepage("bzr") &&
-              $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-              $project->getUrl("cvs_viewcvs_homepage") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
-                                             $project->getUrl("cvs_viewcvs_homepage"));
-            }
-        }
+        vcs_entry ($project, $count, $ret, 'bzr',
+# TRANSLATORS: this string is used as argument in messages 'Use %s' and
+# '%s Repository'.
+                   _('Bazaar'));
       if ($svn)
-        {
-          $count++;
-          $ret .= pagemenu_submenu_entry(_("Use Subversion"),
-                                         $project->getArtifactUrl("svn"),
-                                         1,
-                                         _("Source Code Manager: Subversion Repository"));
-          # Do we need links to browse repositories?
-          if ($project->Uses("svn") &&
-              $project->getUrl("svn_viewcvs") != 'http://' &&
-              $project->getUrl("svn_viewcvs") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
-                                             $project->getUrl("svn_viewcvs"));
-            }
-          if ($project->UsesForHomepage("svn") &&
-              $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-              $project->getUrl("cvs_viewcvs_homepage") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
-                                             $project->getUrl("cvs_viewcvs_homepage"));
-            }
-        }
+        vcs_entry ($project, $count, $ret, 'svn',
+# TRANSLATORS: this string is used as argument in messages 'Use %s' and
+# '%s Repository'.
+                   _('Subversion'));
       if ($arch)
-        {
-          $count++;
-          $ret .= pagemenu_submenu_entry(_("Use GNU Arch"),
-                                         $project->getArtifactUrl("arch"),
-                                         1,
-                                         _("Source Code Manager: GNU Arch Repository"));
-
-          # Do we need links to browse repositories?
-          if ($project->Uses("arch") &&
-              $project->getUrl("arch_viewcvs") != 'http://' &&
-              $project->getUrl("arch_viewcvs") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
-                                             $project->getUrl("arch_viewcvs"));
-            }
-          if ($project->UsesForHomepage("arch") &&
-              $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-              $project->getUrl("cvs_viewcvs_homepage") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
-                                             $project->getUrl("cvs_viewcvs_homepage"));
-            }
-        }
+        vcs_entry ($project, $count, $ret, 'arch',
+# TRANSLATORS: this string is used as argument in messages 'Use %s' and
+# '%s Repository'.
+                   _('GNU Arch'));
       if ($cvs)
-        {
-          $count++;
-          $ret .= pagemenu_submenu_entry(_("Use CVS"),
-                                         $project->getArtifactUrl("cvs"),
-                                         1,
-                                         _("Source Code Manager: CVS Repository"));
-
-          # Do we need links to browse repositories?
-          if ($project->Uses("cvs") &&
-              $project->getUrl("cvs_viewcvs") != 'http://' &&
-              $project->getUrl("cvs_viewcvs") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
-                                             $project->getUrl("cvs_viewcvs"));
-            }
-          if ($project->Uses("homepage") &&
-              $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-              $project->getUrl("cvs_viewcvs_homepage") != '')
-            {
-              $count++;
-              $ret .= pagemenu_submenu_entry(_("Browse Web Pages Repository"),
-                                             $project->getUrl("cvs_viewcvs_homepage"));
-            }
-        }
+        vcs_entry ($project, $count, $ret, 'cvs',
+# TRANSLATORS: this string is used as argument in messages 'Use %s' and
+# '%s Repository'.
+                   _('CVS'));
       # Add a submenu only if there is more than one item.
       if ($ret && $count > 1)
         pagemenu_submenu_content($ret);
