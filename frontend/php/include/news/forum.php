@@ -257,20 +257,6 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,
   return $forum_id;
 }
 
-# Take an ID and return the corresponding forum name
-function get_forum_name($id){
-  $result = db_execute("SELECT forum_name FROM forum_group_list
-                        WHERE group_forum_id=?", array($id));
-  if (!$result || db_numrows($result) < 1)
-    {
-      return "Not Found";
-    }
-  else
-    {
-      return db_result($result, 0, "forum_name");
-    }
-}
-
 # Takes a thread_id and fetches it, then invokes show_submessages
 #   to nest the threads
 # $et is whether or not the forum is "expanded" or in flat mode

@@ -224,32 +224,7 @@ Please ask site administrators for a password.'), 1);
   return true;
 }
 
-// TODO: support IPv6 in general
-function session_checkip($oldip,$newip) 
-{
-  $eoldip = explode('.', $oldip);
-  $enewip = explode('.', $newip);
-  
-  return 1;
-
-  // require same class b subnet
-  if ((isset($eoldip[0]) and isset($enewip[0]) and $eoldip[0] == $enewip[0])
-  and (isset($eoldip[1]) and isset($enewip[1]) and $eoldip[1] == $enewip[1]))
-    {
-      return 1;
-    }
-  else if ($eoldip == $enewip) 
-    {
-      // Somehow the IP addresses match even if they don't have a
-      // valid dot-explosed form (eg "::1")
-      return 1;
-    }
-
-  // IP addresses doesn't match 
-  return 0;
-}
-
-function session_issecure() 
+function session_issecure()
 {
   return (getenv('HTTPS') == 'on');
 }
