@@ -20,9 +20,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 # It can accept db result directy or an array.
-# Total must be an array too, if provided
+# Total must be an array too, if provided.
 function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
 {
   if (!$result)
@@ -35,46 +34,46 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
     {
       $content = array();
       for ($i=0; $i < db_numrows($result) ; $i++)
-	{
-	  $content[db_result($result, $i, 0)] = db_result($result, $i, 1);
-	}
+        {
+          $content[db_result($result, $i, 0)] = db_result($result, $i, 1);
+        }
     }
   else
     {
       $content = $result;
     }
 
-  # Get the total number of items
-  # Total should not be passed as argument, normally
+  # Get the total number of items.
+  # Total should not be passed as argument, normally.
   if (!$total)
     {
       $totalvar = 0;
       while(list($k, $v)=each($content))
-	{
-	  $totalvar += $v;
-	}
+        {
+          $totalvar += $v;
+        }
 
       $total = array();
       reset($content);
       while(list($k, $v)=each($content))
-	{
-	  $total[$k] = $totalvar;
-	}
+        {
+          $total[$k] = $totalvar;
+        }
     }
   else
     {
-      # If total was passed as argument, no crosscheck, assume it is accurate
+      # If total was passed as argument, no crosscheck, assume it is accurate.
       $totalvar = 1;
     }
 
-  # Print the stats, unless $total is nul
+  # Print the stats, unless $total is nul.
   # If total was passed as argument, strange result may be printed.
   if ($totalvar)
     {
       print "\n\n".'<table style="width: 98%;">'."\n";
       reset($content);
       while(list($k, $v)=each($content))
-	{
+        {
           if ($total[$k] > 0)
             {
               $percent_width = round(($v / $total[$k]) * 100);
@@ -88,18 +87,17 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
               $total[$k] = 0;
             }
 
-	  if ($field && $field == "assigned_to")
-	    { $title = utils_user_link($k); }
-	  else
-	    { $title = $k; }
+          if ($field && $field == "assigned_to")
+            $title = utils_user_link($k);
+          else
+            $title = $k;
 
+          if ($percent_width > 25)
+            $class = '';
+          else
+            $class = 'closed';
 
-	  if ($percent_width > 25)
-	    { $class = ''; }
-	  else
-	    { $class = 'closed'; }
-
-	  print '<tr style="width: 50%;">
+          print '<tr style="width: 50%;">
 <td style="width: 15%; text-align: right; vertical-align: center;">'.$title.'</td>
 <td style="width: 5%; text-align: right; vertical-align: center;">'
 # TRANSLATORS: the arguments mean "%1$s of (total) %2$s".
@@ -111,7 +109,7 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
 .'" style="padding: 1px; line-height: 1em; width: '.$percent_width
 .'%; border-top: 0; border-left: 0; border-bottom: 0;">&nbsp;</div></div></td>
 </tr>';
-	}
+        }
       print "\n</table>\n\n";
     }
   else

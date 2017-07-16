@@ -22,11 +22,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # TODO: move to init.php or init-i18n.php - this file doesn't define
-# functions and is part of the initialization phase
+# functions and is part of the initialization phase.
 
 # Table of supported languages :
 # "language variant" => "associated preferred locale"
-# 11jun16 karl disabled all languages since translations are incomplete
+# 11jun2016 karl disabled all languages since translations are incomplete
 # (and the only way to select them is with the inconvenient
 # Accept-Language: browser header). https://savannah.gnu.org/support/?108827
 $locale_list = array(
@@ -65,39 +65,40 @@ if (isset($GLOBALS['sys_default_locale']))
   $best_lang = $GLOBALS['sys_default_locale'];
 
 # Find the best language available.
-while (list(, $lng) = each ($browser_preferences)) {
+while (list(, $lng) = each ($browser_preferences))
+  {
   # Parse language and quality factor.
-  $q = 1;
-  $arr = explode (';', $lng);
-  if (isset ($arr[1])) {
-    $lng = $arr[0];
-    $arr[1] = $arr[1];
-    if (substr($arr[1], 0, 2) === 'q=')
-      $q = substr($arr[1], 2);
-    else continue; # The second half doesn't define quality; skip the item.
-    if ($q > 1 || $q <= 0)
-      continue; # Unusable quality value.
-  }
-
-  $cur_lang = $lng;
+    $q = 1;
+    $arr = explode (';', $lng);
+    if (isset ($arr[1]))
+      {
+        $lng = $arr[0];
+        $arr[1] = $arr[1];
+        if (substr($arr[1], 0, 2) === 'q=')
+          $q = substr($arr[1], 2);
+        else continue; # The second half doesn't define quality; skip the item.
+        if ($q > 1 || $q <= 0)
+          continue; # Unusable quality value.
+      }
+    $cur_lang = $lng;
 
   # Check language code.
-  $lang_len = strpos ($cur_lang, '-');
-  if ($lang_len === FALSE)
-    $lang_len = strlen ($cur_lang);
-  if ($lang_len < 2)
-    continue; # Language code must be at least 2 characters long.
+    $lang_len = strpos ($cur_lang, '-');
+    if ($lang_len === FALSE)
+      $lang_len = strlen ($cur_lang);
+    if ($lang_len < 2)
+      continue; # Language code must be at least 2 characters long.
 
-  if (!isset($locale_list[$cur_lang] ))
-    continue; # No such locale; skip the item.
+    if (!isset($locale_list[$cur_lang] ))
+      continue; # No such locale; skip the item.
 
-  if ($q <= $quality)
-    continue;
+    if ($q <= $quality)
+      continue;
 
   # Best item available so far: select.
-  $quality = $q;
-  $best_lang = $cur_lang;
-} # while (list(, $lng) = each ($browser_preferences))
+    $quality = $q;
+    $best_lang = $cur_lang;
+  } # while (list(, $lng) = each ($browser_preferences))
 
 $locale = $locale_list[$best_lang];
 define('SV_LANG', str_replace ('_', '-', $locale));

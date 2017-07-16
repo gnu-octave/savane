@@ -28,13 +28,13 @@ require_once(dirname(__FILE__).'/spam.php');
 #    - form_clean must be used after succesful item submission
 #
 
-# Start the form with unique ID, store it in the database
+# Start the form with unique ID, store it in the database.
 function form_header ($action, $form_id=false, $method="post", $extra=false)
 {
   if ($extra)
-    { $extra = " $extra"; };
+    $extra = " $extra";
 
-  # Keep previous form id, in case of form that are recreated on failure
+  # Keep previous form id, in case of form that are recreated on failure.
   if (!$form_id)
     {
       mt_srand((double)microtime()*1000000);
@@ -42,48 +42,44 @@ function form_header ($action, $form_id=false, $method="post", $extra=false)
     }
   $result = db_autoexecute('form',
     array('form_id' => $form_id,
-	  'timestamp' => time(),
-	  'user_id' => user_getid()),
+          'timestamp' => time(),
+          'user_id' => user_getid()),
     DB_AUTOQUERY_INSERT);
   if (db_affected_rows($result) != 1)
-    { fb(_("System error while creating the form, report it to admins"), 1); }
+    fb(_("System error while creating the form, report it to admins"), 1);
 
   return '
   <form action="'.htmlentities($action).'" method="'.$method.'"'.$extra.'>'
        .form_input("hidden","form_id",$form_id);
-
 }
 
-# Usual input
+# Usual input.
 function form_input ($type, $name, $value="", $extra=false)
 {
   if ($value != "")
-    { $value = 'value="'.htmlentities($value).'"'; }
+    $value = 'value="'.htmlentities($value).'"';
   if ($extra)
-    { $extra = " $extra"; };
+    $extra = " $extra";
 
   return '
     <input type="'.$type.'" id="'.$name.'" name="'.$name.'" '.$value.$extra.' />';
-
 }
 
-# Special input: textarea
+# Special input: textarea.
 function form_textarea ($name, $value="", $extra=false)
 {
   if ($extra)
-    { $extra = " $extra"; };
+    $extra = " $extra";
 
   return '
     <textarea name="'.$name.'"'.$extra.'>'.$value.'</textarea>';
-
 }
 
-
-# Add submit button
+# Add submit button.
 function form_submit($text=false, $submit_name="update", $extra=false)
 {
   if (!$text)
-    { $text = _("Submit"); }
+    $text = _("Submit");
 
   # Add a trap for spammers: a text input that will have to be kept empty.
   # This wont prevent tailored bots to spam, but that should prevent
@@ -96,11 +92,10 @@ function form_submit($text=false, $submit_name="update", $extra=false)
       $trap = " ".form_input("text", "website", "http://");
       $GLOBALS['int_trapisset'] = true;
     }
-
   return form_input("submit", $submit_name, $text, $extra).$trap;
 }
 
-# Close the form, with submit button
+# Close the form, with submit button.
 function form_footer ($text=false, $submit_name="update")
 {
   return '
@@ -108,7 +103,6 @@ function form_footer ($text=false, $submit_name="update")
       '.form_submit($text, $submit_name).'
     </div>
   </form>';
-
 }
 
 # Check whether this is a duplicate or not: return true if the form
@@ -123,18 +117,17 @@ function form_check ($form_id)
 {
   if (!empty($GLOBALS['sys_debug_noformcheck']))
     return 1;
-  # First, check for spambots
-  # (will kill the session if necessary)
+  # First, check for spambots (will kill the session if necessary).
   form_check_nobot();
 
-  if (user_getid() == 0 &&
-      (!preg_match('/^[a-z0-9]*$/', $form_id)))
+  if (user_getid() == 0
+      && (!preg_match('/^[a-z0-9]*$/', $form_id)))
     {
       fb(_("Unrecognized unique form_id"), 1);
       return 0;
     }
 
-  # See bug #6983
+  # See bug #6983.
   # We must clean the form id right now. This is not how the form id mechanism
   # was designed.
   #
@@ -149,7 +142,7 @@ function form_check ($form_id)
   # SQL request, reducing as much as possible delays.
   $success = db_affected_rows(db_execute("DELETE FROM form WHERE user_id=?
                                           AND form_id=?",
-					 array(user_getid(), $form_id)));
+                                         array(user_getid(), $form_id)));
   if (!$success)
     {
       fb(_("Duplicate Post: this form was already submitted."),1);
@@ -157,32 +150,32 @@ function form_check ($form_id)
     }
 
   # Always do a dnsbl check when such form is sent
-  # (it will kill the submission if necessary)
+  # (it will kill the submission if necessary).
   dnsbl_check();
 
   # Also does a check against savane own blacklist
-  # (will never forbid post to logged-in users)
+  # (will never forbid post to logged-in users).
   spam_bancheck();
 
   return 1;
 }
 
-# Remove form_id from database: the item was posted
+# Remove form_id from database: the item was posted.
 function form_clean ($form_id)
 {
-  # Form_id are now directly removed by form_check
+  # Form_id are now directly removed by form_check.
   return 1;
 }
 
 # Check whether the trap field has been filled. If so, refuse the post.
 # This test should probably be made before remove form id, to be
-# dumbuser-compliant
+# dumbuser-compliant.
 function form_check_nobot ()
 {
   extract(sane_import('request', array('website')));
   if ($website != "" && $website != "http://")
     {
-      # Not much explanation on the reject, since we are hunting spammers
+      # Not much explanation on the reject, since we are hunting spammers.
       exit_log("filled the spam trap special field");
       exit_missing_param();
     }

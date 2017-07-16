@@ -109,15 +109,17 @@ function people_show_table()
         {
           $return .= '<input type="checkbox" name="types[]" value="' .
              db_result($result,$i,'type_id') . '"><a href="'.
-             htmlentities ($_SERVER["PHP_SELF"]).'?types[]='. db_result($result,$i,'type_id').
-             '">' .  db_result($result,$i,'name') . ' ('.
-             db_result($result,$i,'count'). ')</a><br />
+             htmlentities ($_SERVER["PHP_SELF"]).'?types[]='
+             . db_result($result,$i,'type_id')
+             .'">' .  db_result($result,$i,'name') . ' ('
+             .db_result($result,$i,'count'). ')</a><br />
 ';
         }
     }
   if(!$form_is_empty)
     {
-      $return = '<form action="'.htmlentities ($_SERVER["PHP_SELF"]).'" method="get">
+      $return = '<form action="'
+                .htmlentities ($_SERVER["PHP_SELF"]).'" method="get">
 ' . $return . '
 <hr /><input type="checkbox" name="show_any" value="1">
 '._('Show all jobs for all project types').'<br />

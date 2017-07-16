@@ -49,17 +49,17 @@ class GPLQuickForm_Element
       case "text":
       case "checkbox":
       case "textarea":
-	if (isset($params[0]))
-	  $this->label = $params[0];
-	break;
+        if (isset($params[0]))
+          $this->label = $params[0];
+        break;
       case "hidden":
-	if (isset($params[0]))
-	  $this->default = $params[0];
-	break;
+        if (isset($params[0]))
+          $this->default = $params[0];
+        break;
       case "select":
-	$this->label = $params[0];
-	$this->select_options = $params[1];
-	break;
+        $this->label = $params[0];
+        $this->select_options = $params[1];
+        break;
       }
   }
 
@@ -115,160 +115,160 @@ class GPLQuickForm_Element
 
   public function display()
   {
-    // Don't use $this->value directly, to take constants into account
+    # Don't use $this->value directly, to take constants into account.
     $value = $this->getValue();
     if ($this->type == 'header')
       {
-	print "<tr><td colspan=2 style='background: lightgrey;"
-	  . " text-align: left; font-weight: bold'>"
-	  . "{$this->label}</td></tr>";
+        print "<tr><td colspan=2 style='background: lightgrey;"
+          . " text-align: left; font-weight: bold'>"
+          . "{$this->label}</td></tr>";
       }
     else if ($this->type == 'submit')
       {
-	$disabled = "";
-	if ($this->frozen)
-	  $disabled = 'disabled="disabled"';
+        $disabled = "";
+        if ($this->frozen)
+          $disabled = 'disabled="disabled"';
 
-	print "<tr><td></td><td class='element'>";
-	print "<input type='submit'"
-	  . " name='{$this->name}' value='{$this->label}' $disabled />";
-	print '</td></tr>';
+        print "<tr><td></td><td class='element'>";
+        print "<input type='submit'"
+          . " name='{$this->name}' value='{$this->label}' $disabled />";
+        print '</td></tr>';
       }
     else if ($this->type == 'hidden')
       {
-	print "<input type='hidden' name='{$this->name}' value='$value' />";
+        print "<input type='hidden' name='{$this->name}' value='$value' />";
       }
     else
       {
-	print '<tr>';
-	print "<td class='label'>{$this->label}</td>";
-	print "<td class='element'>";
-	if (!empty($this->error))
-	  print "<span class='error'>$this->error</span><br />";
-	switch($this->type)
-	  {
+        print '<tr>';
+        print "<td class='label'>{$this->label}</td>";
+        print "<td class='element'>";
+        if (!empty($this->error))
+          print "<span class='error'>$this->error</span><br />";
+        switch($this->type)
+          {
 
-	  case 'date':
-	    if ($this->frozen)
-	      {
-		print $value['d'];
-		print "<input type='hidden' name='{$this->name}[d]' "
+          case 'date':
+            if ($this->frozen)
+              {
+                print $value['d'];
+                print "<input type='hidden' name='{$this->name}[d]' "
                       ."value='{$value['d']}' /> ";
-		$month = mktime(0, 0, 0, $value['M'], 1, 2001);
-		print strftime('%b', $month);
-		print "<input type='hidden' name='{$this->name}[M]' "
+                $month = mktime(0, 0, 0, $value['M'], 1, 2001);
+                print strftime('%b', $month);
+                print "<input type='hidden' name='{$this->name}[M]' "
                       ."value='{$value['M']}' /> ";
-		print $value['Y'];
-		print "<input type='hidden' name='{$this->name}[Y]' "
+                print $value['Y'];
+                print "<input type='hidden' name='{$this->name}[Y]' "
                       ."value='{$value['Y']}' />\n";
-	      }
-	    else
-	      {
-		print "<select name='{$this->name}[d]'>";
-		for ($i = 1; $i <= 31; $i++)
-		  {
-		    $label = $i;
-		    if ($i < 10)
-		      $label = "0$label";
-		    $selected = '';
-		    if ($i == $value['d'])
-		      $selected = 'selected="selected"';
-		    print "<option value='$i' $selected>$label</option>\n";
-		  }
-		print "</select>\n";
-		print "<select name='{$this->name}[M]'>";
-		for ($i = 1; $i <= 12; $i++)
-		  {
-		    $month = mktime(0, 0, 0, $i, 1, 2001);
-		    $selected = '';
-		    if ($i == $value['M'])
-		      $selected = 'selected="selected"';
-		    print "<option value='$i' $selected>"
+              }
+            else
+              {
+                print "<select name='{$this->name}[d]'>";
+                for ($i = 1; $i <= 31; $i++)
+                  {
+                    $label = $i;
+                    if ($i < 10)
+                      $label = "0$label";
+                    $selected = '';
+                    if ($i == $value['d'])
+                      $selected = 'selected="selected"';
+                    print "<option value='$i' $selected>$label</option>\n";
+                  }
+                print "</select>\n";
+                print "<select name='{$this->name}[M]'>";
+                for ($i = 1; $i <= 12; $i++)
+                  {
+                    $month = mktime(0, 0, 0, $i, 1, 2001);
+                    $selected = '';
+                    if ($i == $value['M'])
+                      $selected = 'selected="selected"';
+                    print "<option value='$i' $selected>"
                           .strftime('%b', $month)."</option>\n";
-		  }
-		print "</select>\n";
-		print "<select name='{$this->name}[Y]'>";
-		for ($i = 2001; $i <= intval(date('Y')) + 3; $i++)
-		  {
-		    $selected = '';
-		    if ($i == $value['Y'])
-		      $selected = 'selected="selected"';
-		    print "<option value='$i' $selected>$i</option>\n";
-		  }
-		print "</select>\n";
-	      }
-	    break;
+                  }
+                print "</select>\n";
+                print "<select name='{$this->name}[Y]'>";
+                for ($i = 2001; $i <= intval(date('Y')) + 3; $i++)
+                  {
+                    $selected = '';
+                    if ($i == $value['Y'])
+                      $selected = 'selected="selected"';
+                    print "<option value='$i' $selected>$i</option>\n";
+                  }
+                print "</select>\n";
+              }
+            break;
 
-	  case 'password':
-	    if ($this->frozen)
-	      print "*****";
-	    else
-	      print "<input type='password' name='{$this->name}' value='"
+          case 'password':
+            if ($this->frozen)
+              print "*****";
+            else
+              print "<input type='password' name='{$this->name}' value='"
                     . htmlspecialchars($value, ENT_QUOTES) . "' />\n";
-	    break;
+            break;
 
-	  case 'text':
-	    if ($this->frozen)
-	      {
-		print "$value";
-		print "<input type='hidden' name='{$this->name}' value='"
+          case 'text':
+            if ($this->frozen)
+              {
+                print "$value";
+                print "<input type='hidden' name='{$this->name}' value='"
                       . htmlspecialchars($value, ENT_QUOTES) . "' />\n";
-	      }
-	    else
-	      {
-		print "<input type='text' name='{$this->name}' value='"
+              }
+            else
+              {
+                print "<input type='text' name='{$this->name}' value='"
                       . htmlspecialchars($value, ENT_QUOTES) . "' />\n";
-	      }
-	    break;
+              }
+            break;
 
-	  case 'select':
-	    if ($this->frozen)
-	      {
-		if ($value != NULL)
-		  {
-		    print $this->select_options[$value];
-		    print "<input type='hidden' name='{$this->name}'"
+          case 'select':
+            if ($this->frozen)
+              {
+                if ($value != NULL)
+                  {
+                    print $this->select_options[$value];
+                    print "<input type='hidden' name='{$this->name}'"
                           ." value='$value' />\n";
-		  }
-	      }
-	    else
-	      {
-		print "<select name='{$this->name}'>";
-		foreach($this->select_options as $id => $text)
-		  {
-		    $selected = '';
-		    if ($id == $value)
-		      $selected = "selected='selected'";
-		    print "<option value='$id' $selected>$text</option>\n";
-		  }
-		print "</select>\n";
-	      }
-	    break;
+                  }
+              }
+            else
+              {
+                print "<select name='{$this->name}'>";
+                foreach($this->select_options as $id => $text)
+                  {
+                    $selected = '';
+                    if ($id == $value)
+                      $selected = "selected='selected'";
+                    print "<option value='$id' $selected>$text</option>\n";
+                  }
+                print "</select>\n";
+              }
+            break;
 
-	  case 'textarea':
-	    $readonly = "";
-	    if ($this->frozen)
-	      $readonly = "readonly='readonly'";
-	    print "<textarea name='{$this->name}' wrap='virtual' "
+          case 'textarea':
+            $readonly = "";
+            if ($this->frozen)
+              $readonly = "readonly='readonly'";
+            print "<textarea name='{$this->name}' wrap='virtual' "
               . "cols='60' rows='10' $readonly>"
-	      . htmlspecialchars($value, ENT_QUOTES)
-	      . "</textarea>\n";
-	    break;
+              . htmlspecialchars($value, ENT_QUOTES)
+              . "</textarea>\n";
+            break;
 
-	  case 'checkbox':
-	    $checked = "";
-	    if ($value === NULL)
-	      $value = '1';
-	    else
-	      $checked = 'checked="checked"';
-	    $disabled = "";
-	    if ($this->frozen)
-	      $disabled = 'disabled="disabled"';
-	    print "<input type='checkbox' name='{$this->name}' "
+          case 'checkbox':
+            $checked = "";
+            if ($value === NULL)
+              $value = '1';
+            else
+              $checked = 'checked="checked"';
+            $disabled = "";
+            if ($this->frozen)
+              $disabled = 'disabled="disabled"';
+            print "<input type='checkbox' name='{$this->name}' "
                   . "value='$value' $checked $disabled />\n";
-	    break;
-	  }
-	print '</td>
+            break;
+          }
+        print '</td>
 </tr>
 ';
       }
@@ -282,7 +282,7 @@ class GPLQuickForm
   private $method = '';
   private $in = array();
 
-  private $requiredNote = 
+  private $requiredNote =
    '<span style="font-size: smaller"><span style="color: red">*</span> required field</span>';
   private $jsWarnings_pref = 'The form is not valid';
   private $jsWarnings_post = '';
@@ -299,12 +299,12 @@ class GPLQuickForm
     switch ($method)
       {
       case "get":
-	$this->in = $_GET;
-	break;
+        $this->in = $_GET;
+        break;
       case 'post':
       default:
-	$this->in = $_POST;
-	break;
+        $this->in = $_POST;
+        break;
       }
   }
 
@@ -347,16 +347,16 @@ class GPLQuickForm
   {
     foreach($constants as $name => $value)
       {
-	if (isset($this->elements[$name]))
-	  $this->elements[$name]->setConstant($value);
+        if (isset($this->elements[$name]))
+          $this->elements[$name]->setConstant($value);
       }
   }
   public function setDefaults($defaults)
   {
     foreach($defaults as $name => $value)
       {
-	if (isset($this->elements[$name]))
-	  $this->elements[$name]->setDefault($value);
+        if (isset($this->elements[$name]))
+          $this->elements[$name]->setDefault($value);
       }
   }
 
@@ -392,8 +392,8 @@ class GPLQuickForm
     $old_value = $elt->getValue();
     if ($old_value !== NULL)
       {
-	$new_value = call_user_func($callback, $old_value);
-	$elt->setValue($new_value);
+        $new_value = call_user_func($callback, $old_value);
+        $elt->setValue($new_value);
       }
   }
 
@@ -408,76 +408,76 @@ class GPLQuickForm
     $form_is_valid = true;
 
     if (empty($this->in))
-      // form not submitted yet
+      # Form not submitted yet.
       return false;
 
     foreach($this->rules as $rule)
       {
-	list ($name, $error_message, $type, $type_param, $side) = $rule;
-	if (is_array($name))
-	  {
-	    $name_array = $name;
-	    $name = $name_array[0];
-	  }
-	if (!isset($elt_is_valid[$name]))
-	  $elt_is_valid[$name] = true;
-	$elt = $this->elements[$name];
+        list ($name, $error_message, $type, $type_param, $side) = $rule;
+        if (is_array($name))
+          {
+            $name_array = $name;
+            $name = $name_array[0];
+          }
+        if (!isset($elt_is_valid[$name]))
+          $elt_is_valid[$name] = true;
+        $elt = $this->elements[$name];
 
-	if ($elt_is_valid[$name])
-	  {
-	    $rule_is_valid = false;
-	    if (!is_array($name))
-	      {
-		$value = $elt->getValue();
-	      }
-	    switch($type)
-	      {
-	      case 'callback':
-		$callback = $type_param;
-		$rule_is_valid = call_user_func($callback, $value);
-		break;
-	      case 'required':
-		$rule_is_valid = !empty($value);
-		break;
-	      case 'regex':
-		$pattern = $type_param;
-		$rule_is_valid = preg_match($pattern, $value) > 0;
-		break;
-	      case 'nonzero':
-		$rule_is_valid = !preg_match('/^0/', $value);
-		break;
-	      case 'lettersonly':
-		$rule_is_valid = preg_match('/^[a-zA-Z]*$/', $value);
-		break;
-	      case 'alphanumeric':
-		$rule_is_valid = preg_match('/^[a-zA-Z0-9]*$/', $value);
-		break;
-	      case 'minlength':
-		$rule_is_valid = (strlen($value) >= $type_param);
-		break;
-	      case 'maxlength':
-		$rule_is_valid = (strlen($value) <= $type_param);
-		break;
-	      case 'rangelength':
-		$rule_is_valid = (strlen($value) >= $type_param[0]
-				  && strlen($value) <= $type_param[1]);
-		break;
-	      case 'compare':
-		$name2 = $name_array[1];
-		$elt2 = $this->elements[$name2];
-		$value2 = $elt2->getValue();
-		$rule_is_valid = ($value == $value2);
-		break;
-	      default:
-		die("Unsupported rule type: $type");
-	      }
-	    if (!$rule_is_valid)
-	      {
-		$form_is_valid = false;
-		$elt_is_valid[$name] = false;
-		$elt->setError($error_message);
-	      }
-	  }
+        if ($elt_is_valid[$name])
+          {
+            $rule_is_valid = false;
+            if (!is_array($name))
+              {
+                $value = $elt->getValue();
+              }
+            switch($type)
+              {
+              case 'callback':
+                $callback = $type_param;
+                $rule_is_valid = call_user_func($callback, $value);
+                break;
+              case 'required':
+                $rule_is_valid = !empty($value);
+                break;
+              case 'regex':
+                $pattern = $type_param;
+                $rule_is_valid = preg_match($pattern, $value) > 0;
+                break;
+              case 'nonzero':
+                $rule_is_valid = !preg_match('/^0/', $value);
+                break;
+              case 'lettersonly':
+                $rule_is_valid = preg_match('/^[a-zA-Z]*$/', $value);
+                break;
+              case 'alphanumeric':
+                $rule_is_valid = preg_match('/^[a-zA-Z0-9]*$/', $value);
+                break;
+              case 'minlength':
+                $rule_is_valid = (strlen($value) >= $type_param);
+                break;
+              case 'maxlength':
+                $rule_is_valid = (strlen($value) <= $type_param);
+                break;
+              case 'rangelength':
+                $rule_is_valid = (strlen($value) >= $type_param[0]
+                                  && strlen($value) <= $type_param[1]);
+                break;
+              case 'compare':
+                $name2 = $name_array[1];
+                $elt2 = $this->elements[$name2];
+                $value2 = $elt2->getValue();
+                $rule_is_valid = ($value == $value2);
+                break;
+              default:
+                die("Unsupported rule type: $type");
+              }
+            if (!$rule_is_valid)
+              {
+                $form_is_valid = false;
+                $elt_is_valid[$name] = false;
+                $elt->setError($error_message);
+              }
+          }
       }
     return $form_is_valid;
   }

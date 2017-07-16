@@ -1,8 +1,9 @@
 <?php
-# <one line to give a brief idea of what this does.>
+# Group administration.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -47,16 +48,18 @@ function show_grouphistory ($group_id)
     for ($i=0; $i < $rows; $i++) {
       $field=db_result($result, $i, 'field_name');
       echo '
-			<tr class="'. html_get_alt_row_color($i) .'"><td>'.$field.'</td><td>';
+			<tr class="'. html_get_alt_row_color($i)
+       .'"><td>'.$field.'</td>
+<td>';
 
       if ($field=='removed user') {
 	echo user_getname(db_result($result, $i, 'old_value'));
       } else {
 	echo db_result($result, $i, 'old_value');
       }
-      echo '</td>'.
-	'<td>'.utils_format_date(db_result($result, $i, 'date')).'</td>'.
-	'<td>'.db_result($result, $i, 'user_name').'</td></tr>';
+      echo '</td>
+<td>'.utils_format_date(db_result($result, $i, 'date')).'</td>
+<td>'.db_result($result, $i, 'user_name')."</td></tr>\n";
     }
 
     echo '
@@ -69,33 +72,41 @@ function show_grouphistory ($group_id)
   }
 }
 
-
 function project_admin_registration_info ($row_grp)
 {
-  $res_admin = db_execute("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname, user.email AS email "
+  $res_admin = db_execute("SELECT user.user_id AS user_id,user.user_name "
+                        . "AS user_name, user.realname "
+                        . "AS realname, user.email AS email "
 			. "FROM user,user_group "
-			. "WHERE user_group.user_id=user.user_id AND user_group.group_id=? AND "
-			. "user_group.admin_flags = 'A'", array($row_grp['group_id']));
-
+			. "WHERE user_group.user_id=user.user_id "
+                        . "AND user_group.group_id=? AND "
+			. "user_group.admin_flags = 'A'",
+                          array($row_grp['group_id']));
 
   print '<p><span class="preinput">'._("Project Admins").':</span><br /> ';
   while ($row_admin = db_fetch_array($res_admin)) {
-    print "<a href=\"".$GLOBALS['sys_home']."users/$row_admin[user_name]/\">$row_admin[realname] &lt;$row_admin[email]&gt;</a> ; ";
+    print "<a href=\"".$GLOBALS['sys_home']
+     ."users/$row_admin[user_name]/\">$row_admin[realname] "
+     ."&lt;$row_admin[email]&gt;</a> ; ";
   }
-
-  print '<p><span class="preinput">'._("Registration Date").':</span><br /> '.utils_format_date($row_grp['register_time']);
-
-  print '<p><span class="preinput">'._("System Group Name:").'</span><br /> '.$row_grp['unix_group_name'];
-
-  print '<p><span class="preinput">'._("Submitted Description:").'</span><br /> '.markup_full($row_grp['register_purpose']);
-
-  print '<p><span class="preinput">'._("Required software:").'</span><br /> '.markup_full($row_grp['required_software']);
-
-  print '<p><span class="preinput">'._("Other comments:").'</span><br /> '.markup_full($row_grp['other_comments']);
-
+  print "</p>\n";
+  print '<p><span class="preinput">'._("Registration Date").':</span><br /> '
+        .utils_format_date($row_grp['register_time']);
+  print "</p>\n";
+  print '<p><span class="preinput">'._("System Group Name:").'</span><br /> '
+        .$row_grp['unix_group_name'];
+  print "</p>\n";
+  print '<p><span class="preinput">'._("Submitted Description:").'</span><br /> '
+        .markup_full($row_grp['register_purpose']);
+  print "</p>\n";
+  print '<p><span class="preinput">'._("Required software:")
+        .'</span><br /> '.markup_full($row_grp['required_software']);
+  print "</p>\n";
+  print '<p><span class="preinput">'._("Other comments:").'</span><br /> '
+        .markup_full($row_grp['other_comments']);
+  print "</p>\n";
   print '<p>';
   print utils_registration_history($row_grp['unix_group_name']);
-
+  print "</p>\n";
 }
-
 ?>
