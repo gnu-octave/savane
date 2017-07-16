@@ -118,20 +118,25 @@ print '<p>'
   .'</p>';
 utils_get_content("my/items");
 
-$fopen = '<select name="form_open"><option value="open" '
+$fopen = '<select name="form_open">
+<option value="open" '
          .($open == "open" ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "Show [%s] new items..."
          ._("Open<!-- items -->");
-$fopen .= '</option><option value="closed" '
+$fopen .= '</option>
+<option value="closed" '
           .($open == "closed" ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "Show [%s] new items..."
           ._("Closed<!-- items -->")
-          .'</option></select> ';
+          .'</option></select>
+';
 
-$fthreshold = '<select name="form_threshold"><option value="1" '
+$fthreshold = '<select name="form_threshold">
+<option value="1" '
              .($threshold == 1 ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
-             ._("Lowest").'</option><option value="3" ';
+             ._("Lowest").'</option>
+<option value="3" ';
 $fthreshold .= ($threshold == 3 ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
                ._("Low")
@@ -140,15 +145,18 @@ $fthreshold .= ($threshold == 3 ? 'selected="selected"':'').'>'
                .($threshold == 5 ? 'selected="selected"':'')
                .'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
-               ._("Normal").'</option><option value="7" ';
+               ._("Normal").'</option>
+<option value="7" ';
 $fthreshold .= ($threshold == 7 ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
                ._("High")
-               .'</option><option value="9" ';
+               .'</option>
+<option value="9" ';
 $fthreshold .= ($threshold == 9 ? 'selected="selected"':'')
                .'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
-               ._("Immediate").'</option></select> ';
+               ._("Immediate").'</option></select>
+';
 
 $form_opening = '<form action="'.htmlentities($_SERVER['PHP_SELF'])
                 .'#options" method="get">';
