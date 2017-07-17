@@ -39,7 +39,7 @@ if ($group_id && user_ismember($group_id,'A'))
   print '<h3>'._("Support Trackers Configuration Copy").'</h3>
 ';
   conf_form($group_id, "support");
-  print '<h3>'._("Bugs Trackers Configuration Copy").'</h3>
+  print '<h3>'._("Bug Trackers Configuration Copy").'</h3>
 ';
   conf_form($group_id, "bugs");
   print '<h3>'._("Task Trackers Configuration Copy").'</h3>

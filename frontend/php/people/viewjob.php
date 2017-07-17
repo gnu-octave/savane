@@ -113,7 +113,7 @@ else
     $devel_status_id = $project->getDevelStatus();
     $devel_status = (isset($DEVEL_STATUS[$devel_status_id]))
       ? $DEVEL_STATUS[$devel_status_id]
-      : _("&lt;Invalid status ID&gt;");
+      : "&lt;"._("Invalid status ID")."&gt;";
     print '<span class="preinput"><br />'
       ._("Development Status").'</span>: '.$devel_status;
 

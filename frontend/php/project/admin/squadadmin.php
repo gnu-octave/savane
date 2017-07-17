@@ -203,7 +203,7 @@ if you want to assign some items to several members at once.").'</p>
             .'</p>
 ';
       
-      print '<p><span class="preinput">'._("Real Name:").'</span>
+      print '<p><span class="preinput">'._("Squad Full Name:").'</span>
 <br />&nbsp;&nbsp;';
       print form_input("text", "form_realname", $form_realname).'</p>
 '; 
@@ -274,7 +274,7 @@ available.').'</p>
       # removed, while we want the list of existing squads
       print form_input("hidden", "squad_id_to_delete", $squad_id);
       print '<p><span class="preinput">'
-._("Do you really want to delete this squad account:").'</span>
+._("Do you really want to delete this squad account?").'</span>
 <br />&nbsp;&nbsp;';
       print form_input("checkbox", "deletionconfirmed", "yes")
 .' '._("Yes, I really do").'</p>';

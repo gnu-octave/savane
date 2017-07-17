@@ -38,7 +38,7 @@ session_require(array('group'=>$group_id));
 site_project_header(array('group'=>$group_id,'context'=>'ahome'));
 
 print '<p>'
-._("You can view/change all of your project configuration from here.") .'</p>
+._("You can change all of your project configuration from here.") .'</p>
 ';
 utils_get_content("project/admin/index_misc");
 
@@ -55,13 +55,34 @@ $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
 # Feature-specific configuration.
-$features = array("cookbook" => _("Cookbook"),
-                  "support" => _("Support Tracker"),
-                  "bugs" => _("Bug Tracker"),
-                  "task" => _("Task Manager"),
-                  "patch" => _("Patch Tracker"),
-                  "news" => _("News Manager"),
-                  "mail" => _("Mailing Lists"));
+$features = array("cookbook" =>
+# TRANSLATORS: this is used in a comma-separated list as the argument
+# of "Configure Features: %s".
+                               _("Cookbook"),
+                  "support" =>
+# TRANSLATORS: this is used in a comma-separated list as the argument
+# of "Configure Features: %s".
+                               _("Support Tracker"),
+                  "bugs" =>
+# TRANSLATORS: this is used in a comma-separated list as the argument
+# of "Configure Features: %s".
+                               _("Bug Tracker"),
+                  "task" =>
+# TRANSLATORS: this is used in a comma-separated list as the argument
+# of "Configure Features: %s".
+                               _("Task Manager"),
+                  "patch" =>
+# TRANSLATORS: this is used in a comma-separated list as the argument
+# of "Configure Features: %s".
+                               _("Patch Tracker"),
+                  "news" =>
+# TRANSLATORS: this is used in a comma-separated list as the argument
+# of "Configure Features: %s".
+                               _("News Manager"),
+                  "mail" =>
+# TRANSLATORS: this is used in a comma-separated list as the argument
+# of "Configure Features: %s".
+                               _("Mailing Lists"));
 $link = '';
 while (list($case, $name) = each($features))
   {

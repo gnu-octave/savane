@@ -44,7 +44,7 @@ if ($update)
 site_project_header(array('group'=>$group_id,'context'=>'anews'));
 
 print '<p>'
-._("You can view/change all of this tracker configuration from here.").'</p>
+._("You can change all of this tracker configuration from this page.").'</p>
 ';
 $res_grp = db_execute("SELECT new_news_address FROM groups WHERE group_id=?",
                       array($group_id));

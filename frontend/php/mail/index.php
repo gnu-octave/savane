@@ -78,9 +78,10 @@ for ($j = 0; $j < $rows; $j++)
     if ($is_public && $project->getTypeMailingListArchivesUrl($list)
         && $project->getTypeMailingListArchivesUrl($list) != "http://")
       {
-        # Pointer to archives
-        $text .= sprintf(_("To see the collection of prior posting to the list,
-visit the <a href=\"%s\">%s archives</a>."),
+        $text .= sprintf(
+        # TRANSLATORS: the second argument is mailing list name.
+          _("To see the collection of prior posting to the list,
+visit the <a href=".'"%1$s">%2$s'." archives</a>."),
                       $project->getTypeMailingListArchivesUrl($list), $list);
         $text .= "\n".'<br />';
       }
@@ -88,24 +89,25 @@ visit the <a href=\"%s\">%s archives</a>."),
     if (!$is_public && $project->getTypeMailingListArchivesPrivateUrl($list)
         && $project->getTypeMailingListArchivesPrivateUrl($list) != "http://")
       {
-        # Pointer to archives.
-        $text .= sprintf (_("To see the collection of prior posting to the
-list, visit the <a href=\"%s\">%s archives</a> (authorization required)."),
+        $text .= sprintf (
+        # TRANSLATORS: the second argument is mailing list name.
+_("To see the collection of prior posting to the list,
+visit the <a href=".'"%1$s">%2$s'." archives</a> (authorization required)."),
                 $project->getTypeMailingListArchivesPrivateUrl($list), $list);
         $text .= "\n".'<br />';
       }
 
     if ($project->getTypeMailingListAddress($list))
       {
-        # TRANSLATORS: the argument is mailing list address.
         $text .= sprintf(
+        # TRANSLATORS: the argument is mailing list address.
               _("To post a message to all the list members, write to %s."),
               utils_email($project->getTypeMailingListAddress($list)));
         $text .= "\n".'<br />';
       }
     else
       $text .= '<br /><span class="error">'
-            ._("No mailing-list address was found, the configuration of the
+            ._("No mailing list address was found, the configuration of the
 server is probably broken, contact the admins!").'</span><br />';
 
     # Subscribe, unsubscribe:
@@ -136,7 +138,8 @@ server is probably broken, contact the admins!").'</span><br />';
              && $project->getTypeMailingListListinfoUrl($list) != "http://")
       {
 
-        $text .= sprintf(_("You can (un)subscribe to the list by following
+        $text .= sprintf(_("You can subscribe to the list
+and unsubscribe from the list by following
 instructions on the <a href=\"%s\">list information page</a>."),
                          $project->getTypeMailingListListinfoUrl($list));
         $text .= "\n".'<br />';

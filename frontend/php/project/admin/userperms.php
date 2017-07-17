@@ -402,7 +402,10 @@ form_input("hidden", "group", $group);
 
 $i = 0;
 $title_arr=array();
-$title_arr[]=_("Applies when ...");
+$title_arr[]=
+# TRANSLATORS: this is the header for a column with two rows,
+# "Posting new items" and "Posting comments".
+_("Applies when ...");
 if ($project->Uses("support"))
   $title_arr[]=_("Support Tracker");
 if ($project->Uses("bugs"))
@@ -427,7 +430,9 @@ print html_build_list_table_top ($title_arr);
 $i++;
 print '
   <tr class="'. utils_get_alt_row_color($i) .'">
-    <td>'._("Posting new items").'</td>';
+    <td>'
+# TRANSLATORS: this is a column row which header says "Applies when ...".
+._("Posting new items").'</td>';
 if ($project->Uses("support"))
   html_select_restriction_box("support", group_getrestrictions($group_id, "support"));
 if ($project->Uses("bugs"))
@@ -445,7 +450,9 @@ print '  </tr>';
 $i++;
 print '
   <tr class="'. utils_get_alt_row_color($i) .'">
-    <td>'._("Posting comments").'</td>';
+    <td>'
+# TRANSLATORS: this is a column row which header says "Applies when ...".
+._("Posting comments").'</td>';
 if ($project->Uses("support"))
   html_select_restriction_box("support",
                               group_getrestrictions($group_id, "support", 2),

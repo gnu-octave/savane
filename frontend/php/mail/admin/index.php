@@ -78,7 +78,7 @@ $ml_address =
   $grp->getTypeMailingListAddress($grp->getTypeMailingListFormat("testname"));
 
 if (!$ml_address || $ml_address == "@")
-  exit_error(_("Mailing-list are misconfigured. Post a support request to ask
+  exit_error(_("Mailing lists are misconfigured. Post a support request to ask
 your site administrator to review group type setup."));
 
 if ($post_changes)
@@ -105,9 +105,9 @@ if ($post_changes)
                        "%NAME") !== false
                 && (!$list_name['new'] || strlen($list_name['new']) < 2))
               {
-# TRANSLATORS: the argument is the new mailing list name entered by the user.
                 if (strlen($list_name['new']) > 0)
                   fb(sprintf(
+# TRANSLATORS: the argument is the new mailing list name entered by the user.
 _("You must provide list name that is two or more characters long: %s"),
                              $list_name['new']), 1);
                 continue;
@@ -117,10 +117,11 @@ _("You must provide list name that is two or more characters long: %s"),
               $grp->getTypeMailingListFormat(strtolower($list_name['new']),
                                                         $newlist_format_index);
             # Check if it is a valid name.
-            if (!account_namevalid($new_list_name, 1, 1, 1, _("list name"),80))
+            if (!account_namevalid($new_list_name, 1, 1, 1, 80))
               {
+                fb(sprintf(
 # TRANSLATORS: the argument is the new mailing list name entered by the user.
-                fb(sprintf(_("Invalid list name: %s"), $new_list_name), 1);
+                           _("Invalid list name: %s"), $new_list_name), 1);
                 continue;
               }
             # Check on the list_name: must not be equal to a user account,
@@ -130,7 +131,7 @@ _("You must provide list name that is two or more characters long: %s"),
                                       array($new_list_name))) > 0)
               {
                 fb(sprintf(
-_("List name %s is reserved, to avoid conflicts with user accounts."),
+_("List name %s is reserved to avoid conflicts with user accounts."),
                            $new_list_name), 1);
                 continue;
               }
@@ -149,7 +150,7 @@ _("List name %s is reserved, to avoid conflicts with user accounts."),
                     # and disallow list name to persons not supposed to
                     # use some names.
                     fb(sprintf(
-_("List %s is already in the database. We will create an alias"),
+_("List %s is already in the database. We will create an alias."),
                                $new_list_name));
                     $status = LIST_STATUS_CREATED;
                   }
@@ -250,9 +251,13 @@ _("List %s is already in the database. We will create an alias"),
           array($id, $group_id));
 
         if (!$result)
-          fb(sprintf(_("Error updating list %s"), $list_name[$id]), 1);
+          fb(sprintf(
+# TRANSLATORS: the argument is list name.
+                     _("Error updating list %s"), $list_name[$id]), 1);
         else
-          fb(sprintf(_("List %s updated"), $list_name[$id]));
+          fb(sprintf(
+# TRANSLATORS: the argument is list name.
+                     _("List %s updated"), $list_name[$id]));
       } # foreach ($list_name as $id => $ignored)
   }
 
@@ -267,7 +272,7 @@ site_project_header(array('title'=>_("Update Mailing List"),
                           'group'=>$group_id,'context'=>'amail'));
 
 print '<p>';
-print _("You can administer lists information from here. Please note that
+print _("You can administer list information from here. Please note that
 private lists are only displayed for members of your project, but not for
 visitors who are not logged in.")."<br />\n";
 print "</p>\n";
@@ -280,7 +285,7 @@ print form_input("hidden", "group_id", $group_id);
 while ($row = db_fetch_array($result))
   {
     $id = $row['group_list_id'];
-    print '<h4>'.$row['list_name']._(':').'</h4>';
+    print '<h4>'.$row['list_name']."</h4>\n";
 
     print '<span class="preinput">'._("Description:").'</span>';
     print '<br />&nbsp;&nbsp;&nbsp;'
@@ -310,7 +315,7 @@ while ($row = db_fetch_array($result))
       $checked = ' checked="checked"';
     print '<br />&nbsp;&nbsp;&nbsp;'
           .form_input("radio", "is_public[$id]", '9', $checked).' '
-          ._("To be deleted (warning, this cannot be undone!)");
+          ._("To be deleted (this cannot be undone!)");
 
 # At this point we have no way to know if the backend brigde to
 # mailman is used or not. We will propose the password change only
@@ -324,10 +329,10 @@ while ($row = db_fetch_array($result))
         $checked = '';
         if ($row['password'] == "1")
           $checked = ' checked="checked"';
-# TRANSLATORS: this string relates to the previous, it means
-# [checkbox] "request resetting admin password".
         print '<br />&nbsp;&nbsp;&nbsp;'
               .form_input("checkbox", "reset_password[$id]", "1", $checked).' '
+# TRANSLATORS: this string relates to the previous, it means
+# [checkbox] "request resetting admin password".
 ._("Requested - <em> this will have no effect if this list is not managed by
 Mailman via Savane</em>");
       }
@@ -337,7 +342,7 @@ Mailman via Savane</em>");
   } # while ($row = db_fetch_array($result))
 
 # New list form.
-print '<br /><br />';
+print "<br /><br />\n";
 utils_get_content("mail/about_list_creation");
 
 print '
@@ -364,14 +369,15 @@ foreach ($project_list_formats as $format)
     $i++;
   }
 
-print '<p></p>';
-print                        _('Is Public?').' '._('(visible to non-members)')
+print '<p>';
+print                        _('Is Public? (visible to non-members)')
 .'<br />
   <input type="radio" name="is_public[new]" value="1" checked> yes<br />
   <input type="radio" name="is_public[new]" value="0"> no<p></p>
-  <strong>'._('description:').'</strong><br />
+  <strong>'._('Description:').'</strong><br />
   <input type="text" name="description[new]" value="" size="40" maxlength="80">
   <br />';
 
-print '<br /><br />'.form_footer();
+print '<br /><br /></p>
+'.form_footer();
 site_project_footer(array());

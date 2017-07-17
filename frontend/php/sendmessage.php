@@ -37,9 +37,8 @@ if ($touser)
                         WHERE user_id=? AND (status='A' OR status='SQD')",
                        array($touser));
     if (!$result || db_numrows($result) < 1)
-      {
-        exit_error(_('That user does not exist'));
-      }
+      # TRANSLATORS: the argument is user id (a number).
+      exit_error(sprintf(_('User %s does not exist'), $touser));
   }
 else
   {

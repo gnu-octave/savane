@@ -622,7 +622,7 @@ don't activate this feature unless you truly know what you're doing"),0);
 		    no_i18n("the support link can be modified"));
 
   specific_checkbox("bugs",
-		    no_i18n("the bugs tracker link can be modified"));
+		    no_i18n("the bug tracker link can be modified"));
 
   specific_checkbox("task",
 		    no_i18n("the task tracker link can be modified"));

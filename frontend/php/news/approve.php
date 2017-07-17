@@ -179,9 +179,10 @@ shown on the front page), you must end the superuser session.").'</p>
     if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
       {
         print '<input type="radio" name="status" value="1" />&nbsp;&nbsp;';
-# TRANSLATORS: the argument is site name (like Savannah).
         print '<span class="preinput">'
-.sprintf(_("Approve For %s' Front Page"),$GLOBALS['sys_name'])
+.sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
+_("Approve For %s' Front Page"),$GLOBALS['sys_name'])
 .'</span><br />
 <input type="radio" name="status" value="0" '
 .'checked="checked" />&nbsp;&nbsp;<span class="preinput">'
@@ -212,8 +213,8 @@ shown on the front page), you must end the superuser session.").'</p>
 ._("Details").' '.markup_info("full").'</span><br />&nbsp;&nbsp;
 <textarea name="details" rows="20" cols="65" wrap="soft">'
 .db_result($result,0,'details').'</textarea><p>';
-# TRANSLATORS: the argument is site name (like Savannah).
     print '<p>'.sprintf (
+# TRANSLATORS: the argument is site name (like Savannah).
 _("Note: If this item is on the %s home page and you edit it, it will be
 removed from the home page."),$GLOBALS['sys_name']).'</p>
 ';

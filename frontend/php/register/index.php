@@ -101,7 +101,7 @@ $form->addElement('checkbox', 'cl2',
 $form->addElement('checkbox', 'cl3',
  _('My dependencies are compatible with my project license'));
 $form->addElement('checkbox', 'cl4',
- sprintf(_('All my files include valid copyright notices [<a href="%s">1</a>]'),
+ sprintf(_('All my files include <a href="%s">valid copyright notices</a>'),
          'https://www.gnu.org/prep/maintain/html_node/Copyright-Notices.html'));
 $form->addElement('checkbox', 'cl5',
  sprintf (_('All my files include a license header [<a href="%s">1</a>]

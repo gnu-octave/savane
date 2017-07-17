@@ -27,11 +27,11 @@ $keyring = $project->getGPGKeyring();
 
 if (!$keyring)
   exit_error(
-    _("They GPG Keyring of the project is empty, no keys were registered"));
+    _("The GPG Keyring of the project is empty, no keys were registered"));
 
 if (!$download)
   {
-    site_project_header(array('title'=>_("Project Members GPG Keyring"),
+    site_project_header(array('title'=>_("Project Member GPG Keyring"),
                               'group'=>$group_id,
                               'context'=>'keys'));
     print '<p>'

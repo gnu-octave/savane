@@ -29,6 +29,7 @@ require_directory("trackers");
 function specific_print_role ($row, $title)
 {
   print
+# TRANSLATORS: these roles are explained in html.php:html_member_explain_roles.
     (($row == 1)?$title.' '._("technician").',<br />':"").
     (($row == 3)?$title.' '._("manager").',<br />':"").
     (($row == 2)?$title.' '._("techn. & manager").',<br />':"");
@@ -50,11 +51,12 @@ if ($detailed)
 $form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
                 .'#options" method="get">';
 $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
-# TRANSLATORS: this is used in context of "Browser with the %s memberlist."
 $selector =
- '<select name="detailed"><option value="0">'._("basic").'</option><option value="1"'
+ '<select name="detailed"><option value="0">'
+# TRANSLATORS: this is used in context of "Browse with the %s memberlist."
+ ._("basic").'</option><option value="1"'
  .$checked.'>';
-# TRANSLATORS: this is used in context of "Browser with the %s memberlist."
+# TRANSLATORS: this is used in context of "Browse with the %s memberlist."
 $selector .= _("detailed").'</option></select>'
  .'<input type="hidden" name="group" value="'.$group.'" />';
 # TRANSLATORS: the argument is "basic" or "detailed".
@@ -221,7 +223,9 @@ which are not attributed by default when joining this project.").'</p>
                     ."people/resume.php?user_id=".$row_memb['user_id']."\">"
                     ._("View Skills")."</a></td>\n";
             else
-              print "\t\t<td align=\"middle\">"._("Set to private")."</td>\n";
+              print "\t\t<td align=\"middle\">"
+          # TRANSLATORS: this is a label shown when user's skills are unavailable.
+                    ._("Set to private")."</td>\n";
           # Watch
            if (user_ismember($group_id))
              {

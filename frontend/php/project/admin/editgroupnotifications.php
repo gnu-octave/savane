@@ -48,7 +48,7 @@ if ($update)
 
   ######### Reminder
     if (group_set_preference($group_id, "batch_frequency", $form_frequency))
-      fb(_("Successfully Updated Reminder Settings")); }
+      fb(_("Successfully Updated Reminder Settings"));
     else
       fb(_("Failed to Update Reminder Setting"), 1);
 
@@ -123,10 +123,12 @@ to them.").'<br/>
 fact project members have or have not requested to receive such reminders via
 their personal notification settings!").'</span></p>
 ';
-$frequency = array("0" => _("None"),
-		   "1" => _("Daily"),
-		   "2" => _("Weekly"),
-		   "3" => _("Monthly"));
+$frequency = array("0" =>
+# TRANSLATORS: this is frequency.
+                          _("Never"),
+                   "1" => _("Daily"),
+                   "2" => _("Weekly"),
+                   "3" => _("Monthly"));
 
 print '<span class="preinput">'._("Frequency of reminders:")
       .'</span> &nbsp;&nbsp;';

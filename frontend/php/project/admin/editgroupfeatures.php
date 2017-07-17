@@ -276,7 +276,7 @@ print form_header($_SERVER['PHP_SELF']).form_input("hidden", "group_id", $group_
 
 $title_arr=array();
 $title_arr[]=_("Feature, Artifact");
-$title_arr[]=_("Activated?");
+$title_arr[]=_("Activated");
 $title_arr[]=_("Standard Address");
 $title_arr[]=_("Alternative Address");
 
@@ -364,7 +364,7 @@ if ($project->CanUse("bzr"))
   }
 
 if ($project->CanUse("bug"))
-  specific_line("bugs", _("Bugs Tracker"), $project->Uses("bugs"));
+  specific_line("bugs", _("Bug Tracker"), $project->Uses("bugs"));
 
 if ($project->CanUse("task"))
   specific_line("task", _("Task Tracker"), $project->Uses("task"));

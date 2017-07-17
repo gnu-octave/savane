@@ -91,7 +91,7 @@ if ($msg_id)
   }
 else
   {
-    forum_header(array('title'=>_('Must choose a message first')));
+    forum_header(array('title'=>_('Choose a message first')));
     print '<p>'._('You must choose a message first').'</p>';
   }
 forum_footer(array());

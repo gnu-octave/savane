@@ -162,7 +162,15 @@ if it was a custom set just posted && logged in, set pref if it's changed.  */
       # Create a pop-up select box showing options for viewing threads.
 
         $vals=array('nested','flat','threaded','nocomments');
-        $texts=array(_('Nested'),_('Flat'),_('Threaded'),_('No Comments'));
+        $texts=array(
+# TRANSLATORS: this is forum style to select.
+                     _('Nested'),
+# TRANSLATORS: this is forum style to select.
+                     _('Flat'),
+# TRANSLATORS: this is forum style to select.
+                     _('Threaded'),
+# TRANSLATORS: this is forum style to select.
+                     _('No Comments'));
         $options_popup=html_build_select_box_from_arrays ($vals,$texts,'style',
                                                           $style,false);
 

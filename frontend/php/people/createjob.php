@@ -23,23 +23,25 @@
 require_once('../include/init.php');
 require_once('../include/people/general.php');
 
-if ($group_id && (user_ismember($group_id, 'A'))) {
+if (!$group_id)
+  exit_no_group();
+if (!user_ismember($group_id, 'A'))
+  exit_permission_denied ();
 
-  /* Fill in the info to create a job */
+# Fill in the info to create a job.
+site_project_header(array('title'=>_("Create a job for your project"),
+                          'group'=>$group_id,'context'=>'ahome'));
 
-  site_project_header(array('title'=>_("Create a job for your project"),
-                            'group'=>$group_id,'context'=>'ahome'));
+utils_get_content("people/createjob");
 
-  utils_get_content("people/createjob");
-
-  print '
+print '
 <form action="'.$GLOBALS['sys_home'].'people/editjob.php" method="POST">
 <input type="HIDDEN" name="group_id" value="'.$group_id.'" />
 <strong>'
     ._("Category:").'</strong><br />'
     . people_job_category_box('category_id') .'
 <p><strong>'
-    ._("Summary").':</strong><br />
+    ._("Summary:").'</strong><br />
 <input type="text" name="title" value="" size="40" maxlength="60" />
 </p>
 <p>'
@@ -53,14 +55,5 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
 </p>
 </form>
 ';
-  site_project_footer(array());
-
-} else {
-  /* Not logged in or insufficient privileges */
-  if (!$group_id) {
-    exit_no_group();
-  } else {
-    exit_permission_denied();
-  }
-}
+site_project_footer(array());
 ?>

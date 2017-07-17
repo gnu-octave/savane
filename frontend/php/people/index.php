@@ -96,8 +96,6 @@ else if ($categories || $types || $show_any)
         # the second %s is enumeration of job categories.
         $title = sprintf(_('%1$s looking for %2$s'), $group_types, $cat_names);
         print site_header(array('title'=>$title));
-        print '<p>'._("Click job titles for more detailed descriptions.").'</p>
-';
         print people_show_jobs($categories, $types, $show_any);
       }
   }
