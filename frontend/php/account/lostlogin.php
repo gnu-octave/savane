@@ -32,8 +32,9 @@ extract(sane_import('post', array('form_id', 'update', 'form_pw', 'form_pw2')));
 $res_lostuser = db_execute("SELECT * FROM user WHERE confirm_hash=?",
                            array($confirm_hash));
 if (db_numrows($res_lostuser) > 1)
+  exit_error(_("Error"),
 # TRANSLATORS: confirmation hash is a secret code mailed to the user.
-  exit_error(_("Error"),_("This confirmation hash exists more than once."));
+             _("This confirmation hash exists more than once."));
 if (db_numrows($res_lostuser) < 1)
   exit_error(_("Error"),_("Invalid confirmation hash."));
 $row_lostuser = db_fetch_array($res_lostuser);

@@ -115,7 +115,7 @@ $message .= _("If this was not you, this could pose a security risk for the syst
             ."\n\n";
 $message .= sprintf(
 _('The request came from %s
-(IP: %s; port: %s; user agent: %s'), gethostbyaddr($_SERVER['REMOTE_ADDR']),
+(IP: %s; port: %s; user agent: %s)'), gethostbyaddr($_SERVER['REMOTE_ADDR']),
     $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
     $_SERVER['HTTP_USER_AGENT'])."\n\n";
 $message .=

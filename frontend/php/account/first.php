@@ -32,15 +32,17 @@ site_user_header(array('title'=>sprintf(_("Welcome to %s"),$GLOBALS['sys_name'])
 print '<p>'.sprintf(_("You are now a registered user on %s."),
                     $GLOBALS['sys_name']).'</p>';
 
-# TRANSLATORS: the argument is system name (like Savannah).
 print '<p>'
-  .sprintf(_("As a registered user, you can participate fully in the activities
+  .sprintf(
+# TRANSLATORS: the argument is system name (like Savannah).
+_("As a registered user, you can participate fully in the activities
 on the site.  You may now post items to issue trackers in %s, sign on as a
 project member, or even start your own project."), $GLOBALS['sys_name']).'</p>';
 
-# TRANSLATORS: the second argument is system name (like Savannah).
 print '<p>'
-  .sprintf(_('You should take some time to read the <a href="%1$s">Savane User
+  .sprintf(
+# TRANSLATORS: the second argument is system name (like Savannah).
+_('You should take some time to read the <a href="%1$s">Savane User
 Guide</a> so that you may take full advantage of %2$s.'),
            $GLOBALS['sys_home'].'userguide/',$GLOBALS['sys_name']).'</p>';
 

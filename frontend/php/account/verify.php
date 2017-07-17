@@ -74,7 +74,7 @@ site_header(array('title'=>_("Login")));
 print '<h3> '.sprintf(_("%s Account Verification"),$GLOBALS['sys_name'])
       .'</h3>';
 print '<p>'._("In order to complete your registration, login now. Your account
-will then be activated for normal logins").'.</p>';
+will then be activated for normal logins.").'</p>';
 
 print form_header($_SERVER["PHP_SELF"], $form_id);
 print '<p><span class="preinput">'._("Login Name").':</span><br />&nbsp;&nbsp;';
