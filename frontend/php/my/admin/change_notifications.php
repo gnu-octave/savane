@@ -198,11 +198,6 @@ you will receive the default subject line.'),
 print '</p>
 ';
 
-$frequency = array("0" => _("None"),
-                   "1" => _("Daily"),
-                   "2" => _("Weekly"),
-                   "3" => _("Monthly"));
-
 print '<span class="preinput">'._("Subject Line:").'</span><br />&nbsp;&nbsp;';
 print '<input name="form_subject_line" size="50" type="text" value="'
       .user_get_preference("subject_line").'" />';
@@ -213,7 +208,10 @@ you, when their priority is higher than 5. Note that projects administrators
 can also set reminders for you, out of your control, for your activities on the
 project they administer.").'</p>
 ';
-$frequency = array("0" => _("None"),
+
+$frequency = array("0" =>
+# TRANSLATORS: this is frequency.
+                          _("Never"),
                    "1" => _("Daily"),
                    "2" => _("Weekly"),
                    "3" => _("Monthly"));

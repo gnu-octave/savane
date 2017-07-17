@@ -138,9 +138,10 @@ if ($result && $rows > 0)
               .group_getunixname(db_result($result, $j, 'group_id')).'">'
               .db_result($result, $j, 'summary').'</a><br />'."\n";
           # FIXME: num. of new comments?
-# TRANSLATORS: the first argument is project name, the second is date.
         print '<span class="smaller">'
-         .sprintf(_('Project %1$s, %2$s'),
+         .sprintf(
+# TRANSLATORS: the first argument is project name, the second is date.
+                  _('Project %1$s, %2$s'),
                   group_getname(db_result($result, $j, 'group_id')),
                   utils_format_date(db_result($result,$j,'date'))).'</span>';
         print "\n".'</div>'."\n";
@@ -174,9 +175,10 @@ if ($result && $rows > 0)
               .db_result($result, $j, 'forum_id').'">'
               .db_result($result, $j, 'summary').'</a><br />';
         # FIXME: num. of new comments?
-# TRANSLATORS: the first argument is project name, the second is date.
         print '<span class="smaller">'
-              .sprintf(_('Project %1$s, %2$s'),
+              .sprintf(
+# TRANSLATORS: the first argument is project name, the second is date.
+                       _('Project %1$s, %2$s'),
                        group_getname(db_result($result, $j, 'group_id')),
                        utils_format_date(db_result($result,$j,'date'))).'</span>';
         print '</div>'."\n";
@@ -184,6 +186,7 @@ if ($result && $rows > 0)
   }
 else
   {
+    # TRANSLATORS: it means, no approved news.
     print _("None found");
   }
 print '</div>';

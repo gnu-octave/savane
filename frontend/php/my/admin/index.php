@@ -120,7 +120,7 @@ site_user_header(array('context'=>'account'));
 $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid()));
 $row_user = db_fetch_array($res_user);
 
-print '<p>'._("You can view/change all of your account features from here.")
+print '<p>'._("You can change all of your account features from here.")
       .'</p>
 ';
 utils_get_content("account/index_intro");
@@ -199,7 +199,9 @@ print $HTML->box_top(_('Identity Record'));
 print sprintf(_("Account #%s"), $row_user['user_id']);
 print '<p class="smaller">'.sprintf(_("Your login is %s."),
                                     '<strong>'.$row_user['user_name'].'</strong>')
-      .' '.sprintf(_("You registered your account on %s."),
+      .' '.sprintf(
+# TRANSLATORS: the argument is registration date.
+                   _("You registered your account on %s."),
                    '<strong>'.utils_format_date($row_user['add_date']).'</strong>')
       .'</p>
 ';
@@ -208,7 +210,9 @@ $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="change.php?item=realname">'._("Change Real Name").'</a>';
 print '<p class="smaller">'
-      .sprintf(_("You are %s."), '<strong>'.$row_user['realname'].'</strong>')
+      .sprintf(
+# TRANSLATORS: the argument is full name.
+_("You are %s."), '<strong>'.$row_user['realname'].'</strong>')
       .'</p>
 ';
 
@@ -282,9 +286,10 @@ print html_splitpage(1);
 
 print $HTML->box_top(_('Account Deletion'));
 print '<a href="change.php?item=delete">'._("Delete Account").'</a>';
-# TRANSLATORS: the argument is site name (like Savannah).
 print '<p class="smaller">'
-.sprintf(_("If you are no longer member of any project and do not intend to use
+.sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
+_("If you are no longer member of any project and do not intend to use
 %s further, you may want to delete your account. This action cannot be undone
 and your current login will be forever lost."),
          $GLOBALS['sys_name']).'</strong></p>
@@ -367,11 +372,12 @@ not advised to use this theme.").' ';
   # a support request.
     if (SV_THEME == $GLOBALS['sys_themedefault'])
       {
-# TRANSLATORS: the argument is site name (like Savannah).
         print utils_link($GLOBALS['sys_home'].'support/?group='
                          .$GLOBALS['sys_unix_group_name'],
-                         sprintf(_("%s administrators should be asked to take
-care of Savane CSS Guidelines, since it is the default theme"),
+                         sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
+_("%s administrators should be asked to take
+care of Savane CSS Guidelines, since it is the default theme."),
                          $GLOBALS['sys_name']), "warn");
       }
     print '</span></p>';
@@ -400,10 +406,10 @@ print '<input type="checkbox" name="form_stone_age_menu" value="1" '
 print '<p class="smaller">'
 ._("By default, the top menu includes links, via dropdown submenus, to all
 relevant pages in the current context (project area, personal area). However,
-the dropdown submenu mechanism may not work with few old browsers, for instance
-very old Konqueror versions (< 3.1, before 2003). Selecting this option enables
-an old fashioned submenu like the one shipped in older Savane releases (<
-2.0).").'</p>
+the dropdown submenu mechanism may not work with a few old or lightweight
+browsers, for instance very old Konqueror versions (< 3.1, before 2003).
+Selecting this option enables an old-fashioned submenu like the one shipped
+in older Savane releases (< 2.0).").'</p>
 ';
 
 $i++;
@@ -414,11 +420,9 @@ print '<input type="checkbox" name="form_nonfixed_feedback" value="1" '
       .' /> '._("Show feedback in relative position");
 
 print '<p class="smaller">'
-._("By default, the feedback box appear as a fixed box on top of the window and
-you can hide it by clicking on it. If you check this option, the feedback will
-be added in the page flow, after the top menu. Note: feedback is always in
-relative position with Microsoft Internet Explorer < 7, whatever this setting
-is set to.").'</p>
+._("By default, the feedback box appear as a fixed box on top of the window.
+If you check this option, the feedback will
+be added in the page flow, after the top menu.").'</p>
 ';
 
 print $HTML->box_bottom();

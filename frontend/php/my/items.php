@@ -118,35 +118,45 @@ print '<p>'
   .'</p>';
 utils_get_content("my/items");
 
-# TRANSLATORS: This is used later as argument of "Show [%s] new items..."
 $fopen = '<select name="form_open"><option value="open" '
-         .($open == "open" ? 'selected="selected"':'').'>'._("Open");
+         .($open == "open" ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "Show [%s] new items..."
+         ._("Open<!-- items -->");
 $fopen .= '</option><option value="closed" '
-          .($open == "closed" ? 'selected="selected"':'').'>'._("Closed")
+          .($open == "closed" ? 'selected="selected"':'').'>'
+# TRANSLATORS: This is used later as argument of "Show [%s] new items..."
+          ._("Closed<!-- items -->")
           .'</option></select> ';
 
-# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
 $fthreshold = '<select name="form_threshold"><option value="1" '
              .($threshold == 1 ? 'selected="selected"':'').'>'
+# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
              ._("Lowest").'</option><option value="3" ';
+$fthreshold .= ($threshold == 3 ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
-$fthreshold .= ($threshold == 3 ? 'selected="selected"':'').'>'._("Low")
-               .'</option><option value="5" '
+               ._("Low")
+               .'</option>
+<option value="5" '
                .($threshold == 5 ? 'selected="selected"':'')
-               .'>'._("Normal").'</option><option value="7" ';
+               .'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
-$fthreshold .= ($threshold == 7 ? 'selected="selected"':'').'>'._("High")
+               ._("Normal").'</option><option value="7" ';
+$fthreshold .= ($threshold == 7 ? 'selected="selected"':'').'>'
+# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
+               ._("High")
                .'</option><option value="9" ';
-# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
 $fthreshold .= ($threshold == 9 ? 'selected="selected"':'')
-               .'>'._("Immediate").'</option></select> ';
+               .'>'
+# TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"
+               ._("Immediate").'</option></select> ';
 
 $form_opening = '<form action="'.htmlentities($_SERVER['PHP_SELF'])
                 .'#options" method="get">';
 $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
-$msg_text =sprintf(_("Show %s new items of %s priority at least."),
-                   $fopen, $fthreshold);
+# TRANSLATORS: the first argument is either 'Open' or 'Closed',
+# the second argument is priority ('Lowest', 'Normal' &c.).
+$msg_text = sprintf(_('Show %1$s new items of %2$s priority at least.'),
+                    $fopen, $fthreshold);
 print html_show_displayoptions($msg_text, $form_opening, $form_submit);
 
 # Right part.

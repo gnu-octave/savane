@@ -89,9 +89,8 @@ Please upgrade your system and regenerate it
     if (count($new_keys))
       {
         $user_id = user_getid();
-
-# TRANSLATORS: the argument is site name (like Savannah).
         $message = sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
 _('Someone, presumably you, has changed your SSH keys on %s.
 If it wasn\'t you, maybe someone is trying to compromise your account...'),
                            $GLOBALS['sys_name'])."\n\n";

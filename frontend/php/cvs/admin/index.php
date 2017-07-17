@@ -24,6 +24,13 @@ require_once('../../include/init.php');
 require_once('../../include/sane.php');
 require_once('../../include/account.php');
 
+# Many error messages in this file make little sense for the users,
+# so they'd better left untranslated.
+function no_i18n($string)
+{
+  return $string;
+}
+
 # Get current information.
 $res_grp = group_get_result($group_id);
 
@@ -46,7 +53,7 @@ if (isset($log_accum))
         foreach ($arr_remove as $hook_id => $ignored)
           {
             if (!ctype_digit($hook_id.''))
-              exit_error(_("Non-numeric hook id") . ": ["
+              exit_error(no_i18n("Non-numeric hook id:") . " ["
                          . htmlspecialchars($hook_id) . "]");
             db_execute("DELETE cvs_hooks, cvs_hooks_log_accum
                   FROM cvs_hooks, cvs_hooks_log_accum
@@ -61,7 +68,7 @@ if (isset($log_accum))
           {
             # Input validation.
             if (!ctype_digit($hook_id.'') and ($hook_id != "new"))
-              exit_error(_("Non-numeric hook id") . ": ["
+              exit_error(no_i18n("Non-numeric hook_id:") . " ["
                            . htmlspecialchars($hook_id) . "]");
 
             if (!isset($arr_remove[$hook_id]))
@@ -73,7 +80,7 @@ if (isset($log_accum))
                 $match_type = $arr_match_type[$hook_id];
                 if ($match_type != 'ALL' and $match_type != 'dir_list'
                     and $match_type != 'DEFAULT')
-                  exit_error(_("Invalid matching type"));
+                  exit_error(no_i18n("Invalid matching type"));
                 $dir_list = $arr_dir_list[$hook_id];
                 if ($match_type != 'dir_list')
                   unset($dir_list);
@@ -89,19 +96,22 @@ if (isset($log_accum))
                 if (isset($arr_enable_diff[$hook_id]))
                   $enable_diff = $arr_enable_diff[$hook_id];
                 if ($enable_diff != '0' and $enable_diff != '1')
-                  exit_error(_("Invalid value for enable_diff"));
+                  exit_error(no_i18n("Invalid value for enable_diff"));
                 $emails_notif = $arr_emails_notif[$hook_id];
                 if (!preg_match(
                  '/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))+/',
                                 $emails_notif))
-                  exit_error(_("Invalid list of notification e-mails"));
+                  exit_error(_("Invalid list of notification emails"));
                 $emails_diff = $arr_emails_diff[$hook_id];
                 if ($emails_diff == '' or $enable_diff == '0')
                   unset($emails_diff);
                 elseif (!preg_match(
                  '/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))*/',
                                     $emails_diff))
-                  exit_error(_("Invalid list of diff notification e-mails"));
+                  exit_error(
+# TRANSLATORS: diff notification emails are addresses whither commit diffs
+# are sent.
+_("Invalid list of diff notification emails"));
 
                 if ($hook_id == 'new')
                   {

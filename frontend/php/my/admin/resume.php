@@ -80,7 +80,7 @@ elseif ($update_skill_inventory)
 elseif ($delete_from_skill_inventory)
   {
     if (!$skill_inventory_id)
-      exit_error(_("Missing information: Fill in all required fields"));
+      exit_error(_("Missing information: fill in all required fields"));
 
     $result = db_execute("DELETE FROM people_skill_inventory "
                          ."WHERE user_id=? AND skill_inventory_id=?",
@@ -95,7 +95,7 @@ elseif ($delete_from_skill_inventory)
 site_user_header(array('title'=>_("Edit Your Resume & Skills"),
                        'context'=>'account'));
 print '<p>'
-._("Details about your experience and skills may be of interest to others users
+._("Details about your experience and skills may be of interest to other users
 or visitors.").'</p>
 ';
 
@@ -110,7 +110,7 @@ $viewableoptions = array("0" => _("No"),
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">'
 .'<h3>'._("Publicly Viewable").'</h3>
 '
-.'<span class="preinput">'._("Do you want your resume to be activated:")
+.'<span class="preinput">'._("Do you want your resume to be activated?")
 .'</span>&nbsp;&nbsp;'
 .html_build_select_box_from_array(array("0" => _("No"),"1" => _("Yes")),
                                   'people_view_skills',

@@ -214,32 +214,33 @@ if ($update)
                       $url = 'http://'.$GLOBALS['sys_default_domain'];
                     $url .= $GLOBALS['sys_home'].'my/admin/change.php?'
                             .'item=email&confirm_hash='.$confirm_hash;
-# TRANSLATORS: the argument is site name (like Savannah).
                     $message = sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
 _('You have requested a change of email address on %s.
 Please visit the following URL to complete the email change:'),
                                        $GLOBALS['sys_name']) . "\n\n"
                     . $url."&step=confirm\n\n";
+                    $message .= sprintf(
 # TRANSLATORS: the argument is site name (like Savannah).
-                    $message .= sprintf(_("-- the %s team."),
+_("-- the %s team."),
                                         $GLOBALS['sys_name']) . "\n";
 
-# TRANSLATORS: the argument is site name (like Savannah).
                     $warning_message = sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
 _('Someone, presumably you, has requested a change of email address on %s.
-If it wasn\'t you, maybe someone is trying to steal your account...
-
-Your current address is %s, the supposedly new address is %s.'
-), $GLOBALS['sys_name'], $row_user['email'], $newvalue).'
+If it wasn\'t you, maybe someone is trying to steal your account...')."\n\n"
+._('Your current address is %1$s, the supposedly new address is %2$s.'),
+$GLOBALS['sys_name'], $row_user['email'], $newvalue).'
 
 ' . _('If you did not request that change, please visit the following URL
 to discard the email change and report the problem to us:')
 ."\n\n"
                     . $url."&step=discard\n\n";
 
-# TRANSLATORS: the argument is site name (like Savannah).
                     $warning_message .=
-                      sprintf(_("-- the %s team."), $GLOBALS['sys_name'])."\n";
+                      sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
+_("-- the %s team."), $GLOBALS['sys_name'])."\n";
                 
                     $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@"
                                              .$GLOBALS['sys_mail_domain'],
@@ -265,8 +266,9 @@ to discard the email change and report the problem to us:')
                                   $warning_message);
                     if ($success)
                       {
+                        sprintf(
 # TRANSLATORS: the argument is email address.
-                        sprintf(_("Confirmation mailed to %s."), $newvalue);
+_("Confirmation mailed to %s."), $newvalue);
                         fb(
 _("Follow the instructions in the email to complete the email change."));
                       }
@@ -291,7 +293,8 @@ administrators."), 1);
                 $res_user = db_execute("SELECT * FROM user WHERE confirm_hash=?",
                                        array($confirm_hash));
                 if (db_numrows($res_user) > 1)
-                  $ffeedback = (' '._("This confirm hash exists more than once."));
+                  $ffeedback = ' '
+                 ._("This confirmation hash is included in DB more than once.");
                 elseif (db_numrows($res_user) < 1)
                   exit_error(' '._("Invalid confirmation hash."));
                 else
@@ -362,23 +365,24 @@ _("Unable to understand what to do, parameters are probably missing"), 1);
                   $url = 'http://'.$GLOBALS['sys_default_domain'];
                 $url .= $GLOBALS['sys_home'].'my/admin/change.php?'
                         .'item=delete&confirm_hash='.$confirm_hash;
-# TRANSLATORS: the argument is site name (like Savannah).
                 $message = sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
 _('Someone, presumably you, has requested your %s account deletion.
 If it wasn\'t you, it probably means that someone stole your account.'),
                                    $GLOBALS['sys_name']).'
 
 ';
-# TRANSLATORS: the argument is site name (like Savannah).
                 $message .= sprintf(
+# TRANSLATORS: the argument is site name (like Savannah).
 _('If you did request your %s account deletion, visit the following URL to finish
 the deletion process:'), $GLOBALS['sys_name']) . "\n\n"
                 . $url."&step=confirm\n\n"
 ._('If you did not request that change, please visit the following URL to discard
 the process and report ASAP the problem to us:')."\n\n"
                 . $url."&step=discard\n\n";
+                $message .= sprintf(
 # TRANSLATORS: the argument is site name (like Savannah).
-                $message .= sprintf(_("-- the %s team."), $GLOBALS['sys_name'])
+_("-- the %s team."), $GLOBALS['sys_name'])
                             . "\n";
                 $success = sendmail_mail($GLOBALS['sys_mail_replyto']."@"
                                          .$GLOBALS['sys_mail_domain'],
@@ -389,8 +393,9 @@ the process and report ASAP the problem to us:')."\n\n"
                   fb(
 _("Follow the instructions in the email to complete the account deletion."));
                 else
-                  fb(_("The system reported a failure when trying to send the
-confirmation mail. Please retry and report that problem to administrators."),
+                  fb(_("The system reported a failure when trying to send
+the confirmation mail. Please retry and report that problem to
+administrators."),
                      1);
               }
           }
@@ -406,7 +411,8 @@ confirmation mail. Please retry and report that problem to administrators."),
                                    array($confirm_hash));
             if (db_numrows($res_user) > 1)
               {
-                $ffeedback = (_("This confirm hash exists more than once."));
+                $ffeedback =
+                  _("This confirmation hash is included in DB more than once.");
                 $success = 0;
               }
             if (db_numrows($res_user) < 1)
@@ -468,8 +474,9 @@ elseif ($item == "timezone")
   {
     require_once('../../include/timezones.php');
     $title = _("Change Timezone");
-    $input_title = _("No matter where you live, you can see all dates and times
-as if it were in your neighborhood:");
+    $input_title =
+_("No matter where you live, you can see all dates and times as if it were in
+your neighborhood.");
     $input_specific = html_build_select_box_from_arrays ($TZs, $TZs, 'newvalue',
                                                          user_get_timezone(),
                                                          true, 'GMT');
@@ -547,7 +554,7 @@ request.").'</p>
     elseif ($step == "confirm")
       {
         $title = _("Confirm Email Change");
-        $preamble = _('Click update to confirm your e-mail change');
+        $preamble = _('Push &ldquo;Update&rdquo; to confirm your email change');
         $input_title = _('Confirmation hash:');
         $input_specific = "<input type='text' readonly='readonly' "
           ."name='confirm_hash' value='"
@@ -567,7 +574,7 @@ elseif ($item == "delete")
     if (!$step)
       {
         $title = _("Delete Account");
-        $input_title = _('Do you really want to delete your user account:');
+        $input_title = _('Do you really want to delete your user account?');
         $input_specific = form_input("checkbox", "newvalue", "deletionconfirmed")
                           .' '._("Yes, I really do");
         $preamble = _("This process will require email confirmation.");
@@ -575,7 +582,7 @@ elseif ($item == "delete")
     elseif ($step == "confirm")
       {
         $title = _("Confirm account deletion");
-        $preamble = _('Click update to confirm your account deletion');
+        $preamble = _('Push &ldquo;Update&rdquo; to confirm your account deletion');
         $input_title = _('Confirmation hash:');
         $input_specific = "<input type='text' readonly='readonly' "
                           ."name='confirm_hash' value='$confirm_hash' />";

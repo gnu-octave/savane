@@ -202,9 +202,8 @@ if ($rows_without_history != $rows)
   #
   # The following update script was maybe forgot:
   # update/1.0.6/update_group_history.pl
-  fb(_("Groups history appears to be flawed. This is a site installation
-problem. Please report the incident to administrators, asking them to get in
-touch with their Savane supplier."), 1);
+  fb(_("Groups history appears to be flawed.
+Please report the incident to administrators."), 1);
   $history_is_flawed = true;
   $result = $result_without_history;
   $rows = $rows_without_history;
@@ -214,8 +213,8 @@ touch with their Savane supplier."), 1);
 site_user_header(array('context'=>'mygroups'));
 
 print '<p>'._("Here is the list of groups you are member of, plus a form which
-allows you to ask for inclusion in a group. Clicking on the trash permits you
-to quit a project.").'</p>';
+allows you to ask for inclusion in a group. You can also quit groups here.")
+."</p>\n";
 
 utils_get_content("my/groups");
 
@@ -234,8 +233,8 @@ sent to them) permits you to be their backup when they are away from the
 office, or to review all their activities on a project.");
     print '</p>
 <p>';
-    print _("To watch someone, click &ldquo;Watch partner&rdquo; in the
-project memberlist page. You need to be member of that project.");
+    print _("To watch someone, follow the &ldquo;Watch partner&rdquo; link
+in the project memberlist page. You need to be member of that project.");
     print '<br />
 ';
     print db_error();
@@ -285,11 +284,12 @@ if ($watchers)
 
     print '<p>';
 # TRANSLATORS: the message is selected according to number of watchers
-# (listed in the argument, separated with commas).
-    printf (ngettext("My own notifications are currently watched by %s.",
-                     "My own notifications are currently watched by %s.",
+# listed in the first argument; the second argument is comma-separated
+# list of watchers.
+    printf (ngettext('My own notifications are currently watched by %1$s user: %2$s.',
+                     'My own notifications are currently watched by %1$s users: %2$s.',
                      $watchers_num),
-            $watchers);
+            $watchers_num, $watchers);
     print '</p>'."\n";
   }
 else
@@ -335,7 +335,7 @@ if ($words)
 
     print '<div class="boxitemalt" id="searchgroup">'."\n";
     print '<p>';
-    print _("Below is the result of the research in the groups database.");
+    print _("Below is the result of the search in the groups database.");
     print '</p>'."\n";
 
     if (db_numrows($result_search) < 1)
@@ -406,7 +406,7 @@ else
                      .'<a href="../my/quitproject.php?quitting_group_id='
                      . db_result($result,$i,'group_id').'">'
                      .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-                     .'.theme/misc/trash.png" alt="'._("Quit this project")
+                     .'.theme/misc/trash.png" alt="'._("Quit this group")
                      .'" /></a><br /></span>'."\n";
 
             $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'
@@ -449,7 +449,7 @@ else
                      . db_result($result,$i,'group_id').'">'
                      .'<img src="'.$GLOBALS['sys_home'].'images/'
                      .SV_THEME.'.theme/misc/trash.png" alt="'
-                     ._("Quit this project").'" /></a></span>';
+                     ._("Quit this group").'" /></a></span>';
 
             $content .= '<a href="'.$GLOBALS['sys_home'].'projects/'
                         . db_result($result,$i,'unix_group_name') .'/">'

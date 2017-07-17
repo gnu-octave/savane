@@ -41,7 +41,9 @@ if ($func == 'del')
               . " AND time=? AND user_id=? LIMIT 1",
               array($dsession_hash, $dip_addr,
                     $dtime, user_getid())))
-          fb(_("Old session deleted"));
+          fb(
+# TRANSLATORS: this is a report of a successful action.
+             _("Old session deleted"));
         else
           fb(_("Failed to delete old session"), 1);
       }
@@ -51,7 +53,9 @@ if ($func == 'del')
         if (db_execute("DELETE FROM session "
               . " WHERE session_hash<>? AND user_id=?",
               array($session_hash, user_getid())))
-          fb(_("Old sessions deleted"));
+          fb(
+# TRANSLATORS: this is a report of a successful action.
+             _("Old sessions deleted"));
         else
           fb(_("Failed to delete old sessions"), 1);
       }
