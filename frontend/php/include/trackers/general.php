@@ -377,21 +377,21 @@ function trackers_multiple_field_date($field_name,$date_begin='',$date_end='',
 
   if ($ro)
     if ($date_begin || $date_end)
-      $html = "Start:&nbsp;$date_begin<br />End:&nbsp;$date_end";
+      $html = _("Start:")."&nbsp;$date_begin<br />"._("End:")."&nbsp;$date_end";
     else
-      $html = 'Any time';
+      $html = _('Any time');
   else
     {
       if (!$size || !$maxlength)
         list($size, $maxlength) = trackers_data_get_display_size($field_name);
 
-      $html = 'Start:<br /><input type="text" name="'.$field_name.
-        '" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_begin.'">'.
-        '(yyyy-mm-dd)'.
-        '</td></tr><tr><td>'.
-        'End:<br /><input type="text" name="'.$field_name.'_end'.
-        '" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_end.'">'.
-        '(yyyy-mm-dd)';
+      $html = _('Start:').'<br /><input type="text" name="'.$field_name
+        . '" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_begin.'">'
+        ._('(yyyy-mm-dd)')
+        .'</td></tr><tr><td>'
+        ._('End:').'<br /><input type="text" name="'.$field_name.'_end'
+        .'" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_end.'">'
+        ._('(yyyy-mm-dd)');
 
       $html = '<table><tr><td>'.$html.'</td></tr></table>';
     }
@@ -828,7 +828,9 @@ function trackers_build_notification_list($item_id, $group_id, $changes,
   if ($artifact == null)
     $artifact = ARTIFACT;
   if (!ctype_alnum($artifact))
-    util_die('Invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
+# TRANSLATORS: the argument is name of artifact (like bugs or patches).
+    util_die(sprintf(_('Invalid artifact %s'),
+                     '<em>' . htmlspecialchars($artifact) . '</em>'));
 
   $addresses = array();
   $addresses_to_skip = array();
@@ -990,7 +992,9 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,
     $artifact = ARTIFACT;
 
   if (!ctype_alnum($artifact))
-    util_die('Invalid artifact <em>' . htmlspecialchars($artifact) . '</em>');
+# TRANSLATORS: the argument is name of artifact (like bugs or patches).
+    util_die(sprintf(_('Invalid artifact %s'),
+                     '<em>' . htmlspecialchars($artifact) . '</em>'));
 
   $result = db_execute("SELECT * from $artifact WHERE bug_id=?", array($item_id));
   $bug_href = "http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']
@@ -1225,6 +1229,7 @@ function trackers_attach_file($item_id,
   $current_upload_size_comment = '';
   if ($current_upload_size < 0)
     {
+# TRANSLATORS: the argument is file name.
       fb(sprintf(_("Unexpected error, disregarding file %s attachment"),
                  $input_file_name), 1);
       return false;

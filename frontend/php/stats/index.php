@@ -81,7 +81,7 @@ print html_show_displayoptions(
 # TRANSLATORS: The arguments are two dates.
 # Example: "From 12. September 2005 till 14. September 2005"
 print '
-<h3>'.html_anchor(sprintf(_('From %1$s till %1$s'),utils_format_date($since),
+<h3>'.html_anchor(sprintf(_('From %1$s till %2$s'),utils_format_date($since),
                           utils_format_date($until)),"between")
 .'</h3>
 ';
@@ -89,7 +89,7 @@ print '
 if ($since > $until)
 {
   print '<p class="error">'
-         ._("Apparently, the period you asked for is incoherent.").'</p>
+  ._("The begin of the period you asked for is later than its end.").'</p>
 ';
 }
 

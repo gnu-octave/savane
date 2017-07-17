@@ -26,13 +26,21 @@ require_directory("news");
 require_directory("stats");
 require_once('include/features_boxes.php');
 
+# Some messages make little sense for users as opposed to the admins;
+# they are left untranslated.
+
+function no_i18n($string)
+{
+  return $string;
+}
+
 # Check if the PHP Frontend is acceptably configured.
 # Do progressive little checks, to avoid creating to much extra load.
 # Not gettextized for now, already lot of more important strings to 
 # translate.
 if (empty($GLOBALS['sys_unix_group_name']))
 {
-  fb(_("Serious configuration problem: sys_unix_group_name is empty."), 1);
+  fb(no_i18n("Serious configuration problem: sys_unix_group_name is empty."), 1);
 } 
 
 # Check whether the local admin group exists. This is useful only during
@@ -47,7 +55,7 @@ if ($conn && empty($sys_group_id))
       if (!db_numrows($result))
 	{
 	  # No valid database
-	  fb(sprintf(_(
+	  fb(sprintf(no_i18n(
 "Installation incomplete: while the connection to the SQL server is
 ok, the database '%s' was not found. Please, create it according to
 the documentation shipped with your Savane package"),
@@ -56,7 +64,7 @@ the documentation shipped with your Savane package"),
       else if (db_result(db_query("SELECT count(*) AS count FROM user"),
                          0, 'count') < 2)
 	{ // 2 = 1 default "None" user + 1 normal user
-	  fb(_(
+	  fb(no_i18n(
 "Installation incomplete: you must now create for yourself a user
 account. Once it is done, you will have to login and register the
 local administration project"), 1);
@@ -64,7 +72,7 @@ local administration project"), 1);
       else
 	{
 	  # Not logged-in, probably no user account
-	  fb(sprintf(_(
+	  fb(sprintf(no_i18n(
 "Installation incomplete: you have to login and register the local
 administration project (or maybe <em>%s</em>, from the
 <em>sys_unix_group_name</em> configuration parameter, is not the right
@@ -74,14 +82,14 @@ project name?)"), $sys_unix_group_name), 1);
   else
     {    
       # No admin groups
-      fb(_(
+      fb(no_i18n(
 "Installation incomplete: you must now register the local
 administration project, select &ldquo;Register New Project&rdquo; in the left
 menu"), 1);
     }
-  # I18N
   # The string is a URL on localhost, e.g. http://127.0.0.1/testconfig.php
-  fb(sprintf(_("By the way, have you checked the setup of your web server at %s?"),
+  fb(sprintf(
+    no_i18n("By the way, have you checked the setup of your web server at %s?"),
              'http://127.0.0.1'.$GLOBALS['sys_home'].'testconfig.php'), 1);
 }
 

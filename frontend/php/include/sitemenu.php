@@ -49,11 +49,19 @@ function sitemenu ($params)
 
   if ($GLOBALS['sys_logo_name'])
     {
-      print '          '.utils_link($GLOBALS['sys_home'], html_image($GLOBALS['sys_logo_name'],array('alt'=>sprintf(_("Back to %s Homepage"), $GLOBALS['sys_name'])), 0));
+      print '          '
+        .utils_link($GLOBALS['sys_home'],
+                    html_image($GLOBALS['sys_logo_name'],
+# TRANSLATORS: the argument is site name (like Savannah).
+                               array('alt'=>sprintf(_("Back to %s Homepage"),
+                                     $GLOBALS['sys_name'])), 0));
     }
   else
     {
-      print '          <br />'.utils_link($GLOBALS['sys_home'], $GLOBALS['sys_name'], 0, 1, sprintf(_("Back to %s Homepage"), $GLOBALS['sys_name']));
+      print '          <br />'
+        .utils_link($GLOBALS['sys_home'], $GLOBALS['sys_name'], 0, 1,
+# TRANSLATORS: the argument is site name (like Savannah).
+                    sprintf(_("Back to %s Homepage"), $GLOBALS['sys_name']));
     }
 
   print '
@@ -182,6 +190,7 @@ function sitemenu_projects()
   $HTML->menu_entry($GLOBALS['sys_home'].'register/',
                     _("Register New Project"),
                     1,
+# TRANSLATORS: the argument is site name (like Savannah).
                     sprintf(_("Register your project at %s"),
                             $GLOBALS['sys_name']));
   $HTML->menu_entry($GLOBALS['sys_home']
@@ -196,6 +205,7 @@ function sitemenu_projects()
   $HTML->menu_entry($GLOBALS['sys_home'].'stats/',
                     _("Statistics"),
                     1,
+# TRANSLATORS: the argument is site name (like Savannah).
                     sprintf(_("Browse statistics about %s"),
                     $GLOBALS['sys_name']));
   $HTML->menuhtml_bottom();
@@ -231,7 +241,10 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
           $bookmark_title = urlencode(context_title());
 
           if ($page_title)
-            $bookmark_title .= urlencode(_(": ").$page_title);
+            $bookmark_title .= urlencode(
+            # TRANSLATORS: this string is used to separate context from
+            # further description, like _("Bugs")._(": ").$bug_title.
+                                         _(": ").$page_title);
 
             $HTML->menu_entry($GLOBALS['sys_home']
                               .'my/bookmarks.php?add=1&amp;url='
@@ -398,14 +411,18 @@ function sitemenu_help()
                     1,
 _("In-depth Documentation dedicated to any users, including Project Admins"));
 
-  $HTML->menu_entry($GLOBALS['sys_home'].'support/?group='.$GLOBALS['sys_unix_group_name'],
-		    _("Get Support"),
-		    1,
-		    sprintf(_("Get help from the Admins of %s, when documentation is not enough"), $GLOBALS['sys_name']));
+  $HTML->menu_entry($GLOBALS['sys_home'].'support/?group='
+                    .$GLOBALS['sys_unix_group_name'],
+                    _("Get Support"),
+                    1,
+# TRANSLATORS: the argument is site name (like Savannah).
+sprintf(_("Get help from the Admins of %s, when documentation is not enough"),
+        $GLOBALS['sys_name']));
   $HTML->menuhtml_bottom();
   $HTML->menu_entry($GLOBALS['sys_home'].'contact.php',
                     _("Contact Savannah"),
                     1,
+# TRANSLATORS: the argument is site name (like Savannah).
                     sprintf(_("Contact address of %s Admins"),
                             $GLOBALS['sys_name']));
   $HTML->menuhtml_bottom();
@@ -422,11 +439,15 @@ function sitemenu_loggedin($page_title, $page_toptab=0, $page_group=0)
 # Show links appropriate for someone logged in, like account maintenance, etc.
   if (!user_is_super_user())
     {
+# TRANSLATORS: the argument is user's name.
       $HTML->menuhtml_top(sprintf(_("Logged in as %s"), user_getname()));
     }
   else
     {
-      $HTML->menuhtml_top('<span class="warn">'.sprintf(_("%s logged in as superuser"), user_getname()).'</span>');
+      $HTML->menuhtml_top('<span class="warn">'
+# TRANSLATORS: the argument is user's name.
+                          .sprintf(_("%s logged in as superuser"),
+                                   user_getname()).'</span>');
     }
   if (user_can_be_super_user() && !user_is_super_user())
     {

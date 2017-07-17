@@ -190,7 +190,8 @@ function spam_unflag ($item_id, $comment_id, $tracker, $group_id)
              array($item_id, $comment_id, $tracker));
 
   if (!ctype_alnum($tracker))
-    util_die('Tracker is not valid (not alnum): ' . htmlescape($tracker));
+    util_die(sprintf(_('Tracker &ldquo;%s&rdquo; is not valid (not alnum).'),
+                     htmlescape($tracker)));
 
   # Update the item spamscore fields.
   if ($comment_id)
@@ -285,7 +286,7 @@ function spam_set_item_default_score ($item_id, $comment_id, $tracker, $score,
                        'item_id' => $item_id,
                        'comment_id' => $comment_id),
                  DB_AUTOQUERY_INSERT);
-  fb(sprintf(_("Spam score of your post set to %s"), $score), 1);
+  fb(sprintf(_("Spam score of your post is set to %s"), $score), 1);
 }
 
 # Put an item or a comment in temporary queue.
@@ -351,7 +352,7 @@ function spam_add_to_spamcheck_queue ($item_id, $comment_id, $tracker,
   if (db_affected_rows($result))
     {
       fb(sprintf(
-_("Spam score of your post set temporarily to %s, until it is checked by spam
+_("Spam score of your post is set temporarily to %s, until it is checked by spam
 filters"), $newscore), 1);
     }
 

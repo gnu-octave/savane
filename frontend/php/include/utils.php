@@ -54,7 +54,8 @@ function utils_get_content ($file)
     include($file);
   else
     fb(sprintf(_("Warning: Savane was not able to read site-specific
-information from file \"%s\", please contact administrators"), $file), 1);
+information from file &ldquo;%s&rdquo;, please contact administrators"),
+       $file), 1);
 }
 
 # Make sure that to avoid malicious file paths.
@@ -125,13 +126,14 @@ function utils_email ($address, $nohtml=0)
           if (!$realaddress && strpos($address, " "))
             {
               return htmlspecialchars($address).' <span class="warn">'
-                ._("(seems invalid and will probably be ignored)").'</span>';
+                ._("(address seems invalid and will probably be ignored)").'</span>';
             }
 
           # No @ but and not a login? P
-# TRANSLATORS: the argument is mail domain (like localhost or sv.gnu.org).
           return htmlspecialchars($address).' <span class="warn">'
-            .sprintf(_("(unknown to Savane, will fail if not valid at %s)"),
+            .sprintf(
+# TRANSLATORS: the argument is mail domain (like localhost or sv.gnu.org).
+                    _("(address is unknown to Savane, will fail if not valid at %s)"),
                      $GLOBALS['sys_mail_domain']).'</span>';
         }
 
@@ -150,7 +152,7 @@ function utils_email ($address, $nohtml=0)
       if ($realaddress)
         {
           return htmlspecialchars($address).' <span class="warn">'
-            ._("(seems invalid and will probably be ignored)").'</span>';
+            ._("(address seems invalid and will probably be ignored)").'</span>';
         }
       # We have no realaddress found, only one string that is an address.
       if (validate_email($address))
@@ -160,11 +162,11 @@ function utils_email ($address, $nohtml=0)
         }
       # Nothing was valid, print a warning.
       return htmlspecialchars($address).' <span class="warn">'
-        ._("(seems invalid and will probably be ignored)").'</span>';
+        ._("(address seems invalid and will probably be ignored)").'</span>';
     }
   if ($nohtml)
-    return _("-unavailable-");
-  return utils_help(_("-unavailable-"),
+    return _("-email is unavailable-");
+  return utils_help(_("-email is unavailable-"),
                     _("This information is not provided to anonymous users"),
                     1);
 }
@@ -183,8 +185,8 @@ function utils_email_basic ($address, $nohtml=0)
     }
 
   if ($nohtml)
-    return _("-unavailable-");
-  return utils_help(_("-unavailable-"),
+    return _("-email is unavailable-");
+  return utils_help(_("-email is unavailable-"),
                     _("This information is not provided to anonymous users"),
                     1);
 }

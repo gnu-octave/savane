@@ -142,8 +142,9 @@ function sendmail_mail ($from,
   # we the mail will be actually sent).
   if (empty($int_delayspamcheck))
     {
+# TRANSLATORS: the argument is site name (like Savannah).
       $message .= "\n\n_______________________________________________
-  ".sprintf(_("Message sent via/by %s"), $GLOBALS['sys_name'])."
+  ".sprintf(_("Message sent via %s"), $GLOBALS['sys_name'])."
   https://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']."\n";
     }
 
@@ -380,10 +381,7 @@ function sendmail_mail ($from,
         {
           $ret .= mail($real_to, sendmail_encode_header_content($subject),
                        $message, $more_headers);
-          /* html_feedback_top() is currently escaping HTML
-             already, to prevent XSS. So no need to do it again
-             here:
-            $r = array_map("htmlspecialchars", $recipients); */
+# TRANSLATORS: the argument is a comma-separated list of recipients.
             fb(sprintf(_("Mail sent to %s"), join(', ', $recipients)));
           }
         else
@@ -411,7 +409,7 @@ function sendmail_mail ($from,
           $ret .= mail(sendmail_encode_header_content($user_name[$v]),
                        sendmail_encode_header_content($user_subject[$v]),
                        $message, $more_headers);
-# TRANSLATORS: the argument is single email address.
+# TRANSLATORS: the argument is a single email address.
           fb(sprintf(_("Mail sent to %s"), utils_email($user_name[$v], 1)));
         }
       else

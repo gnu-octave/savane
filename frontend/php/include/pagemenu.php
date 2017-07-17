@@ -74,7 +74,10 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
   if ($title)
     print $title;
   if ($title && !empty($params['title']))
-    print _(": ");
+    print
+      # TRANSLATORS: this string is used to separate context from
+      # further description, like _("Bugs")._(": ").$bug_title.
+          _(": ");
   if (!empty($params['title']))
     print $params['title'];
   print '</h2>';
@@ -902,7 +905,7 @@ fields to show in the query form table"))
                                .'/admin/userperms.php?group='
                                .$project->getUnixName(),
                                1,
-                               _("Defines posting restrictions"))
+                               _("Define posting restrictions"))
         .pagemenu_submenu_entry(_("Set&nbsp;notifications"),
                                $GLOBALS['sys_home'].$tracker
                                .'/admin/notification_settings.php?group='

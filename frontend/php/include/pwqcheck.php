@@ -35,7 +35,7 @@ _("Bad passphrase (based on a common sequence of characters and not a passphrase
 function pwqcheck($newpass, $oldpass = '', $user = '', $aux = '', $args = '')
 {
 # pwqcheck(1) itself returns the same message on internal error.
-  $retval = 'Bad passphrase (check failed)';
+  $retval = _('Bad passphrase (check failed)');
 
   $descriptorspec = array(0 => array('pipe', 'r'),
                           1 => array('pipe', 'w'));
