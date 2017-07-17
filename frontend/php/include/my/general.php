@@ -4,6 +4,7 @@
 #
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 #
@@ -122,17 +123,8 @@ function my_format_as_flag($assigned_to, $submitted_by)
 
 function my_item_count($total, $new)
 {
-  $ret = '(';
-  $ret .= sprintf(ngettext("%s item", "%s items", $total), $total);
-  if ($new)
-    {
-      $ret .= ", <strong>"
-              .sprintf(ngettext("%s new", "%s new", $new), $new)."</strong>";
-    }
-  $ret .= ')';
-  return $ret;
+  return sprintf (' '._('(new items: %1$s, total: %2$s)')."\n", $total, $new);
 }
-
 
 # Function that expect item_data and $group_data to exist as globals,
 # so we can avoid
@@ -198,7 +190,7 @@ function my_item_list_buildsql ($tracker, $role="assignee", $threshold="5",
   global $items_per_groups, $usersquads;
 
   if (!ctype_alnum($tracker))
-    die("Invalid tracker name: " . htmlspecialchars($tracker));
+    die(_("Invalid tracker name:")." " . htmlspecialchars($tracker));
 
   # status: 1 = open, 3 = closed
   if ($openclosed == "open")
@@ -620,7 +612,7 @@ list.").'</span></span></div>';
 	{
 	  # In condensed mode, there is no hide url
 	  print '<div class="'.utils_altrow(1).'"> '
-                .sprintf(_("%s: "), $group_data["group".$current_group_id])
+                .sprintf(("%s: "), $group_data["group".$current_group_id])
                 .'</div>';
 	}
 

@@ -112,6 +112,6 @@ function exit_test_usesmail($group_id)
 {
   $project=project_get_object($group_id);
   if (!$project->usesMail())
-    exit_error(_("Error"),_("This Project Has Turned Off Mailing Lists"));
+    exit_error(_("Error"),_("This project has turned off mailing lists"));
 }
 ?>

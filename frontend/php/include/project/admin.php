@@ -41,7 +41,7 @@ function show_grouphistory ($group_id)
     $title_arr[]=_("Field");
     $title_arr[]=_("Value");
     $title_arr[]=_("Date");
-    $title_arr[]=_("By");
+    $title_arr[]=_("Author");
 
     echo html_build_list_table_top ($title_arr);
 

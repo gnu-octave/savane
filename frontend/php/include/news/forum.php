@@ -164,7 +164,8 @@ function forum_header($params)
 
           print "<h3><a href='forum.php?forum_id=$forum_id'>"
                 .db_result($result,0,'summary')."</a></h3>";
-          print '<p><em>'.sprintf(_("Item posted by %s on %s."),
+# TRANSLATORS: the first argument is user's name, the second argument is date.
+          print '<p><em>'.sprintf(_('Item posted by %1$s on %2$s.'),
               utils_user_link(user_getname(db_result($result,0,'submitted_by')),
               user_getrealname(db_result($result,0,'submitted_by'))),
               utils_format_date(db_result($result,0,'date')))
@@ -296,9 +297,9 @@ function show_thread($thread_id,$et=0)
   else
     {
       $title_arr=array();
-      $title_arr[]='Thread';
-      $title_arr[]='Author';
-      $title_arr[]='Date';
+      $title_arr[]=_('Thread');
+      $title_arr[]=_('Author');
+      $title_arr[]=_('Date');
 
       $ret_val .= html_build_list_table_top ($title_arr);
 
@@ -429,7 +430,7 @@ function get_next_thread_id()
 
   if (!$result)
     {
-      print '<H1>Error!</H1>';
+      print '<h1>'._('Error')."</h1>\n";
       print db_error();
       exit;
     }
@@ -471,16 +472,16 @@ function post_message($thread_id, $is_followup_to, $subject, $body,
     }
   if (!user_isloggedin())
     {
-      print '<h3>'._("You could post if you were logged in").'.</h3>';
+      print '<p>'._("You could post if you were logged in.")."</p>\n";
       return;
     }
   if (!$group_forum_id)
     {
-      exit_error('Error',_("Trying to post without a forum ID"));
+      exit_error(_("Trying to post without a forum ID"));
     }
   if (!$body || !$subject)
     {
-      exit_error('Error',_("Must include a message body and subject"));
+      exit_error(_("Must include a message body and subject"));
     }
 
 #see if that message has been posted already for all the idiots that double-post
@@ -495,7 +496,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body,
   if (db_numrows($res3) > 0)
     {
       #already posted this message
-      exit_error('Error',
+      exit_error(
 _("You appear to be double-posting this message, since it has the same subject
 and followup information as a prior post."));
     }
@@ -534,14 +535,14 @@ and followup information as a prior post."));
             }
           else
             {
-              exit_error('Error',
+              exit_error(
                      _("Trying to followup to a message that doesn't exist."));
             }
         }
       else
         {
 #should never happen except with shoddy browsers or mucking with the HTML form
-          exit_error('Error',
+          exit_error(
         _("No followup ID present when trying to post to an existing thread."));
         }
     }
@@ -561,11 +562,11 @@ and followup information as a prior post."));
     {
       print "INSERT FAILED";
       print db_error();
-      ' '._("Posting Failed").' ';
+      ' '.("Posting Failed").' ';
     }
   else
     {
-      ' '._("Message Posted").' ';
+      ' '.("Message Posted").' ';
     }
 
   $msg_id=db_insertid($result);

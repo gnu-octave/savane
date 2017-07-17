@@ -66,7 +66,7 @@ $adminsnum = db_numrows($res_admin);
 $j = 0;
 if ($adminsnum > 0)
   {
-    print ngettext("Project Admin:", "Project Admins:", $adminsnum);
+    print $adminsnum < 2? _("Project Admin:"): _("Project Admins:");
     while ($row_admin = db_fetch_array($res_admin))
       {
         print '</span></div>
@@ -77,9 +77,16 @@ if ($adminsnum > 0)
   }
 
 #count of developers on this project
-$membersnum = db_fetch_array(db_execute("SELECT COUNT(*) AS count FROM user_group WHERE group_id=? AND admin_flags<>'P' AND admin_flags<>'SQD' AND user_group.onduty = 1", array($group_id)));
-print '</span></div><div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-printf(ngettext("%s active member", "%s active members", $membersnum['count']),'<strong>'.$membersnum['count'].'</strong>');
+$membersnum = db_fetch_array(db_execute("SELECT COUNT(*) AS count "
+                                        ."FROM user_group WHERE group_id=? "
+                                        ."AND admin_flags<>'P' "
+                                        ."AND admin_flags<>'SQD' "
+                                        ."AND user_group.onduty = 1",
+                                        array($group_id)));
+print '</span></div>
+<div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
+printf(ngettext("%s active member", "%s active members", $membersnum['count']),
+       '<strong>'.$membersnum['count'].'</strong>');
 
 # if member = 1, it's obviously (or it should be) the project admin
 # if there's no admin, we need to get access to the list
@@ -95,7 +102,8 @@ print $HTML->box_bottom();
 print "<br />\n";
 print $HTML->box_top(_("Group identification"));
 print '<span class="smaller">';
-print _("Id:").' <strong>#'.$group_id.'</strong>';
+# TRANSLATORS: the argument is group id (a number).
+printf (_("Id: <strong>#%s</strong>"), $group_id);
 $j = 0;
 print '</span></div>
 <div class="'.utils_get_alt_row_color($j++)
@@ -143,12 +151,16 @@ else
     else
       {
         print '<p>';
-        printf(_("This project has not yet submitted a short description. You can %ssubmit it%s now."), '<a href="'.$GLOBALS['sys_home'].'project/admin/editgroupinfo.php?group='.$group.'">', '</a>');
+        printf(
+_("This project has not yet submitted a short description. You can <a
+href=\"%s\">submit it</a> now."),
+               $GLOBALS['sys_home'].'project/admin/editgroupinfo.php?group='
+               .$group);
         print "</p>\n";
       }
   }
 
-print '<p>'._("Registration Date")._(": ").' '
+print '<p>'._("Registration Date:").' '
       .utils_format_date($project->getStartDate())."\n";
 
 if ($project->CanUse("license"))
@@ -161,7 +173,7 @@ if ($project->CanUse("license"))
     if (!empty($LICENSE[$license]))
       print $LICENSE[$license];
     else
-      print "Unknown!";
+      print _("Unknown!");
     if ($license == "other") {
       print " - " . $project->getLicense_other();
     }
@@ -172,7 +184,7 @@ if ($project->CanUse("license"))
 if ($project->CanUse("devel_status"))
 {
   $devel_status = $project->getDevelStatus();
-  print '<br />'._("Development Status")._(": ").' '
+  print '<br />'._("Development Status:").' '
         .$DEVEL_STATUS[$devel_status]."\n";
 }
 print '</p>
@@ -218,8 +230,13 @@ if ($GLOBALS['sys_group_id'] == $group_id)
   if (member_check(0, $group_id, 'A'))
     {
       require $GLOBALS['sys_www_topdir']."/include/features_boxes.php";
-      print $HTML->box_top(sprintf(_("Administration: %s server"), $GLOBALS['sys_name']));
-      print '<div class="justify">'.sprintf(_("Since you are administrator of this project, which one is the \"system project\", you are administrator of the whole %s server."), $GLOBALS['sys_name']).'</div>';
+# TRANSLATORS: the argument is site name (like Savannah).
+      print $HTML->box_top(sprintf(_("Administration: %s server"),
+                           $GLOBALS['sys_name']));
+# TRANSLATORS: the argument is site name (like Savannah).
+      print '<div class="justify">'.sprintf(_("Since you are administrator of
+this project, which one is the &ldquo;system project,&rqduo; you are
+administrator of the whole %s server."), $GLOBALS['sys_name'])."</div>\n";
 
       print $HTML->box_nextitem(utils_get_alt_row_color($odd));
 
@@ -239,9 +256,10 @@ if ($GLOBALS['sys_group_id'] == $group_id)
                                         'alt'=>'')).'&nbsp;'
                                         ._("Pending Projects List"));
       $registration_count = number_format(stats_getprojects_pending());
-      print " (";
-      printf(ngettext("%s registration pending", "%s registrations pending", $registration_count), "<strong>$registration_count</strong>");
-      print ")";
+      printf(' '.ngettext("(%s registration pending)",
+                          "(%s registrations pending)",
+                          $registration_count),
+             "<strong>$registration_count</strong>");
       print $HTML->box_bottom();
       print '<br />';
     }
@@ -347,10 +365,11 @@ else if ($project->Uses("extralink_documentation") && $project->getUrl("extralin
 # Memberlist
 specific_makesep();
 print utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group,
-	 html_image("contexts/people.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Memberlist')).'&nbsp;'._("Project Memberlist"));
-print " (";
-printf(ngettext("%s member", "%s members", $membersnum['count']), "<strong>{$membersnum['count']}</strong>");
-print ")";
+                 html_image("contexts/people.png",
+                            array('width'=>'24', 'height'=>'24', 'alt'=>''))
+                 .'&nbsp;'._("Project Memberlist"));
+printf(' '.ngettext("(%s member)", "(%s members)", $membersnum['count']),
+       "<strong>{$membersnum['count']}</strong>");
 $i++;
 
 if ($project->getGPGKeyring())
@@ -369,6 +388,30 @@ if ($project->getGPGKeyring())
 print $HTML->box_bottom();
 print '<br />';
 
+function open_vs_total_items ($url, $group_id, $artifact)
+{
+  $res_count = db_execute("SELECT count(*) AS count FROM ".$artifact."
+                           WHERE group_id=? AND status_id != 3",
+                          array($group_id));
+  $row_count = db_fetch_array($res_count);
+  $open_num = '<strong>'.$row_count['count'].'</strong>';
+  $res_count = db_execute("SELECT count(*) AS count FROM ".$artifact
+                          ." WHERE group_id=?",
+                          array($group_id));
+  $row_count = db_fetch_array($res_count);
+  $total_num = '<strong>'.$row_count['count'].'</strong>';
+# TRANSLATORS: the arguments are numbers of items.
+  printf (' '._('(open items: %1$s, total: %2$s)')."\n", $open_num,
+          $total_num);
+
+  print '<br /> &nbsp; - '
+        .utils_link($url.'&amp;func=browse&amp;set=open',
+                    _("Browse open items"));
+  print '<br /> &nbsp; - '
+        .utils_link($url.'&amp;func=additem', _("Submit a new item"),
+                    0, group_restrictions_check($group_id, $artifact));
+
+}
 
 # ################################## COMMUNICATION
 
@@ -395,25 +438,7 @@ if ($GLOBALS['sys_unix_group_name'] == $group ||
                      .'&nbsp;'._("Tech Support Manager"));
 
     if (group_get_artifact_url("support", 0) == $url)
-      {
-
-	$res_count = db_execute("SELECT count(*) AS count FROM support WHERE group_id=? AND status_id != 3",
-				array($group_id));
-	$row_count = db_fetch_array($res_count);
-
-
-        print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-	$res_count = db_execute("SELECT count(*) AS count FROM support WHERE group_id=?", array($group_id));
-	$row_count = db_fetch_array($res_count);
-	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-        print ")\n";
-
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=additem', _("Submit a new item"), 0, group_restrictions_check($group_id, "support"));
-      }
-
+      open_vs_total_items ($url, $group_id, 'support');
     $i++;
   }
 
@@ -446,10 +471,10 @@ if ($GLOBALS['sys_unix_group_name'] == $group ||
                                 . "WHERE group_id=? "
 				. "AND is_public=1", array($group_id));
 	$row_count = db_fetch_array($res_count);
-
-        print " ";
-	printf(ngettext("%s forum", "%s forums", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-        print ")\n";
+        $fora_count = '<strong>'.$row_count['count'].'</strong>';
+# TRANSLATORS: the arguments are numbers of messages and forums.
+        printf (' '._('(messages: %1$s, forums: %2$s)')."\n", $msg_count,
+                $fora_count);
       }
     $i++;
 
@@ -471,9 +496,10 @@ if ($GLOBALS['sys_unix_group_name'] == $group ||
                               ."WHERE group_id=? AND is_public=1",
 			      array($group_id));
       $row_count = db_fetch_array($res_count);
-      print " (";
-      printf(ngettext("%s public mailing-list", "%s public mailing-lists", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-      print ")";
+      print " ";
+      printf(ngettext("(%s public mailing list)", "(%s public mailing lists)",
+                      $row_count['count']),
+             "<strong>{$row_count['count']}</strong>");
 
       $i++;
     }
@@ -490,9 +516,8 @@ if ($GLOBALS['sys_unix_group_name'] == $group ||
 
     $job_count = people_project_jobs_rows($group_id);
 
-    print " (";
-    printf(ngettext("%s contributor wanted", "%s contributors wanted", $job_count), "<strong>$job_count</strong>");
-    print ")";
+    printf(ngettext("(%s contributor wanted)", "(%s contributors wanted)",
+                    $job_count), "<strong>$job_count</strong>");
     $i++;
   }
 
@@ -514,127 +539,52 @@ if ($project->Uses("patch") ||
   $i = 1;
   $j = $i;
 
+  function print_scm_entry ($project, &$i, $scm, $scm_name)
+  {
+    if (!($project->Uses($scm) || $project->UsesForHomepage($scm)))
+      return;
+
+    specific_makesep();
+    $url = $project->getArtifactUrl($scm);
+
+    html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24',
+               'alt'=>''));
+    print '&nbsp;<a href="'.$url.'">';
+# TRANSLATORS: the argument is name of VCS (like Git or Bazaar).
+    printf (_("%s Repository"), $scm_name);
+    print '</a>';
+
+    if ($project->Uses($scm) && $project->getUrl($scm."_viewcvs") != 'http://'
+        && $project->getUrl($scm."_viewcvs") != '')
+      {
+        print '<br /> &nbsp; - <a href="'.$project->getUrl($scm."_viewcvs")
+              .'">'._("Browse Sources Repository").'</a>';
+      }
+    if ($project->UsesForHomepage($scm)
+        && $project->getUrl("cvs_viewcvs_homepage") != 'http://'
+        && $project->getUrl("cvs_viewcvs_homepage") != '')
+      {
+        print '<br /> &nbsp; - <a href="'
+              .$project->getUrl("cvs_viewcvs_homepage").'">'
+              ._("Browse Web Pages Repository").'</a>';
+      }
+    $i++;
+
+  } # print_scm_entry
+
   # SCMs
-  #  - check if the SCM is selected by the project
-  #  - check if the SCM is the default SCM, if the project use the standard
-  #    webpage
-  if ($project->Uses("git") || $project->UsesForHomepage("git"))
-    {
-      specific_makesep();
-      $url = $project->getArtifactUrl("git");
-
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Git'));
-      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Git Repository").'</a>';
-
-      if ($project->Uses("git") && $project->getUrl("git_viewcvs") != 'http://' && $project->getUrl("git_viewcvs") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("git_viewcvs").'">'._("Browse Sources Repository").'</a>';
-	}
-      if ($project->UsesForHomepage("git") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
-	}
-      $i++;
-    }
-
-  if ($project->Uses("hg") || $project->UsesForHomepage("hg"))
-    {
-      specific_makesep();
-      $url = $project->getArtifactUrl("hg");
-
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Mercurial'));
-      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Mercurial Repository").'</a>';
-
-      if ($project->Uses("hg") && $project->getUrl("hg_viewcvs") != 'http://' && $project->getUrl("hg_viewcvs") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("hg_viewcvs").'">'._("Browse Sources Repository").'</a>';
-	}
-      if ($project->UsesForHomepage("hg") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
-	}
-      $i++;
-    }
-
-  if ($project->Uses("bzr") || $project->UsesForHomepage("bzr"))
-    {
-      specific_makesep();
-      $url = $project->getArtifactUrl("bzr");
-
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Bazaar'));
-      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Bazaar Repository").'</a>';
-
-      if ($project->Uses("bzr") && $project->getUrl("bzr_viewcvs") != 'http://' && $project->getUrl("bzr_viewcvs") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("bzr_viewcvs").'">'._("Browse Sources Repository").'</a>';
-	}
-      if ($project->UsesForHomepage("bzr") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
-	}
-      $i++;
-    }
-
-  if ($project->Uses("svn") || $project->UsesForHomepage("svn"))
-    {
-      $url = $project->getArtifactUrl("svn");
-      specific_makesep();
-
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Subversion'));
-      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: Subversion Repository").'</a>';
-
-      if ($project->Uses("svn") && $project->getUrl("svn_viewcvs") != 'http://' && $project->getUrl("svn_viewcvs") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("svn_viewcvs").'">'._("Browse Sources Repository").'</a>';
-	}
-      if ($project->UsesForHomepage("svn") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
-	}
-      $i++;
-    }
-
-  if ($project->Uses("arch") || $project->UsesForHomepage("arch"))
-    {
-      specific_makesep();
-      $url = $project->getArtifactUrl("arch");
-
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'Arch'));
-      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: GNU Arch Repository").'</a>';
-
-      if ($project->Uses("arch") && $project->getUrl("arch_viewcvs") != 'http://' && $project->getUrl("arch_viewcvs") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("arch_viewcvs").'">'._("Browse Sources Repository").'</a>';
-	}
-      if ($project->UsesForHomepage("arch") && $project->getUrl("cvs_viewcvs_homepage") != 'http://' && $project->getUrl("cvs_viewcvs_homepage") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
-	}
-      $i++;
-    }
-
-  if ($project->Uses("cvs") || $project->UsesForHomepage("cvs"))
-    {
-
-      specific_makesep();
-      $url = $project->getArtifactUrl("cvs");
-
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24', 'alt'=>'CVS'));
-      print '&nbsp;<a href="'.$url.'">'._("Source Code Manager: CVS Repository").'</a>';
-      if ($project->Uses("cvs") && $project->getUrl("cvs_viewcvs") != 'http://' && $project->getUrl("cvs_viewcvs") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs").'">'._("Browse Sources Repository").'</a>';
-	}
-      if ($project->Uses("homepage") &&
-          $project->getUrl("cvs_viewcvs_homepage") != 'http://' &&
-          $project->getUrl("cvs_viewcvs_homepage") != '')
-	{
-	  print '<br /> &nbsp; - <a href="'.$project->getUrl("cvs_viewcvs_homepage").'">'._("Browse Web Pages Repository").'</a>';
-	}
-      $i++;
-    }
-
-
+# TRANSLATORS: the string is used as the argument of "%s Repository".
+  print_scm_entry ($project, $i, 'git', _("Git"));
+# TRANSLATORS: the string is used as the argument of "%s Repository".
+  print_scm_entry ($project, $i, 'hg', _("Mercurial"));
+# TRANSLATORS: the string is used as the argument of "%s Repository".
+  print_scm_entry ($project, $i, 'bzr', _("Bazaar"));
+# TRANSLATORS: the string is used as the argument of "%s Repository".
+  print_scm_entry ($project, $i, 'svn', _("Subversion"));
+# TRANSLATORS: the string is used as the argument of "%s Repository".
+  print_scm_entry ($project, $i, 'arch', _("GNU Arch"));
+# TRANSLATORS: the string is used as the argument of "%s Repository".
+  print_scm_entry ($project, $i, 'cvs', _("CVS"));
 
   # Bug tracking
 
@@ -649,24 +599,7 @@ if ($project->Uses("patch") ||
                        .'&nbsp;'._("Bug Tracker"));
 
     if (group_get_artifact_url("bugs", 0) == $url)
-      {
-
-	$res_count = db_execute("SELECT count(*) AS count FROM bugs WHERE group_id=? AND status_id != 3",
-				array($group_id));
-	$row_count = db_fetch_array($res_count);
-
-        print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-        $res_count = db_execute("SELECT count(*) AS count FROM bugs WHERE group_id=?",
-				array($group_id));
-	$row_count = db_fetch_array($res_count);
-	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-        print ")\n";
-
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=additem', _("Submit a new item"), 0, group_restrictions_check($group_id, "bugs"));
-      }
+      open_vs_total_items ($url, $group_id, 'bugs');
     $i++;
   }
 
@@ -684,24 +617,7 @@ if ($project->Uses("patch") ||
                        .'&nbsp;'._("Task Manager"));
 
     if (group_get_artifact_url("task", 0) == $url)
-      {
-
-	$res_count = db_execute("SELECT count(*) AS count FROM task WHERE group_id=? AND status_id != 3", 
-	  array($group_id));
-	$row_count = db_fetch_array($res_count);
-
-	print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-        $res_count = db_execute("SELECT count(*) AS count FROM task WHERE group_id=?",
-	  array($group_id));
-	$row_count = db_fetch_array($res_count);
-	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-        print ")\n";
-
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=additem', _("Submit a new item"), 0, group_restrictions_check($group_id, "task"));
-      }
+      open_vs_total_items ($url, $group_id, 'task');
     $i++;
   }
 
@@ -719,23 +635,7 @@ if ($project->Uses("patch") ||
                        .'&nbsp;'._("Patch Manager"));
 
     if (group_get_artifact_url("patch", 0) == $url)
-      {
-	$res_count = db_execute("SELECT count(*) AS count FROM patch WHERE group_id=? AND status_id != 3",
-	  array($group_id));
-	$row_count = db_fetch_array($res_count);
-
-        print " (";
-        printf(ngettext("%s open item", "%s open items", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-	$res_count = db_execute("SELECT count(*) AS count FROM patch WHERE group_id=?",
-	  array($group_id));
-	$row_count = db_fetch_array($res_count);
-	print ', ';
-        printf(ngettext("%s total", "%s total", $row_count['count']), "<strong>{$row_count['count']}</strong>");
-        print ")\n";
-
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=browse&amp;set=open', _("Browse open items"));
-	print '<br /> &nbsp; - '.utils_link($url.'&amp;func=additem', _("Submit a new item"), 0, group_restrictions_check($group_id, "patch"));
-      }
+      open_vs_total_items ($url, $group_id, 'patch');
     $i++;
   }
 

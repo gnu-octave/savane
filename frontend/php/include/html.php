@@ -937,6 +937,7 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
 function html_select_typedir_box ($input_name, $current_value)
 {
   # Probably this shouldn't be localized since it's for siteadmin's eyes only.
+  # The strings are not localized because they are for admin's eyes only.
   print '<br />&nbsp;&nbsp;
       <select name="'.$input_name.'">
         <option value="basicdirectory"'

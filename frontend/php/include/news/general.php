@@ -124,7 +124,8 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",
 	          $summ_txt = substr($story, 0, $truncate);
 		  $summ_txt .= " ...";
 		  $summ_txt = markup_full($summ_txt);
-	          $summ_txt .= sprintf(_("%s[Read more]%s"), '<br /><a href="'
+	          $summ_txt .= sprintf("%s["._("Read more")."]%s",
+                            '<br /><a href="'
                             .$GLOBALS['sys_home'].'forum/forum.php?forum_id='
                             .db_result($result,$i,'forum_id').'">', '</a>');
 		}

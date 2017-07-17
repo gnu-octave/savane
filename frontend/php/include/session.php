@@ -441,8 +441,7 @@ function session_set_new($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
     {
       db_execute("DELETE FROM session WHERE session_hash=?",
                  array($GLOBALS['session_hash']));
-      exit_error(_("Error"),
-		 _("Error - two people had the same hash - backarrow and
+      exit_error(_("Two people had the same hash - backarrow and
 re-login. It should never happen again"));
     }
   else
