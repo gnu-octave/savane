@@ -29,8 +29,7 @@ mission is to spread the freedom to copy and modify software.').'</p>
 
 ';
 
-printf ('<p>'._('<strong>Important</strong>: check <a
-href="%s">
+printf ('<p>'._('<strong>Important</strong>: check <a href="%s">
 Project - How to get it approved quickly</a>.').'</p>
 
 ','//savannah.gnu.org/faq/?group_id=5802&question=Project_-_How_to_get_it_approved_quickly.txt');
@@ -44,7 +43,7 @@ registration process.').'</p>
 of these groups:').'</p>
 
 <dl>
-<dt>'._('<strong>Software Project</strong>').'</dt>
+<dt>'._('Software Project').'</dt>
 <dd>'._('A free software package that can run on a completely free operating
 system, without depending on any nonfree software. You can only provide
 versions for nonfree operating systems if you also provide free
@@ -52,23 +51,24 @@ operating systems versions with the same or more functionalities. Large
 software distributions are not allowed; they should be split into separate
 projects.').'</dd>
 
-<dt>'._('<strong>Free Documentation Projects</strong>').'</dt>
+<dt>'._('Free Documentation Projects').'</dt>
 <dd>'._('Documentation for free software programs, released under a free
 documentation license.').'</dd>
 
-<dt>'._('<strong>Free Educational Textbook Projects</strong>').'</dt>
+<dt>'._('Free Educational Textbook Projects').'</dt>
 <dd>'._('Projects aimed to create educational textbooks, released under a free
 documentation license.').'</dd>
 
-<dt>'._('<strong>FSF/GNU projects</strong>').'</dt>
+<dt>'._('FSF/GNU projects').'</dt>
 <dd>'._('Internal projects of the FSF and projects that have been approved
 by the GNU Project management.').'</dd>
 
-<dt>'._('<strong>GNU/Linux User Groups (GUG)</strong>').'</dt>
+<dt>'._('GNU/Linux User Groups (GUG)').'</dt>
 ';
-printf ('<dd>'._('Organizational project for your user group. GUG need to be listed
-at <a href="%s">GNU Users
-Groups page<a> - contact %s for details.').'
+printf ('<dd>'
+# TRANSLATORS: the second argument is a link to a mailing list.
+._('Organizational project for your user group. GUG need to be listed
+at <a href="%1$s">GNU Users Groups page<a>&mdash;contact %2$s for details.').'
 </dd>
 </dl>
 
@@ -87,25 +87,14 @@ printf ('<p>'
 ._('To keep compatibility among Savannah projects, we only accept free software
 licenses that are compatible with the GPL. The list of GPL-compatible licenses
 covers several of the most commonly used licenses; if you are not familiar
-with that list, please take some time to read <a
-href="%s">GPL-compatible, free software licenses</a>.').'</p>
+with that list, please take some time to read <a href="%s">GPL-compatible,
+free software licenses</a>.').'</p>
 
 ','//www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses');
 
 print '<p>'
 ._('Keep in mind that your project is not approved automatically
 after you follow the registration steps, but it will have to be evaluated
-by one of the Savannah administrators. That process may take from one day
-to a week, depending on the current number of pending projects.').'</p>
-
-<p>'
-._('To ease handling the large number of projects we receive, whenever we ask you
-to provide more information that we think is missing from your registration
-or when we ask you to make some changes, your registration will be removed
-and you will have to register your project again after the changes are done.
-This does not imply that we are reluctant to host your project; it is fairly
-common for projects to undergo more than one registration before they
-are finally approved, so please be prepared for that.').'</p>
-';
-
+by one of the Savannah administrators. Preliminary evaluation may take from one day
+to a week, depending on the current number of pending projects.')."</p>\n";
 ?>

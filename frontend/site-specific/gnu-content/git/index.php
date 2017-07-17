@@ -23,16 +23,16 @@
 
 global $project;
 
-  exec ("grep -A 3 '^repo\.url=" . $project->getUnixName()
-        . "/' /etc/savane/cgitrepos", $output);
-  $n = intval((count ($output) + 1) / 5);
-  if ($n > 0)
-    {
-      echo "<p>"._('Note: this group has multiple Git repositories.')."</p>";
-      $main_desc = exec ("grep -A 2 '^repo\.url=" . $project->getUnixName()
-                         . "\.git' /etc/savane/cgitrepos");
-      $main_desc = preg_replace(':repo.desc=:', '', $main_desc) . "\n";
-    }
+exec ("grep -A 3 '^repo\.url=" . $project->getUnixName()
+      . "/' /etc/savane/cgitrepos", $output);
+$n = intval((count ($output) + 1) / 5);
+if ($n > 0)
+  {
+    echo "<p>"._('Note: this group has multiple Git repositories.')."</p>";
+    $main_desc = exec ("grep -A 2 '^repo\.url=" . $project->getUnixName()
+                       . "\.git' /etc/savane/cgitrepos");
+    $main_desc = preg_replace(':repo.desc=:', '', $main_desc) . "\n";
+  }
 print '
 <h4>'._('Anonymous clone:').'</h4>
 
@@ -64,20 +64,19 @@ print '</pre>
 <pre>';
 
 $username = user_getname();
-if ($username == "NA") {
-        // for anonymous user:
-        $username = '&lt;<em>'._('membername').'</em>&gt;';
-}
+if ($username == "NA")
+  # For anonymous user.
+  $username = '&lt;<i>'._('membername').'</i>&gt;';
 if ($n > 0)
   echo $main_desc;
 
 echo "git clone " . $username . "@git.sv.gnu.org:"
      .  $project->getTypeDir('git') . "\n";
-  for ($i = 0; $i < $n; $i++)
-    {
-      echo "\n" . $desc[$i] . "\n";
-      echo "git clone " . $username . "@git.sv.gnu.org:" . $repo[$i] . "\n";
-   }
+for ($i = 0; $i < $n; $i++)
+  {
+    echo "\n" . $desc[$i] . "\n";
+    echo "git clone " . $username . "@git.sv.gnu.org:" . $repo[$i] . "\n";
+  }
 print '
 </pre>
 

@@ -25,8 +25,8 @@ print '
 
 <br />
 
-'._('Verbatim copying and distribution of this entire article is
-permitted in any medium, provided this notice is preserved.').'
+'._('Verbatim copying and distribution of this entire article
+is permitted in any medium, provided this notice is preserved.').'
 
 <br />
 

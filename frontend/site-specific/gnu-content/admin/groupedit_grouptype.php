@@ -22,7 +22,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-printf(_('To check if a package is official GNU software, see the file
+# No need for i18n: this is for admins only.
+printf(('To check if a package is official GNU software, see the file
 fencepost.gnu.org:/gd/gnuorg/maintainers.  If it is not listed there,
 and no official dubbing message has been sent, it must <b>not</b> be
 approved as &ldquo;Official GNU Software&rdquo;.  The type should be

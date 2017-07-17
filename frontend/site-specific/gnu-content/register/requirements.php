@@ -3,7 +3,7 @@
 print '<p>'._("Please read these usage terms carefully.  If you don't follow them,
 we will not accept your project; if we don't have enough information
 determine whether your project follows these terms, we will
-have to ask you to register the project again with more details.
+have to ask you for more details.
 Once your project is accepted, you are expected to continue following
 these terms.").'</p>
 
@@ -17,9 +17,8 @@ printf ('<p>'._('The space given to you on this server is given for the expresse
 purpose of advancing free software that can run in free operating systems,
 documenting such software, or creating free educational textbooks.
 Using it to host or advertise nonfree software is considered harmful to
-free software.  For more information, please read the <a
-href="%s">
-Philosophy of the GNU Project</a>.').'</p>
+free software.  For more information, please read the
+<a href="%s">Philosophy of the GNU Project</a>.').'</p>
 
 ', "//www.gnu.org/philosophy/philosophy.html");
 
@@ -43,25 +42,25 @@ nonfree software.').'</p>
 <p>'._('It is ok for the program to run on nonfree platforms or nonfree
 operating systems, and to work with well-known nonfree applications,
 in addition to working with free software, provided it gives the free
-software at least as good support as it gives to other
-alternatives.  In other words, at no time, in no way, should your
+software at least as good support as it gives to nonfree
+counterparts.  In other words, at no time, in no way, should your
 program put free software users at a disadvantage compared to those
 willing to use proprietary software.').'</p>
 
 <h3>'._('Regarding Android phones').'</h3>
 
-<p>'._("Provided Savannah's maintainers have the capacity, projects running on
+<p>'._("Projects running on
 Replicant may be hosted on Savannah.  Projects having dependencies on
 nonfree software, such as proprietary software drivers or AndroidOS,
-are not permissible").'</p>
+are not permissible.").'</p>
 
 <h3>'._('No nonfree formats').'</h3>
 
 <p>'._("Using a format such as Flash, RealPlayer and QuickTime, that can in
 practice only be created or played using nonfree software is, in
 effect, to recommend use of that nonfree player software.  When the
-free software alternative is not as good as the proprietary one, using
-such a format is also implicitly recommending the nonfree solution.
+free software implementation is not as technically good as the proprietary one, using
+such a format is also implicitly recommending the nonfree version.
 Therefore, your package shouldn't contain or recommend materials in
 these nonfree formats.").'</p>
 
@@ -92,8 +91,7 @@ package.').'</p>
 
 ';
 printf ('<p>'._("If you'd like to help correct other confusions, you can find some
-suggestions in <a href=\"%s\">
-Words to Use with Care</a>.").'</p>
+suggestions in <a href=\"%s\">Words to Use with Care</a>.").'</p>
 
 ', '//www.gnu.org/philosophy/words-to-avoid.html');
 
@@ -116,16 +114,15 @@ holder of whatever you create for your project.').'</p>
 
 ';
 printf ('<p>'._('For manuals, we recommend GNU FDL version X-or-later, where X is the
-latest released version of the <a
-href="%s">FDL</a>; other
+latest released version of the <a href="%s">FDL</a>; other
 licensing compatible with that is acceptable.').'</p>
 
 ', '//www.gnu.org/licenses/fdl.html');
 
 printf ('<p>'._('Proper license notices should be applied to, at least, each source
 (non-derived) file in your project.  For example, for the GPL, see the
-page on <a href="%s">How to Use
-GNU Licenses</a>.  In the case of binary source files, such as images,
+page on <a href="%s">How to Use GNU Licenses</a>.
+In the case of binary source files, such as images,
 it is ok for the license to be stated in a companion <tt>README</tt> or
 similar file.  It is desirable for derived files to also include license
 notices.  A copy of the full text of all applicable licenses should also

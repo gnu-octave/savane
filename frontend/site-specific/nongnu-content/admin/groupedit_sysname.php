@@ -18,8 +18,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# No need for i18n: this is for admins only.
 printf ('<p>'
-._('The /webcvs subdirectory on which the project will have write access.
+.('The /webcvs subdirectory on which the project will have write access.
 Empty value means that no directory of /webcvs will be given to this project.
 Make sure you fully understand the <a href="%s">
 rationale</a> associated with this value.
@@ -30,17 +31,17 @@ Every non-GNU project must be located in the <b>/non-gnu/</b> subdirectory.')
 
 ', '/savannah.html#Web%20CVS%20repositories');
 print '<p>'
-._('Only change the project name <b>if it already exists</b> under another
+.('Only change the project name <b>if it already exists</b> under another
 name in the GNU project. For instance if <code>gnuedma</code> was submitted,
 it should be changed to <code>edma</code> since the pages exists in
 <code>www.gnu.org/software/edma</code>.').'</p>
 
 <p>'
-._('<i>auto</i> means that everything will be set according to the project type.')
+.('<i>auto</i> means that everything will be set according to the project type.')
 .'</p>
 
 <p>'
-._('Note: if you use the text field to set the Subdirectory, you need to
+.('Note: if you use the text field to set the Subdirectory, you need to
 give the complete url.  In this particular case, the System Name will
 not be added as subsubdirectory.  This field should be used only for
 web project. In fact, this field generally must be used for web

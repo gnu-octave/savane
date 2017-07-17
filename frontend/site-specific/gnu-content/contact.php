@@ -45,8 +45,7 @@ them, so it is a waste of everyone's time to write us.").'</p>
 printf ('
 <li>'._('For general help with and discussion about using Savannah (<b>not</b>
 about a specific project hosted here), you can use the <a
-href="%s">savannah-users
-mailing list</a>.').'</li>
+href="%s">savannah-users mailing list</a>.').'</li>
 ','//lists.gnu.org/mailman/listinfo/savannah-users');
 
 print '<li>'._("To report an issue or submit a request about the Savannah
@@ -63,10 +62,8 @@ print ' <a href="'
 ';
 
 printf ('<li>'
-._('As an alternative to submitting a tracker item, you can send mail to the <a
-href="%s">savannah-help-public</a>
-list, after <a
-href="%s">searching
+._('As an alternative to submitting a tracker item, you can send mail to the
+<a href="%s">savannah-help-public</a> list, after <a href="%s">searching
 the archives</a>.').'</li>
 
 ', '//lists.gnu.org/mailman/listinfo/savannah-hackers',

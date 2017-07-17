@@ -23,12 +23,12 @@
 
 print '<h2>'._('Registration Complete!').'</h2>
 <p>';
-printf (_('Your project has been submitted and is waiting to be reviewed by a
-%s
-administrator. You will shortly receive a mail message telling you whether
+print
+_('Your project has been submitted and is waiting to be reviewed by a
+Savannah administrator. You will shortly receive a mail message telling you whether
 your project has been approved, or you have to do some changes before it is
 approved.').'
 </p>
-', $GLOBALS['sys_name']);
+';
 
 ?>

@@ -24,54 +24,62 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 printf ('<p>'._('Welcome to <strong>Savannah</strong>, the software forge for people
-committed to <a href="%s">free
-software</a>:').'</p>
+committed to <a href="%s">free software</a>:').'</p>
 
 ', '//www.gnu.org/philosophy/free-sw.html');
 
 print '<p><ul>
 <li>'._('We host free projects that run on free operating systems and without
     any proprietary software dependencies.').'</li>
-<li>'._('Our service runs with 100% free software, including <a
-    href="/projects/administration/">itself</a>.').'</li>
-<li><a href="/maintenance/WhyChooseSavannah">'._('Why
-    choose Savannah?').'</a></li>
+<li>'.sprintf(
+_('Our service runs with 100%% free software, including <a href="%s">itself</a>.'),
+ '/projects/administration/').'</li>
+<li><a href="/maintenance/WhyChooseSavannah">'
+._('Why choose Savannah?').'</a></li>
 </ul></p>
 
 ';
 printf ('<p>'._('<strong>Savannah.nongnu.org</strong> is a central point for
-development, maintenance and distribution of <a
-href="%s">free software</a>').'.</p>
+development, maintenance and distribution of <a href="%s">free software</a>.')
+.'</p>
 
 ', '//www.gnu.org/philosophy/free-sw.html');
 
 print '<p>'._('If you would like to use Savannah to host your
-project, then go to the <b>Register new project</b> menu entry.').'</p>
+project, then go to the <b>Register New Project</b> menu entry.').'</p>
 
 ';
 
 printf ('<p>'
 ._("It's not necessary for using Savannah, but if you would like to make
 your project part of the GNU system, please see the <a
-href=\"%s\">GNU Software
-Evaluation</a> web page.  New packages are welcome in GNU.").'</p>
+href=\"%s\">GNU Software Evaluation</a> web page.
+New packages are welcome in GNU.").'</p>
 
 ', '//www.gnu.org/help/evaluation.html');
 
 print '<p>'._('We strongly recommend all Savannah users subscribe to this
 mailing list:').'</p>
 <ul>
-<li>'._('<a href="//lists.gnu.org/mailman/listinfo/savannah-announce">
-    savannah-announce</a>:
-    low-volume notifications of important issues and changes at Savannah.').'</li>
+<li>'
+.sprintf(
+# TRANSLATORS: the argument is a link to mailing list.
+_('%s:
+    low-volume notifications of important issues and changes at Savannah.'),
+'<a href="//lists.gnu.org/mailman/listinfo/savannah-announce">'
+.'savannah-announce</a>').'</li>
 </ul>
 
 <p>'._('And this mailing list is a place for Savannah users to communicate and
 ask questions:').'</p>
 <ul>
-<li>'._('<a href="//lists.gnu.org/mailman/listinfo/savannah-users">
-    savannah-users</a>:
-    help with using Savannah in general (not with a specific project).').'</li>
+<li>'
+.sprintf(
+# TRANSLATORS: the argument is a link to mailing list.
+_('%s:
+    help with using Savannah in general (not with a specific project).'),
+'<a href="//lists.gnu.org/mailman/listinfo/savannah-users>savannah-users</a>')
+.'</li>
 </ul>
 </p>
 

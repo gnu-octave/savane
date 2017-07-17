@@ -24,8 +24,8 @@ print '
 <h3>'._('Create a New Job').'</h3>
 
 <p>'
-._('Start by filling in the fields below. When you click continue, you
-will be shown a list of skills and experience levels that this job requires.')
+._('Start by filling in the fields below. When you push &ldquo;continue,&rdquo;
+you will be shown a list of skills and experience levels that this job requires.')
 .'</p>
 ';
 ?>

@@ -23,6 +23,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
+
 global $project;
 
 print '<h3>'._('Anonymous CVS Access').'</h3>
@@ -30,41 +32,42 @@ print '<h3>'._('Anonymous CVS Access').'</h3>
 <p>'
 ._("This project's CVS repository can be checked out through anonymous
 CVS with the following instruction set. The module you wish
-to check out must be specified as the <i>modulename</i>.").'</p>
+to check out must be specified as the &lt;<i>modulename</i>&gt;.").'</p>
 
 ';
 
-if ($project->Uses("cvs")) {
-	print "<h4>"._('Software repository:')."</h4>\n";
-	print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
-	      . $project->getTypeBaseHost()
-	      . ":" . $project->getTypeDir('cvs')
-	      . " co "
-	      . $project->getUnixName()
-	      . "</pre>\n";
-	print "<h5>"._('With other project modules:')."</h5>\n";
-	print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
-	      . $project->getTypeBaseHost()
-	      . ":"
-	      . $project->getTypeDir('cvs')
-	      . " co "._('&lt;<em>modulename</em>&gt;')."</pre>\n";
-
-}
-if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs")) {
-	print "<h4>"._('Webpages repository:')."</h4>\n";
-	print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
-	. $project->getTypeBaseHost()
-	. ":"
-	. $project->getTypeDir('homepage')
-	. " co "
-	. $project->getUnixName()
-	. "</pre>\n";
-}
+if ($project->Uses("cvs"))
+  {
+    print "<h4>"._('Software repository:')."</h4>\n";
+    print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
+          . $project->getTypeBaseHost()
+          . ":" . $project->getTypeDir('cvs')
+          . " co "
+          . $project->getUnixName()
+          . "</pre>\n";
+    print "<h5>"._('With other project modules:')."</h5>\n";
+    print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
+          . $project->getTypeBaseHost()
+          . ":"
+          . $project->getTypeDir('cvs')
+          . " co &lt;<i>"._('modulename')."</i>&gt;</pre>\n";
+  }
+if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
+  {
+    print "<h4>"._('Webpage repository:')."</h4>\n";
+    print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
+    . $project->getTypeBaseHost()
+    . ":"
+    . $project->getTypeDir('homepage')
+    . " co "
+    . $project->getUnixName()
+    . "</pre>\n";
+  }
 
 print '<p>'
 ._("<em>Hint:</em> When you update your working copy from within the
-module's directory (with <em>cvs update</em>) you do not need the -d
-option anymore.  Simply use").'</p>
+module's directory (with <code>cvs update</code>) you do not need the
+<code>-d</code> option anymore.  Simply use").'</p>
 
 <blockquote>
 <pre>
@@ -81,54 +84,47 @@ cvs -qn update
 pserver method can only be used for anonymous access.').'</p>
 
 <p>'
-._('The SSHv2 public key fingerprints for the machine hosting the cvs
-trees are:').'</p>
-
-<pre>
-1024 80:5a:b0:0c:ec:93:66:29:49:7e:04:2b:fd:ba:2c:d5 (RSA)
-256 65:b8:1c:2f:82:7c:0e:39:e1:4a:63:f2:13:10:e8:9c (ECDSA)
-256 14:7b:c8:98:dd:06:08:97:8c:00:9d:d2:ae:85:c8:82 (ED25519)
-</pre>
-
-';
+._('The SSHv2 public key fingerprints for the machine hosting the CVS
+trees are:').'</p>'. $vcs_fingerprints;
 
 $username = user_getname();
-if ($username == "NA") {
-	// for anonymous user:
-	$username = '&lt;<em>'._('membername').'</em>&gt;';
-}
-if ($project->Uses("cvs")) {
-	print "<h4>"._('Software repository:').'</h4>'."\n";
-	print "<pre>cvs -z3 -d:ext:"
-            . $username
-            . "@cvs."
-            . $project->getTypeBaseHost()
-            . ":"
-            . $project->getTypeDir("cvs")
-            . " co "
-            . $project->getUnixName()
-            . "</pre></p>\n";
-        print "<h5>"._('With other project modules:')."</h5>\n";
-	print "<pre>cvs -z3 -d:ext:"
-            . $username
-            . "@cvs."
-            . $project->getTypeBaseHost()
-            . ":"
-            . $project->getTypeDir("cvs")
-            . " co ".'&lt;<em>'._('modulename').'</em>&gt;'."</pre></p>\n";
-}
-if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs")) {
-	print "<h4>"._('Webpages repository:')."</h4>\n";
-	print "<pre>cvs -z3 -d:ext:"
-	. $username
-	. "@cvs."
-	. $project->getTypeBaseHost()
-	. ":"
-	. ereg_replace('/$', "", $project->getTypeDir("homepage"))
-	. " co "
-	. $project->getUnixName()
-	. "</pre></p>\n";
-}
+if ($username == "NA")
+  # For anonymous user.
+  $username = '&lt;<i>'._('membername').'</i>&gt;';
+if ($project->Uses("cvs"))
+  {
+    print "<h4>"._('Software repository:').'</h4>'."\n";
+    print "<pre>cvs -z3 -d:ext:"
+           . $username
+           . "@cvs."
+           . $project->getTypeBaseHost()
+           . ":"
+           . $project->getTypeDir("cvs")
+           . " co "
+           . $project->getUnixName()
+           . "</pre></p>\n";
+    print "<h5>"._('With other project modules:')."</h5>\n";
+    print "<pre>cvs -z3 -d:ext:"
+          . $username
+          . "@cvs."
+          . $project->getTypeBaseHost()
+          . ":"
+          . $project->getTypeDir("cvs")
+          . " co ".'&lt;<i>'._('modulename').'</i>&gt;'."</pre></p>\n";
+  }
+if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
+  {
+    print "<h4>"._('Webpage repository:')."</h4>\n";
+    print "<pre>cvs -z3 -d:ext:"
+          . $username
+          . "@cvs."
+          . $project->getTypeBaseHost()
+          . ":"
+          . ereg_replace('/$', "", $project->getTypeDir("homepage"))
+          . " co "
+          . $project->getUnixName()
+          . "</pre></p>\n";
+  }
 
 print '<h3>'._('CVS Newbies').'</h3>
 
@@ -145,28 +141,28 @@ http://www.nongnu.org/cvs/#documentation</a>');
 
 printf ('<p>'
 ._('The basic information described further on this page is detailed in
-<a href="%s">the savannah user doc</a>.').'</p>',
+the <a href="%s">Savannah user doc</a>.').'</p>',
    $GLOBALS['sys_home'].'faq/?group='.$GLOBALS['sys_unix_group_name']);
 
-	if ($project->CanUse("cvs")) {
-		print '<h3>'._('What are CVS modules?').'</h3>';
-		printf ('<p>'
+if ($project->CanUse("cvs"))
+  {
+    print '<h3>'._('What are CVS modules?').'</h3>';
+    printf ('<p>'
 ._('The CVS repository of each project is divided into modules which you can
 download separately.  The list of existing modules for this project can be
 obtained by looking at <a href="%s">the root of the CVS repository</a>; each
-<strong>File</strong> listed there is the name of a module, which can substitute
-the generic &lt;<em>modulename</em>&gt; used below in the examples of the
-<em>co</em> command of CVS.  Note that <strong>.</strong> (dot) is always also
+<code>File</code> listed there is the name of a module, which can substitute
+the generic &lt;<i>modulename</i>&gt; used below in the examples of the
+<code>co</code> command of CVS.  Note that <code>.</code> (dot) is always also
 a valid module name which stands for &ldquo;all available modules&rdquo; in a project.  Most
 projects have a module with the same name of the project, where the main
 software development takes place.').'</p>
 
 ',
-   $project->getTypeUrl("cvs_viewcvs"));
-	}
+    $project->getTypeUrl("cvs_viewcvs"));
+  }
 
-print '<p>'._('The same applies to the Webpages Repository.').'</p>
-
+print '<p>'._('The same applies to the Webpage Repository.').'</p>
 
 <h3>'._('Import your CVS tree').'</h3>
 
@@ -175,7 +171,7 @@ want to move to Savannah, make an appointment with us for the
 migration.').'</p>
 
 
-<h3>'._('Symbolic Links in HTML CVS').'</h3>
+<h3>'._('Symbolic Links in Webpage CVS').'</h3>
 
 ';
 
@@ -184,16 +180,17 @@ printf ('<p>'
 <tt>.symlinks</tt> can be put in any directory where you want to make symbolic
 links.  Each line of the file lists a real file name followed by the name of the
 symbolic link. The symbolic links are built twice an hour.  More information in
-<a href="%s">GNU Webmastinrg Guidelines</a>.').'</p>',
+<a href="%s">GNU Webmastering Guidelines</a>.').'</p>',
 "//www.gnu.org/server/standards/README.webmastering.html#symlinks");
 
 global $project;
 
-if ($project->getTypeBaseHost() == "savannah.gnu.org") {
-	print '<h3>'._('Web pages for GNU packages').'</h3>';
-	printf ('<p>'
+if ($project->getTypeBaseHost() == "savannah.gnu.org")
+  {
+    print '<h3>'._('Web pages for GNU packages').'</h3>';
+    printf ('<p>'
 ._('When writing web pages for official GNU packages, please keep the
 <a href="%s"> guidelines</a> in mind.').'</p>
 ','//www.gnu.org/prep/maintain/maintain.html#Web-Pages');
-}
+  }
 ?>

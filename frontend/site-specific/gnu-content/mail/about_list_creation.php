@@ -53,7 +53,7 @@ href="%s">listhelper system</a>.  More details about this:').'</li>
 print '<ul>
 <li>'._('The first time a person posts to a list under a particular email
 address, the message is held for review, potentially by the mailman list
-owner(s) (you), the listhelper automated system, and the listhelper
+owners, the listhelper automated system, and the listhelper
 human volunteers.  This is when spam is detected and deleted.').'</li>
 
 <li>'._("Therefore, if you are concerned about your list's messages being
@@ -75,8 +75,8 @@ on the &lsquo;General Options&rsquo; page).').'</li>
 
 <li>';
 
-printf (_('For more information, see the <a href="%s">listhelper home page</a>')
-.'.</li>
+printf (_('For more information, see the <a href="%s">listhelper home page</a>.')
+.'</li>
 ', "//www.nongnu.org/listhelper/");
 
 print '</ul>

@@ -1,6 +1,6 @@
 <?php
 
-# Savannah - Project registration administration group type infos
+# Savannah - Project registration administration group type info.
 #
 # Copyright (C) 2002 Loic Dachary
 # Copyright (C) 2017 Ineiev <ineiev@gnu.org>
@@ -20,7 +20,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-print _('To check if a project is a GNU project, read the
+# No need for i18n: this is for admins only.
+print ('To check if a project is a GNU project, read the
 fencepost.gnu.org:/gd/gnuorg/maintainers list. If the value of this flag is Y
 before moderation it mean that the project is either already a GNU project (in
 which case the user submitting the project probably added something in the

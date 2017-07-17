@@ -21,8 +21,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# No need for i18n: this is for admins only.
 print '<p>'
-._('When examining a submission, first check the description.  If the description
+.('When examining a submission, first check the description.  If the description
 is unclear, delete the project and ask the submitter to send a more detailed
 description.  If the software claims to be free software, check the submitted
 tarball, some people are confused and/or misled.').'</p>

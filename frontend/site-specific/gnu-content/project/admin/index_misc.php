@@ -42,11 +42,14 @@ print 'rsync cvs.' . $project->getTypeBaseHost() . '::web/' . $GLOBALS['group'] 
 print'
 </pre>
 
-<h4>'._('ftp.gnu.org area').'</h4>
+<h4>'
+# TRANSLATORS: this is a header (<h4>)
+._('ftp.gnu.org area').'</h4>
 ';
 
-printf ('<p>'.
-_('Each GNU project has a download area at ftp.gnu.org. This area is not
+printf ('<p>'
+# TRANSLATORS: the argument is a mailto: link.
+._('Each GNU project has a download area at ftp.gnu.org. This area is not
 managed via Savannah.  Write to %s to get access.').'</p>
 ', '<a href="mailto:account@gnu.org">account@gnu.org</a>');
 

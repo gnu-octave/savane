@@ -21,6 +21,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
+
 global $project;
 
 print '<h4>'._('Anonymous read-only access').'</h4>
@@ -28,15 +30,16 @@ print '<h4>'._('Anonymous read-only access').'</h4>
 <p>'._('The Bazaar repositories for projects use separate directories for
 each branch. You can see the branch names in the repository by pointing
 a web browser to:').' <br />
-<tt>http://bzr.'
-  .$project->getTypeBaseHost(). "/r/" . $project->getUnixName().'</tt></p>
+<code>http://bzr.'
+  .$project->getTypeBaseHost(). "/r/" . $project->getUnixName().'</code></p>
 
 <ul>
 <li><p>'._('For a repository with separate branch directories (<tt>trunk</tt>,
 <tt>devel</tt>, &hellip;), use:').'</p>
 
 <pre>bzr branch bzr://bzr.'
-  .$project->getTypeBaseHost(). "/" . $project->getUnixName().'/<i>branch</i></pre>
+  .$project->getTypeBaseHost(). "/" . $project->getUnixName().'/'
+._('<i>branch</i>').'</pre>
 
 <p>'._('where <i>branch</i> is the name of the branch you want.').'</p>
 </li>
@@ -49,21 +52,20 @@ a web browser to:').' <br />
 </li>
 
 <li><p>'
-._('If you need the low-performance HTTP access, this is the url:').'</p>
+._('If you need the low-performance HTTP access, this is the URL:').'</p>
 <pre>http://bzr.'
   .$project->getTypeBaseHost(). "/r/" . $project->getUnixName().'</pre>
 </li>
 </ul>
 
-<h4>'._('Developer write access (ssh)').'</h4>
+<h4>'._('Developer write access (SSH)').'</h4>
 
 ';
 
 $username = user_getname();
-if ($username == "NA") {
-   // for anonymous user :
-   $username = '&lt;<em>'._('membername').'</em>&gt;';
-}
+if ($username == "NA")
+   # For anonymous user.
+   $username = '&lt;<i>'._('membername').'</i>&gt;';
 print '
 <pre>bzr branch bzr+ssh://'
   .$username ?>@bzr.<?php echo $project->getTypeBaseHost(). "/"
@@ -76,6 +78,10 @@ print '
 
 printf ('<p>'
 ._('Check the <a href="%s">UsingBzr</a> page at the documentation wiki.')
-.'</p>', "//savannah.gnu.org/maintenance/UsingBzr");
+."</p>\n", "//savannah.gnu.org/maintenance/UsingBzr");
+
+print "<p>".
+_('The SSHv2 public key fingerprints for the machine hosting the CVS
+trees are:')."</p>\n". $vcs_fingerprints;
 
 ?>

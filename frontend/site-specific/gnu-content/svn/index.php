@@ -21,31 +21,33 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
+
 global $project;
 
 print '<h3>'._('Anonymous / read-only Subversion access').'</h3>
 
 <p>'._("This project's Subversion repository can be checked out anonymously
 as follows.  The module you wish to check out must be specified as the
-<i>modulename</i>.").'</p>
+&lt;<i>modulename</i>&gt;.").'</p>
 
 ';
 
 print '<h4>'._('Access using the SVN protocol:').'</h4>
-<tt>svn co svn://svn.'
+<code>svn co svn://svn.'
                         . $project->getTypeBaseHost()
                         . "/"
                         . $project->getUnixName()
-                        . "/<em>"._('modulename')."</em></tt><br />";
+                        . "/&lt;<i>"._('modulename')."</i>&gt;</code><br />";
 print '<h4>'._('Access using HTTP (slower):').'</h4>
-<tt>svn co http://svn.'
+<code>svn co http://svn.'
                         . $project->getTypeBaseHost()
                         . "/svn/"
                         . $project->getUnixName()
-                        . "/<em>"._('modulename')."</em></tt>";
+                        . "/&lt;<i>"._('modulename')."</i>&gt;</code>";
 
 print '<p>'._("Typically, you'll want to use <tt>trunk</tt> for
-<em>modulename</em>. Refer to a project's specific instructions if
+<i>modulename</i>. Refer to a project's specific instructions if
 you're unsure, or browse the repository with ViewVC.").'</p>
 
 
@@ -57,30 +59,22 @@ you're unsure, or browse the repository with ViewVC.").'</p>
 
 <p>
 '._('The SSHv2 public key fingerprints for the machine hosting the source
-trees are:').'</p>
-
-<pre>
-1024 80:5a:b0:0c:ec:93:66:29:49:7e:04:2b:fd:ba:2c:d5 (RSA)
-256 65:b8:1c:2f:82:7c:0e:39:e1:4a:63:f2:13:10:e8:9c (ECDSA)
-256 14:7b:c8:98:dd:06:08:97:8c:00:9d:d2:ae:85:c8:82 (ED25519)
-</pre>
-
-';
+trees are:')."</p>\n".$vcs_fingerprints;
 
 $username = user_getname();
 if ($username == "NA") {
         // for anonymous user :
-        $username = '&lt;<em>'._('membername').'</em>&gt;';
+        $username = '&lt;<i>'._('membername').'</i>&gt;';
 }
 
 print '<h4>'._('Software repository (over SSH):').'</h4>
-<tt>svn co svn+ssh://'
+<code>svn co svn+ssh://'
               . $username
               . '@svn.'
               . $project->getTypeBaseHost()
               . "/"
               . $project->getUnixName()
-              . "/<em>"._('modulename')."</em></tt>";
+              . "/&lt;<i>"._('modulename')."</i>&gt;</code>";
 print '
 
 <h3>'._('Importing into Subversion on Savannah').'</h3>
@@ -89,12 +83,9 @@ print '
 
 printf ('<p>'
 ._('If your project already has an existing source repository that you
-want to move to Savannah, check the <a
-href="%s">conversion
+want to move to Savannah, check the <a href="%s">conversion
 documentation</a> and then submit a request for the
-migration in the <a
-href="%s">Savannah
-Administration</a> project.').'</p>
+migration in the <a href="%s">Savannah Administration</a> project.').'</p>
 
 ', '//savannah.gnu.org/maintenance/CvSToSvN',
    '//savannah.gnu.org/projects/administration');
@@ -104,7 +95,7 @@ print '<h3>'._('Exporting Subversion tree from Savannah').'</h3>
 
 <p>'
 ._('You can access your subversion raw repository using read-only access via
-rsync, and then use that copy as a local svn repository:').'</p>
+rsync, and then use that copy as a local SVN repository:').'</p>
 
 <pre>
 rsync -avHS rsync://svn.<?php echo $project->getTypeBaseHost(); ?>/svn/'

@@ -23,13 +23,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# No need for i18n: this is for admins only.
 print '<p><a href="gnuevalconfirm.php?group_id='.$GLOBALS['group_id'].'">'
-._('Ask maintainers@gnu.org if this is a GNU package indeed').'</a></p>
+.('Ask maintainers@gnu.org if this is a GNU package indeed').'</a></p>
 
 <p><a href="gnueval.php?group_id='.$GLOBALS['group_id'].'">'
-._('Ask gnueval-input@gnu.org to evaluate for inclusion in the GNU project').'</a></p>
+.('Ask gnueval-input@gnu.org to evaluate for inclusion in the GNU project').'</a></p>
 
 <p><a href="send_registration_notification.php?group_id='.$GLOBALS['group_id'].'">'
-._('Resend the admin mail notification').'</a></p>';
+.('Resend the admin mail notification').'</a></p>';
 
 ?>

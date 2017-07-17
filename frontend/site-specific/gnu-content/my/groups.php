@@ -20,12 +20,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-printf (_('To remove a project, please contact the <a
-href="%s">Savannah Hackers</a>
+printf (_('To remove a project, please contact the
+<a href="%s">Savannah Hackers</a>
 indicating the new project location&mdash;we
 only remove projects if they are available at another place&mdash;and
-optionally the reason why you leave :)
-'),
+optionally the reason why you leave :)'),
 '//savannah.gnu.org/support/?group=administration');
 
 ?>

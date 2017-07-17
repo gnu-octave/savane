@@ -24,6 +24,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# TRANSLATORS: the argument is site name (like Savannah).
 printf(_('Your %s password is used only for
 logging into the Savannah web interface.  It is not used for bzr, cvs,
 git, hg, rsync, scp, sftp or other services.  Only SSH keys are
