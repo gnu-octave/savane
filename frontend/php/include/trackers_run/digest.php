@@ -43,8 +43,8 @@ elseif ($func == "digestselectfield")
     if ($dependencies_of_item && $dependencies_of_tracker)
       {
         if (!ctype_alnum($dependencies_of_tracker))
-          util_die("Invalid tracker name <em>"
-                   . htmlspecialchars($dependencies_of_tracker) . "</em>");
+          util_die(sprintf(_("Invalid tracker name %s"),
+                   "<em>".htmlspecialchars($dependencies_of_tracker)."</em>"));
 
         $res_deps = db_execute("SELECT is_dependent_on_item_id FROM "
                                .$dependencies_of_tracker
@@ -80,12 +80,11 @@ elseif ($func == "digestselectfield")
       }
 
     print "\n\n<p>";
-    printf(
-ngettext("You selected %s item for this digest. Now you must unselect fields
-you do not want to be included in the digest.",
- "You selected %s items for this digest. Now you must unselect fields you do
-not want to be included in the digest.",
- $count), $count)."</p>\n";
+    printf(ngettext("You selected %s item for this digest.",
+                    "You selected %s items for this digest.", $count),
+           $count)
+._("Now you must unselect fields you do not want to be included in the digest.")
+."</p>\n";
 
     $i = 0;
   # Select fields

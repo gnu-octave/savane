@@ -56,8 +56,8 @@ if (db_numrows($result) > 0)
 	}
       elseif (db_result($result,0,'submitted_by') == user_getid())
 	{
-	  $private_intro = _("This item is private. However, you are allowed to
-read it as you submitted it.");
+	  $private_intro =
+_("This item is private. However, you are allowed to read it as you submitted it.");
 	}
       else
 	{
@@ -476,7 +476,7 @@ priority and open/close items")))."</p>\n";
   print sprintf(_("(Note: upload size limit is set to %s kB, after insertion of
 the required escape characters.)"), $GLOBALS['sys_upload_max']);
 
-  print '</p><p class="noprint"><span class="preinput"> '._("Attach File(s):")
+  print '</p><p class="noprint"><span class="preinput"> '._("Attach Files:")
     .'</span><br />
       &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" /> '
     .'<input type="file" name="input_file2" size="10" />
@@ -563,7 +563,7 @@ fill a dependency against):");
 </select>&nbsp;';
 
 # TRANSLATORS: the first argument is tracker type (like The Bug Tracker),
-# th second argument is either 'This Project Only' or 'Any Project'.
+# the second argument is either 'This Project Only' or 'Any Project'.
   printf (_('Of %1$s of %2$s'), $tracker_select, $group_select);
 
   if (!$depends_search)
@@ -630,7 +630,7 @@ of '%s' in the database:"), $depends_search);
 			  print '<br />';
                           print '&nbsp;&nbsp;&nbsp;'
                             .form_input("checkbox", "dependent_on_".$tracker
-                            ."[]", $res_id).' '.$tracker.' #'.$res_id._(': ')
+                            ."[]", $res_id).' '.$tracker.' #'.$res_id.': '
                             .$res_summary;
 			  print ', '._("group").' '.group_getname($res_group);
 			}
@@ -667,8 +667,8 @@ three characters are valid.");
 			       _("Mail Notification Carbon-Copy List"));
   print '<p class="noprint">';
 # TRANSLATORS: the argument is site name (like Savannah).
-  printf (_("(Note: for %s users, you can use their login name rather than
-their email addresses.)"), $GLOBALS['sys_name']);
+  printf (_("(Note: for %s users, you can use their login name
+rather than their email addresses.)"), $GLOBALS['sys_name']);
 
   print '</p>
 <p class="noprint"><span class="preinput">'
@@ -748,13 +748,13 @@ managers.").'</p>
 	}
       $tracker_select = '<select name="reassign_change_artifact">';
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("support", _("Support Tracker"));
+      $tracker_select .= specific_reassign_artifact("support", _("<!-- Move to the -->Support Tracker"));
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("bugs", _("Bugs Tracker"));
+      $tracker_select .= specific_reassign_artifact("bugs", _("<!-- Move to the -->Bug Tracker"));
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("task", _("Task Tracker"));
+      $tracker_select .= specific_reassign_artifact("task", _("<!-- Move to the -->Task Tracker"));
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("patch", _("Patch Tracker"));
+      $tracker_select .= specific_reassign_artifact("patch", _("<!-- Move to the -->Patch Tracker"));
       $tracker_select .= "</select>\n";
 
       printf (_("Move to the %s"), $tracker_select);

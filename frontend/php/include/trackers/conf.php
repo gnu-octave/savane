@@ -34,6 +34,33 @@
 # result. We ll be doing dumb code, code that we ll be able to debug.
 # (you need to be smarter than the code to be able to debug it, so lets avoid
 # writing the smartest code, so we still have a chance)
+function artifact_name ($artifact)
+{
+   switch($artifact)
+     {
+       case 'bugs': return
+       # TRANSLATORS: this string is used in context of "%s tracker".
+                           _('bug');
+       case 'patch': return
+       # TRANSLATORS: this string is used in context of "%s tracker".
+                           _('patch');
+       case 'task': return
+       # TRANSLATORS: this string is used in context of "%s tracker".
+                           _('task');
+       case 'cookbook': return
+       # TRANSLATORS: this string is used in context of "%s tracker".
+                               _('cookbook');
+       case 'support': return
+       # TRANSLATORS: this string is used in context of "%s tracker".
+                              _('support');
+       case 'news': return
+       # TRANSLATORS: this string is used in context of "%s tracker".
+                             _('news');
+       default: return $artifact;
+     }
+   return $artifact;
+}
+
 function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 {
   if (!ctype_alnum($artifact))
@@ -45,8 +72,11 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
       fb(_("Missing parameters"), 1);
       return 0;
     }
-  fb(sprintf(_("Start copying configuration of group #%s %s tracker"),
-             $from_group_id, $artifact));
+  fb(sprintf(
+# TRANSLATORS: the first argument is group id (a number),
+# the second argument is previously defined string (bug|patch|task|...)
+             _('Start copying configuration of group #%1$s %2$s tracker'),
+             $from_group_id, artifact_name($artifact)));
 
 # Copy the notification settings.
   $res_groups_from_group = db_execute("SELECT * FROM groups WHERE group_id=?",
@@ -79,46 +109,53 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
   $result_field_usage_from_group =
     db_execute("SELECT * FROM {$artifact}_field_usage WHERE group_id=?",
                array($from_group_id));
-  $z = 0;
-  $itemsdone = '';
-  while ($thisone = db_fetch_array($result_field_usage_from_group))
-    {
-      $res = db_createinsertinto($result_field_usage_from_group,
-                                 $artifact."_field_usage",
-                                 $z,
-                                 "none",
-                                 "group_id",
-                                 $group_id);
 
-      if (db_affected_rows($res))
-        $itemsdone .= "#".$thisone['bug_field_id']." ";
+  function print_no ($id)
+  {
+    return sprintf (
+    # TRANSLATORS: the argument is id (a number).
+                    _("#%s"), $id)." ";
+  }
 
-      $z++;
-    }
+  function print_items ($result_field_usage_from_group, $artifact_key,
+                        $group_id, $field, $field_idx)
+  {
+    $z = 0;
+    $ret = '';
+
+    while ($thisone = db_fetch_array($result_field_usage_from_group))
+      {
+        $res = db_createinsertinto($result_field_usage_from_group,
+                                   $artifact_key,
+                                   $z,
+                                   $field,
+                                   "group_id",
+                                   $group_id);
+
+        if (db_affected_rows($res))
+          $ret .= print_no ($thisone[$field_idx]);
+        $z++;
+      }
+    return $ret;
+  }
+  $itemsdone = print_items ($result_field_usage_from_group,
+                            $artifact."_field_usage", $group_id, 'none',
+                            'bug_field_id');
   if ($itemsdone)
-    fb(sprintf(_("Field values %s copied"), $itemsdone));
+    fb(sprintf(
+# TRANSLATORS: the argument is space-separated list of field ids.
+               _("Field values %s copied"), $itemsdone));
 
   $result_field_value_from_group =
     db_execute("SELECT * FROM ".$artifact."_field_value WHERE group_id=?",
                array($from_group_id));
-  $z = 0;
-  $itemsdone = '';
-  while ($thisone = db_fetch_array($result_field_value_from_group))
-    {
-      $res = db_createinsertinto($result_field_value_from_group,
-                                 $artifact."_field_value",
-                                 $z,
-                                 "bug_fv_id",
-                                 "group_id",
-                                 $group_id);
-
-      if (db_affected_rows($res))
-        $itemsdone .= "#".$thisone['bug_fv_id']." ";
-
-      $z++;
-    }
+  $itemsdone = print_items ($result_field_usage_from_group,
+                            $artifact."_field_value", $group_id, 'bug_fv_id',
+                            'bug_fv_id');
   if ($itemsdone)
-    fb(sprintf(_("Field values %s copied"), $itemsdone));
+    fb(sprintf(
+# TRANSLATORS: the argument is space-separated list of value ids.
+               _("Field values %s copied"), $itemsdone));
 
   # Delete currently set canned responses.
   # Copy the canned responses of the other project.
@@ -130,24 +167,13 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
   $result_canned_from_group = db_execute("SELECT * FROM ".$artifact
                                          ."_canned_responses WHERE group_id=?",
                                          array($from_group_id));
-  $z = 0;
-  $itemsdone = '';
-  while ($thisone = db_fetch_array($result_canned_from_group))
-    {
-      $res = db_createinsertinto($result_canned_from_group,
-                                 $artifact."_canned_responses",
-                                 $z,
-                                 "bug_canned_id",
-                                 "group_id",
-                                 $group_id);
-
-      if (db_affected_rows($res))
-        $itemsdone .= "#".$thisone['bug_canned_id']." ";
-
-      $z++;
-    }
+  $itemsdone = print_items ($result_canned_from_group,
+                            $artifact."_canned_responses", $group_id,
+                            'bug_canned_id', 'bug_canned_id');
   if ($itemsdone)
-    fb(sprintf(_("Canned responses %s copied"), $itemsdone));
+    fb(sprintf(
+# TRANSLATORS: the argument is space-separated list of response ids.
+               _("Canned responses %s copied"), $itemsdone));
 
   # Delete currently set query forms.
   # Copy the query forms of the other project.
@@ -182,7 +208,7 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
       $thisone_id = db_insertid($res);
       if ($thisone_id)
         {
-          $itemsdone .= "#".$thisone['report_id']." ";
+          $itemsdone .= print_no($thisone['report_id']);
 
           # Copy the info related to the report in report_field.
           $result_thisqueryforms_from_group =
@@ -206,7 +232,9 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
       $z++;
     }
   if ($itemsdone)
-    fb(sprintf(_("Query forms %s copied"), $itemsdone));
+    fb(sprintf(
+# TRANSLATORS: the argument is space-separated list of report ids.
+               _("Query forms %s copied"), $itemsdone));
 
   # Delete current set transitions.
   # Copy the transition of the other project.
@@ -242,7 +270,7 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
       $thisone_id = db_insertid($res);
       if ($thisone_id)
         {
-          $itemsdone .= "#".$thisone['transition_id']." ";
+          $itemsdone .= print_no ($thisone['transition_id']);
 
           # Copy the info related to the report in report_field.
           $result_thistransitions_from_group =
@@ -266,7 +294,9 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
       $z++;
     }
   if ($itemsdone)
-    fb(sprintf(_("Transitions %s copied"), $itemsdone));
+    fb(sprintf(
+# TRANSLATORS: the argument is space-separated list of transition ids.
+               _("Transitions %s copied"), $itemsdone));
   fb(_("Configuration copy finished"));
 }
 
@@ -292,12 +322,13 @@ function conf_form ($group_id, $artifact)
       $texts[] = $thisgroup['group_name'];
       $found = true;
     }
-
   if ($found)
     {
-      print '<p>'.sprintf(_("You can copy the configuration of the %s tracker
+      print '<p>'.sprintf(
+# TRANSLATORS: the argument is previously defined string (bug|patch|task|...)
+                          _("You can copy the configuration of the %s tracker
 of the following projects (this list was established according to your
-currently membership record)."), $artifact).'</p>
+currently membership record)."), artifact_name ($artifact)).'</p>
 <p class="warn">'._("Beware, your current configuration will be irremediably
 lost.").'</p>
 
@@ -312,9 +343,11 @@ lost.").'</p>
     }
   else
     {
-      print '<p>'.sprintf(_("You cannot copy the configuration of other
+      print '<p>'.sprintf(
+# TRANSLATORS: the argument is previously defined string (bug|patch|task|...)
+                          _("You cannot copy the configuration of other
 projects because you are not member of any project hosted here that uses a %s
-tracker"), $artifact).'</p>';
+tracker."), artifact_name($artifact))."</p>\n";
     }
 }
 ?>

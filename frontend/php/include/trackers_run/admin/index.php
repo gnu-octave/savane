@@ -39,7 +39,7 @@ if (!($group_id && user_ismember($group_id,'A')))
   trackers_header_admin(array());
 
   print '<p>'
-    ._("You can view/change all of this tracker configuration from here.")
+    ._("You can change all of this tracker configuration from here.")
     .'</p>';
   print "\n\n".html_splitpage(1);
   print $HTML->box_top(_("Miscellaneous"));
@@ -77,7 +77,7 @@ on this tracker.")
   print html_splitpage(2);
 
   $i = 0;
-  print $HTML->box_top(_('Items Fields'));
+  print $HTML->box_top(_('Item Fields'));
 
   print '<a href="field_usage.php?group='.$group.'">'._("Select Fields").'</a>';
   print '<p class="smaller">'

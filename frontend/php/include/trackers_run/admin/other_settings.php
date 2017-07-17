@@ -61,10 +61,9 @@ echo '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">';
 
 # FIXME: preamble should not be in the groups table!!
 echo '<input type="hidden" name="group_id" value="'.$group_id.'" />';
-echo '<span class="preinput">'
-.sprintf(
-_("Introductory message showing at the top of the item submission form %s:"),
-         markup_info("rich")).'</span>
+echo '<span class="preinput">';
+print _("Introductory message showing at the top of the item submission form");
+print ' '.markup_info("rich").'</span>
 <br />
 <textarea cols="70" rows="8" wrap="virtual" name="form_preamble">'
 .$row_grp[ARTIFACT.'_preamble'].'</textarea>';

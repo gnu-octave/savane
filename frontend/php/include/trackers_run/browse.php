@@ -70,7 +70,7 @@ if (!$offset || $offset < 0)
 else
   $offset = intval($offset);
 
-$hdr = '';
+$hdr = _('Browse Items');
 
 # Make sure spamscore has a numeric value between 1 and
 # 20.
@@ -308,8 +308,10 @@ else if ($set=='custom')
       # Do not add the criteria in the header if value is "Any"
         if ($value_id != 0)
           {
-            $hdr .= _(" By ").trackers_data_get_label($field).': '.
-               trackers_data_get_value($field,$group_id,$value_id);
+# TRANSLATORS: the argument is field name.
+            $hdr = sprintf(_("Browse Items By %s: "),
+                            trackers_data_get_label($field))
+               .trackers_data_get_value($field,$group_id,$value_id);
           }
       }
     $pref_stg .= '&amp;advsrch='.$advsrch;
@@ -744,11 +746,12 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
             if ($morder == "$field<"
                 || $morder == "$field>")
               {
+                $so = trackers_sorting_order ($morder);
                 $lbl_list[] = trackers_data_get_label($field).' '
                   .'<img class="icon" src="'.$GLOBALS['sys_home'].'images/'
                   .SV_THEME.'.theme/arrows/'
-                  .((substr($morder, -1) == '>') ? 'down' : 'up')
-                  .'.png" border="0" />';
+                  .$so['image'].'.png" alt="'.$so['text']
+                  .'" border="0" />';
                 $morder_icon_is_set = 1;
               }
             else
@@ -767,11 +770,12 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
             if ($crit == "$field<"
                 || $crit == "$field>")
               {
+                $so = trackers_sorting_order ($morder);
                 $lbl_list[] = trackers_data_get_label($field).' '
                   .'<img class="icon" src="'.$GLOBALS['sys_home'].'images/'
                   .SV_THEME.'.theme/arrows/'
-                  .((substr($crit, -1) == '>') ? 'down' : 'up')
-                  .'.png" border="0" />';
+                  .$so['image'].'.png" alt="'.$so['text']
+                  .'" border="0" />';
 
               # If we found a criteria, go deal with the next column
                 $morder_icon_is_set = 1;
@@ -906,7 +910,7 @@ if ($printer)
   trackers_header(array('title'=>_("Browse Items").' - '
                                  .utils_format_date(time())));
 else
-  trackers_header(array('title'=>_("Browse Items").' '.$hdr));
+  trackers_header(array('title'=>$hdr));
 
 if ($browse_preamble)
   print $browse_preamble;
@@ -917,8 +921,7 @@ $form = '
           <input type="hidden" name="group" value="'.$group.'" />
           <input type="hidden" name="func" value="'.$func.'" />
           <input type="hidden" name="set" value="custom" />
-          <input type="hidden" name="msort" value="'.$msort.'" />
-          '._("Browse").' ';
+          <input type="hidden" name="msort" value="'.$msort.'" />';
 
 # Show the list of available bug reports kind
 $res_report = trackers_data_get_reports($group_id,user_getid(),$sober);
@@ -928,13 +931,10 @@ if (!$printer)
     $show_100 = true;
     if ($sober)
       { $show_100 = false; }
-
-    $form .= sprintf(_("with the %s query form"),
-                     html_build_select_box($res_report,
-                                           'report_id',
-                                           $report_id,
-                                           $show_100,
-                                           'Basic'));  # basic == 100
+    $form_query_type = html_build_select_box($res_report, 'report_id',
+                                             $report_id,
+# TRANSLATORS: this string is as argument in "Browse with the %s query form".
+                                             $show_100, _('Basic'));
   }
 else
   {
@@ -945,7 +945,7 @@ else
         $report_name = $v;
         break;
       }
-    $form .= sprintf(_("with the %s query form"), $report_name);
+    $form_query_type = $report_name;
   }
 
 # Start building the URL that we use to for hyperlink in the form
@@ -986,22 +986,30 @@ if (!$printer)
       {
         $advsrch_0 = ' selected="selected"';
       }
-    $form .= ' '
-.sprintf(_("and %s selection."), '<select name="advsrch"><option value="0"'
-         .$advsrch_0.'>'._("Simple").'</option><option value="1"'.$advsrch_1
-         .'>'._("Multiple").'</option></select>');
+    $form_sel_type = '<select name="advsrch"><option value="0"'
+         .$advsrch_0.'>'
+# TRANSLATORS: this string is used to specify kind of selection.
+         ._("Simple").'</option><option value="1"'.$advsrch_1.'>'
+# TRANSLATORS: this string is used to specify kind of selection.
+         ._("Multiple").'</option></select>';
     $form_submit = '<input class="bold" value="'._("Apply")
          .'" name="go_report" type="submit" />';
   }
 else
   {
     if ($advsrch)
+# TRANSLATORS: this string is used to specify kind of selection.
       $advsrch_x = _("Multiple");
     else
+# TRANSLATORS: this string is used to specify kind of selection.
       $advsrch_x =  _("Simple");
 
-    $form .= sprintf(' '._("and %s selection."), $advsrch_x);
+    $form_sel_type = $advsrch_x;
   }
+# TRANSLATORS: the first argument is kind of query form (like Basic),
+# the second argument is kind of selection (Simple or Multiple).
+$form .= sprintf (_('Browse with the %1$s query form and %2$s selection.'),
+                  $form_query_type, $form_sel_type);
 
 $form .= '<table cellpadding="0" cellspacing="5">
         <tr><td colspan="'.$fields_per_line.'" nowrap="nowrap">';
@@ -1014,11 +1022,20 @@ if (($details_search == 1) && ($summary_search == 1))
     if (!$printer)
       {
         $form .= '<p class="smaller">'
-          .sprintf(_("Use logical %s between '%s' and '%s' searches."),
+# TRANSLATORS: the first argument is operator (AND or OR),
+# the second argument is label for 'summary' field,
+# the third argument is label for 'details' field.
+        .sprintf(_('Use logical %1$s between \'%2$s\' and \'%3$s\' searches.'),
                    '<select name="sumORdet"><option value="0" '
-                   .(!$sumORdet ? 'selected="selected"':'').'>'._("AND")
+                   .(!$sumORdet ? 'selected="selected"':'').'>'
+# TRANSLATORS: this is a logical operator, used in string
+# "Use logical %s between '%s' and '%s' searches.
+                   ._("AND")
                    .'</option>
-<option value="1" '.($sumORdet ? 'selected="selected"':'').'>'._("OR")
+<option value="1" '.($sumORdet ? 'selected="selected"':'').'>'
+# TRANSLATORS: this is a logical operator, used in string
+# "Use logical %s between '%s' and '%s' searches.
+                   ._("OR")
                    .'</option>
 </select>
 ',
@@ -1032,9 +1049,18 @@ if (($details_search == 1) && ($summary_search == 1))
       }
     else
       {
-        $form .= '<p class="smaller">'.
-          sprintf(_("Use logical %s between '%s' and '%s' searches."),
-                  ($sumORdet ? _("OR"):_("AND")),
+        $form .= '<p class="smaller">'
+# TRANSLATORS: the first argument is operator (AND or OR),
+# the second argument is label for 'summary' field,
+# the third argument is label for 'details field.
+        .sprintf(_('Use logical %1$s between \'%2$s\' and \'%3$s\' searches.'),
+                  ($sumORdet ?
+# TRANSLATORS: this is a logical operator, used in string
+# "Use logical %s between '%s' and '%s' searches.
+                   _("OR"):
+# TRANSLATORS: this is a logical operator, used in string
+# "Use logical %s between '%s' and '%s' searches.
+                   _("AND")),
                   rtrim(trackers_field_label_display("summary", $group_id,
                                                      false,true),
                         ': '),
@@ -1079,7 +1105,9 @@ while (list($field,$label) = each($fextracted))
   }
 
 $hist_ev_text  = array();
+# TRANSLATORS: the string is used like "<field-name> %s since <date>"
 $hist_ev_text[] = _("modified");
+# TRANSLATORS: the string is used like "<field-name> %s since <date>"
 $hist_ev_text[] = _("not modified");
 $hist_ev_value  = array();
 $hist_ev_value[] = "modified";
@@ -1088,67 +1116,71 @@ $hist_ev_value[] = "not modified";
 # If we are in sober mode, additional constraint is not proposed
 if (!$sober)
   {
+    $form_separator = '';
     if (!$printer)
       {
-        $form .= '<p class="smaller"><span class="preinput">'
-          .sprintf(_("Additional constraint %s:"),
+        $form_activated =
                    '<select name="history_search"><option value="0" '
                    .(!$history_search ? 'selected="selected"':'').'>'
+# TRANSLATORS: this string is used as the argument in
+# 'Additional constraint %s'.
                    ._("deactivated").'</option>
 <option value="1" '.($history_search ? 'selected="selected"':'').'>'
-                   ._("activated").'</option></select>')
-          .'</span><br />&nbsp;&nbsp;&nbsp;'
-     # I18N
-     # This is for specifying additional constraints for the result list.
-     # The first string is the fieldname
-     # (e.g. "category", "privacy", "status"),
-     # the second is currently either "modified" or "not modified", and the
-     # third string is a date.
-     # Full example: "Severity not modified since 14. September 2005"
-         .sprintf(_("%s%s since %s"),
-                  html_build_select_box_from_arrays ($fname,
-                                                     $flabel,
-                                                     'history_field',
-                                                     $history_field,
-                                                     false,
-                                                     '',
-                                                     true,
-                                                     'Any',
-                                                     false),
-                  html_build_select_box_from_arrays ($hist_ev_value,
-                                                     $hist_ev_text,
-                                                     'history_event',
-                                                     $history_event,
-                                                     false,
-                                                     '',
-                                                     false,
-                                                     '',
-                                                     false),
-                  trackers_field_date('history_date',
-                                      $history_date,
-                                      0,
-                                      0,
-                                      false)).'</p>';
-      }
-    else
-      {
-      # In printer mode, if the additional constrait is off,
-      # no need to print it
-        if ($history_search)
-          {
-            $form .= '<p class="smaller"><span class="preinput">'
-              .sprintf(_("Additional constraint %s:"), _("activated"))
-              .'</span> '
-              .sprintf(_("%s%s since %s"),
-                      $flabel[$history_field],
-                      $hist_ev_text[$history_event],
-                      trackers_field_date('history_date',
+# TRANSLATORS: this string is used as the argument in
+# 'Additional constraint %s'.
+                   ._("activated").'</option></select>';
+        $form_separator = '<br />&nbsp;&nbsp;&nbsp;';
+        $form_fieldname = html_build_select_box_from_arrays ($fname,
+                                                             $flabel,
+                                                             'history_field',
+                                                             $history_field,
+                                                             false,
+                                                             '',
+                                                             true,
+                                                             'Any',
+                                                             false);
+        $form_modified = html_build_select_box_from_arrays ($hist_ev_value,
+                                                            $hist_ev_text,
+                                                            'history_event',
+                                                            $history_event,
+                                                            false,
+                                                            '',
+                                                            false,
+                                                            '',
+                                                            false);
+        $form_since = trackers_field_date('history_date',
                                           $history_date,
                                           0,
                                           0,
-                                          true)).'</p>';
-        }
+                                          false);
       }
+    else if ($history_search)
+      # In printer mode, if the additional constrait is off,
+      # no need to print it
+      {
+# TRANSLATORS: this string is used as the argument in
+# 'Additional constraint %s'.
+        $form_activated = _("activated");
+        $form_fieldname = $flabel[$history_field];
+        $form_modified = $hist_ev_text[$history_event];
+        $form_since = trackers_field_date('history_date',
+                                          $history_date,
+                                          0,
+                                          0,
+                                          true);
+        $form_separator = ' ';
+      }
+    if ($form_separator != '')
+      $form .= '<p class="smaller"><span class="preinput">'
+# TRANSLATORS: the argument is 'activated' or 'deactivated'.
+            .sprintf(_('Additional constraint %1$s:'), $form_activated)
+            .'</span>'.$form_separator
+# TRANSLATORS: the first argument is field name, the second argument is
+# either 'modified' or 'not modified', the third argument is date.
+            .sprintf(_('%1$s %2$s since %3$s'),
+                     $form_fieldname,
+                     $form_modified,
+                     $form_since)."</p>\n";
   } # !$sober
 
 if ($history_search)
@@ -1163,12 +1195,11 @@ if (!$sober)
   {
     if (!$printer)
       {
-      # I18N
-      # %s in this message is an input field, so it is impossible to use ngettext.
         $form .= '<p class="smaller">'
-                 .sprintf(_("Show: %s items at once ; items with a spam score lower than %s."),
+                 .sprintf(_("Items to show at once: %s."),
                           form_input("text", "chunksz", $wanted_chunksz,
-                                     'size="3" maxlength="5"'),
+                                     'size="3" maxlength="5"')).' '
+                 .sprintf(_("Show items with a spam score lower than %s."),
                           form_input("text", "spamscore", $spamscore,
                                      'size="3" maxlength="2"'));
         if ($wanted_chunksz != $chunksz)
@@ -1177,14 +1208,18 @@ if (!$sober)
             # it would mean that Savane would be modified to never list more
             # than 10 items at once, which is almost nothing.
             $form .= ' <span class="warn">'
-.sprintf(_("Warning: only %s items can be shown at once, unless using Printer
-Version."), $chunksz).'</span>';
+.sprintf(ngettext(
+"Warning: only %s item can be shown at once, unless using Printer Version.",
+"Warning: only %s items can be shown at once, unless using Printer Version.",
+                 $chunksz), $chunksz).'</span>';
           }
         $form .= '</p>';
       }
     else
       $form .= '<p class="smaller">'
-.sprintf(_("Show: %s items at once ; items with a spam score lower than %s."),
+.sprintf(ngettext('Show %1$s item at once with a spam score lower than %2$s.',
+                  'Show %1$s items at once with a spam score lower than %2$s.',
+                  $chunksz),
          $chunksz, $spamscore).'</p>';
   }
 
@@ -1197,27 +1232,30 @@ if ($totalrows > 0 && !$sober)
       {
         $url_alternate_sort = str_replace('msort=1','msort=0',$url)
                               .'&amp;order=#results';
-        $form .= sprintf(_("Click a column heading to sort results (up or
-down), or %ssort by priority%s or %sreset sort%s. You can also %sdeactivate
-multicolumn sort%s."),
-                         '<a href="'.$url.'&amp;order=priority#results">',
-                         '</a>',
-                         '<a href="'.$url.'&amp;order=#results">', '</a>',
-                         '<a href="'.$url_alternate_sort.'">', '</a>');
+        $form .= sprintf(_('Column heading links sort results (up or
+down), you can also <a href="%1$s">sort by priority</a> or <a href="%2$s">reset
+sort</a>.'),
+                         $url.'&amp;order=priority#results',
+                         $url.'&amp;order=#results');
+	$form .= sprintf(
+_("You can also <a href=\"%s\">deactivate multicolumn sort</a>."),
+                         $url_alternate_sort);
       }
     else
       {
         $url_alternate_sort = str_replace('msort=0','msort=1',$url)
                               .'&amp;order=#results';
-        $form .= sprintf(_("Click a column heading to sort results (up or
-down), or %ssort by priority%s or %sreset sort%s. You can also %sactivate
-multicolumn sort%s."),
-                         '<a href="'.$url.'&amp;order=priority#results">',
-                         '</a>',
-                         '<a href="'.$url.'&amp;order=#results">', '</a>',
-                         '<a href="'.$url_alternate_sort.'">', '</a>');
+        $form .= sprintf(_('Column heading links sort results (up or
+down), you can also <a href="%1$s">sort by priority</a> or <a href="%2$s">reset
+sort</a>.'),
+                         $url.'&amp;order=priority#results',
+                         $url.'&amp;order=#results');
+	$form .= ' '.sprintf(
+_("You can also <a href=\"%s\">activate multicolumn sort</a>."),
+                         $url_alternate_sort);
       }
     if ($morder)
+# TRANSLATORS: the argument is comma-separated list of field labels.
       $form .= " ".sprintf(_("Currently, results are sorted by %s."),
                            trackers_criteria_list_to_text($morder,
                                                           $url_nomorder));
@@ -1257,10 +1295,10 @@ if ($totalrows > 0)
   }
 else
   {
-    print '<h2>'
-._("No matching items found. The display criteria may be too restrictive.")
-.'</h2>';
-    print db_error();
+    fb(
+_("No matching items found. The display criteria may be too restrictive.").
+' '.db_error(),
+       1);
   }
 
 trackers_footer(array());

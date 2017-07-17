@@ -2,7 +2,7 @@
 # Create tasks for exporting artifacts.
 #
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -31,7 +31,7 @@ if (!$group_id)
 $project=project_get_object($group_id);
 
 if (!member_check(0, $group_id))
-  exit_error(_("Data Export is currently restricted to projects members"));
+  exit_error(_("Data Export is currently restricted to project members"));
 
 if (!$from || !$export_id)
   exit_missing_param();
@@ -125,6 +125,7 @@ $result = db_execute("UPDATE trackers_export SET status='P', task_id=?
 session_redirect($GLOBALS['sys_home'].$from."/export.php?group="
                  .rawurlencode($group)."&feedback="
                  .rawurlencode(
-                   sprintf(_("Export job #%s registered, task #%s created"),
+                   # TRANSLATORS: the arguments are job and task ids (numbers).
+                   sprintf(_('Export job #%1$s registered, task #%2$s created'),
                            $export_id, $item_id)));
 ?>

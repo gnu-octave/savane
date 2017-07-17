@@ -112,20 +112,21 @@ $to = trackers_data_get_value($field, $group_id,
                               db_result($result, 0, 'to_value_id'));
 
 trackers_header_admin(array('title'=>
-                            _("Field Values Transitions: Others Fields Update")));
+                            _("Field Value Transitions: Update Other Fields")));
 print '<h3>'
-  .sprintf(_("Others Fields to update when '%s' change from '%s' to '%s':"),
-           trackers_data_get_label($field),$from,$to).'</h3>';
+  .sprintf(_('Other Fields to update when &ldquo;%1$s&rdquo; changes
+from &ldquo;%2$s&rdquo; to &ldquo;%3$s&rdquo;:'),
+           trackers_data_get_label($field), $from, $to).'</h3>';
 
 print '<p class="warn">'
-.sprintf(_("Note that if you set an automatic update of the field %s,
+.sprintf(_('Note that if you set an automatic update of the field %1$s,
 technicians will be able to close items by changing the value of the field
-%s."),  trackers_data_get_label('status_id'), trackers_data_get_label($field))
+%2$s.'),  trackers_data_get_label('status_id'), trackers_data_get_label($field))
  ."</p>\n";
 print '<p>'
 ._("Note also the automatic update process will not override field values
 specifically filled in forms. It means that if someone was able (depending on
-his role in the project) to modify/set a specific field value, any automatic
+his role in the project) to modify a specific field value, any automatic
 update supposed to apply to this field will be disregarded.")."</p>\n";
 
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">

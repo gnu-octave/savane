@@ -84,25 +84,24 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
     }
   else
     {
-      # I18N
-      # This word is used in the phrase "Search [phrase] in
-      # [projects, bugs, tasks, ...]" in the main menu on the left side.
-      # Please try to find a translation which is as short as possible,
-      # so the layout of the menu wont be destroyed.
-      $ret .= ' '._("<em>in</em>").' <select name="type_of_search">';
+      $sel = '<select name="type_of_search">'."\n";
 
       # If the search is restricted to a given group, remove the possibility
       # to search another group, unless we're showing the left box.
       if (empty($group_id))
         {
-          $ret .= '<option value="soft"'
+          $sel .= '<option value="soft"'
                .(($type_of_search == "soft")||($type_of_search == "") ?
                  ' selected="selected"' : "")
-               .'>'._("Projects")."</option>\n";
+               .'>'
+# TRANSLATORS: this string is used in the context of "Search [...] in Projects"
+               ._("Projects")."</option>\n";
 
-          $ret .= '<option value="people"'
+          $sel .= '<option value="people"'
                .(($type_of_search == "people") ? ' selected="selected"' : "")
-               .'>'._("People")."</option>\n";
+               .'>'
+# TRANSLATORS: this string is used in the context of "Search [...] in People"
+               ._("People")."</option>\n";
         }
 
       if (!empty($group_id))
@@ -113,14 +112,19 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
       $text = '';
       if (empty($group_id) || $is_small)
-        $text = _("Cookbook");
+        $text =
+# TRANSLATORS: this string is used in the context of "Search [...] in Cookbook"
+                _("<!-- Search... in -->Cookbook");
       else
         {
-          $text = sprintf(_("%s Cookbook"), $group_realname);
+          $text = sprintf(
+# TRANSLATORS: this string is used in the context of "Search [...] in %s Cookbook"
+# the argument is group name (like GNU Coreutils).
+                          _("%s Cookbook"), $group_realname);
         }
       if ($text)
         {
-          $ret .= '<option value="cookbook"'
+          $sel .= '<option value="cookbook"'
                   .(($type_of_search == "cookbook") ? ' selected="selected"' : "")
                   .'>'.$text."</option>\n";
         }
@@ -128,35 +132,47 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
       $text = '';
       if (empty($group_id)
           || ($is_small && $project->Uses("support")))
-        $text = _("Support");
+        $text =
+# TRANSLATORS: this string is used in the context of "Search [...] in Support";
+# the HTML comment is used to differentiate the usages of the same English string.
+                _("<!-- Search... in -->Support");
       else
         {
           if ($project->Uses("support"))
             {
-              $text = sprintf(_("%s Support"), $group_realname);
+              $text = sprintf(
+# TRANSLATORS: this string is used in the context of "Search [...] in %s Support"
+# the argument is group name (like GNU Coreutils).
+                              _("%s Support"), $group_realname);
             }
         }
 
       if ($text)
         {
-          $ret .= '<option value="support"'
+          $sel .= '<option value="support"'
                   .(($type_of_search == "support") ? ' selected="selected"' : "")
                   .'>'.$text."</option>\n";
         }
 
       $text = '';
       if (empty($group_id) || ($is_small && $project->Uses("bugs")))
-        $text = _("Bugs");
+        $text =
+# TRANSLATORS: this string is used in the context of "Search [...] in Bugs";
+# the HTML comment is used to differentiate the usages of the same English string.
+                _("<!-- Search... in -->Bugs");
       else
         {
           if ($project->Uses("bugs"))
             {
-              $text = sprintf(_("%s Bugs"), $group_realname);
+              $text = sprintf(
+# TRANSLATORS: this string is used in the context of "Search [...] in %s Bugs"
+# the argument is group name (like GNU Coreutils).
+                              _("%s Bugs"), $group_realname);
             }
         }
       if ($text)
         {
-          $ret .= '<option value="bugs"'
+          $sel .= '<option value="bugs"'
                   .(($type_of_search == "bugs") ? ' selected="selected"' : "")
                   .'>'.$text."</option>\n";
         }
@@ -164,17 +180,23 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
       $text = '';
       if (empty($group_id)
           || ($is_small && $project->Uses("task")))
-        $text = _("Tasks");
+        $text =
+# TRANSLATORS: this string is used in the context of "Search [...] in Tasks";
+# the HTML comment is used to differentiate the usages of the same English string.
+                _("<!-- Search... in -->Tasks");
       else
         {
           if ($project->Uses("task"))
             {
-              $text = sprintf(_("%s Tasks"), $group_realname);
+              $text = sprintf(
+# TRANSLATORS: this string is used in the context of "Search [...] in %s Tasks"
+# the argument is group name (like GNU Coreutils).
+                              _("%s Tasks"), $group_realname);
             }
         }
       if ($text)
         {
-          $ret .= '<option value="task"'
+          $sel .= '<option value="task"'
                   .(($type_of_search == "task") ? ' selected="selected"' : "")
                   .'>'.$text."</option>\n";
         }
@@ -182,21 +204,34 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
       $text = '';
       if (empty($group_id)
           || ($is_small && $project->Uses("patch")))
-        $text = _("Patches");
+        $text =
+# TRANSLATORS: this string is used in the context of "Search [...] in Patches";
+# the HTML comment is used to differentiate the usages of the same English string.
+                _("<!-- Search... in -->Patches");
       else
         {
           if ($project->Uses("patch"))
             {
-              $text = sprintf(_("%s Patches"), $group_realname);
+              $text = sprintf(
+# TRANSLATORS: this string is used in the context of "Search [...] in %s Patches"
+# the argument is group name (like GNU Coreutils).
+                              _("%s Patches"), $group_realname);
             }
         }
       if ($text)
         {
-          $ret .= '<option value="patch"'
+          $sel .= '<option value="patch"'
                   .(($type_of_search == "patch") ? ' selected="selected"' : "")
                   .'>'.$text."</option>\n";
         }
-      $ret .= "</select>\n";
+      $sel .= "</select>\n";
+
+      $ret .= ' '.sprintf(
+      # TRANSLATORS: this word is used in the phrase "Search [...] in
+      # [Projects|People|Cookbook|Support|Bugs|Tasks|Patches]"
+      # in the main menu on the left side.
+      # Make sure to put this piece in agreement with the following strings.
+           _("in %s"), $sel);
     }
   if ($size < 16)
     $ret .= '<br />';
@@ -223,7 +258,8 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
               .( $exact ? " checked" : " " ).' />'._("with all of the words")
               ."\n";
       $ret .= '<br />&nbsp;'
-              .sprintf(_("%s results per page"),
+              .sprintf(ngettext("%s result per page", "%s results per page",
+                                intval($max_rows)),
                        '<input type="text" name="max_rows" value="'
                        .$max_rows.'" size="4" />')."\n";
       if (!isset($group_id))
@@ -231,7 +267,9 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
           # Add the functionality to restrict the search to a project type.
           $ret .="<br />&nbsp;";
 
-          $select = '<select name="type" size="1"><option value="">'._("any")
+          $select = '<select name="type" size="1"><option value="">'
+# TRANSLATORS: this string is used in the context of "Search [...] in any group type"
+                    ._("any")
                     .'</option>'."\n";
           $result = db_query("SELECT type_id,name FROM group_type "
                              ."ORDER BY type_id");
@@ -244,8 +282,9 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
             }
           $select .= '</select>'."\n";
 
-          $ret .=
-sprintf(_("Search in %s group type, when searching for a \"Project/Group\"."),
+          $ret .= sprintf(
+# TRANSLATORS: the argument is group type (like Official GNU software).
+_("Search in %s group type, when searching for a Project."),
                   $select);
         }
        $ret .= '<p>'
@@ -276,6 +315,7 @@ function search_send_header ()
   if (!$only_group_id)
     $title = _("Search Criteria:");
   else
+# TRANSLATORS: the argument is group name (like GNU Coreutils).
     $title = sprintf(_("New search criteria for the Group %s:"),
                      group_getname($only_group_id));
 
@@ -293,32 +333,59 @@ function print_search_heading()
     {
       # Print real words describing the type of search.
       if ($type_of_search == "soft")
-	$type_of_search_real = _("Project/Group");
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+        $type_of_search_real = _("Projects");
       elseif ($type_of_search == "support")
-	$type_of_search_real = _("Support");
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+# The HTML comment is used to differentiate the usages of the same English string.
+        $type_of_search_real = _("<!-- Search... in -->Support");
       elseif ($type_of_search == "bugs")
-	$type_of_search_real = _("Bugs");
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+# The HTML comment is used to differentiate the usages of the same English string.
+        $type_of_search_real = _("<!-- Search... in -->Bugs");
       elseif ($type_of_search == "task")
-	$type_of_search_real = _("Task");
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+# The HTML comment is used to differentiate the usages of the same English string.
+        $type_of_search_real = _("<!-- Search... in -->Tasks");
       elseif ($type_of_search == "patch")
-	$type_of_search_real = _("Patch");
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+# The HTML comment is used to differentiate the usages of the same English string.
+        $type_of_search_real = _("<!-- Search... in -->Patches");
       elseif ($type_of_search == "cookbook")
-	$type_of_search_real = _("Cookbook");
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+# The HTML comment is used to differentiate the usages of the same English string.
+        $type_of_search_real = _("<!-- Search... in -->Cookbook");
       elseif ($type_of_search == "people")
-	$type_of_search_real = _("People");
+# TRANSLATORS: this string is the section to look in; it is used as the second
+# argument in 'Search results for %1$s (in %2$s)'.
+# The HTML comment is used to differentiate the usages of the same English string.
+        $type_of_search_real = _("<!-- Search... in -->People");
 
       if (!$only_group_id)
-	{
-	  printf(_("Search results for %s (in %s):"),
+        {
+# TRANSLATORS: the first argument is string to look for,
+# the second argument is section (Project/Group|Support|Bugs|Task
+#   |Patch|Cookbook|People).
+          printf(_('Search results for %1$s in %2$s:'),
                  '<strong>'.htmlspecialchars($words).'</strong>',
                  $type_of_search_real);
-	}
+        }
       else
-	{
-	  printf(_("Search results for %s (in %s, for the Group %s):"),
+        {
+# TRANSLATORS: the first argument is string to look for,
+# the second argument is section (Support|Bugs|Task
+#   |Patch|Cookbook|People), the third argument is
+# group name (like GNU Coreutils).
+          printf(_('Search results for %1$s in %2$s, for the Group %3$s:'),
                  '<strong>'.htmlspecialchars($words).'</strong>',
                  $type_of_search_real, group_getname($only_group_id));
-	}
+        }
     }
   else
     print _("Search results:");
@@ -521,9 +588,12 @@ function search_exact ($keywords)
   if ($num_rows != 1)
     return;
   print "<h3>";
-  printf(_("Unique project search result for %s:"),
+  print
+# TRANSLATORS: this is a title for search results when exactly one item is found.
+        _("Unique project search result");
+  print "</h3>\n";
+  printf('<p>'._("Search string was: %s.")."</p>\n",
          '<strong>'.htmlspecialchars($keywords).'</strong>');
-  print "</h3>";
 
   $title_arr = array();
   $title_arr[] = _("Project");

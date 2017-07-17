@@ -1,5 +1,5 @@
 <?php
-# View a tracker item - alternate view. Used by cookbook.
+# View a tracker item - alternate view.
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
@@ -32,8 +32,9 @@ $result = db_execute($sql = "SELECT * FROM ".ARTIFACT
 		     ." WHERE bug_id=? AND group_id=?",
 		     array($item_id, $group_id));
 
-if (db_numrows($result) > 0)
-{
+if (db_numrows($result) <= 0)
+  exit_error(_("No item found with that id."));
+
   # ################################ Start the form
 
   # Defines the item name, converting bugs to bug.
@@ -295,9 +296,10 @@ authentication level.");
 	  if (!user_isloggedin())
 	    {
 	      print '<h2 class="warn">'._("You are not logged in").'</h2><p>';
-	      printf (_("Please %slog in,%s so followups can be emailed to you."),
-                      '<a href="'.$GLOBALS['sys_home'].'account/login.php?uri='
-                      .urlencode($_SERVER['REQUEST_URI']).'">','</a>');
+	      printf (
+_("Please <a href=\"%s\">log in</a>, so followups can be emailed to you."),
+                      $GLOBALS['sys_home'].'account/login.php?uri='
+                      .urlencode($_SERVER['REQUEST_URI']));
 	      print '</p>';
 	    }
 	}
@@ -335,7 +337,7 @@ authentication level.");
 escape characters.)"), $GLOBALS['sys_upload_max']);
 
       print '</p><p class="noprint"><span class="preinput"> '
-            ._("Attach File(s):").'</span><br />
+            ._("Attach Files:").'</span><br />
       &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" />
       <input type="file" name="input_file2" size="10" />
       <br />
@@ -376,9 +378,11 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
   if (user_isloggedin() && !$item_discussion_lock)
     {
       print '<p class="noprint">';
-      printf (_(
-"(Note: for %s users, you can use their login name rather than their email
-addresses.)"), $GLOBALS['sys_name']);
+      printf (
+# TRANSLATORS: the argument is site name (like Savannah).
+_(
+"(Note: for %s users, you can use their login name
+rather than their email addresses.)"), $GLOBALS['sys_name']);
       print '</p><p class="noprint">
 	   <span class="preinput">'
             ._("Add Email Addresses (comma as separator):")
@@ -403,7 +407,7 @@ addresses.)"), $GLOBALS['sys_name']);
       print '<p>'
 	._("Do you think this task is very important?")
 	.'<br />'
-	._("If so, you can click here to add your encouragement to it.")
+	._("If so, you can add your encouragement to it.")
 	.'<br />'
 	.sprintf(ngettext("This task has %s encouragement so far.",
 			  "This task has %s encouragements so far.", $votes),
@@ -456,9 +460,9 @@ addresses.)"), $GLOBALS['sys_name']);
 
   # Minimal anti-spam
   if (!user_isloggedin()) {
-    print '<p class="noprint">Please enter the title of <a
+    print '<p class="noprint">'._('Please enter the title of <a
 href="https://en.wikipedia.org/wiki/George_Orwell">George Orwell</a>\'s famous
-dystopian book (it\'s a date): <input type="text" name="check" /></p>';
+dystopian book (it\'s a date):').' <input type="text" name="check" /></p>';
   }
 
   #  ################################  Submit
@@ -474,9 +478,4 @@ dystopian book (it\'s a date): <input type="text" name="check" /></p>';
   print html_hidsubpart_footer();
 
   trackers_footer(array());
-}
-else
-{
-  exit_error(_("No item found with that id."));
-}
 ?>

@@ -276,17 +276,17 @@ if ($update_field)
       if ($checkbox_members)
         {
           print '<br />&nbsp;&nbsp;&nbsp;
-'.$checkbox_members.' '._("Project Members");
+'.$checkbox_members.' '._("<!-- present this field to --> Project Members");
         }
       if ($checkbox_loggedin)
         {
           print '<br />&nbsp;&nbsp;&nbsp;
-'.$checkbox_loggedin.' '._("Logged-in Users");
+'.$checkbox_loggedin.' '._("<!-- present this field to --> Logged-in Users");
         }
       if ($checkbox_anonymous)
         {
           print '<br />&nbsp;&nbsp;&nbsp;
-'.$checkbox_anonymous.' '._("Anonymous Users");
+'.$checkbox_anonymous.' '._("<!-- present this field to --> Anonymous Users");
         }
 
       print "\n\n<p>&nbsp;</p>\n<h3>"._("Display:")."</h3>\n";
@@ -297,7 +297,7 @@ if ($update_field)
       # Check the previous comments.
       if (!trackers_data_is_special($field))
         {
-          print '<span class="preinput">'._("Rank on screen:")
+          print '<span class="preinput">'._("Rank on page:")
                 .' </span><br />&nbsp;&nbsp;&nbsp;';
           print '<input type="text" name="place" value="'
                 .trackers_data_get_place($field)
@@ -319,7 +319,7 @@ if ($update_field)
           print '<input type="text" name="n1" value="'.$size
                 .'" size="3" maxlength="3" /><br />'."\n";
           print '<span class="preinput">'
-                ._("Maximum size of the field content (up to 255):")
+                ._("Maximum size of field text (up to 255):")
                 .' </span><br />&nbsp;&nbsp;&nbsp;'."\n";
           print '<input type="text" name="n2" value="'.$maxlength
                 .'" size="3" maxlength="3" /><br />'."\n";
@@ -388,7 +388,7 @@ if ($update_field)
       $title_arr[]=_("Field Label");
       $title_arr[]=_("Type");
       $title_arr[]=_("Description");
-      $title_arr[]=_("Rank on screen");
+      $title_arr[]=_("Rank on page");
       $title_arr[]=_("Scope");
       $title_arr[]=_("Status");
 

@@ -39,7 +39,7 @@ function cookbook_context_project_possiblevalues()
                "cookbook" => _("Cookbook"),
                "download" => _("Download Area"),
                "support" => _("Support Tracker"),
-               "bugs" => _("Bugs Tracker"),
+               "bugs" => _("Bug Tracker"),
                "task" => _("Task Manager"),
                "patch" => _("Patch Tracker"),
                "news" => _("News Manager"),
@@ -52,7 +52,7 @@ function cookbook_context_project_possiblevalues()
 # Guess all the possible values in theory on the site for the site admin.
 function cookbook_context_site_possiblevalues()
 {
-  return array("my" => _("My (User Personal Area)"),
+  return array("my" => _("User Personal Area"),
                "stats" => _("Site Statistics"),
                "siteadmin" => _("Site Administration"));
 }

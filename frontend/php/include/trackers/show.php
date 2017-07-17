@@ -57,23 +57,23 @@ function show_item_list ($result_arr,
 	     '<span class="xsmall"><a href="'.$url
              .'&amp;offset=0#results"><img src="'.$GLOBALS['sys_home'].'images/'
              .SV_THEME.'.theme/arrows/first.png" border="0" alt="'
-             ._("Begin").'" />'._("Begin").'</a>'
+             .'" />'._("Begin").'</a>'
 	     .'&nbsp;&nbsp;&nbsp;&nbsp;'
 	     .'<a href="'.$url.'&amp;offset='.($offset-$chunksz)
 	     .'#results"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
              .'.theme/arrows/previous.png" border="0" alt="'
-             ._("Previous Results").'" />'._("Previous Results").'</a></span>';
+             .'" />'._("Previous Results").'</a></span>';
 	}
       else
 	{
 	  $nav_bar .=
 	     '<span class="xsmall"><img src="'.$GLOBALS['sys_home']
              .'images/'.SV_THEME.'.theme/arrows/firstgrey.png" border="0" alt="'
-             ._("Begin").'" /><em>'._("Begin").'</em>'
+             .'" /><em>'._("Begin").'</em>'
 	     .'&nbsp;&nbsp;&nbsp;&nbsp;'
 	     .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
              .'.theme/arrows/previousgrey.png" border="0" alt="'
-             ._("Previous Results").'" /><em>'._("Previous Results")
+             .'" /><em>'._("Previous Results")
              .'</em></span>';
 	}
     }
@@ -85,7 +85,9 @@ function show_item_list ($result_arr,
   $nav_bar .= " &nbsp;  &nbsp; &nbsp; &nbsp; "
               .sprintf(ngettext("%d matching item", "%d matching items",
                                 $total_rows), $total_rows);
-  $nav_bar .= " - ".sprintf(_("Items %s to %s"), ($offset+1), ($offset_last+1))
+# TRANSLATORS: the arguments are offsets of items in the list.
+  $nav_bar .= " - ".sprintf(_('Items %1$s to %2$s'), ($offset+1),
+                            ($offset_last+1))
               ."  &nbsp; &nbsp; &nbsp; &nbsp; ";
 
   # If all items are on screen, no next/end pointer at all
@@ -104,21 +106,21 @@ function show_item_list ($result_arr,
 	     '<span class="xsmall"><a href="'.$url.'&amp;offset='.($offset+$chunksz).
 	     '#results">'._("Next Results").'<img src="'.$GLOBALS['sys_home']
              .'images/'.SV_THEME.'.theme/arrows/next.png" border="0" alt="'
-             ._("Next Results").'" /></a>'.'&nbsp;&nbsp;&nbsp;&nbsp;'
+             .'" /></a>'.'&nbsp;&nbsp;&nbsp;&nbsp;'
 	     .'<a href="'.$url.'&amp;offset='.($offset_end)
 	     .'#results">'._("End").'<img src="'.$GLOBALS['sys_home'].'images/'
              .SV_THEME.'.theme/arrows/last.png" border="0" alt="'
-             ._("End").'" /></a></span>';
+             .'" /></a></span>';
 	}
       else
 	{
 	  $nav_bar .= '<span class="xsmall"><em>'._("Next Results")
              .'</em><img src="'.$GLOBALS['sys_home'].'images/'
              .SV_THEME.'.theme/arrows/nextgrey.png" border="0" alt="'
-             ._("Next Results").'" />'.'&nbsp;&nbsp;&nbsp;&nbsp;'
+             .'" />'.'&nbsp;&nbsp;&nbsp;&nbsp;'
 	     .'<em>'._("End").'</em><img src="'.$GLOBALS['sys_home']
              .'images/'.SV_THEME.'.theme/arrows/lastgrey.png" border="0" alt="'
-             ._("End").'" /></span>';
+             .'" /></span>';
 	}
     }
   $nav_bar .= '</h3>';
@@ -423,6 +425,7 @@ function show_item_list_sober ($result_arr,
 		  # If it comes from the site docs, mention it
 		  if ($is_site_doc)
 		    $audience_content .= '&nbsp;&nbsp;<span class="smaller">('
+# TRANSLATORS: the argument is site name (like Savannah).
                       .sprintf(_("From %s User Docs"), $sys_name).')</span>';
 		  $audience_content .= '</li>';
 		}
@@ -432,7 +435,7 @@ function show_item_list_sober ($result_arr,
 		{ continue; }
 
 	      $context_content .= '<li><span class="smaller">'
-                                  .sprintf(_("%s:"), $audience_label).'</span>';
+                                  .sprintf(("%s:"), $audience_label).'</span>';
 	      $context_content .= '<ul>';
 	      $context_content .= $audience_content;
 	      $context_content .= '</ul>';
@@ -444,7 +447,7 @@ function show_item_list_sober ($result_arr,
 	{ continue; }
 
       print '
-  <h3>'.html_anchor(sprintf(_("%s:"), $context_label), $context).'</h3>
+  <h3>'.html_anchor(sprintf(("%s:"), $context_label), $context).'</h3>
   <ul>'.$context_content.'</ul>
   <br />
 ';
@@ -570,11 +573,11 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 
       $title_arr=array();
       $title_arr[]=_("Date");
-      $title_arr[]=_("Changed By");
+      $title_arr[]=_("Changed by");
       $title_arr[]=_("Updated Field");
       $title_arr[]=_("Previous Value");
       $title_arr[]="=>";
-      $title_arr[]=_("Replaced By");
+      $title_arr[]=_("Replaced by");
 
       print html_build_list_table_top ($title_arr);
 
@@ -676,7 +679,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
   else
     {
       print "\n".'<span class="warn">'
-            ._("No Changes Have Been Made to This Item").'</span>';
+            ._("No changes have been made to this item").'</span>';
     }
 }
 
@@ -784,7 +787,7 @@ function show_dependent_item ($item_id, $dependson=0)
   # No item found? Exit here
   if (!$item_exists)
     {
-      print '<p class="warn">'.sprintf(_("%s: %s"), $title, _("None found"))
+      print '<p class="warn">'.sprintf(("%s: %s"), $title, _("None found"))
             .'</p>';
       return;
     }
@@ -841,7 +844,7 @@ function show_dependent_item ($item_id, $dependson=0)
             .'&amp;item_depends_on='.$current_item_id
             .'&amp;item_depends_on_artifact='.$tracker.'">'
             .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-            .'.theme/misc/trash.png" alt="'._("Delete this dependency?")
+            .'.theme/misc/trash.png" alt="'._("Delete this dependency")
             .'" class="icon" /></a></span>';
         }
 
@@ -913,6 +916,8 @@ function show_dependent_item ($item_id, $dependson=0)
 	      $linktitle = _("patch dependencies");
 	      break;
 	    default:
+# TRANSLATORS: the argument is tracker name, unlocalized
+# (this string is a fallback that should never actually be used).
 	      $linktitle = sprintf(_("%s dependencies"), $tracker);
 	    }
           $content .= utils_link($GLOBALS['sys_home'].$tracker.'/?group_id='

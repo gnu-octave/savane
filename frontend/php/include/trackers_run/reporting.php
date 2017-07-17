@@ -57,6 +57,7 @@ function specific_reports_list ($thisfield=0)
 
   if ($thisfield != 'aging')
     print "<li><a href=\"reporting.php?group_id=$group_id&amp;field=aging\">"
+# TRANSLATORS: aging statistics is statistics by date.
           ._("Aging Statistics")."</a></li>\n";
 
   while ($field = trackers_list_all_fields())
@@ -68,6 +69,7 @@ function specific_reports_list ($thisfield=0)
         {
           print "<li><a href=\"reporting.php?group_id="
                 ."$group_id&amp;field=$field\">";
+          # TRANSLATORS: the argument is field label.
           printf(_("Statistics by '%s'"), trackers_data_get_label($field));
           print "</a></li>\n";
         }
@@ -82,6 +84,7 @@ if ($field)
   {
     if ($field == 'aging')
       {
+# TRANSLATORS: aging statistics is statistics by date.
         print '<h3>'._("Aging statistics:").'</h3>';
 
         $time_now=time();
@@ -98,12 +101,13 @@ if ($field)
                                   AND spamscore < 5 ",
                                  array($start, $end, $group_id));
 
-            $key = sprintf(_("%s to %s"), utils_format_date($start),
+            # TRANSLATORS: the arguments are dates.
+            $key = sprintf(_('%1$s to %2$s'), utils_format_date($start),
                            utils_format_date($end));
             $content[$key] = db_result($result, 0,0);
           }
 
-        print '<h5>'._("Average Turnaround Time For Closed Items").'</h5>';
+        print '<h5>'._("Average Turnaround Time for Closed Items").'</h5>';
         graphs_build($content,0,0);
         unset($content);
         print "<p>&nbsp;&nbsp;</p>";
@@ -118,7 +122,8 @@ if ($field)
                                   AND spamscore < 5",
                                  array($start, $end, $group_id));
 
-            $key = sprintf(_("%s to %s"), utils_format_date($start),
+            # TRANSLATORS: the arguments are dates.
+            $key = sprintf(_('%1$s to %2$s'), utils_format_date($start),
                            utils_format_date($end));
             $content[$key] = db_result($result, 0,0);
           }
@@ -154,6 +159,7 @@ if ($field)
         $label = trackers_data_get_label($field);
 
         # Title + field description
+        # TRANSLATORS: the argument is field label.
         print '<h3>'.sprintf(_("Statistics by '%s':"), $label).'</h3>'
           .'<p><em>'._('Field Description:').'</em> '
           .trackers_data_get_description($field).'</p>';
@@ -162,6 +168,7 @@ if ($field)
         if (trackers_data_is_special($field) || !trackers_data_is_used($field)
             || !trackers_data_is_select_box($field))
           print '<p class="error">'
+        # TRANSLATORS: the argument is field label.
             .sprintf(_("Can't generate report for field %s"), $label).'</p>';
         else
           {

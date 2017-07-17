@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007 Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -47,7 +47,7 @@ if (!$group_id)
 $project = project_get_object($group_id);
 
 if (!member_check(0, $group_id))
-  exit_error(_("Data Export is currently restricted to projects members"));
+  exit_error(_("Data Export is currently restricted to project members"));
 
 trackers_init($group_id);
 
@@ -65,6 +65,16 @@ $res_export = db_execute("SELECT * FROM trackers_export WHERE user_name=?
                           array(user_getname(), $group));
 $export_count = db_numrows($res_export);
 
+function export_limit_msg ($max_export)
+  {
+    return sprintf(ngettext(
+"You have already registered %s export job for this project, which is the
+current limit.",
+"You have already registered %s export jobs for this project, which is the
+current limit.", $max_export), $max_export)
+." "._("If more exports are needed, ask other project members.");
+  }
+
 ########################################################################
 # GET/POST Update
 
@@ -80,12 +90,7 @@ if ($update)
           {
             # Already registered 5 exports? Kick out
             form_clean($form_id);
-            exit_error(sprintf(ngettext(
-"You have already registered %s export job for this project, which is the
-current limit.",
-"You have already registered %s export jobs for this project, which is the
-current limit.", $max_export), $max_export)
-." "._("If more exports are needed, ask other project members."));
+            exit_error(export_limit_msg ($max_export));
           }
 
         ##
@@ -386,6 +391,7 @@ current limit.", $max_export), $max_export)
                              array($export_id, user_getname()));
         if (db_affected_rows($result))
           {
+# TRANSLATORS: the argument is job id (a number).
             fb(sprintf(_("Export job #%s successfully removed"), $export_id));
 
             session_redirect($GLOBALS['sys_home']
@@ -396,6 +402,7 @@ current limit.", $max_export), $max_export)
           }
         else
           {
+# TRANSLATORS: the argument is job id (a number).
             fb(sprintf(_("Unable to remove export job #%s"), $export_id), 1);
           }
         // Update the list of current exports
@@ -454,10 +461,10 @@ if ($export_count > 0)
        print utils_link($GLOBALS['sys_home']
                         .'task/?func=detailitem&amp;item_id='
                         .db_result($res_export, $i, 'task_id'),
-                        # I18N
-                           # The first two strings are export and task id;
-                           # the last string is the status (pending, done)
-                        sprintf(_("Job #%s, bound to task #%s, %s"),
+                        # TRANSLATORS: The first two strings are export
+                        # and task id (numbers);
+                        # the last string is the status (pending or done).
+                        sprintf(_('Job #%1$s, bound to task #%2$s, %3$s'),
                                 db_result($res_export, $i, 'export_id'),
                                 db_result($res_export, $i, 'task_id'),
                                 $status));
@@ -472,35 +479,41 @@ if ($export_count > 0)
 
        if (db_result($res_export, $i, 'frequency_day'))
          {
-           # I18N
-           # First string is 'every weekday', second the time of day
-           # Example: "every Wednesday at 16:45 hours"
            if (db_result($res_export, $i, 'frequency_day') == 8)
-             $date = sprintf(_("%s at %s hours [GMT]"), "every day",
-                             db_result($res_export, $i, 'frequency_hour'));
+           # TRANSLATORS: First argument is 'every weekday',
+           # the second is time of day, the third is time zone,
+           # e.g. (export should be generated)
+           # "every Wednesday at 16:45 hours [GMT]".
+             $date = sprintf(_('%1$s at %2$s hours %3$s'), _("every day"),
+                             db_result($res_export, $i, 'frequency_hour'),
+           # TRANSLATORS: This is time zone.
+                             _('[GMT]'));
            else
-             $date = sprintf(_("%s at %s hours [GMT]"),
+           # TRANSLATORS: First argument is 'every weekday',
+           # the second is time of day, the third is time zone,
+           # e.g. (export should be generated)
+           # "every Wednesday at 16:45 hours [GMT]".
+             $date = sprintf(_('%1$s at %2$s hours %3$s'),
                              calendar_every_weekday_name(
                                    db_result($res_export, $i, 'frequency_day')),
-                             db_result($res_export, $i, 'frequency_hour'));
+                             db_result($res_export, $i, 'frequency_hour'),
+                             _('[GMT]'));
          }
        else
          {
            $date = utils_format_date(db_result($res_export, $i, 'date'));
          }
 
-       print '<br /><span class="smaller">'.
-         # I18N
-         # First string is the type of export (e.g. recipes, bugs, tasks, ...)
-         # Second string is the date of the export
+       print '<br /><span class="smaller">'
+         # TRANSLATORS:
+         # First string is the type of export (e.g. recipes, bugs, tasks, ...).
+         # Second string is the date of the export.
          # Example: Exporting recipes on Fri, 2 Dec 2005
-         sprintf(_("Exporting %s on %s"),
-                 $type,
-                 $date).
-         '</span>';
+         .sprintf(_('Exporting %1$s on %2$s'), $type, $date)
+         .'</span>';
       }
     print $HTML->box_bottom();
-    print '<p>'._("Note that xml files will be removed after 2 weeks or if you
+    print '<p>'._("Note that XML files will be removed after 2 weeks or if you
 remove the job from this list.").'</p>';
   }
 else
@@ -537,15 +550,22 @@ if ($export_count < $max_export)
     $res_report = trackers_data_get_reports($group_id,user_getid());
 
     print html_show_displayoptions(sprintf(
-            _("Use the %s Query Form and %s selection for export criteria."),
+# TRANSLATORS: the first argument is selection of "Basic", "Advanced",
+# "Votes", "By date", "full", the second argument is selection
+# of "Simple" or "Multiple".
+            _('Use the %1$s Query Form and %2$s selection for export criteria.'),
                                            html_build_select_box($res_report,
                                                                  'report_id',
                                                                  $report_id,
                                                                  true,
                                                                  'Basic'),
                                            '<select name="advsrch">
-<option value="0"'.$advsrch_0.'>'._("Simple").'</option>
-<option value="1"'.$advsrch_1.'>'._("Multiple").'</option></select>'),
+<option value="0"'.$advsrch_0.'>'
+# TRANSLATORS: this string is used to specify kind of selection.
+._("Simple").'</option>
+<option value="1"'.$advsrch_1.'>'
+# TRANSLATORS: this string is used to specify kind of selection.
+._("Multiple").'</option></select>'),
                                    form_header($_SERVER['PHP_SELF'].'#new', '')
                                    .form_input("hidden", "group", $group),
                                    form_submit(_("Apply")));
@@ -711,13 +731,11 @@ if ($export_count < $max_export)
 
     print '&nbsp;&nbsp;&nbsp;'.form_input("radio", "date_mainchoice", "next")
       .' '
-      # I18N
-      # First %s: the day (e.g. today, tomorrow, Fri 2. Dec 2005, ...)
-      # Second %s: the time (e.g. 16:37)
-      # Third %s: the timezone (e.g. GMT)
-      # Note that the GMT string may not be set, so dont put it beween
-      # parenthesis.
-      .sprintf(_("%s at %s hours %s"),
+      # TRANSLATORS: First argument is 'every weekday',
+      # the second is time of day, the third is time zone,
+      # e.g. (export should be generated)
+      # "every Wednesday at 16:45 hours [GMT]".
+      .sprintf(_('%1$s at %2$s hours %3$s'),
                html_build_select_box_from_array($valid_days,
                                                 "date_next_day"),
                html_build_select_box_from_array($valid_hours,
@@ -735,13 +753,11 @@ if ($export_count < $max_export)
 
     print '&nbsp;&nbsp;&nbsp;'.form_input("radio", "date_mainchoice",
                                           "frequent").' '
-      # I18N
-      # First string is 'every weekday', second the time of day,
-      # third is the timezone
-      # Example: "every Wednesday at 16:45 hours GMT"
-      # Note that the GMT string may not be set, so dont put it beween
-      # parenthesis.
-      .sprintf(_("%s at %s hours %s"),
+      # TRANSLATORS: First argument is 'every weekday',
+      # the second is time of day, the third is time zone,
+      # e.g. (export should be generated)
+      # "every Wednesday at 16:45 hours [GMT]".
+      .sprintf(_('%1$s at %2$s hours %3$s'),
                html_build_select_box_from_array($valid_days,
                                                 "date_frequent_day"),
                html_build_select_box_from_array($valid_hours,
@@ -753,13 +769,7 @@ if ($export_count < $max_export)
   }
 else
   {
-    printf(ngettext(
-"You have already registered %s export job for this project, which is the
-current limit.",
-"You have already registered %s export jobs for this project, which is the
-current limit.", $max_export)
-  ." "._("If more exports are needed, ask other project members."),
-           $max_export);
+    print export_limit_msg ($max_export);
   }
 trackers_footer(array());
 ?>

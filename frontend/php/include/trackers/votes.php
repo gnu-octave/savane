@@ -151,13 +151,10 @@ function trackers_votes_update ($item_id, $group_id=0, $new_vote, $tracker=null)
 	      'howmuch' => $new_vote
             ), DB_AUTOQUERY_INSERT);
 
-          # Add in CC
-          # workaround for stupid function that require a
-          # variable to be passed as final argument.
 	  trackers_add_cc($item_id,
 			  $group_id,
 			  user_getname(),
-			  "Voted in favor of this item");
+			  "-VOT-");
 	}
       else
 	{

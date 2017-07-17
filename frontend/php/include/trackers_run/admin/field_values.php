@@ -88,7 +88,7 @@ elseif ($post_changes || $delete_canned)
                                        'A');
           }
         else
-          fb(_("Empty field value not allowed"), 1);
+          fb(_("Empty field value is not allowed"), 1);
       }
     elseif ($update_value)
       {
@@ -104,7 +104,7 @@ elseif ($post_changes || $delete_canned)
                                        $status);
           }
         else
-          fb(_("Empty field value not allowed"), 1);
+          fb(_("Empty field value is not allowed"), 1);
       }
     elseif ($create_canned)
       {
@@ -178,9 +178,9 @@ if ($to != $from) {
         ), DB_AUTOQUERY_INSERT);
 
       if (db_affected_rows($result) < 1)
-        fb(_("Insert failed."), 1);
+        fb(_("Insert failed"), 1);
       else
-        fb(_("New transition inserted."));
+        fb(_("New transition inserted"));
     }
   else
     {
@@ -195,9 +195,9 @@ if ($to != $from) {
          array($group_id, ARTIFACT, $field_id, $from, $to));
 
       if (db_affected_rows($result) < 1)
-        fb(_("Update of transition failed."), 1);
+        fb(_("Update of transition failed"), 1);
       else
-        fb(_("Transition updated."));
+        fb(_("Transition updated"));
     }
 }
 
@@ -206,6 +206,7 @@ if ($list_value)
   {
 # Display the List of values for a given bug field.
 
+# TRANSLATORS: the argument is field label.
     $hdr = sprintf(_("Edit Field Values for '%s'"),
                    trackers_data_get_label($field));
 
@@ -236,7 +237,7 @@ if ($list_value)
 
             $title_arr=array();
             if (!$is_project_scope)
-              $title_arr[]='ID';
+              $title_arr[]=_('ID');
             $title_arr[]=_("Value label");
             $title_arr[]=_("Description");
             $title_arr[]=_("Rank");
@@ -246,9 +247,15 @@ if ($list_value)
             $hdr = html_build_list_table_top ($title_arr);
 
             $ia = $ih = 0;
-            $status_stg = array('A' => _("Active"),
-                                'P' => _("Permanent"),
-                                'H' => _("Hidden"));
+            $status_stg = array('A' =>
+# TRANSLATORS: this is field status.
+                                 _("Active"),
+                                'P' =>
+# TRANSLATORS: this is field status.
+                                 _("Permanent"),
+                                'H' =>
+# TRANSLATORS: this is field status.
+                                 _("Hidden"));
 
 # Display the list of values in 2 blocks : active first
 # Hidden second.
@@ -346,6 +353,7 @@ any)").'</p>'.$hdr;
           }
         else
           {
+# TRANSLATORS: the  argument is field label.
             printf ("\n<h2>"._("No values defined yet for %s")
                    .'</h2>',trackers_data_get_label($field));
           }
@@ -382,7 +390,11 @@ that suits your needs.").'</p>';
             if (isset($none_rk))
               {
                 print "&nbsp;&nbsp;"
-                      ."<strong> (must be &gt; $none_rk)</strong><br /></p>";
+                      ."<strong> "
+                     # TRANSLATORS: the argument is minimum rank value;
+                     # the string is used like "Rank: (must be > %s)".
+                      .sprintf(_("(must be &gt; %s)"),$none_rk)
+                      ."</strong><br /></p>";
               }
 
             print '
@@ -444,6 +456,7 @@ administrators."), 1);
       }
     else
       exit_error(sprintf(
+# TRANSLATORS: the argument is field.
 _("The field you requested '%s' is not used by your project or you are not
 allowed to customize it"),$field));
 
@@ -508,9 +521,9 @@ allowed to customize it"),$field));
             $title_arr[]=_("From");
             $title_arr[]=_("To");
             $title_arr[]=_("Is Allowed");
-            $title_arr[]=_("Others Fields Update");
+            $title_arr[]=_("Other Fields Update");
             $title_arr[]=_("Carbon-Copy List");
-            $title_arr[]=_("Delete?");
+            $title_arr[]=_("Delete");
 
             $hdr = html_build_list_table_top ($title_arr);
             print $hdr;
@@ -530,6 +543,7 @@ allowed to customize it"),$field));
                   print '<td align="center">'
                     .$val_label[$transition['from_value_id']].'</td>';
                 else
+                  # TRANSLATORS: this refers to transitions.
                   print '<td align="center">'._("* - Any").'</td>';
 
                 print '<td align="center">'
@@ -559,7 +573,7 @@ allowed to customize it"),$field));
                       }
                     else
                       {
-                        $content = _("Edit others fields update");
+                        $content = _("Edit other fields update");
                       }
 
                     print utils_link($GLOBALS['sys_home'].ARTIFACT
@@ -578,7 +592,7 @@ allowed to customize it"),$field));
 .'?group='.$group.'&amp;func=deltransition&amp;transition_id='
 .$transition['transition_id'].'&amp;list_value=1&amp;field='.$field,
 '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/misc/trash.png" border="0" alt="'._("Delete this transition?").'" />')
+.'.theme/misc/trash.png" border="0" alt="'._("Delete this transition").'" />')
 .'</td>';
                 print '</tr>';
               }
@@ -588,6 +602,7 @@ allowed to customize it"),$field));
           {
             $reg_default_auth = '';
             printf ("\n\n<p>&nbsp;</p><h3>"
+                    # TRANSLATORS: the argument is field.
                     ._("No transition defined yet for %s").'</h3>',
                     trackers_data_get_label($field));
           }
@@ -618,11 +633,11 @@ transitions not registered are allowed. This setting can be changed when
 managing this field usage.");
           }
         print "\n\n<p>&nbsp;</p><h3>"
-.html_anchor(_("Create / Edit a transition"),"create").'</h3>';
+.html_anchor(_("Create a transition"),"create").'</h3>';
         print "<p>$transition_for_field</p>\n";
         print '<p>'
-._("Once a transition created, it will be possible to set \"Others Fields
-Update\" for this transition.").'</p>';
+._("Once a transition created, it will be possible to set &ldquo;Other Fields
+Update&rdquo; for this transition.").'</p>';
 
         $title_arr=array();
         $title_arr[]=_("From");
@@ -659,6 +674,7 @@ Update\" for this transition.").'</p>';
       {
         print "\n\n<p>&nbsp;</p><h3>";
         printf (
+# TRANSLATORS: the argument is field.
 _("The Bug field you requested '%s' is not used by your project or you are not
 allowed to customize it"),$field);
         print '</h3>';
@@ -695,13 +711,15 @@ elseif ($update_value)
       ._("Status:").' </span>
     <select name="status">
          <option value="A">'
+# TRANSLATORS: this is field status.
       ._("Active").'</option>
          <option value="H"'
 .((db_result($res,0,'status') == 'H') ? ' selected="selected"':'').'>'
+# TRANSLATORS: this is field status.
       ._("Hidden").'</option>
     </select>
     <p>
-    <span class="preinput">'._("Description: (optional)").'</span><br />
+    <span class="preinput">'._("Description (optional):").'</span><br />
     <textarea name="description" rows="4" cols="65" wrap="soft">'
 .db_result($res,0,'description').'</textarea></p>';
     $count = trackers_data_count_field_value_usage($group_id, $field,
@@ -725,7 +743,7 @@ field '%s'."), $field).'</p>';
 elseif ($create_canned || $delete_canned)
   {
     #   Show existing responses and UI form.
-    trackers_header_admin(array ('title'=>_("Create/Modify Canned Responses")));
+    trackers_header_admin(array ('title'=>_("Modify Canned Responses")));
     $result=db_execute('SELECT * FROM '.ARTIFACT.'_canned_responses
                         WHERE group_id = ? ORDER BY order_id ASC',
                        array($group_id));
@@ -740,7 +758,7 @@ elseif ($create_canned || $delete_canned)
         $title_arr[]=_("Title");
         $title_arr[]=_("Body (abstract)");
         $title_arr[]=_("Rank");
-        $title_arr[]=_("Delete?");
+        $title_arr[]=_("Delete");
 
         print html_build_list_table_top ($title_arr);
 
@@ -762,7 +780,7 @@ elseif ($create_canned || $delete_canned)
               .db_result($result, $i, 'bug_canned_id').'&amp;group_id='
               .$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'
               .SV_THEME.'.theme/misc/trash.png" border="0" alt="'
-              ._("Delete this canned answer?").'" />
+              ._("Delete this canned answer").'" />
               </a></td></tr>';
           }
         print '</table>';

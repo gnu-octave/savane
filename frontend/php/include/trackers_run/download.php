@@ -63,10 +63,12 @@ $result = db_execute("SELECT filename,filesize FROM trackers_file
 		     array($file_id));
 
 if ($result && db_numrows($result) <= 0) 
-  exit_error(_("Couldn't find attached file")." (file #$file_id)");
+# TRANSLATORS: the argument is file id (a number).
+  exit_error(sprintf(_("Couldn't find attached file (file #%s)"),
+                     $file_id));
 
 if (db_result($result,0,'filesize') == 0) 
-  exit_error(_("Nothing in here, file has a null size"));
+  exit_error(_("File has a null size"));
 
   # Redirect to an url that will pretend the file really exists with
   # this name, so all browsers will propose its name as filename when

@@ -217,16 +217,16 @@ if ($post_changes)
     if ($res)
       {
         if ($create_report)
-          sprintf(_("Query form '%s' created successfully"),$rep_name);
+          fb(sprintf(_("Query form '%s' created successfully"),$rep_name));
         else
-          sprintf(_("Query form '%s' updated successfully"),$rep_name);
+          fb(sprintf(_("Query form '%s' updated successfully"),$rep_name),1);
       }
     else
       {
         if ($create_report)
-          sprintf(_("Failed to create query form '%s'"),$rep_name);
+          fb(sprintf(_("Failed to create query form '%s'"),$rep_name));
         else
-          sprintf(_("Failed to update query form '%s'"),$rep_name);
+          fb(sprintf(_("Failed to update query form '%s'"),$rep_name),1);
       }
   } /* if($post_changes) */
 else if ($delete_report)
@@ -244,7 +244,7 @@ else if ($delete_report)
 # Display the UI forms.
 if ($new_report)
   {
-    trackers_header_admin(array ('title'=>_("Create A New Query Form")));
+    trackers_header_admin(array ('title'=>_("Create a New Query Form")));
 
 # Display the table of all fields that can be included in the report.
     $title_arr=array();
@@ -371,7 +371,8 @@ else if ($show_report)
     $rows = db_numrows($res);
     if (!$rows)
       {
-        exit_error('Error',"Unknown Report ID ($report_id)");
+        # TRANSLATORS: the argument is report id (a number).
+        exit_error(sprintf(_("Unknown Report ID (%s)"), $report_id));
       }
 
     // Make sure this user has the right to modify the bug report.
@@ -518,14 +519,13 @@ else
       {
 # Loop through the list of all bug report.
         $title_arr=array();
-        $title_arr[]=_("Id");
+        $title_arr[]=_("ID");
         $title_arr[]=_("Query form name");
         $title_arr[]=_("Description");
         $title_arr[]=_("Scope");
-        $title_arr[]=_("Delete?");
+        $title_arr[]=_("Delete");
 
-        print "\n<h3>"._("Existing Query Forms:").'</h3>';
-        print '<p>('._("Click to modify").')';
+        print "\n<h3>"._("Existing Query Forms").'</h3>';
         print html_build_list_table_top ($title_arr);
         $i=0;
         while ($arr = db_fetch_array($res))
@@ -575,13 +575,11 @@ else
       }
     else
       {
-        print '<h3>'._("No query form defined yet.").'</h3>';
+        print '<p>'._("No query form defined yet.").'</p>';
       }
-
-    printf ('<p>'._("You can %s create a new query form%s").'</p>',
-            '<a href="'.htmlentities ($_SERVER["PHP_SELF"]).'?group='
-            .$group.'&new_report=1">',
-            '</a>');
+    printf ('<p>'._("You can <a href=\"%s\"> create a new query form</a>.")
+            .'</p>', htmlentities ($_SERVER["PHP_SELF"])
+                     .'?group='.$group.'&new_report=1');
   }
 trackers_footer(array());
 ?>

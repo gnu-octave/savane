@@ -2,7 +2,7 @@
 # Edit export jobs.
 #
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -30,7 +30,7 @@ if (!$group_id)
 $project=project_get_object($group_id);
 
 if (!member_check(0, $group_id))
-  exit_error(_("Data Export is currently restricted to projects members"));
+  exit_error(_("Data Export is currently restricted to project members"));
 
 extract(sane_import('get', array('from', 'export_id', 'task_id')));
 
@@ -70,6 +70,7 @@ trackers_mail_followup($task_id, $address, $changes,false,'task');
 session_redirect($GLOBALS['sys_home'].$from."/export.php?group="
                  .rawurlencode($group)."&feedback="
                  .rawurlencode(
-                   sprintf(_("Export job #%s deleted, task #%s closed"),
+         # TRANSLATORS: the arguments are task and export ids (numbers).
+                   sprintf(_('Export job #%1$s deleted, task #%2$s closed'),
                            $export_id, $task_id)));
 ?>

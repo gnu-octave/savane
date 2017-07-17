@@ -187,7 +187,9 @@ function trackers_data_show_notification_settings($group_id, $tracker_name,
     {
       if ($show_intro_msg != 0)
           print '<p>'
-.sprintf(_("As a project administrator you must decide if the list of persons
+.sprintf(
+# TRANSLATORS: the argument is tracker name (like bugs, support requests, tasks).
+         _("As a project administrator you must decide if the list of persons
 to be systematically notified on new %s submissions (and possibly updates)
 depend on the categories or not and you must provide the corresponding email
 addresses (comma separated list)."),
@@ -233,7 +235,9 @@ utils_get_tracker_name($tracker_name)).'</p>';
     {
       if ($show_intro_msg != 0)
         print '<p>'
-.sprintf(_("As a project administrator you must decide if the list of persons
+.sprintf(
+# TRANSLATORS: the argument is tracker name (like bugs, support requests, tasks).
+         _("As a project administrator you must decide if the list of persons
 to be systematically notified on new %s submissions (and possibly updates)
 depend on the categories or not and you must provide the corresponding email
 addresses (comma separated list)."), utils_get_tracker_name($tracker_name))
@@ -313,7 +317,10 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
          ), DB_AUTOQUERY_UPDATE,
     "group_id=?", array($group_id));
   if (!$res_gl)
-    $local_feedback .= _("groups table Update failed.").' '.db_error();
+# TRANSLATORS: the argument is table name (like groups);
+# the string shall be followed by database error message.
+    $local_feedback .= sprintf(_("%s table Update failed:"), 'groups')
+                       .' '.db_error();
 
   $ok = 0;
   if ($nb_categories > 0)
@@ -344,7 +351,11 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
           if ($res_cat)
             $ok++;
           else
-            $local_feedback .= _($tracker_name."_field_value table Update failed.").' '.db_error();
+# TRANSLATORS: the argument is table name (like groups);
+# the string shall be followed by database error message.
+            $local_feedback .= sprintf(_("%s table Update failed:"),
+                                       $tracker_name)
+                               .' '.db_error();
         }
     }
   if (($res_gl) && ($ok == $nb_categories) && ($local_feedback == ""))
@@ -2118,7 +2129,7 @@ reassigned, exiting."), 1);
             ), DB_AUTOQUERY_INSERT);
           if (!$result)
             {
-	      fb(_("Unable to duplicate a comment  from the original item
+	      fb(_("Unable to duplicate a comment from the original item
 report information."), 1);
             }
         }
@@ -2461,8 +2472,10 @@ administrator"), 1);
       return false;
     }
 
-  $item = utils_get_tracker_prefix(ARTIFACT)." #".$item_id;;
-  fb(sprintf(_("New item posted (%s)"), $item));
+# TANSLATORS: the first argument is tracker type (like sr, bug or recipe)
+# the second argument is item id (number).
+  fb(sprintf(_('New item posted (%1$s #%2$s)'),
+             utils_get_tracker_prefix(ARTIFACT), $item_id));
 
   # Register the spam score.
   spam_set_item_default_score($item_id,
@@ -2721,7 +2734,8 @@ function trackers_data_delete_file($group_id, $item_id, $file_id)
                     array($item_id, $group_id));
   if (db_numrows($res) <= 0)
     {
-      sprintf(_("Item #%s doesn't belong to project"), $item_id);
+# TRANSLATORS: the argument is item id (a number).
+      fb(sprintf(_("Item #%s doesn't belong to project"), $item_id), 1);
       return;
     }
 
@@ -2735,7 +2749,10 @@ function trackers_data_delete_file($group_id, $item_id, $file_id)
 
   if (!$result)
     {
-      "Error deleting attachment #$file_id: ".db_error($res);
+# TRANSLATORS: the argument is file id (a number); the string
+# shall be followed by database error message.
+      fb(sprintf(_("Can't delete attachment #%s:"), $file_id)
+         ." ".db_error($res), 1);
     }
   else
     {

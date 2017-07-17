@@ -217,7 +217,7 @@ if (!$is_suspended)
 # FIXME: it could reuse the arrays built before to generate
 # the items lists.
 
-    print $HTML->box_top(_("Project/Group Information"),'',1);
+    print $HTML->box_top(_("Project Information"),'',1);
     # Now get listing of groups for that user.
     $result = db_execute("SELECT groups.group_name,"
                          . "groups.group_id,"

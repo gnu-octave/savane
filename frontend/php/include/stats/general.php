@@ -1,59 +1,61 @@
 <?php
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 2004-2004 (c) Mathieu Roy <yeupou--gnu.org>
-#                          Yves Perrin <yves.perrin--cern.ch>
+# Get statistics.
+#
+# Copyright (C) 2004 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2004 Yves Perrin <yves.perrin--cern.ch>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 function stats_get_generic($res_count)
 {
-  if (db_numrows($res_count) > 0) 
+  if (db_numrows($res_count) > 0)
     {
       $row_count = db_fetch_array($res_count);
       return $row_count['count'];
-    } 
-  else 
+    }
+  else
     {
       return _("Error");
     }
 }
 
-function stats_getprojects_active($type_id="") 
+function stats_getprojects_active($type_id="")
 {
   return stats_getprojects($type_id);
 }
 
-function stats_getprojects_bytype_active($type_id) 
+function stats_getprojects_bytype_active($type_id)
 {
   return stats_getprojects_active($type_id);
 }
 
-function stats_getprojects_pending() 
+function stats_getprojects_pending()
 {
-  return stats_get_generic(db_query("SELECT count(*) AS count FROM groups WHERE status='P'"));
+  return stats_get_generic(
+           db_query("SELECT count(*) AS count FROM groups WHERE status='P'"));
 }
 
-function stats_getprojects_total() 
+function stats_getprojects_total()
 {
   return stats_getprojects();
 }
 
-function stats_getprojects($type_id="", $is_public="",$period="") 
+function stats_getprojects($type_id="", $is_public="",$period="")
 {
   $params = array();
   $type_id_sql = '';
@@ -76,11 +78,12 @@ function stats_getprojects($type_id="", $is_public="",$period="")
     }
 
   return stats_get_generic(
-    db_execute("SELECT count(*) AS count FROM groups WHERE status='A' $type_id_sql $is_public_sql $period_sql",
+    db_execute("SELECT count(*) AS count FROM groups WHERE status='A'
+                $type_id_sql $is_public_sql $period_sql",
 	       $params));
 }
 
-function stats_getusers($period="") 
+function stats_getusers($period="")
 {
   $param = array();
   $period_sql = '';
@@ -91,7 +94,8 @@ function stats_getusers($period="")
     }
 
   return stats_get_generic(
-    db_execute("SELECT count(*) AS count FROM user WHERE status='A' $period_sql", $param));
+    db_execute("SELECT count(*) AS count FROM user WHERE status='A'
+                $period_sql", $param));
 }
 
 function stats_getitems($tracker, $only_open="",$period="")
@@ -110,15 +114,18 @@ function stats_getitems($tracker, $only_open="",$period="")
       $period_sql = " AND ?";
       array_push($params, $period);
     }
-  
- 
+
+
   return stats_get_generic(
-    db_execute("SELECT count(*) AS count FROM $tracker WHERE group_id<>'100' AND spamscore < 5"
+    db_execute("SELECT count(*) AS count FROM $tracker "
+               . "WHERE group_id<>'100' AND spamscore < 5"
 	       . " $only_open_sql $period_sql", $params));
 }
 
-function stats_getthemeusers($theme="") 
+function stats_getthemeusers($theme="")
 {
-  return stats_get_generic(db_execute("SELECT count(*) AS count FROM user WHERE status='A' AND theme=?",
+  return stats_get_generic(db_execute("SELECT count(*) AS count FROM user "
+                                     ."WHERE status='A' AND theme=?",
 				      array($theme)));
 }
+?>

@@ -377,15 +377,16 @@ switch ($func)
 	   {
 	     fb(sprintf(_("You provided search words to get a list of items
 this one may depend on. Below, in the section [%s Dependencies], you can now
-select the appropriate one(s) and submit the form."),
+select the appropriate ones and submit the form."),
                 $GLOBALS['sys_https_url'].$_SERVER['SCRIPT_NAME']
                 .'#dependencies'));
 	   }
 	 if ($reassign_change_project_search)
 	   {
 	     fb(sprintf(_("You provided search words to get a list of projects
-this item should maybe reassigned to. Below, in the section [%s Reassign this
-item], you can now select the appropriate project and submit the form."),
+this item should maybe reassigned to. Below, in the section
+[%s Reassign this item], you can now select the appropriate
+project and submit the form."),
                         $GLOBALS['sys_https_url'].$_SERVER['SCRIPT_NAME']
                         .'#reassign'));
 	   }
@@ -395,10 +396,10 @@ item], you can now select the appropriate project and submit the form."),
 	   }
 	 if ($change_quotation_style)
 	   {
-	     if ($change_quotation_style == _("Quoted, ready to be copied/pasted into your new comment"))
+	     if ($change_quotation_style == ("Quoted, ready to be copied/pasted into your new comment"))
 	       {
 		 $quotation_style = "quoted";
-		 fb(_("Previous comments will now be printed in a copy/paste-friendly mode."));
+		 fb(("Previous comments will now be printed in a copy/paste-friendly mode."));
 	       }
 	     else
 	       {

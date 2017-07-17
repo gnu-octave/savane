@@ -140,7 +140,7 @@ if (db_result($result,0,'category_id') != '100')
                                           true);  # ascii
 
 print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'))
-  .'"><em>'.sprintf(_("%s:"), $item_link.$category).'</em> '
+  .'"><em>'.$item_link.$category.':</em> '
   .db_result($result,0,'summary').'</h2>';
 print markup_full(db_result($result,0,'details'));
 
@@ -156,11 +156,13 @@ else
   $last_update = db_result($result, 0, 'date');
 
 print '<div align="right" class="smaller">'
+# TRANSLATORS: the argument is date.
   .sprintf(_("Last update: %s"), utils_format_date($last_update)).'</div>';
 
 if ($comingfrom)
   # Mention it is documentation from the site
   print '<div align="right" class="smaller">'
+# TRANSLATORS: the argument is site name (like Savannah).
     .sprintf(_("This recipe comes from %s User Docs"), $sys_name).'</div>';
 
 print '<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>';
@@ -285,11 +287,9 @@ links)").'</p>';
 if (member_check(0, $group_id))
   {
     print '<h3>'.html_anchor(_("Item Edition"), "edit").'</h3>';
-    print '<p>'
-     .sprintf(_("If you want to edit or comment this recipe, go to %s"),
-              utils_link($GLOBALS['sys_home'].ARTIFACT
+    print '<p>'.utils_link($GLOBALS['sys_home'].ARTIFACT
                          ."/edit.php?func=detailitem&amp;item_id=$item_id",
-                         _("this item's edit page"))).'</p>';
+                         _("Edit this page")).'</p>';
   }
 
 trackers_footer(array());

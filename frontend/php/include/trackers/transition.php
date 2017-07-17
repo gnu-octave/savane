@@ -205,8 +205,9 @@ function trackers_transition_update_item ($item_id, $transition_id_array,
 	      if ($field != 'close_date')
 		{
 		  fb(
+# TRANSLATORS: the argument is field name.
           sprintf(_("Automatic update of %s due to transitions settings"),
-                  trackers_data_get_label($field)));
+                  '<em>'.trackers_data_get_label($field).'</em>'));
 		}
 	      $upd_list[$field] = $value;
 	      $exists = true;

@@ -943,7 +943,7 @@ function html_select_theme_box ($input_name="user_theme", $current=0)
         print ' selected="selected"';
       print '>'.$theme;
       if ($theme == $GLOBALS['sys_themedefault'])
-        print ' ('._("default").')';
+        print ' '._("(default)");
       print '</option>'."\n";
     }
   # Special rotate case.
@@ -1082,16 +1082,16 @@ function show_group_type_box($name='group_type',$checked_val='xzxz',
 function html_member_explain_roles ()
 {
   print '<p>'
-._("Technicians, and only technicians, can be assigned tracker's items. They
+._("Technicians, and only technicians, can be assigned items of trackers. They
 cannot reassign items, change the status or priority of items.");
   print "</p>\n<p>";
-  print _("Trackers Managers can fully manage the trackers items, including
-assigning items to technicians, reassign items over trackers and projects,
-changing priority and status of items - but they cannot configure the
+  print _("Tracker Managers can fully manage items of trackers, including
+assigning items to technicians, reassigning items over trackers and projects,
+changing priority and status of items&mdash;but they cannot configure the
 trackers.");
   print "</p>\n<p>";
   print _("Project Admins can manage members, configure the trackers, post
-jobs, and add mailing-list. They actually also have manager rights on every
+jobs, and add mailing lists. They actually also have manager rights on every
 tracker and are allowed to read private items.");
   print "</p>\n";
 }

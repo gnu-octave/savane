@@ -24,7 +24,7 @@ trackers_header(array ('title'=>_("Search")));
 print '<p>'
 ._("With the following form, you can perform a search in the items summaries
 and details. If you need to perform more complex search, use the query forms in
-Browse items page")
+Browse items page.")
 .'</p>';
 # this must not be in a boxoption, it is no option, it is the only purpose of
 # the page

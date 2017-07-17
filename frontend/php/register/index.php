@@ -59,9 +59,9 @@ $HTML->header(array('title' => sprintf(_("%s hosting request"),
 if (db_numrows(db_execute("SELECT type_id FROM group_type")) < 1) {
 	# group_type is empty; it's not possible to register projects
 	print _("No group type has been set. Admins need to create at least one
-group type. They can make it so clicking on the link &ldquo;Group Type
-Admin,&rdquo; on the Administration section of the left side menu, while logged
-in as admin");
+group type. They can make it so visiting the link &ldquo;Group Type
+Admin&rdquo; on the Administration section of the left side menu, while logged
+in as admin.");
 } else
   utils_get_content("register/index");
 

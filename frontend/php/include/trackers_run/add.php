@@ -26,6 +26,8 @@ extract(sane_import('request', array('form_id')));
 
 if (!group_restrictions_check($group_id, ARTIFACT))
   {
+# TRANSLATORS: the argument is a string that explains why the action is
+# unavilable.
     exit_error(sprintf(_("Action Unavailable: %s"),
                group_getrestrictions_explained($group_id, ARTIFACT)));
   }
@@ -198,7 +200,7 @@ print '<h3>'._("Attached Files").'</h3>';
 print sprintf(_("(Note: upload size limit is set to %s kB, after insertion of
 the required escape characters.)"), $GLOBALS['sys_upload_max']);
 
-print '<p><span class="preinput"> '._("Attach File(s):").'</span><br />
+print '<p><span class="preinput"> '._("Attach Files:").'</span><br />
 &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" />
 <input type="file" name="input_file2" size="10" />
 <br />
@@ -216,11 +218,12 @@ if (user_isloggedin())
   print '<p>&nbsp;</p>';
   print '<h3>'._("Mail Notification CC").'</h3>';
 
+# TRANSLATORS: the argument is site name (like Savannah).
   print sprintf(_("(Note: for %s users, you can use their login name rather
 than their email addresses.)"), $GLOBALS['sys_name']);
 
   print '<p><span class="preinput">'
-    ._("Add Email Addresses (comma as separator):")
+    ._("Add Email Addresses (use comma as separator):")
 .'</span><br />
 &nbsp;&nbsp;&nbsp;<input type="text" name="add_cc" size="40" value="'
 .htmlspecialchars($add_cc).'" />&nbsp;&nbsp;&nbsp;

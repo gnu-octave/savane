@@ -132,7 +132,7 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   if (!count($data))
     {
       if (!$ascii)
-	$out = '<span class="warn">'._("No Followups Have Been Posted").'</span>';
+	$out = '<span class="warn">'._("No followups have been posted").'</span>';
       return $out;
     }
 
@@ -185,7 +185,7 @@ Follow-up Comments:\n\n";
 	{ $jumpto_text = _("Jump to the recipe preview"); }
       print '<p class="center"><span class="xsmall">'
 .'(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/arrows/bottom.png" class="icon" alt="'.$jumpto_text.'" /> '
+.'.theme/arrows/bottom.png" class="icon" alt="'.'" /> '
 .$jumpto_text.'</a>)</span></p>';
     }
 
@@ -249,7 +249,7 @@ Follow-up Comments:\n\n";
 	  if ($entry['user_id'] != 100)
 	    { $spammer_user_name = $entry['user_name'];  }
 	  else
-	    { $spammer_user_name = _("an anonymous"); }
+	    { $spammer_user_name = _("anonymous"); }
 
 	  # If we are in printer mode, simply skip if
 	  if (!empty($_REQUEST['printer']))
@@ -286,7 +286,7 @@ to be run.")
 .htmlentities ($_SERVER['PHP_SELF']).'?func=unflagspam&amp;item_id='.$item_id
 .'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
 .($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/bool/ok.png" class="icon" alt="'._("Unflag as spam").'" />'
+.'.theme/bool/ok.png" class="icon" alt="'.'" />'
 ._("Unflag as spam").'</a>)';
 		}
 	      $out .= '</td></tr>';
@@ -453,7 +453,7 @@ to be run.")
 	    }
 	  else
 	    {	      
-	      # No # in front of the revision number so users dont get
+	      # No # in front of the revision number so users don't get
 	      # confused and do use it as a ref that will be made link
 	      # (in the future, we could imagine doing such links)
 	      $out .= sprintf(_("SVN revision %s:"), $entry['revision']);
@@ -516,7 +516,7 @@ to be run.")
 .htmlentities ($_SERVER['PHP_SELF']).'?func=flagspam&amp;item_id='.$item_id
 .'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
 .($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/misc/trash.png" class="icon" alt="'._("Flag as spam").'" />'
+.'.theme/misc/trash.png" class="icon" alt="'.'" />'
 ._("Flag as spam").'</a>)<br /><br />';
 	    }
 	  $out .= '</td></tr>';
@@ -721,11 +721,12 @@ File Attachments:\n\n";
 	      $out .= '<div>&nbsp;&nbsp;&nbsp;- ';
 	    }
 
-	  $out .= '<a href="'.$href.'">file #'.$item_file_id._(": ").'&nbsp;';
+	  $out .= '<a href="'.$href.'">file #'.$item_file_id.(": ").'&nbsp;';
 
 	  if (!$sober)
 	    {
-	      $out .= sprintf(_('%s added by %s'),
+# TRANSLATORS: the first argument is file name, the second is user's name.
+	      $out .= sprintf(_('<!-- file -->%1$s added by %2$s'),
                               db_result($result, $i, 'filename').'</a>',
                               utils_user_link(db_result($result, $i,
                                                         'user_name')));
@@ -805,7 +806,7 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	{
 	  # We wont provide the CC address in the mail, we keep that
 	  # information only on the web interface
-	  $email = "Available only the item webpage";
+	  $email = "Available only on the item webpage";
 	}
       else
 	{
@@ -852,6 +853,16 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	    { $comment = _('Updated the item'); }
 	}
 
+      if ($comment == '-VOT-'
+        # Older procedure in votes.php used this comment with trackers_add_cc ().
+          || $comment == 'Voted in favor of this item')
+	{
+	  if ($ascii)
+	    $comment = 'Voted in favor of this item';
+	  else
+	    $comment = _('Voted in favor of this item');
+	}
+
       if ($ascii)
 	{
 	  $out .= sprintf($fmt, $email, $comment);
@@ -881,7 +892,8 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	    }
 
           $out .= '<li class="'.utils_get_alt_row_color($i).'">'.$html_delete
-	  .sprintf(_('%s added by %s'), $email,
+# TRANSLATORS: the first argument is email, the second is user's name.
+	  .sprintf(_('<!-- email --> %1$s added by %2$s'), $email,
                    utils_user_link(db_result($result, $i, 'user_name')));
           if ($comment)
            {
