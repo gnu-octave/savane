@@ -130,7 +130,7 @@ function account_pwvalid ($newpass, $oldpass = '', $user = '')
   } else {
     /* Some really trivial and obviously-insufficient password strength checks -
      * we ought to use the pwqcheck(1) program instead. */
-    $check = '';
+    $check = 'OK';
 # TRANSLATORS: this string in used in the context "Bad password (%s)".
     if (strlen($newpass) < 7)
       $check = _('way too short');
@@ -144,9 +144,9 @@ function account_pwvalid ($newpass, $oldpass = '', $user = '')
       $check = _('based on the username');
   }
 
-  if ($check != '') {
+  if ($check != 'OK') {
 # TRANSLATORS: the argument describes the reason why the password is bad.
-    $GLOBALS['register_error'] = sprintf(_("Bad password (%s)", $check));
+    $GLOBALS['register_error'] = sprintf(_("Bad password (%s)"), $check);
     fb($check, 1);
     return 0;
   }
