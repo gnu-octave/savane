@@ -573,8 +573,8 @@ switch ($func)
 			  'ip' => $_SERVER['REMOTE_ADDR'],
 			  'check_value' => $fields['check'],
 			  'details' => $fields['comment']));
-
- if (!user_isloggedin() && (!isset($_POST['check']) || ($_POST['check'] != 1984)))
+ if (!user_isloggedin() && (!isset($_POST['check'])
+     || ($_POST['check'] != 1984 && !$preview)))
  { exit_error(_("You're not logged in and you didn't enter the magic anti-spam number, please go back!")); }
 
 ### Add a comment to a bug already in the database,
@@ -627,7 +627,7 @@ switch ($func)
      // Attach new file if there is one
      // Do that first so it can update the comment
      $additional_comment = '';
-     if (group_restrictions_check($group_id, ARTIFACT, 2))
+     if (!$preview && group_restrictions_check($group_id, ARTIFACT, 2))
        {
          // (attach_several_files will use sane_() functions to get the
          // the necessary info)
@@ -647,36 +647,36 @@ switch ($func)
          $comment = htmlspecialchars($comment);
          # For none project members force the comment type to None (100)
 	 # The delay for spamcheck will be called from this function:
-	 trackers_data_add_history('details',$comment,'',$item_id,100);
+         if (!$preview)
+           {
+             trackers_data_add_history('details',$comment,'',$item_id,100);
 
-         # YPE fix to trigger notifications in case of non member
-	 $changes['details']['add'] = $comment;
-	 $changes['details']['type'] = 'None';
-	 $changed = true;
-	 
-         # Add to CC list unless prefs says not to
-         # (usually, this part is handled directly in functions included
-         # in general.php, but here as we do a direct insert, we need
-         # to also do this now)
-	 if (user_isloggedin() && 
-	     !user_get_preference("skipcc_postcomment"))
-	   {
-	     trackers_add_cc($item_id,
-			     $group_id,
-			     user_getid(),
-			     "-COM-");
-                  # use a flag as comment, because if we 
-                  # translate the string now, people will get
-                  # the translation of the submitter when they
-                  # read the item, not necessarily the one they
-                  # want
-	   }
+             # YPE fix to trigger notifications in case of non member
+             $changes['details']['add'] = $comment;
+             $changes['details']['type'] = 'None';
+             $changed = true;
 
-	 fb(_("Comment added"));
+             # Add to CC list unless prefs says not to
+             # (usually, this part is handled directly in functions included
+             # in general.php, but here as we do a direct insert, we need
+             # to also do this now)
+             if (user_isloggedin()
+                 && !user_get_preference("skipcc_postcomment"))
+               trackers_add_cc($item_id,
+                               $group_id,
+                               user_getid(),
+                # use a flag as comment, because if we
+                # translate the string now, people will get
+                # the translation of the submitter when they
+                # read the item, not necessarily the one they
+                # want
+                               "-COM-");
+             fb(_("Comment added"));
+          }
        }
 	
      # Add new cc if any, only accepted from logged in users.
-     if ($add_cc && user_isloggedin())
+     if (!$preview && $add_cc && user_isloggedin())
        {
          # No notification needs to be sent when a cc is added,
          # it is irrelevant to the item itself
@@ -689,7 +689,7 @@ switch ($func)
 	
      # Add vote, if configured to be accepted from non members or if 
      # the user is member
-     if (trackers_data_is_used("vote"))
+     if (!$preview && trackers_data_is_used("vote"))
        {
 	 if (trackers_data_is_showed_on_add("vote") && user_isloggedin() ||
 	     member_check(user_getid(), $group_id))
@@ -711,9 +711,10 @@ switch ($func)
 	 $address .= $additional_address;
 	 trackers_mail_followup($item_id, $address, $changes);
        }
-	    
-	
-     include '../include/trackers_run/browse.php';
+     if ($preview)
+       include '../include/trackers_run/detail.php';
+     else
+       include '../include/trackers_run/browse.php';
      break;
    }
 

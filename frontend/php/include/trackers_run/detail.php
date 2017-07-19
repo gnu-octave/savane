@@ -245,6 +245,8 @@ authentication level.");
 
   # Default picks
   $is_deployed["postcomment"] = false;
+  if ($preview)
+    $is_deployed["postcomment"] = true;
   $is_deployed["discussion"] = true;
   $is_deployed["attached"] = true;
   $is_deployed["dependencies"] = true;
@@ -277,9 +279,10 @@ authentication level.");
       if (!$item_discussion_lock)
 	{
 	  print '<p class="noprint"><span class="preinput"> '
-                .sprintf(_("Add a New Comment %s:"), markup_info("rich"))
-                .'</span><br /> &nbsp;&nbsp;&nbsp;';
-	  print trackers_field_textarea('comment', '');
+                ._("Add a New Comment").markup_info("rich");
+          print form_submit (_('Preview'), 'preview')
+                ."</span><br />&nbsp;&nbsp;&nbsp;\n";
+	  print trackers_field_textarea('comment', htmlspecialchars($comment));
 	  print '</p>';
 	  
 	  if (!user_isloggedin())
@@ -303,8 +306,10 @@ authentication level.");
 # ################################ Read Comments
 
   print html_hidsubpart_header("discussion", _("Discussion"), 1);
+  $new_comment = $preview? $comment: false;
  
-  print show_item_details($item_id,$group_id,0,$item_assigned_to);
+  print show_item_details($item_id,$group_id,0,$item_assigned_to, false,
+                          $new_comment);
 
   print '<p>&nbsp;</p>';
   print html_hidsubpart_footer();
