@@ -145,8 +145,6 @@ function account_pwvalid ($newpass, $oldpass = '', $user = '')
   }
 
   if ($check !== 0) {
-# TRANSLATORS: the argument describes the reason why the password is bad.
-    $GLOBALS['register_error'] = sprintf(_("Bad password (%s)"), $check);
     fb($check, 1);
     return 0;
   }

@@ -50,12 +50,9 @@ function register_valid()
 	db_execute("SELECT user_pw FROM user WHERE user_id=?", array($user_id));
 
 	if (!$GLOBALS['form_pw']) {
-		$GLOBALS['register_error'] =
-                   no_i18n("You must supply a password.");
 		return 0;
 	}
 	if ($GLOBALS['form_pw'] != $GLOBALS['form_pw2']) {
-		$GLOBALS['register_error'] = no_i18n("Passwords do not match.");
 		return 0;
 	}
 	if (!account_pwvalid($GLOBALS['form_pw'])) {
