@@ -1,13 +1,36 @@
 <?php
-// From:
-// http://www.openwall.com/articles/PHP-Users-Passwords#enforcing-password-policy
+# Check password strength.
+#
+# Copyright (C) 2000-2002,2010,2013,2016 Solar Designer
+# Copyright (C) 2017 Ineiev
+#
+# From:
+# http://www.openwall.com/articles/PHP-Users-Passwords#enforcing-password-policy
+#
+# No copyright to the source code snippets found in this article and
+# to the sample programs included in the accompanying archive is
+# claimed, and they're hereby placed in the public domain. Please feel
+# free to reuse them in your programs.
+#
+# Author: Alexander Peslyak
+# Author: Ineiev (i18n).
 
-// No copyright to the source code snippets found in this article and
-// to the sample programs included in the accompanying archive is
-// claimed, and they're hereby placed in the public domain. Please feel
-// free to reuse them in your programs.
+# The original pwqcheck is not internationalized. Strings to localize
+# are taken from passwdqc_check.c (the 1.3.1 release); they are copyrighted
+# by Solar Designer.
 
-// Author: Alexander Peslyak
+$pwqcheck_messages_for_i18n =
+  array(
+_("Bad passphrase (is the same as the old one)"),
+_("Bad passphrase (is based on the old one)"),
+_("Bad passphrase (too short)"),
+_("Bad passphrase (too long)"),
+_("Bad passphrase (not enough different characters or classes for this length)"),
+_("Bad passphrase (not enough different characters or classes)"),
+_("Bad passphrase (based on personal login information)"),
+_("Bad passphrase (based on a dictionary word and not a passphrase)"),
+_("Bad passphrase (based on a common sequence of characters and not a passphrase)")
+);
 
 function pwqcheck($newpass, $oldpass = '', $user = '', $aux = '', $args = '')
 {
@@ -57,5 +80,8 @@ function pwqcheck($newpass, $oldpass = '', $user = '', $aux = '', $args = '')
 	if ($err === 0 && ($status === 0 || $output !== 'OK'))
 		$retval = $output;
 
-	return $retval;
+        if ($retval == 'OK')
+          return 0;
+        return gettext($retval);
 }
+?>
