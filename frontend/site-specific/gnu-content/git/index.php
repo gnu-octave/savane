@@ -41,7 +41,7 @@ print '
 if ($n > 0)
   echo $main_desc;
 
-echo 'git clone https://git.' . $project->getTypeBaseHost() . "/git/"
+echo 'git clone https://git.' . $project->getTypeBaseHost() . "/git"
   . preg_replace(':/srv/git:', '', $project->getTypeDir('git')). "\n";
 
 for ($i = 0; $i < $n; $i++)
