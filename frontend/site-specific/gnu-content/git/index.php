@@ -54,7 +54,7 @@ for ($i = 0; $i < $n; $i++)
   {
     echo "\n" . $desc[$i] . "\n";
     echo "git clone https://git."
-         .  $project->getTypeBaseHost() . "/" . $url[$i] . "\n";
+         .  $project->getTypeBaseHost() . "/git/" . $url[$i] . "\n";
   }
 
 print '</pre>
