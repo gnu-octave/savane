@@ -91,7 +91,7 @@ $form->addElement('textarea', 'license_other', 'Other license and/or details');
 
 $form->addElement('header', 'title_checklist',
 sprintf (
-_('Checklist - **see <a href="%s">How To Get Your Project Approved Quickly</a>**'),
+_('Checklist - see <a href="%s">How To Get Your Project Approved Quickly</a>'),
 "https://savannah.gnu.org/maintenance/HowToGetYourProjectApprovedQuickly"));
 # <savannah-specific>
 $form->addElement('checkbox', 'cl1',
@@ -116,8 +116,8 @@ $form->addElement('checkbox', 'cl7',
 $form->addElement('checkbox', 'cl_foolproof',
  _("I read carefully and don't check this one"));
 $form->addElement('checkbox', 'cl_requirements',
- _('I agree with the <a href="%s">hosting requirements</a>'),
-   'requirements.php');
+ sprintf(_('I agree with the <a href="%s">hosting requirements</a>'),
+         'requirements.php'));
 
 $form->addElement('header', 'title_details', _('Details'));
 $form->addElement('textarea', 'required_sw', _('Dependencies')
