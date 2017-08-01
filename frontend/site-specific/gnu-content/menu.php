@@ -68,8 +68,6 @@ if (isset ($_SERVER['HTTP_HOST'])
 else
    $HTML->menu_entry('//savannah.gnu.org/',
                      _('GNU Savannah'));
-$HTML->menu_entry('//gna.org/',
-                  _('Gna!'));
 $HTML->menu_entry('//puszcza.gnu.org.ua/',
                   _('Puszcza'));
 $HTML->menuhtml_bottom();
