@@ -665,22 +665,31 @@ function _markup_inline($line)
       "tasks?" => "task/?",
       "recipes?|rcp" => "cookbook/?func=detailitem$comingfrom&amp;item_id=",
       "patch" => "patch/?",
-      # In this case, we make the link pointing to support, it wont matter,
+      # In this case, we make the link pointing to support, it won't matter,
       # the download page is in every tracker and does not check if the tracker
       # is actually used
       "files?" => "support/download.php?file_id=",
   );
+
   foreach ($trackers as $regexp => $link)
     {
-      # Allows only two white space between the string and the numeric id
+      # Allows only two white spaces between the string and the numeric id
       # to avoid having too time consuming regexp. People just have to pay
       # attention.
+
+      # Handle named links.
+      $line = preg_replace("/(^|\s|\W)\[($regexp)\s{0,2}#([0-9]+)\s+(.+?)\]/i",
+        '$1<em><a href="'.$GLOBALS['sys_home'].$link.'$3">$4</a></em>', $line);
+
+      # Now process "usual" links.
       $line = preg_replace("/(^|\s|\W)($regexp)\s{0,2}#([0-9]+)/i",
         '$1<em><a href="'.$GLOBALS['sys_home']
         .$link.'$3">$2&nbsp;#$3</a></em>', $line);
     }
 
   # add an internal link for comments
+  $line = preg_replace("/(^|\s|\W)\[(comments?)\s{0,2}#([0-9]+)\s+(.+?)\]/i",
+    '$1<em><a href="#comment$3">$4</a></em>', $line);
   $line = preg_replace('/(comments?)\s{0,2}#([0-9]+)/i',
     '<em><a href="#comment$2">$1&nbsp;#$2</a></em>', $line);
 
