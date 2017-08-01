@@ -30,6 +30,9 @@ extract(sane_import('get', array('comingfrom')));
 if (defined('PRINTER'))
 { $printer = 1; }
 
+if (!isset ($comingfrom))
+  $comingfrom = false;
+
 # Site doc pretending to be project doc: set the group id to the one of the
 # system group, so its setup will prevail (private right etc)
 if ($comingfrom)

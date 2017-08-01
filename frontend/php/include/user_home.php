@@ -339,6 +339,7 @@ if ($rows_without_history != $rows)
 
       $j = 1;
       unset($content);
+      $exists = false;
       for ($i=0; $i<$rows; $i++)
 	{
 	  $content .= '<li class="'.utils_get_alt_row_color($j).'">';

@@ -39,10 +39,14 @@ if (!$file_id || !ctype_digit($file_id))
 $result = db_execute("SELECT item_id, artifact FROM trackers_file WHERE file_id=?",
 		     array($file_id));
                                                                                 
-if ($result && db_numrows($result) > 0) {
-  $item_id  = db_result($result,0,'item_id');
-  $artifact = db_result($result,0,'artifact');
-}
+if ($result && db_numrows($result) > 0)
+  {
+    $item_id  = db_result($result,0,'item_id');
+    $artifact = db_result($result,0,'artifact');
+  }
+else
+# TRANSLATORS: the argument is file id (a number).
+  util_die (sprintf(_("File #%s not found"), $file_id));
 
 # TRANSLATORS: the argument is artifact ID.
 if (!ctype_alnum($artifact))

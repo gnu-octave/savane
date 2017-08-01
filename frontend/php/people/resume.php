@@ -1,8 +1,9 @@
 <?php
 # Display resume.
 # 
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2017 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -27,7 +28,7 @@ register_globals_off();
 
 extract(sane_import('get', array('user_id')));
 
-if ($user_id == null)
+if ((!isset ($user_id)) || $user_id == null)
 { exit_missing_param(); }
 
 $result=db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));

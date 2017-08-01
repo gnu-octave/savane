@@ -459,9 +459,9 @@ if (!isset($group_id) && !isset($group) && isset($item_id)
   # Special case: if it the item is from the system group and we are on the
   # cookbook, we may want to pretend that an item belong a given group while
   # it actually belongs to the system group.
-  if (ARTIFACT == 'cookbook' &&
-      $group_id == $sys_group_id &&
-      $comingfrom && ctype_digit($comingfrom))
+  if (ARTIFACT == 'cookbook'
+      && $group_id == $sys_group_id && isset ($comingfrom)
+      && $comingfrom && ctype_digit($comingfrom))
     {
       $group_id = $comingfrom;
     }

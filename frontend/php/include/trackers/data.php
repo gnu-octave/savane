@@ -1921,7 +1921,7 @@ function trackers_data_handle_update ($group_id,
    }
 
   # Finally, build the full SQL query and update the bug itself (if need be)
-  dbg("UPD LIST: $upd_list");
+  dbg("UPD LIST: ".implode(',', $upd_list));
   if (count($upd_list) > 0)
     {
       $res = db_autoexecute(ARTIFACT, $upd_list, DB_AUTOQUERY_UPDATE,

@@ -1161,7 +1161,7 @@ function utils_is_broken_msie ()
 	  // string, in the next characters
 	  $msie = substr($_SERVER['HTTP_USER_AGENT'], $msie, 10);
 	  preg_match("/MSIE (\d*)/", $msie, $msie_version);
-	  if ($msie_version[1] < 7)
+	  if ((!isset ($msie_version[1]) || $msie_version[1] < 7)
 	    {
 	      $is_broken = true;
 	    }

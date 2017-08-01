@@ -61,7 +61,8 @@ $HTML->menu_entry('//www.fsf.org/about/dmca-notice',
 $HTML->menuhtml_bottom();
 
 $HTML->menuhtml_top(_('Related Forges'));
-if ($_SERVER['HTTP_HOST'] == 'savannah.gnu.org')
+if (isset ($_SERVER['HTTP_HOST'])
+    && $_SERVER['HTTP_HOST'] == 'savannah.gnu.org')
    $HTML->menu_entry('//savannah.nongnu.org/',
                      _('Savannah Non-GNU'));
 else
