@@ -50,6 +50,6 @@ header('Content-Disposition: attachment; filename='
 # TRANSLATORS: the argument is user's name.
 header('Content-Description: '
        .sprintf(_('GPG Key of the user %s'),
-       db_result($result, 0, 'user_name'));
+       db_result($result, 0, 'user_name')));
 print db_result($result,0,'gpg_key');
 ?>
