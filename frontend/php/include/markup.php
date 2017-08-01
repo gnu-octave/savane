@@ -626,34 +626,6 @@ function _markup_inline($line)
   # we can expect web browsers to support)
   $protocols = "https?|ftp|sftp|file|afs|nfs";
 
-  # Prepare usual links: prefix "www." with "http://"
-  # if it is preceded by [ or whitespace or at the beginning of line.
-  # (don't want to prefix in cases like "//www.." or "ngwww...")
-  $line = preg_replace('/(^|\s|\[)(www\.)/i', '$1http://$2', $line);
-
-  # replace the @ sign with an HTML entity, if it is used within
-  # an url (e.g. for pointers to mailing lists). This way, the
-  # @ sign doesn't get mangled in the e-mail markup code
-  # below. See bug #2689 on http://gna.org/ for reference.
-  $line = eregi_replace("([a-z]+://[^<>[:space:]]+)@", "\\1&#64;", $line);
-
-  # Prepare the markup for normal links, e.g. http://test.org, by
-  # surrounding them with braces []
-  # (& = begin of html entities, it means a end of string unless
-  # it is &amp; which itself is the entity for &)
-  $line = preg_replace('/(^|\s|[^\[])(('.$protocols
-                       .'):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
-    '$1[$2]', $line);
-
-  # do a markup for mail links, e.g. info@support.org
-  # (do not use utils_emails, this does extensive database
-  # search on the string
-  # and replace addresses in several fashion. Here we just want to make
-  # a link). Make sure that 'cvs -d:pserver:anonymous@cvs.sv.gnu.org:/...'
-  # is NOT replaced.
-  $line = preg_replace("/(^|\s)([a-z0-9_+-.]+@([a-z0-9_+-]+\.)+[a-z]+)(\s|$)/i",
-		       '\1' . utils_email_basic('\2') . '\4', $line);
-
   # Links between items
   # FIXME: it should be i18n, but in a clever way, meaning that everytime
   # a form is submitted with such string, the string get converted in
@@ -670,6 +642,59 @@ function _markup_inline($line)
       # is actually used
       "files?" => "support/download.php?file_id=",
   );
+  $artifact_regex = implode ('|', array_keys($trackers)).'|comments?';
+
+  # Modify link texts to disable interpreting them as nested links.
+  $line = preg_replace_callback ('/(\[(('
+        .$protocols.'|www\.)[^\s]+'
+        .'|(('.$artifact_regex.')\s{0,2}#[0-9]+))\s+)(.*?)\]/',
+        function ($matches)
+          {
+        # Replace '#' in link texts with HTML references;
+        # if we don't, we may get links like
+        # [bug #3 bug #1] ->
+        # <em><a href="/bugs/?3"><em><a href="/bugs/?1">bug #1</a></em></a></em>
+            $tail = preg_replace ('/(^|[^&])#/', '$1&#35;', $matches[6]);
+        # Add '&#32;' before each word to disable interpreting it as
+        # a link in texts like
+        # [https://www.gnu.org/home.html home page for www.gnu.org]
+            $tail = preg_replace ('/(^|\s)([^\s])/', '$1&#32;$2', $tail);
+            return $matches[1].$tail.']';
+          }, $line);
+
+  # Prepare usual links: prefix "www." with "http://"
+  # if it is preceded by [ or whitespace or at the beginning of line.
+  # (don't want to prefix in cases like "//www.." or "ngwww...")
+  $line = preg_replace('/(^|\s|\[)(www\.)/i', '$1http://$2', $line);
+
+  # replace the @ sign with an HTML entity, if it is used within
+  # an url (e.g. for pointers to mailing lists). This way, the
+  # @ sign doesn't get mangled in the e-mail markup code
+  # below. See bug #2689 on http://gna.org/ for reference.
+  $line = eregi_replace("([a-z]+://[^<>[:space:]]+)@", "\\1&#64;", $line);
+
+  # Prepare the markup for normal links, e.g. http://test.org, by
+  # surrounding them with braces []
+  # (& = begin of html entities, it means a end of string unless
+  # it is &amp; which itself is the entity for &)
+  $line = preg_replace('/(^|\s|[^;\[])(('.$protocols
+                       .'):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
+    '$1[$2]', $line);
+  # Remove spaces added with preg_replace_callback
+  # and process links with preceding ';'.
+  $line = preg_replace ('/&#32;/', '', $line);
+  $line = preg_replace('/(;)(('.$protocols
+                       .'):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
+    '$1[$2]', $line);
+
+  # do a markup for mail links, e.g. info@support.org
+  # (do not use utils_emails, this does extensive database
+  # search on the string
+  # and replace addresses in several fashion. Here we just want to make
+  # a link). Make sure that 'cvs -d:pserver:anonymous@cvs.sv.gnu.org:/...'
+  # is NOT replaced.
+  $line = preg_replace("/(^|\s)([a-z0-9_+-.]+@([a-z0-9_+-]+\.)+[a-z]+)(\s|$)/i",
+		       '\1' . utils_email_basic('\2') . '\4', $line);
 
   foreach ($trackers as $regexp => $link)
     {
