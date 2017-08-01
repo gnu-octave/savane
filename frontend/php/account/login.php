@@ -194,7 +194,8 @@ site_header(array('title'=>_("Login")));
 if (!empty($login) && !$success)
 {
 
-  if ($GLOBALS['signal_pending_account'] == 1)
+  if (isset ($GLOBALS['signal_pending_account'])
+      && $GLOBALS['signal_pending_account'] == 1)
     {
       print '<h3>'._("Pending Account").'</h3>';
       print '<p>'._("Your account is currently pending your email confirmation.
