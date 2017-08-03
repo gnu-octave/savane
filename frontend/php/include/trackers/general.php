@@ -818,7 +818,7 @@ function trackers_check_empty_fields($field_array, $new_item=true)
 Fill them and re-submit the form."), join(', ',$previous_form_bad_fields));
           else
             $msg = sprintf(_("The field %s is mandatory.
-Fill it and re-submit the form."), $previous_form_bad_fields);
+Fill it and re-submit the form."), implode ($previous_form_bad_fields));
 
 	  fb($msg, 1);
 	}

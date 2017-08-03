@@ -1869,11 +1869,11 @@ function trackers_data_handle_update ($group_id,
 	}
     }
 
-
   # Enter the timestamp if we are changing to closed or declined
   # (if not already set)
-  if (trackers_data_is_status_closed($vfl['status_id']) &&
-      $vfl['status_id'] != db_result($result,0,'status_id'))
+  if (isset ($fvl['status_id'])
+      && trackers_data_is_status_closed($vfl['status_id'])
+      && $vfl['status_id'] != db_result($result,0,'status_id'))
     {
       $now=time();
       $upd_list['close_date'] = $now;

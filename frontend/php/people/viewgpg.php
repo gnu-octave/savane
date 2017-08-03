@@ -23,9 +23,8 @@ require_once('../include/init.php');
 register_globals_off();
 extract(sane_import('get', array('user_id')));
 
-
 # Check whether the user exists
-if (!$user_id)
+if (!(isset ($user_id) && $user_id))
 {
   exit_error(_("User not found."));
 }

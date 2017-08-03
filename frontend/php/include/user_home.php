@@ -338,7 +338,7 @@ if ($rows_without_history != $rows)
       $rows = db_numrows($result);
 
       $j = 1;
-      unset($content);
+      $content = '';
       $exists = false;
       for ($i=0; $i<$rows; $i++)
 	{
