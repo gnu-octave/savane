@@ -184,7 +184,7 @@ $result=trackers_data_get_attached_files($item_id);
 if (db_numrows($result))
 {
   print '<h3>'.html_anchor(_("Attached Files"), "attached").'</h3>';
-  print show_item_attached_files($item_id,$group_id,false,true);
+  print format_item_attached_files($item_id,$group_id,false,true);
 
   print '<p>&nbsp;</p>';
 }
