@@ -288,10 +288,10 @@ available.').'</p>
     {
       foreach ($user_ids as $user) {
 	if (member_squad_add($user, $squad_id, $group_id)) 
-# TRASNLATORS: the argument is user's name.
+# TRANSLATORS: the argument is user's name.
 	  { fb(sprintf(_("User %s added to the squad."), user_getname($user))); }
 	else
-# TRASNLATORS: the argument is user's name.
+# TRANSLATORS: the argument is user's name.
 	  { fb(sprintf(_("User %s is already part of the squad."),
                        user_getname($user)),1); }
       }
@@ -302,10 +302,10 @@ available.').'</p>
     {
       foreach ($user_ids as $user) {
 	if (member_squad_remove($user, $squad_id, $group_id)) 
-# TRASNLATORS: the argument is user's name.
+# TRANSLATORS: the argument is user's name.
 	  { fb(sprintf(_("User %s removed from the squad."), user_getname($user))); }
 	else
-# TRASNLATORS: the argument is user's name.
+# TRANSLATORS: the argument is user's name.
 	  { fb(sprintf(_("User %s is not part of the squad."), user_getname($user)),1); }
       }
     }
