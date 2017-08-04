@@ -738,9 +738,7 @@ function _markup_inline($line)
   # [http://gna.org/] -> <a href="http://gna.org/">http://gna.org/</a>
   # We make sure the string is not too long, otherwise we cut
   # it.
-  # (Supposedly, preg_replace_callback is faster than preg_replace //e but
-  # it seems less reliable)
-  $line = preg_replace(
+  $line = preg_replace_callback(
     # find the opening brace '['
     '/\['
     # followed by the protocol, either http:// or https://
@@ -749,7 +747,10 @@ function _markup_inline($line)
     .'(('.$protocols.'):\/\/'
     # match any character except whitespace (non-greedy) for
     # the actual link, followed by the closing brace ']'
-    .'[^\s]+?)\]/e', "utils_cutlink('$1')", $line);
+    .'[^\s]+?)\]/', function ($match)
+                      {
+                        return utils_cutlink($match[1]);
+                      }, $line);
 
   # *word* -> <strong>word</strong>
   $line = preg_replace(
