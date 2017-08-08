@@ -275,7 +275,7 @@ which are not attributed by default when joining this project.").'</p>
 if ($project->getGPGKeyring())
 {
   print '<p>'
-.sprintf(_('You may also be interested in the <a href=\"%s\">GPG Keyring of
+.sprintf(_('You may also be interested in the <a href="%s">GPG Keyring of
 this project</a>'), 'memberlist-gpgkeys.php?group='.$group).'</p>
 ';
 
