@@ -59,6 +59,7 @@ $LICENSE['dual-gpl'] =
   _('GNU General Public License v2 or later (+ dual licensing)');
 $LICENSE['gplv3orlater'] = _('GNU General Public License v3 or later');
 $LICENSE['agpl'] = _('GNU Affero General Public License v3 or later');
+$LICENSE['apache2'] = _('Apache 2.0');
 
 /* should be equal to '0' when no url exists */
 $LICENSE_URL['gpl'] = '//www.gnu.org/licenses/gpl-2.0.html';
@@ -84,6 +85,7 @@ $LICENSE_URL['other'] = '0';
 $LICENSE_URL['dual-gpl'] = '//www.gnu.org/licenses/gpl-2.0.html';
 $LICENSE_URL['gplv3orlater'] = '//www.gnu.org/licenses/gpl-3.0.html';
 $LICENSE_URL['agpl'] = '//www.gnu.org/licenses/agpl-3.0.html';
+$LICENSE_URL['apache2'] = '//directory.fsf.org/wiki/License:Apache2.0';
 
 $DEVEL_STATUS[0] = _('0 - Undefined');
 $DEVEL_STATUS[1] = _('1 - Planning');
