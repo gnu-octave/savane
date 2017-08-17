@@ -23,13 +23,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-print '<p><a href="gnuevalconfirm.php?group_id='.$GLOBALS[group_id].'">'
+print '<p><a href="gnuevalconfirm.php?group_id='.$GLOBALS['group_id'].'">'
 ._('Ask maintainers@gnu.org if this is a GNU package indeed').'</a></p>
 
-<p><a href="gnueval.php?group_id='.$GLOBALS[group_id].'">'
+<p><a href="gnueval.php?group_id='.$GLOBALS['group_id'].'">'
 ._('Ask gnueval-input@gnu.org to evaluate for inclusion in the GNU project').'</a></p>
 
-<p><a href="send_registration_notification.php?group_id='.$GLOBALS[group_id].'">'
+<p><a href="send_registration_notification.php?group_id='.$GLOBALS['group_id'].'">'
 ._('Resend the admin mail notification').'</a></p>';
 
 ?>
