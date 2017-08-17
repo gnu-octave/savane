@@ -479,6 +479,7 @@ else
 
     print $HTML->box_top(_("Request for Inclusion Waiting For Approval"),'',1);
     $content = '';
+    $j = 1;
 
     for ($i=0; $i<$rows; $i++)
       {
@@ -496,6 +497,7 @@ else
                      .db_result($result,$i,'group_name')
                      .'</a><br />&nbsp;</li>'."\n";
             $exists=1;
+            $j++;
           }
       }
 
