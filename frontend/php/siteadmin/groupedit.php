@@ -224,7 +224,7 @@ belongs to accepts this information.").'<br />';
 print '<select name="form_license">';
 print '<option value="none">'.no_i18n("N/A").'</option>';
 print '<option value="other">'.no_i18n("Other license").'</option>';
-while (list($k,$v) = each($LICENSE))
+while (list($k,$v) = each($LICENSE_EN))
 {
   print "<OPTION value=\"$k\"";
   if ($k == $row_grp['license']) print " selected";

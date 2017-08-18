@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+$LICENSE_EN = array();
 $LICENSE = array();
 $LICENSE_URL = array();
 $DEVEL_STATUS = array();

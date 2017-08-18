@@ -33,32 +33,61 @@
 # DO NOT PUT ANY WHITESPACE OUTSIDE PHP TAGS
 # OR MANY REDIRECTIONS WILL NOT WORK
 
+# Every entry is defined in English (for the admins)
+# and in localized form (for the users).
+$LICENSE_EN['gpl'] = ('GNU General Public License v2 or later');
 $LICENSE['gpl'] = _('GNU General Public License v2 or later');
+$LICENSE_EN['lgpl'] = ('GNU Lesser General Public License');
 $LICENSE['lgpl'] = _('GNU Lesser General Public License');
+$LICENSE_EN['fdl'] = ('GNU Free Documentation License');
 $LICENSE['fdl'] = _('GNU Free Documentation License');
+$LICENSE_EN['mbsd'] = ('Modified BSD License');
 $LICENSE['mbsd'] = _('Modified BSD License');
+$LICENSE_EN['x11'] = ('X11 license');
 $LICENSE['x11'] = _('X11 license');
+$LICENSE_EN['cryptix'] = ('Cryptix General License');
 $LICENSE['cryptix'] = _('Cryptix General License');
+$LICENSE_EN['zlib'] = ('The license of ZLib');
 $LICENSE['zlib'] = _('The license of ZLib');
+$LICENSE_EN['imatrix'] = ('The license of the iMatix Standard Function Library');
 $LICENSE['imatrix'] = _('The license of the iMatix Standard Function Library');
+$LICENSE_EN['w3c'] = ('The W3C Software Notice and License');
 $LICENSE['w3c'] = _('The W3C Software Notice and License');
+$LICENSE_EN['berkeley'] = ('The Berkeley Database License');
 $LICENSE['berkeley'] = _('The Berkeley Database License');
+$LICENSE_EN['python16'] = ('The License of Python 1.6a2 and earlier versions');
 $LICENSE['python16'] = _('The License of Python 1.6a2 and earlier versions');
+$LICENSE_EN['python2'] = ('The License of Python 2.0.1, 2.1.1, and newer versions');
 $LICENSE['python2'] = _('The License of Python 2.0.1, 2.1.1, and newer versions');
+$LICENSE_EN['cartistic'] = ('The Clarified Artistic License');
 $LICENSE['cartistic'] = _('The Clarified Artistic License');
+$LICENSE_EN['perl'] =
+  ('The license of Perl (disjunction of the Artistic License and the GNU GPL)');
 $LICENSE['perl'] =
   _('The license of Perl (disjunction of the Artistic License and the GNU GPL)');
+$LICENSE_EN['expat'] = ('Expat License (sometime refered to as MIT License)');
 $LICENSE['expat'] = _('Expat License (sometime refered to as MIT License)');
+$LICENSE_EN['affero'] = ('Affero General Public License v1 or later');
 $LICENSE['affero'] = _('Affero General Public License v1 or later');
+$LICENSE_EN['classpath'] =
+  ('GNU General Public License v2 or later with GNU Classpath special exception');
 $LICENSE['classpath'] =
   _('GNU General Public License v2 or later with GNU Classpath special exception');
+$LICENSE_EN['public domain'] = ('Public domain');
 $LICENSE['public domain'] = _('Public domain');
+$LICENSE_EN['website'] = ('WebSite Only');
 $LICENSE['website'] = _('WebSite Only');
+$LICENSE_EN['other'] = ('Other license');
 $LICENSE['other'] = _('Other license');
+$LICENSE_EN['dual-gpl'] =
+  ('GNU General Public License v2 or later (+ dual licensing)');
 $LICENSE['dual-gpl'] =
   _('GNU General Public License v2 or later (+ dual licensing)');
+$LICENSE_EN['gplv3orlater'] = ('GNU General Public License v3 or later');
 $LICENSE['gplv3orlater'] = _('GNU General Public License v3 or later');
+$LICENSE_EN['agpl'] = ('GNU Affero General Public License v3 or later');
 $LICENSE['agpl'] = _('GNU Affero General Public License v3 or later');
+$LICENSE_EN['apache2'] = ('Apache 2.0');
 $LICENSE['apache2'] = _('Apache 2.0');
 
 /* should be equal to '0' when no url exists */

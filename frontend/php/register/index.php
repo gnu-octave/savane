@@ -237,7 +237,7 @@ effectively *logged as site administrators* (superuser):
 * Name: *".$form_full_name."*
 * System Name:  *".$unix_name."*
 * Type: ".$type."
-* License: ".$LICENSE[$form_license];
+* License: ".$LICENSE_EN[$form_license];
 
   if ($form_license_other) {
     $message_admin .= " (".$form_license_other.")";
