@@ -209,6 +209,8 @@ priority and open/close items")))."</p>\n";
 
       # If nocache is set, we were explicetely asked to rely only
       # on database content
+      if (!isset ($nocache))
+        $nocache = false;
       if (empty($$field_name) || $nocache)
 	{ $field_value = db_result($result,0,$field_name); }
       else
