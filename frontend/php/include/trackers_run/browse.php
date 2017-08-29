@@ -475,7 +475,8 @@ if (!$sober)
 reset($url_params);
 
 # prepare for summary and original submission as 'special' criteria
-unset($summary_search, $details_search);
+$summary_search = 0;
+$details_search = 0;
 
 while (list($field,$value_id) = each($url_params))
 {

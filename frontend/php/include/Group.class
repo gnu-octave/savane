@@ -322,7 +322,11 @@ class Group extends Error
     return $this->data_array['devel_status'];
   }
   function getGPGKeyring()
-    { return $this->data_array['registered_gpg_keys']; }
+  {
+     if (!isset($this->data_array['registered_gpg_keys']))
+       return false;
+     return $this->data_array['registered_gpg_keys'];
+  }
 
   # ######################
   # Url, Dir, Permission
