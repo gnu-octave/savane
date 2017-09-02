@@ -51,8 +51,20 @@ $success = FALSE;
 # the user to use the relevant form than to reimplement everything here
 if ($item == 'delete')
 {
-  $res_check = db_execute("SELECT group_id FROM user_group WHERE user_id=?", array(user_getid()));
-  if (db_numrows($res_check) != 0)
+  $res_check = db_execute("SELECT group_id FROM user_group WHERE user_id=?",
+                          array(user_getid()));
+  $rows = db_numrows($res_check);
+  $exists = false;
+  # Check if the user is a member of any _active_ group.
+  for ($i = 0; $i < $rows && !$exists; $i++)
+    {
+      $group_id = db_result ($res_check, $i, 'group_id');
+      if (0 != db_numrows(db_execute("SELECT unix_group_name FROM groups "
+                                     ."WHERE group_id=? and status='A'",
+                                     array($group_id))))
+        $exists = true;
+    }
+  if ($exists)
     {      
       exit_error(_("You must quit groups of which you are a member before
 requesting account deletion. If you registered a project that was not approved
