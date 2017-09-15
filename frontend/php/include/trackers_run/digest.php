@@ -138,9 +138,9 @@ elseif ($func == "digestget")
       if (db_result($result,0,'privacy') == "2" && !member_check_private(0, db_result($result, 0, 'group_id')))
 	{ continue; }
 
-      # Show summary if requested
-      unset($summary);
-      if ($field_used['summary'] == 1)
+      # Show summary if requested.
+      $summary = '';
+      if (isset($field_used['summary']) && $field_used['summary'] == 1)
 	{
 	  $summary = db_result($result,0,'summary');
 	}
@@ -202,7 +202,7 @@ elseif ($func == "digestget")
 	{
 	  print '<hr class="clearr" /><div class="smaller">'. trackers_field_display("details",db_result($result, 0, 'group_id'),db_result($result,0,"details"),false,true,true).'</div>';
 	}
-      if ($field_used["latestcomment"] == 1)
+      if (isset($field_used["latestcomment"]) && $field_used["latestcomment"] == 1)
 	{
 #         $last_comment = db_result(db_query("SELECT old_value FROM ".ARTIFACT."_history WHERE bug_id='$item' AND field_name='details' ORDER BY bug_history_id DESC LIMIT 1"),0,'old_value');
 

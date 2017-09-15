@@ -310,7 +310,7 @@ function sendmail_mail ($from,
 	      $v = utils_normalize_email($v);	  
 	      
               # Already handled?
-	      if ($seen_before[$v])
+	      if (isset($seen_before[$v]) && $seen_before[$v])
 		{ continue; }
 	      
 	    }
