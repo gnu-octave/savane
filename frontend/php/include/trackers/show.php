@@ -840,7 +840,7 @@ function show_dependent_item ($item_id, $dependson=0)
       # level members of a project.
       if ($dependson && $is_manager)
 	{
-	  print '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_dependancy&amp;item_id='.$item_id.'&amp;item_depends_on='.$current_item_id.
+	  print '<span class="trash"><a href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_dependancy&amp;item_id='.$item_id.'&amp;item_depends_on='.$current_item_id.
 	    '&amp;item_depends_on_artifact='.$tracker.'">'.
 	    '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" alt="'._("Delete this dependency?").'" class="icon" /></a></span>';
 	}

@@ -237,7 +237,7 @@ if ($new_report)
   $title_arr[]=_("Column width (optional)");
   
   print'
-	<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+	<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 	   <input type="hidden" name="create_report" value="y" />
 	   <input type="hidden" name="group_id" value="'.$group_id.'" />
 	   <input type="hidden" name="post_changes" value="y" />
@@ -381,7 +381,7 @@ else if ($show_report)
   $title_arr[]=_("Rank on Output");
   $title_arr[]=_("Column width (optional)");
   
-  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+  print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 	   <input type="hidden" name="update_report" value="y" />
 	   <input type="hidden" name="group_id" value="'.$group_id.'" />
 	   <input type="hidden" name="report_id" value="'.$report_id.'" />
@@ -505,11 +505,11 @@ else
 	    }
 	  else
 	    {
-	      print '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group.
+	      print '<a href="'.htmlentities ($_SERVER['PHP_SELF']).'?group='.$group.
 		'&show_report=1&report_id='.$arr['report_id'].'">'.
 		$arr['report_id'].'</a>';
 	      print "</td>\n";
-	      print '<td><a href="'.$_SERVER['PHP_SELF'].'?group='.$group.
+	      print '<td><a href="'.htmlentities ($_SERVER['PHP_SELF']).'?group='.$group.
 		'&show_report=1&report_id='.$arr['report_id'].'">'.
 		$arr['name'].'</a></td>';
 	    }
@@ -524,7 +524,7 @@ else
 	    }
 	  else
 	    {
-	      print '<a href="'.$_SERVER['PHP_SELF'].'?group='.$group.
+	      print '<a href="'.htmlentities ($_SERVER['PHP_SELF']).'?group='.$group.
 		'&amp;delete_report=1&amp;report_id='.$arr['report_id'].
 		'&amp;rep_name='.$arr['name'].'">'.
 		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" /></A>';
@@ -540,7 +540,7 @@ else
       print '<h3>'._("No query form defined yet.").'</h3>';
     }
   
-  printf ('<p>'._("You can %s create a new query form%s").'</p>','<a href="'.$_SERVER["PHP_SELF"].'?group='.$group.'&new_report=1">','</a>');
+  printf ('<p>'._("You can %s create a new query form%s").'</p>','<a href="'.htmlentities ($_SERVER["PHP_SELF"]).'?group='.$group.'&new_report=1">','</a>');
 }
 
 trackers_footer(array());

@@ -139,7 +139,7 @@ utils_get_content("people/editresume");
 $viewableoptions = array("0" => _("No"),
 			 "1" => _("Yes"));
 
-print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">'
+print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">'
 .'<h3>'._("Publicly Viewable").'</h3>
 '
 .'<span class="preinput">'._("Do you want your resume to be activated:")

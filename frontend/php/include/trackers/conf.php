@@ -295,7 +295,7 @@ function conf_form ($group_id, $artifact)
       print '<p>'.sprintf(_("You can copy the configuration of the %s tracker of the following projects (this list was established according to your currently membership record)."), $artifact).'</p>
 <p class="warn">'._("Beware, your current configuration will be irremediably lost.").'</p>
 
-<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />
 <input type="hidden" name="artifact" value="'.$artifact.'" />
 <span class="preinput">'._("Projects:").'</span><br />

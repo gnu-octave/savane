@@ -83,13 +83,15 @@ print '<h3>'.no_i18n("User Search").'</h3>
 <p>'.no_i18n("Display users beginning with").': ';
 
 for ($i=0; $i < count($abc_array); $i++)
-  print '<a href="'.$_SERVER["PHP_SELF"].'?user_name_search='.
+  print '<a href="'.htmlentities ($_SERVER["PHP_SELF"])
+        .'?user_name_search='.
         $user_name_search.$abc_array[$i].'">'.
         $user_name_search.$abc_array[$i].'</a> ';
 
 print '<br />'.no_i18n("Search by email, username, realname or userid").':';
 print '
-<form name="usersrch" action="'.$_SERVER["PHP_SELF"].'" method="GET">
+<form name="usersrch" action="'.htmlentities ($_SERVER["PHP_SELF"])
+  .'" method="GET">
   <input type="text" name="text_search" value="'.$text_search.'" />
   <input type="hidden" name="usersearch" value="1" />
   <input type="submit" value="'.no_i18n("Search").'" />
@@ -224,7 +226,7 @@ else
 }
 print "</table>\n";
 
-html_nextprev($_SERVER['PHP_SELF'].
+html_nextprev(htmlentities ($_SERVER['PHP_SELF']).
               '?user_name_search='.urlencode($user_name_search).
               '&amp;usersearch=1&amp;search='.urlencode($search).
               '&amp;text_search='.urlencode($text_search),

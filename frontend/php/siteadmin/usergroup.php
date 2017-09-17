@@ -95,7 +95,7 @@ print '
 .$user_id. ' ' .user_getname($user_id).'</strong></p>
 <p>
 '.no_i18n('Account Info:').'
-<form method="post" action="'.$_SERVER['PHP_SELF'].'">
+<form method="post" action="'.htmlentities ($_SERVER['PHP_SELF']).'">
 <input type="hidden" name="action" value="update_user">
 <input type="hidden" name="user_id" value="'.$user_id.'">
 </p>
@@ -130,7 +130,7 @@ $res_cat = db_execute("SELECT groups.group_name AS group_name, "
 			. "[".no_i18n('Remove User from Group')."]</a>");
 		# editing for flags
 print '
-<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="action" value="update_user_group">
 <input name="user_id" type="hidden" value="'.$user_id.'">
 <input name="group_id" type="hidden" value="'.$row_cat['group_id'].'">
@@ -149,7 +149,7 @@ print '
 print '
 <hr />
 <p>
-<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="action" value="add_user_to_group">
 <input name="user_id" type="hidden" value="'.$user_id.'">
 <p>

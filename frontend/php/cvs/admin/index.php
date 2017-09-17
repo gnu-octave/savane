@@ -163,7 +163,8 @@ WHERE group_id = ?", array($group_id));
 
 echo "<h2>log_accum</h2>";
 echo "<h3>Current notifications</h3>";
-echo "<form action='{$_SERVER['PHP_SELF']}?group=$group' method='post'>";
+echo "<form action='";
+print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>";
 echo "<table>";
 echo html_build_list_table_top(array('X', 'Repository', 'Match type', 'Module list', 'Branch filter', 'Notification to', 'Diff?', 'Separate diffs to', 'Updated?'));
 
@@ -200,7 +201,8 @@ echo "</form>";
 
 // NEW
 echo "<h3>New notification</h3>";
-echo "<form action='{$_SERVER['PHP_SELF']}?group=$group' method='post'>";
+echo "<form action='";
+print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>";
 echo "<ol>";
 echo "<li>Repository: ";
 echo html_build_select_box_from_array(array('sources', 'web'), "arr_repo_name[new]", $row['repo_name'], 1);
@@ -253,7 +255,8 @@ WHERE group_id = ?", array($group_id));
 
 echo "<h2>cia (in progress)</h2>";
 echo "<h3>Current CIA notifications</h3>";
-echo "<form action={$_SERVER['PHP_SELF']}>";
+echo "<form action='";
+print htmlentities ($_SERVER['PHP_SELF'])."'>";
 echo "<table>";
 echo html_build_list_table_top(array('X', 'Repository', 'Match type', 'Module list', 'CIA Project', 'Updated?'));
 

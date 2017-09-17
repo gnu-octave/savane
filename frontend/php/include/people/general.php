@@ -80,7 +80,7 @@ function people_show_table()
           print db_error();
           $return .= '<input type="checkbox" name="categories[]" value="'.
              db_result($result,$i,'category_id') .'"><a href="'.
-             $_SERVER["PHP_SELF"].'?categories[]='.
+             htmlentities ($_SERVER["PHP_SELF"]).'?categories[]='.
              db_result($result,$i,'category_id').'">'.
           db_result($result,$i,'name') .' ('.
              db_result($count_res,0,'count') .')</a><br />
@@ -109,7 +109,7 @@ function people_show_table()
         {
           $return .= '<input type="checkbox" name="types[]" value="' .
              db_result($result,$i,'type_id') . '"><a href="'.
-             $_SERVER["PHP_SELF"].'?types[]='. db_result($result,$i,'type_id').
+             htmlentities ($_SERVER["PHP_SELF"]).'?types[]='. db_result($result,$i,'type_id').
              '">' .  db_result($result,$i,'name') . ' ('.
              db_result($result,$i,'count'). ')</a><br />
 ';
@@ -117,7 +117,7 @@ function people_show_table()
     }
   if(!$form_is_empty)
     {
-      $return = '<form action="'.$_SERVER["PHP_SELF"].'" method="get">
+      $return = '<form action="'.htmlentities ($_SERVER["PHP_SELF"]).'" method="get">
 ' . $return . '
 <hr /><input type="checkbox" name="show_any" value="1">
 '._('Show all jobs for all project types').'<br />
@@ -346,7 +346,7 @@ function people_edit_job_inventory($job_id,$group_id)
       for (; $i < $rows; $i++)
 	{
 	  print '
-<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
 <input type="hidden" name="job_inventory_id" value="'
                 . db_result($result,$i,'job_inventory_id') .'" />
 <input type="hidden" name="job_id" value="'. db_result($result,$i,'job_id')
@@ -375,7 +375,7 @@ function people_edit_job_inventory($job_id,$group_id)
 
   print '
 <tr><td colspan="4"><strong>'._("Add A New Skill").'</strong></td></tr>
-<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
 <input type="HIDDEN" name="job_id" value="'. $job_id .'" />
 <input type="HIDDEN" name="group_id" value="'.$group_id.'" />
 <tr class="'. utils_get_alt_row_color($i) .'">
@@ -706,7 +706,7 @@ function people_edit_skill_inventory($user_id)
       for ($i=0; $i < $rows; $i++)
 	{
 	  print '
-<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
 <input type="hidden" name="skill_inventory_id" value="'
             .db_result($result,$i,'skill_inventory_id').'" />
 <tr class="'. utils_get_alt_row_color($i) .'">
@@ -734,7 +734,7 @@ function people_edit_skill_inventory($user_id)
 
   print '
 <tr><td colspan="4"><strong>'._("Add A New Skill").'</strong></td></tr>
-<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
 <tr class="'. utils_get_alt_row_color($i) .'">
 <td><span class="smaller">'. people_skill_box('skill_id'). '</span></td>
 <td><span class="smaller">'. people_skill_level_box('skill_level_id'). '</span></td>

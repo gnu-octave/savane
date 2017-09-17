@@ -484,7 +484,8 @@ class GPLQuickForm
 
   public function display()
   {
-    print "<form id='$this->name' action='{$_SERVER['PHP_SELF']}'"
+    print "<form id='$this->name' action='"
+          .htmlentities ($_SERVER['PHP_SELF'])."'"
           ." method='$this->method'>
 <style type='text/css'><!--
 #$this->name .label {

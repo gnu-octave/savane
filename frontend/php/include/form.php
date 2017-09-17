@@ -49,7 +49,7 @@ function form_header ($action, $form_id=false, $method="post", $extra=false)
     { fb(_("System error while creating the form, report it to admins"), 1); }
 
   return '
-  <form action="'.$action.'" method="'.$method.'"'.$extra.'>'
+  <form action="'.htmlentities($action).'" method="'.$method.'"'.$extra.'>'
        .form_input("hidden","form_id",$form_id);
 
 }

@@ -273,7 +273,7 @@ function format_item_details ($item_id, $group_id, $ascii=false,
 
 	      if ($is_admin)
 		{
-		  $out .= '<br /><br />(<a name="spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.$_SERVER['PHP_SELF'].'?func=unflagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" class="icon" alt="'._("Unflag as spam").'" />'._("Unflag as spam").'</a>)';
+		  $out .= '<br /><br />(<a name="spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=unflagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" class="icon" alt="'._("Unflag as spam").'" />'._("Unflag as spam").'</a>)';
 		}
 
 	      $out .= '</td></tr>';
@@ -284,7 +284,7 @@ function format_item_details ($item_id, $group_id, $ascii=false,
 
 	      $out .= "\n".'<tr class="'.$class.'extra">'.
 		'<td class="xsmall">&nbsp;</td>'.
-		'<td class="xsmall"><a name="spam'.$entry['comment_internal_id'].'" href="'.$_SERVER['PHP_SELF'].'?func=viewspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'">'.sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'.
+		'<td class="xsmall"><a name="spam'.$entry['comment_internal_id'].'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=viewspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#spam'.$entry['comment_internal_id'].'" title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'">'.sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'.
 		'</td></tr>';
 	    }
           # No go to the next comment
@@ -487,7 +487,7 @@ function format_item_details ($item_id, $group_id, $ascii=false,
               # Surround by two line breaks, to keep that link clearly 
 	      # separated from 
 	      # anything else, to avoid clicks by error
-	      $out .= '<br /><br />(<a title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.$_SERVER['PHP_SELF'].'?func=flagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Flag as spam").'" />'._("Flag as spam").'</a>)<br /><br />';
+	      $out .= '<br /><br />(<a title="'.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=flagspam&amp;item_id='.$item_id.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'.($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Flag as spam").'" />'._("Flag as spam").'</a>)<br /><br />';
 	    }
 	  
 	  $out .= '</td></tr>';
@@ -686,7 +686,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
 	  $html_delete = '';
 	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2') && !$sober)
 	    {
-	      $html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_file&amp;item_id='.$item_id.'&amp;item_file_id='.$item_file_id.'">'.
+	      $html_delete = '<span class="trash"><a href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_file&amp;item_id='.$item_id.'&amp;item_file_id='.$item_file_id.'">'.
 		'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 
@@ -859,7 +859,7 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	      (user_getemail(user_getid()) == $email) ||
 	      (user_getname(user_getid()) == db_result($result, $i, 'user_name') ))
             {
-$html_delete = '<span class="trash"><a href="'.$_SERVER['PHP_SELF'].'?func=delete_cc&amp;item_id='.$item_id.'&amp;item_cc_id='.$item_cc_id.'">'.
+$html_delete = '<span class="trash"><a href="'.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_cc&amp;item_id='.$item_id.'&amp;item_cc_id='.$item_cc_id.'">'.
 		 '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 	  else

@@ -176,7 +176,8 @@ shown on the front page), you must end the superuser session.").'</p>
                                               'submitted_by'))).'</p>
 ';
       print '
-		<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+		<form action="'.htmlentities ($_SERVER['PHP_SELF'])
+                .'" method="post">
 		<input type="hidden" name="id" value="'
                 .db_result($result,0,'id').'" />';
 
@@ -288,8 +289,8 @@ shown on the front page), you must end the superuser session.").'</p>
 	      print '<li';
               if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id'])
                 print ' class="boxhighlight"';
-              print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;id='
-                    .db_result($result,$i,'id');
+              print '><a href="'.htmlentities ($_SERVER['PHP_SELF'])
+                    .'?approve=1&amp;id='.db_result($result,$i,'id');
 
 	      if ($group_id == $GLOBALS['sys_group_id']) 
                 {
@@ -355,7 +356,8 @@ shown on the front page), you must end the superuser session.").'</p>
 	      print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id'])
               print ' class="boxhighlight"';
-            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='
+            print '><a href="'.htmlentities ($_SERVER['PHP_SELF'])
+                  .'?approve=1&amp;group='
                   .$group.'&amp;id='.db_result($result,$i,'id').'">';
 
               if ($group_id == $GLOBALS['sys_group_id']) 
@@ -400,7 +402,8 @@ shown on the front page), you must end the superuser session.").'</p>
 	    print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id'])
               print ' class="boxhighlight"';
-            print '><a href="'.$_SERVER['PHP_SELF'].'?approve=1&amp;group='
+            print '><a href="'.htmlentities ($_SERVER['PHP_SELF'])
+                  .'?approve=1&amp;group='
                   .$group.'&amp;id='.db_result($result,$i,'id').'">';
 
               if ($group_id == $GLOBALS['sys_group_id']) 

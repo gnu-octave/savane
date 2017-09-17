@@ -63,11 +63,11 @@ Output:
   # Determine the relevant content (title with a + or a -)
   if ($hide)
     {
-      $hide_url= '<a name="'.$role.$group_id.'" href="'.$_SERVER['PHP_SELF'].'?hide_'.$role.'=0&amp;hide_group_id='.$group_id.'#'.$role.$group_id.'"><span class="minusorplus">(+)</span>'.$link.'</a>';
+      $hide_url= '<a name="'.$role.$group_id.'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?hide_'.$role.'=0&amp;hide_group_id='.$group_id.'#'.$role.$group_id.'"><span class="minusorplus">(+)</span>'.$link.'</a>';
     }
   else
     {
-      $hide_url= '<a name="'.$role.$group_id.'" href="'.$_SERVER['PHP_SELF'].'?hide_'.$role.'=1&amp;hide_group_id='.$group_id.'#'.$role.$group_id.'"><span class="minusorplus">(-)</span>'.$link.'</a>';
+      $hide_url= '<a name="'.$role.$group_id.'" href="'.htmlentities ($_SERVER['PHP_SELF']).'?hide_'.$role.'=1&amp;hide_group_id='.$group_id.'#'.$role.$group_id.'"><span class="minusorplus">(-)</span>'.$link.'</a>';
     }
 
   # Return everything

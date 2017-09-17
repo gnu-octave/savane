@@ -116,7 +116,7 @@ if ($submit)
 trackers_header_admin(array ('title'=>_("Set Notifications")));
 
 print '
-<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />';
 
 

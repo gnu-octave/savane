@@ -939,7 +939,7 @@ if ($browse_preamble)
 { print $browse_preamble; }
 
 
-$form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get" name="bug_form">';
+$form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'#options" method="get" name="bug_form">';
 $form = '
           <input type="hidden" name="group" value="'.$group.'" />
           <input type="hidden" name="func" value="'.$func.'" />
@@ -1229,7 +1229,7 @@ print html_show_displayoptions($form,$form_opening,$form_submit);
 
 if ($digest)
 {
-  print '<form action="'.$_SERVER['PHP_SELF'].'" method="get">
+  print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="get">
 <input type="hidden" name="group" value="'.$group.'" />
 <input type="hidden" name="func" value="digestselectfield" />
 ';

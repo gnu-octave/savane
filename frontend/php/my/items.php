@@ -151,7 +151,8 @@ $fthreshold .= ($threshold == 7 ? 'selected="selected"':'').'>'._("High")
 $fthreshold .= ($threshold == 9 ? 'selected="selected"':'')
                .'>'._("Immediate").'</option></select> ';
 
-$form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
+$form_opening = '<form action="'.htmlentities($_SERVER['PHP_SELF'])
+                .'#options" method="get">';
 $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
 $msg_text =sprintf(_("Show %s new items of %s priority at least."),
                    $fopen, $fthreshold);

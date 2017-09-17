@@ -84,7 +84,7 @@ if ($people_cat)
     }
 
   print '<h3>'._("Add a new job category:").'</h3>
-<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <p><input type="hidden" name="people_cat" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
 <h4>'._("New Category Name:").'</h4>
@@ -125,7 +125,7 @@ else if ($people_skills)
   print '<h3>'._("Add a new skill:").'</h3>
 ';
   print '<p>
-<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="people_skills" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
 <h4>'._("New Skill Name:").'</h4>
@@ -146,9 +146,12 @@ else
 
   print '<h2>'._("Help Wanted Administration").'</h2>';
 
-  print '<p><a href="'.$_SERVER['PHP_SELF'].'?people_cat=1">'._("Add Job Categories").'</a><br />';
+  print '<p><a href="'.htmlentities ($_SERVER['PHP_SELF'])
+        .'?people_cat=1">'._("Add Job Categories").'</a><br />';
 
-  print "\n<a href=\"{$_SERVER['PHP_SELF']}?people_skills=1\">"._("Add Job Skills").'</a><br />';
+  print "\n<a href=\"";
+  print htmlentities ($_SERVER['PHP_SELF'])."?people_skills=1\">"
+        ._("Add Job Skills").'</a><br />';
 
   site_project_footer(array());
 }

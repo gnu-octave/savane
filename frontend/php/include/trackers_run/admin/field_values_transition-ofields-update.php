@@ -116,7 +116,7 @@ if ($group_id && member_check(0,$group_id,'A'))
   print '<p>'._("Note also the automatic update process will not override field values specifically filled in forms. It means that if someone was able (depending on his role in the project) to modify/set a specific field value, any automatic update supposed to apply to this field will be disregarded.").'</p>';
 
 # here begin the form  
-print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group" value="'.$group.'" />
 <input type="hidden" name="transition_id" value="'.$transition_id.'" />
 ';

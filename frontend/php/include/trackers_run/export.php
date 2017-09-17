@@ -421,7 +421,7 @@ else
 	    { print $HTML->box_nextitem(utils_get_alt_row_color($i+1)); }
 
 	 print '<span class="trash">';
-	 print utils_link($_SERVER['PHP_SELF'].'?update=1&amp;delete='.db_result($res_export, $i, 'export_id').'&amp;group='.$group,
+	 print utils_link(htmlentities ($_SERVER['PHP_SELF']).'?update=1&amp;delete='.db_result($res_export, $i, 'export_id').'&amp;group='.$group,
 			  '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/misc/trash.png" border="0" alt="'._("Remove this job").'" />');
 	 print '</span>';
 

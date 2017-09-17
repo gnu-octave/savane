@@ -204,7 +204,7 @@ if it was a custom set just posted && logged in, set pref if it's changed.  */
 
       //now show the popup boxes in a form
       $ret_val .= '<table border="0" width="50%">
-<form action="'. $_SERVER['PHP_SELF'] .'" METHOD="get">
+<form action="'. htmlentities ($_SERVER['PHP_SELF'] ).'" METHOD="get">
 <input type="hidden" name="set" value="custom">
 <input type="hidden" name="forum_id" value="'.$forum_id.'">
 <tr>

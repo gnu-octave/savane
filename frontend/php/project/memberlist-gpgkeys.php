@@ -38,7 +38,8 @@ if (!$download) {
 
   print '<p>'
 .sprintf(_("You can <a href=\"%s\">download the keyring</a> and import it with
-the command %s."), $_SERVER['PHP_SELF'].'?group='.$group.'&amp;download=1',
+the command %s."), htmlentities ($_SERVER['PHP_SELF']).'?group='.$group
+                   .'&amp;download=1',
 '<em>gpg --import &lt;file&gt;</em>').'</p>';
 
   site_project_footer(array());

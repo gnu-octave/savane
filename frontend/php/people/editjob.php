@@ -163,7 +163,7 @@ if ($group_id && (user_ismember($group_id, 'A'))) {
       utils_get_content("people/editjob");
 
       print '
-<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
 <input type="hidden" name="group_id" value="'.$group_id.'" />
 <input type="hidden" name="job_id" value="'.$job_id.'" />
 <strong>'

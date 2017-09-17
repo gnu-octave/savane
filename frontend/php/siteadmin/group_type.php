@@ -178,7 +178,8 @@ if (!isset($type_id))
   while ($usr = db_fetch_array($result))
     {
 # TRANSLATORS: the first argument is type No, the second is group name.
-      print '<a href="'.$_SERVER['PHP_SELF'].'?type_id='.$usr['type_id'].'">'
+      print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
+            .'?type_id='.$usr['type_id'].'">'
             .sprintf('Type #%1$s: %2$s', $usr['type_id'], gettext($usr['name']))
             .'</a><br />
 ';
@@ -189,7 +190,7 @@ if (!isset($type_id))
   if ($type == 100)
     { $type = 101; }
 
-  print '<a href="'.$_SERVER['PHP_SELF'].'?type_id='.$type
+  print '<a href="'.htmlentities ($_SERVER['PHP_SELF']).'?type_id='.$type
         .'&amp;create=1">'.no_i18n('Create new group type').'</a>';
 
 }
@@ -217,7 +218,7 @@ else
   print '<h1>'.$row_grp['name'].' (#'.$row_grp['type_id'].')</h1>';
 
 
-  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">
+  print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="type_id" value="'.$type_id.'" />';
 
   # ####################################################################

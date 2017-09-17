@@ -39,7 +39,8 @@ function show_pending_users_list ($result, $group_id)
 here. To approve their requests, select their name and click on the button
 below. To discard requests, go to the next section called &ldquo;Removing users
 from group.&rdquo;")."</p>
-<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
+<form action=\"";
+  print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"approve_for_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
@@ -74,7 +75,8 @@ function show_all_users_remove_list ($result, $result2, $group_id)
 <p>"._("To remove users, select their name and click on the button
 below. The administrators of a project cannot be removed unless they quit.
 Pending users are at the bottom of the list.")."</p>
-<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
+<form action=\"";
+  print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"remove_from_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
@@ -120,7 +122,7 @@ function show_all_users_add_searchbox ($group_id, $previous_search)
 database with the following search tool. A list of users, depending on the
 names you'll type in this form, will be generated.").'
 
-<form action="'.$_SERVER['PHP_SELF'].'#searchuser" method="post">
+<form action="'.htmlentities ($_SERVER['PHP_SELF']).'#searchuser" method="post">
 	<input type="hidden" name="action" value="add_to_group_list" />
         <input type="text" size="35" name="words" value="'
         .$previous_search.'" /><br />
@@ -137,7 +139,8 @@ function show_all_users_add_list ($result, $group_id)
 {
   print _("Below is the result of your search in the users database.")."
 
-<form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">
+<form action=\"";
+  print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
 	<input type=\"HIDDEN\" name=\"action\" VALUE=\"add_to_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 

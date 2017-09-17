@@ -149,7 +149,7 @@ print '<p>'._("You can view/change all of your account features from here.")
 utils_get_content("account/index_intro");
 
 
-print '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
+print '<form action="'.htmlentities ($_SERVER["PHP_SELF"]).'" method="post">';
 
 #####################################################################
 #####################################################################

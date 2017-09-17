@@ -130,7 +130,8 @@ foreach ($groups_with_cc as $thisunixname => $thisname)
     { print $HTML->box_nextitem(utils_get_alt_row_color($i)); }
 
   print '<span class="trash">';
-  print utils_link($_SERVER['PHP_SELF'].'?cancel='.$groups_with_cc_gid[$thisunixname],
+  print utils_link(htmlentities ($_SERVER['PHP_SELF']).'?cancel='
+                   .$groups_with_cc_gid[$thisunixname],
 		   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
                    .'.theme/misc/trash.png" border="0" alt="'
                    ._("Cancel CC for this group").'" />');
@@ -150,7 +151,7 @@ if ($i > 3)
   $i++;
   print $HTML->box_nextitem(utils_get_alt_row_color($i));
  print '<span class="trash">';
-  print utils_link($_SERVER['PHP_SELF'].'?cancel=any',
+  print utils_link(htmlentities ($_SERVER['PHP_SELF']).'?cancel=any',
 		   '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
                    .'.theme/misc/trash.png" border="0" alt="'
                    ._("Cancel All CC").'" />');

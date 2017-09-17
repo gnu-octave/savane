@@ -814,7 +814,7 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false)
             $link = $linkend = '';
 	    if ($linkify && $i == 0)
 	      {
-		$link = '<a href="'.$_SERVER['PHP_SELF'].'?';
+		$link = '<a href="'.htmlentities ($_SERVER['PHP_SELF']).'?';
 		$linkend = '</a>';
 		switch ($linkify)
                   {

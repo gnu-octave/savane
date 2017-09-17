@@ -59,7 +59,7 @@ if ($edit)
 	  $title = db_result($result,0,'bookmark_title');
 	  $url = db_result($result,0,'bookmark_url');
 	  
-	  print '<form action="'.$_SERVER['PHP_SELF'].'" method="post">';
+	  print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">';
 	  print '<span class="preinput">'._("Title:").'</span>';
 	  print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="title" value="'
                 .$title.'" size="50" />';

@@ -46,7 +46,8 @@ site_project_header(array('group'=>$group_id,
 
 /* permit the user to specify something */
 
-$form_opening = '<form action="'. $_SERVER['PHP_SELF'] .'#options" method="get">';
+$form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
+                .'#options" method="get">';
 $form = sprintf(
 ngettext("Show summaries for the %s latest news.",
          "Show summaries for the %s latest news.", $limit),

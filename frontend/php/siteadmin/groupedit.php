@@ -129,10 +129,12 @@ print '</p>
 # MODIFICATORS SHORTCUTS
 print '<h3>'.no_i18n("Registration Management Shortcuts").'</h3>
 ';
-print '<a href="'.$_SERVER['PHP_SELF'].'?status=A&amp;updatefast=1&amp;group_id='
+print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
+.'?status=A&amp;updatefast=1&amp;group_id='
 .$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/bool/ok.orig.png" alt="'.no_i18n("Approve").'" /></a>&nbsp;&nbsp;&nbsp;';
-print '<a href="'.$_SERVER['PHP_SELF'].'?status=D&amp;updatefast=1&amp;group_id='
+print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
+.'?status=D&amp;updatefast=1&amp;group_id='
 .$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/bool/wrong.orig.png" alt="'.no_i18n("Discard").'" /></a>&nbsp;&nbsp;&nbsp;';
 print '<a href="triggercreation.php?group_id='.$group_id.'"><img src="'
@@ -142,7 +144,8 @@ print '<a href="triggercreation.php?group_id='.$group_id.'"><img src="'
 done only once)").'" /></a>';
 
 # MODIFICATORS
-print '<form action="'.$_SERVER['PHP_SELF'].'" method="POST">';
+print '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
+.'" method="POST">';
 print '<h3>'.no_i18n("Detailed Interface").'</h3>
 ';
 $HTML->box1_top(no_i18n("General Settings"));

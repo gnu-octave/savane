@@ -60,7 +60,8 @@ else
 $since = mktime($hour,$min,0,$since_month, $since_day, $since_year);
 $until = mktime($hour,$min,0,$until_month, $until_day, $until_year);
 
-$form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="GET">';
+$form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
+                .'#options" method="GET">';
 $form_submit = '<input class="bold" value="'._("Apply")
                .'" name="update" type="submit" />';
 # TRANSLATORS: The arguments are two dates.

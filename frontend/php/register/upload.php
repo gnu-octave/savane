@@ -28,8 +28,9 @@ if (!isset($tarball))
 {
   $HTML->header(array('title' => _("Temporary upload")));
   echo "<form enctype='multipart/form-data' "
-    . " action={$_SERVER['PHP_SELF']} "
-    . " method='post'>";
+    . " action=\"";
+  print htmlentities($_SERVER['PHP_SELF'])
+    . "\" method='post'>";
   echo "<p>"._("Select file to upload:")."<br />\n";
   echo "<input type='file' name='tarball'/>";
   echo "<input type='submit' value='" . _('Upload file') . "' />";

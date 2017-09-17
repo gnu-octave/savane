@@ -172,10 +172,11 @@ else
       print '<td width="25%">'.utils_user_link($entry['user_name'],
              $entry['realname']).'</td>
 <td width="5%" class="center">'.$entry['spamscore'].'</td>
-<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF'].'?ban_user_id='
+<td width="5%" class="center">'.utils_link(htmlentities ($_SERVER['PHP_SELF'])
+.'?ban_user_id='
 .$entry['user_id'].'#users_results', '<img src="'.$GLOBALS['sys_home']
 .'images/'.SV_THEME.'.theme/misc/trash.png" alt="'.no_i18n("Ban user").'" />').'</td>
-<td width="5%" class="center">'.utils_link($_SERVER['PHP_SELF']
+<td width="5%" class="center">'.utils_link(htmlentities ($_SERVER['PHP_SELF'])
 .'?wash_user_id='.$entry['user_id'].'#users_results', '<img src="'
 .$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/bool/ok.png" alt="'
 .no_i18n("Wash score").'" />').'</td>
@@ -188,7 +189,7 @@ else
 ';
   
   # More results than $max? Print next/prev
-  html_nextprev($_SERVER['PHP_SELF'].'?', $max_rows, $i, "users");      
+  html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "users");      
 }
 
 print '<p>&nbsp;</p>';
@@ -228,7 +229,8 @@ else
       if ($i > 1)
 	{ print ', '; }
 
-      print utils_link($_SERVER['PHP_SELF'].'?wash_ip='.$entry['ip'].'#ip_results',
+      print utils_link(htmlentities ($_SERVER['PHP_SELF'])
+                       .'?wash_ip='.$entry['ip'].'#ip_results',
 		       $entry['ip'].' <img src="'.$GLOBALS['sys_home'].'images/'
                        .SV_THEME.'.theme/bool/ok.png" alt="'.no_i18n("Wash IP").'" />');
       
@@ -236,7 +238,7 @@ else
   print '</div>';
     
   # More results than $max? Print next/prev
-  html_nextprev($_SERVER['PHP_SELF'].'?', $max_rows, $i, "ip");   
+  html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "ip");   
 }
 
 $HTML->footer(array());

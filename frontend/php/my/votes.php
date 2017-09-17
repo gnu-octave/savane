@@ -92,7 +92,7 @@ if (user_isloggedin())
 ._("To change your votes, type in new numbers (using zero removes the entry
 from your votes list).").'</p>'."\n";
 
-      print '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
+      print '<form action="'.htmlentities ($_SERVER["PHP_SELF"]).'" method="post">';
 
       $result = db_execute("SELECT * FROM user_votes WHERE user_id = ? "
                            ."ORDER BY howmuch DESC, item_id ASC LIMIT 100",

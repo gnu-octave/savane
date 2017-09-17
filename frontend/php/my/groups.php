@@ -280,7 +280,8 @@ else
             .'</span>'."\n";
 
 	  print '</td>'."\n"
-	    .'<td><a href="'.$_SERVER['PHP_SELF'].'?func=delwatchee&amp;group_id='
+	    .'<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
+            .'?func=delwatchee&amp;group_id='
             .$gr_res.'&amp;watchee_id='.$wa_res
 	    .'" onClick="return confirm(\''._("Stop watching this user").'\')">'
 	    .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
@@ -340,7 +341,8 @@ formal inclusion using this form.")."\n";
 print '</p>';
 
 print '
-	<form action="'.$_SERVER["PHP_SELF"].'#searchgroup" method="post">
+	<form action="'.htmlentities ($_SERVER["PHP_SELF"])
+        .'#searchgroup" method="post">
 	<input type="hidden" name="action" value="searchgroup" />
         <input type="text" size="35" name="words" value="'.$words.'" /><br />
 	<br /><br />

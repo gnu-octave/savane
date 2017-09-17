@@ -68,7 +68,7 @@ if (user_isloggedin())
     {
     
       $HTML->header(array('title'=>_('Send a message')));
-      sendmail_form_message($_SERVER["PHP_SELF"], $touser);
+      sendmail_form_message(htmlentities ($_SERVER["PHP_SELF"]), $touser);
       $HTML->footer(array());
     
     }

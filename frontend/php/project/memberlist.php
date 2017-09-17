@@ -52,7 +52,8 @@ if ((!$group_id) && $form_grp)
 $checked = '';
 if ($detailed)
 { $checked = " selected=\"selected\""; }
-  $form_opening = '<form action="'.$_SERVER['PHP_SELF'].'#options" method="get">';
+  $form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
+                  .'#options" method="get">';
   $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
 # TRANSLATORS: this is used in context of "Browser with the %s memberlist."
 $selector = 
