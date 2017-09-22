@@ -642,12 +642,12 @@ switch ($func)
          # Add the additionnal comment that may have been added during
          # the file upload
 	 $comment .= $additional_comment;
-         # Encode special characters
-         $comment = htmlspecialchars($comment);
          # For none project members force the comment type to None (100)
 	 # The delay for spamcheck will be called from this function:
          if (!$preview)
            {
+             # Encode special characters
+             $comment = htmlspecialchars($comment);
              trackers_data_add_history('details',$comment,'',$item_id,100);
 
              # YPE fix to trigger notifications in case of non member
