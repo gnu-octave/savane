@@ -23,7 +23,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 require_once(dirname(__FILE__).'/sane.php');
 require_once(dirname(__FILE__).'/markup.php');
 require_once(dirname(__FILE__).'/form.php');
@@ -40,7 +39,6 @@ function html_show_displayoptions ($content, $form_opening=0, $submit=0)
 
 function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 {
-
   $script_hide =
 "document.getElementById('boxoptionscontent').style.display='none'; "
 ."document.getElementById('boxoptionslinkhide').style.display='none'; "
@@ -87,7 +85,6 @@ function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
     .'" id="boxoptionslinkshow" style="display: none">'
     .'<span class="minusorplus">(+)</span>'
     .htmlspecialchars($legend, ENT_QUOTES).'</span>\');';
-
     }
   $ret .= '
   </script>
@@ -122,7 +119,7 @@ function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
     }
 
   # We add boxoptionwanted to be able to determine if a boxoption was used
-  # to update the page, in which case the boxoption must appear deployed
+  # to update the page, in which case the boxoption must appear deployed.
   $ret .= '
 <span class="smaller">'.$content.form_input("hidden", "boxoptionwanted", "1")
       .'</span>';
@@ -141,31 +138,30 @@ function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 }
 
 # Function to create a an area in the page that can be hidden or shown
-# in one click with a javascript
+# in one click with a JavaScript.
 # Per policy, this must work with a browser that does not support at all
-# javascript
+# JavaScript.
 # This is useful on item pages because we have some info that is not
 # essential to be shown (like CC list etc), but still very nice be able to
-# access easily
+# access easily.
 function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
 {
   global $is_deployed;
 
-  # Try to find a deployed value that match the unique id
+  # Try to find a deployed value that match the unique id.
   # If found, override the deployed setting (the deployed setting should be
   # used to set a default behavior, but if in the case we explicitely
-  # use an array to determine what is deployed, this matters more)
-  if (is_array($is_deployed) &&
-      array_key_exists($uniqueid, $is_deployed))
+  # use an array to determine what is deployed, this matters more).
+  if (is_array($is_deployed)
+      && array_key_exists($uniqueid, $is_deployed))
     {
       $deployed = $is_deployed[$uniqueid];
     }
-
   $script_hide =
  "document.getElementById('hidsubpartcontent$uniqueid').style.display='none'; "
 ."document.getElementById('hidsubpartlinkhide$uniqueid').style.display='none'; "
 ."document.getElementById('hidsubpartlinkshow$uniqueid').style.display='block';";
-  $script_show = 
+  $script_show =
 "document.getElementById('hidsubpartcontent$uniqueid').style.display='inline'; "
 ."document.getElementById('hidsubpartlinkhide$uniqueid').style.display='block'; "
 ."document.getElementById('hidsubpartlinkshow$uniqueid').style.display='none';";
@@ -174,7 +170,7 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
   <h3 id="'.$uniqueid.'">
   <script type="text/javascript">';
 
-    if (!$deployed)
+  if (!$deployed)
     {
       $ret .= '
     document.write(\'<a onclick="'.addslashes($script_hide)
@@ -198,17 +194,16 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
   .$uniqueid.'"><span class="minusorplus">(+)</span> '
   .htmlspecialchars($title, ENT_QUOTES).'</a>\');';
     }
-    $ret .= '
+  $ret .= '
   </script>
   <noscript>
     <a href="#'.$uniqueid.'">'.$title.'</a>
   </noscript>
   </h3>
 ';
-
-    if (!$deployed)
-      {
-	$ret .= '
+  if (!$deployed)
+    {
+      $ret .= '
 <script type="text/javascript">
   document.write(\'<span id="hidsubpartcontent'.$uniqueid
   .'" style="display: none">\');
@@ -217,17 +212,15 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
   <span id="hidsubpartcontent'.$uniqueid.'">
 </noscript>
 ';
-      }
-    else
-      {
-	$ret .= '
+    }
+  else
+    {
+      $ret .= '
 <span id="hidsubpartcontent'.$uniqueid.'">
 ';
-      }
-
-    return $ret;
+    }
+  return $ret;
 }
-
 
 function html_hidsubpart_footer ()
 {
@@ -240,93 +233,80 @@ function html_hidsubpart_footer ()
 function html_splitpage ($how)
 {
   if ($how == 'start' || $how == '1')
-    {
-      return "\n".'<div class="splitright">'."\n";
-
-    }
-  elseif ($how == 'middle' || $how == '2')
-    {
-      return  "\n".'</div><!-- end  splitright -->'."\n".
-	'<div class="splitleft">'."\n";
-
-    }
-  else
-    {
-      return "\n".'</div><!-- end  splitleft -->'."\n";
-    }
+    return "\n".'<div class="splitright">'."\n";
+  if ($how == 'middle' || $how == '2')
+    return  "\n".'</div><!-- end  splitright -->'."\n".
+        '<div class="splitleft">'."\n";
+  return "\n".'</div><!-- end  splitleft -->'."\n";
 }
-
 
 function html_nextprev ($search_url, $rows, $rows_returned, $varprefix=false)
 {
   global $offset, $max_rows;
 
   if (!$varprefix)
-    { $varprefix = ''; }
+    $varprefix = '';
   else
-    { $varprefix .= '_'; }
+    $varprefix .= '_';
 
   if (($rows_returned > $rows) || ($offset != 0))
     {
       print "\n<br /><p class=\"nextprev\">\n";
 
       if ($offset != 0)
-	{
-	  print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
+        {
+          print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
                 .($offset-$rows).'&amp;'.$varprefix.'max_rows='.$max_rows
                 .'#'.$varprefix.'results">';
-	  print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+          print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
                 .'.theme/arrows/previous.png" border="0" alt="" />'
                 ._("Previous Results").'</a>';
-
-	}
+        }
       else
-	{
-	  print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+        {
+          print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
                 .'.theme/arrows/previousgrey.png" border="0" alt="" /><em>'
                 ._("Previous Results").'</em>';
-	}
-
+        }
       print "&nbsp; &nbsp; &nbsp;";
 
       if ($rows_returned > $rows)
-	{
-	  print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
+        {
+          print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
                 .($offset+$rows).'&amp;'.$varprefix.'max_rows='.$max_rows
                 .'#'.$varprefix.'results">';
-	  print _("Next Results").' <img src="'.$GLOBALS['sys_home'].'images/'
+          print _("Next Results").' <img src="'.$GLOBALS['sys_home'].'images/'
                 .SV_THEME.'.theme/arrows/next.png" border="0" alt="" /></a>';
-	}
+        }
       else
-	{
-	  print '<em>'._("Next Results").'</em> <img src="'.$GLOBALS['sys_home']
+        {
+          print '<em>'._("Next Results").'</em> <img src="'.$GLOBALS['sys_home']
                 .'images/'.SV_THEME
                 .'.theme/arrows/nextgrey.png" border="0" alt="" />';
-	}
-
+        }
       print "</p>\n";
     }
 }
 
 function html_anchor ($content, $name)
 {
-  if (!$name) { $name = $content; };
+  if (!$name)
+    $name = $content;
   return '<a id="'.$name.'" href="#'.$name.'">'.$content.'</a>';
 }
 
-##
-# Print out the feedback
+# Print out the feedback.
 function html_feedback($bottom)
 {
   global $feedback, $ffeedback;
 
-  # Escape the html special chars, active markup
+  # Escape the html special chars, active markup.
 
-  // Ugh... Actually this is because feedback may be passed through
-  // $_GET[] in some situations, which can lead to XSS if the content
-  // is not escaped. We need a proper way to display formatted text to
-  // the user - OR, we need to properly replace pages that pass
-  // 'feedback' as a GET argument (grep 'feedback=').
+  /* Ugh... Actually this is because feedback may be passed through
+     $_GET[] in some situations, which can lead to XSS if the content
+     is not escaped. We need a proper way to display formatted text to
+     the user - OR, we need to properly replace pages that pass
+     'feedback' as a GET argument (grep 'feedback='). */
 
   $feedback = markup_basic(htmlspecialchars($feedback));
   $ffeedback = markup_basic(htmlspecialchars($ffeedback));
@@ -348,24 +328,24 @@ function html_feedback($bottom)
                  'document.getElementById(\'feedbackback'.$suffix.
                  '\').style.visibility=\'hidden\';"';
 
-  # With MSIE  the feedback will be be
-  # in relative position, so the hiding link will not make sense
+  # With MSIE  the feedback will be
+  # in relative position, so the hiding link will not make sense.
   if (is_broken_msie() && empty($_GET['printer']))
-    { $script_hide = ''; }
+    $script_hide = '';
   # Users can choose the same behavior, disallowing the fixed positionning
   # of the feedback (less convenient as the feedback gets easily hidden,
   # requires to scroll to be accessed, but seems prefered by users of
   # mozilla that slow scrolling down/up when there is such fixed box on the
-  # page)
+  # page).
   if (user_get_preference("nonfixed_feedback"))
-    $script_hide = 
+    $script_hide =
        'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"';
 
   print '<div '.$script_show.
         ' id="feedbackback'.$suffix.'" class="feedbackback">'.
         _("Show feedback again")."</div>\n";
 
-  # Only success
+  # Only success.
   if ($GLOBALS['feedback'] && !$GLOBALS['ffeedback'])
     {
         print '<div id="feedback'.$suffix.'" class="feedback" '.
@@ -375,7 +355,7 @@ function html_feedback($bottom)
               _("Success:").'</span> '.$GLOBALS['feedback']."</div>\n";
     }
 
-  # Only errors
+  # Only errors.
   if ($GLOBALS['ffeedback'] && !$GLOBALS['feedback'])
     {
       print '<div id="feedback'.$suffix.'" class="feedbackerror" '.
@@ -385,7 +365,7 @@ function html_feedback($bottom)
             _("Error:").'</span><br/>'.$GLOBALS['ffeedback']."</div>\n";
     }
 
-  # Errors and success
+  # Errors and success.
   if ($GLOBALS['ffeedback'] && $GLOBALS['feedback'])
     {
       print '<div id="feedback'.$suffix.'" class="feedbackerrorandsuccess" '.
@@ -426,15 +406,14 @@ function html_image ($src,$args,$display=1)
       $return .= ' '.$k.'="'.$v.'"';
     }
 
-  # ## insert a border tag if there isn't one
-  if (empty($args['border'])) $return .= (' border="0"');
+  # Insert a border tag if there isn't one.
+  if (empty($args['border']))
+    $return .= (' border="0"');
 
-
-  # ## if no height AND no width tag, insert em both
+  # If no height AND no width tag, insert em both.
   if (empty($args['height']) and empty($args['width']))
     {
-
-     #Check to see if we've already fetched the image data
+     # Check to see if we've already fetched the image data.
      if(!$img_attr[$src] && is_file($GLOBALS['sys_www_topdir'].'/images/'
                                     .SV_THEME.'.theme/'.$src))
        {
@@ -455,56 +434,50 @@ function html_image ($src,$args,$display=1)
         }
       $return .= ' ' . $img_attr[$src];
     }
-
 # Insert alt tag if there isn't one.
-  if (!$args['alt']) $return .= " alt=\"\"";
+  if (!$args['alt'])
+    $return .= " alt=\"\"";
 
   $return .= (' />');
   if ($display)
-    {
-      print $return;
-    }
+    print $return;
   else
-    {
-      return $return;
-    }
+    return $return;
 }
 
 /* Take an array of titles and builds.
    The first row of a new table.
 
    Optionally take a second array of links for the titles. */
-function html_build_list_table_top ($title_arr,$links_arr=false,$table=true)
+function html_build_list_table_top ($title_arr, $links_arr=false, $table=true)
 {
   GLOBAL $HTML;
   $return = '';
 
   if ($table)
-    {
-     $return = '
+    $return = '
   <table class="box">';
-    }
 
-     $return .= '
-		<tr>';
+  $return .= '
+                <tr>';
 
   $count=count($title_arr);
   if ($links_arr)
     {
       for ($i=0; $i<$count; $i++)
-	{
-	  $return .= '
+        {
+          $return .= '
 <th class="boxtitle"><a class="sortbutton" href="'.$links_arr[$i].'">'
           .$title_arr[$i]."</a></th>\n";
-	}
+        }
     }
   else
     {
       for ($i=0; $i<$count; $i++)
-	{
-	  $return .= '
+        {
+          $return .= '
 <th class="boxtitle">'.$title_arr[$i]."</th>\n";
-	}
+        }
     }
   return $return."</tr>\n";
 }
@@ -513,22 +486,15 @@ function html_get_alt_row_color ($i)
 {
   GLOBAL $HTML;
   if ($i % 2 == 0)
-    {
-      return 'boxitemalt';
-    }
-  else
-    {
-      return 'boxitem';
-    }
+    return 'boxitemalt';
+  return 'boxitem';
 }
 
-#deprecated
+# Deprecated.
 function utils_get_alt_row_color ($i)
 {
   return html_get_alt_row_color ($i);
 }
-
-
 
 /* Take one array, with the first array being the "id" or value
    and the array being the text you want displayed.
@@ -539,37 +505,32 @@ function utils_get_alt_row_color ($i)
 function html_build_select_box_from_array ($vals,$select_name,
                                            $checked_val='xzxz',$samevals = 0)
 {
-
-  $return = '';
-  $return .= '
+  $return = '
 <select name="'.$select_name.'">';
-
   $rows=count($vals);
-
   for ($i=0; $i<$rows; $i++)
     {
       if ($samevals)
-	{
-	  $return .= "\n\t\t<option value=\"" . $vals[$i] . "\"";
-	  if ($vals[$i] == $checked_val)
-	    {
-	      $return .= ' selected="selected"';
-	    }
-	}
+        {
+          $return .= "\n\t\t<option value=\"" . $vals[$i] . "\"";
+          if ($vals[$i] == $checked_val)
+            {
+              $return .= ' selected="selected"';
+            }
+        }
       else
-	{
-	  $return .= "\n\t\t<option value=\"" . $i .'"';
-	  if ($i == $checked_val)
-	    {
-	      $return .= ' selected="selected"';
-	    }
-	}
+        {
+          $return .= "\n\t\t<option value=\"" . $i .'"';
+          if ($i == $checked_val)
+            {
+              $return .= ' selected="selected"';
+            }
+        }
       $return .= '>'.$vals[$i].'</option>';
     }
   $return .= '
 </select>
 ';
-
   return $return;
 }
 
@@ -578,7 +539,7 @@ SQL Table joins done throughout all this code.
 There must be a related row in users, categories, etc, and by default that
 row is 100, so almost every pop-up box has 100 as the default
 Most tables in the database should therefore have a row with an id of 100 in it
-so that joins are successful
+so that joins are successful.
 
 There is now another infamous row called the Any row. It is not
 in any table as opposed to 100. it's just here as a convenience mostly
@@ -601,39 +562,37 @@ The 7th parameter is a boolean - whether or not to show the 'Any row'.
 
 The 8th parameter is what to call the 'Any row' defaults to 'Any'. */
 function html_build_select_box_from_arrays ($vals,
-					    $texts,
-					    $select_name,
-					    $checked_val='xzxz', #4
-					    $show_100=true,
-					    $text_100='None', #6
-					    $show_any=false,
-					    $text_any='Any', #8
-					    $show_unknown=false)
+                                            $texts,
+                                            $select_name,
+                                            $checked_val='xzxz', #4
+                                            $show_100=true,
+                                            $text_100='None', #6
+                                            $show_any=false,
+                                            $text_any='Any', #8
+                                            $show_unknown=false)
 {
   if ($text_100 == 'None')
     $text_100 = _('None');
   if ($text_any == 'Any')
     $text_any = _('Any');
 
-  $return = '';
-  $return .= '
+  $return = '
 <select name="'.$select_name.'">';
 
-
-  # We want the "Default" on item initial post, only at this momement
+  # We want the "Default" on item initial post, only at this momement.
   if ($show_unknown)
     {
       $return .= "\n<option value=\"!unknown!\">"._("Unknown")."</option>";
     }
 
-  #we don't always want the default any  row shown
+  # We don't always want the default any  row shown.
   if ($show_any)
     {
       $selected = ( $checked_val == 0 ? 'selected="selected"':'');
       $return .= "\n<option value=\"0\" $selected>$text_any </option>";
     }
 
-  #we don't always want the default 100 row shown
+  # We don't always want the default 100 row shown.
   if ($show_100)
     {
       $selected = ( $checked_val == 100 ? 'selected="selected"':'');
@@ -646,19 +605,19 @@ function html_build_select_box_from_arrays ($vals,
 
   for ($i=0; $i<$rows; $i++)
     {
-      #  uggh - sorry - don't show the 100 row and Any row
-      #  if it was shown above, otherwise do show it
-      if ((($vals[$i] != '100') && ($vals[$i] != '0')) ||
-	   ($vals[$i] == '100' && !$show_100) ||
-	   ($vals[$i] == '0' && !$show_any))
-	{
-	  $return .= '
+      #  Uggh - sorry - don't show the 100 row and Any row.
+      #  If it was shown above, otherwise do show it.
+      if ((($vals[$i] != '100') && ($vals[$i] != '0'))
+           || ($vals[$i] == '100' && !$show_100)
+           || ($vals[$i] == '0' && !$show_any))
+        {
+          $return .= '
 <option value="'.$vals[$i].'"';
-	  if ($vals[$i] == $checked_val)
-	    {
-	      $return .= ' selected="selected"';
-	    }
-	  $return .= '>'.$texts[$i].'</option>';
+          if ($vals[$i] == $checked_val)
+            {
+              $return .= ' selected="selected"';
+            }
+          $return .= '>'.$texts[$i].'</option>';
        }
     }
   $return .= '
@@ -723,56 +682,53 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
   $checked_count=count($checked_array);
   $return = '
 <select name="'.$name.'" multiple size="'.$size.'">';
-  # Put in the Any box
+  # Put in the Any box.
   if ($show_any)
     {
       $return .= '
-		<option value="0"';
+                <option value="0"';
       for ($j=0; $j<$checked_count; $j++)
-	{
-	  if ($checked_array[$j] == '0')
-	    {
-	      $return .= ' selected="selected"';
-	    }
-	}
+        {
+          if ($checked_array[$j] == '0')
+            {
+              $return .= ' selected="selected"';
+            }
+        }
       $return .= '>'.$text_any.'</option>';
     }
-
-  # Put in the default NONE box
+  # Put in the default NONE box.
   if ($show_100)
     {
       $return .= '
-		<option value="100"';
+                <option value="100"';
       for ($j=0; $j<$checked_count; $j++)
-	{
-	  if ($checked_array[$j] == '100')
-	    {
-	      $return .= ' selected="selected"';
-	    }
-	}
+        {
+          if ($checked_array[$j] == '100')
+            {
+              $return .= ' selected="selected"';
+            }
+        }
       $return .= '>'.$text_100.'</option>';
     }
-
   $rows=db_numrows($result);
-
   for ($i=0; $i<$rows; $i++)
     {
       if (db_result($result,$i,0) != '100')
-	{
-	  $return .= '
-				<option value="'.db_result($result,$i,0).'"';
-          # Determine if it's checked
-	  $val=db_result($result,$i,0);
-	  for ($j=0; $j<$checked_count; $j++)
-	    {
-	      if ($val == $checked_array[$j])
-		{
-		  $return .= ' selected="selected"';
-		}
-	    }
-	  $return .= '>'. ($show_value?$val.'-':'').
-	     substr(db_result($result,$i,1),0,35). '</option>';
-	}
+        {
+          $return .= '
+                                <option value="'.db_result($result,$i,0).'"';
+          # Determine if it's checked.
+          $val=db_result($result,$i,0);
+          for ($j=0; $j<$checked_count; $j++)
+            {
+              if ($val == $checked_array[$j])
+                {
+                  $return .= ' selected="selected"';
+                }
+            }
+          $return .= '>'. ($show_value?$val.'-':'').
+             substr(db_result($result,$i,1),0,35). '</option>';
+        }
     }
   $return .= '
 </select>
@@ -783,7 +739,7 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 function html_select_permission_box ($artifact, $row, $level="member")
 {
   # If $row['user_id'] does not exists, we havent got a row but simple value
-  # and it means that we are about to modify per group default
+  # and it means that we are about to modify per group default.
   $num = '';
   if ($level == "type")
     {
@@ -820,46 +776,39 @@ function html_select_permission_box ($artifact, $row, $level="member")
         <option value="1"'.(($value == 1)?" selected=\"selected\"":"").'>'
         ._("Technician").'</option>';
     }
-
   print '
         <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'
         ._("Manager").'</option>';
-
-
   if ($artifact != "news")
     {
       print '
         <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'
         ._("Techn. & Manager").'</option>';
     }
-
   print '
       </select>';
-
   if (!$value && $level == "group")
     {
       $value = group_gettypepermissions($GLOBALS['group_id'], $artifact);
       print '<br />('.
-	(($value == 9)?_("None"):"").
-	(($value == 1)?_("Technician"):"").
-	(($value == 3)?_("Manager"):"").
-	(($value == 2)?_("Techn. & Manager"):"").
-	')';
+        (($value == 9)?_("None"):"").
+        (($value == 1)?_("Technician"):"").
+        (($value == 3)?_("Manager"):"").
+        (($value == 2)?_("Techn. & Manager"):"").
+        ')';
     }
-
   print '
     </td>';
 }
 
-
 function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
                                       $event=1)
 {
-  # event = 1 : posting items
-  # event = 2 : posting comments
+  # $event = 1 : posting items
+  # $event = 2 : posting comments
 
   # If $row['user_id'] does not exists, we havent got a row but simple value
-  # and it means that we are about to modify per group default
+  # and it means that we are about to modify per group default.
   if ($level == "type")
     {
       $value = $row;
@@ -869,13 +818,13 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
     {
       $value = $row;
       if ($event == 2)
-	{
-	  $default = _("Same as for new items");
-	}
+        {
+          $default = _("Same as for new items");
+        }
       else
-	{
-	  $default = _("Group Type Default");
-	}
+        {
+          $default = _("Group Type Default");
+        }
     }
 
   if (!$notd)
@@ -910,13 +859,11 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
     {
       $value = group_gettyperestrictions($GLOBALS['group_id'], $artifact);
       print '<br />('.
-	(($value == 5)?_("Project Member"):"").
-	(($value == 3)?_("Logged-in User"):"").
-	(($value == 2)?_("Anonymous"):"").
-	')';
+        (($value == 5)?_("Project Member"):"").
+        (($value == 3)?_("Logged-in User"):"").
+        (($value == 2)?_("Anonymous"):"").
+        ')';
     }
-
-
   if (!$notd)
     {
       print '
@@ -929,11 +876,10 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
 # This function must know every type of directory that can be built by the
 # backend.
 # FIXME: in a future, we may create a table of method associating
-# method -> perl module -> sub name
+# method -> perl module -> sub name.
 function html_select_typedir_box ($input_name, $current_value)
 {
-  # Probably this shouldn't be localized since it's for siteadmin's eyes only.
-  # The strings are not localized because they are for admin's eyes only.
+  # The strings are not localized because they are for siteadmin's eyes only.
   print '<br />&nbsp;&nbsp;
       <select name="'.$input_name.'">
         <option value="basicdirectory"'
@@ -971,8 +917,6 @@ function html_select_typedir_box ($input_name, $current_value)
         .("Savannah non-GNU").'</option>
       </select> [BACKEND SPECIFIC]
 ';
-
-  # put some information
   print '<p><span class="smaller">Basic directory will make the backend
 using DownloadMakeArea(), defined in Savannah::Download; <br /> CVS directory
 will make the backend using CvsMakeArea(), defined in Savannah::Cvs.
@@ -989,35 +933,32 @@ will make the backend using CvsMakeArea(), defined in Savannah::Cvs.
 # one.
 function html_select_theme_box ($input_name="user_theme", $current=0)
 {
-
   print '
-		<select name="'.$input_name.'">';
-
-  # usual themes
+                <select name="'.$input_name.'">';
+  # Usual themes.
   foreach (theme_list() as $theme)
     {
       print "\n\t\t".'<option value="'.$theme.'"';
       if ($theme == $current)
-	{ print ' selected="selected"'; }
+        print ' selected="selected"';
       print '>'.$theme;
       if ($theme == $GLOBALS['sys_themedefault'])
-	{ print ' ('._("default").')'; }
+        print ' ('._("default").')';
       print '</option>'."\n";
     }
-
-  # special rotate case
+  # Special rotate case.
   $theme = "rotate";
   print "\n\t\t".'<option value="'.$theme.'"';
   if ($theme == $current)
-    { print ' selected="selected"'; }
+    print ' selected="selected"';
   print '> &gt; '.("alphabetically picked everyday").'</option>';
-  # special random case
+  # Special random case.
   $theme = "random";
   print "\n\t\t".'<option value="'.$theme.'"';
   if ($theme == $current)
-    { print ' selected="selected"'; }
+    print ' selected="selected"';
   print '> &gt; '.("randomly picked everyday").'</option>';
-  print "		</select>\n";
+  print "                </select>\n";
 
 }
 
@@ -1025,12 +966,11 @@ function html_build_checkbox ($name, $is_checked=0)
 {
   print  '<input type="checkbox" name="'.$name.'" value="1"';
   if ($is_checked)
-    { print ' checked="checked"'; }
+    print ' checked="checked"';
   print ' />';
 }
 
-##
-# Catch all header functions
+# Catch all header functions.
 function html_header($params)
 {
   global $HTML, $feedback;
@@ -1045,8 +985,7 @@ function html_footer($params)
   $HTML->footer($params);
 }
 
-##
-# aliases of catch all header functions
+# Aliases of catch all header functions.
 function site_header($params)
 {
   html_header($params);
@@ -1057,12 +996,11 @@ function site_footer($params)
   html_footer($params);
 }
 
+# Project page functions.
 
-# Project page functions
-
-# Everything required to handle security and state checks for a project web page
-# Params array() must contain $context and $group
-# Result text - prints HTML to the screen directly
+# Everything required to handle security and state checks for a project web page.
+# Params array() must contain $context and $group.
+# Result text - prints HTML to the screen directly.
 function site_project_header($params)
 {
   global $group_id;
@@ -1077,35 +1015,34 @@ function site_project_header($params)
 
   if (!$project->isPublic())
     {
-      #if its a private group, you must be a member of that group
+      # If it's a private group, you must be a member of that group.
       session_require(array('group'=>$group_id));
     }
 
-  #for dead projects must be member of admin project
+  # For dead projects must be member of admin project.
   if (!$project->isActive())
     {
       # only sys_group people can view non-active, non-holding groups
       session_require(array('group'=>$GLOBALS['sys_group_id']));
     }
-
   html_header($params);
 }
 
 # Currently a simple shim that should be on every project page,
-#   rather than a direct call to site_footer() or theme_footer()
-# Param params array() empty
-# Result text - prints HTML to the screen directly
+# rather than a direct call to site_footer() or theme_footer().
+# Param params array() empty.
+# Result text - prints HTML to the screen directly.
 function site_project_footer($params)
 {
   html_footer($params);
 }
 
-# User page functions
+# User page functions.
 
 # Everything required to handle security and
-#   add navigation for user pages like /my/ and /account/
-# Params array() must contain $user_id
-# Result text - prints HTML to the screen directly
+# add navigation for user pages like /my/ and /account/.
+# Params array() must contain $user_id.
+# Result text - prints HTML to the screen directly.
 function site_user_header($params)
 {
   session_require(array('isloggedin'=>'1'));
@@ -1113,15 +1050,15 @@ function site_user_header($params)
 }
 
 # Currently a simple shim that should be on every user page,
-#   rather than a direct call to site_footer() or theme_footer()
-# Params array() empty
-# Result text - prints HTML to the screen directly
+# rather than a direct call to site_footer() or theme_footer().
+# Params array() empty.
+# Result text - prints HTML to the screen directly.
 function site_user_footer($params)
 {
   html_footer($params);
 }
 
-# Administrative page functions
+# Administrative page functions.
 
 function site_admin_header($params)
 {
