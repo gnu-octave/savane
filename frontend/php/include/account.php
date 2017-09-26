@@ -239,7 +239,7 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
                      $nameof, $tolerated),1);
         }
       else
-      fb(sprintf(_("The %s must only contain alphanumerics."), $nameof, $tolerated),1);
+        fb(sprintf(_("The %s must only contain alphanumerics."), $nameof), 1);
 
       return 0;
     }
