@@ -540,10 +540,8 @@ switch ($func)
        }
      elseif (!$preview)
        { # ends up including tracker item number in url, if present
-         if (isset ($_SERVER['HTTP_REFERER'])
-             && preg_match("/:\/\/($sys_default_domain)|($sys_https_host)/",
-                           $_SERVER['HTTP_REFERER']))
-           header('Location: ' . $_SERVER['HTTP_REFERER']);
+         if (isset ($item_id))
+           header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $item_id);
          else
            {
              $_POST = $_FILES = array();
