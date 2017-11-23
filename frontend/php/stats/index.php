@@ -68,14 +68,14 @@ $form_submit = '<input class="bold" value="'._("Apply")
 # Example: "From 12. September 2005 till 14. September 2005"
 print html_show_displayoptions(
        sprintf(_('From %1$s till %2$s.'),
-               calendar_selectbox("day",$since_day,"since_day")
-               .calendar_selectbox("month",$since_month,"since_month")
-               .'<input type="text" value="'.htmlentities($since_year)
-               .'" name="since_year" size="4" maxlength="4" />',
-               calendar_selectbox("day",$until_day,"until_day")
-               .calendar_selectbox("month",$until_month,"until_month")
-               .'<input type="text" value="'.htmlentities($until_year)
-               .'" name="until_year" size="4" maxlength="4" />'),
+               calendar_select_date($since_day, $since_month,
+                                    htmlentities ($since_year),
+                                    array ("since_day", "since_month",
+                                           "since_year")),
+               calendar_select_date($until_day, $until_month,
+                                    htmlentities ($until_year),
+                                    array ("until_day", "until_month",
+                                           "until_year"))),
                $form_opening, $form_submit);
 
 # TRANSLATORS: The arguments are two dates.

@@ -361,11 +361,10 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
       if (!$year)
         $year = ($today[5]+1900);
 
-      # FIXME: order of year/day/month must be local specific.
-      $html = calendar_selectbox("day", $day, $field_name.'_dayfd')
-              .calendar_selectbox("month", $month, $field_name.'_monthfd')
-              .' <input type="text" name="'.$field_name
-              .'_yearfd" size="4" maxlength="4" value="'.$year.'" />';
+      $html = calendar_select_date($day, $month, $year,
+                                   array ($field_name.'_dayfd',
+                                          $field_name.'_monthfd',
+                                          $field_name));
     }
   return($html);
 }

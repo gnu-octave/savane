@@ -23,34 +23,68 @@
 
 function calendar_month_name ($month)
 {
-# TRANSLATORS: names of months are used in selection boxes
-# like [day] [month] [year].
   switch ($month)
     {
     case '1':
-      return _("January"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+             _("January"); break;
     case '2':
-      return _("February"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("February"); break;
     case '3':
-      return _("March"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("March"); break;
     case '4':
-      return _("April"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("April"); break;
     case '5':
-      return _("May"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("May"); break;
     case '6':
-      return _("June"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("June"); break;
     case '7':
-      return _("July"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("July"); break;
     case '8':
-      return _("August"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("August"); break;
     case '9':
-      return _("September"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("September"); break;
     case '10':
-      return _("October"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("October"); break;
     case '11':
-      return _("November"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("November"); break;
     case '12':
-      return _("December"); break;
+      return
+# TRANSLATORS: names of months are used in selection boxes
+# like '%1$s %2$s %3$s'.
+      _("December"); break;
     }
 }
 
@@ -119,5 +153,16 @@ function calendar_selectbox ($level, $checked_val='xxaz', $inputname=false)
                                            $inputname,
                                            $checked_val,
                                            0);
+}
+function calendar_select_date ($day, $month, $year, $field_names)
+{
+  return sprintf(
+  # TRANSLATORS: Arrange the arguments to make up the date in your language.
+       _('<!-- Date: day, month, year --> %1$s %2$s %3$s'),
+                      calendar_selectbox("day", $day, $field_names[0]),
+                      calendar_selectbox("month", $month,
+                                         $field_names[1]),
+                      ' <input type="text" name="'.$field_names[2].'" '
+                      .'size="4" maxlength="4" value="'.$year.'" />');
 }
 ?>
