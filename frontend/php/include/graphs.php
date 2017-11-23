@@ -103,7 +103,7 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
 <td style="width: 15%; text-align: right; vertical-align: center;">'.$title.'</td>
 <td style="width: 5%; text-align: right; vertical-align: center;">'
 # TRANSLATORS: the arguments mean "%1$s of (total) %2$s".
-  .sprintf(_('%1$s/%1$s'), $v, $total[$k]).'</td>
+  .sprintf(_('%1$s/%2$s'), $v, $total[$k]).'</td>
 <td style="width: 5%; text-align: right; vertical-align: center;">'
   .$percent_print.'</td>
 <td style="width: 75%; text-align: left; vertical-align: center;">'
