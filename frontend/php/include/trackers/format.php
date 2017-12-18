@@ -102,7 +102,8 @@ function format_item_details ($item_id, $group_id, $ascii=false,
       $data[$i]['realname'] = user_getname(user_getid(), 1);
       $data[$i]['date'] = time();
       $data[$i]['comment_type'] = '';
-      $data[$i]['content'] = "*"._("This is a preview")."*\n\n". $new_comment;
+      $data[$i]['content'] = "*"._("This is a preview")."*\n\n"
+                             .htmlspecialchars($new_comment);
       $data[$i]['comment_internal_id'] = $hist_id;
       $data[$i]['spamscore'] = '0';
     }
