@@ -11540,7 +11540,7 @@ msgstr "Quelltext"
 
 #: frontend/site-specific/gnu-content/page_footer.php:33
 #: frontend/site-specific/nongnu-content/page_footer.php:33
-msgid "Copyright &copy; 2017 &nbsp;Free Software Foundation, Inc."
+msgid "Copyright &copy; 2018 &nbsp;Free Software Foundation, Inc."
 msgstr ""
 
 #: frontend/site-specific/gnu-content/page_footer.php:37
