@@ -40,7 +40,7 @@ print '<br />
 <a href="';
 
 echo 'http://git.savannah.gnu.org/cgit/administration/savane.git/plain/'
-  . preg_replace(':/usr/src/savane/:', '', realpath($_SERVER['SCRIPT_FILENAME']));
+  . preg_replace(':/opt/savannah/savane/:', '', realpath($_SERVER['SCRIPT_FILENAME']));
 
 print'">'._('Source Code').'</a></span>
 ';
