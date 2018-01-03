@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 print '
-'._('Copyright &copy; 2017 &nbsp;Free Software Foundation, Inc.').'
+'._('Copyright &copy; 2018 &nbsp;Free Software Foundation, Inc.').'
 
 <br />
 

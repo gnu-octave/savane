@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 print '<meta name="Author" content="'
-.'Copyright 2017 Free Software Foundation, Inc.
+.'Copyright 2018 Free Software Foundation, Inc.
 '._('Verbatim copying and distribution of this entire article
 is permitted in any medium, provided this notice is preserved.').'" />
 <meta name="Description" content="'
