@@ -323,9 +323,19 @@ class Group extends Error
   }
   function getGPGKeyring()
   {
-     if (!isset($this->data_array['registered_gpg_keys']))
-       return false;
-     return $this->data_array['registered_gpg_keys'];
+    $keyring = "";
+    $res = db_execute("SELECT gpg_key
+        FROM user JOIN user_group ON user.user_id = user_group.user_id
+        WHERE admin_flags<>'P' AND status='A' AND group_id=?",
+                    array($this->group_id));
+    $rows = db_numrows ($res);
+    for ($j = 0; $j < $rows; $j++)
+      {
+        $key = db_result ($res, $j, 'gpg_key');
+        if ($key)
+          $keyring .= $key . "\n";
+      }
+    return $keyring;
   }
 
   # ######################

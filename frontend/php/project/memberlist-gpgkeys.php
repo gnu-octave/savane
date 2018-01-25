@@ -46,13 +46,10 @@ the command %s."), htmlentities ($_SERVER['PHP_SELF']).'?group='.$group
 
 } else {
 
-# Download the keyring
-  $result = db_execute("SELECT keyring FROM groups_gpg_keyrings "
-                       ."WHERE unix_group_name=? LIMIT 1", array($group));
-
+# Send the keyring.
   header('Content-Type: application/pgp-keys');
   header('Content-Disposition: attachment; filename='.$group.'-keyring.gpg');
   header('Content-Description: GPG Keyring of the project '.$group);
-  passthru('/usr/local/bin/sv_tmpgpg ' . $group_id);
+  print $keyring;
 }
 ?>
