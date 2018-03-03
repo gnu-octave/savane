@@ -6,7 +6,7 @@
 #
 # Copyright 2003-2006 (c) Mathieu Roy <yeupou--gnu.org>
 #                          Yves Perrin <yves.perrin--cern.ch>
-#
+# Copyright 2018 (C) Ineiev
 #
 # This file is part of Savane.
 # 
@@ -1471,6 +1471,26 @@ function trackers_data_get_cc_list ($item_id=false)
 		    array($item_id));
 }
 
+# Magic value to mark base64-encoded comments.
+$trackers_encode_value_prefix = 'jbexnebhaq ZlFDY oht';
+
+function trackers_encode_value ($value)
+{
+  global $trackers_encode_value_prefix;
+  return $trackers_encode_value_prefix . base64_encode ($value);
+}
+
+function trackers_decode_value ($value)
+{
+  global $trackers_encode_value_prefix;
+  $len = strlen ($trackers_encode_value_prefix);
+  if (strlen ($value) <= $len)
+    return $value;
+  if (strcmp (substr ($value, 0, $len), $trackers_encode_value_prefix))
+    return $value;
+  return base64_decode (substr ($value, $len));
+}
+
 function trackers_data_add_history ($field_name,
 				    $old_value,
 				    $new_value,
@@ -1537,7 +1557,41 @@ function trackers_data_add_history ($field_name,
       'ip' => $_SERVER['REMOTE_ADDR'],
       'type' => $val_type
     ), DB_AUTOQUERY_INSERT);
-  
+  $insert_id = db_insertid($result);
+  if ($field_name == 'details')
+    {
+      # Check if we read what we've written,
+      # see Savannah sr #109423.
+
+      $read_result = db_execute("SELECT "
+                                .$artifact."_history.old_value,"
+                                .$artifact."_history.new_value "
+                                ."FROM ".$artifact."_history "
+                                ."WHERE "
+                                .$artifact."_history.bug_history_id=?",
+                                array($insert_id));
+
+      $prev_old_value = $old_value;
+      $prev_new_value = $new_value;
+
+      if (db_numrows ($read_result))
+        {
+          # Encode comments if needed.
+          $entry = db_fetch_array ($read_result);
+          if ($entry['old_value'] != $old_value)
+            $old_value = trackers_encode_value ($old_value);
+          if ($entry['new_value'] != $new_value)
+            $new_value = trackers_encode_value ($new_value);
+          if ($prev_old_value != $old_value
+              || $prev_new_value != $new_value)
+          $res = db_autoexecute($artifact."_history", 
+                                array('new_value' => $new_value,
+                                      'old_value' => $old_value),
+                                DB_AUTOQUERY_UPDATE,
+                                "bug_history_id=?", array($insert_id));
+        } # db_numrows ($read_result)
+    } # $field_name == 'details'
+
   spam_set_item_default_score($item_id, 
 			      db_insertid($result),
 			      $artifact,

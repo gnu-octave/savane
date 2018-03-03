@@ -5,7 +5,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -72,6 +72,8 @@ function format_item_details ($item_id, $group_id, $ascii=false,
 	  $data[$i]['date'] = $entry['date'];
 	  $data[$i]['comment_type'] = $entry['comment_type'];
 	  $data[$i]['content'] = $entry['old_value'];
+          if ($data[$i]['comment_type'] == 'None')
+            $data[$i]['content'] = trackers_decode_value ($entry['old_value']);
 	  $data[$i]['comment_internal_id'] = $entry['bug_history_id']; 
 	  $hist_id = $entry['bug_history_id'] + 1;
 
