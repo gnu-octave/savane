@@ -1576,11 +1576,16 @@ function trackers_data_add_history ($field_name,
 
       if (db_numrows ($read_result))
         {
+          global $trackers_encode_value_prefix;
           # Encode comments if needed.
           $entry = db_fetch_array ($read_result);
-          if ($entry['old_value'] != $old_value)
+          if ($entry['old_value'] != $old_value
+              || !strcmp (substr ($old_value, 0, $len),
+                          $trackers_encode_value_prefix))
             $old_value = trackers_encode_value ($old_value);
-          if ($entry['new_value'] != $new_value)
+          if ($entry['new_value'] != $new_value
+              || !strcmp (substr ($new_value, 0, $len),
+                          $trackers_encode_value_prefix))
             $new_value = trackers_encode_value ($new_value);
           if ($prev_old_value != $old_value
               || $prev_new_value != $new_value)
