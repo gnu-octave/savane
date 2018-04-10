@@ -1577,6 +1577,7 @@ function trackers_data_add_history ($field_name,
       if (db_numrows ($read_result))
         {
           global $trackers_encode_value_prefix;
+          $len = strlen ($trackers_encode_value_prefix);
           # Encode comments if needed.
           $entry = db_fetch_array ($read_result);
           if ($entry['old_value'] != $old_value
