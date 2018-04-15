@@ -39,7 +39,7 @@ below. To discard requests, go to the next section called &ldquo;Removing users
 from group.&rdquo;")."</p>
 <form action=\"";
   print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
-        <input type=\"HIDDEN\" name=\"action\" VALUE=\"approve_for_group\" />
+        <input type=\"hidden\" name=\"action\" value=\"approve_for_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
   $exists = false;
@@ -54,7 +54,7 @@ from group.&rdquo;")."</p>
     print '<option>'._("None found").'</option>';
 
   print "</select>
-        <input type=\"HIDDEN\" name=\"group_id\" VALUE=\"$group_id\" />
+        <input type=\"hidden\" name=\"group_id\" value=\"$group_id\" />
         <p>
         <input type=\"submit\" name=\"Submit\" value=\""
 ._("Approve users for group")."\" />
@@ -73,7 +73,7 @@ below. The administrators of a project cannot be removed unless they quit.
 Pending users are at the bottom of the list.")."</p>
 <form action=\"";
   print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
-        <input type=\"HIDDEN\" name=\"action\" VALUE=\"remove_from_group\" />
+        <input type=\"hidden\" name=\"action\" value=\"remove_from_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
   while ($usr = db_fetch_array($result))
@@ -101,7 +101,7 @@ Pending users are at the bottom of the list.")."</p>
 
   print "</select>
         <br />
-        <input type=\"HIDDEN\" name=\"group_id\" VALUE=\"$group_id\" />
+        <input type=\"hidden\" name=\"group_id\" value=\"$group_id\" />
         <p>
         <input type=\"submit\" name=\"Submit\" value=\""
 ._("Remove users from group")."\" />
@@ -137,7 +137,7 @@ function show_all_users_add_list ($result, $group_id)
 
 <form action=\"";
   print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
-        <input type=\"HIDDEN\" name=\"action\" VALUE=\"add_to_group\" />
+        <input type=\"hidden\" name=\"action\" value=\"add_to_group\" />
   <select name=\"user_ids[]\" size=\"10\" multiple>\n";
 
   while ($usr = db_fetch_array($result))
@@ -152,7 +152,7 @@ function show_all_users_add_list ($result, $group_id)
 
   print "</select>
         <br />
-        <input type=\"HIDDEN\" name=\"group_id\" VALUE=\"$group_id\" />
+        <input type=\"hidden\" name=\"group_id\" value=\"$group_id\" />
         <p>
         <input type=\"submit\" name=\"Submit\" value=\""._("Add users to group")."\" />
         </p>
