@@ -265,7 +265,7 @@ function context_title ()
     case 'bugs':
       switch (SUBCONTEXT)
         {
-        case 'configure': $title = _("Bugs Tracker Administration"); break;
+        case 'configure': $title = _("Bug Tracker Administration"); break;
         default: $title = _("Bugs"); break;
         }
       break;
@@ -273,7 +273,7 @@ function context_title ()
     case 'bugs':
       switch (SUBCONTEXT)
         {
-        case 'configure': $title = _("Bugs Tracker Administration"); break;
+        case 'configure': $title = _("Bug Tracker Administration"); break;
         default: $title = _("Bugs"); break;
         }
       break;
@@ -281,7 +281,7 @@ function context_title ()
     case 'task':
       switch (SUBCONTEXT)
         {
-        case 'configure': $title = _("Tasks Manager Administration"); break;
+        case 'configure': $title = _("Task Manager Administration"); break;
         default: $title = _("Tasks"); break;
         }
       break;

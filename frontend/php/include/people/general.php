@@ -241,7 +241,9 @@ function people_add_to_job_inventory($job_id,$skill_id,$skill_level_id,
             ), DB_AUTOQUERY_INSERT);
 	  if (!$result || db_affected_rows($result) < 1)
 	    {
-	      fb(_('inserting into skill inventory'),1);
+	      fb(
+                 # TRANSLATORS: this is an error message.
+                 _('Inserting into skill inventory'),1);
 	      print db_error();
 	    }
 	  else
@@ -251,7 +253,7 @@ function people_add_to_job_inventory($job_id,$skill_id,$skill_level_id,
 	}
       else
 	{
-	  fb(_("skill already in your inventory"),1);
+	  fb(_("Skill already in your inventory"),1);
 	}
 
     }

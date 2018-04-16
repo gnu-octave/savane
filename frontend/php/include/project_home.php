@@ -163,7 +163,7 @@ if ($project->CanUse("license"))
         if (!empty($LICENSE[$license]))
           print $LICENSE[$license];
         else
-          print _("Unknown!");
+          print _("Project license is unknown!");
         if ($license == "other")
           print " - " . $project->getLicense_other();
       }
@@ -347,7 +347,7 @@ if ($project->getGPGKeyring())
                      .$group,
                      html_image("contexts/keys.png",
                                 array('width'=>'24', 'height'=>'24', 'alt'=>''))
-                     .'&nbsp;'._("Project Members GPG Keyring"));
+                     .'&nbsp;'._("Project Member GPG Keyring"));
     $i++;
   }
 

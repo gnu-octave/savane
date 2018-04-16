@@ -414,7 +414,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body,
     }
   if (!user_isloggedin())
     {
-      print '<p>'._("You could post if you were logged in.")."</p>\n";
+      print '<p>'._("You could post if you were logged in")."</p>\n";
       return;
     }
   if (!$group_forum_id)

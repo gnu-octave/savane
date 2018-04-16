@@ -156,17 +156,12 @@ function account_pwvalid ($newpass, $oldpass = '', $user = '')
 }
 
 function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
-                            $allow_dots=0, $nameof=0, $MAX_ACCNAME_LENGTH=16,
+                            $allow_dots=0, $MAX_ACCNAME_LENGTH=16,
                             $MIN_ACCNAME_LENGTH=3)
 {
   $underscore = '';
   $dashe = '';
   $dot = '';
-
-  # By default, we are supposed to check for an account name. But it may
-  # be a list name or whatever.
-  if (!$nameof)
-    $nameof = _("account name");
 
   # By default, underscore are allowed, creating no specific issue for an
   # account name. It may creates trouble if the account is use to handle DNS...
@@ -188,14 +183,14 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
   # No spaces.
   if (strrpos($name,' ') > 0)
     {
-      fb(sprintf(_("There cannot be any spaces in the %s"), $nameof),1);
+      fb(_("There cannot be any spaces in the name"),1);
       return 0;
     }
 
   # Min and max length.
   if (strlen($name) < $MIN_ACCNAME_LENGTH)
     {
-      fb(sprintf(_("The %s is too short"), $nameof), 1);
+      fb(_("The name is too short"), 1);
       fb(sprintf(ngettext("It must be at least %s character.",
                           "It must be at least %s characters.",
                           $MIN_ACCNAME_LENGTH), $MIN_ACCNAME_LENGTH),1);
@@ -204,17 +199,16 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
 
   if (strlen($name) > $MAX_ACCNAME_LENGTH)
     {
-      fb(sprintf(_("The %s is too long"), $nameof), 1);
+      fb(_("The name is too long"), 1);
       fb(sprintf(ngettext("It must be at most %s character.",
                           "It must be at most %s characters.",
                           $MAX_ACCNAME_LENGTH), $MAX_ACCNAME_LENGTH),1);
       return 0;
     }
 
-  # Must start with an alphanumeric non numeric.
   if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0)
     {
-      fb(sprintf(_("The %s must begin with an alphabetical character."), $nameof),1);
+      fb(_("The name must begin with an alphabetical character."), 1);
       return 0;
     }
 
@@ -234,13 +228,13 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
       if ($tolerated)
         {
           $tolerated = rtrim($tolerated, ', ');
-# TRANSLATORS: the second argument is comma-separated list of additional characters
+# TRANSLATORS: the argument is comma-separated list of additional characters
 # (possibly single character).
-          fb(sprintf(_('The %1$s must only contain alphanumerics and %2$s.'),
-                     $nameof, $tolerated),1);
+          fb(sprintf(_('The name must only contain alphanumerics and %s.'),
+                     $tolerated),1);
         }
       else
-        fb(sprintf(_("The %s must only contain alphanumerics."), $nameof), 1);
+        fb(_("The name must only contain alphanumerics."), 1);
       return 0;
     }
 
@@ -252,8 +246,7 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
             . "|(web)|(www)|(cvs)|(anoncvs)|(anonymous)|(shell)"
             . "|(ftp)|(irc)|(debian)|(ns)|(download))$",$name))
     {
-# TRANSLATORS: the argument is name of account.
-      fb(sprintf(_("That %s is reserved."), $nameof),1);
+      fb(_("That name is reserved."), 1);
       return 0;
     }
   return 1;

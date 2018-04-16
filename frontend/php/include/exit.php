@@ -33,7 +33,10 @@ function exit_error($title, $text=0)
 
   $content = $title;
   if ($text)
-    $content .= _(':').' '.$text;
+    $content .=
+# TRANSLATORS: this string separates error title from further description,
+# like _("Invalid User")._(': ')._("That user does not exist.")
+      _(': ').$text;
 
   # Add the content in feedback only if there is actually something.
   if ($content)

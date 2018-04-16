@@ -231,8 +231,7 @@ ORDER BY vote DESC LIMIT ?", array($limit));
       $return .= '<div class="'.utils_get_alt_row_color($count).'">'
         .'<span class="smaller">&nbsp;&nbsp;- '
         .'<a href="'.$GLOBALS['sys_home'].$tracker.'/?'.$item_id.'">'
-        .$prefix .' #'.$item_id.'</a>'
-        ._(": ").'&nbsp;'
+        .$prefix .' #'.$item_id.'</a>'.": ".'&nbsp;'
         .'<a href="'.$GLOBALS['sys_home'].$tracker.'/?'.$item_id.'">'
         .$item_summary[$thisitem].'</a>,'
         .'&nbsp;'.sprintf(ngettext("%s vote", "%s votes", $vote), $vote)
