@@ -188,17 +188,19 @@ if ($form_is_valid)
         form_clean($form_id);
 
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
-        $message = sprintf(_('Thank you for registering on the %s web site.
+        $message_head = sprintf(_('Thank you for registering on the %s web site.
 (Your login is not mentioned in this mail to prevent account creation by robots.)
 
 In order to complete your registration, visit the following URL:'),
           $GLOBALS['sys_name'])
           ."\n"
           . $GLOBALS['sys_https_url'] . $GLOBALS['sys_home']
-          . "account/verify.php?confirm_hash=$confirm_hash\n\n"
+          . "account/verify.php?confirm_hash=";
+        $message_tail = "\n\n"
           ._("Enjoy the site.")."\n\n";
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
-          $message .= sprintf(_("-- the %s team.")."\n\n",$GLOBALS['sys_name']);
+          $message_tail .= sprintf(_("-- the %s team.")."\n\n",$GLOBALS['sys_name']);
+        $message = $message_head . $confirm_hash . $message_tail;
 
         if ($krb5ret == 0) #KRB5_OK
           {
@@ -224,9 +226,15 @@ actually can read those messages).'). "\n";
              $GLOBALS['sys_name'])
         ."\n".sprintf(_("Your login is %s."),
           '<strong>'.user_getname($newuserid).'</strong>')."\n";
-      print '<p>'._("You are now being sent a confirmation email to verify your
+      print '<p>'
+.sprintf(_("You are now being sent a confirmation email to verify your
 email address. Visiting the link sent to you in this email will activate your
-account.").' <em>'
+account. The email is sent from &lt;%s&gt;, it contains a text like this:"),
+  $GLOBALS['sys_mail_replyto']."@".$GLOBALS['sys_mail_domain'] )."</p>\n"
+."<blockquote><pre>\n"
+. $message_head . "XXXXXXXXXXXXXXXXXXXXXXXXX" . $message_tail
+."\n</pre></blockquote>\n"
+.'<p><em>'
 ._("Accounts not confirmed after two days are deleted from the
 database.")."</em></p>\n";
       }
