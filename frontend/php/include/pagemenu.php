@@ -539,7 +539,7 @@ function pagemenu_group ()
             $ret .= pagemenu_submenu_entry(_("Browse Sources Repository"),
                                            $project->getUrl($vcs."_viewcvs"));
           }
-        if (($vcs != 'cvs' && $project->UsesForHomepage($vcs)
+        if ((($vcs != 'cvs' && $project->UsesForHomepage($vcs))
              || ($vcs == 'cvs' && $project->Uses("homepage")))
             && $project->getUrl("cvs_viewcvs_homepage") != 'http://'
             && $project->getUrl("cvs_viewcvs_homepage") != '')

@@ -509,8 +509,8 @@ if ($project->Uses("patch")
           print '<br /> &nbsp; - <a href="'.$project->getUrl($scm."_viewcvs")
                 .'">'._("Browse Sources Repository").'</a>';
         }
-      if (($scm != 'cvs' && $project->UsesForHomepage($scm)
-             || ($scm == 'cvs' && $project->Uses("homepage")))
+      if ((($scm != 'cvs' && $project->UsesForHomepage($scm))
+           || ($scm == 'cvs' && $project->Uses("homepage")))
           && $project->getUrl("cvs_viewcvs_homepage") != 'http://'
           && $project->getUrl("cvs_viewcvs_homepage") != '')
         {
