@@ -364,7 +364,7 @@ function trackers_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=fals
       $html = calendar_select_date($day, $month, $year,
                                    array ($field_name.'_dayfd',
                                           $field_name.'_monthfd',
-                                          $field_name));
+                                          $field_name.'_yearfd'));
     }
   return($html);
 }
