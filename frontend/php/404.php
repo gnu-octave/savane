@@ -39,7 +39,7 @@ tried to access (%s)."),
 
 # TRANSLATORS: the second argument is system name (like Savannah).
 print '<p>'
-  .sprintf(_("Otherwise, you can return to the <a href=\"%s\>%s main page</a>."),
+  .sprintf(_("Otherwise, you can return to the <a href=\"%s\">%s main page</a>."),
            $GLOBALS['sys_home'], $GLOBALS['sys_name']).'</p>';
 
 
