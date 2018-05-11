@@ -4,7 +4,7 @@
 # Copyright (C) 2016 Karl Berry (disable languages)
 # Copyright (C) 2003-2006 Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -21,36 +21,47 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# TODO: move to init.php or init-i18n.php - this file doesn't define
-# functions and is part of the initialization phase.
-
 # Table of supported languages :
 # "language variant" => "associated preferred locale"
 # 11jun2016 karl disabled all languages since translations are incomplete
 # (and the only way to select them is with the inconvenient
 # Accept-Language: browser header). https://savannah.gnu.org/support/?108827
-$locale_list = array(
-                            #"de"       => "de_DE.UTF-8",
-                            #"de-de"    => "de_DE.UTF-8",
-                            #"ca"        => "ca_ES.UTF-8",
-                            "en"        => "en_US.UTF-8",
-                            #"en-gb"    => "en_GB.UTF-8",
-                            #"es"        => "es_ES.UTF-8",
-                            #"fr"       => "fr_FR.UTF-8",
-                            #"fr-fr"    => "fr_FR.UTF-8",
-                            #"it"       => "it_IT.UTF-8",
-                            #"it-it"     => "it_IT.UTF-8",
-                            #"ja"       => "ja_JP.UTF-8",
-                            #"ja-jp"    => "ja_JP.UTF-8",
-                            #"ko"       => "ko_KR.UTF-8",
-                            #"ko-kr"    => "ko_KR.UTF-8",
-                            #"pt"       => "pt_BR.UTF-8",
-                            #"pt-br"     => "pt_BR.UTF-8",
-                            #"ru"        => "ru_RU.UTF-8",
-                            #"ru-ru"     => "ru_RU.UTF-8",
-                            #"sv"       => "sv_SE.UTF-8",
-                            #"sv-se"     => "sv_SE.UTF-8",
-                            );
+$locale_list = array();
+
+# Locale names offered for selection in /i18n.php.
+$locale_names = array();
+
+# Add language to arrays:
+# $code - language code
+# $locale - locale to use
+# $name - label for the item in select box; when empty, the language
+# isn't offered for selection on /i18n.php.
+function register_language ($code, $locale, $name = "")
+{
+  global $locale_list, $locale_names;
+  $locale_list[$code] = $locale.".UTF-8";
+  if ($name !== "")
+    $locale_names[$code] = $name;
+}
+
+#register_language ("ca", "ca_ES", "català");
+#register_language ("de", "de_DE", "Deutsch");
+register_language ("en", "en_US", "English");
+#register_language ("en-gb", "en_GB");
+#register_language ("es", "es_ES", "español");
+#register_language ("fr", "fr_FR", "français");
+#register_language ("fr-fr", "fr_FR");
+#register_language ("it", "it_IT", "italiano");
+#register_language ("ja", "ja_JP", "日本語");
+#register_language ("ja-jp", "ja_JP");
+#register_language ("ko", "ko_KR", "한국어");
+#register_language ("ko-kr", "ko_KR");
+#register_language ("pt", "pt_BR", "português do Brasil");
+#register_language ("pt-br", "pt_BR");
+#register_language ("ru", "ru_RU", "русский");
+#register_language ("sv", "sv_SE", "svenska");
+#register_language ("sv-se", "sv_SE");
+
 
 # Get user's preferred languages from UA headers.
 $accept_language = strtolower (str_replace (array (' ', '	'), '',
@@ -99,6 +110,9 @@ while (list(, $lng) = each ($browser_preferences))
     $quality = $q;
     $best_lang = $cur_lang;
   } # while (list(, $lng) = each ($browser_preferences))
+
+if (isset($_COOKIE['LANGUAGE']) && isset($locale_list[$_COOKIE['LANGUAGE']]))
+  $best_lang = $_COOKIE['LANGUAGE'];
 
 $locale = $locale_list[$best_lang];
 define('SV_LANG', str_replace ('_', '-', $locale));
