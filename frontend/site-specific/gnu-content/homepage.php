@@ -68,7 +68,7 @@ ask questions:').'</p>
 # TRANSLATORS: the argument is a link to mailing list.
 .sprintf(_('%s:
     help with using Savannah in general (not with a specific project).'),
-'<a href="//lists.gnu.org/mailman/listinfo/savannah-users>savannah-users</a>')
+'<a href="//lists.gnu.org/mailman/listinfo/savannah-users">savannah-users</a>')
 .'</li>
 </ul>
 </p>
