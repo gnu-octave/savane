@@ -83,11 +83,11 @@ $types = array();
 $result = db_execute("SELECT type_id, name FROM group_type ORDER BY type_id");
 while($line = db_fetch_array($result))
      $types[$line['type_id']] = $line['name'];
-$form->addElement('select', 'group_type', 'Group type', $types);
+$form->addElement('select', 'group_type', _('Group type'), $types);
 // TODO: default group type
 $form->setDefaults(array('group_type' => 2));
-$form->addElement('select', 'license', 'Project license', $LICENSE);
-$form->addElement('textarea', 'license_other', 'Other license and/or details');
+$form->addElement('select', 'license', _('Project license'), $LICENSE);
+$form->addElement('textarea', 'license_other', _('Other license, details'));
 
 $form->addElement('header', 'title_checklist',
 sprintf (

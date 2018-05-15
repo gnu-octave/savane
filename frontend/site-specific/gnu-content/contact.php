@@ -69,9 +69,9 @@ the archives</a>.').'</li>
 ', '//lists.gnu.org/mailman/listinfo/savannah-hackers',
 '//lists.gnu.org/archive/html/savannah-hackers/');
 
-print '<li>'.'Finally, to report security-related or confidential issues, you can
+print '<li>'._('Finally, to report security-related or confidential issues, you can
 use the savannah-help-private list, which is not publicly archived
-(unlike all the others here).'.'</li>
+(unlike all the others here).').'</li>
 
 </ul>';
 ?>
