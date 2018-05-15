@@ -416,6 +416,11 @@ h5 a {
 	font-size: smaller;
 }
 
+.menusearch input[name=words] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
 .relatedrecipes {
 	text-indent: 0;
 	list-style-type: none;
