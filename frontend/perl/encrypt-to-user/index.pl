@@ -1,7 +1,7 @@
 #! /usr/bin/perl
 # Encrypt a message to specified savane user.
 #
-# Copyright 2017 (c) Ineiev <ineiev--gnu.org>
+# Copyright (C) 2017, 2018 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -108,7 +108,7 @@ sub UserEncrypt {
     print $mh $message;
 
     $exit_code = 2;
-    open($input, '|-', 'gpg --homedir='.$temp_dir.' -q --import');
+    open($input, '|-', 'gpg --homedir='.$temp_dir.' --batch -q --import');
     print $input $key;
     close($input) or return "";
 
