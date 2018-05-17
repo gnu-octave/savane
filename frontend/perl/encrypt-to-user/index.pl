@@ -25,6 +25,8 @@ use Getopt::Long;
 my $getopt;
 my $help;
 my $user;
+our $gpg_home;
+our $gpg_name;
 my $sys_dbname;
 my $sys_dbhost;
 my $sys_dbuser;
@@ -37,7 +39,9 @@ eval {
                          "user=s" => \$user,
                          "dbname=s" => \$sys_dbname,
                          "dbhost:s" => \$sys_dbhost,
-                         "dbparams:s" => \$sys_dbparams);
+                         "dbparams:s" => \$sys_dbparams,
+                         "home=s" => \$gpg_home,
+                         "gpg=s" => \$gpg_name);
 };
 
 sub print_help {
@@ -51,6 +55,7 @@ Encrypt a message to user's registered GPG key.
       --dbname          Savannah database name
       --dbhost          Savannah database host
       --dbparams        Savannah database parameters
+      --gpg             Use specified program as GPG
 
 Database user and password are passed in the first two lines of input.
 
@@ -62,17 +67,22 @@ if($help) {
     exit(0);
 }
 
-$sys_dbuser = <> or die "No database user is supplied.";
-$sys_dbpasswd = <> or die "No database password is supplied.";
+our $dbd;
 
-$sys_dbuser =~ s/\n$//;
-$sys_dbpasswd =~ s/\n$//;
+if (!$gpg_home) {
+  $sys_dbuser = <> or die "No database user is supplied.";
+  $sys_dbpasswd = <> or die "No database password is supplied.";
 
-our $dbd = DBI->connect('DBI:mysql:database='.$sys_dbname
-		       .':host='.$sys_dbhost
-		       .$sys_dbparams,
+  $sys_dbuser =~ s/\n$//;
+  $sys_dbpasswd =~ s/\n$//;
+
+  $dbd = DBI->connect('DBI:mysql:database='.$sys_dbname
+                       .':host='.$sys_dbhost.$sys_dbparams,
                        $sys_dbuser, $sys_dbpasswd,
                        { RaiseError => 1, AutoCommit => 1});
+}
+
+$gpg_name = 'gpg' unless $gpg_name;
 
 ## Encrypt to user GPG key if available
 # arg1: user id
@@ -87,34 +97,42 @@ our $dbd = DBI->connect('DBI:mysql:database='.$sys_dbname
 #   4 when creating temporary files failed,
 #   5 when extracted key_id is invalid.
 sub UserEncrypt {
+    my $temp_dir = $gpg_home;
     my ($user, $message) = @_;
-    my $key = $dbd->selectrow_array("SELECT gpg_key FROM user WHERE user_id=".$user);
-
-    $exit_code = 3;
-    return "" unless $key ne "";
 
     $exit_code = 4;
-
     my ($mh, $mname) = tempfile(UNLINK => 1);
     return "" if $mname eq "";
+    my $key;
 
-    my $temp_dir = tempdir(CLEANUP => 1);
-    return "" if $temp_dir eq "";
+    if (!$gpg_home) {
+      $key = $dbd->selectrow_array("SELECT gpg_key FROM user WHERE user_id="
+                                   .$user);
+      $exit_code = 3;
+      return "" unless $key ne "";
+
+      $exit_code = 4;
+      $temp_dir = tempdir(CLEANUP => 1);
+      return "" if $temp_dir eq "";
+    }
 
     my $input;
     my $key_id = "";
     my $msg = "";
 
     print $mh $message;
-
     $exit_code = 2;
-    open($input, '|-', 'gpg --homedir='.$temp_dir.' --batch -q --import');
-    print $input $key;
-    close($input) or return "";
+
+    if (!$gpg_home) {
+      open($input, '|-', $gpg_name . ' --homedir=' . $temp_dir
+                         .' --batch -q --import');
+      print $input $key;
+      close($input) or return "";
+    }
 
 # Get the first ID of a public key with encryption capability.
-    open($input, '-|', 'gpg --homedir='.$temp_dir.
-                       ' --list-keys --with-colons 2> /dev/null');
+    open($input, '-|', $gpg_name . ' --homedir=' . $temp_dir
+                       .' --list-keys --with-colons 2> /dev/null');
     while(<$input>)
       {
         if(!/^pub/)
@@ -134,8 +152,8 @@ sub UserEncrypt {
     $exit_code = 5;
     return "" unless $key_id =~ /^[0-9A-F]*$/;
     $exit_code = 1;
-    open($input, '-|', 'gpg --homedir='.$temp_dir.
-                       ' --trust-model always --batch -a --encrypt -r '
+    open($input, '-|', $gpg_name . ' --homedir='.$temp_dir
+                       .' --trust-model always --batch -a --encrypt -r '
                        .$key_id." -o - ".$mname);
     while(<$input>)
       {
