@@ -8,8 +8,9 @@ install-data-local: MANIFEST
 	$(MAKE) -f Makefile.perl install VPATH=.:$(srcdir)
 
 uninstall-local:
-	PERLLIB=$(DESTDIR)/$(prefix)/lib/perl $(PERL) $(srcdir)/uninstall.pl Savane
-	$(RM) `find $(DESTDIR)/$(prefix)/lib/perl -name perllocal.pod`
+	PERLLIB=`find $(DESTDIR)/$(prefix)/lib -name perl -type d` \
+          $(PERL) $(srcdir)/uninstall.pl Savane
+	$(RM) `find $(DESTDIR)/$(prefix)/lib -name perllocal.pod`
 
 CLEANFILES = Savane-*.tar.gz MANIFEST MANIFEST.bak
 clean-local:
