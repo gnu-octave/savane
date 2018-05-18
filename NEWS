@@ -1,5 +1,54 @@
-Clean-up branch - v.3.1-cleanup
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+????-??-?? 3.2
+
+[FRONTEND]
+
+* Multiple typo fixes.
+
+* Language selection is rewritten. New way to select language is added
+  for the case when regular browser means don't work.
+
+* Most strings to i18n are reviewed, translator's comments are added.
+
+* Comment preview is implemented for trackers.
+
+* A few PHP notices and warnings are fixed.
+
+* Some dead links are removed.
+
+* In Markup, named links to trackers are supported, like
+  [task #4913 our most important task] and
+  [comment #289 my second reply].
+
+* When deleting account, non-active groups are ignored
+  per Savannah Task #14513.
+
+* OBB-296182 is fixed.
+
+* Getting group keyring was fixed per Savannah sr #109450.
+
+* Due to a MySQL bug, some Unicode characters didn't display
+  in tracker comments correctly, per Savannah sr #109450.
+
+* When registering a new user account, a message explaining
+  what the confirmation email looks like is shown,
+  per Savannah sr #109310.
+
+* Account Configuration -> Change GPG Key:
+  a sample key is shown to explain what it should look like;
+  a button to test the submitted key is added.
+
+* Some fixes in CSS.
+
+* In Markup, URL parts like "*checkout*" were shown in bold.
+
+[SITE SPECIFIC CONTENT]
+
+* Webpages (including "site-specific content") are imported to Git;
+  they are localized together with frontend messages.
+
+* Apache 2.0 is added to license list.
+
+* Add SHA256 VCS server SSH key fingerprints to MD5 ones.
 
 2017-05-23 3.1-cleanup2
 
