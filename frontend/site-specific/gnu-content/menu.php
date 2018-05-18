@@ -26,7 +26,7 @@
 
 global $HTML;
 $HTML->menu_entry('//savannah.gnu.org/maintenance/FaQ', _('User Docs: FAQ'));
-$HTML->menuhtml_top('GNU Project');
+$HTML->menuhtml_top(_('GNU Project'));
 $HTML->menu_entry('//www.gnu.org/help/help.html',_('Help GNU'));
 $HTML->menu_entry("//www.gnu.org/software/software.html",_('All GNU Packages'));
 $HTML->menu_entry('//www.gnu.org/software/devel.html',_('Dev Resources'));
