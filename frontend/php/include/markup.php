@@ -708,14 +708,14 @@ function _markup_inline($line)
 
   # *word* -> <strong>word</strong>
   $line = preg_replace(
-    # Find an asterisk
-    '/\*'
+    # Find an asterisk after a space or starting the line
+    '/(^|\s)\*'
     # then one character (except a space or asterisk)
     .'([^* ]'
     # then (optionally) any character except asterisk
     .'[^*]*?)'
     # then an asterisk.
-    .'\*/', '<strong>$1</strong>', $line);
+    .'\*/', '$1<strong>$2</strong>', $line);
 
   # _word_ -> <em>word</em>
   $line = preg_replace(
