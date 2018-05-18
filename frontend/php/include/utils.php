@@ -47,15 +47,15 @@ function utils_get_content_filename ($file)
 }
 
 # Include site-specific content.
-function utils_get_content ($file)
+function utils_get_content ($filename)
 {
-  $file = utils_get_content_filename($file);
+  $file = utils_get_content_filename($filename);
   if ($file != null)
     include($file);
   else
     fb(sprintf(_("Warning: Savane was not able to read site-specific
-information from file &ldquo;%s&rdquo;, please contact administrators"),
-       $file), 1);
+information from file '%s', please contact administrators"),
+       $filename), 1);
 }
 
 # Make sure that to avoid malicious file paths.
