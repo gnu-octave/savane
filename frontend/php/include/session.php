@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Derek Feichtinger <derek.feichtinger--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -416,7 +416,7 @@ function session_set_new($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
     {
       db_execute("DELETE FROM session WHERE session_hash=?",
                  array($GLOBALS['session_hash']));
-      exit_error(_("Two people had the same session hash&mdash;re-login.
+      exit_error(_("Two people had the same session hash - re-login.
 It should never happen again."));
     }
   else

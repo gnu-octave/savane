@@ -3,7 +3,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2006, 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2018  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -74,8 +74,8 @@ local administration project"), 1);
 	  # Not logged-in, probably no user account
 	  fb(sprintf(no_i18n(
 "Installation incomplete: you have to login and register the local
-administration project (or maybe <em>%s</em>, from the
-<em>sys_unix_group_name</em> configuration parameter, is not the right
+administration project (or maybe '%s', from the
+'sys_unix_group_name' configuration parameter, is not the right
 project name?)"), $sys_unix_group_name), 1);
 	}
     }
@@ -84,7 +84,7 @@ project name?)"), $sys_unix_group_name), 1);
       # No admin groups
       fb(no_i18n(
 "Installation incomplete: you must now register the local
-administration project, select &ldquo;Register New Project&rdquo; in the left
+administration project, select 'Register New Project' in the left
 menu"), 1);
     }
   # The string is a URL on localhost, e.g. http://127.0.0.1/testconfig.php

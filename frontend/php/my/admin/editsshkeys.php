@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -71,10 +71,10 @@ if ($update)
               }
             else
               fb(sprintf(
+# TRANSLATORS: the argument is a link to a page.
 _('Error: ssh-vulnkey detected key #%s as compromised.
 Please upgrade your system and regenerate it
-(see %s for more information).'), $i+1,
-'<a href="http://wiki.debian.org/SSLkeys">http://wiki.debian.org/SSLkeys</a>'),
+(see %s for more information).'), $i+1, 'http://wiki.debian.org/SSLkeys'),
                  1);
           }
       }

@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou---gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -206,7 +206,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array,
 		  fb(
 # TRANSLATORS: the argument is field name.
           sprintf(_("Automatic update of %s due to transitions settings"),
-                  '<em>'.trackers_data_get_label($field).'</em>'));
+                  trackers_data_get_label($field)));
 		}
 	      $upd_list[$field] = $value;
 	      $exists = true;
