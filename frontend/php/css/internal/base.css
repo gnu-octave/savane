@@ -579,7 +579,6 @@ li.topmenuitemsubmenuseparator {
 .boxtitle {
 	font-weight: bold;
 	text-align: center;
-	text-transform: capitalize;
 }
 
 .boxtitle a {

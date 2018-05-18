@@ -197,10 +197,6 @@ td.topmenuitem {
 	background-color:	#eddb5a;
 	font-weight:		bold;
 	color:				#000000;
-	text-transform:		none;
-}
-.boxtitle[LANG=en] {
-	text-transform:		capitalize;
 }
 .boxitem {
 	background-color:	#fff9e0;

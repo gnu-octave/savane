@@ -184,7 +184,6 @@ ul.topmenuitemsubmenu {
   border: thin solid black; 
   font-weight: bold;
   text-align: center;
-  text-transform: capitalize;
   background-color: #e5e5e5;
   color: black;
 }

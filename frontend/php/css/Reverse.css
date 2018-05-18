@@ -171,7 +171,12 @@ does not cope well with item a being a block
  *
  **********************************************************************/
 
-.boxtitle { background-color: #e0ddce; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; }
+.boxtitle {
+  background-color: #e0ddce;
+  font-weight: bold;
+  text-align: center;
+  color: #000000;
+}
 .boxtitle a { color: #000000; }
 .boxtitle a:hover { color: #917400; }
 .boxitem {  background-color: #a3a3a3; text-align: left; color: #333333; }

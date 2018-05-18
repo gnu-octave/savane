@@ -151,7 +151,13 @@ li.topmenuitemsubmenu a:hover {
 
 .box { background-color: #bababa; border-spacing: 0; border: thin solid #736298; }
 .boxleft { background-color: #bababa; border-spacing: 0; border: thin solid #736298; }
-.boxtitle { background-color: #736298; font-weight: bold; text-align: left; text-indent: 1em;  text-transform: capitalize; color: #ffffff; }
+.boxtitle {
+  background-color: #736298;
+  font-weight: bold;
+  text-align: left;
+  text-indent: 1em;
+  color: #ffffff;
+}
 .boxtitle a { color: #ffffff; }
 .boxtitle a:hover { color: #f2ffff; }
 .boxitem { background-color: #c9c9c9; text-align: left; color: #333333; }
