@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2005 Joxean Koret <joxeankoret--yahoo.es>
-# Copyright (C) 2017 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2017, 2018 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #

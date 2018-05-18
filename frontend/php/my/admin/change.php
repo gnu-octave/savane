@@ -6,7 +6,7 @@
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2013  Sylvain Beucler
 # Copyright (C) 2016 Karl Berry
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
