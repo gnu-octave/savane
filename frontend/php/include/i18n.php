@@ -58,7 +58,7 @@ register_language ("en", "en_US", "English");
 #register_language ("ko-kr", "ko_KR");
 #register_language ("pt", "pt_BR", "português do Brasil");
 #register_language ("pt-br", "pt_BR");
-#register_language ("ru", "ru_RU", "русский");
+register_language ("ru", "ru_RU", "русский");
 #register_language ("sv", "sv_SE", "svenska");
 #register_language ("sv-se", "sv_SE");
 
