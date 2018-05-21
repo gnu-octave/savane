@@ -1,6 +1,7 @@
-# Autoconf configuration
+# Autoconf configuration for Savane.
 # 
 # Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2014  Assaf Gordon
 #
 # This file is part of Savane.
 # 
@@ -22,7 +23,7 @@
 
 AC_INIT([GNU Savannah],
         [3.3],
-	[savannah-hackers-public@gnu.org], [],
+	[savannah-hackers-public@gnu.org], [savane],
 	[https://savannah.gnu.org/projects/administration])
 
 # We expect to use Bash for our build scripts - it's widespread
