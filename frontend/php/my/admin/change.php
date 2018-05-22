@@ -668,7 +668,7 @@ elseif ($item == "gpgkey")
     $input_title = "";
     $input_specific =
 "<h3>"._("Sample GPG key")."</h3>\n"
-.'<p>'._('Exported public GPG key should look like this:')
+.'<p>'._('The exported public GPG key should look like this:')
 .'</p>
 <pre>
 -----BEGIN PGP PUBLIC KEY BLOCK-----
