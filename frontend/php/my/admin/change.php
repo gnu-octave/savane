@@ -665,10 +665,10 @@ elseif ($item == "gpgkey")
                            array(user_getid()));
     $row_user = db_fetch_array($res_user);
     $title = _("Change GPG Key");
-    $input_title =
-_("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):");
+    $input_title = "";
     $input_specific =
-'<p>'._('Your exported public GPG key should look like this:')
+"<h3>"._("Sample GPG key")."</h3>\n"
+.'<p>'._('Your exported public GPG key should look like this:')
 .'</p>
 <pre>
 -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -704,6 +704,10 @@ yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
 </pre>
 <p>'
 ._("Please don't remove begin and end markers when submitting your GPG key.")
+."</p>\n"
+.'<h3>'._("Update your key in the input area below")."</h3>\n"
+.'<p>'
+._("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):")
 ."</p>\n";
 
     if (!$newvalue)
