@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.3\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2018-05-22 14:18+0300\n"
+"POT-Creation-Date: 2018-05-22 14:26+0300\n"
 "PO-Revision-Date: 2018-05-22 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
@@ -9696,7 +9696,7 @@ msgid "Sample GPG key"
 msgstr "Образец ключа GPG"
 
 #: frontend/php/my/admin/change.php:671
-msgid "Exported public GPG key should look like this:"
+msgid "The exported public GPG key should look like this:"
 msgstr "Открытый ключ GPG должен выглядеть так:"
 
 #: frontend/php/my/admin/change.php:706
