@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.3\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2018-05-22 14:26+0300\n"
-"PO-Revision-Date: 2018-05-22 15:44+0000\n"
+"POT-Creation-Date: 2018-05-24 13:24+0000\n"
+"PO-Revision-Date: 2018-05-24 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
 "Language: ru\n"
@@ -1583,42 +1583,20 @@ msgstr ""
 "других служб. В этих целях используются только ключи SSH."
 
 #: frontend/site-specific/gnu-content/account/editsshkeys.php:28
-msgid "SSH Public Keys"
-msgstr "Открытые ключи SSH"
+msgid ""
+"Public keys should look like this (their typical\n"
+"length is hundreds of characters):"
+msgstr ""
+"Открытые ключи должны выглядеть так (их длина обычно составляет сотни "
+"символов):"
 
-#: frontend/site-specific/gnu-content/account/editsshkeys.php:32
+#: frontend/site-specific/gnu-content/account/editsshkeys.php:35
 #, php-format
 msgid ""
-"To generate a public key, see the\n"
-"<a href=\"%s\">Savannah FAQ\n"
-"entry for SSH</a>.  Please use only RSA keys, not DSA keys."
+"When unsure, check <a href=\"%s\">Savannah documentation on SSH access</a>."
 msgstr ""
-"О том, как получить открытый ключ, см.\n"
-"<a href=\"%s\">пункт о SSH в &ldquo;Вопросах и ответах&rdquo; Саванны</a>. "
-"Пользуйтесь, пожалуйста, только ключами RSA (не DSA)."
-
-#: frontend/site-specific/gnu-content/account/editsshkeys.php:39
-msgid "What you need to copy/paste looks like this:"
-msgstr "То, что вам нужно скопировать, выглядит так:"
-
-#: frontend/site-specific/gnu-content/account/editsshkeys.php:43
-msgid ""
-"This public key data is commonly located in\n"
-"<code>~/.ssh/id_rsa.pub</code>.  If questions, check the FAQ."
-msgstr ""
-"Эти данные открытого ключа обычно размещаются в <code>~/.ssh/id_rsa.pub</"
-"code>. Если остались вопросы, обращайтесь к &ldquo;Вопросам и ответам&rdquo;."
-
-#: frontend/site-specific/gnu-content/account/editsshkeys.php:47
-#, php-format
-msgid ""
-"If your key gets truncated, it is probably because your browser\n"
-"limits the maximum length of the text fields. Try with <a\n"
-"href=\"%s\">IceCat</a> (or Firefox), which is known to work."
-msgstr ""
-"Если ключ обрезается, возможно, это из-за того, что ваш браузер ограничивает "
-"максимальную длину текстовых полей. Побробуйте <a href=\"%s\">IceCat</a> "
-"(или Firefox), они заведомо работают."
+"Если есть сомнения, обратитесь к <a href=\"%s\">документации Саванны "
+"по работе с SSH</a>."
 
 #: frontend/site-specific/gnu-content/arch/index.php:27
 msgid "Anonymous Arch Access"
@@ -3367,7 +3345,7 @@ msgstr "Действие"
 #: frontend/php/include/trackers_run/admin/field_usage.php:369
 #: frontend/php/include/trackers_run/admin/field_values.php:405
 #: frontend/php/include/trackers_run/admin/field_values_transition-ofields-update.php:175
-#: frontend/php/my/bookmarks.php:62 frontend/php/my/admin/editsshkeys.php:158
+#: frontend/php/my/bookmarks.php:62 frontend/php/my/admin/editsshkeys.php:157
 #: frontend/php/my/admin/change.php:834 frontend/php/my/admin/index.php:269
 #: frontend/php/my/admin/index.php:435
 #: frontend/php/my/admin/change_notifications.php:226
@@ -9383,11 +9361,11 @@ msgstr "Ошибка при регистрации ключа"
 msgid "Change Authorized Keys"
 msgstr "Изменить зарегистрированные ключи"
 
-#: frontend/php/my/admin/editsshkeys.php:138
-msgid "Authorized keys:"
-msgstr "Зарегистрированые ключи:"
+#: frontend/php/my/admin/editsshkeys.php:137
+msgid "Authorized keys"
+msgstr "Зарегистрированые ключи"
 
-#: frontend/php/my/admin/editsshkeys.php:141
+#: frontend/php/my/admin/editsshkeys.php:140
 msgid ""
 "Fill the text fields below with the public keys for each key you want to\n"
 "register. After submitting, verify that the number of keys registered is "
@@ -9398,7 +9376,7 @@ msgstr ""
 "зарегистрировать. После отправки проверьте, что количество ключей совпадает "
 "с ожидаемым."
 
-#: frontend/php/my/admin/editsshkeys.php:153
+#: frontend/php/my/admin/editsshkeys.php:152
 #, php-format
 msgid "Key #%s:"
 msgstr "Ключ №%s:"
@@ -12165,6 +12143,38 @@ msgstr "Сообщение отправлено"
 #: frontend/php/sendmessage.php:67
 msgid "Send a message"
 msgstr "Послать сообщение"
+
+#~ msgid "SSH Public Keys"
+#~ msgstr "Открытые ключи SSH"
+
+#~ msgid ""
+#~ "To generate a public key, see the\n"
+#~ "<a href=\"%s\">Savannah FAQ\n"
+#~ "entry for SSH</a>.  Please use only RSA keys, not DSA keys."
+#~ msgstr ""
+#~ "О том, как получить открытый ключ, см.\n"
+#~ "<a href=\"%s\">пункт о SSH в &ldquo;Вопросах и ответах&rdquo; Саванны</"
+#~ "a>. Пользуйтесь, пожалуйста, только ключами RSA (не DSA)."
+
+#~ msgid "What you need to copy/paste looks like this:"
+#~ msgstr "То, что вам нужно скопировать, выглядит так:"
+
+#~ msgid ""
+#~ "This public key data is commonly located in\n"
+#~ "<code>~/.ssh/id_rsa.pub</code>.  If questions, check the FAQ."
+#~ msgstr ""
+#~ "Эти данные открытого ключа обычно размещаются в <code>~/.ssh/id_rsa.pub</"
+#~ "code>. Если остались вопросы, обращайтесь к &ldquo;Вопросам и "
+#~ "ответам&rdquo;."
+
+#~ msgid ""
+#~ "If your key gets truncated, it is probably because your browser\n"
+#~ "limits the maximum length of the text fields. Try with <a\n"
+#~ "href=\"%s\">IceCat</a> (or Firefox), which is known to work."
+#~ msgstr ""
+#~ "Если ключ обрезается, возможно, это из-за того, что ваш браузер "
+#~ "ограничивает максимальную длину текстовых полей. Побробуйте <a href=\"%s"
+#~ "\">IceCat</a> (или Firefox), они заведомо работают."
 
 #~ msgid "Spam posted by an anonymous user"
 #~ msgstr "Спам, посланный анонимно"
