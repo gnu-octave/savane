@@ -133,10 +133,9 @@ else # !$update
 # Not valid registration, or first time to page.
 site_user_header(array('title' => _("Change Authorized Keys"),
                        'context' => 'account'));
-utils_get_content("account/editsshkeys");
 print form_header($_SERVER['PHP_SELF'], false, "post");
-print '<h3>'._("Authorized keys:").'</h3>
-';
+print '<h3>'._("Authorized keys")."</h3>\n";
+utils_get_content("account/editsshkeys");
 print '<p>'
 ._("Fill the text fields below with the public keys for each key you want to
 register. After submitting, verify that the number of keys registered is what
