@@ -268,6 +268,14 @@ function utils_format_date($timestamp, $format="default")
         # depending on locale, and users reported confusion.
         return strftime('%Y-%m-%d', $timestamp);
       }
+    case 'natural':
+      {
+        if (time () - $timestamp < 12 * 60 * 60)
+          $date_fmt = '%X'; # Time without date, for recent events.
+        else
+          $date_fmt = '%x'; # Date without time.
+        return strftime($date_fmt, $timestamp);
+      }
     case 'short':
     default:
       {

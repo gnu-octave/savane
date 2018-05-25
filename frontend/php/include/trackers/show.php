@@ -169,7 +169,7 @@ function show_item_list ($result_arr,
 		  else
 		    { $highlight_date = ''; }
 		  print "<td $width$highlight_date>";
-		  print utils_format_date($value, 'short');
+		  print utils_format_date($value, 'natural');
 		  print "</td>\n";
 		}
 	      else
@@ -515,7 +515,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
               $j++;
               print "\n".'<tr class="'. utils_get_alt_row_color($j).'">';
               print '<td align="center" class="smaller">'
-                    .utils_format_date($date)."</td>\n";
+                    .utils_format_date($date, 'natural')."</td>\n";
               print '<td align="center" class="smaller">'
                     .utils_user_link($user)."</td>\n";
             }
@@ -540,8 +540,8 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	    }
 	  else if (trackers_data_is_date_field($field))
 	    {
-	      # For date fields do some special processing
-	      print utils_format_date($value_id);
+	      # For date fields do some special processing.
+	      print utils_format_date($value_id, 'natural');
 	    }
 	  else
 	    {
@@ -562,12 +562,12 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	    }
 	  else if (trackers_data_is_date_field($field))
 	    {
-	      # For date fields do some special processing
-	      print utils_format_date($new_value_id);
+	      # For date fields do some special processing.
+	      print utils_format_date($new_value_id, 'natural');
 	    }
 	  else
 	    {
-	      # It's a text zone then display directly
+	      # It's a text zone then display directly.
 	      print markup_basic($new_value_id);
 	    }
 	  print "</td>\n";
