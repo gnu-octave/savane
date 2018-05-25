@@ -63,6 +63,7 @@ em { font-style: italic; }
 	font-family: monospace; 
 }
 
+code { border: solid thin; }
 
 .block { display: block; }
 
