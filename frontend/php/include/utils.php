@@ -271,9 +271,9 @@ function utils_format_date($timestamp, $format="default")
     case 'natural':
       {
         if (time () - $timestamp < 12 * 60 * 60)
-          $date_fmt = '%X'; # Time without date, for recent events.
+          $date_fmt = '%H:%M';
         else
-          $date_fmt = '%x'; # Date without time.
+          $date_fmt = '%Y-%m-%d';
         return strftime($date_fmt, $timestamp);
       }
     case 'short':
