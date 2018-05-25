@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
 # Copyright (C) 2006, 2007, 2008, 2010 Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -235,8 +235,8 @@ function utils_cutlink ($string, $length=35)
 #
 # Currently, you can use the following values for $format:
 #   - default => localized Fri 18 November 2005 at 18:51
-#   - short => localized 18/11/2005, 18:51
-#   - minimal => localized 18/11/2005
+#   - natural => 2005-11-18 or (for recent events) 18:51.
+#   - minimal => 2005-11-18
 #
 # @see utils_date_to_unixtime()
 function utils_format_date($timestamp, $format="default")
