@@ -1,9 +1,7 @@
-/* <one line to give a brief idea of what this does.>
+/* Common stylesheet for all themes.
  * 
- * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
- * See the changelog file for a detailed list of changes
- *
- *  http://gna.org/p/savane
+ * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2018 Ineiev
  *
  * This file is part of Savane.
  * 
@@ -19,9 +17,6 @@
  * 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
 */
 
 /* THIS CSS DEFINES BASIC ELEMENTS AND IS SUPPOSED TO BE IMPORTED */
@@ -64,6 +59,14 @@ em { font-style: italic; }
 }
 
 code { border: solid thin; }
+
+pre {
+	border-top: dashed thin;
+	border-bottom: dashed thin;
+	border-left: solid thick;
+	padding: 1em;
+	margin: 1em;
+}
 
 .block { display: block; }
 
