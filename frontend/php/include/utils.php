@@ -276,7 +276,6 @@ function utils_format_date($timestamp, $format="default")
           $date_fmt = '%Y-%m-%d';
         return strftime($date_fmt, $timestamp);
       }
-    case 'short':
     default:
       {
         # %c  The preferred date and time representation for the current locale.
