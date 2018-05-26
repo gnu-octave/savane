@@ -291,7 +291,7 @@ function db_query($qstring,$print=0)
     {
       print "<pre>[";
       print_r($qstring);
-      print "</pre>]";
+      print "]</pre>";
     }
 
   $GLOBALS['db_qhandle'] = mysql_query($qstring);

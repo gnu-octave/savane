@@ -956,8 +956,8 @@ function util_die($msg)
 {
   if ($GLOBALS['sys_debug_on'])
     {
-      print '<pre>';
       print "<strong>Fatal error:</strong> $msg<br />";
+      print '<pre>';
       debug_print_backtrace();
       print '</pre>';
       die();
