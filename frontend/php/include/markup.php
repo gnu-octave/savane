@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2005-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -31,6 +31,9 @@
 # where it is supposed to be the most useful.
 function markup_info($level, $additionnal_string=false)
 {
+  $link_head = '<a href="/cookbook/?func=detailitem&item_id=125">';
+  $link_tail = '</a>';
+
   if ($level == 'basic')
     {
       $string = _("Basic Markup");
@@ -50,18 +53,17 @@ function markup_info($level, $additionnal_string=false)
     {
       $string = _("No Markup");
       $text = _("No tags are available in this input field.");
+      $link_head = '';
+      $link_tail = '';
     }
 
-  if ($level != 'none')
-    {
-      $text .= " "
-._("Check the Markup Reminder in Related Recipes for a description of these tags.");
-    }
-
-  return '<span class="smaller">('.utils_help('<img src="'.$GLOBALS['sys_home']
-         .'images/'.SV_THEME
-         .'.theme/misc/edit.png" border="0" class="icon" alt="'
-         .'" />'.$string, $text, true).$additionnal_string.')</span>';
+  return '<span class="smaller">('
+         .utils_help($link_head.'<img
+    src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+         .'.theme/misc/edit.png"
+    border="0" class="icon" alt=""'
+         .'
+    />'.$string.$link_tail, $text, true).$additionnal_string.')</span>';
 }
 
 # Convert special markup characters in the input text to real HTML.
