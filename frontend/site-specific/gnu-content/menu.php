@@ -7,7 +7,7 @@
 # Copyright (C) 2008, 2011, 2012, 2013 Karl Berry
 # Copyright (C) 2010, 2011, 2012 Michael J. Flickinger
 # Copyright (C) 2017 Bob Proulx
-# Copyright (C) 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2017, 2018 Ineiev <ineiev@gnu.org>
 #
 # This file is part of Savane.
 #
@@ -40,7 +40,8 @@ print '
   <br />
 ';
   print '<a href="//www.fsf.org/associate/support_freedom/join_fsf?referrer=2442">'
-        .'<img src="//static.fsf.org/fsforg/img/thin-image.png" alt="'
+.'<img style="width: 100%; margin-bottom: 0.2em"
+  src="//static.fsf.org/fsforg/img/thin-image.png" alt="'
         ._('Support freedom').'" title="'
         ._('Help protect your freedom, join the Free Software Foundation')
         .'" /></a>';
