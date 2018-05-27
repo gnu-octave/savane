@@ -1,8 +1,9 @@
 #! @PERL@
-# <one line to give a brief idea of what this does.>
+# Process export requests.
 # 
-#  Copyright 2005-2006 (c) Yves Perrin <yves.perrin--cern.ch>
+#  Copyright (C) 2005-2006 Yves Perrin <yves.perrin--cern.ch>
 #                          BBN Technologies Corp
+#  Copyright (C) 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -38,47 +39,63 @@ our $sys_default_domain;
 our $sys_url_topdir;
 
 # Configure
+my $default_logfile = "/var/log/sv_export.log";
 my $script = "sv_export";
-my $logfile = "/var/log/sv_export.log";
+my $logfile = $default_logfile;
 
 my $getopt;
 my $help;
 my $xml_path;
 my $debug;
 
-# get options 
 eval {
     $getopt = GetOptions("help" => \$help,
                          "xml-path=s" => \$xml_path,
-			 "debug" => \$debug);
+                         "log-file=s" => \$logfile,
+                         "debug" => \$debug);
 };
  
 if($help) {
     print STDERR <<EOF;
 usage: $0
  
-   script that searches the database 'export' table for pending
-   requests and for each of these, extracts the relevant data,
-   produces the corresponding XML representation and
-   writes it together with the appropriate XML schema into a file
-   the path of which being specified by the xml-path argument
+   Search the database 'trackers_export' table for pending
+   requests and for each of these, extract the relevant data,
+   produce the corresponding XML representation and
+   write it together with the appropriate XML schema into a file
+   the path of which being specified by the xml-path argument.
  
         --help                  print this help
         --xml-path=/            path of the generated xml file
+        --log-file=$default_logfile
+                                path for log file
  
 Author: yves.perrin\@cern.ch, yeupou\@gnu.org
+
+Copyright (C) 2005-2006 Yves Perrin <yves.perrin--cern.ch>
+                        BBN Technologies Corp
+Copyright (C) 2018 Ineiev
+
+License AGPLv3+: GNU AGPL version 3 or (at your option)
+any later version <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
 EOF
- exit(1);
+  exit(0);
 }
 
+unless (-w $logfile) {
+  die "Log file $logfile is not writable, exiting";
+}
 
-#Starts only if the xml-path exists
+#Starts only if the xml-path exists.
 unless (-d $xml_path) {
   print LOG "[$script] $xml_path does not exists or is not a directory\n";
   die "$xml_path does not exists or is not a directory, exiting",
 }
 
-#Locks: instances should not run concurrently, so we add a lock
+#Locks: instances should not run concurrently, so we add a lock.
 AcquireReplicationLock();
 
 # Log: Starting logging

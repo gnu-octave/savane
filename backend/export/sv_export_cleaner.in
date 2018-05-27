@@ -1,7 +1,8 @@
 #! @PERL@
-# <one line to give a brief idea of what this does.>
+# Remove old exported files.
 # 
-# Copyright 2005 (c) Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2005 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -27,30 +28,29 @@ use Time::Local;
 use File::Basename;
 use File::Find::Rule;
 
-
-# Configure
+my $default_logfile = "/var/log/sv_export_cleaner.log";
 my $script = "sv_export_cleaner";
-my $logfile = "/var/log/sv_export_cleaner.log";
+my $logfile = $default_logfile;
 
 my $getopt;
 my $help;
 my $xml_path;
 my $debug;
 
-# get options 
 eval {
     $getopt = GetOptions("help" => \$help,
                          "xml-path=s" => \$xml_path,
-			 "debug" => \$debug);
+                         "log-file=s" => \$logfile,
+                         "debug" => \$debug);
 };
  
 if($help) {
     print STDERR <<EOF;
 usage: $0
  
-   script that remove xml exports that were done and (removed by the user
-   via the frontend).
-   basically, it gets the list of exports known in the database and remove
+   Remove xml exports that were done and removed
+   by the user via the frontend.
+   Basically, it gets the list of exports known in the database and remove
    files that are not in this list.
 
    FIXME: it could remove files that are older than 2 weeks, but currently
@@ -59,10 +59,20 @@ usage: $0
  
         --help                  print this help
         --xml-path=/            path of the generated xml file
+        --log-file=$default_logfile
+                                path for log file
  
 Author: yves.perrin\@cern.ch, yeupou\@gnu.org
+
+Copyright (C) 2005 Mathieu Roy <yeupou--gnu.org>
+Copyright (C) 2018 Ineiev
+
+License AGPLv3+: GNU AGPL version 3 or (at your option)
+any later version <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
 EOF
- exit(1);
+  exit(1);
 }
 
 # Log: Starting logging
