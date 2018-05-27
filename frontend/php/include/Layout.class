@@ -291,7 +291,7 @@ class Layout extends Error
     sitemenu($params);
 
 
-    print '<div class="main"><a name="top"></a>
+    print '<div id="top" class="main">
 ';
     pagemenu($params);
 

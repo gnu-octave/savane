@@ -113,7 +113,7 @@ Pending users are at the bottom of the list.")."</p>
 function show_all_users_add_searchbox ($group_id, $previous_search)
 {
   print '
-        <h3><a name="searchuser"></a>'._("Adding users to group").'</h3>
+        <h3 id="searchuser">'._("Adding users to group").'</h3>
 <p>'._("You can search one or several users to add in the whole users
 database with the following search tool. A list of users, depending on the
 names you'll type in this form, will be generated.").'

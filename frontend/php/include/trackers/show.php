@@ -46,9 +46,8 @@ function show_item_list ($result_arr,
     }
   # Show extra rows for <-- Prev / Next -->
 
-  $nav_bar ='<h3 class="nextprev">';
-
-  # If all bugs on screen so no prev/begin pointer at all
+  $nav_bar = 'class="nextprev">';
+  # If all bugs on screen so no prev/begin pointer at all.
   if ($total_rows > $chunksz)
     {
       if ($offset > 0)
@@ -122,8 +121,8 @@ function show_item_list ($result_arr,
     }
   $nav_bar .= "</h3>\n";
 
-  # Print prev/next links
-  print $nav_bar.'<a name="results"></a><br />';
+  # Print prev/next links.
+  print '<h3 id="results" '.$nav_bar."<br />\n";
   print html_build_list_table_top ($title_arr,$links_arr);
 
   #see if the bugs are too old - so we can highlight them
@@ -217,12 +216,11 @@ function show_item_list ($result_arr,
       print "</tr>\n";
     }
   print "</table>\n";
-  # Print prev/next links
-  print "<br />".$nav_bar;
+  # Print prev/next links.
+  print "<br />\n".'<h3 '.$nav_bar."<br />\n";
 }
 
-##
-# Do the same a item list but in sober output
+# Do the same a item list but in sober output.
 function show_item_list_sober ($result_arr,
 			       $total_rows,
 			       $url)

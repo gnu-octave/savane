@@ -370,7 +370,7 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
 
   print "\n";
   print '<li class="relatedrecipes">';
-  print '<div><a name="relatedrecipes"></a><img src="'.$GLOBALS['sys_home']
+  print '<div id="relatedrecipes"><img src="'.$GLOBALS['sys_home']
         .'images/'.SV_THEME.'.theme/contexts/help.png" alt="'
         .'" class="icon" />'._("Related Recipes:")."</div>\n";
   for ($i = 0; $i < $rows; $i++)

@@ -50,8 +50,7 @@ function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 ."document.getElementById('boxoptionslinkshow').style.display='none';";
 
   $ret = '
-<fieldset class="boxoptions">
-<a name="options"></a>
+<fieldset id="options" class="boxoptions">
 <legend>';
 
   # yeupou, 2006-02: it is not ubercool to use monospace font to show

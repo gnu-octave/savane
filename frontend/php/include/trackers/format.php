@@ -271,16 +271,15 @@ to be run.")
 <span class="preinput">'._("Spam content:")
 .'</span><br />
 <br />'.nl2br($entry['content'])."</td>\n"
-.'<td class="'.$class.'extra">';
+.'<td class="'.$class.'extra" id="spam'.$entry['comment_internal_id'].'">'."\n";
 	      
-	      $out .= '<a name="spam'.$entry['comment_internal_id'].'"></a>'
-		.utils_user_link($entry['user_name'], $entry['realname'], true)
+	      $out .= utils_user_link($entry['user_name'],
+                                      $entry['realname'], true)
                 ."<br />\n";
 
 	      if ($is_admin)
 		{
-		  $out .= '<br /><br />(<a name="spam'
-.$entry['comment_internal_id'].'" title="'
+		  $out .= '<br /><br />(<a title="'
 .sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'
 .htmlentities ($_SERVER['PHP_SELF']).'?func=unflagspam&amp;item_id='.$item_id
 .'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
@@ -294,7 +293,7 @@ to be run.")
 	    {	   
 	      $out .= "\n".'<tr class="'.$class.'extra">'
 ."<td class=\"xsmall\">&nbsp;</td>\n"
-.'<td class="xsmall"><a name="spam'.$entry['comment_internal_id'].'" href="'
+.'<td class="xsmall"><a href="'
 .htmlentities ($_SERVER['PHP_SELF']).'?func=viewspam&amp;item_id='.$item_id
 .'&amp;comment_internal_id='.$entry['comment_internal_id'].'#spam'
 .$entry['comment_internal_id'].'" title="'
@@ -427,7 +426,7 @@ to be run.")
 	    }
 	  
 	  $out .= "\n".'<tr class="'.$class.'"><td valign="top">';
-	  $out .= '<a name="comment'.$comment_number.'" href="#comment'
+	  $out .= '<a id="comment'.$comment_number.'" href="#comment'
                   .$comment_number.'" class="preinput">';
 	  $out .= utils_format_date($entry['date']);
 	  $out .= ', ';

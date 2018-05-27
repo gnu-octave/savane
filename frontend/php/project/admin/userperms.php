@@ -586,7 +586,7 @@ else
           }
         print '
   <tr class="'. utils_get_alt_row_color($i) .'">
-    <td align="center"><a name="'.$row['user_name'].'"></a>'
+    <td align="center" id="'.$row['user_name'].'">'
 .utils_user_link($row['user_name'], $row['realname']).'</td>';
         print '
     <td class="smaller">';
@@ -684,7 +684,7 @@ else
           }
         print '
   <tr class="'. utils_get_alt_row_color($i) .'">
-    <td align="center"><a name="'.$row['user_name'].'"></a>'
+    <td align="center" id="'.$row['user_name'].'">'
 .utils_user_link($row['user_name'], $row['realname']).'</td>
 ';
         print '
