@@ -4,7 +4,7 @@
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2006  BBN Technologies Corp
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2018  Ineiev
 #
 # This file is part of Savane.
 #
@@ -287,7 +287,8 @@ while ($row = db_fetch_array($result))
     $id = $row['group_list_id'];
     print '<h2>'.$row['list_name']."</h2>\n";
 
-    print '<span class="preinput">'._("Description:").'</span>';
+    print '<span class="preinput"><label for="'."description[$id]".'">'
+          ._("Description:").'</label></span>';
     print '<br />&nbsp;&nbsp;&nbsp;'
           .form_input("text", "description[$id]", $row['description'],
                       'maxlenght="120" size="50"');
@@ -300,22 +301,30 @@ while ($row = db_fetch_array($result))
     if ($row['is_public'] == "1")
       $checked = ' checked="checked"';
     print '<br />&nbsp;&nbsp;&nbsp;'
-          .form_input("radio", "is_public[$id]", '1', $checked).' '
-          ._("Public List");
+          .form_input("radio", "is_public[$id]", '1', $checked
+                      ." id='is_public[$id]'")
+          ." <label for='is_public[$id]'>"
+          ._("Public List").'</label>';
 
     $checked = '';
     if ($row['is_public'] == "0")
       $checked = ' checked="checked"';
     print '<br />&nbsp;&nbsp;&nbsp;'
-          .form_input("radio", "is_public[$id]", '0', $checked).' '
-          ._("Private List (not advertised, subscribing requires approval)");
+          .form_input("radio", "is_public[$id]", '0', $checked
+                      ." id='is_private[$id]'")
+          ." <label for='is_private[$id]'>"
+          ._("Private List (not advertised, subscribing requires approval)")
+          .'</label>';
 
     $checked = '';
     if ($row['is_public'] == "9")
       $checked = ' checked="checked"';
     print '<br />&nbsp;&nbsp;&nbsp;'
-          .form_input("radio", "is_public[$id]", '9', $checked).' '
-          ._("To be deleted (this cannot be undone!)");
+          .form_input("radio", "is_public[$id]", '9', $checked
+                      ." id='to_be_deleted[$id]'")
+          ." <label for='to_be_deleted[$id]'>"
+          ._("To be deleted (this cannot be undone!)")
+          .'</label>';
 
 # At this point we have no way to know if the backend brigde to
 # mailman is used or not. We will propose the password change only
@@ -324,8 +333,9 @@ while ($row = db_fetch_array($result))
     if ($row['status'] == LIST_STATUS_CREATED
         || $row['status'] == LIST_STATUS_NEED_RECONFIGURATION)
       {
-        print '<br /><span class="preinput">'
-              ._("Reset List Admin Password:").'</span>';
+        print '<br />
+<span class="preinput"><label for="'."reset_password[$id]".'">'
+              ._("Reset List Admin Password:").'</label></span>';
         $checked = '';
         if ($row['password'] == "1")
           $checked = ' checked="checked"';
@@ -342,7 +352,6 @@ Mailman via Savane</em>");
   } # while ($row = db_fetch_array($result))
 
 # New list form.
-print "<br /><br />\n";
 utils_get_content("mail/about_list_creation");
 
 print '
@@ -359,25 +368,31 @@ $i = 0;
 foreach ($project_list_formats as $format)
   {
     if (count($project_list_formats) > 1)
-      print "<input type='radio' name='newlist_format_index' value='$i'> ";
+      print "<input type='radio' title='$i' name='newlist_format_index' value='$i'> ";
     $input = str_replace('%NAME',
-                         '<input type="text" name="list_name[new]" '
+                         '<input type="text" title="'
+                         ._("Name of new mailing list").'" name="list_name[new]" '
                          .'value="" size="25" maxlenght="70" />',
                          $format);
     print $grp->getTypeMailingListAddress($input);
     print '<br />';
     $i++;
   }
+print '<p>
+  <input type="radio" name="is_public[new]" id="is_public_new" value="1"
+         checked="checked"><label for="is_public_new">'
+  ._('Public (visible to non-members)')
+.'</label><br />
+  <input type="radio" name="is_public[new]" id="is_not_public_new" value="0">
+    <label for="is_not_public_new">'._('Private')
+.'</label></p>
+<p>
+  <strong><label for="description_new">'._('Description:')
+  .'</label></strong><br />
+  <input type="text" name="description[new]" id="description_new"
+         value="" size="40" maxlength="80">
+  <br />
+';
 
-print '<p>';
-print                        _('Is Public? (visible to non-members)')
-.'<br />
-  <input type="radio" name="is_public[new]" value="1" checked> yes<br />
-  <input type="radio" name="is_public[new]" value="0"> no<p></p>
-  <strong>'._('Description:').'</strong><br />
-  <input type="text" name="description[new]" value="" size="40" maxlength="80">
-  <br />';
-
-print '<br /><br /></p>
-'.form_footer();
+print form_footer();
 site_project_footer(array());

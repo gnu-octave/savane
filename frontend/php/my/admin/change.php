@@ -1,5 +1,5 @@
 <?php
-# Generic user settings editor
+# Generic user settings editor.
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
@@ -621,7 +621,9 @@ _("No matter where you live, you can see all dates and times as if it were in
 your neighborhood.");
     $input_specific = html_build_select_box_from_arrays ($TZs, $TZs, 'newvalue',
                                                          user_get_timezone(),
-                                                         true, 'GMT');
+                                                         true, 'GMT', false,
+                                                         'Any', false,
+                                                         _('Timezone'));
   }
 elseif ($item == "password")
   {
@@ -713,9 +715,10 @@ yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
     if (!$newvalue)
       $newvalue = $row_user['gpg_key'];
 
-    $input_specific .= '<textarea cols="70" rows="10" '
+    $input_specific .= '<textarea title="'._("New GPG key")
+                      .'" cols="70" rows="10" '
                       .'wrap="virtual" name="newvalue">'.$newvalue
-                      .'</textarea>'."\n";
+                      ."</textarea>\n";
     $input_specific .= '<p><input type="submit" name="test_gpg_key" value="'
                        ._("Test GPG key").'" /></p>'."\n<hr />\n";
     if ($test_gpg_key)
@@ -767,7 +770,9 @@ elseif ($item == "delete")
       {
         $title = _("Delete Account");
         $input_title = _('Do you really want to delete your user account?');
-        $input_specific = form_input("checkbox", "newvalue", "deletionconfirmed")
+        $input_specific = form_input("checkbox", "newvalue",
+                                     "deletionconfirmed",
+                                     ' title="'.("Delete Account").'"')
                           .' '._("Yes, I really do");
         $preamble = _("This process will require email confirmation.");
       }
@@ -797,37 +802,53 @@ if ($preamble)
   print '<p>'.$preamble.'</p>';
 
 print form_header($_SERVER['PHP_SELF'], false, "post");
-print '<span class="preinput">'.$input_title.'</span>';
+print '<span class="preinput">';
+if (!$input_specific)
+  print '<label for="'.$form_item_name.'">';
+print $input_title;
+if (!$input_specific)
+  print '</label>';
+print '</span>';
 
 # Print the usual input unless we have something specific.
 if (!$input_specific)
-  print '<br />&nbsp;&nbsp;&nbsp;<input name="'.$form_item_name
-        .'" type="'.$input_type.'" />';
+  print '<br />
+&nbsp;&nbsp;&nbsp;<input name="'.$form_item_name
+        .'" id="'.$form_item_name.'" type="'.$input_type.'" />';
 else
   print '<br />&nbsp;&nbsp;&nbsp;'.$input_specific;
 
 # Add one more input if required.
 if ($input2_type)
   {
-    print '<br /><span class="preinput">'.$input2_title.'</span>';
-    print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input2_type
-          .'" name="'.$form_item2_name.'" />';
+    print '<br />
+<span class="preinput"><label for="'.$form_item2_name.'">'
+          .$input2_title.'</label></span>';
+    print '<br />
+&nbsp;&nbsp;&nbsp;<input type="'.$input2_type
+          .'" id="'.$form_item2_name.'" name="'.$form_item2_name.'" />';
   }
 
 # Add one more input if required.
 if ($input3_type)
   {
-    print '<br /><span class="preinput">'.$input3_title.'</span>';
-    print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input3_type
-          .'" name="'.$form_item3_name.'" />';
+    print '<br />
+<span class="preinput"><label for="'.$form_item3_name.'">'
+          .$input3_title.'</label></span>';
+    print '<br />
+&nbsp;&nbsp;&nbsp;<input type="'.$input3_type
+          .'" id="'.$form_item3_name.'" name="'.$form_item3_name.'" />';
   }
 
 # Add one more input if required.
 if ($input4_type)
   {
-    print '<br /><span class="preinput">'.$input4_title.'</span>';
-    print '<br />&nbsp;&nbsp;&nbsp;<input type="'.$input4_type
-          .'" name="'.$form_item4_name.'" />';
+    print '<br />
+<span class="preinput"><label for="'.$form_item4_name.'">'
+          .$input4_title.'</label></span>';
+    print '<br />
+&nbsp;&nbsp;&nbsp;<input type="'.$input4_type
+          .'" id="'.$form_item4_name.'" name="'.$form_item4_name.'" />';
   }
 
 print '<p><input type="hidden" name="item" value="'.$item.'" /></p>';

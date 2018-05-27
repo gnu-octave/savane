@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 # Modified 2016 Karl Berry (trivial wording changes)
 #
 # This file is part of Savane.
@@ -148,41 +148,53 @@ $checked = '';
 if (user_get_preference("notify_unless_im_author"))
   $checked = 'checked="checked"';
 print form_input("checkbox", "form_notifset_unless_im_author", "1", $checked)
-      .' '._("I am not the author of the item update").'<br />&nbsp;&nbsp;';
+      .' <label for="form_notifset_unless_im_author">'
+      ._("I am not the author of the item update").'</label><br />
+&nbsp;&nbsp;';
 $checked = '';
 if (user_get_preference("notify_item_closed"))
   $checked = 'checked="checked"';
 print form_input("checkbox", "form_notifset_item_closed", "1", $checked)
-      .' '._("the item was closed").'<br />&nbsp;&nbsp;'."\n";
+      .' <label for="form_notifset_item_closed">'
+      ._("the item was closed").'</label><br />
+&nbsp;&nbsp;';
 $checked = '';
 if (user_get_preference("notify_item_statuschanged"))
   $checked = 'checked="checked"';
 print form_input("checkbox", "form_notifset_item_statuschanged", "1", $checked)
-      .' '._("the item status changed").'<br />'."\n";
+      .' <label for="form_notifset_item_statuschanged">'
+      ._("the item status changed").'</label><br />'."\n";
 
 print '<span class="preinput">'._("Do not add me in Carbon-Copy when:")
-      .'</span><br />&nbsp;&nbsp;';
+      .'</span><br />
+&nbsp;&nbsp;';
 $checked = '';
 if (user_get_preference("skipcc_postcomment"))
   $checked = 'checked="checked"';
-print form_input("checkbox", "form_skipcc_postcomment", "1", $checked).' '
-      ._("I post a comment").'<br />&nbsp;&nbsp;'."\n";
+print form_input("checkbox", "form_skipcc_postcomment", "1", $checked)
+      .' <label for="form_skipcc_postcomment">'
+      ._("I post a comment").'</label><br />
+&nbsp;&nbsp;'."\n";
 $checked = '';
 if (user_get_preference("skipcc_updateitem"))
   $checked = 'checked="checked"';
-print form_input("checkbox", "form_skipcc_updateitem", "1", $checked).' '
+print form_input("checkbox", "form_skipcc_updateitem", "1", $checked)
+      .' <label for="form_skipcc_updateitem">'
       ._("I update a field, add dependencies, attach file, etc").'<br />'."\n";
 $checked = '';
 
 print '<span class="preinput">'._("Remove me from Carbon-Copy when:")
-      .'</span><br />&nbsp;&nbsp;'."\n";
+      .'</span><br />
+&nbsp;&nbsp;'."\n";
 $checked = '';
 if (user_get_preference("removecc_notassignee"))
   $checked = 'checked="checked"';
-print form_input("checkbox", "form_removecc_notassignee", "1", $checked).' '
-      ._("I am no longer assigned to the item").'<br />&nbsp;&nbsp;'."\n";
+print form_input("checkbox", "form_removecc_notassignee", "1", $checked)
+      .' <label for="form_removecc_notassignee">'
+      ._("I am no longer assigned to the item").'</label><br />
+&nbsp;&nbsp;'."\n";
 
-print '<br /><h2>'._("Subject Line").'</h2>'."\n";
+print '<h2>'._("Subject Line").'</h2>'."\n";
 print '<p>';
 printf(_('The header &ldquo;%s&rdquo; will always be included, and when
 applicable, so will &ldquo;%s,&rdquo; &ldquo;%s,&rdquo; and &ldquo;%s.&rdquo;'),
@@ -198,11 +210,14 @@ you will receive the default subject line.'),
 print '</p>
 ';
 
-print '<span class="preinput">'._("Subject Line:").'</span><br />&nbsp;&nbsp;';
-print '<input name="form_subject_line" size="50" type="text" value="'
-      .user_get_preference("subject_line").'" />';
+print '<span class="preinput"><label for="form_subject_line">'
+      ._("Subject Line:").'</label></span><br />
+&nbsp;&nbsp;';
+print
+'<input name="form_subject_line" id="form_subject_line" size="50"
+        type="text" value="'.user_get_preference("subject_line").'" />';
 
-print '<br /><h2>'._("Reminder").'</h2>'."\n";
+print '<h2>'._("Reminder").'</h2>'."\n";
 print '<p>'._("You can also receive reminders about opened items assigned to
 you, when their priority is higher than 5. Note that projects administrators
 can also set reminders for you, out of your control, for your activities on the
@@ -216,9 +231,11 @@ $frequency = array("0" =>
                    "2" => _("Weekly"),
                    "3" => _("Monthly"));
 
-print '<span class="preinput">'._("Frequency of reminders:")
-      .'</span><br />&nbsp;&nbsp;
-';
+print '<span class="preinput"><label for="form_frequency">'
+      ._("Frequency of reminders:")
+      .'</label></span><br />
+&nbsp;&nbsp;';
+
 print html_build_select_box_from_array($frequency,
                                        "form_frequency",
                                        user_get_preference("batch_frequency"));

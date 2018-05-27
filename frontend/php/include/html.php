@@ -495,6 +495,14 @@ function utils_get_alt_row_color ($i)
   return html_get_alt_row_color ($i);
 }
 
+# Auxiliary function to use in html_build_select*box*.
+function html_title_attr ($title)
+{
+  if ($title == "")
+    return "";
+  return 'title="'.$title.'" ';
+}
+
 /* Take one array, with the first array being the "id" or value
    and the array being the text you want displayed.
 
@@ -502,10 +510,10 @@ function utils_get_alt_row_color ($i)
 
    The third parameter is the value of the item that should be checked.  */
 function html_build_select_box_from_array ($vals,$select_name,
-                                           $checked_val='xzxz',$samevals = 0)
+                                           $checked_val='xzxz',$samevals = 0,
+                                           $title="")
 {
-  $return = '
-<select name="'.$select_name.'">';
+  $return = "<select ".html_title_attr($title).'name="'.$select_name.'">';
   $rows=count($vals);
   for ($i=0; $i<$rows; $i++)
     {
@@ -545,21 +553,24 @@ in any table as opposed to 100. it's just here as a convenience mostly
 when using select boxes in queries (bug, task,...). The 0 value is reserved
 for Any and must not be used in any table.
 
-Params:
+Takes two arrays, with $vals being the "id" or value
+and $texts being the text you want displayed.
 
-Takes two arrays, with the first array being the "id" or value
-and the other array being the text you want displayed.
+$select_name is the name you want assigned to this form element.
 
-The third parameter is the name you want assigned to this form element.
+$checked_val is the value of the item that should be checked.
 
-The fourth parameter is the value of the item that should be checked.
+$show_100 is a boolean - whether or not to show the '100 row'.
 
-The fifth parameter is a boolean - whether or not to show the '100 row'.
+$text_100 is what to call the '100 row', defaults to none.
 
-The sixth parameter is what to call the '100 row', defaults to none.
-The 7th parameter is a boolean - whether or not to show the 'Any row'.
+$show_any is a boolean - whether or not to show the 'Any row'.
 
-The 8th parameter is what to call the 'Any row' defaults to 'Any'. */
+$text_any is what to call the 'Any row' defaults to 'Any'.
+
+$show_unknown is a boolean - whether to show "Unknown" row.
+
+$title is the title for the box. */
 function html_build_select_box_from_arrays ($vals,
                                             $texts,
                                             $select_name,
@@ -568,34 +579,40 @@ function html_build_select_box_from_arrays ($vals,
                                             $text_100='None', #6
                                             $show_any=false,
                                             $text_any='Any', #8
-                                            $show_unknown=false)
+                                            $show_unknown=false,
+                                            $title="")
 {
   if ($text_100 == 'None')
     $text_100 = _('None');
   if ($text_any == 'Any')
     $text_any = _('Any');
+  if ($title != '')
+    $id_attr = '';
+  else
+    $id_attr = ' id="'.$select_name.'"';
 
-  $return = '
-<select name="'.$select_name.'">';
+  $return = "\n<select ".html_title_attr($title)
+            .'name="'.$select_name.'"'
+            .$id_attr.' >'."\n";
 
   # We want the "Default" on item initial post, only at this momement.
   if ($show_unknown)
     {
-      $return .= "\n<option value=\"!unknown!\">"._("Unknown")."</option>";
+      $return .= "<option value=\"!unknown!\">"._("Unknown")."</option>\n";
     }
 
   # We don't always want the default any  row shown.
   if ($show_any)
     {
       $selected = ( $checked_val == 0 ? 'selected="selected"':'');
-      $return .= "\n<option value=\"0\" $selected>$text_any </option>";
+      $return .= "<option value=\"0\" $selected>$text_any </option>\n";
     }
 
   # We don't always want the default 100 row shown.
   if ($show_100)
     {
       $selected = ( $checked_val == 100 ? 'selected="selected"':'');
-      $return .= "\n<option value=\"100\" $selected>$text_100 </option>";
+      $return .= "<option value=\"100\" $selected>$text_100 </option>\n";
     }
 
   $rows=count($vals);
@@ -616,12 +633,10 @@ function html_build_select_box_from_arrays ($vals,
             {
               $return .= ' selected="selected"';
             }
-          $return .= '>'.$texts[$i].'</option>';
+          $return .= '>'.$texts[$i]."</option>\n";
        }
     }
-  $return .= '
-</select>
-';
+  $return .= "</select>\n";
   return $return;
 }
 
@@ -639,25 +654,25 @@ the '100 row'.
 The fifth parameter is what to call the '100 row' defaults to none. */
 function html_build_select_box ($result, $name, $checked_val="xzxz",
                                 $show_100=true,$text_100='None',$show_any=false,
-                                $text_any='Any',$show_unknown=false)
+                                $text_any='Any',$show_unknown=false, $title="")
 {
   return html_build_select_box_from_arrays (utils_result_column_to_array($result),
                                             utils_result_column_to_array($result, 1),
                                             $name,$checked_val,$show_100,$text_100,
-                                            $show_any,$text_any,$show_unknown);
+                                            $show_any,$text_any,$show_unknown,$title);
 }
 
 # The same as html_build_select_box, but the items are localized.
 function html_build_localized_select_box ($result, $name, $checked_val="xzxz",
                                           $show_100=true,$text_100='None',
                                           $show_any=false,$text_any='Any',
-                                          $show_unknown=false)
+                                          $show_unknown=false,$title="")
 {
   return html_build_select_box_from_arrays (utils_result_column_to_array($result),
                                             utils_result_column_to_array($result,
                                             1, true),
                                             $name,$checked_val,$show_100,$text_100,
-                                            $show_any,$text_any,$show_unknown);
+                                            $show_any,$text_any,$show_unknown,$title);
 }
 
 /* Takes a result set, with the first column being the "id" or value
@@ -676,16 +691,16 @@ the menu label (default true for backward compatibility.  */
 function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
                                          $show_100=true,$text_100='None',
                                          $show_any=false,$text_any='Any',
-                                         $show_value=true)
+                                         $show_value=true,$title="")
 {
   $checked_count=count($checked_array);
-  $return = '
-<select name="'.$name.'" multiple size="'.$size.'">';
+
+  $return = "\n<select ".html_title_attr($title)
+            .'name="'.$name.'" multiple size="'.$size.'">'."\n";
   # Put in the Any box.
   if ($show_any)
     {
-      $return .= '
-                <option value="0"';
+      $return .= '<option value="0"';
       for ($j=0; $j<$checked_count; $j++)
         {
           if ($checked_array[$j] == '0')
@@ -693,13 +708,12 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
               $return .= ' selected="selected"';
             }
         }
-      $return .= '>'.$text_any.'</option>';
+      $return .= '>'.$text_any."</option>\n";
     }
   # Put in the default NONE box.
   if ($show_100)
     {
-      $return .= '
-                <option value="100"';
+      $return .= '<option value="100"';
       for ($j=0; $j<$checked_count; $j++)
         {
           if ($checked_array[$j] == '100')
@@ -707,15 +721,14 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
               $return .= ' selected="selected"';
             }
         }
-      $return .= '>'.$text_100.'</option>';
+      $return .= '>'.$text_100."</option>\n";
     }
   $rows=db_numrows($result);
   for ($i=0; $i<$rows; $i++)
     {
       if (db_result($result,$i,0) != '100')
         {
-          $return .= '
-                                <option value="'.db_result($result,$i,0).'"';
+          $return .= '<option value="'.db_result($result,$i,0).'"';
           # Determine if it's checked.
           $val=db_result($result,$i,0);
           for ($j=0; $j<$checked_count; $j++)
@@ -726,12 +739,10 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
                 }
             }
           $return .= '>'. ($show_value?$val.'-':'').
-             substr(db_result($result,$i,1),0,35). '</option>';
+             substr(db_result($result,$i,1),0,35). "</option>\n";
         }
     }
-  $return .= '
-</select>
-';
+  $return .= "</select>\n";
   return $return;
 }
 
@@ -757,47 +768,40 @@ function html_select_permission_box ($artifact, $row, $level="member")
       $default = _("Group Default");
     }
 
-  print '
-    <td align="center">
-      <select name="'.$artifact.'_user_'.$num.'">';
+  print '<td align="center">
+<select title="'._("Roles of members").'" name="'.$artifact.'_user_'
+                .$num.'">'."\n";
   if ($default)
     {
-      print '
-        <option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'
-        .$default.'</option>';
+      print ' <option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'
+        .$default."</option>\n";
     }
-  print '
-        <option value="9"'.(($value == 9)?" selected=\"selected\"":"")
-        .'>'._("None").'</option>';
+  print ' <option value="9"'.(($value == 9)?" selected=\"selected\"":"")
+        .'>'._("None")."</option>\n";
   if ($artifact != "news")
     {
-      print '
-        <option value="1"'.(($value == 1)?" selected=\"selected\"":"").'>'
-        ._("Technician").'</option>';
+      print ' <option value="1"'.(($value == 1)?" selected=\"selected\"":"").'>'
+        ._("Technician")."</option>\n";
     }
-  print '
-        <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'
-        ._("Manager").'</option>';
+  print ' <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'
+        ._("Manager")."</option>\n";
   if ($artifact != "news")
     {
-      print '
-        <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'
-        ._("Techn. & Manager").'</option>';
+      print ' <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'
+        ._("Techn. & Manager")."</option>\n";
     }
-  print '
-      </select>';
+  print "</select>\n";
   if (!$value && $level == "group")
     {
       $value = group_gettypepermissions($GLOBALS['group_id'], $artifact);
-      print '<br />('.
+      print "<br />\n(".
         (($value == 9)?_("None"):"").
         (($value == 1)?_("Technician"):"").
         (($value == 3)?_("Manager"):"").
         (($value == 2)?_("Techn. & Manager"):"").
-        ')';
+        ")\n";
     }
-  print '
-    </td>';
+  print "</td>\n";
 }
 
 function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
@@ -828,47 +832,39 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
 
   if (!$notd)
     {
-      print '
-    <td align="center">';
+      print '<td align="center">'."\n";
     }
 
-  print '
-      <select name="'.$artifact.'_restrict_event'.$event.'">';
+  print '<select title="'._("Permission level").'" name="'.$artifact
+         .'_restrict_event'.$event.'">'."\n";
 
   if ($default)
     {
-      print '
-        <option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'
-        .$default.'</option>';
+      print '<option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'
+        .$default."</option>\n";
     }
   print '
         <option value="5"'.(($value == 5)?" selected=\"selected\"":"").'>'
-        ._("Project Member").'</option>';
+        ._("Project Member")."</option>\n";
   print '
         <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'
-        ._("Logged-in User").'</option>';
+        ._("Logged-in User")."</option>\n";
   print '
         <option value="2"'.(($value == 2)?" selected=\"selected\"":"").'>'
-        ._("Anonymous").'</option>';
-  print '
-      </select>
-';
+        ._("Anonymous")."</option>\n";
+  print "</select>\n";
 
   if (!$value && $level == "group" && $event == 1)
     {
       $value = group_gettyperestrictions($GLOBALS['group_id'], $artifact);
-      print '<br />('.
+      print "<br />\n(".
         (($value == 5)?_("Project Member"):"").
         (($value == 3)?_("Logged-in User"):"").
         (($value == 2)?_("Anonymous"):"").
-        ')';
+        ")\n";
     }
   if (!$notd)
-    {
-      print '
-    </td>
-';
-    }
+    print "</td>\n";
 }
 
 
@@ -880,7 +876,7 @@ function html_select_typedir_box ($input_name, $current_value)
 {
   # The strings are not localized because they are for siteadmin's eyes only.
   print '<br />&nbsp;&nbsp;
-      <select name="'.$input_name.'">
+      <select title="'."directories".'" name="'.$input_name.'">
         <option value="basicdirectory"'
         .(($current_value == "basicdirectory")?" selected":"").'>'
         .("Basic Directory").'</option>
@@ -932,12 +928,11 @@ will make the backend using CvsMakeArea(), defined in Savannah::Cvs.
 # one.
 function html_select_theme_box ($input_name="user_theme", $current=0)
 {
-  print '
-                <select name="'.$input_name.'">';
+  print '<select title="'._("Website theme").'" name="'.$input_name.'">'."\n";
   # Usual themes.
   foreach (theme_list() as $theme)
     {
-      print "\n\t\t".'<option value="'.$theme.'"';
+      print "\t\t".'<option value="'.$theme.'"';
       if ($theme == $current)
         print ' selected="selected"';
       print '>'.$theme;
@@ -947,23 +942,23 @@ function html_select_theme_box ($input_name="user_theme", $current=0)
     }
   # Special rotate case.
   $theme = "rotate";
-  print "\n\t\t".'<option value="'.$theme.'"';
+  print "\t\t".'<option value="'.$theme.'"';
   if ($theme == $current)
     print ' selected="selected"';
-  print '> &gt; '.("alphabetically picked everyday").'</option>';
+  print '> &gt; '._("Pick theme alphabetically every day")."</option>\n";
   # Special random case.
   $theme = "random";
-  print "\n\t\t".'<option value="'.$theme.'"';
+  print "\t\t".'<option value="'.$theme.'"';
   if ($theme == $current)
     print ' selected="selected"';
-  print '> &gt; '.("randomly picked everyday").'</option>';
-  print "                </select>\n";
-
+  print '> &gt; '._("Pick random theme every day")."</option>\n";
+  print "</select>\n";
 }
 
-function html_build_checkbox ($name, $is_checked=0)
+function html_build_checkbox ($name, $is_checked=0, $title="")
 {
-  print  '<input type="checkbox" name="'.$name.'" value="1"';
+  print  '<input type="checkbox" '.html_title_attr ($title).' id="'.$name
+         .'" name="'.$name.'" value="1"';
   if ($is_checked)
     print ' checked="checked"';
   print ' />';
@@ -1007,8 +1002,9 @@ function site_project_header($params)
 
   if ($project->isError())
     {
+      exit_error(sprintf(
 # TRANSLATORS: the argument is group id (a number).
-      exit_error(sprintf(_("Invalid Group %s"), $group_id),
+                         _("Invalid Group %s"), $group_id),
                  _("That group does not exist."));
     }
 
@@ -1074,8 +1070,9 @@ function show_group_type_box($name='group_type',$checked_val='xzxz',
                              $show_select_one=false)
 {
   $result=db_query("SELECT * FROM group_type");
-  return html_build_select_box($result,'group_type',$checked_val,
-                               $show_select_one, "> "._("Choose one below"));
+  return html_build_select_box($result, 'group_type', $checked_val,
+                               $show_select_one, "> "._("Choose one below"),
+                               false, 'Any', false, _('Group type'));
 }
 
 function html_member_explain_roles ()

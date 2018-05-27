@@ -221,10 +221,10 @@ if ($list_value)
         trackers_header_admin(array ('title'=>$hdr));
 
         print '<h1>'._("Field Label:").' '.trackers_data_get_label($field)
-.' &nbsp;&nbsp; <span class="smaller">('
+."</h1>\n<p>".'<span class="smaller">('
 .utils_link($GLOBALS['sys_home'].ARTIFACT.'/admin/field_usage.php?group='
             .$group.'&amp;update_field=1&amp;field='.$field,
-            _("Jump to this field usage")).")</span></h1>\n";
+            _("Jump to this field usage")).")</span></p>\n";
 
         $result = trackers_data_get_field_predefined_values($field, $group_id,
                                                             false,false,false);
@@ -232,8 +232,7 @@ if ($list_value)
 
         if ($result && $rows > 0)
           {
-            print "\n<h2>".html_anchor(_("Existing Values"),"existing")
-                  ."</h2>\n";
+            print "\n<h2>"._("Existing Values")."</h2>\n";
 
             $title_arr=array();
             if (!$is_project_scope)
@@ -361,9 +360,7 @@ any)")."</p>\n".$hdr;
 # Only show the add value form if this is a project scope field.
         if ($is_project_scope)
           {
-            print "<br />\n";
-            print '<h2>'.html_anchor(_("Create a new field value"),"create")
-                  ."</h2>\n";
+            print '<h2>'._("Create a new field value")."</h2>\n";
 
             if ($ih)
               {
@@ -381,10 +378,11 @@ that suits your needs.")."</p>\n";
       <input type="hidden" name="list_value" value="y" />
       <input type="hidden" name="field" value="'.$field.'" />
       <input type="hidden" name="group_id" value="'.$group_id.'" />
-      <span class="preinput">'._("Value:").' </span>'
+      <span class="preinput"><label for="title">'._("Value:").'</label> </span>'
               .form_input("text", "title", "", 'size="30" maxlength="60"').'
       &nbsp;&nbsp;
-      <span class="preinput">'._("Rank:").' </span>'
+      <span class="preinput"><label for="order_id">'._("Rank:")
+              .'</label> </span>'
               .form_input("text", "order_id", "", 'size="6" maxlength="6"');
 
             if (isset($none_rk))
@@ -399,8 +397,10 @@ that suits your needs.")."</p>\n";
 
             print '
       <p>
-      <span class="preinput">'._("Description (optional):").'</span><br />
-      <textarea name="description" rows="4" cols="65" wrap="hard"></textarea></p>
+      <span class="preinput"><label for="description">'
+      ._("Description (optional):").'</label></span><br />
+      <textarea id="description" name="description" rows="4" cols="65"
+                wrap="hard"></textarea></p>
       <div class="center">
         <input type="submit" name="submit" value="'._("Update").'" />
       </div>
@@ -634,11 +634,10 @@ managing this field usage.");
 transitions not registered are allowed. This setting can be changed when
 managing this field usage.");
           }
-        print "\n\n<p>&nbsp;</p><h2>"
-.html_anchor(_("Create a transition"),"create")."</h2>\n";
+        print "\n\n<p>&nbsp;</p><h2>"._("Create a transition")."</h2>\n";
         print "<p>$transition_for_field</p>\n";
         print '<p>'
-._("Once a transition created, it will be possible to set &ldquo;Other Fields
+._("Once a transition created, it will be possible to set &ldquo;Other Field
 Update&rdquo; for this transition.")."</p>\n";
 
         $title_arr=array();
@@ -663,9 +662,13 @@ Update&rdquo; for this transition.")."</p>\n";
         print $hdr.'<tr>'.$from.$to;
         print '<td>'.html_build_select_box_from_arrays ($auth_val,$auth_label,
                                                         'allowed', 'allowed',
-                                                        false)."</td>\n";
+                                                        false, 'None', false,
+                                                        'Any', false,
+                                                        _("allowed or not"))
+."</td>\n";
         $mlist   = '<td>'.'
-<input type="text" name="mail_list" value="" size="30" maxlength="60" />
+<input type="text" title="'._("Carbon-Copy List")
+       .'" name="mail_list" value="" size="30" maxlength="60" />
 </td>
 ';
         print $mlist."</tr>\n</table>\n";
@@ -701,20 +704,20 @@ elseif ($update_value)
     <input type="hidden" name="fv_id" value="'.$fv_id.'" />
     <input type="hidden" name="field" value="'.$field.'" />
     <input type="hidden" name="group_id" value="'.$group_id.'" />
-    <p><span class="preinput">'
-._("Value:").' </span><br />
+    <p><span class="preinput"><label for="title">'
+._("Value:").'</label> </span><br />
 '
 .form_input("text", "title", db_result($res,0,'value'),
             'size="30" maxlength="60"')
 .'
     &nbsp;&nbsp;
-    <span class="preinput">'._("Rank:").' </span>'
+    <span class="preinput"><label for="order_id">'._("Rank:").'</label> </span>'
 .form_input("text", "order_id", db_result($res,0,'order_id'),
             'size="6" maxlength="6"').'
     &nbsp;&nbsp;
-    <span class="preinput">'
-      ._("Status:").' </span>
-    <select name="status">
+    <span class="preinput"><label for="status">'
+      ._("Status:").'</label></span>
+    <select name="status" id="status">
          <option value="A">'
 # TRANSLATORS: this is field status.
       ._("Active").'</option>
@@ -724,8 +727,9 @@ elseif ($update_value)
       ._("Hidden").'</option>
     </select>
     <p>
-    <span class="preinput">'._("Description (optional):").'</span><br />
-    <textarea name="description" rows="4" cols="65" wrap="soft">'
+    <span class="preinput"><label for="description">'
+   ._("Description (optional):").'</label></span><br />
+    <textarea id="description" name="description" rows="4" cols="65" wrap="soft">'
 .db_result($res,0,'description').'</textarea></p>';
     $count = trackers_data_count_field_value_usage($group_id, $field,
                                                    db_result($res,0,
@@ -806,14 +810,17 @@ responses.")
 <input type="hidden" name="create_canned" value="y" />
 <input type="hidden" name="group_id" value="'.$group_id.'" />
 <input type="hidden" name="post_changes" value="y" />
-<span class="preinput">'._("Title:").'</span><br />
-&nbsp;&nbsp;<input type="text" name="title" value="" '
+<span class="preinput"><label for="title">'._("Title:").'</label></span><br />
+&nbsp;&nbsp;<input type="text" name="title" id="title" value="" '
 .'size="50" maxlength="50" /><br />
-<span class="preinput">'
-._("Rank (useful in multiple canned responses):").'</span><br />
-&nbsp;&nbsp;<input type="text" name="order_id" value="" maxlength="50" /><br />
-<span class="preinput">'._("Message Body:").'</span><br />
-&nbsp;&nbsp;<textarea name="body" rows="20" cols="65" wrap="hard"></textarea>
+<span class="preinput"><label for="order_id">'
+._("Rank (useful in multiple canned responses):").'</label></span><br />
+&nbsp;&nbsp;<input type="text" name="order_id" id="order_id"
+                   value="" maxlength="50" /><br />
+<span class="preinput"><label for="body">'._("Message Body:")
+      .'</label></span><br />
+&nbsp;&nbsp;<textarea id="body" name="body" rows="20" cols="65"
+                      wrap="hard"></textarea>
 <div class="center">
   <input type="submit" name="submit" value="'._("Submit").'" />
 </div>

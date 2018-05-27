@@ -171,15 +171,20 @@ if it was a custom set just posted && logged in, set pref if it's changed.  */
                      _('Threaded'),
 # TRANSLATORS: this is forum style to select.
                      _('No Comments'));
-        $options_popup=html_build_select_box_from_arrays ($vals,$texts,'style',
-                                                          $style,false);
+        $options_popup=html_build_select_box_from_arrays ($vals, $texts, 'style',
+                                                          $style, false, 'None',
+                                                          false, 'Any', false,
+                                                          _("forum style"));
 
       # Create a pop-up select box showing options for max_row count.
         $vals=array(25,50,75,100);
         $texts=array(_('Show 25'),_('Show 50'),_('Show 75'),_('Show 100'));
         $max_row_popup=html_build_select_box_from_arrays ($vals,$texts,
                                                           'max_rows',
-                                                          $max_rows,false);
+                                                          $max_rows, false,
+                                                          'None', false, 'Any',
+                                                          false,
+                                                          _("rows per page"));
       # Now show the popup boxes in a form.
         $ret_val .= '<table border="0" width="50%">
 <form action="'. htmlentities ($_SERVER['PHP_SELF'] ).'" METHOD="get">

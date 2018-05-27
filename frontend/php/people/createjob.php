@@ -36,19 +36,20 @@ utils_get_content("people/createjob");
 
 print '
 <form action="'.$GLOBALS['sys_home'].'people/editjob.php" method="POST">
-<input type="HIDDEN" name="group_id" value="'.$group_id.'" />
+<input type="hidden" name="group_id" value="'.$group_id.'" />
 <strong>'
-    ._("Category:").'</strong><br />'
+    ._("Category:")."</strong><br />\n"
     . people_job_category_box('category_id') .'
-<p><strong>'
-    ._("Summary:").'</strong><br />
-<input type="text" name="title" value="" size="40" maxlength="60" />
+<p><strong><label for="title">'
+    ._("Summary:").'</label></strong><br />
+<input type="text" id="title" name="title" value="" size="40" maxlength="60" />
 </p>
 <p>'
     ._("Your project description will be inserted on the announce.").'
-<p><strong>'
-    ._("Details (job description, contact...):").'</strong><br />
-<textarea name="description" rows="10" cols="60" wrap="soft"></textarea>
+<p><strong><label for="description">'
+    ._("Details (job description, contact...):").'</label></strong><br />
+<textarea name="description" id="description" rows="10" cols="60"
+          wrap="soft"></textarea>
 </p>
 <p><input type="submit" name="add_job" value="'
     ._("continue >>").'" />

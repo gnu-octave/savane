@@ -180,9 +180,13 @@ print '</a><br /><br />
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print '<input type="checkbox" name="form_keep_only_one_session" value="1" '
+print
+'<input type="checkbox" name="form_keep_only_one_session"
+        id="form_keep_only_one_session"  value="1" '
       .(user_get_preference("keep_only_one_session") ? 'checked="checked"':'')
-      .' /> '._("Keep only one session opened at a time");
+      .' />
+<label for="form_keep_only_one_session">'
+      ._("Keep only one session opened at a time")."</label>\n";
 
 print '<p class="smaller">'
 ._("By default, you can open as many session concurrently as you want. But you
@@ -299,9 +303,13 @@ print $HTML->box_bottom();
 print "<br />\n";
 
 print $HTML->box_top(_('Optional Features'));
-print '<input type="checkbox" name="form_use_bookmarks" value="1" '
+print
+'<input type="checkbox" name="form_use_bookmarks"
+        id="form_use_bookmarks" value="1" '
       .(user_get_preference("use_bookmarks") ? 'checked="checked"':'')
-      .' /> '._("Use integrated bookmarks");
+      .' />
+<label for="form_use_bookmarks">'
+      ._("Use integrated bookmarks")."</label>\n";
 
 print '<p class="smaller">'
 ._("By default, integrated bookmarks are deactivated to avoid redundancy with
@@ -313,9 +321,12 @@ without web browsers bookmarks synchronization.").'</p>
 $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print '<input type="checkbox" name="form_email_hide" value="1" '
-      .($row_user['email_hide'] ? 'checked="checked"':'').' /> '
-      ._("Hide email address from your account information");
+print
+'<input type="checkbox" name="form_email_hide"
+        id="form_email_hide" value="1" '
+      .($row_user['email_hide'] ? 'checked="checked"':'').' />
+<label for="form_email_hide">'
+      ._("Hide email address from your account information")."</label>\n";
 
 print '<p class="smaller">'
 ._("When checked, the only way for users to get in touch with you would be to
@@ -323,9 +334,12 @@ use the form available to logged-in users. It is generally a bad idea to choose
 this option, especially if you are a project administrator.").'</p>
 ';
 
-print '<input type="checkbox" name="form_email_encrypted" value="1" '
-.(user_get_preference("email_encrypted") ? 'checked="checked"':'').' /> '
-._("Encrypt emails when resetting password");
+print
+'<input type="checkbox" name="form_email_encrypted"
+        id="form_email_encrypted" value="1" '
+.(user_get_preference("email_encrypted") ? 'checked="checked"':'').' />
+<label for="form_email_encrypted">'
+._("Encrypt emails when resetting password")."</label>\n";
 
 print '<p class="smaller">'
 ._("When checked, Savannah will encrypt email messages
@@ -341,8 +355,10 @@ print $HTML->box_top(_('Cosmetics Setup'));
 
 # The select box comes before the name of the category so all the clickable
 # part of the form stays on a same line (better UI design).
-print html_build_select_box_from_arrays($TZs,$TZs,'form_timezone',
-                                        $row_user['timezone'], true, 'GMT');
+print html_build_select_box_from_arrays($TZs, $TZs, 'form_timezone',
+                                        $row_user['timezone'], true, 'GMT',
+                                        false, 'Any', false,
+                                        _('Timezone'));
 print ' '._("Timezone");
 print '<p class="smaller">'
 ._("No matter where you live, you can see all dates and times as if it were in
@@ -356,8 +372,11 @@ html_select_theme_box("user_theme", $row_user['theme']);
 print ' '._("Theme");
 
 if ("rotate"==$row_user['theme'])
-  print '<br /><input type="checkbox" name="theme_rotate_jump" value="1" /> '
-        ._("Jump to the next theme").'';
+  print '<br />
+<input type="checkbox" name="theme_rotate_jump"
+       id="theme_rotate_jump" value="1" />
+<label for="theme_rotate_jump">'
+        ._("Jump to the next theme")."</label>\n";
 print '<p class="smaller">'
 ._("Not satisfied with the default color theme of the interface?").'</p>
 ';
@@ -386,9 +405,13 @@ care of Savane CSS Guidelines, since it is the default theme."),
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print '<input type="checkbox" name="form_reverse_comments_order" value="1" '
+print
+'<input type="checkbox" name="form_reverse_comments_order"
+        id="form_reverse_comments_order" value="1" '
       .(user_get_preference("reverse_comments_order") ? 'checked="checked"':'')
-      .' /> '._("Print items comments from the oldest to the latest");
+      .' />
+<label for="form_reverse_comments_order">'
+      ._("Print items comments from the oldest to the latest")."</label>\n";
 
 print '<p class="smaller">'
 ._("By default, comments are listed in reverse chronological order. This means
@@ -399,9 +422,12 @@ this behavior does not suit you, select this option.").'</p>
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print '<input type="checkbox" name="form_stone_age_menu" value="1" '
+print
+'<input type="checkbox" name="form_stone_age_menu"
+        id="form_stone_age_menu" value="1" '
       .(user_get_preference("stone_age_menu") ? 'checked="checked"':'')
-      .' /> '._("Use the Stone Age menu");
+      .' />
+<label for="form_stone_age_menu">'._("Use the Stone Age menu")."</label>\n";
 
 print '<p class="smaller">'
 ._("By default, the top menu includes links, via dropdown submenus, to all
@@ -415,9 +441,13 @@ in older Savane releases (< 2.0).").'</p>
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print '<input type="checkbox" name="form_nonfixed_feedback" value="1" '
+print
+'<input type="checkbox" name="form_nonfixed_feedback"
+        id="form_nonfixed_feedback" value="1" '
       .(user_get_preference("nonfixed_feedback") ? 'checked="checked"':'')
-      .' /> '._("Show feedback in relative position");
+      .' />
+<label for="form_nonfixed_feedback">'
+      ._("Show feedback in relative position")."</label>\n";
 
 print '<p class="smaller">'
 ._("By default, the feedback box appear as a fixed box on top of the window.

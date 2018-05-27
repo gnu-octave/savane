@@ -4,7 +4,7 @@
 # This file is part of the Savane project
 # 
 # Copyright (C) 1999-2000 The SourceForge Crew
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -100,7 +100,7 @@ print '
 <input type="hidden" name="user_id" value="'.$user_id.'">
 </p>
 <p>
-<input type="text" name="email" value="'
+<input type="text" title="'.no_i18n("Email").'" name="email" value="'
 .htmlspecialchars($row_user['email']).'" size="25" maxlength="55">
 
 <p>
@@ -110,8 +110,7 @@ print '
 <hr />
 
 <p>
-<h1>'.no_i18n('Current Groups:').'</h1>
-<br />
+<h2>'.no_i18n('Current Groups').'</h2>
 ';
 
 # Iterate and show groups this user is in
@@ -134,10 +133,10 @@ print '
 <input type="hidden" name="action" value="update_user_group">
 <input name="user_id" type="hidden" value="'.$user_id.'">
 <input name="group_id" type="hidden" value="'.$row_cat['group_id'].'">
+<br /><label for="admin_flags">
+'.no_i18n('Admin Flags:').'</label>
 <br />
-'.no_i18n('Admin Flags:').'
-<br />
-<input type="text" name="admin_flags" value="'
+<input type="text" name="admin_flags" id="admin_flags" value="'
 .htmlspecialchars($row_cat['admin_flags'], ENT_QUOTES).'">
 <br />
 <input type="submit" name="Update_Group" value="'.no_i18n('Update').'" />
@@ -152,10 +151,10 @@ print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="action" value="add_user_to_group">
 <input name="user_id" type="hidden" value="'.$user_id.'">
-<p>
-'.no_i18n('Add User to Group (group_id):').'
+<p><label for="group_id">
+'.no_i18n('Add User to Group (group_id):').'</label>
 <br />
-<input type="text" name="group_id" length="4" maxlength="5" />
+<input type="text" name="group_id" id="group_id" length="4" maxlength="5" />
 </p>
 <p>
 <input type="submit" name="Submit" value="'.no_i18n('Submit').'" />

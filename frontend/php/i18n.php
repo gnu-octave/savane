@@ -98,14 +98,16 @@ $checked = '';
 if ($cookie_for_a_year)
   $checked = 'checked="checked" ';
 
-print '<p><input type="checkbox" name="cookie_for_a_year" tabindex="1" value="1" '
-      .$checked.'/><span class="preinput">'._("Keep for a year")."</span><br />\n";
+print '<p><input type="checkbox" id="cookie_for_a_year" name="cookie_for_a_year"
+tabindex="1" value="1" '."\n"
+      .$checked.'/><span class="preinput"><label for="cookie_for_a_year">'
+      ._("Keep for a year")."</label></span><br />\n";
 print '<span class="text">'
       ._("Your language choice will be stored in a cookie for a year.
 When unchecked, it will be cleared at the end of browser session.")
       ."</span></p>\n";
 
-print "<p>\n&nbsp;&nbsp;";
+print "<p>\n&nbsp;&nbsp;<label for=\"language\">".("Language:")."</label>";
 print html_build_select_box_from_arrays (array_keys ($locale_names),
                                          array_values($locale_names),
                                          "language",

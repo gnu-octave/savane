@@ -114,11 +114,13 @@ print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">'
 .'</span>&nbsp;&nbsp;'
 .html_build_select_box_from_array(array("0" => _("No"),"1" => _("Yes")),
                                   'people_view_skills',
-                                  db_result($result,0,'people_view_skills'));
+                                  db_result($result,0,'people_view_skills'), 0,
+                                  _("Activate resume"));
 
-print '<h2>'._("Resume - Description of Experience").'</h2>
+print '<h2><label for="people_resume">'
+      ._("Resume - Description of Experience").'</label></h2>
 <p>'.markup_info("full").'</p>
-<textarea name="people_resume" rows="15" cols="60" wrap="soft">'
+<textarea id="people_resume" name="people_resume" rows="15" cols="60" wrap="soft">'
 . db_result($result,0,'people_resume') .'</textarea>
 ';
 

@@ -118,7 +118,7 @@ print '<p>'
   .'</p>';
 utils_get_content("my/items");
 
-$fopen = '<select name="form_open">
+$fopen = '<select title="'._("open or closed").'" name="form_open">
 <option value="open" '
          .($open == "open" ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "Show [%s] new items..."
@@ -131,7 +131,7 @@ $fopen .= '</option>
           .'</option></select>
 ';
 
-$fthreshold = '<select name="form_threshold">
+$fthreshold = '<select title="'.("priority").'" name="form_threshold">
 <option value="1" '
              .($threshold == 1 ? 'selected="selected"':'').'>'
 # TRANSLATORS: This is used later as argument of "...new items or of [%s] priority"

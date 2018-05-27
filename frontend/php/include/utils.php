@@ -538,7 +538,7 @@ function utils_result_column_to_array($result, $col=0, $localize=false)
         {
           $val = db_result($result,$i,$col);
           if ($localize)
-            $val = gettext ($val);
+            $val = htmlentities(gettext ($val));
           $arr[$i] = $val;
         }
     }
@@ -763,9 +763,13 @@ function utils_get_priority_color ($index, $closed="")
 # Very simple, plain way to show a generic result set.
 # Accepts a result set and title.
 # Makes certain items into HTML links.
-function utils_show_result_set ($result,$title="Untitled",$linkify=false)
+function utils_show_result_set ($result,$title="Untitled",$linkify=false,
+                                $level=false)
 {
   global $group_id,$HTML;
+
+  if ($level === false)
+    $level = '3';
 
   if ($title == "Untitled")
     $title = _("Untitled");
@@ -776,7 +780,7 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false)
       $cols  =  db_numfields($result);
 
       # Show title.
-      print "<h3>$title</h3>\n";
+      print "<h".$level.">$title</h".$level.">\n";
       print '<table border="0" width="100%" summary="'.$title.'">'."\n";
 
       # Create the headers.

@@ -197,13 +197,15 @@ if you want to assign some items to several members at once.").'</p>
     {  
       print form_header($_SERVER["PHP_SELF"].'#form', $form_id);
       print form_input("hidden", "group_id", $group_id);
-      print '<p><span class="preinput">'._("Squad Login Name:")
-            .'</span><br />&nbsp;&nbsp;';
+      print '<p><span class="preinput"><label for="form_loginname">'
+            ._("Squad Login Name:")
+            .'</label></span><br />&nbsp;&nbsp;';
       print $group."-".form_input("text", "form_loginname", $form_loginname)
             .'</p>
 ';
       
-      print '<p><span class="preinput">'._("Squad Full Name:").'</span>
+      print '<p><span class="preinput"><label for="form_realname">'
+._("Squad Full Name:").'</label></span>
 <br />&nbsp;&nbsp;';
       print form_input("text", "form_realname", $form_realname).'</p>
 '; 
@@ -317,8 +319,8 @@ available.').'</p>
   print form_header($_SERVER["PHP_SELF"]);
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "squad_id", $squad_id);
-  print '<p><span class="preinput">'._("Real Name:")
-        .'</span><br />&nbsp;&nbsp;';
+  print '<p><span class="preinput"><label for="form_realname">'._("Real Name:")
+        .'</label></span><br />&nbsp;&nbsp;';
   print form_input("text", "form_realname", db_result($result, 0, 'realname'))
         .' &lt;'.db_result($result, 0, 'user_name').'&gt;</p>
 ';
@@ -345,7 +347,8 @@ below.")."</p>\n";
   print form_header($_SERVER["PHP_SELF"]);
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "squad_id", $squad_id);
-  print '&nbsp;&nbsp;<select name="user_ids[]" size="10" multiple="multiple">';
+  print '&nbsp;&nbsp;<select title="'._("Users")
+        .'" name="user_ids[]" size="10" multiple="multiple">';
   $exists = false;
   $already_in_squad = array();
   while ($thisuser = db_fetch_array($result_delusers)) 
@@ -384,7 +387,8 @@ below.")."</p>\n";
   print form_header($_SERVER["PHP_SELF"]);
   print form_input("hidden", "group_id", $group_id);
   print form_input("hidden", "squad_id", $squad_id);
-  print '&nbsp;&nbsp;<select name="user_ids[]" size="10" multiple="multiple">';
+  print '&nbsp;&nbsp;<select title="'.("Users")
+        .'" name="user_ids[]" size="10" multiple="multiple">';
   unset($exists);
   while ($thisuser = db_fetch_array($result_addusers)) 
     {

@@ -40,7 +40,7 @@ from group.&rdquo;")."</p>
 <form action=\"";
   print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
         <input type=\"hidden\" name=\"action\" value=\"approve_for_group\" />
-  <select name=\"user_ids[]\" size=\"10\" multiple>\n";
+  <select title=\""._("Users")."\" name=\"user_ids[]\" size=\"10\" multiple>\n";
 
   $exists = false;
   while ($usr = db_fetch_array($result))
@@ -74,7 +74,7 @@ Pending users are at the bottom of the list.")."</p>
 <form action=\"";
   print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
         <input type=\"hidden\" name=\"action\" value=\"remove_from_group\" />
-  <select name=\"user_ids[]\" size=\"10\" multiple>\n";
+  <select title=\""._("Users")."\" name=\"user_ids[]\" size=\"10\" multiple>\n";
 
   while ($usr = db_fetch_array($result))
     {
@@ -120,7 +120,8 @@ names you'll type in this form, will be generated.").'
 
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'#searchuser" method="post">
         <input type="hidden" name="action" value="add_to_group_list" />
-        <input type="text" size="35" name="words" value="'
+        <input type="text" size="35" title="'._("Search users")
+        .'" name="words" value="'
         .$previous_search.'" /><br />
         <p>
         <input type="hidden" name="group_id" value="'.$group_id.'" />
@@ -138,7 +139,7 @@ function show_all_users_add_list ($result, $group_id)
 <form action=\"";
   print htmlentities ($_SERVER['PHP_SELF'])."\" method=\"post\">
         <input type=\"hidden\" name=\"action\" value=\"add_to_group\" />
-  <select name=\"user_ids[]\" size=\"10\" multiple>\n";
+  <select title=\""._("Users")."\" name=\"user_ids[]\" size=\"10\" multiple>\n";
 
   while ($usr = db_fetch_array($result))
     {

@@ -105,7 +105,8 @@ from your votes list).").'</p>'."\n";
         print '<div class="'
           .utils_get_priority_color(db_result($res_item, 0, 'priority'),
                                     db_result($res_item, 0, 'status_id')).'">'
-          .'<input type="text" name="new_votes['.$row['vote_id']
+          .'<input type="text" title="'._("Vote number")
+          .'" name="new_votes['.$row['vote_id']
           .']" size="3" maxlength="3" value="'.$row['howmuch'].'" /> / '
           .($row['howmuch']+$remaining_votes)
           .'&nbsp;&nbsp;&nbsp;&nbsp;<a href="'.$GLOBALS['sys_home']

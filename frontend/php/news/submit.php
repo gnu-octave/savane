@@ -92,13 +92,15 @@ print '<p class="warn">'
      .'</p>
 '.form_header($_SERVER['PHP_SELF'], $form_id)
 .form_input("hidden", "group_id", $group_id).'
-<span class="preinput">'._("Subject:").'</span><br/>&nbsp;&nbsp;
-<input type="text" name="summary" value="'.$summary
+<span class="preinput"><label for="summary">'._("Subject:")
+.'</label></span><br/>&nbsp;&nbsp;
+<input type="text" id="summary" name="summary" value="'.$summary
 .'" size="65" maxlenght="80" />
 <br />
-<span class="preinput">'._("Details").' '.markup_info("full")
+<span class="preinput"><label for="details">'._("Details")
+.'</label> '.markup_info("full")
 .'</span><br />&nbsp;&nbsp;
-<textarea name="details" rows="20" cols="65" wrap="soft">
+<textarea name="details" id="details" rows="20" cols="65" wrap="soft">
 '.$details.'</textarea><br />
 '.form_footer();
 

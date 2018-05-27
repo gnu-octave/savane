@@ -81,22 +81,23 @@ print form_header($_SERVER['PHP_SELF'])
      .form_input("hidden", "group_id", $group_id);
 
 print '
-<p><span class="preinput">'._("Group Name:").'</span>
+<p><span class="preinput"><label for="form_group_name">'._("Group Name:")
+.'</label></span>
 <br />&nbsp;&nbsp;&nbsp;'.form_input("text", 
 				     "form_group_name", 
 				     $row_grp['group_name'],
 				     'size="60" maxlen="254"').'</p>
 ';
 print '
-<p><span class="preinput">'._("Short Description").' '
-.markup_info("none", ", 255 Characters Max").'</span>
+<p><span class="preinput"><label for="form_shortdesc">'._("Short Description")
+.'</label> '.markup_info("none", ", 255 Characters Max").'</span>
 <br />&nbsp;&nbsp;&nbsp;'.form_textarea("form_shortdesc",
 					$row_grp['short_description'],
 					'cols="70" rows="3" wrap="virtual"').'</p>
 ';
 print '
-<p><span class="preinput">'._("Long Description").' '
-.markup_info("full").'</span>
+<p><span class="preinput"><label for="form_longdesc">'._("Long Description")
+.'</label> '.markup_info("full").'</span>
 <br />&nbsp;&nbsp;&nbsp;'.form_textarea("form_longdesc",
 					$row_grp['long_description'],
 					'cols="70" rows="10" wrap="virtual"').'</p>
@@ -113,9 +114,10 @@ if($DEVEL_STATUS1 = $row_grp1['devel_status_array']){
 if ($project->CanUse("devel_status"))
 {
   print '
-<p><span class="preinput">'
+<p><span class="preinput"><label for="form_devel_status">'
     ._("Development Status:")
-    .'</span><br />&nbsp;&nbsp;&nbsp;<select name="form_devel_status">';
+    .'</label></span><br />&nbsp;&nbsp;&nbsp;<select '
+    .'name="form_devel_status" id="form_devel_status">';
   while (list($k,$v) = each($DEVEL_STATUS))
     {
       print '<option value="'.$k.'"';
@@ -140,8 +142,9 @@ if ($project->getLicense() == 'gpl') {
   print '<p><span class="preinput">'._("GNU GPL v3:").'</span>
 <br />&nbsp;&nbsp;';
   html_build_checkbox("upgrade_gpl");
-  print " "._("Upgrade license to &quot;GNU GPLv3 or later&quot;");
-  print "</p>\n";
+  print " <label for=\"upgrade_gpl\">"
+        ._("Upgrade license to &quot;GNU GPLv3 or later&quot;");
+  print "</label></p>\n";
 }
 
 print form_footer();

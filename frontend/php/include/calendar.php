@@ -3,7 +3,7 @@
 #
 # Took from Annif <http://gna.org/projects/annif/>
 # Copyright (C) 2003 Mathieu Roy <yeupou--at--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -130,6 +130,7 @@ function calendar_selectbox ($level, $checked_val='xxaz', $inputname=false)
   # Initialize array.
   $text = array();
   $number = array();
+  $title = "";
 
   if ($level == 'day')
     {
@@ -138,6 +139,7 @@ function calendar_selectbox ($level, $checked_val='xxaz', $inputname=false)
           $number[] = $day;
           $text[] = $day;
         }
+      $title = _("day of month");
     }
   elseif ($level == 'month')
     {
@@ -146,13 +148,15 @@ function calendar_selectbox ($level, $checked_val='xxaz', $inputname=false)
           $number[] = $month;
           $text[] = calendar_month_name($month);
         }
+      $title = _("month");
     }
 
   return html_build_select_box_from_arrays($number,
                                            $text,
                                            $inputname,
                                            $checked_val,
-                                           0);
+                                           false, 'None', false, 'Any', false,
+                                           $title);
 }
 function calendar_select_date ($day, $month, $year, $field_names)
 {
@@ -162,7 +166,8 @@ function calendar_select_date ($day, $month, $year, $field_names)
                       calendar_selectbox("day", $day, $field_names[0]),
                       calendar_selectbox("month", $month,
                                          $field_names[1]),
-                      ' <input type="text" name="'.$field_names[2].'" '
+                      ' <input type="text" title="'._('year')
+                      .'" name="'.$field_names[2].'" '
                       .'size="4" maxlength="4" value="'.$year.'" />');
 }
 ?>

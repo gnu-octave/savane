@@ -61,12 +61,10 @@ if ($people_cat)
   {
     # Show categories and blank row.
     print site_header(array('title'=>_('Change Categories')));
-    print '<h1>'._("Add Job Categories").'</h1>
-';
     # List of possible categories for this group.
     $result = db_query("SELECT category_id,name FROM people_job_category");
     if ($result && db_numrows($result) > 0)
-      utils_show_result_set($result,_("Existing Categories"),'people_cat');
+      utils_show_result_set($result,_("Existing Categories"),'people_cat', '2');
     else
       {
         print '<p>'._("No job categories")."</p>\n";
@@ -76,8 +74,9 @@ if ($people_cat)
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <p><input type="hidden" name="people_cat" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
-<h3>'._("New Category Name:").'</h3>
-<input type="text" name="cat_name" value="" size="15" maxlength="30" /><br />
+<p><label for="cat_name">'._("New Category Name:").'</label></p>
+<input type="text" name="cat_name" id="cat_name" value="" size="15"
+       maxlength="30" /><br />
 <p>
 <strong><span class="warn">'
 ._("Once you add a category, it cannot be deleted")
@@ -93,13 +92,11 @@ else if ($people_skills)
   {
     # Show people_groups and blank row.
     print site_header(array('title'=>_('Change People Skills')));
-    print '<h1>'._("Add Job Skills").'</h1>
-';
     # List of possible people_groups for this group.
     $result = db_query("SELECT skill_id,name FROM people_skill");
     print "<p>";
     if ($result && db_numrows($result) > 0)
-      utils_show_result_set($result,_("Existing Skills"),"people_skills");
+      utils_show_result_set($result,_("Existing Skills"),"people_skills", '2');
     else
       {
         print db_error();
@@ -112,8 +109,9 @@ else if ($people_skills)
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="people_skills" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
-<h3>'._("New Skill Name:").'</h3>
-<input type="text" name="skill_name" value="" size="15" maxlength="30" /><br />
+<p><label for="skill_name">'._("New Skill Name:").'</label></p>
+<input type="text" name="skill_name" id="skill_name" value="" size="15"
+       maxlength="30" /><br />
 <p><strong><span class="warn">'._("Once you add a skill, it cannot be deleted")
 .'</span></strong></p>
 <p><input type="submit" name="submit" value="'._("Add").'" /></p>

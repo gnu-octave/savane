@@ -207,14 +207,15 @@ site_project_header(array('title'=>_("Select Features"),'group'=>$group_id,
 
 function specific_line ($artifact, $explanation, $use, $increment=1)
 {
-  # Just a little fonction to clean that part of the code, no
+  # Just a little function to clean that part of the code, no
   # interest to generalize it.
   global $i, $project;
   if ($increment)
     $i++;
   print '<tr>
 ';
-  print ' <td class="'.utils_get_alt_row_color($i).'">'.$explanation.'</td>
+  print ' <td class="'.utils_get_alt_row_color($i).'">'
+        .'<label for="use_'.$artifact.'">'.$explanation.'</td>
 ';
   print ' <td class="'.utils_get_alt_row_color($i).'">';
   # Print the checkbox to de/activate it
@@ -255,7 +256,7 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
         $url = $project->getArtifactUrl($artifact);
 
       print form_input("text", "url_".$artifact,
-                       $url, 'size="20"');
+                       $url, 'size="20" title="'._("Alternative Address").'"');
     }
   else
     print "---";

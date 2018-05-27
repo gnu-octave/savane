@@ -314,7 +314,8 @@ print '
         <form action="'.htmlentities ($_SERVER["PHP_SELF"])
                        .'#searchgroup" method="post">
         <input type="hidden" name="action" value="searchgroup" />
-        <input type="text" size="35" name="words" value="'.$words.'" /><br />
+        <input type="text" title="'._("Group to look for").'" size="35"
+               name="words" value="'.$words.'" /><br />
         <br /><br />
         <input type="submit" name="Submit" value="'
         ._("Search Groups").'" />
@@ -361,21 +362,24 @@ who will approve or disapprove the request, and submit the form.");
           {
             if (!user_is_group_member($row_user['user_id'], $val['group_id']))
               {
-                print '<input type="checkbox" name="form_groups['
-                      .$val['group_id'].']" /> ';
-                print $val['group_name'];
-                print '<br />'."\n";
+                print '<input type="checkbox" id="form_groups['
+                      .$val['group_id'].']"  name="form_groups['
+                      .$val['group_id'].']" />
+<label for="form_groups['
+                      .$val['group_id'].']">';
+                print $val['group_name']."</label><br />\n";
               }
             else
               {
-                print '<input type="checkbox" disabled="yes" /> ';
-                print $val['group_name'];
+                print '+ '.$val['group_name'].' ';
                 print _('(already a member)').'<br />'."\n";
               }
           }
 
-        print '<br />'."\n"._("Comments (required):").'<br />
-     <textarea name="form_message" cols="40" rows="7"></textarea><br /><br />
+        print '<br />'."\n<label for='form_message'>"._("Comments (required):")
+              .'</label><br />
+     <textarea name="form_message" id="form_message" cols="40"
+               rows="7"></textarea><br /><br />
      <input type="submit" name="update" value="';
         print _("Request Inclusion").'" /></form>';
       }

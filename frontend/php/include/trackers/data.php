@@ -202,7 +202,7 @@ utils_get_tracker_name($tracker_name))."</p>\n";
 ._("Notify persons in the category related list in addition to the global list")
 .'</span><br />
 
-          <h3>'._("Category related lists")."</h3>\n";
+          <h2>'._("Category related lists")."</h2>\n";
       print '<input type="hidden" name="'.$tracker_name
 .'_nb_categories" value="'.$grtrsettings['nb_categories'].'" />';
 
@@ -210,19 +210,23 @@ utils_get_tracker_name($tracker_name))."</p>\n";
         {
           print '<input type="hidden" name="'.$tracker_name.'_cat_'.$i
 .'_bug_fv_id" value="'.$grtrsettings['category'][$i]['fv_id'].'" />';
-          print '<span class="preinput">'.$grtrsettings['category'][$i]['name']
+          print '<span class="preinput"><label
+for="'.$tracker_name.'_cat_'.$i.'_email">'.$grtrsettings['category'][$i]['name']
 .'</span><br />
-&nbsp;&nbsp;<input type="text" name="'.$tracker_name.'_cat_'.$i
+&nbsp;&nbsp;<input type="text" id="'.$tracker_name.'_cat_'.$i
+.'_email" name="'.$tracker_name.'_cat_'.$i
 .'_email" value="'.$grtrsettings['category'][$i]['email']
 .'" size="50" maxlength="255" />
           &nbsp;&nbsp;<span class="preinput">(
-          <input type="checkbox" name="'.$tracker_name.'_cat_'.$i
+          <input type="checkbox" id="'.$tracker_name.'_cat_'.$i
+.'_send_all_flag" name="'.$tracker_name.'_cat_'.$i
 .'_send_all_flag" value="1" '
 . (($grtrsettings['category'][$i]['send_all_flag'])?'checked="checked"':'')
-.' />'._("Send on all updates").')</span><br />
+.' /><label for="'.$tracker_name.'_cat_'.$i
+.'_send_all_flag"'._("Send on all updates").')</label></span><br />
 ';
         }
-      print '<h3>'._("Global list")."</h3>\n";
+      print '<h2>'._("Global list")."</h2>\n";
     }
   else
     {
@@ -236,26 +240,32 @@ depend on the categories or not and you must provide the corresponding email
 addresses (comma separated list)."), utils_get_tracker_name($tracker_name))
 ."</p>\n";
     }
-  print '<span class="preinput">'._("Global List:")
-.'</span><br />
-&nbsp;&nbsp;<input type="text" name="'.$tracker_name
+  print '<span class="preinput"><label
+for="'.$tracker_name.'_new_item_address"'._("Global List:")
+.'</label></span><br />
+&nbsp;&nbsp;<input type="text" id="'.$tracker_name
+.'_new_item_address" name="'.$tracker_name
 .'_new_item_address" value="'.$grtrsettings['glnewad']
 .'" size="50" maxlength="255" />
-      &nbsp;&nbsp;<span class="preinput">(<input type="checkbox" name="'
+      &nbsp;&nbsp;<span class="preinput">(<input type="checkbox" id="'
+.$tracker_name.'_send_all_changes" name="'
 .$tracker_name.'_send_all_changes" value="1" '
-. (($grtrsettings['glsendall'])?'checked':'') .'>'._("Send on all updates")
-.')</span>';
+. (($grtrsettings['glsendall'])?'checked':'')
+.'><label for="'.$tracker_name.'_send_all_changes"'._("Send on all updates")
+.'</label>)</span>';
 
-  print '<h3>'._("Private items exclude list")."</h3>\n";
+  print '<h2>'._("Private items exclude list")."</h2>\n";
   if ($show_intro_msg != 0)
     print '<p>'
 ._("Addresses registered in this list will be excluded from default mail
 notification for private items.")
 ."</p>\n";
 
-  print '<span class="preinput">'._("Exclude List:")
-.'</span><br />
-&nbsp;&nbsp;<input type="text" name="'.$tracker_name
+  print '<span class="preinput"><label
+for="'.$tracker_name.'_private_exclude_address"'._("Exclude List:")
+.'</label></span><br />
+&nbsp;&nbsp;<input type="text" id="'.$tracker_name
+.'_private_exclude_address" name="'.$tracker_name
 .'_private_exclude_address" value="'.$grtrsettings['private_exclude']
 .'" size="50" maxlength="255" />'."<br />\n";
 }

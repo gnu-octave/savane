@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2002-2006  Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -289,7 +289,8 @@ authentication level.");
                 ._("Add a New Comment").markup_info("rich");
           print form_submit (_('Preview'), 'preview')
                 ."</span><br />&nbsp;&nbsp;&nbsp;\n";
-	  print trackers_field_textarea('comment', htmlspecialchars($comment));
+	  print trackers_field_textarea('comment', htmlspecialchars($comment),
+                                        0, 0, _("New comment"));
 	  print "</p>\n";
 
 	  if (!user_isloggedin())
@@ -336,25 +337,27 @@ _("Please <a href=\"%s\">log in</a>, so followups can be emailed to you."),
 "(Note: upload size limit is set to %s kB, after insertion of the required
 escape characters.)"), $GLOBALS['sys_upload_max']);
 
-      print '</p>
-<p class="noprint"><span class="preinput"> '
-            ._("Attach Files:").'</span><br />
-      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" />
-      <input type="file" name="input_file2" size="10" />
+  print '</p><p class="noprint"><span class="preinput"> '._("Attach Files:")
+    .'</span><br />
+      &nbsp;&nbsp;&nbsp;<input type="file" title="'._("File to attach")
+    .'" name="input_file1" size="10" /> '
+    .'<input type="file" name="input_file2" title="'._("File to attach")
+    .'" size="10" />
       <br />
-      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file3" size="10" />
-      <input type="file" name="input_file4" size="10" />
+      &nbsp;&nbsp;&nbsp;<input type="file" title="'._("File to attach")
+    .'" name="input_file3" size="10" /> '
+    .'<input type="file" name="input_file4" title="'._("File to attach")
+    .'" size="10" />
       <br />
       <span class="preinput">'._("Comment:").'</span><br />
-      &nbsp;&nbsp;&nbsp;<input type="text" name="file_description" '
-      .'size="60" maxlength="255" />
-      </p>
-<p>';
+      &nbsp;&nbsp;&nbsp;'
+    .'<input type="text" name="file_description" title="'
+    ._("File description").'" size="60" maxlength="255" />
+</p>
+';
     }
-  else
-    {
-      print '<p>';
-    }
+
+print '<p>';
 
   show_item_attached_files($item_id,$group_id);
 
@@ -387,13 +390,15 @@ _(
 rather than their email addresses.)"), $GLOBALS['sys_name']);
       print '</p>
 <p class="noprint">
-	   <span class="preinput">'
+	   <span class="preinput"><label for="add_cc">'
             ._("Add Email Addresses (comma as separator):")
-            .'</span><br />&nbsp;&nbsp;&nbsp;'
-            .'<input type="text" name="add_cc" size="30" /><br />
-	   <span class="preinput">'._("Comment:")
-            .'</span><br />&nbsp;&nbsp;&nbsp;'
-            .'<input type="text" name="cc_comment" size="40" maxlength="255" />'
+            .'</label></span><br />
+&nbsp;&nbsp;&nbsp;'
+            .'<input type="text" id="add_cc" name="add_cc" size="30" /><br />
+	   <span class="preinput"><label for="cc_comment">'._("Comment:")
+            .'</label></span><br />
+&nbsp;&nbsp;&nbsp;'
+            .'<input type="text" id="cc_comment" name="cc_comment" size="40" maxlength="255" />'
             ."</p>\n";
     }
 
@@ -435,9 +440,9 @@ rather than their email addresses.)"), $GLOBALS['sys_name']);
               # votes.
               # The number of remaining points must be 100 - others votes
 
-              print '<span class="preinput">'._("Your vote:")
-                    .'</span><br />&nbsp;&nbsp;&nbsp;'
-                    .'<input type="text" name="new_vote" size="3" '
+              print '<span class="preinput"><label for="new_vote">'._("Your vote:")
+                    .'</label></span><br />&nbsp;&nbsp;&nbsp;'
+                    .'<input type="text" id="new_vote" name="new_vote" size="3" '
                     .'maxlength="3" value="'
                     .htmlspecialchars($new_vote).'" /> '
                     .sprintf(ngettext("/ %s remaining vote",
@@ -463,9 +468,9 @@ rather than their email addresses.)"), $GLOBALS['sys_name']);
 
   # Minimal anti-spam
   if (!user_isloggedin()) {
-    print '<p class="noprint">'._('Please enter the title of <a
+    print '<p class="noprint"><label for="check">'._('Please enter the title of <a
 href="https://en.wikipedia.org/wiki/George_Orwell">George Orwell</a>\'s famous
-dystopian book (it\'s a date):').' <input type="text" name="check" /></p>
+dystopian book (it\'s a date):').'</label> <input type="text" id="check" name="check" /></p>
 ';
   }
 

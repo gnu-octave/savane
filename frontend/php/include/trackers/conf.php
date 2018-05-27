@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2004 Mathieu Roy <yeupou--at--gnu.org>
 # Copyright (C) 2004 Yves Perrin <yves.perrin--at--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -349,10 +349,10 @@ lost.").'</p>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />
 <input type="hidden" name="artifact" value="'.$artifact.'" />
-<span class="preinput">'._("Projects:").'</span><br />
-&nbsp;&nbsp;&nbsp;
+<span class="preinput"><label for="from_group_id">'._("Projects:")
+.'</label></span>&nbsp;&nbsp;&nbsp;
 ';
-      print html_build_select_box_from_arrays($vals,$texts,'from_group_id');
+      print html_build_select_box_from_arrays($vals, $texts, 'from_group_id');
       print form_footer();
     }
   else

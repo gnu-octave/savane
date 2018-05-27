@@ -178,17 +178,18 @@ shown on the front page), you must end the superuser session.").'</p>
 ';
     if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
       {
-        print '<input type="radio" name="status" value="1" />&nbsp;&nbsp;';
-        print '<span class="preinput">'
+        print '<input type="radio" name="status" id="status_admin" value="1" />&nbsp;&nbsp;';
+        print '<span class="preinput"><label for="status_admin">'
 .sprintf(
 # TRANSLATORS: the argument is site name (like Savannah).
 _("Approve For %s' Front Page"),$GLOBALS['sys_name'])
-.'</span><br />
-<input type="radio" name="status" value="0" '
-.'checked="checked" />&nbsp;&nbsp;<span class="preinput">'
-._("Do Nothing").'</span><br />
-<input type="radio" name="status" value="2" />&nbsp;&nbsp;'
-.'<span class="preinput">'._("Refuse").'</span><br />
+.'</label></span><br />
+<input type="radio" id="status_do_nothing" name="status" value="0" '
+.'checked="checked" />&nbsp;&nbsp;<span class="preinput"><label for="status_do_nothing">'
+._("Do Nothing").'</label></span><br />
+<input type="radio" name="status" id="status_refuse" value="2" />&nbsp;&nbsp;'
+.'<span class="preinput"><label for="status_refuse">'._("Refuse")
+.'</label></span><br />
 <input type="hidden" name="for_group_id" value="'
 .db_result($result,0,'group_id').'" />
 <input type="hidden" name="group_id" value="'.$GLOBALS['sys_group_id'].'" />
@@ -196,22 +197,26 @@ _("Approve For %s' Front Page"),$GLOBALS['sys_name'])
       }
     else
       {
-        print '<input type="radio" name="status" '
-.'value="0" checked="checked" /> &nbsp;&nbsp;<span class="preinput">'
-._("Display").'</span><br />
-<input type="radio" name="status" value="4" />&nbsp;&nbsp;<span class="preinput">'
-._("Delete").'</span><br />
+        print '<input type="radio" name="status" id="status_display" '
+.'value="0" checked="checked" />
+&nbsp;&nbsp;<span class="preinput"><label for="status_display">'
+._("Display").'</label></span><br />
+<input type="radio" name="status" id="status_delete" value="4" />
+&nbsp;&nbsp;<span class="preinput"><label for="status_delete">'
+._("Delete").'</label></span><br />
 <input type="hidden" name="group_id" value="'.db_result($result,0,'group_id').'" />
 ';
       }
 
-    print '<br /><span class="preinput">'
-._("Subject:").'</span><br />&nbsp;&nbsp;
-<input type="text" name="summary" value="'
+    print '<br /><span class="preinput"><label for="summary">'
+._("Subject:").'</label></span><br />
+&nbsp;&nbsp;
+<input type="text" name="summary" id="summary" value="'
 .db_result($result,0,'summary').'" size="65" maxlength="80" /><br />
-<span class="preinput">'
-._("Details").' '.markup_info("full").'</span><br />&nbsp;&nbsp;
-<textarea name="details" rows="20" cols="65" wrap="soft">'
+<span class="preinput"><label for="details">'
+._("Details").'</label> '.markup_info("full").'</span><br />
+&nbsp;&nbsp;
+<textarea name="details" id="details" rows="20" cols="65" wrap="soft">'
 .db_result($result,0,'details').'</textarea><p>';
     print '<p>'.sprintf (
 # TRANSLATORS: the argument is site name (like Savannah).

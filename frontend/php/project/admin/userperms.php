@@ -592,13 +592,12 @@ else
     <td class="smaller">';
 
         print '
-      <input type="checkbox" name="privacy_user_'.$row['user_id']
+      <input type="checkbox" name="privacy_user_'.$row['user_id'].'"
+             id="privacy_user_'.$row['user_id']
 .'" value="1" '.(($row['privacy_flags']=='1')?'checked="checked"':'')
-.' />&nbsp;'._("Private Items");
+.' />&nbsp;<label for="privacy_user_'.$row['user_id'].'"> '._("Private Items")
+."</label>\n</td>\n";
 
-        print '
-    </td>
-';
        if ($project->Uses("support"))
          html_select_permission_box("support", $row);
        if ($project->Uses("bugs"))
@@ -695,13 +694,17 @@ else
           {
             $extra = ($row['admin_flags'] == 'A' ) ?'checked="checked"':'';
             print form_input("checkbox", "admin_user_"
-                  .$row['user_id'], "A", $extra).'&nbsp;'._("Admin");
+                  .$row['user_id'], "A", $extra).'&nbsp;'
+                  .'<label for="admin_user_'.$row['user_id'].'">'
+                  ._("Admin").'</label>';
           }
         if ($row['admin_flags'] != 'A')
          {
            $extra = ($row['privacy_flags'] == '1' ) ?'checked="checked"':'';
            print '<br />'.form_input("checkbox", "privacy_user_"
-                 .$row['user_id'], "1", $extra).'&nbsp;'._("Private Items");
+                 .$row['user_id'], "1", $extra).'&nbsp;'
+                  .'<label for="privacy_user_'.$row['user_id'].'">'
+                 ._("Private Items").'</label>';
           }
         else
           print form_input("hidden", 'privacy_user_'.$row['user_id'], 1);
@@ -710,6 +713,7 @@ else
 ';
         print '<td align="center">';
         $extra = ($row['onduty'] == '1' ) ? 'checked="checked"' : '';
+        $extra .= ' title="'._("On Duty").'"';
         print form_input("checkbox", "onduty_user_".$row['user_id'], 1, $extra);
         print '</td>
 ';

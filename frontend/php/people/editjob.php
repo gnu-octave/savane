@@ -116,7 +116,7 @@ else if ($update_job_inventory)
             'skill_level_id' => $skill_level_id,
             'skill_year_id' => $skill_year_id,
             ), DB_AUTOQUERY_UPDATE,
-         "job_id= AND job_inventory_id=?",
+         "job_id=? AND job_inventory_id=?",
          array($job_id, $job_inventory_id));
         if (!$result || db_affected_rows($result) < 1)
           {
@@ -183,14 +183,15 @@ if ($job_id)
         ._("Status").':</strong><br />'
         . people_job_status_box('status_id',db_result($result,0,'status_id')) .'
 </p>
-<p><strong>'
-        ._("Short Description:").'</strong><br />
-<input type="text" name="title" value="'. db_result($result,0,'title')
+<p><strong><label for="title">'
+        ._("Short Description:").'</label></strong><br />
+<input type="text" id="title" name="title" value="'
+        . db_result($result,0,'title')
         .'" size="40" maxlength="60" />
 </p>
-<p><strong>'
-        ._("Long Description:").'</strong><br />
-<textarea name="description" rows="10" cols="60" wrap="soft">'
+<p><strong><label for="description">'
+        ._("Long Description:").'</label></strong><br />
+<textarea name="description" id="description" rows="10" cols="60" wrap="soft">'
         .htmlspecialchars(db_result($result,0,'description')) .'</textarea>
 </p>
 <p><input type="submit" name="update_job" value="'

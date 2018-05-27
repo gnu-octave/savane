@@ -52,7 +52,7 @@ $form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
                 .'#options" method="get">';
 $form_submit = '<input class="bold"  type="submit" value="'._("Apply").'" />';
 $selector =
- '<select name="detailed"><option value="0">'
+ '<select title="'._("basic or detailed").'" name="detailed"><option value="0">'
 # TRANSLATORS: this is used in context of "Browse with the %s memberlist."
  ._("basic").'</option><option value="1"'
  .$checked.'>';

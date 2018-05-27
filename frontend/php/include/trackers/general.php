@@ -6,7 +6,7 @@
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -384,11 +384,13 @@ function trackers_multiple_field_date($field_name,$date_begin='',$date_end='',
       if (!$size || !$maxlength)
         list($size, $maxlength) = trackers_data_get_display_size($field_name);
 
-      $html = _('Start:').'<br /><input type="text" name="'.$field_name
+      $html = '<label for="'.$field_name.'">'._('Start:').'</label><br />
+<input type="text" name="'.$field_name.'" id="'.$field_name
         . '" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_begin.'">'
         ._('(yyyy-mm-dd)')
         .'</td></tr><tr><td>'
-        ._('End:').'<br /><input type="text" name="'.$field_name.'_end'
+        ._('End:').'<br />
+<input type="text" name="'.$field_name.'_end" id="'.$field_name.'_end'
         .'" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$date_end.'">'
         ._('(yyyy-mm-dd)');
 
@@ -402,7 +404,8 @@ function trackers_field_date_operator($field_name,$value='',$ro=false)
   if ($ro)
     $html = htmlspecialchars($value);
   else
-    $html = '<select name="'.$field_name.'_op">
+    $html = '<select title="'._("comparison operator")
+.'" name="'.$field_name.'_op">
 <option value=">"'.(($value == '>') ? ' selected':'').'>&gt;</option>
 <option value="="'.(($value == '=') ? ' selected':'').'>=</option>
 <option value="<"'.(($value == '<') ? ' selected':'').'>&lt;</option>
@@ -416,14 +419,16 @@ function trackers_field_text($field_name,$value='',$size=0,$maxlength=0)
   if (!$size || !$maxlength)
     list($size, $maxlength) = trackers_data_get_display_size($field_name);
 
-  $html = '<input type="text" name="'.$field_name.
-     '" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$value.'" />';
+  $html = '<input type="text" name="'.$field_name
+     .'" title="'.trackers_data_get_description($field_name)
+     .'" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$value.'" />';
   return($html);
 }
 
-function trackers_field_textarea($field_name,$value='',$cols=0,$rows=0)
+function trackers_field_textarea($field_name,$value='',$cols=0,$rows=0, $title=false)
 {
-
+  if ($title === false)
+    $title = trackers_data_get_description($field_name);
   if (!$cols || !$rows)
     {
       $t = trackers_data_get_display_size($field_name);
@@ -438,7 +443,8 @@ function trackers_field_textarea($field_name,$value='',$cols=0,$rows=0)
         }
     }
 
-  $html = '<textarea name="'.$field_name
+  $html = '<textarea id="'.$field_name.'" name="'.$field_name
+     .'" title="'.$title
      .'" rows="'.$rows.'" cols="'.$cols.'" wrap="soft">'.$value.'</textarea>';
   return($html);
 }
@@ -459,6 +465,10 @@ function trackers_field_box ($field_name,
 {
   if (!$group_id)
     return _('Error: no group defined');
+
+  $title = trackers_data_get_description ($field_name);
+  if ($title == '')
+    $title= trackers_data_get_label ($field_name);
 
   $result = trackers_data_get_field_predefined_values($field_name,
                                                       $group_id,$checked);
@@ -533,14 +543,15 @@ function trackers_field_box ($field_name,
                                                        $text_none, #6
                                                        $show_any,
                                                        $text_any, #8
-                                                       $show_unknown);
+                                                       $show_unknown,$title);
             }
         } # if ($trans_result && $rows > 0 || $default_auth == "F")
     } # if ($allowed_transition_only)
 
 # If no transition is defined, use 'normal' code.
   return html_build_select_box ($result,$box_name,$checked,$show_none,
-                                $text_none,$show_any, $text_any,$show_unknown);
+                                $text_none,$show_any, $text_any,$show_unknown,
+                                $title);
 }
 
 # Return a multiple select box populated with field values for this project.
@@ -806,7 +817,9 @@ function trackers_canned_response_box ($group_id,$name='canned_response')
           $texts[] = $entry['title'];
 
         }
-      return html_build_select_box_from_arrays($vals, $texts ,$name);
+      return html_build_select_box_from_arrays($vals, $texts ,$name,
+                                               'xzxz',true,'None',false,'Any',
+                                               false, _("Canned Responses"));
     }
   return form_input("hidden", "canned_response", "100")
            ._("No canned response available");

@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2007  Cliss XXI
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -32,6 +32,7 @@ class GPLQuickForm_Element
 
   private $label = '';
   private $error = '';
+  private $title = '';
 
   private $select_options = array();
 
@@ -49,6 +50,8 @@ class GPLQuickForm_Element
       case "text":
       case "checkbox":
       case "textarea":
+        if (isset($params[1]))
+          $this->title = $params[1];
         if (isset($params[0]))
           $this->label = $params[0];
         break;
@@ -113,6 +116,19 @@ class GPLQuickForm_Element
     $this->frozen = true;
   }
 
+  private function title_attr()
+  {
+    $title = '';
+    if ($this->label)
+      $title = $this->label;
+    if ($this->title)
+      $title = $this->title;
+    $label = '';
+    if ($title)
+      $label = 'title="'.$title.'" ';
+    return htmlspecialchars($label, ENT_QUOTES);
+  }
+
   public function display()
   {
     # Don't use $this->value directly, to take constants into account.
@@ -164,7 +180,8 @@ class GPLQuickForm_Element
               }
             else
               {
-                print "<select name='{$this->name}[d]'>";
+                print "<select title=\""._('day of month')
+                      ."\" name='{$this->name}[d]'>";
                 for ($i = 1; $i <= 31; $i++)
                   {
                     $label = $i;
@@ -176,7 +193,8 @@ class GPLQuickForm_Element
                     print "<option value='$i' $selected>$label</option>\n";
                   }
                 print "</select>\n";
-                print "<select name='{$this->name}[M]'>";
+                print "<select title=\"".('month')
+                      ."\" name='{$this->name}[M]'>";
                 for ($i = 1; $i <= 12; $i++)
                   {
                     $month = mktime(0, 0, 0, $i, 1, 2001);
@@ -187,7 +205,7 @@ class GPLQuickForm_Element
                           .strftime('%b', $month)."</option>\n";
                   }
                 print "</select>\n";
-                print "<select name='{$this->name}[Y]'>";
+                print "<select title=\"".('year')."\" name='{$this->name}[Y]'>";
                 for ($i = 2001; $i <= intval(date('Y')) + 3; $i++)
                   {
                     $selected = '';
@@ -216,7 +234,8 @@ class GPLQuickForm_Element
               }
             else
               {
-                print "<input type='text' name='{$this->name}' value='"
+                print "<input type='text' ".$this->title_attr()
+                      . "name='{$this->name}' value='"
                       . htmlspecialchars($value, ENT_QUOTES) . "' />\n";
               }
             break;
@@ -233,13 +252,13 @@ class GPLQuickForm_Element
               }
             else
               {
-                print "<select name='{$this->name}'>";
+                print "<select ".$this->title_attr()."name='{$this->name}'>";
                 foreach($this->select_options as $id => $text)
                   {
                     $selected = '';
                     if ($id == $value)
-                      $selected = "selected='selected'";
-                    print "<option value='$id' $selected>$text</option>\n";
+                      $selected = " selected='selected'";
+                    print "<option value='$id'$selected>$text</option>\n";
                   }
                 print "</select>\n";
               }

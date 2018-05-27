@@ -149,11 +149,13 @@ while($i < count($form_authorized_keys) or $i < 5)
   {
     $thiskey = array_key_exists($i, $form_authorized_keys)
       ? $form_authorized_keys[$i] : '';
-    print '<span class="preinput">' . sprintf(_("Key #%s:"), $i+1)
-      . "</span> <input type='text' size='60' "
-      . "name='form_authorized_keys[$i]' value='$thiskey' /><br />\n";
+    print '<span class="preinput"><label for="form_authorized_keys['.$i.']">'
+      . sprintf(_("Key #%s:"), $i+1)
+      . "</label></span>\n<input type='text' size='60' "
+      . "id='form_authorized_keys[$i]' name='form_authorized_keys[$i]'\n      "
+      . "value='$thiskey' /><br />\n";
     $i++;
   }
-print '<br />'.form_footer(_("Update"));
+print "<br />\n".form_footer(_("Update"));
 site_user_footer(array());
 ?>

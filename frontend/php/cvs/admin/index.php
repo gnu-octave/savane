@@ -1,7 +1,7 @@
 <?php
 # Manage commit hooks/triggers.
 # Copyright (C) 2006  Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of the Savane project
 #
@@ -29,6 +29,16 @@ require_once('../../include/account.php');
 function no_i18n($string)
 {
   return $string;
+}
+
+function match_type_box ($arr_match_type, $row_match_type)
+{
+  return
+    html_build_select_box_from_arrays (array('ALL', 'dir_list', 'DEFAULT'),
+                                       array('Always', 'Module list', 'Fallback'),
+                                       $arr_match_type,
+                                       $row_match_type, false, 'None',
+                                       false, 'Any', false, 'match type');
 }
 
 # Get current information.
@@ -210,11 +220,7 @@ while ($row = mysql_fetch_assoc($result))
                                           $row['repo_name'], 1);
     echo "</td>\n";
     echo "<td>";
-    echo html_build_select_box_from_arrays(array('ALL', 'dir_list', 'DEFAULT'),
-                                           array('Always', 'Module list',
-                                                 'Fallback'),
-                                           "arr_match_type[$cur]",
-                                           $row['match_type'], 0);
+    echo match_type_box ("arr_match_type[$cur]", $row['match_type']);
     echo "</td>\n";
     echo "<td><input type='text' name='arr_dir_list[$cur]' "
          ."value='{$row['dir_list']}' /></td>\n";
@@ -245,10 +251,7 @@ echo html_build_select_box_from_array(array('sources', 'web'),
                                       "arr_repo_name[new]", $row['repo_name'], 1);
 echo "</li>\n<li>";
 echo "Matching type: ";
-echo html_build_select_box_from_arrays(array('ALL', 'dir_list', 'DEFAULT'),
-                                         array('Always', 'Module list', 'Fallback'),
-                                         "arr_match_type[new]",
-                                         $row['match_type'], 0);
+echo match_type_box ("arr_match_type[new]", $row['match_type']);
 echo "<ul>
   <li><i>Always</i> is always performed (even in addition to Fallback)</li>
   <li><i>Module list</i> if you specify a list of directories (see below)<li/>
@@ -316,10 +319,7 @@ while ($row = mysql_fetch_assoc($result))
                                           $row['repo_name'], 1);
     echo "</td>\n";
     echo "<td>";
-    echo html_build_select_box_from_arrays(array('ALL', 'dir_list', 'DEFAULT'),
-                                           array('Always', 'Module list',
-                                                 'Fallback'),
-                                           'match_type', $row['match_type'], 0);
+    echo match_type_box ('match_type', $row['match_type']);
     echo "</td>\n";
     echo "<td><input type='text' name='dir_list[$cur]' "
          ."value='{$row['dir_list']}' /></td>\n";

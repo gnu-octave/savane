@@ -6,7 +6,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2014, 2017  Ineiev
+# Copyright (C) 2014, 2017, 2018  Ineiev
 #
 # This file is part of Savane.
 #
@@ -640,18 +640,18 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
               $url_params[$field.'_op'][0],$printer)
               .trackers_field_date($field,$url_params[$field][0],0,0,$printer);
           }
-
       }
     elseif (trackers_data_is_text_field($field)
             || trackers_data_is_text_area($field))
       {
         if ($field == 'summary')
-          { $summary_search = 1; }
+          $summary_search = 1;
         if ($field == 'details')
-          { $details_search = 1; }
+          $details_search = 1;
 
         if (!isset($url_params[$field]))
-  # not passed as parameter yet, field just appeared due to a query form change
+          # Not passed as parameter yet, field just appeared due to
+          # a change of the query form.
           $url_params[$field] = array(null);
 
         $boxes .=
@@ -893,9 +893,7 @@ while ($thisarray = db_fetch_array($result))
     }
   }
 
-/* ==================================================
-   Display the HTML search form
-  ================================================== */
+# Display the HTML search form.
 
 $form_submit = '';
 if ($printer)
@@ -915,18 +913,20 @@ $form = '
           <input type="hidden" name="set" value="custom" />
           <input type="hidden" name="msort" value="'.$msort.'" />';
 
-# Show the list of available bug reports kind
+# Show the list of available bug reports kind.
 $res_report = trackers_data_get_reports($group_id,user_getid(),$sober);
 if (!$printer)
   {
-  # In sober mode, there is no relevant query form that have reportid = 100
+  # In sober mode, there is no relevant query form that have reportid = 100.
     $show_100 = true;
     if ($sober)
-      { $show_100 = false; }
+      $show_100 = false;
     $form_query_type = html_build_select_box($res_report, 'report_id',
                                              $report_id,
+                                             $show_100,
 # TRANSLATORS: this string is as argument in "Browse with the %s query form".
-                                             $show_100, _('Basic'));
+                                             _('Basic'), false, 'Any', false,
+                                             _('query form'));
   }
 else
   {
@@ -978,7 +978,8 @@ if (!$printer)
       {
         $advsrch_0 = ' selected="selected"';
       }
-    $form_sel_type = '<select name="advsrch"><option value="0"'
+    $form_sel_type = '<select title="'._("type of search")
+         .'" name="advsrch"><option value="0"'
          .$advsrch_0.'>'
 # TRANSLATORS: this string is used to specify kind of selection.
          ._("Simple").'</option><option value="1"'.$advsrch_1.'>'
@@ -1018,7 +1019,8 @@ if (($details_search == 1) && ($summary_search == 1))
 # the second argument is label for 'summary' field,
 # the third argument is label for 'details' field.
         .sprintf(_('Use logical %1$s between \'%2$s\' and \'%3$s\' searches.'),
-                   '<select name="sumORdet"><option value="0" '
+                   '<select title="'._("logical operation to apply")
+                   .'" name="sumORdet"><option value="0" '
                    .(!$sumORdet ? 'selected="selected"':'').'>'
 # TRANSLATORS: this is a logical operator, used in string
 # "Use logical %s between '%s' and '%s' searches.
@@ -1112,7 +1114,9 @@ if (!$sober)
     if (!$printer)
       {
         $form_activated =
-                   '<select name="history_search"><option value="0" '
+                   '<select title="'
+                   ._("whether additional constraint is activated")
+                   .'" name="history_search"><option value="0" '
                    .(!$history_search ? 'selected="selected"':'').'>'
 # TRANSLATORS: this string is used as the argument in
 # 'Additional constraint %s'.
@@ -1130,7 +1134,8 @@ if (!$sober)
                                                              '',
                                                              true,
                                                              'Any',
-                                                             false);
+                                                             false,
+                                                             _("Field for criteria"));
         $form_modified = html_build_select_box_from_arrays ($hist_ev_value,
                                                             $hist_ev_text,
                                                             'history_event',
@@ -1139,7 +1144,8 @@ if (!$sober)
                                                             '',
                                                             false,
                                                             '',
-                                                            false);
+                                                            false,
+                                                            _("modified or not"));
         $form_since = trackers_field_date('history_date',
                                           $history_date,
                                           0,
@@ -1190,10 +1196,13 @@ if (!$sober)
         $form .= '<p class="smaller">'
                  .sprintf(_("Items to show at once: %s."),
                           form_input("text", "chunksz", $wanted_chunksz,
-                                     'size="3" maxlength="5"')).' '
+                                     'size="3" maxlength="5" title="'
+                                     .("Number of items to show at once").'"'))
+                 .' '
                  .sprintf(_("Show items with a spam score lower than %s."),
                           form_input("text", "spamscore", $spamscore,
-                                     'size="3" maxlength="2"'));
+                                     'size="3" maxlength="2" title="'
+                                     ._("Spam level of items to hide").'"'));
         if ($wanted_chunksz != $chunksz)
           {
             # No use of ngettext as $chunksz will never be below 10, otherwise

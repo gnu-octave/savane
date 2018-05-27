@@ -498,11 +498,13 @@ you can think of.")."</p>\n";
     .user_getemail(user_getid()).'&gt;<br />
     <span class="preinput">'._("Mailer:").'</span><br />&nbsp;&nbsp;&nbsp;'
     .utils_cutstring($_SERVER['HTTP_USER_AGENT'], "50").'<br />
-   <span class="preinput">'._("Subject:")
-    .'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="subject" '
+   <span class="preinput"><label for="subject">'._("Subject:")
+    .'</label></span><br />
+&nbsp;&nbsp;&nbsp;<input type="text" id="subject" name="subject" '
     .'size="60" maxlength="45" value="" /><br />
-   <span class="preinput">'._("Message:").'</span><br />
-   &nbsp;&nbsp;&nbsp;<textarea name="body" rows="20" cols="60"></textarea>
+   <span class="preinput"><label for="body">'._("Message:")
+    .'</label></span><br />
+&nbsp;&nbsp;&nbsp;<textarea id="body" name="body" rows="20" cols="60"></textarea>
 
    <p align="center"><input type="submit" name="send_mail" value="'
    ._('Send Message').'" /></p>

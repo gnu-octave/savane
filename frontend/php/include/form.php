@@ -60,9 +60,12 @@ function form_input ($type, $name, $value="", $extra=false)
     $value = 'value="'.htmlentities($value).'"';
   if ($extra)
     $extra = " $extra";
+  $id_attr = ' id="'.$name.'"';
+  if ($type == 'hidden' || $type == 'submit' || $type == 'radio')
+    $id_attr = '';
 
   return '
-    <input type="'.$type.'" id="'.$name.'" name="'.$name.'" '.$value.$extra.' />';
+    <input type="'.$type.'"'.$id_attr.' name="'.$name.'" '.$value.$extra.' />';
 }
 
 # Special input: textarea.
@@ -72,7 +75,7 @@ function form_textarea ($name, $value="", $extra=false)
     $extra = " $extra";
 
   return '
-    <textarea name="'.$name.'"'.$extra.'>'.$value.'</textarea>';
+    <textarea id="'.$name.'" name="'.$name.'"'.$extra.'>'.$value.'</textarea>';
 }
 
 # Add submit button.

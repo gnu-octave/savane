@@ -2,7 +2,7 @@
 # Edit news CC list.
 # 
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -55,8 +55,11 @@ print '<h2>'._("News Tracker Email Notification Settings").'</h2>
 print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />';
-print '<span class="preinput">'._("Carbon-Copy List:").'</span>
-<br />&nbsp;&nbsp;<input type="text" name="form_news_address" value="'
+print '<span class="preinput"><label for="form_news_address">'
+._("Carbon-Copy List:").'</label></span>
+<br />
+&nbsp;&nbsp;<input type="text" name="form_news_address" id="form_news_address"
+                   value="'
 .$row_grp['new_news_address'].'" size="40" maxlength="255" />';
 print '
 <p align="center"><input type="submit" name="update" value="'._("Update").'" />

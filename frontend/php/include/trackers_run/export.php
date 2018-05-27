@@ -427,8 +427,8 @@ $export_id = null; # Not implemented
 trackers_header(array('title'=>_("Data Export Jobs")));
 
 print '<p>'
-._("From here, you can select criteria for an XML export of the items of your
-project of the current tracker. Then your request will be queued and made
+._("From here, you can select criteria for an XML export of the items
+of the current tracker of your project. Then your request will be queued and made
 available on an HTTP accessible URL. This way you can automate exports, using
 scripts, as you know the file URL in advance.").'</p>';
 
@@ -558,14 +558,18 @@ if ($export_count < $max_export)
                                                                  'report_id',
                                                                  $report_id,
                                                                  true,
-                                                                 'Basic'),
-                                           '<select name="advsrch">
+                                                                 _('Basic'),
+                                                                 false, 'Any',
+                                                                 false,
+                                                                  _("query form")),
+                                           '<select title="'._("selection type")
+.'" name="advsrch">
 <option value="0"'.$advsrch_0.'>'
 # TRANSLATORS: this string is used to specify kind of selection.
 ._("Simple").'</option>
 <option value="1"'.$advsrch_1.'>'
 # TRANSLATORS: this string is used to specify kind of selection.
-._("Multiple").'</option></select>'),
+._("Multiple")."</option>\n</select>\n"),
                                    form_header($_SERVER['PHP_SELF'].'#new', '')
                                    .form_input("hidden", "group", $group),
                                    form_submit(_("Apply")));

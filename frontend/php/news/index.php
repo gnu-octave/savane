@@ -45,7 +45,8 @@ $form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
 $form = sprintf(
 ngettext("Show summaries for the %s latest news.",
          "Show summaries for the %s latest news.", $limit),
- '<input type="text" name="limit" size="4" value="'.$limit.'" />');
+ '<input type="text" title="'._("Number of news to show")
+.'" name="limit" size="4" value="'.$limit.'" />');
 if (isset($group))
   $form .= '<input type="hidden" name="group" value="'.$group.'" />';
 $form_submit = '<input class="bold" type="submit" value="'._("Apply").'"  />';

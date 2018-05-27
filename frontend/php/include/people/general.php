@@ -78,12 +78,13 @@ function people_show_table()
                                  WHERE category_id=? AND status_id=1",
                                  array(db_result($result,$i,'category_id')));
           print db_error();
-          $return .= '<input type="checkbox" name="categories[]" value="'.
-             db_result($result,$i,'category_id') .'"><a href="'.
-             htmlentities ($_SERVER["PHP_SELF"]).'?categories[]='.
-             db_result($result,$i,'category_id').'">'.
-          db_result($result,$i,'name') .' ('.
-             db_result($count_res,0,'count') .')</a><br />
+          $return .= '<input type="checkbox" title="'.db_result($result,$i,'name')
+             .'" name="categories[]" value="'
+             .db_result($result,$i,'category_id') .'"><a href="'
+             .htmlentities ($_SERVER["PHP_SELF"]).'?categories[]='
+             .db_result($result,$i,'category_id').'">'
+             .db_result($result,$i,'name') .' ('
+             .db_result($count_res,0,'count') .')</a><br />
 ';
         }
     }
@@ -107,9 +108,11 @@ function people_show_table()
 
       for ($i=0; $i<$rows; $i++)
         {
-          $return .= '<input type="checkbox" name="types[]" value="' .
-             db_result($result,$i,'type_id') . '"><a href="'.
-             htmlentities ($_SERVER["PHP_SELF"]).'?types[]='
+          $return .= '<input type="checkbox" title="'
+             .db_result($result,$i,'name') 
+             .'" name="types[]" value="'
+             .db_result($result,$i,'type_id') . '"><a href="'
+             .htmlentities ($_SERVER["PHP_SELF"]).'?types[]='
              . db_result($result,$i,'type_id')
              .'">' .  db_result($result,$i,'name') . ' ('
              .db_result($result,$i,'count'). ')</a><br />
@@ -121,8 +124,9 @@ function people_show_table()
       $return = '<form action="'
                 .htmlentities ($_SERVER["PHP_SELF"]).'" method="get">
 ' . $return . '
-<hr /><input type="checkbox" name="show_any" value="1">
-'._('Show all jobs for all project types').'<br />
+<hr />
+<input type="checkbox" name="show_any" id="show_any" value="1">
+<label for="show_any">'._('Show all jobs for all project types').'</label><br />
 <input type="submit" name="submit" value="'._("Search").'" />
 </form>
 ';
@@ -186,7 +190,10 @@ function people_job_status_box($name='status_id',$checked='xyxy')
                                      _("Deleted"));
   $sql="SELECT * FROM people_job_status";
   $result=db_query($sql);
-  return html_build_localized_select_box ($result,$name,$checked);
+  return html_build_localized_select_box ($result, $name,
+                                          $checked, true, 'None',
+                                          false, 'Any', false,
+                                          _('job status'));
 }
 
 function people_job_category_box($name='category_id',$checked='xyxy')
@@ -216,7 +223,10 @@ function people_job_category_box($name='category_id',$checked='xyxy')
 
   $sql="SELECT * FROM people_job_category";
   $result=db_query($sql);
-  return html_build_localized_select_box ($result,$name,$checked);
+  return html_build_localized_select_box ($result, $name,
+                                          $checked, true, 'None',
+                                          false, 'Any', false,
+                                          _('job category'));
 }
 
 function people_add_to_job_inventory($job_id,$skill_id,$skill_level_id,
@@ -321,12 +331,12 @@ function people_verify_job_group($job_id,$group_id)
     }
 }
 
-function people_edit_job_inventory($job_id,$group_id)
+function people_draw_skill_box ($result, $job_id=false, $group_id=false)
 {
-  $result = db_execute("SELECT *,people_skill.name AS skill_name
-     FROM people_job_inventory,people_skill
-     WHERE job_id = ? AND people_skill.skill_id=people_job_inventory.skill_id",
-    array($job_id));
+  if ($job_id === false)
+    $infix = 'skill';
+  else
+    $infix = 'job';
 
   $title_arr=array();
   $title_arr[]=_('Skill');
@@ -334,15 +344,15 @@ function people_edit_job_inventory($job_id,$group_id)
   $title_arr[]=_('Experience');
   $title_arr[]=_('Action');
 
-  print html_build_list_table_top ($title_arr);
-
   $rows = db_numrows($result);
   $i = 0;
   if (!$result || $rows < 1)
     {
+      print html_build_list_table_top ($title_arr);
       print '
 <tr><td colspan="4"><strong>'._("No Skill Inventory Set Up")
         .'</strong></td></tr>';
+      print "\n</table>\n";
       print db_error();
     }
   else
@@ -351,13 +361,16 @@ function people_edit_job_inventory($job_id,$group_id)
 	{
 	  print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-<input type="hidden" name="job_inventory_id" value="'
-                . db_result($result,$i,'job_inventory_id') .'" />
-<input type="hidden" name="job_id" value="'. db_result($result,$i,'job_id')
+';
+          print html_build_list_table_top ($title_arr);
+          print '
+<tr class="'. utils_get_alt_row_color($i) .'">
+<td><input type="hidden" name="'.$infix.'_inventory_id" value="'
+                . db_result($result,$i,''.$infix.'_inventory_id') .'" />
+<input type="hidden" name="'.$infix.'_id" value="'. db_result($result,$i,''.$infix.'_id')
                 .'" />
 <input type="hidden" name="group_id" value="'.$group_id.'" />
-<tr class="'. utils_get_alt_row_color($i) .'">
-<td><span class="smaller">'. db_result($result,$i,'skill_name') . '</span></td>
+<span class="smaller">'. db_result($result,$i,'skill_name') . '</span></td>
 <td><span class="smaller">'
 . people_skill_level_box('skill_level_id', db_result($result,$i,'skill_level_id'))
                            . '</span></td>
@@ -365,33 +378,53 @@ function people_edit_job_inventory($job_id,$group_id)
                                                    db_result($result,$i,
                                                              'skill_year_id'))
                            . '</span></td>
-<td nowrap><span class="smaller"><input type="submit" name="update_job_inventory" '
+<td nowrap><span class="smaller"><input type="submit" name="update_'.$infix.'_inventory" '
     .'value="'._("Update").'"> &nbsp;
-<input type="submit" name="delete_from_job_inventory" value="'
+<input type="submit" name="delete_from_'.$infix.'_inventory" value="'
     ._("Delete").'"></span></td>
-</tr></form>
+</tr></table>
+</form>
 ';
 	}
 
     }
-  #add a new skill
-  $i++; #for row coloring
+
+  $i = 0;
+  print '
+<h3>'._("Add a New Skill").'</h3>
+';
 
   print '
-<tr><td colspan="4"><strong>'._("Add A New Skill").'</strong></td></tr>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-<input type="HIDDEN" name="job_id" value="'. $job_id .'" />
-<input type="HIDDEN" name="group_id" value="'.$group_id.'" />
+';
+  print html_build_list_table_top ($title_arr);
+print '
 <tr class="'. utils_get_alt_row_color($i) .'">
-<td><span class="smaller">'. people_skill_box('skill_id'). '</span></td>
+<td>';
+
+if ($job_id === false)
+  print '<input type="hidden" name="'.$infix.'_id" value="'. $job_id .'" />
+<input type="hidden" name="group_id" value="'.$group_id.'" />
+';
+
+print '<span class="smaller">'. people_skill_box('skill_id'). '</span></td>
 <td><span class="smaller">'. people_skill_level_box('skill_level_id'). '</span></td>
 <td><span class="smaller">'. people_skill_year_box('skill_year_id'). '</span></td>
-<td nowrap><span class="smaller"><input type="SUBMIT" name="add_to_job_inventory"
+<td nowrap><span class="smaller"><input type="submit" name="add_to_'
+.$infix.'_inventory"
 value="'._("Add Skill").'"></span></td>
-</tr></form>';
+</tr></table>
+</form>';
+}
 
-  print '
-</table>';
+function people_edit_job_inventory($job_id,$group_id)
+{
+  $result = db_execute("SELECT *,people_skill.name AS skill_name
+     FROM people_job_inventory,people_skill
+     WHERE job_id=? AND people_skill.skill_id=people_job_inventory.skill_id",
+    array($job_id));
+
+  people_draw_skill_box ($result, $job_id, $group_id);
 }
 
 function people_show_job_list($result, $edit=0)
@@ -543,7 +576,8 @@ function people_skill_box($name='skill_id',$checked='xyxy')
       $sql="SELECT * FROM people_skill ORDER BY name ASC";
       $PEOPLE_SKILL=db_query($sql);
     }
-  return html_build_select_box ($PEOPLE_SKILL,$name,$checked);
+  return html_build_select_box ($PEOPLE_SKILL, $name, $checked, true, 'None',
+                                false, 'Any', false, 'skills');
 }
 
 function people_skill_level_box($name='skill_level_id',$checked='xyxy')
@@ -567,7 +601,10 @@ function people_skill_level_box($name='skill_level_id',$checked='xyxy')
       $sql="SELECT * FROM people_skill_level";
       $PEOPLE_SKILL_LEVEL=db_query($sql);
     }
-  return html_build_localized_select_box ($PEOPLE_SKILL_LEVEL,$name,$checked);
+  return html_build_localized_select_box ($PEOPLE_SKILL_LEVEL, $name,
+                                          $checked, true, 'None',
+                                          false, 'Any', false,
+                                          _('skill level'));
 }
 
 function people_skill_year_box($name='skill_year_id',$checked='xyxy')
@@ -586,11 +623,14 @@ function people_skill_year_box($name='skill_year_id',$checked='xyxy')
                                      _('> 10 years'));
   if (!$PEOPLE_SKILL_YEAR)
     {
-      #will be used many times potentially on a single page
+      # Potentially used many times on a single page.
       $sql="SELECT * FROM people_skill_year";
-      $PEOPLE_SKILL_YEAR=db_query($sql);
+      $PEOPLE_SKILL_YEAR = db_query($sql);
     }
-  return html_build_localized_select_box ($PEOPLE_SKILL_YEAR,$name,$checked);
+  return html_build_localized_select_box ($PEOPLE_SKILL_YEAR, $name,
+                                          $checked, true, 'None',
+                                          false, 'Any', false,
+                                          _('experience level'));
 }
 
 function people_add_to_skill_inventory($skill_id,$skill_level_id,$skill_year_id)
@@ -684,72 +724,6 @@ function people_edit_skill_inventory($user_id)
                        ."people_skill.skill_id=people_skill_inventory.skill_id",
                        array($user_id));
 
-  $title_arr=array();
-  $title_arr[]=_("Skill");
-  $title_arr[]=_("Level");
-  $title_arr[]=_("Experience");
-  $title_arr[]=_("Action");
-
-  print html_build_list_table_top ($title_arr);
-
-  $i = 0;
-  $rows=db_numrows($result);
-  if (!$result )  {
-    print '<tr><td colspan="4"><p class="warn">('._("SQL Error:").')';
-    print db_error();
-    print '</p></td></tr>';
-  } else if ( $rows < 1)
-    {
-      print '<tr><td colspan="4"><p class="warn">'
-            ._("No Skill Inventory Set Up").'</p>';
-      print '</td></tr>
-';
-    }
-  else
-    {
-      for ($i=0; $i < $rows; $i++)
-	{
-	  print '
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-<input type="hidden" name="skill_inventory_id" value="'
-            .db_result($result,$i,'skill_inventory_id').'" />
-<tr class="'. utils_get_alt_row_color($i) .'">
-<td><span class="smaller">'. db_result($result,$i,'skill_name') .'</span></td>
-<td><span class="smaller">'. people_skill_level_box('skill_level_id',
-                                                    db_result($result,$i
-                                                              ,'skill_level_id'))
-                                                    . '</span></td>
-<td><span class="smaller">'. people_skill_year_box('skill_year_id',
-                                                   db_result($result,$i,
-                                                             'skill_year_id'))
-                                                    . '</span></td>
-<td nowrap><span class="smaller"><input type="submit" name="update_skill_inventory"'
-    .'value="'._("Update").'"> &nbsp;
-<input type="submit" name="delete_from_skill_inventory"'
-    .'value="'._("Delete").'"></span></td>
-</tr>
-</form>
-';
-	}
-
-    }
-  #add a new skill
-  $i++; #for row coloring
-
-  print '
-<tr><td colspan="4"><strong>'._("Add A New Skill").'</strong></td></tr>
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-<tr class="'. utils_get_alt_row_color($i) .'">
-<td><span class="smaller">'. people_skill_box('skill_id'). '</span></td>
-<td><span class="smaller">'. people_skill_level_box('skill_level_id'). '</span></td>
-<td><span class="smaller">'. people_skill_year_box('skill_year_id'). '</span></td>
-<td nowrap><span class="smaller"><input type="submit" '
-.'name="add_to_skill_inventory" value="'._("Add Skill").'"></span></td>
-	</tr>
-	</form>';
-
-  print '
-		</table>';
+  people_draw_skill_box ($result);
 }
-
 ?>

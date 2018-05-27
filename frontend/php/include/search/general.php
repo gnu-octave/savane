@@ -71,7 +71,9 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
               .'" /></span>';
     }
 
-  $ret .= '<input type="text" size="'.$size.'" name="words" value="'
+  $ret .= '<input type="text" '
+          .'title="'._("Terms to look for").'" '
+          .'size="'.$size.'" name="words" value="'
           .htmlspecialchars($searched_words).'" />';
 
   if ($is_small)
@@ -84,7 +86,8 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
     }
   else
     {
-      $sel = '<select name="type_of_search">'."\n";
+      $sel = '<select title="'._("Area to search in").'" '
+             .'name="type_of_search">'."\n";
 
       # If the search is restricted to a given group, remove the possibility
       # to search another group, unless we're showing the left box.
@@ -252,22 +255,26 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
   if ($size > 15)
     {
       $ret .= '<br />&nbsp;<input type="radio" name="exact" value="0"'
-              .( $exact ? " " : " checked").' />'
+              .( $exact ? " " : " checked").' title="'
+              ._("with at least one of the words").'"/>'
               ._("with at least one of the words")."\n";
       $ret .= '<br />&nbsp;<input type="radio" name="exact" value="1"'
-              .( $exact ? " checked" : " " ).' />'._("with all of the words")
-              ."\n";
+              .( $exact ? " checked" : " " ).' title="'._("with all of the words")
+              .'"/>'._("with all of the words")."\n";
       $ret .= '<br />&nbsp;'
               .sprintf(ngettext("%s result per page", "%s results per page",
                                 intval($max_rows)),
                        '<input type="text" name="max_rows" value="'
-                       .$max_rows.'" size="4" />')."\n";
+                       .$max_rows.'" title="'
+                       ._("Number of items to show per page")
+                       .'" size="4" />')."\n";
       if (!isset($group_id))
         {
           # Add the functionality to restrict the search to a project type.
           $ret .="<br />&nbsp;";
 
-          $select = '<select name="type" size="1"><option value="">'
+          $select = '<select name="type" title="'._("Group type to search in")
+                    .'" size="1"><option value="">'
 # TRANSLATORS: this string is used in the context of "Search [...] in any group type"
                     ._("any")
                     .'</option>'."\n";

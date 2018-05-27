@@ -249,7 +249,7 @@ if ($new_report)
     $title_arr=array();
     $title_arr[]=_("Field Label");
     $title_arr[]=_("Description");
-    $title_arr[]=_("Use as a Search Criteria");
+    $title_arr[]=_("Use as a Search Criterion");
     $title_arr[]=_("Rank on Search");
     $title_arr[]=_("Use as an Output Column");
     $title_arr[]=_("Rank on Output");
@@ -261,30 +261,21 @@ if ($new_report)
          <input type="hidden" name="group_id" value="'.$group_id.'" />
          <input type="hidden" name="post_changes" value="y" />
          <p>
-         <span class="preinput">'
-    ._("Name of the Query Form:").'</span><br />
-         <input type="text" name="rep_name" value="" size="20" maxlength="20" />
+         <span class="preinput"><label for="rep_name"'
+    ._("Name of the Query Form:").'</label></span><br />
+         <input type="text" name="rep_name" id="rep_name"
+                value="" size="20" maxlength="20" />
          </p><p>
          <span class="preinput">'
     ._("Scope:").'</span><br />';
 
-  /*
- Separation of personal and project administration operation
-  if (user_ismember($group_id,'A')
-    {
-      print '<select name="rep_scope">
-                        <option value="I">'._("Personal").'</option>
-                        <option value="P">'._("Project").'</option>
-                        </select>';
-    }
-  else
-    { print _("Personal").' <input type="hidden" name="rep_scope" value="I" />'; }
-  */
     print _("Project").' <input type="hidden" name="rep_scope" value="P" />';
     print '</p>
 <p>
-     <span class="preinput">'._("Description:").'</span><br />
-     <input type="text" name="rep_desc" value="" size="50" maxlength="120" />
+     <span class="preinput"><label for="rep_desc">'._("Description:")
+       .'</label></span><br />
+     <input type="text" name="rep_desc" id="rep_desc"
+            value="" size="50" maxlength="120" />
 </p>
 ';
 
@@ -329,9 +320,11 @@ if ($new_report)
         print '<tr class="'. utils_get_alt_row_color($i) .'">';
         print "\n<td>".trackers_data_get_label($field)."</td>\n"
           ."<td>".trackers_data_get_description($field)."</td>\n"
-          ."<td align=\"center\">".'<input type="checkbox" name="'.$cb_search
+          ."<td align=\"center\">".'<input title="'._("Use as a Search Criterion")
+          .'" type="checkbox" name="'.$cb_search
           .'" value="1" /></td>'
-          ."\n<td align=\"center\">".'<input type="text" name="'
+          ."\n<td align=\"center\">".'<input type="text" title="'
+          ._("Rank on Search").'" name="'
           .$tf_search.'" value="" size="5" maxlen="5" />'."</td>\n";
 
         // If the current field is item id, we force its presence on the
@@ -347,13 +340,16 @@ if ($new_report)
         else
           {
             print "\n<td align=\"center\">".'<input type="checkbox" name="'
-              .$cb_report.'" value="1" />'."</td>\n"
-              ."<td align=\"center\">".'<input type="text" name="'.$tf_report
+              .$cb_report.'" title="'._("Use as an Output Column")
+              .'" value="1" />'."</td>\n"
+              ."<td align=\"center\">".'<input type="text" title="'
+              ._("Rank on Output").'" name="'.$tf_report
               .'" value="'.$tf_report_val.'" size="5" maxlen="5" />'."</td>\n";
           }
 
         print "\n<td align=\"center\">".'<input type="text" name="'
-              .$tf_colwidth.'" value="" size="5" maxlen="5" />'."</td>\n"
+              .$tf_colwidth.'" title="'._("Column width (optional)")
+              .'" value="" size="5" maxlen="5" />'."</td>\n"
           ."</tr>\n";
         $i++;
       }
@@ -399,7 +395,7 @@ else if ($show_report)
     $title_arr=array();
     $title_arr[]=_("Field Label");
     $title_arr[]=_("Description");
-    $title_arr[]=_("Use as a Search Criteria");
+    $title_arr[]=_("Use as a Search Criterion");
     $title_arr[]=_("Rank on Search");
     $title_arr[]=_("Use as an Output Column");
     $title_arr[]=_("Rank on Output");
@@ -410,14 +406,15 @@ else if ($show_report)
              <input type="hidden" name="group_id" value="'.$group_id.'" />
              <input type="hidden" name="report_id" value="'.$report_id.'" />
              <input type="hidden" name="post_changes" value="y" />
-             <span class="preinput">'._("Name:").' </span><br />&nbsp;&nbsp;&nbsp;
-             <input type="text" name="rep_name" value="'
+             <span class="preinput"><label for="rep_name">'._("Name:")
+             .'</label> </span><br />&nbsp;&nbsp;&nbsp;
+             <input type="text" name="rep_name" id="rep_name" value="'
              .db_result($res,0,'name').'" size="20" maxlength="20" />';
     print '
 <p>
-<span class="preinput">'._("Description:")
-            .'</span><br />&nbsp;&nbsp;&nbsp;
-<input type="text" name="rep_desc" value="'
+<span class="preinput"><label for="rep_desc">'._("Description:")
+            .'</label></span><br />&nbsp;&nbsp;&nbsp;
+<input type="text" name="rep_desc" id="rep_desc" value="'
             .db_result($res,0,'description').'" size="50" maxlength="120" /></p>
 <p>';
 
@@ -457,9 +454,12 @@ else if ($show_report)
 
         print "\n<td>".trackers_data_get_label($field).'</td>'
           ."\n<td>".trackers_data_get_description($field).'</td>'
-          ."\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search
+          ."\n<td align=\"center\">"
+          .'<input type="checkbox" title="'._("Use as a Search Criterion")
+          .'" name="'.$cb_search
           .'" value="1" '.$cb_search_chk.'  /></td>'
           ."\n<td align=\"center\">".'<input type="text" name="'.$tf_search
+          .'" title="'._("Rank on Search")
           .'" value="'.$tf_search_val.'" size="5" maxlen="5" /></td>';
         // If the current field is item id, we force it's presence on
         // the report with rank 0. This field is mandatory: otherwise
@@ -474,12 +474,15 @@ else if ($show_report)
         else
           {
             print "\n<td align=\"center\">".'<input type="checkbox" name="'
-              .$cb_report.'" value="1" '.$cb_report_chk.'  /></td>'
+              .$cb_report.'" title="'._("Use as an Output Column")
+              .'" value="1" '.$cb_report_chk.'  /></td>'
               ."\n<td align=\"center\">".'<input type="text" name="'.$tf_report
+              .'" title="'._("Rank on Output")
               .'" value="'.$tf_report_val.'" size="5" maxlen="5" />'."</td>\n";
           }
         print "\n<td align=\"center\">".'<input type="text" name="'
-          .$tf_colwidth.'" value="'.$tf_colwidth_val
+          .$tf_colwidth.'" title="'._("Column width (optional)")
+          .'" value="'.$tf_colwidth_val
           .'" size="5" maxlen="5" />'."</td>\n"
           ."</tr>\n";
         $i++;
@@ -548,7 +551,7 @@ else
                   .'&amp;delete_report=1&amp;report_id='.$arr['report_id']
                   .'&amp;rep_name='.$arr['name'].'">'
                   .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-                  .'.theme/misc/trash.png" border="0" /></a>';
+                  .'.theme/misc/trash.png" border="0" alt="'._("Delete").'" /></a>';
               }
 
             print "</td>\n</tr>\n";

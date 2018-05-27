@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -118,26 +118,28 @@ if ($update_field)
     <h1>'
       ._("Field Label:").' ';
 
-    $closetag = '';
+    $closetag = "</h1>\n";
     if (trackers_data_is_select_box($field))
       {
         # Only selectboxes can have values configured.
-        $closetag = ' &nbsp;&nbsp; <span class="smaller">('
+        $closetag .= '<p><span class="smaller">'
                     .utils_link($GLOBALS['sys_home'].ARTIFACT
                                 .'/admin/field_values.php?group='.$group
                                 .'&amp;list_value=1&amp;field='.$field,
-                                _("Jump to this field values")).')</span>';
+                                _("Jump to this field values"))."</span></p>\n";
       }
-    $closetag .= "</h1>\n";
     # If it is a custom field let the user change the label and description.
     if (trackers_data_is_custom($field))
       {
-        print '<input type="text" name="label" value="'
+        print '<input type="text" title="'._("Field Label")
+          .'" name="label" value="'
           .trackers_data_get_label($field).'" size="20" maxlength="85">'
           .$closetag;
-        print '<span class="preinput">'._("Description:").' </span>';
+        print '<span class="preinput"><label for="description">'
+              ._("Description:").'</label> </span>';
         print '<br />
-&nbsp;&nbsp;&nbsp;<input type="text" name="description" value="'
+&nbsp;&nbsp;&nbsp;<input type="text" id="description"
+                         name="description" value="'
           .trackers_data_get_description($field)
           .'" size="70" maxlength="255" /><br />
 ';
@@ -157,7 +159,7 @@ if ($update_field)
     else
       {
         print '<br />&nbsp;&nbsp;&nbsp;
-<select name="status">
+<select title="'._("Usage status").'" name="status">
   <option value="1"'.(trackers_data_is_used($field)?' selected="selected"':'')
            .'>'._("Used").'</option>
   <option value="0"'.(trackers_data_is_used($field)?'':' selected="selected"')
@@ -170,7 +172,7 @@ if ($update_field)
       {
         print '<br /><span class="preinput">'._("Item History:").' </span>
 <br />&nbsp;&nbsp;&nbsp;
-<select name="keep_history">
+<select title="'._("whether to keep in history").'" name="keep_history">
   <option value="1"'
   .(trackers_data_do_keep_history($field)?' selected="selected"':'')
   .'>'._("Keep field value changes in history").'</option>
@@ -193,7 +195,7 @@ if ($update_field)
         $mandatory_flag = trackers_data_mandatory_flag($field);
         print '<span class="preinput">'._("This field is:").' </span>
 <br />&nbsp;&nbsp;&nbsp;
-<select name="mandatory_flag">
+<select title="'._("whether the field is mandatory").'" name="mandatory_flag">
   <option value="1"'.(($mandatory_flag == 1)?' selected="selected"':'').'>'
   ._("Optional (empty values are accepted)").'</option>
   <option value="3"'.(($mandatory_flag == 3)?' selected="selected"':'').'>'
@@ -215,17 +217,21 @@ if ($update_field)
         if ($field != "vote" && $field != "originator_email")
           {
             $checkbox_members =
-              '<input type="checkbox" name="show_on_add_members" value="1"'
+              '<input type="checkbox" title="'._("Show field to members")
+              .'" name="show_on_add_members" value="1"'
               .(trackers_data_is_showed_on_add_members($field)?
                 ' checked="checked"':'')
               .' />';
             $checkbox_anonymous =
-              '<input type="checkbox" name="show_on_add_nologin" value="2"'
+              '<input type="checkbox" title="'
+              ._("Show field to logged-in users")
+              .'" name="show_on_add_nologin" value="2"'
               .(trackers_data_is_showed_on_add_nologin($field)?
                 ' checked="checked"':'')
               .' />';
             $checkbox_loggedin =
-              '<input type="checkbox" name="show_on_add" value="1"'
+              '<input type="checkbox" title="'._("Show field to anonymous users")
+              .'" name="show_on_add" value="1"'
               .(trackers_data_is_showed_on_add($field)?' checked="checked"':'')
               .' />';
           }
@@ -297,9 +303,9 @@ if ($update_field)
       # Check the previous comments.
       if (!trackers_data_is_special($field))
         {
-          print '<span class="preinput">'._("Rank on page:")
-                .' </span><br />&nbsp;&nbsp;&nbsp;';
-          print '<input type="text" name="place" value="'
+          print '<span class="preinput"><label for="place">'._("Rank on page:")
+                .'</label> </span><br />&nbsp;&nbsp;&nbsp;';
+          print '<input type="text" id="place" name="place" value="'
                 .trackers_data_get_place($field)
                 .'" size="6" maxlength="6" /><br />'."\n";
         }
@@ -314,27 +320,30 @@ if ($update_field)
         {
           list($size,$maxlength) = trackers_data_get_display_size($field);
 
-          print '<span class="preinput">'._("Visible size of the field:")
-                ." </span><br />&nbsp;&nbsp;&nbsp;\n";
-          print '<input type="text" name="n1" value="'.$size
+          print '<span class="preinput"><label for="n1">'
+                ._("Visible size of the field:")
+                ."</label> </span><br />&nbsp;&nbsp;&nbsp;\n";
+          print '<input type="text" id="n1" name="n1" value="'.$size
                 .'" size="3" maxlength="3" /><br />'."\n";
-          print '<span class="preinput">'
+          print '<span class="preinput"><label for="n2">'
                 ._("Maximum size of field text (up to 255):")
-                .' </span><br />&nbsp;&nbsp;&nbsp;'."\n";
-          print '<input type="text" name="n2" value="'.$maxlength
+                .'</label> </span><br />&nbsp;&nbsp;&nbsp;'."\n";
+          print '<input type="text" id="n2" name="n2" value="'.$maxlength
                 .'" size="3" maxlength="3" /><br />'."\n";
         }
       else if (trackers_data_is_text_area($field))
         {
           list($rows,$cols) = trackers_data_get_display_size($field);
 
-          print '<span class="preinput">'._("Number of columns of the field:")
-                ." </span><br />&nbsp;&nbsp;&nbsp;\n";
-          print '<input type="text" name="n1" value="'.$rows
+          print '<span class="preinput"><label for="n1">'
+                ._("Number of columns of the field:")
+                ."</label> </span><br />&nbsp;&nbsp;&nbsp;\n";
+          print '<input type="text" id="n1" name="n1" value="'.$rows
                 .'" size="3" maxlength="3" /><br />'."\n";
-          print '<span class="preinput">'._("Number of rows  of the field:")
-                .' </span><br />&nbsp;&nbsp;&nbsp;'."\n";
-          print '<input type="text" name="n2" value="'.$cols
+          print '<span class="preinput"><label for="n2">'
+                ._("Number of rows  of the field:")
+                .'</label> </span><br />&nbsp;&nbsp;&nbsp;'."\n";
+          print '<input type="text" id="n2" name="n2" value="'.$cols
                 .'" size="3" maxlength="3" /><br />'."\n";
         }
 
@@ -357,12 +366,16 @@ if ($update_field)
                 ._("By default, transitions (from one value to another) are:")
                 ."</h2>\n";
           print '&nbsp;&nbsp;&nbsp;<input type="radio" '
-                .'name="form_transition_default_auth" value="A" '
-                .(($transition_default_auth!='F')?' checked="checked"':'')
-                .' /> '._("Allowed").'<br />&nbsp;&nbsp;&nbsp;
-<input type="radio" name="form_transition_default_auth" value="F" '
+                .'name="form_transition_default_auth"
+id="form_transition_default_auth_allowed" value="A"
+'               .(($transition_default_auth!='F')?' checked="checked"':'')
+                .' /><label for="form_transition_default_auth_allowed">'
+                ._("Allowed").'</label><br />
+&nbsp;&nbsp;&nbsp;<input type="radio" id="form_transition_default_auth_forbidden"
+name="form_transition_default_auth" value="F" '
                 .(($transition_default_auth=='F')?'checked="checked"':'')
-                .' /> '._("Forbidden");
+                .' /><label for="form_transition_default_auth_forbidden">'
+                ._("Forbidden")."</label>\n";
         }
       print '
               <p align="center">

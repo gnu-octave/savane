@@ -5,7 +5,7 @@
 # Copyright 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright 2002-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright 2017 Ineiev
+# Copyright 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -398,7 +398,8 @@ priority and open/close items")))."</p>\n";
   print '<p class="noprint"><span class="preinput"> '._("Add a New Comment")
         . markup_info("rich");
   print form_submit (_('Preview'), 'preview')."</span><br />&nbsp;&nbsp;&nbsp;\n";
-  print trackers_field_textarea('comment',  htmlspecialchars($comment));
+  print trackers_field_textarea('comment', htmlspecialchars($comment),
+                                0, 0, _("New comment"));
   print '</p>';
 
   print '<p class="noprint"><span class="preinput">';
@@ -478,15 +479,20 @@ the required escape characters.)"), $GLOBALS['sys_upload_max']);
 
   print '</p><p class="noprint"><span class="preinput"> '._("Attach Files:")
     .'</span><br />
-      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file1" size="10" /> '
-    .'<input type="file" name="input_file2" size="10" />
+      &nbsp;&nbsp;&nbsp;<input type="file" title="'._("File to attach")
+    .'" name="input_file1" size="10" /> '
+    .'<input type="file" name="input_file2" title="'._("File to attach")
+    .'" size="10" />
       <br />
-      &nbsp;&nbsp;&nbsp;<input type="file" name="input_file3" size="10" /> '
-    .'<input type="file" name="input_file4" size="10" />
+      &nbsp;&nbsp;&nbsp;<input type="file" title="'._("File to attach")
+    .'" name="input_file3" size="10" /> '
+    .'<input type="file" name="input_file4" title="'._("File to attach")
+    .'" size="10" />
       <br />
       <span class="preinput">'._("Comment:").'</span><br />
       &nbsp;&nbsp;&nbsp;'
-    .'<input type="text" name="file_description" size="60" maxlength="255" />
+    .'<input type="text" name="file_description" title="'
+    ._("File description").'" size="60" maxlength="255" />
 </p>
 <p>';
 
@@ -514,11 +520,13 @@ fill a dependency against):");
 
   print '</span><br />
       &nbsp;&nbsp;&nbsp;'
-  .'<input type="text" name="depends_search" size="40" maxlength="255" /><br />
+  .'<input type="text" title="'._("Terms to look for")
+  .'" name="depends_search" size="40" maxlength="255" /><br />
 ';
 
   $tracker_select =
-    '&nbsp;&nbsp;&nbsp;<select name="depends_search_only_artifact">';
+    '&nbsp;&nbsp;&nbsp;<select title="'._("Tracker to search in")
+    .'" name="depends_search_only_artifact">';
 
   # Generate the list of searchable trackers
   $tracker_list = array(
@@ -538,7 +546,8 @@ fill a dependency against):");
     }
   $tracker_select .= "</select>\n";
 
-  $group_select = '<select name="depends_search_only_project">';
+  $group_select = '<select title="'._("Wether to search in any project")
+                  .'" name="depends_search_only_project">';
 
   # By default, search restricted to the project (lighter for the CPU, probably
   # also more accurate)
@@ -671,15 +680,17 @@ three characters are valid.");
 rather than their email addresses.)"), $GLOBALS['sys_name']);
 
   print '</p>
-<p class="noprint"><span class="preinput">'
+<p class="noprint"><span class="preinput"><label for="add_cc">'
     ._("Add Email Addresses (comma as separator):")
-    .'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="add_cc" '
+    .'</label></span><br />
+&nbsp;&nbsp;&nbsp;<input type="text" id="add_cc" name="add_cc" '
     .'size="40" value="'
     .htmlspecialchars($add_cc).'" />&nbsp;&nbsp;&nbsp;
         <br />
-        <span class="preinput">'
+        <span class="preinput"><label for="cc_comment">'
     ._("Comment:")
-    .'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="cc_comment" '
+    .'</label></span><br />
+&nbsp;&nbsp;&nbsp;<input type="text" id="cc_comment" name="cc_comment" '
     .'size="40" maxlength="255" value="'
     .htmlspecialchars($cc_comment).'" />';
   print '<p></p>';
@@ -713,8 +724,9 @@ managers.").'</p>
 # Show how many vote he already gave and allows to remove or give more
 # votes.
 # The number of remaining points must be 100 - others votes
-      print '<span class="preinput">'._("Your vote:")
-        .'</span><br />&nbsp;&nbsp;&nbsp;<input type="text" name="new_vote" '
+      print '<span class="preinput"><label for="new_vote">'._("Your vote:")
+        .'</label></span><br />
+&nbsp;&nbsp;&nbsp;<input type="text" name="new_vote" id="new_vote" '
         .'size="3" maxlength="3" value="'
         .htmlspecialchars($new_vote).'" /> '
         .sprintf(ngettext("/ %s remaining vote",
@@ -746,15 +758,20 @@ managers.").'</p>
 	  $checked = '';
           return $ret;
 	}
-      $tracker_select = '<select name="reassign_change_artifact">';
+      $tracker_select = '<select title="'._("Tracker to reassign to")
+                        .'" name="reassign_change_artifact">';
+      $tracker_select .= specific_reassign_artifact("support",
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("support", _("<!-- Move to the -->Support Tracker"));
+        _("<!-- Move to the -->Support Tracker"));
+      $tracker_select .= specific_reassign_artifact("bugs",
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("bugs", _("<!-- Move to the -->Bug Tracker"));
+        _("<!-- Move to the -->Bug Tracker"));
+      $tracker_select .= specific_reassign_artifact("task",
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("task", _("<!-- Move to the -->Task Tracker"));
+        _("<!-- Move to the -->Task Tracker"));
+      $tracker_select .= specific_reassign_artifact("patch",
 # TRANSLATORS: this string is used in the context of "Move to the %s".
-      $tracker_select .= specific_reassign_artifact("patch", _("<!-- Move to the -->Patch Tracker"));
+        _("<!-- Move to the -->Patch Tracker"));
       $tracker_select .= "</select>\n";
 
       printf (_("Move to the %s"), $tracker_select);
@@ -773,7 +790,8 @@ managers.").'</p>
 	}
 
       print '</span><br />
-&nbsp;&nbsp;&nbsp;<input type="text" name="reassign_change_project_search" '
+&nbsp;&nbsp;&nbsp;<input type="text" title="'._("Project to reassign item to")
+.'" name="reassign_change_project_search" '
 .'size="40" maxlength="255" />';
       if (!$reassign_change_project_search)
 	{

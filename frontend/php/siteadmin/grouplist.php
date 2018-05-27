@@ -109,7 +109,8 @@ print '<br />
 
 print '
 <form name="gpsrch" action="grouplist.php" method="POST">
-  <input type="text" name="search" value ="'.$search.'" />
+  <input type="text" title="'.no_i18n("Group name")
+  .'" name="search" value ="'.$search.'" />
   <input type="hidden" name="groupsearch" value="1" />
   <input type="submit" value="'.no_i18n("Search").'" />
 </form>

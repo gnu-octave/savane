@@ -22,7 +22,7 @@
 
 trackers_header(array ('title'=>_("Search")));
 print '<p>'
-._("With the following form, you can perform a search in the items summaries
+._("With the following form, you can perform a search in the item summaries
 and details. If you need to perform more complex search, use the query forms in
 Browse items page.")
 ."</p>\n";

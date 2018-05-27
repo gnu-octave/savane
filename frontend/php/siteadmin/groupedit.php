@@ -5,7 +5,7 @@
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -163,9 +163,10 @@ print '</td>
 </tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("System Name").':</span><br />
+print '<p><span class="preinput"><label for="form_name">'
+.no_i18n("System Name:").'</label></span><br />
 ';
-print '<input type="text" name="form_name" value="'
+print '<input type="text" name="form_name" id="form_name" value="'
       .$row_grp['unix_group_name'].'" />';
 
 $i++;
@@ -173,10 +174,11 @@ print '</td>
 </tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Status").':</span><br />
+print '<p><span class="preinput"><label for="form_status">'.no_i18n("Status:")
+.'</label></span><br />
 ';
 
-print '<select name="form_status">
+print '<select status" name="form_status" id="form_status">
 <option '.(($row_grp['status'] == "A")?'selected ':'').'value="A">'
        .no_i18n("Active").'</option>
 <option '.(($row_grp['status'] == "P")?'selected ':'').'value="P">'
@@ -205,11 +207,12 @@ print '</td>
 </tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Public?").'</span><br />
+print '<p><span class="preinput"><label for="form_public">'.no_i18n("Public?")
+.'</label></span><br />
 '.no_i18n("A private project will be completely invisible from the web interface.").'
 '.no_i18n("You must clear the HTML repository field below when setting the private
 flag otherwise unpredictable result will occur.").'<br />
-<select name="form_public">
+<select name="form_public" id="form_public">
 <option '.(($row_grp['is_public'] == 1)?'selected ':'').'value="1">'.no_i18n("Yes").'</option>
 <option '.(($row_grp['is_public'] == 0)?'selected ':'').'value="0">'.no_i18n("No").'</option>
 </select>
@@ -220,11 +223,12 @@ print '</td>
 </tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("License:").' </span><br />
+print '<p><span class="preinput"><label for="form_license">'
+.no_i18n("License:").'</label></span><br />
 ';
 print no_i18n("Note: this has influence only if the group type of which this group
 belongs to accepts this information.").'<br />';
-print '<select name="form_license">';
+print '<select name="form_license" id="form_license">';
 print '<option value="none">'.no_i18n("N/A").'</option>';
 print '<option value="other">'.no_i18n("Other license").'</option>';
 while (list($k,$v) = each($LICENSE_EN))
@@ -235,9 +239,9 @@ while (list($k,$v) = each($LICENSE_EN))
 }
 print '</select>
 <br />
-';
-print no_i18n("If other:").'<br />
-<input type="text" name="form_license_other" value="'
+<label for="form_license_other">';
+print no_i18n("If other:").'</label><br />
+<input type="text" name="form_license_other" id="form_license_other" value="'
 .$row_grp['license_other'].'" />';
 print '</p>
 ';
@@ -280,52 +284,51 @@ print '</td>
 </tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("CVS directory:").'</span><br /> ';
-print '<input type="text" name="form_dir_cvs" value="'.$row_grp['dir_cvs']
-      .'" size="50" />';
+function vcs_directory ($vcs, $label)
+{
+  print '<p><span class="preinput"><label for="form_dir_'.$vcs.'">'
+  .$label.'</label></span><br />
+';
+print '<input type="text" name="form_dir_'.$vcs.'" id="form_dir_'.$vcs
+      .'" value="'.$row_grp['dir_'.$vcs.''].'" size="50" />';
+}
+
+vcs_directory ('cvs', no_i18n("CVS directory:"));
 $i++;
 print '</td></tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("GNU Arch directory:").'</span><br />
-<input type="text" name="form_dir_arch" value="'
-      .$row_grp['dir_arch'].'" size="50" />';
+vcs_directory ('arch', no_i18n("GNU Arch directory:"));
 $i++;
 print '</td></tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Subversion directory:").'</span><br />
-<input type="text" name="form_dir_svn" value="'
-      .$row_grp['dir_svn'].'" size="50" />';
+vcs_directory ('svn', no_i18n("Subversion directory:"));
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Git directory:").'</span><br />
-<input type="text" name="form_dir_git" value="'
-      .$row_grp['dir_git'].'" size="50" />';
+vcs_directory ('git', no_i18n("Git directory:"));
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Mercurial directory:").'</span><br />
-<input type="text" name="form_dir_hg" value="'
-      .$row_grp['dir_hg'].'" size="50" />';
+vcs_directory ('hg', no_i18n("Mercurial directory:"));
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Bazaar directory:").'</span><br />
-<input type="text" name="form_dir_bzr" value="'
-      .$row_grp['dir_bzr'].'" size="50" />';
+vcs_directory ('bzr', no_i18n("Bazaar directory:"));
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Homepage directory:").'</span><br />
-<input type="text" name="form_dir_homepage" value="'
+print '<p><span class="preinput"><label for="form_dir_homepage">'
+.no_i18n("Homepage directory:").'</label></span><br />
+<input type="text" name="form_dir_homepage" id="form_dir_homepage" value="'
       .$row_grp['dir_homepage'].'" size="50" />';
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-print '<p><span class="preinput">'.no_i18n("Download directory:").'</span><br />
-<input type="text" name="form_dir_download" value="'
+print '<p><span class="preinput"><label for="form_dir_download">'
+.no_i18n("Download directory:").'</label></span><br />
+<input type="text" name="form_dir_download" id="form_dir_download" value="'
       .$row_grp['dir_download'].'" size="50" />';
 print '
 <p><input type="submit" name="update" value="'.no_i18n("Update").'">';
