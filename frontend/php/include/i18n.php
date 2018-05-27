@@ -115,7 +115,7 @@ if (isset($_COOKIE['LANGUAGE']) && isset($locale_list[$_COOKIE['LANGUAGE']]))
   $best_lang = $_COOKIE['LANGUAGE'];
 
 $locale = $locale_list[$best_lang];
-define('SV_LANG', str_replace ('_', '-', $locale));
+define('SV_LANG', $best_lang);
 
 setlocale('LC_ALL', $locale);
 
