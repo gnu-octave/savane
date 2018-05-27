@@ -79,7 +79,7 @@ if ($wash_ip)
 
 site_admin_header(array('title'=>no_i18n("Monitor Spam"),'context'=>'admhome'));
 
-print '<h3>'.html_anchor(no_i18n("Suspected users"), "users_results").'</h3>
+print '<h2>'.html_anchor(no_i18n("Suspected users"), "users_results").'</h2>
 ';
 print '<p>'.no_i18n("Follow the list of users that post content that as been flagged
 as spam, ordered by their spam score. If the user is an obvious spammer, you
@@ -193,7 +193,7 @@ else
 }
 
 print '<p>&nbsp;</p>';
-print '<h3>'.html_anchor(no_i18n("Banned IPs"), "ip_results").'</h3>
+print '<h2>'.html_anchor(no_i18n("Banned IPs"), "ip_results").'</h2>
 ';
 print '<p>'.no_i18n("Follow the list of IPs that are currently banned because content
 their owner posted was flagged as spam. This ban affect only anonymous users

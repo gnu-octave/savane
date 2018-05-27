@@ -155,8 +155,8 @@ function forum_header($params)
 <div class="indexcenter">
 ';
 
-          print "<h3><a href='forum.php?forum_id=$forum_id'>"
-                .db_result($result,0,'summary')."</a></h3>";
+          print "<h2><a href='forum.php?forum_id=$forum_id'>"
+                .db_result($result,0,'summary')."</a></h2>";
 # TRANSLATORS: the first argument is user's name, the second argument is date.
           print '<p><em>'.sprintf(_('Item posted by %1$s on %2$s.'),
               utils_user_link(user_getname(db_result($result,0,'submitted_by')),

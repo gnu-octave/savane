@@ -78,7 +78,7 @@ h1 {
   text-align: center; 
 }
 
-h2.toptitle {
+h1.toptitle {
   color: #339966;
   background-color: bisque;
   text-align: left;
@@ -86,12 +86,12 @@ h2.toptitle {
   text-shadow: 0.1em 0.1em #eacdab;
 }
 
-h3 {
+h2 {
   border-bottom: thin solid #cab79f;
   text-shadow: 0.1em 0.1em #f6e4cd;
 }
 
-h3 a:hover {
+h2 a:hover {
   background-color: #f6f2e6;
 }
 

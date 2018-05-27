@@ -418,7 +418,7 @@ $title_arr[]=_("Cookbook Manager");
 if ($project->Uses("news"))
   $title_arr[]=_("News Manager");
 
-print '<h3>'._("Group trackers posting restrictions").'</h3>
+print '<h2>'._("Group trackers posting restrictions").'</h2>
 <p>';
 print _("Here you can set the minimal authentication level required in order to
 post on the trackers.");
@@ -497,7 +497,7 @@ if ($project->Uses("news"))
   $title_arr[]=_("News Manager");
 
 print '<p>&nbsp;</p>
-<h3>'._("Group Default Permissions").'</h3>
+<h2>'._("Group Default Permissions").'</h2>
 ';
 member_explain_roles();
 print html_build_list_table_top ($title_arr);
@@ -544,7 +544,7 @@ $result = db_execute("SELECT user.user_name AS user_name,"
 . "ORDER BY user.user_name", array($group_id));
 
 print '<p>&nbsp;</p>
-<h3>'._("Permissions per squad").'</h3>
+<h2>'._("Permissions per squad").'</h2>
 ';
 
 if (!$result || db_numrows($result) < 1)
@@ -641,7 +641,7 @@ $result = db_execute("SELECT user.user_name AS user_name,"
 . "ORDER BY user.user_name", array($group_id));
 
 print '<p>&nbsp;</p>
-<h3>'._("Permissions per member").'</h3>
+<h2>'._("Permissions per member").'</h2>
 ';
 
 if (!$result || db_numrows($result) < 1)

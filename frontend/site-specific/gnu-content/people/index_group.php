@@ -23,7 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # TRANSLATORS: the argument is project name (like "GNU coreutils").
-sprintf ('<h3>'._('Project Help Wanted for %s').'</h3>
+sprintf ('<h2>'._('Project Help Wanted for %s').'</h2>
 
 ', group_getname($GLOBALS['group_id']));
 print '<p>'

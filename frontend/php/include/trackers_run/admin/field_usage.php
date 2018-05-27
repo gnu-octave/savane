@@ -115,7 +115,7 @@ if ($update_field)
     print '<input type="hidden" name="post_changes" value="y" />
     <input type="hidden" name="field" value="'.$field.'" />
     <input type="hidden" name="group_id" value="'.$group_id.'" />
-    <h2>'
+    <h1>'
       ._("Field Label:").' ';
 
     $closetag = '';
@@ -128,7 +128,7 @@ if ($update_field)
                                 .'&amp;list_value=1&amp;field='.$field,
                                 _("Jump to this field values")).')</span>';
       }
-    $closetag .= "</h2>\n";
+    $closetag .= "</h1>\n";
     # If it is a custom field let the user change the label and description.
     if (trackers_data_is_custom($field))
       {
@@ -180,7 +180,7 @@ if ($update_field)
 </select>';
         }
 
-    print "\n\n<p>&nbsp;</p><h3>"._("Access:").'</h3>';
+    print "\n\n<p>&nbsp;</p><h2>"._("Access:").'</h2>';
 
     # Set mandatory bit: if the field is special, meaning it is entered
     # by the system, or if it is "priority", assume the
@@ -289,7 +289,7 @@ if ($update_field)
 '.$checkbox_anonymous.' '._("<!-- present this field to --> Anonymous Users");
         }
 
-      print "\n\n<p>&nbsp;</p>\n<h3>"._("Display:")."</h3>\n";
+      print "\n\n<p>&nbsp;</p>\n<h2>"._("Display:")."</h2>\n";
 
       # yeupou--gnu.org 2005-07-18
       # I suspect that the is_special affect the way the field shown,
@@ -353,9 +353,9 @@ if ($update_field)
             $transition_default_auth = db_result($result, 0,
                                                  'transition_default_auth');
 
-          print "\n\n<p>&nbsp;</p>\n<h3>"
+          print "\n\n<p>&nbsp;</p>\n<h2>"
                 ._("By default, transitions (from one value to another) are:")
-                ."</h3>\n";
+                ."</h2>\n";
           print '&nbsp;&nbsp;&nbsp;<input type="radio" '
                 .'name="form_transition_default_auth" value="A" '
                 .(($transition_default_auth!='F')?' checked="checked"':'')

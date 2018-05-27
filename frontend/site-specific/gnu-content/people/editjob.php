@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 print '
-<h3>'._('Select Required Skills').'</h3>
+<h2>'._('Select Required Skills').'</h2>
 
 <p>'
 ._('Here you can edit/change the list of skills attached to this posting,

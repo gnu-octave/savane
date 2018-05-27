@@ -166,7 +166,7 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
 ."document.getElementById('hidsubpartlinkshow$uniqueid').style.display='none';";
 
   $ret = '
-  <h3 id="'.$uniqueid.'">
+  <h2 id="'.$uniqueid.'">
   <script type="text/javascript">';
 
   if (!$deployed)
@@ -198,7 +198,7 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
   <noscript>
     <a href="#'.$uniqueid.'">'.$title.'</a>
   </noscript>
-  </h3>
+  </h2>
 ';
   if (!$deployed)
     {

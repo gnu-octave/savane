@@ -285,7 +285,7 @@ print form_input("hidden", "group_id", $group_id);
 while ($row = db_fetch_array($result))
   {
     $id = $row['group_list_id'];
-    print '<h4>'.$row['list_name']."</h4>\n";
+    print '<h2>'.$row['list_name']."</h2>\n";
 
     print '<span class="preinput">'._("Description:").'</span>';
     print '<br />&nbsp;&nbsp;&nbsp;'
@@ -350,7 +350,7 @@ print '
 <input type="hidden" name="post_changes" value="y" />
 <input type="hidden" name="group_id" value="'.$group_id.'" />
 </p>
-<h3>'._('Create a new mailing list:').'</h3> ';
+<h2>'._('Create a new mailing list:').'</h2> ';
 
 $project_list_format  = $grp->getTypeMailingListFormat();
 $project_list_formats = split(',', $project_list_format);

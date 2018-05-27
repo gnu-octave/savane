@@ -102,7 +102,7 @@ function markup_rich($text)
 # Convert special markup characters in the input text to real HTML.
 #
 # This function does the same markup as utils_rich_markup(), plus
-# it converts headings to <h3> ... <h6>.
+# it converts headings to <h2> ... <h5>.
 function markup_full($text, $allow_headings=true)
 {
   $lines = explode("\n", $text);
@@ -444,9 +444,9 @@ function _markup_headings($line, &$context_stack, &$start_paragraph)
       if ($header_level_start == $header_level_end)
         {
           # If the user types '= heading =' (one '=' sign), it will
-          # actually be rendered as a level 3 heading <h3>.
-          $header_level_start += 2;
-          $header_level_end += 2;
+          # actually be rendered as a level 2 heading <h2>.
+          $header_level_start += 1;
+          $header_level_end += 1;
 
           $line = "<h$header_level_start>$matches[2]</h$header_level_end>";
           # Make sure that all previously used contexts get their

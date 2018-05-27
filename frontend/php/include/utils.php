@@ -649,12 +649,12 @@ function utils_double_diff_array($arr1, $arr2)
   # First transform both arrays in hashes.
   reset($arr1); reset($arr2);
   while ( list(,$v) = each($arr1))
-    $h1[$v] = $v;
+    $h2[$v] = $v;
   while ( list(,$v) = each($arr2))
     $h2[$v] = $v;
 
   $deleted = array();
-  while ( list($k,) = each($h1))
+  while ( list($k,) = each($h2))
     {
       if (!isset($h2[$k]))
         $deleted[] = $k;
@@ -663,7 +663,7 @@ function utils_double_diff_array($arr1, $arr2)
   $added = array();
   while ( list($k,) = each($h2))
     {
-      if (!isset($h1[$k]))
+      if (!isset($h2[$k]))
         $added[] = $k;
     }
   return array($deleted, $added);
@@ -776,7 +776,7 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false)
       $cols  =  db_numfields($result);
 
       # Show title.
-      print "<h4>$title</h4>\n";
+      print "<h3>$title</h3>\n";
       print '<table border="0" width="100%" summary="'.$title.'">'."\n";
 
       # Create the headers.

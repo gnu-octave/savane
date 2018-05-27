@@ -81,7 +81,7 @@ function news_show_latest ($group_id,$limit=10,$show_summaries="true",
 
   if (!$result || $rows < 1)
     {
-      $return .= news_new_subbox(0).'<h3>'._("No news items found").'</h3>';
+      $return .= news_new_subbox(0).'<h2>'._("No news items found").'</h2>';
     }
   else
     {

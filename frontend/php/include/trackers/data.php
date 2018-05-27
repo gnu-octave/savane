@@ -202,7 +202,7 @@ utils_get_tracker_name($tracker_name))."</p>\n";
 ._("Notify persons in the category related list in addition to the global list")
 .'</span><br />
 
-          <h4>'._("Category related lists")."</h4>\n";
+          <h3>'._("Category related lists")."</h3>\n";
       print '<input type="hidden" name="'.$tracker_name
 .'_nb_categories" value="'.$grtrsettings['nb_categories'].'" />';
 
@@ -222,7 +222,7 @@ utils_get_tracker_name($tracker_name))."</p>\n";
 .' />'._("Send on all updates").')</span><br />
 ';
         }
-      print '<h4>'._("Global list")."</h4>\n";
+      print '<h3>'._("Global list")."</h3>\n";
     }
   else
     {
@@ -246,7 +246,7 @@ addresses (comma separated list)."), utils_get_tracker_name($tracker_name))
 . (($grtrsettings['glsendall'])?'checked':'') .'>'._("Send on all updates")
 .')</span>';
 
-  print '<h4>'._("Private items exclude list")."</h4>\n";
+  print '<h3>'._("Private items exclude list")."</h3>\n";
   if ($show_intro_msg != 0)
     print '<p>'
 ._("Addresses registered in this list will be excluded from default mail

@@ -110,7 +110,7 @@ print '
 <hr />
 
 <p>
-<h2>'.no_i18n('Current Groups:').'</h2>
+<h1>'.no_i18n('Current Groups:').'</h1>
 <br />
 ';
 

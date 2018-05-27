@@ -127,7 +127,7 @@ print '</p>
 ';
 
 # MODIFICATORS SHORTCUTS
-print '<h3>'.no_i18n("Registration Management Shortcuts").'</h3>
+print '<h2>'.no_i18n("Registration Management Shortcuts").'</h2>
 ';
 print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
 .'?status=A&amp;updatefast=1&amp;group_id='
@@ -146,7 +146,7 @@ done only once)").'" /></a>';
 # MODIFICATORS
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
 .'" method="POST">';
-print '<h3>'.no_i18n("Detailed Interface").'</h3>
+print '<h2>'.no_i18n("Detailed Interface").'</h2>
 ';
 $HTML->box1_top(no_i18n("General Settings"));
 

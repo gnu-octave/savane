@@ -434,7 +434,7 @@ scripts, as you know the file URL in advance.").'</p>';
 
 ##
 # List of pending exports
-print '<h3>'.html_anchor(_("Pending Export Jobs"), "pending").'</h3>';
+print '<h2>'.html_anchor(_("Pending Export Jobs"), "pending").'</h2>';
 
 if ($export_count > 0)
   {
@@ -524,7 +524,7 @@ else
 ##
 # Query to build an export
 print '<br />';
-print '<h3>'.html_anchor(_("Creating a new Export Job"), "new").'</h3>';
+print '<h2>'.html_anchor(_("Creating a new Export Job"), "new").'</h2>';
 
 if ($export_count < $max_export)
   {

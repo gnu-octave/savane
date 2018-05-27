@@ -43,12 +43,12 @@ $res_preamble = db_execute("SELECT ".ARTIFACT."_preamble
 $preamble = db_result($res_preamble,0,ARTIFACT.'_preamble');
 if ($preamble)
 {
-  # The h3 is necessary to keep the layout correct in every case
-  print '<h3>'._("Preamble")."</h3>\n"
+  # The h2 is necessary to keep the layout correct in every case
+  print '<h2>'._("Preamble")."</h2>\n"
     .markup_rich($preamble);
 }
 
-print '<h3>'._("Details")."</h3>\n";
+print '<h2>'._("Details")."</h2>\n";
 
 # Beginning of the submission form with fixed fields
 print form_header($_SERVER['PHP_SELF'], $form_id, "post",
@@ -195,7 +195,7 @@ print '<p class="warn"><span class="smaller">* '._("Mandatory Fields")
 
 #  possibility of attachment
 print "<p>&nbsp;</p>\n";
-print '<h3>'._("Attached Files")."</h3>\n";
+print '<h2>'._("Attached Files")."</h2>\n";
 print sprintf(_("(Note: upload size limit is set to %s kB, after insertion of
 the required escape characters.)"), $GLOBALS['sys_upload_max']);
 
@@ -216,7 +216,7 @@ print '<p><span class="preinput"> '._("Attach Files:").'</span><br />
 if (user_isloggedin())
 {
   print "<p>&nbsp;</p>\n";
-  print '<h3>'._("Mail Notification CC")."</h3>\n";
+  print '<h2>'._("Mail Notification CC")."</h2>\n";
 
 # TRANSLATORS: the argument is site name (like Savannah).
   print '<p>'.sprintf(_("(Note: for %s users, you can use their login name

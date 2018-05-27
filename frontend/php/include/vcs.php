@@ -51,7 +51,7 @@ function vcs_page ($vcs_name, $vcs_exfix, $group_id)
        && $project->getUrl("cvs_viewcvs_homepage") != ''))
     {
 # TRANSLATORS: The argument is a name of VCS (like Arch, CVS, Git, Subversion).
-      print '<h2>'.sprintf(_("Browsing the %s Repository"), $vcs_name)."</h2>\n";
+      print '<h1>'.sprintf(_("Browsing the %s Repository"), $vcs_name)."</h1>\n";
 # TRANSLATORS: The argument is a name of VCS (like Arch, CVS, Git, Subversion).
       print '<p>'.sprintf(_("You can Browse the %s repository of this project with
 your web browser. This gives you a good picture of the current status of the
@@ -71,8 +71,8 @@ repository as well as differences among two versions."), $vcs_name)."</p>\n";
       print "</ul>\n<p>&nbsp;</p>\n";
     }
 # TRANSLATORS: The argument is a name of VCS (like Arch, CVS, Git, Subversion).
-  print '<h2>'.sprintf(_("Getting a Copy of the %s Repository"),$vcs_name)
-        ."</h2>\n";
+  print '<h1>'.sprintf(_("Getting a Copy of the %s Repository"),$vcs_name)
+        ."</h1>\n";
   utils_get_content($vcs_exfix."/index");
   site_project_footer(array());
 }

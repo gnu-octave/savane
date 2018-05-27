@@ -42,7 +42,7 @@ $rows = db_numrows($result);
 if (!$result || $rows < 1)
   {
 # TRANSLATORS: The argument is Savannah group (project) name.
-    printf ('<h2>'._("No Lists found for %s").'</h2>',$project->getName());
+    printf ('<h1>'._("No Lists found for %s").'</h1>',$project->getName());
     print '<p>'
     ._("Project administrators can add mailing lists using the admin interface.")
     .'</p>';

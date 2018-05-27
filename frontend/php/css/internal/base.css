@@ -302,11 +302,11 @@ hr {
 }
 
 
-h3 a {
+h2 a {
 	display: block;
 }
 
-h5 a {
+h4 a {
 	display: block;
 }
 
@@ -784,25 +784,25 @@ li.topmenuitemsubmenuseparator {
 	list-style-type: none; }
 
 
-h2.priora { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priorb { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priorc { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priord { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priore { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priorf { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priorg { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priorh { text-shadow: 0.1em 0.1em #f89b9b; }
-h2.priori { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priora { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priorb { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priorc { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priord { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priore { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priorf { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priorg { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priorh { text-shadow: 0.1em 0.1em #f89b9b; }
+h1.priori { text-shadow: 0.1em 0.1em #f89b9b; }
 
-h2.prioraclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.priorbclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.priorcclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.priordclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.prioreclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.priorfclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.priorgclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.priorhclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h2.prioriclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.prioraclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.priorbclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.priorcclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.priordclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.prioreclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.priorfclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.priorgclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.priorhclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
+h1.prioriclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
 
 
 tr.priora a {

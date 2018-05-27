@@ -1,6 +1,7 @@
-/* <one line to give a brief idea of what this does.>
+/* Gna theme.
  * 
- * Copyright 2004-2006 (c) Vincent Caron <zerodeux--gnu.org>
+ * Copyright (C) 2004-2006 Vincent Caron <zerodeux--gnu.org>
+ * Copyright (C) 2018 Ineiev
  * Heavily based on Light theme by Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
@@ -72,13 +73,13 @@ a.unavailable:hover {
 	color: #475a5a;
  }
 
-h2 {
+h1 {
         margin-bottom: 1%;
 	text-shadow: 0.1em 0.1em #c2c2c2;
 }
 
 
-h3 {
+h2 {
 	background-color: #0869bc;
 	color: #ffffff;
 	margin-left: 0.5em;
@@ -89,17 +90,17 @@ h3 {
 	text-shadow: 0.1em 0.1em #004c8c;
 }
 
-h3 a {
+h2 a {
 	color: #ffffff;
 }
 
-h3 a:hover {
+h2 a:hover {
 	background-color: #0879d9;
 	color: #ffffff;
 	text-decoration: none;
 }
 
-h5 {
+h4 {
 	background-color: #0869bc;
 	margin-left: 0.5em;
 	margin-right: 0.5em;
@@ -110,11 +111,11 @@ h5 {
 }
 
 
-h5 a {
+h4 a {
 	color: #ffffff;
 }
 
-h5 a:hover {
+h4 a:hover {
 	background-color: #0768ba;
 	color: #ffffff;
 	text-decoration: none;

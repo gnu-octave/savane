@@ -60,21 +60,21 @@ a:active { color: #aa6666; }
 }
 
 
-h2, h3, h5 {
+h1, h2, h4 {
 	text-indent: 1em;
 	border-collapse: collapse;
 }
 
-h2, h3 {
+h1, h2 {
   	text-shadow: 0.1em 0.1em #002A4E;
 }
 
-h3, h5 {
+h2, h4 {
 	border-bottom: 0.1em solid #002A4E; 
 
 }
 
-h3:hover, h5:hover {
+h2:hover, h4:hover {
 	background: #F1F1F1;	
 }
 

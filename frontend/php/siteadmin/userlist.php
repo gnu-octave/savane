@@ -63,7 +63,7 @@ else
 
 if ($action) 
 {
-  print '<h3>'.no_i18n("Action done").' :</h3>';
+  print '<h2>'.no_i18n("Action done").' :</h2>';
   print '<p>';
 # TRANSLATORS: the first argument is status (DELETE, ACTIVE, SUSPEND),
 # the second argument is user id (number).
@@ -79,7 +79,7 @@ $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N',
                    'O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1',
                    '2','3','4','5','6','7','8','9');
 
-print '<h3>'.no_i18n("User Search").'</h3>
+print '<h2>'.no_i18n("User Search").'</h2>
 <p>'.no_i18n("Display users beginning with").': ';
 
 for ($i=0; $i < count($abc_array); $i++)
@@ -153,8 +153,8 @@ else
 }
 
 # TRANSLATORS: the argument is group name or 'All Groups'.
-print '<h3>'.sprintf(no_i18n("User List for %s"),
-                     '<strong>'.$group_listed.'</strong>')."</h3>\n";
+print '<h2>'.sprintf(no_i18n("User List for %s"),
+                     '<strong>'.$group_listed.'</strong>')."</h2>\n";
 
 $rows = $rows_returned = db_numrows($result);
 

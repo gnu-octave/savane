@@ -67,7 +67,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
     }
 
   print '
-<h2 class="toptitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+<h1 class="toptitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
   .'.theme/contexts/'.context_icon().'.orig.png" width="48" height="48" alt="'
   .context_icon().'" class="pageicon" />';
   $title = context_title();
@@ -80,7 +80,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
           _(": ");
   if (!empty($params['title']))
     print $params['title'];
-  print '</h2>';
+  print '</h1>';
 
   # Print topmenu subtitle.
   unset($scope);

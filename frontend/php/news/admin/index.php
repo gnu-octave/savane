@@ -50,7 +50,7 @@ $res_grp = db_execute("SELECT new_news_address FROM groups WHERE group_id=?",
                       array($group_id));
 $row_grp = db_fetch_array($res_grp);
   
-print '<h3>'._("News Tracker Email Notification Settings").'</h3>
+print '<h2>'._("News Tracker Email Notification Settings").'</h2>
 ';
 print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">

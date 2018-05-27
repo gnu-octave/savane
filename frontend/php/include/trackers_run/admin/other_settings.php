@@ -56,7 +56,7 @@ if (db_numrows($res_grp) < 1)
   exit_no_group();
 $row_grp = db_fetch_array($res_grp);
 
-echo '<h3>'._("Item Post Form Preamble")."</h3>\n";
+echo '<h2>'._("Item Post Form Preamble")."</h2>\n";
 echo '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">';
 
 # FIXME: preamble should not be in the groups table!!

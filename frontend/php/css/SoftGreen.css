@@ -72,17 +72,17 @@ a:active {
 
 /* Titles */
 
-/* <h2> Page title */
-/* <h3> Section title */
-h3 {
+/* <h1> Page title */
+/* <h2> Section title */
+h2 {
 	text-indent: 1em; 
 	border-top: solid thin #d3c5be;
 	border-bottom: solid thin #d3c5be;
 }
 
-/* <h4> Small section title */
-/* <h5> Input form label */
-h5 {
+/* <h3> Small section title */
+/* <h4> Input form label */
+h4 {
 	border-top: solid thin #d3c5be;
 	border-bottom: solid thin #d3c5be;
 }

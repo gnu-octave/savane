@@ -165,7 +165,7 @@ if ($job_id)
       {
         print db_error();
         fb(_("POSTING fetch FAILED"));
-        print '<h2>'._("No Such Posting For This Project").'</h2>
+        print '<h1>'._("No Such Posting For This Project").'</h1>
 ';
       }
     else

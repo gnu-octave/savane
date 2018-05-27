@@ -97,10 +97,10 @@ priority and open/close items")))."</p>\n";
 
 # ################################ Start the form
 
-  print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'),
+  print '<h1 class="'.utils_get_priority_color(db_result($result,0,'priority'),
                                                db_result($result,0,'status_id'))
         .'">'.sprintf(("<em>%s</em>:"), $item_link).' '
-        .db_result($result,0,'summary')."</h2>\n";
+        .db_result($result,0,'summary')."</h1>\n";
 
   print form_header($_SERVER['PHP_SELF'], $form_id, "post",
                     'enctype="multipart/form-data" name="item_form"');

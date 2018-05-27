@@ -24,7 +24,7 @@ include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
 
 global $project;
 
-print '<h3>'._('Anonymous Arch Access').'</h3>
+print '<h2>'._('Anonymous Arch Access').'</h2>
 <p>'
 ._("This project's Arch repository can be accessed through HTTP.")
 .'</p>
@@ -34,7 +34,7 @@ print '<h3>'._('Anonymous Arch Access').'</h3>
 print '<pre>tla register-archive http://arch.savannah.gnu.org/archives/'
         .$project->getUnixName().'</pre>
 
-<h3>'._('Project Member Arch Access').'</h3>
+<h2>'._('Project Member Arch Access').'</h2>
 <p>'
 ._("This project's Arch repository can be accessed throgh SFTP for project members.")
 .'</p>
@@ -54,7 +54,7 @@ print '<pre>tla register-archive sftp://'
 
 ';
 
-print '<h3>'._('More Information').'</h3>
+print '<h2>'._('More Information').'</h2>
 
 ';
 printf ('<p>'._('For more information, see %s.').'</p>',

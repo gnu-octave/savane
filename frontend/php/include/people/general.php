@@ -60,7 +60,7 @@ function people_get_category_name($category_id)
 # Show job selection controls.
 function people_show_table()
 {
-  $return = '<h3>'._("Category").'</h3>';
+  $return = '<h2>'._("Category").'</h2>';
   $form_is_empty = 1;
 
   $result = db_query("SELECT * FROM people_job_category ORDER BY category_id");
@@ -89,7 +89,7 @@ function people_show_table()
     }
 
   $return .= '
-<h3>'._("Project type").'</h3>';
+<h2>'._("Project type").'</h2>';
   $result=db_query("SELECT group_type.type_id, group_type.name,
                     COUNT(people_job.job_id) AS count FROM
                     group_type JOIN (groups JOIN people_job ON

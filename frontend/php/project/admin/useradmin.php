@@ -32,7 +32,7 @@ if (!$group_id)
 
 function show_pending_users_list ($result, $group_id)
 {
-  print "<h3>"._("Users Pending for Group")."</h3>
+  print "<h2>"._("Users Pending for Group")."</h2>
 <p>"._("Users that have requested to be member of the group are listed
 here. To approve their requests, select their names and push the button
 below. To discard requests, go to the next section called &ldquo;Removing users
@@ -67,7 +67,7 @@ function show_all_users_remove_list ($result, $result2, $group_id)
 {
   $exists = false;
   print "
-        <h3>"._("Removing users from group")."</h3>
+        <h2>"._("Removing users from group")."</h2>
 <p>"._("To remove users, select their names and push the button
 below. The administrators of a project cannot be removed unless they quit.
 Pending users are at the bottom of the list.")."</p>
@@ -113,7 +113,7 @@ Pending users are at the bottom of the list.")."</p>
 function show_all_users_add_searchbox ($group_id, $previous_search)
 {
   print '
-        <h3 id="searchuser">'._("Adding users to group").'</h3>
+        <h2 id="searchuser">'._("Adding users to group").'</h2>
 <p>'._("You can search one or several users to add in the whole users
 database with the following search tool. A list of users, depending on the
 names you'll type in this form, will be generated.").'

@@ -108,7 +108,7 @@ $viewableoptions = array("0" => _("No"),
                          "1" => _("Yes"));
 
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">'
-.'<h3>'._("Publicly Viewable").'</h3>
+.'<h2>'._("Publicly Viewable").'</h2>
 '
 .'<span class="preinput">'._("Do you want your resume to be activated?")
 .'</span>&nbsp;&nbsp;'
@@ -116,7 +116,7 @@ print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">'
                                   'people_view_skills',
                                   db_result($result,0,'people_view_skills'));
 
-print '<h3>'._("Resume - Description of Experience").'</h3>
+print '<h2>'._("Resume - Description of Experience").'</h2>
 <p>'.markup_info("full").'</p>
 <textarea name="people_resume" rows="15" cols="60" wrap="soft">'
 . db_result($result,0,'people_resume') .'</textarea>
@@ -126,7 +126,7 @@ print '<br /><br />
 <div class="center"><input type="submit" name="update_profile" value="'
 ._("Update Profile").'" /></div></form>';
 
-print '<h3>'._("Skills").'</h3>';
+print '<h2>'._("Skills").'</h2>';
 # Now show the list of desired skills.
 people_edit_skill_inventory(user_getid());
 

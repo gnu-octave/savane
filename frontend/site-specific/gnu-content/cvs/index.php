@@ -27,7 +27,7 @@ include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
 
 global $project;
 
-print '<h3>'._('Anonymous CVS Access').'</h3>
+print '<h2>'._('Anonymous CVS Access').'</h2>
 
 <p>'
 ._("This project's CVS repository can be checked out through anonymous
@@ -38,14 +38,14 @@ to check out must be specified as the &lt;<i>modulename</i>&gt;.").'</p>
 
 if ($project->Uses("cvs"))
   {
-    print "<h4>"._('Software repository:')."</h4>\n";
+    print "<h3>"._('Software repository:')."</h3>\n";
     print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
           . $project->getTypeBaseHost()
           . ":" . $project->getTypeDir('cvs')
           . " co "
           . $project->getUnixName()
           . "</pre>\n";
-    print "<h5>"._('With other project modules:')."</h5>\n";
+    print "<h4>"._('With other project modules:')."</h4>\n";
     print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
           . $project->getTypeBaseHost()
           . ":"
@@ -54,7 +54,7 @@ if ($project->Uses("cvs"))
   }
 if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
   {
-    print "<h4>"._('Webpage repository:')."</h4>\n";
+    print "<h3>"._('Webpage repository:')."</h3>\n";
     print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
     . $project->getTypeBaseHost()
     . ":"
@@ -78,7 +78,7 @@ cvs -qn update
 
 <p>'._('to preview and status check.').'</p>
 
-<h3>'._('Project Member CVS Access via SSH').'</h3>
+<h2>'._('Project Member CVS Access via SSH').'</h2>
 
 <p>'._('Member access is performed using the CVS over SSH method. The
 pserver method can only be used for anonymous access.').'</p>
@@ -93,7 +93,7 @@ if ($username == "NA")
   $username = '&lt;<i>'._('membername').'</i>&gt;';
 if ($project->Uses("cvs"))
   {
-    print "<h4>"._('Software repository:').'</h4>'."\n";
+    print "<h3>"._('Software repository:').'</h3>'."\n";
     print "<pre>cvs -z3 -d:ext:"
            . $username
            . "@cvs."
@@ -103,7 +103,7 @@ if ($project->Uses("cvs"))
            . " co "
            . $project->getUnixName()
            . "</pre></p>\n";
-    print "<h5>"._('With other project modules:')."</h5>\n";
+    print "<h4>"._('With other project modules:')."</h4>\n";
     print "<pre>cvs -z3 -d:ext:"
           . $username
           . "@cvs."
@@ -114,7 +114,7 @@ if ($project->Uses("cvs"))
   }
 if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
   {
-    print "<h4>"._('Webpage repository:')."</h4>\n";
+    print "<h3>"._('Webpage repository:')."</h3>\n";
     print "<pre>cvs -z3 -d:ext:"
           . $username
           . "@cvs."
@@ -126,7 +126,7 @@ if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
           . "</pre></p>\n";
   }
 
-print '<h3>'._('CVS Newbies').'</h3>
+print '<h2>'._('CVS Newbies').'</h2>
 
 ';
 
@@ -146,7 +146,7 @@ the <a href="%s">Savannah user doc</a>.').'</p>',
 
 if ($project->CanUse("cvs"))
   {
-    print '<h3>'._('What are CVS modules?').'</h3>';
+    print '<h2>'._('What are CVS modules?').'</h2>';
     printf ('<p>'
 ._('The CVS repository of each project is divided into modules which you can
 download separately.  The list of existing modules for this project can be
@@ -164,14 +164,14 @@ software development takes place.').'</p>
 
 print '<p>'._('The same applies to the Webpage Repository.').'</p>
 
-<h3>'._('Import your CVS tree').'</h3>
+<h2>'._('Import your CVS tree').'</h2>
 
 <p>'._('If your project already has an existing CVS repository that you
 want to move to Savannah, make an appointment with us for the
 migration.').'</p>
 
 
-<h3>'._('Symbolic Links in Webpage CVS').'</h3>
+<h2>'._('Symbolic Links in Webpage CVS').'</h2>
 
 ';
 
@@ -187,7 +187,7 @@ global $project;
 
 if ($project->getTypeBaseHost() == "savannah.gnu.org")
   {
-    print '<h3>'._('Web pages for GNU packages').'</h3>';
+    print '<h2>'._('Web pages for GNU packages').'</h2>';
     printf ('<p>'
 ._('When writing web pages for official GNU packages, please keep the
 <a href="%s"> guidelines</a> in mind.').'</p>

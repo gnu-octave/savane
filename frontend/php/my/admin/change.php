@@ -43,7 +43,7 @@ if (!$item)
 
 function test_gpg_listing ($gpg_name, $temp_dir, &$ret)
 {
-  $ret .= "<h3>"._("Listing key")."</h3>\n"
+  $ret .= "<h2>"._("Listing key")."</h2>\n"
                      ."<p>". _("Output:")."</p>";
   $cmd = $gpg_name . " --home " . $temp_dir
                    . " --list-keys --fingerprint ";
@@ -72,7 +72,7 @@ function test_gpg_listing ($gpg_name, $temp_dir, &$ret)
 
 function test_gpg_import ($gpg_name, $key, $temp_dir, &$output)
 {
-  $output .= "<h3>"._("Importing key")."</h3>\n";
+  $output .= "<h2>"._("Importing key")."</h2>\n";
   $cmd = $gpg_name . " --home '".$temp_dir."' --batch --import";
   $d_spec = array (0 => array("pipe", "r"), 1 => array("pipe", "w"),
                    2 => array("pipe", "w"));
@@ -132,7 +132,7 @@ function test_gpg_encryption ($gpg_name, $temp_dir, &$output)
         $gpg_error = _("Extracted GPG key ID is invalid.");
       $encrypted_message = "";
     }
-  $output .= "<h3>"._("Test Encryption")."</h3>\n";
+  $output .= "<h2>"._("Test Encryption")."</h2>\n";
   if ($gpg_result)
     $output .= "<p>"._("Errors:")." ".$gpg_error."</p>\n";
   else
@@ -156,7 +156,7 @@ function run_gpg_tests ($gpg_name, $key, $temp_dir, &$output)
 function run_gpg_checks ($key)
 {
   $ret = "";
-  $ret .= "<h3>"._("GnuPG version")."</h3>\n";
+  $ret .= "<h2>"._("GnuPG version")."</h2>\n";
   $gpg_name = 'gpg';
   $cmd = $gpg_name . " --version";
   $d_spec = array (0 => array("pipe", "r"), 1 => array("pipe", "w"),
@@ -667,7 +667,7 @@ elseif ($item == "gpgkey")
     $title = _("Change GPG Key");
     $input_title = "";
     $input_specific =
-"<h3>"._("Sample GPG key")."</h3>\n"
+"<h2>"._("Sample GPG key")."</h2>\n"
 .'<p>'._('The exported public GPG key should look like this:')
 .'</p>
 <pre>
@@ -705,7 +705,7 @@ yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
 <p>'
 ._("Please don't remove begin and end markers when submitting your GPG key.")
 ."</p>\n"
-.'<h3>'._("Update your key in the input area below")."</h3>\n"
+.'<h2>'._("Update your key in the input area below")."</h2>\n"
 .'<p>'
 ._("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):")
 ."</p>\n";

@@ -71,8 +71,8 @@ if (!empty($update))
   }
 site_header(array('title'=>_("Login")));
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
-print '<h3> '.sprintf(_("%s Account Verification"),$GLOBALS['sys_name'])
-      ."</h3>\n";
+print '<h2> '.sprintf(_("%s Account Verification"),$GLOBALS['sys_name'])
+      ."</h2>\n";
 print '<p>'._("In order to complete your registration, login now. Your account
 will then be activated for normal logins.")."</p>\n";
 

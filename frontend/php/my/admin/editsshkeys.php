@@ -134,7 +134,7 @@ else # !$update
 site_user_header(array('title' => _("Change Authorized Keys"),
                        'context' => 'account'));
 print form_header($_SERVER['PHP_SELF'], false, "post");
-print '<h3>'._("Authorized keys")."</h3>\n";
+print '<h2>'._("Authorized keys")."</h2>\n";
 utils_get_content("account/editsshkeys");
 print '<p>'
 ._("Fill the text fields below with the public keys for each key you want to

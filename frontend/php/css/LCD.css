@@ -1,7 +1,8 @@
 /*
+ * LCD-oriented style. 
  *
- * Part of the Savane project
- * Copyright 2004 (c) Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2004 Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2018 Ineiev
  *
  * This file is part of Savane.
  * 
@@ -18,8 +19,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id$
- *
 */
 
 
@@ -29,9 +28,7 @@
 
 
 /* This class is LCD screen oriented: dark background and high contrast 
-      is more lisible with this kind of screens
-
-*/
+   is more lisible with this kind of screens. */
 
 /**********************************************************************
  *
@@ -73,20 +70,20 @@ a:active { color: #ffc4ba; }
 
 /* Titles */
 
-/* <h2> Page title */
-h2 {
+/* <h1> Page title */
+h1 {
 	text-indent: 0.3em;
 }
-/* <h3> Section title */
-h3 {
+/* <h2> Section title */
+h2 {
 	font-weight: normal;
 	text-indent: 1em;
 	border-bottom: thin solid #a5a5a5;
 	background-color: #282828; 
 }
-/* <h4> Small section title */
-/* <h5> Input form label */
-h5 {
+/* <h3> Small section title */
+/* <h4> Input form label */
+h4 {
 	font-weight: normal;
 	background-color: #282828; 
 	border-bottom: #a5a5a5 solid thin;

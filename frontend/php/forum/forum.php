@@ -304,7 +304,7 @@ if it was a custom set just posted && logged in, set pref if it's changed.  */
 ';
     if ($GLOBALS['sys_enable_forum_comments'])
       {
-        print '<h3>'.html_anchor(_("Start a New Thread:"), "newthread").'</h3>
+        print '<h2>'.html_anchor(_("Start a New Thread:"), "newthread").'</h2>
 ';
         show_post_form($forum_id);
       }

@@ -40,7 +40,7 @@ Very basic (mostly text) items:
 	* "footer" defines the little text on each page bottom.
 	* "warn","error" defines error/warning messages style.
 	* "feedback", "feedbackerror" defines feedback messages style
- 	  (usually defines an h3 tag), the second one is dedicated to error
+	  (usually defines an h2 tag), the second one is dedicated to error
 	   messages while the first one can give both.
 	* "help" defines the word that got a help balloon on mouseover.
 	* "quote" defines a quoted paragraph, for example in comments
@@ -49,7 +49,7 @@ Very basic (mostly text) items:
 	* "highlight" helps to highlight rows, it should be used when
 	  boxhighlight does not work (because of padding, borders...).
 
-	In addition, note that the h3 and h5 headers tag are frequently
+	In addition, note that the h2 and h4 headers tag are frequently
 	  used.
 
 

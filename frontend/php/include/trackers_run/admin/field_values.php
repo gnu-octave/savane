@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -220,11 +220,11 @@ if ($list_value)
 
         trackers_header_admin(array ('title'=>$hdr));
 
-        print '<h2>'._("Field Label:").' '.trackers_data_get_label($field)
+        print '<h1>'._("Field Label:").' '.trackers_data_get_label($field)
 .' &nbsp;&nbsp; <span class="smaller">('
 .utils_link($GLOBALS['sys_home'].ARTIFACT.'/admin/field_usage.php?group='
             .$group.'&amp;update_field=1&amp;field='.$field,
-            _("Jump to this field usage")).")</span></h2>\n";
+            _("Jump to this field usage")).")</span></h1>\n";
 
         $result = trackers_data_get_field_predefined_values($field, $group_id,
                                                             false,false,false);
@@ -232,8 +232,8 @@ if ($list_value)
 
         if ($result && $rows > 0)
           {
-            print "\n<h3>".html_anchor(_("Existing Values"),"existing")
-                  ."</h3>\n";
+            print "\n<h2>".html_anchor(_("Existing Values"),"existing")
+                  ."</h2>\n";
 
             $title_arr=array();
             if (!$is_project_scope)
@@ -354,16 +354,16 @@ any)")."</p>\n".$hdr;
         else
           {
 # TRANSLATORS: the  argument is field label.
-            printf ("\n<h2>"._("No values defined yet for %s")
-                   ."</h2>\n",trackers_data_get_label($field));
+            printf ("\n<h1>"._("No values defined yet for %s")
+                   ."</h1>\n",trackers_data_get_label($field));
           }
 
 # Only show the add value form if this is a project scope field.
         if ($is_project_scope)
           {
             print "<br />\n";
-            print '<h3>'.html_anchor(_("Create a new field value"),"create")
-                  ."</h3>\n";
+            print '<h2>'.html_anchor(_("Create a new field value"),"create")
+                  ."</h2>\n";
 
             if ($ih)
               {
@@ -410,7 +410,7 @@ that suits your needs.")."</p>\n";
         # If the project use custom values, propose to reset to the default.
         if (trackers_data_use_field_predefined_values($field,$group_id))
           {
-            print '<h3>'._("Reset values")."</h3>\n";
+            print '<h2>'._("Reset values")."</h2>\n";
             print '<p>'
 ._("You are currently using custom values. If you want to reset values to the
 default ones, use the following form:").'</p>
@@ -513,9 +513,9 @@ allowed to customize it"),$field));
 
         if ($result && $rows > 0)
           {
-            print "\n\n<p>&nbsp;</p><h3>"
+            print "\n\n<p>&nbsp;</p><h2>"
               .html_anchor(_("Registered Transitions"),"registered")
-              ."</h3>\n";
+              ."</h2>\n";
 
             $title_arr=array();
             $title_arr[]=_("From");
@@ -603,9 +603,9 @@ allowed to customize it"),$field));
         else
           {
             $reg_default_auth = '';
-            printf ("\n\n<p>&nbsp;</p><h3>"
+            printf ("\n\n<p>&nbsp;</p><h2>"
                     # TRANSLATORS: the argument is field.
-                    ._("No transition defined yet for %s")."</h3>\n",
+                    ._("No transition defined yet for %s")."</h2>\n",
                     trackers_data_get_label($field));
           }
 
@@ -634,8 +634,8 @@ managing this field usage.");
 transitions not registered are allowed. This setting can be changed when
 managing this field usage.");
           }
-        print "\n\n<p>&nbsp;</p><h3>"
-.html_anchor(_("Create a transition"),"create")."</h3>\n";
+        print "\n\n<p>&nbsp;</p><h2>"
+.html_anchor(_("Create a transition"),"create")."</h2>\n";
         print "<p>$transition_for_field</p>\n";
         print '<p>'
 ._("Once a transition created, it will be possible to set &ldquo;Other Fields
@@ -676,12 +676,12 @@ Update&rdquo; for this transition.")."</p>\n";
       }
     else
       {
-        print "\n\n<p>&nbsp;</p><h3>";
+        print "\n\n<p>&nbsp;</p><h2>";
         printf (
 # TRANSLATORS: the argument is field.
 _("The Bug field you requested '%s' is not used by your project or you are not
 allowed to customize it"),$field);
-        print "</h3>\n";
+        print "</h2>\n";
       }
   }
 elseif ($update_value)
@@ -758,7 +758,7 @@ elseif ($create_canned || $delete_canned)
     if($result && $rows > 0)
       {
         #   Links to update pages.
-        print "\n<h3>"._("Existing Responses:")."</h3>\n<p>\n";
+        print "\n<h2>"._("Existing Responses:")."</h2>\n<p>\n";
 
         $title_arr=array();
         $title_arr[]=_("Title");
@@ -793,10 +793,10 @@ elseif ($create_canned || $delete_canned)
         print "</table>\n";
       }
     else
-      print "\n<h3>"._("No canned bug responses set up yet")."</h3>\n";
+      print "\n<h2>"._("No canned bug responses set up yet")."</h2>\n";
 #       Escape to print the add response form.
 
-    print '<h3>'._("Create a new response").'</h3>
+    print '<h2>'._("Create a new response").'</h2>
 <p>
 '
 ._("Creating generic quick responses can save a lot of time when giving common

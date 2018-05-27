@@ -34,7 +34,7 @@ if ($n > 0)
     $main_desc = preg_replace(':repo.desc=:', '', $main_desc) . "\n";
   }
 print '
-<h4>'._('Anonymous clone:').'</h4>
+<h2>'._('Anonymous clone:').'</h2>
 
 <pre>';
 
@@ -59,7 +59,7 @@ for ($i = 0; $i < $n; $i++)
 
 print '</pre>
 
-<h4>'._('Member clone:').'</h4>
+<h2>'._('Member clone:').'</h2>
 
 <pre>';
 
@@ -80,7 +80,7 @@ for ($i = 0; $i < $n; $i++)
 print '
 </pre>
 
-<h4>'._('More information').'</h4>
+<h2>'._('More information').'</h2>
 <a href="//savannah.gnu.org/maintenance/UsingGit">
 https://savannah.gnu.org/maintenance/UsingGit</a>';
 

@@ -110,14 +110,14 @@ a:active { color: #ffffff; }
 
 /* Titles */
 
-h2 {
+h1 {
 	text-indent: 0.3em; }
 
-h3 {
+h2 {
 	background-color: #70535a; 
 	border: thin solid #223538; }
 
-h5 {
+h4 {
 	background-color: #70535a; 
         border: thin solid #223538; }
 

@@ -161,7 +161,7 @@ _("That username is blocked to avoid conflict with mailing-list addresses."),1);
 if you want to assign some items to several members at once.").'</p>
 ';
   
-  print '<h3 id="form">'._("Squads List").'</h3>
+  print '<h2 id="form">'._("Squads List").'</h2>
 ';
 
   if ($rows < 1)
@@ -188,7 +188,7 @@ if you want to assign some items to several members at once.").'</p>
   # restriction by creating fake users, but the point is only to incitate
   # to create squads only if necessary, not to really enforce something 
   # important)
-  print '<h3>'._("Create a New Squad").'</h3>
+  print '<h2>'._("Create a New Squad").'</h2>
 ';
   
   if ($rows < db_numrows(db_execute("SELECT user_id FROM user_group "
@@ -328,7 +328,7 @@ available.').'</p>
 
 
   ## REMOVE USERS
-  print '<h3>'._("Removing members").'</h3>
+  print '<h2>'._("Removing members").'</h2>
 ';
 
   $result_delusers = db_execute("SELECT user.user_id AS user_id, "
@@ -366,7 +366,7 @@ below.")."</p>\n";
 ';
   
   ## ADD USERS
-  print '<h3>'._("Adding members").'</h3>
+  print '<h2>'._("Adding members").'</h2>
 ';
   
   $result_addusers =  db_execute("SELECT user.user_id AS user_id, "
@@ -409,7 +409,7 @@ below.")."</p>\n";
 '.form_submit(_("Add Members"), "add_to_squad").'</form>
 ';
 
-  print '<h3>'._("Setting permissions").'</h3>
+  print '<h2>'._("Setting permissions").'</h2>
 ';
 
   print '<p><a href="userperms.php?group='.$group.'#'

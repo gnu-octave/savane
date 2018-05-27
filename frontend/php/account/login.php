@@ -167,7 +167,7 @@ if (!empty($login) && !$success)
     if (isset ($GLOBALS['signal_pending_account'])
         && $GLOBALS['signal_pending_account'] == 1)
       {
-        print '<h3>'._("Pending Account").'</h3>';
+        print '<h2>'._("Pending Account").'</h2>';
         print '<p>'._("Your account is currently pending your email confirmation.
 Visiting the link sent to you in this email will activate your account.")
               .'</p>';

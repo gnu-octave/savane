@@ -219,8 +219,8 @@ actually can read those messages).'). "\n";
                       $message);
 
       $HTML->header(array('title'=>_("Register Confirmation")));
-      print '<h3>'.$GLOBALS['sys_name'].' : '
-        ._("New Account Registration Confirmation")."</h3>\n";
+      print '<h2>'.$GLOBALS['sys_name'].' : '
+        ._("New Account Registration Confirmation")."</h2>\n";
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
       printf(_("Congratulations. You have registered on %s."),
              $GLOBALS['sys_name'])

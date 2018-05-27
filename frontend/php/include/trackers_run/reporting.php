@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2002-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -52,7 +52,7 @@ function specific_reports_list ($thisfield=0)
   global $group_id;
 
   if ($thisfield)
-    print "<p>&nbsp;</p>\n<h3>"._("Other statistics:")."</h3>\n";
+    print "<p>&nbsp;</p>\n<h2>"._("Other statistics:")."</h2>\n";
   print "<ul>\n";
 
   if ($thisfield != 'aging')
@@ -85,7 +85,7 @@ if ($field)
     if ($field == 'aging')
       {
 # TRANSLATORS: aging statistics is statistics by date.
-        print '<h3>'._("Aging statistics:")."</h3>\n";
+        print '<h2>'._("Aging statistics:")."</h2>\n";
 
         $time_now=time();
         unset($content);
@@ -107,7 +107,7 @@ if ($field)
             $content[$key] = db_result($result, 0,0);
           }
 
-        print '<h4>'._("Average Turnaround Time for Closed Items")."</h4>\n";
+        print '<h3>'._("Average Turnaround Time for Closed Items")."</h3>\n";
         graphs_build($content,0,0);
         unset($content);
         print "<p>&nbsp;&nbsp;</p>\n";
@@ -128,7 +128,7 @@ if ($field)
             $content[$key] = db_result($result, 0,0);
           }
 
-        print '<h4>'._("Number of Items Opened")."</h4>\n";
+        print '<h3>'._("Number of Items Opened")."</h3>\n";
         graphs_build($content,0,0);
         unset($content);
         print "<p>&nbsp;&nbsp;</p>\n";
@@ -148,7 +148,7 @@ if ($field)
             $content[utils_format_date($end)] = db_result($result, 0,0);
           }
 
-        print "\n<h4>"._("Number of Items Still Open")."</h4>\n";
+        print "\n<h3>"._("Number of Items Still Open")."</h3>\n";
         graphs_build($content,0,0);
         unset($content);
         print "<p>&nbsp;&nbsp;</p>\n";
@@ -160,7 +160,7 @@ if ($field)
 
         # Title + field description
         # TRANSLATORS: the argument is field label.
-        print '<h3>'.sprintf(_("Statistics by '%s':"), $label)."</h3>\n"
+        print '<h2>'.sprintf(_("Statistics by '%s':"), $label)."</h2>\n"
           .'<p><em>'._('Field Description:').'</em> '
           .trackers_data_get_description($field)."</p>\n";
 
@@ -178,7 +178,7 @@ if ($field)
 
             if ($field != 'status_id')
               {
-                print "\n<h4>".sprintf(_("Open Items"), $label)."</h4>\n";
+                print "\n<h3>".sprintf(_("Open Items"), $label)."</h3>\n";
 
                 # First graph the bug distribution for Open item only.
                 # Assigned to must be handle in a specific way.
@@ -234,7 +234,7 @@ if ($field)
                }
 
             #Second  graph the bug distribution for all items
-            print "\n<h4>".sprintf(_("All Items"), $label)."</h4>\n";
+            print "\n<h3>".sprintf(_("All Items"), $label)."</h3>\n";
 
             if ($field == 'assigned_to')
               {

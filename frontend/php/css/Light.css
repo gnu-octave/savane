@@ -77,11 +77,11 @@ a:active {
 
 .footer { color: #333333;  }
 
-h2 {
+h1 {
 	text-indent: 0.3em;
 }
 
-h3 {
+h2 {
 	background-color: #f3dbff; 
 	border: thin solid #d19fea; 
 	color: #6a447c; 
@@ -89,7 +89,7 @@ h3 {
 	font-weight: normal;
 }
 
-h5 {
+h4 {
 	border-bottom: thin solid #d19fea;
 	background-color: #f9efff; 
 	font-weight: normal;

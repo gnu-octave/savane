@@ -72,7 +72,7 @@ if ($update)
 trackers_header_admin(array ('title'=>_("Set Permissions")));
 
 ########################### POSTING RESTRICTIONS
-print '<h3>'._("Posting Restrictions")."</h3>\n";
+print '<h2>'._("Posting Restrictions")."</h2>\n";
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group" value="'.$group.'" />';
 

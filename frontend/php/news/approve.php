@@ -3,7 +3,7 @@
 # Copyright (C) 1999-2000  The SourceForge Crew
 # Copyright (C) 2002-2006  Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2018  Ineiev
 #
 # This file is part of Savane.
 #
@@ -134,7 +134,7 @@ if ($approve)
 
     if (db_numrows($result) < 1)
       {
-        print '<h2 class="error">'._("No pending news").'</h2>';
+        print '<h1 class="error">'._("No pending news").'</h1>';
         site_project_footer(array());
         exit;
       }
@@ -222,7 +222,7 @@ removed from the home page."),$GLOBALS['sys_name']).'</p>
 <input type="submit" name="submit" value="'._("Submit").'" /></div>
 </form>
 ';
-    print '<h3>'._("Preview:").'</h3>
+    print '<h2>'._("Preview:").'</h2>
 '.markup_full(db_result($result,0,'details'));
   }
 else # ! $approve
@@ -265,12 +265,12 @@ shown on the front page), you must end the superuser session.").'</p>
     $rows=db_numrows($result);
     if ($rows < 1)
       {
-        print '<h3>'._("No queued items found").'</h3>';
+        print '<h2>'._("No queued items found").'</h2>';
       }
     else
       {
-        print '<h3>'._("These news items were submitted and need approval")
-                    .'</h3>
+        print '<h2>'._("These news items were submitted and need approval")
+                    .'</h2>
 <ul>
 ';
         for ($i=0; $i<$rows; $i++)
@@ -315,22 +315,22 @@ shown on the front page), you must end the superuser session.").'</p>
     $rows=db_numrows($result);
     if ($rows < 1)
       {
-        print '<h3>'
-          ._("No deleted items during these past two weeks").'</h3>
+        print '<h2>'
+          ._("No deleted items during these past two weeks").'</h2>
 ';
       }
     else
       {
         if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
           {
-            print '<h3>'
-              ._("These items were refused these past two weeks:").'</h3>
+            print '<h2>'
+              ._("These items were refused these past two weeks:").'</h2>
 ';
           }
         else
           {
-            print '<h3>'
-              ._("These items were deleted these past two weeks:").'</h3>
+            print '<h2>'
+              ._("These items were deleted these past two weeks:").'</h2>
 ';
           }
         print '<ul>
@@ -370,14 +370,14 @@ shown on the front page), you must end the superuser session.").'</p>
     $rows=db_numrows($result);
     if ($rows < 1)
       {
-        print '<h3>'
-          ._("No news items approved").'</h3>
+        print '<h2>'
+          ._("No news items approved").'</h2>
 ';
       }
     else
       {
-        print '<h3>'
-          ._("These items were approved:").'</h3>
+        print '<h2>'
+          ._("These items were approved:").'</h2>
 <ul>
 ';
         for ($i=0; $i<$rows; $i++)

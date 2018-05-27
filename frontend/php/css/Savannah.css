@@ -1,7 +1,10 @@
 /*
- * Copyright 2002-2005 Mathieu Roy <yeupou--gnu.org>
- *                     St@'ephane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
- *                     Sylvain Beucler <beuc--beuc.net>
+ * Savannah theme.
+ *
+ * Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2002-2005 St@'ephane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
+ * Copyright (C) 2002-2005 Sylvain Beucler <beuc--beuc.net>
+ * Copyright (C) 2018 Ineiev
  *
  * This file is part of Savane.
  * 
@@ -20,7 +23,6 @@
  *
  * For debugging/development of css, setting network.http.use-cache to
  * false was apparently both necessary and sufficient --karl, 23jan15.
- *
 */
 
 /* GUIDELINES VERSION FOLLOWED: 1.17 */
@@ -73,19 +75,19 @@ a:active { color: #ff0000; }
 
 /* Titles */
 
-/* <h2> Page title */
-h2 {
+/* <h1> Page title */
+h1 {
 	text-indent: 0.3em;
 }
-/* <h3> Section title */
-h3 {
+/* <h2> Section title */
+h2 {
 	text-indent: 1em;
 	border-bottom: thin solid #e0c080;
 	background-color: #fff0d0; 
 }
-/* <h4> Small section title */
-/* <h5> Input form label */
-h5 {
+/* <h3> Small section title */
+/* <h4> Input form label */
+h4 {
 	font-weight: normal;
 	background-color: #fff7ea; 
 	border: #ffe4b2 solid thin;

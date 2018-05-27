@@ -25,7 +25,7 @@ include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
 
 global $project;
 
-print '<h3>'._('Anonymous / read-only Subversion access').'</h3>
+print '<h2>'._('Anonymous / read-only Subversion access').'</h2>
 
 <p>'._("This project's Subversion repository can be checked out anonymously
 as follows.  The module you wish to check out must be specified as the
@@ -33,13 +33,13 @@ as follows.  The module you wish to check out must be specified as the
 
 ';
 
-print '<h4>'._('Access using the SVN protocol:').'</h4>
+print '<h3>'._('Access using the SVN protocol:').'</h3>
 <code>svn co svn://svn.'
                         . $project->getTypeBaseHost()
                         . "/"
                         . $project->getUnixName()
                         . "/&lt;<i>"._('modulename')."</i>&gt;</code><br />";
-print '<h4>'._('Access using HTTP (slower):').'</h4>
+print '<h3>'._('Access using HTTP (slower):').'</h3>
 <code>svn co http://svn.'
                         . $project->getTypeBaseHost()
                         . "/svn/"
@@ -51,7 +51,7 @@ print '<p>'._("Typically, you'll want to use <tt>trunk</tt> for
 you're unsure, or browse the repository with ViewVC.").'</p>
 
 
-<h3>'._('Project member Subversion access via SSH').'</h3>
+<h2>'._('Project member Subversion access via SSH').'</h2>
 
 <p>'
 ._('Member access is performed using the Subversion over SSH method.')
@@ -67,7 +67,7 @@ if ($username == "NA") {
         $username = '&lt;<i>'._('membername').'</i>&gt;';
 }
 
-print '<h4>'._('Software repository (over SSH):').'</h4>
+print '<h3>'._('Software repository (over SSH):').'</h3>
 <code>svn co svn+ssh://'
               . $username
               . '@svn.'
@@ -77,7 +77,7 @@ print '<h4>'._('Software repository (over SSH):').'</h4>
               . "/&lt;<i>"._('modulename')."</i>&gt;</code>";
 print '
 
-<h3>'._('Importing into Subversion on Savannah').'</h3>
+<h2>'._('Importing into Subversion on Savannah').'</h2>
 
 ';
 
@@ -91,7 +91,7 @@ migration in the <a href="%s">Savannah Administration</a> project.').'</p>
    '//savannah.gnu.org/projects/administration');
 
 
-print '<h3>'._('Exporting Subversion tree from Savannah').'</h3>
+print '<h2>'._('Exporting Subversion tree from Savannah').'</h2>
 
 <p>'
 ._('You can access your subversion raw repository using read-only access via

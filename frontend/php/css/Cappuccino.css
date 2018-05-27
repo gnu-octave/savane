@@ -51,7 +51,7 @@
 	border: none;
 }
 
-.topmenutitle, h3, h4, h5 {
+.topmenutitle, h2, h3, h4 {
 	border: thin solid #006699;
 	background: #8BB9EA;
 	text-shadow: 0.1em 0.1em #006699;
@@ -128,12 +128,12 @@ li.topmenuitemsubmenu a:hover {
 }
 
 
-.boxtitle a, h3 a, h4 a, h5 a {
+.boxtitle a, h2 a, h3 a, h4 a {
 	text-shadow: 0.1em 0.1em #526D8A;
 	color: white;
 }
 
-.boxtitle a:hover, h3 a:hover, h4 a:hover, h5 a:hover {
+.boxtitle a:hover, h2 a:hover, h3 a:hover, h4 a:hover {
 	background: #7CA4D1 !important;
 	color: white;
 }

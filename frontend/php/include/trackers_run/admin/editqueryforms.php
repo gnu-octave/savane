@@ -508,7 +508,7 @@ else
         $title_arr[]=_("Scope");
         $title_arr[]=_("Delete");
 
-        print "\n<h3>"._("Existing Query Forms").'</h3>';
+        print "\n<h2>"._("Existing Query Forms").'</h2>';
         print html_build_list_table_top ($title_arr);
         $i=0;
         while ($arr = db_fetch_array($res))

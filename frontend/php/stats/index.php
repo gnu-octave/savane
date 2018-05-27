@@ -3,7 +3,7 @@
 # 
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -81,9 +81,9 @@ print html_show_displayoptions(
 # TRANSLATORS: The arguments are two dates.
 # Example: "From 12. September 2005 till 14. September 2005"
 print '
-<h3>'.html_anchor(sprintf(_('From %1$s till %2$s'),utils_format_date($since),
+<h2>'.html_anchor(sprintf(_('From %1$s till %2$s'),utils_format_date($since),
                           utils_format_date($until)),"between")
-.'</h3>
+.'</h2>
 ';
 
 if ($since > $until)
@@ -94,7 +94,7 @@ if ($since > $until)
 }
 
 print '
-<h4>'._("Accounts").'</h4>
+<h3>'._("Accounts").'</h3>
 <ul>
 ';
 
@@ -120,7 +120,7 @@ print '
 <li> '.sprintf(ngettext("%s new project", "%s new projects",
                                         $count),$count)."</li>\n</ul>\n";
 
-print '<h4>'._("New users and new groups / total")."</h4>\n";
+print '<h3>'._("New users and new groups / total")."</h3>\n";
 graphs_build($content,0,0,$total);
 
 $content = array();
@@ -133,7 +133,7 @@ $total_support = stats_getitems("support");
 
 
 print '
-<h4>'._("Trackers").'</h4>
+<h3>'._("Trackers").'</h3>
 ';
 if (($total_patch + $total_task + $total_support + $total_bugs > 0))
   print "<ul>\n";
@@ -245,7 +245,7 @@ else
            $total_open)."</li>\n";
 
   print '</ul>
-<h4>'._("New items per tracker / tracker total")."</h4>\n";
+<h3>'._("New items per tracker / tracker total")."</h3>\n";
   graphs_build($content,0,0,$content_total);
   unset($content,$content_total);
 }
@@ -256,11 +256,11 @@ print '<p>&nbsp;</p>';
 
 ##################### GENERAL
 print '
-<h3>'.html_anchor(_("Overall"),"overall").'</h3>
+<h2>'.html_anchor(_("Overall"),"overall").'</h2>
 ';
 
 print '
-<h4>'._("Accounts").'</h4>
+<h3>'._("Accounts").'</h3>
 <ul>
 ';
 
@@ -284,11 +284,11 @@ while ($eachtype = db_fetch_array($result))
 }
 
 print '
-<h4>'._("Projects per group type")."</h4>\n";
+<h3>'._("Projects per group type")."</h3>\n";
 graphs_build($content,0,0);
 unset($content);
 
-print '<h4>'._("Trackers").'</h4>
+print '<h3>'._("Trackers").'</h3>
 <ul>
 ';
 
@@ -381,12 +381,12 @@ print "<li>"
          $total_open)."</li>\n</ul>\n";
 
 print '
-<h4>'._("Items per tracker")."</h4>\n";
+<h3>'._("Items per tracker")."</h3>\n";
 graphs_build($content,0,0);
 unset($content);
 
 print '
-<h4>'._("Most popular themes").'</h4>
+<h3>'._("Most popular themes").'</h3>
 ';
 
 # Get the more popular themes. 7 at most, all superior to 0%

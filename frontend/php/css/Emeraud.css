@@ -1,26 +1,25 @@
-/* <one line to give a brief idea of what this does.>
- * 
- * Copyright 2005-2006 (c) Mathieu Roy <yeupou--gnu.org>
+/*  Emerauld theme.
+ *
+ * Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2018 Ineiev
+ *
  * Inspired by colors of the Emerald theme shipped with KDE 3.x
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-/* THIS IS THE DEFAULT SAVANE THEME (2.0) */
 
 /* GUIDELINES VERSION FOLLOWED: 1.17 */
 
@@ -57,14 +56,14 @@ a:active {
 	color: #D7D7CF !important;
 	text-decoration: none !important;
 }
-.unavailable:hover { 
+.unavailable:hover {
 	color: #D7D7CF !important;
 }
 
 .error { font-weight: bold; color: #c12424; }
 .warn { color: #d36363; }
 
-.footer { 
+.footer {
         text-align: center;
 	background-color: #f3f3f3;
 	border: solid #d2d2d2 thin;
@@ -74,12 +73,12 @@ a:active {
 }
 
 
-h2 {
+h1 {
         margin-bottom: 1%;
 	text-shadow: 0.1em 0.1em #c2c2c2;
 }
 
-h3 {
+h2 {
 	background-color: #BCF4BC;
 	text-indent: 0.8em;
 	font-weight: normal;
@@ -88,16 +87,16 @@ h3 {
 	color: #307330;
 }
 
-h3 a {
+h2 a {
 	color: #307330;
 }
 
-h3 a:hover {	
+h2 a:hover {
 	background-color: #d0ffd0;
 	text-decoration: none;
 }
 
-h5 {
+h4 {
 	background-color: #BCF4BC;
 	text-shadow: 0.1em 0.1em #86CC86;
  	border: solid #86CC86 thin;
@@ -105,11 +104,11 @@ h5 {
 	color: #307330;
 }
 
-h5 a {
+h4 a {
 	color: #307330;
 }
 
-h5 a:hover {	
+h4 a:hover {
 	background-color: #d0ffd0;
 	text-decoration: none;
 }
@@ -137,7 +136,7 @@ hr {
  **********************************************************************/
 
 
-.realbody { 
+.realbody {
 	background-color: #fafafa;
 	padding-right: 0;
 }
@@ -154,7 +153,7 @@ hr {
  *
  **********************************************************************/
 
-.menu { 
+.menu {
 	background: #EEEEE6;
 	width: 146px;
 	margin: 2px;
@@ -171,38 +170,38 @@ hr {
 	text-shadow: 0.1em 0.1em #d2d2c2;
 }
 
-.menuitem { 
+.menuitem {
 	text-align: left;
 	list-style-type: none;
   	border-bottom: thin solid #DBDBD3;
 	padding: 2px;
 }
 
-.relatedrecipes { 
+.relatedrecipes {
 	text-align: left;
 	list-style-type: none;
   	border-bottom: thin solid #DBDBD3;
 	padding: 2px;
 }
 
-.relatedrecipesitem { 
+.relatedrecipesitem {
   	border-top: thin solid #e6e6dd;
 }
 
 
-.menu a, .tabs, li.topmenuitemsubmenu a { 
+.menu a, .tabs, li.topmenuitemsubmenu a {
 	color: #535353;
 	text-decoration: none;
 }
 
 
-.menu a:hover, .tabs:hover, .tabselect:hover, .topmenuitemmainitem:hover  { 
+.menu a:hover, .tabs:hover, .tabselect:hover, .topmenuitemmainitem:hover  {
 	color: #000000;
 	background-color: #F9F9F0;
 	text-decoration: none;
 }
 
-.tabselect:hover { 
+.tabselect:hover {
 	text-decoration: underline;
 }
 
@@ -212,7 +211,7 @@ hr {
 
 .topmenutitle {
 	background-color: #E9B879;
-	text-shadow: 0.1em 0.1em #CC885E;	
+	text-shadow: 0.1em 0.1em #CC885E;
 	font-weight: bold;
   	border: solid #CC885E thin;
 }
@@ -278,7 +277,7 @@ li.topmenuitemsubmenu a:hover {
 */
 
 
-.tabselect { color: #000000; background-color: #f9f9f2; text-decoration: underline; } 
+.tabselect { color: #000000; background-color: #f9f9f2; text-decoration: underline; }
 
 
 /**********************************************************************

@@ -328,7 +328,7 @@ function print_search_heading()
 {
   global $words,$type_of_search,$only_group_id;
   # Print the result
-  print '<h3 id="results">'._('Search results')."</h3>\n";
+  print '<h2 id="results">'._('Search results')."</h2>\n";
   if (!($words && $type_of_search))
     return;
   print "<p>";
@@ -585,11 +585,11 @@ function search_exact ($keywords)
 
   if ($num_rows != 1)
     return;
-  print "<h3>";
+  print "<h2>";
   print
 # TRANSLATORS: this is a title for search results when exactly one item is found.
         _("Unique project search result");
-  print "</h3>\n";
+  print "</h2>\n";
   printf('<p>'._("Search string was: %s.")."</p>\n",
          '<strong>'.htmlspecialchars($keywords).'</strong>');
 

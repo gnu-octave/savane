@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-print '<h3>'._('New mailing lists at Savannah').'</h3>
+print '<h2>'._('New mailing lists at Savannah').'</h2>
 
 ';
 printf ('<p>'

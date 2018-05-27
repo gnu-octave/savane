@@ -55,7 +55,7 @@ sendmail_mail($GLOBALS['sys_mail_replyto'] . "@".$GLOBALS['sys_mail_domain'],
 
 $HTML->header(array('title'=>_("Account Pending Verification")));
 
-print '<h3>'._("Pending Account")."</h3>\n";
+print '<h2>'._("Pending Account")."</h2>\n";
 print '<p>'
       ._("Your email confirmation has been resent. Visit the link in this
 email to complete the registration process.")

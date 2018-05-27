@@ -34,8 +34,8 @@ function show_grouphistory ($group_id)
   if ($rows > 0) {
 
     echo '
-		<h3>'
-      ._("Group Change History").'</h3>
+		<h2>'
+      ._("Group Change History").'</h2>
 		<p>';
     $title_arr=array();
     $title_arr[]=_("Field");
@@ -67,8 +67,8 @@ function show_grouphistory ($group_id)
 
   } else {
     echo '
-		<h3>'
-      ._("No Changes Have Been Made to This Group").'</h3>';
+		<h2>'
+      ._("No Changes Have Been Made to This Group").'</h2>';
   }
 }
 

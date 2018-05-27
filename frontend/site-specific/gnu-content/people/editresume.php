@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-print '<h3>'._('Edit Your Profile').'</h3>
+print '<h2>'._('Edit Your Profile').'</h2>
 
 <p>'
 ._('Now you can edit/change the list of your skills and your resume.

@@ -113,10 +113,10 @@ $to = trackers_data_get_value($field, $group_id,
 
 trackers_header_admin(array('title'=>
                             _("Field Value Transitions: Update Other Fields")));
-print '<h3>'
+print '<h2>'
   .sprintf(_('Other Fields to update when &ldquo;%1$s&rdquo; changes
 from &ldquo;%2$s&rdquo; to &ldquo;%3$s&rdquo;:'),
-           trackers_data_get_label($field), $from, $to).'</h3>';
+           trackers_data_get_label($field), $from, $to).'</h2>';
 
 print '<p class="warn">'
 .sprintf(_('Note that if you set an automatic update of the field %1$s,

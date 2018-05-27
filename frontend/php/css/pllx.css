@@ -1,8 +1,7 @@
-/* <one line to give a brief idea of what this does.>
+/* pllx color scheme.
  * 
- * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
- *
- *  http://gna.org/p/savane 
+ * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2018 Ineiev
  *
  * This file is part of Savane.
  * 
@@ -18,9 +17,6 @@
  * 
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
 */
 
 
@@ -55,19 +51,19 @@ a:active { color: #87ceeb; }
 
 /* Titles */
 
-/* <h2> Page title */
-h2 {
+/* <h1> Page title */
+h1 {
 	text-indent: 0.3em;
 }
-/* <h3> Section title */
-h3 {
+/* <h2> Section title */
+h2 {
 	text-indent: 1em;	
 	color: #e0c080;
 	border-bottom: thin solid #e0c080;
 }
-/* <h4> Small section title */
-/* <h5> Input form label */
-h5 {
+/* <h3> Small section title */
+/* <h4> Input form label */
+h4 {
 	margin: 1px 1px 1px 1px;
 	color: #e0c080;
 	border-bottom: thin solid #e0c080;

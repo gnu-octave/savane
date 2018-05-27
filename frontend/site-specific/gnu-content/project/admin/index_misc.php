@@ -6,7 +6,7 @@
 # Copyright (C) 2002 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004 Rudy Gevaert
 # Copyright (C) 2004, 2005, 2007 Sylvain Beucler
-# Copyright (C) 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2017, 2018 Ineiev <ineiev@gnu.org>
 #
 # This file is part of Savane.
 #
@@ -27,9 +27,9 @@ global $project;
 
 print '
 
-<h3>'._('Miscellaneous...').'</h3>
+<h2>'._('Miscellaneous...').'</h2>
 
-<h4>'._('Backup').'</h4>
+<h3>'._('Backup').'</h3>
 
 <p>'._('You can get read-only access to your raw CVS files (the RCS
 <code>,v</code> ones) using rsync:').'</p>
@@ -42,9 +42,9 @@ print 'rsync cvs.' . $project->getTypeBaseHost() . '::web/' . $GLOBALS['group'] 
 print'
 </pre>
 
-<h4>'
+<h3>'
 # TRANSLATORS: this is a header (<h4>)
-._('ftp.gnu.org area').'</h4>
+._('ftp.gnu.org area').'</h3>
 ';
 
 printf ('<p>'

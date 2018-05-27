@@ -146,10 +146,10 @@ which are not attributed by default when joining this project.").'</p>
       continue;
 
     if ($active)
-      print '<h3>'._('Active members on duty').'</h3>
+      print '<h2>'._('Active members on duty').'</h2>
 ';
     else
-      print '<h3>'._('Currently inactive members').'</h3>
+      print '<h2>'._('Currently inactive members').'</h2>
 ';
     echo html_build_list_table_top ($title_arr);
 

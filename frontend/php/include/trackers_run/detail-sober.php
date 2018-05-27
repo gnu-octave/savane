@@ -139,9 +139,9 @@ if (db_result($result,0,'category_id') != '100')
                                           true,  # read only
                                           true);  # ascii
 
-print '<h2 class="'.utils_get_priority_color(db_result($result,0,'priority'))
+print '<h1 class="'.utils_get_priority_color(db_result($result,0,'priority'))
   .'"><em>'.$item_link.$category.':</em> '
-  .db_result($result,0,'summary')."</h2>\n";
+  .db_result($result,0,'summary')."</h1>\n";
 print markup_full(db_result($result,0,'details'));
 
 # latest update: when the item was posted or the latest history change
@@ -173,7 +173,7 @@ print "<p>&nbsp;</p>\n";
 $result=trackers_data_get_attached_files($item_id);
 if (db_numrows($result))
   {
-    print '<h3>'.html_anchor(_("Attached Files"), "attached")."</h3>\n";
+    print '<h2>'.html_anchor(_("Attached Files"), "attached")."</h2>\n";
     print format_item_attached_files($item_id,$group_id,false,true);
 
     print "<p>&nbsp;</p>\n";
@@ -183,7 +183,7 @@ if (db_numrows($result))
 # Give info about the context
 if (ARTIFACT == 'cookbook')
   {
-    print '<h3>'.html_anchor(_("Audience and Context"), "context")."</h3>\n";
+    print '<h2>'.html_anchor(_("Audience and Context"), "context")."</h2>\n";
 
   # Obtain selected context
     $context_result = db_execute("SELECT * FROM cookbook_context2recipe
@@ -287,7 +287,7 @@ links)")."</p>\n";
 # posting a proper SR.
 if (member_check(0, $group_id))
   {
-    print '<h3>'.html_anchor(_("Item Edition"), "edit")."</h3>\n";
+    print '<h2>'.html_anchor(_("Item Edition"), "edit")."</h2>\n";
     print '<p>'.utils_link($GLOBALS['sys_home'].ARTIFACT
                          ."/edit.php?func=detailitem&amp;item_id=$item_id",
                          _("Edit this page"))."</p>\n";

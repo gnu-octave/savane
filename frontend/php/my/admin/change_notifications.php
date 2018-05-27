@@ -124,7 +124,7 @@ line configuration skipped."), 1);
 site_user_header(array('title'=>_("Mail Notification Settings"),
                        'context'=>'account'));
 
-print '<h3>'._("Notification Exceptions").'</h3>';
+print '<h2>'._("Notification Exceptions").'</h2>';
 print '<p>'._("When you post or update an item, you are automatically added to
 its Carbon-Copy list to receive notifications regarding future updates. You can
 always remove yourself from an item Carbon-Copy list.")
@@ -182,7 +182,7 @@ if (user_get_preference("removecc_notassignee"))
 print form_input("checkbox", "form_removecc_notassignee", "1", $checked).' '
       ._("I am no longer assigned to the item").'<br />&nbsp;&nbsp;'."\n";
 
-print '<br /><h3>'._("Subject Line").'</h3>'."\n";
+print '<br /><h2>'._("Subject Line").'</h2>'."\n";
 print '<p>';
 printf(_('The header &ldquo;%s&rdquo; will always be included, and when
 applicable, so will &ldquo;%s,&rdquo; &ldquo;%s,&rdquo; and &ldquo;%s.&rdquo;'),
@@ -202,7 +202,7 @@ print '<span class="preinput">'._("Subject Line:").'</span><br />&nbsp;&nbsp;';
 print '<input name="form_subject_line" size="50" type="text" value="'
       .user_get_preference("subject_line").'" />';
 
-print '<br /><h3>'._("Reminder").'</h3>'."\n";
+print '<br /><h2>'._("Reminder").'</h2>'."\n";
 print '<p>'._("You can also receive reminders about opened items assigned to
 you, when their priority is higher than 5. Note that projects administrators
 can also set reminders for you, out of your control, for your activities on the

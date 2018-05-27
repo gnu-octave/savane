@@ -3,7 +3,7 @@
 #
 #  Copyright (C) 2003-2004 Yves Perrin <Yves.Perrin@cern.ch>
 #  Copyright (C) 2003-2004 Mathieu Roy <yeupou--at--gnu.org>
-#  Copyright (C) 2017 Ineiev
+#  Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -74,31 +74,31 @@ print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="group_id" value="'.$group_id.'" />';
 
-print '<h3>'._("Bug Tracker Email Notification Settings").'</h3>
+print '<h2>'._("Bug Tracker Email Notification Settings").'</h2>
 ';
 trackers_data_show_notification_settings($group_id, 'bugs', 0);
 print '<br />
 ';
 
-print '<h3>'._("Support Tracker Email Notification Settings").'</h3>
+print '<h2>'._("Support Tracker Email Notification Settings").'</h2>
 ';
 trackers_data_show_notification_settings($group_id, 'support', 0);
 print '<br />
 ';
 
-print '<h3>'._("Task Tracker Email Notification Settings").'</h3>
+print '<h2>'._("Task Tracker Email Notification Settings").'</h2>
 ';
 trackers_data_show_notification_settings($group_id, 'task', 0);
 print '<br />
 ';
 
-print '<h3>'._("Patch Tracker Email Notification Settings").'</h3>
+print '<h2>'._("Patch Tracker Email Notification Settings").'</h2>
 ';
 trackers_data_show_notification_settings($group_id, 'patch', 0);
 print '<br />
 ';
 
-print '<h3>'._("Cookbook Manager Email Notification Settings").'</h3>
+print '<h2>'._("Cookbook Manager Email Notification Settings").'</h2>
 ';
 trackers_data_show_notification_settings($group_id, 'cookbook', 0);
 print '<br />
@@ -106,7 +106,7 @@ print '<br />
 
 # yeupou--gnu.org 2004-09-17: in the end, the goal is to make news
 # using the common tracker code
-print '<h3>'._("News Manager Email Notification Settings").'</h3>
+print '<h2>'._("News Manager Email Notification Settings").'</h2>
 ';
 print '<span class="preinput">'._("Carbon-Copy List:")
 .'</span><br />&nbsp;&nbsp;<input type="text" name="form_news_address" value="'
@@ -114,7 +114,7 @@ print '<span class="preinput">'._("Carbon-Copy List:")
 print '<br /><br />
 ';
 
-print '<h3>'._("Reminders").'</h3>
+print '<h2>'._("Reminders").'</h2>
 ';
 print '<p>'._("You can configure the project so that reminder emails get sent
 to project members who have opened items with priority higher than 5 assigned

@@ -36,7 +36,7 @@ extract(sane_import('post', array('search', 'groupsearch')));
 extract(sane_import('get', array('group_name_search', 'offset', 'max_rows',
                                  'status')));
 
-print '<h3>'.no_i18n("Group List Filter").'</h3>
+print '<h2>'.no_i18n("Group List Filter").'</h2>
 ';
 
 $title_arr=array();
@@ -96,7 +96,7 @@ $status_proj_arr['D']=no_i18n("Deleted Projects");
 $status_proj_arr['M']=no_i18n("Maintenance Projects");
 $status_proj_arr['X']=no_i18n("System internal Projects");
 
-print '<h3>'.no_i18n("Group Search").'</h3>
+print '<h2>'.no_i18n("Group Search").'</h2>
 <p>'.no_i18n("Display Groups beginning with:").' ';
 
 for ($i=0; $i < count($abc_array); $i++) {
@@ -115,7 +115,7 @@ print '
 </form>
 </p>';
 
-print '<h3>'.no_i18n("Group List").'</h3>';
+print '<h2>'.no_i18n("Group List").'</h2>';
 
 if (!$offset or !ctype_digit($offset) or $offset < 0)
 { $offset = 0; }

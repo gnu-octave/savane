@@ -36,16 +36,16 @@ if ($group_id && user_ismember($group_id,'A'))
   site_project_header(array('context'=>'ahome','group'=>$group_id,
                             'title'=>_("Copy Configuration")));
   
-  print '<h3>'._("Support Trackers Configuration Copy").'</h3>
+  print '<h2>'._("Support Trackers Configuration Copy").'</h2>
 ';
   conf_form($group_id, "support");
-  print '<h3>'._("Bug Trackers Configuration Copy").'</h3>
+  print '<h2>'._("Bug Trackers Configuration Copy").'</h2>
 ';
   conf_form($group_id, "bugs");
-  print '<h3>'._("Task Trackers Configuration Copy").'</h3>
+  print '<h2>'._("Task Trackers Configuration Copy").'</h2>
 ';
   conf_form($group_id, "task");
-  print '<h3>'._("Patch Trackers Configuration Copy").'</h3>
+  print '<h2>'._("Patch Trackers Configuration Copy").'</h2>
 ';
   conf_form($group_id, "patch");
   

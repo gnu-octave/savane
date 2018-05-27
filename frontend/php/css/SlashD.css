@@ -57,13 +57,13 @@ a:active { color: #00618e; }
   color: #b5b5b5l;
 }
 
-h2 { }
-h3 {
+h1 { }
+h2 {
   border-top: thin solid #006666;
   border-bottom: thin solid #006666;
   color: #006666
 }
-h5 {
+h4 {
   border-top: thin solid #006666;
   border-bottom: thin solid #006666;
   color: #006666

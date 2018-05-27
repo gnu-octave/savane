@@ -56,7 +56,7 @@ if ($update && $form_pw)
 
 site_header(array('title'=>_("Lost Password Login")));
 
-print '<h3>'._("Lost Password Login").'</h3>';
+print '<h2>'._("Lost Password Login").'</h2>';
 print '<p>'.sprintf(_("Welcome, %s."), $row_lostuser['user_name']);
 print ' '._("You may now change your password").'.</p>';
 

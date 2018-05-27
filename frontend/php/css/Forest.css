@@ -67,14 +67,14 @@ a:active { color: #000000; }
 .italic { font-style: italic; }
 .footer { font-size: x-small; color: #333333; }
 
-h3 {
+h2 {
 	background-color: #def9d1;
 	font-weight: normal;
  	border: solid #96ad80;
 	border-width: 0 0 thin 0;
 }
 
-h5 {
+h4 {
 	font-weight: normal;
 	background-color: #def9d1;
 	font-weight: normal;

@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 print '
-<h3>'._('Create a New Job').'</h3>
+<h2>'._('Create a New Job').'</h2>
 
 <p>'
 ._('Start by filling in the fields below. When you push &ldquo;continue,&rdquo;

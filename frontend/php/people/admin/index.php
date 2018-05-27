@@ -3,7 +3,7 @@
 #
 # Copyright 1999-2000 (c) The SourceForge Crew
 # Copyright 2006, 2007, 2008 Sylvain Beucler
-# Copyright 2017 Ineiev
+# Copyright 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -61,7 +61,7 @@ if ($people_cat)
   {
     # Show categories and blank row.
     print site_header(array('title'=>_('Change Categories')));
-    print '<h2>'._("Add Job Categories").'</h2>
+    print '<h1>'._("Add Job Categories").'</h1>
 ';
     # List of possible categories for this group.
     $result = db_query("SELECT category_id,name FROM people_job_category");
@@ -72,11 +72,11 @@ if ($people_cat)
         print '<p>'._("No job categories")."</p>\n";
         print db_error();
       }
-    print '<h3>'._("Add a new job category:").'</h3>
+    print '<h2>'._("Add a new job category:").'</h2>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <p><input type="hidden" name="people_cat" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
-<h4>'._("New Category Name:").'</h4>
+<h3>'._("New Category Name:").'</h3>
 <input type="text" name="cat_name" value="" size="15" maxlength="30" /><br />
 <p>
 <strong><span class="warn">'
@@ -93,7 +93,7 @@ else if ($people_skills)
   {
     # Show people_groups and blank row.
     print site_header(array('title'=>_('Change People Skills')));
-    print '<h2>'._("Add Job Skills").'</h2>
+    print '<h1>'._("Add Job Skills").'</h1>
 ';
     # List of possible people_groups for this group.
     $result = db_query("SELECT skill_id,name FROM people_skill");
@@ -106,13 +106,13 @@ else if ($people_skills)
         print "<p>"._("No Skills Found").'</p>
 ';
       }
-    print '<h3>'._("Add a new skill:").'</h3>
+    print '<h2>'._("Add a new skill:").'</h2>
 ';
     print '<p>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="people_skills" value="y" />
 <input type="hidden" name="post_changes" value="y" /></p>
-<h4>'._("New Skill Name:").'</h4>
+<h3>'._("New Skill Name:").'</h3>
 <input type="text" name="skill_name" value="" size="15" maxlength="30" /><br />
 <p><strong><span class="warn">'._("Once you add a skill, it cannot be deleted")
 .'</span></strong></p>
@@ -124,7 +124,7 @@ else # ! $people_skills
   {
     # Show main page.
     print site_header(array('title'=>_('People Administration')));
-    print '<h2>'._("Help Wanted Administration").'</h2>';
+    print '<h1>'._("Help Wanted Administration").'</h1>';
     print '<p><a href="'.htmlentities ($_SERVER['PHP_SELF'])
           .'?people_cat=1">'._("Add Job Categories").'</a><br />';
     print "\n<a href=\"";

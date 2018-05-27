@@ -126,7 +126,7 @@ print '<p>'._("You can change all of your account features from here.")
 utils_get_content("account/index_intro");
 print '<form action="'.htmlentities ($_SERVER["PHP_SELF"]).'" method="post">';
 
-print '<h3>'._("Significant Arrangements").'</h3>';
+print '<h2>'._("Significant Arrangements").'</h2>';
 print "\n".html_splitpage(1);
 
 print $HTML->box_top(_('Authentication Setup'));
@@ -269,7 +269,7 @@ print '<span class="clearr" /><p class="center">'
       ._("Update").'" /></p></span>';
 print "<br />\n";
 
-print '<h3>'._("Secondary Arrangements").'</h3>
+print '<h2>'._("Secondary Arrangements").'</h2>
 ';
 
 if (is_broken_msie() && empty($_GET["printer"]))

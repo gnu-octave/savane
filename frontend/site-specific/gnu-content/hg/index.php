@@ -22,14 +22,14 @@
 
 global $project;
 
-print '<h4>'._('Anonymous checkout:').'</h4>
+print '<h2>'._('Anonymous checkout:').'</h2>
 
 <pre>hg clone http://hg.'
   .$project->getTypeBaseHost() . '/hgweb'
   .preg_replace(':/srv/hg:', '', $project->getTypeDir('hg')).'
 </pre>
 
-<h4>'._('More information').'</h4>
+<h2>'._('More information').'</h2>
 
 <p><a href="//savannah.gnu.org/maintenance/UsingHg">
 https://savannah.gnu.org/maintenance/UsingHg</a></p>

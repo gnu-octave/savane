@@ -119,10 +119,10 @@ function show_item_list ($result_arr,
              .'" /></span>';
 	}
     }
-  $nav_bar .= "</h3>\n";
+  $nav_bar .= "</h2>\n";
 
   # Print prev/next links.
-  print '<h3 id="results" '.$nav_bar."<br />\n";
+  print '<h2 id="results" '.$nav_bar."<br />\n";
   print html_build_list_table_top ($title_arr,$links_arr);
 
   #see if the bugs are too old - so we can highlight them
@@ -217,7 +217,7 @@ function show_item_list ($result_arr,
     }
   print "</table>\n";
   # Print prev/next links.
-  print "<br />\n".'<h3 '.$nav_bar."<br />\n";
+  print "<br />\n".'<h2 '.$nav_bar."<br />\n";
 }
 
 # Do the same a item list but in sober output.
@@ -436,7 +436,7 @@ function show_item_list_sober ($result_arr,
 	{ continue; }
 
       print '
-  <h3>'.html_anchor(sprintf(("%s:"), $context_label), $context).'</h3>
+  <h2>'.html_anchor(sprintf(("%s:"), $context_label), $context).'</h2>
   <ul>'.$context_content.'</ul>
   <br />
 ';

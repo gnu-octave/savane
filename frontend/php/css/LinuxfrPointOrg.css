@@ -59,9 +59,9 @@ a:active { color: #ff0000; }
 
 /* Titles */
 
-/* <h2> Page title */
-/* <h3> Section title */
-h3 {
+/* <h1> Page title */
+/* <h2> Section title */
+h2 {
 	background-color: white;
 	text-indent: 1em; 
 	border-top: solid thin black;
@@ -69,9 +69,9 @@ h3 {
 	color: black;
 }
 
-/* <h4> Small section title */
-/* <h5> Input form label */
-h5 {
+/* <h3> Small section title */
+/* <h4> Input form label */
+h4 {
 	margin: 1px 1px 1px 1px;
 	background-color: white;
 	border-top: solid thin black;

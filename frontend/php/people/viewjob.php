@@ -50,13 +50,13 @@ if (!$result || db_numrows($result) < 1)
   {
     print db_error();
     fb(_("POSTING fetch FAILED"));
-    print '<h2>'._("No Such Posting For This Project").'</h2>';
+    print '<h1>'._("No Such Posting For This Project").'</h1>';
   }
 else
   {
     $project=project_get_object($group_id);
     print '
-<h2 class=toptitle>';
+<h1 class=toptitle>';
 # TRANSLATORS: the first argument is job title (like Tester or Developer),
 # the second argument is group name (like GNU Coreutils).
     printf ('%1$s for %2$s',
@@ -64,7 +64,7 @@ else
             '<a href="'.$GLOBALS['sys_home'].'projects/'
             . db_result($result,0,'unix_group_name')
             .'">'. db_result($result,0,'group_name') .'</a>');
-    print'</h2>
+    print'</h1>
 <p><span class="preinput">'._("Category:").'</span> <a href="'
          . $GLOBALS['sys_home'] . 'people/?category_id='
          . db_result($result,0,'category_id') . '">'
@@ -121,7 +121,7 @@ else
           ._("Details (job description, contact ...):").'</span></p>
 ';
     print markup_full(htmlspecialchars(db_result($result,0,'description')));
-    print '<h3>'._("Required Skills:").'</h3>
+    print '<h2>'._("Required Skills:").'</h2>
 ';
     print people_show_job_inventory($job_id);
   }

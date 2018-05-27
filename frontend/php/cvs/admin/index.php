@@ -186,8 +186,8 @@ FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
 WHERE group_id = ?", array($group_id));
 
-echo "<h2>log_accum</h2>\n";
-echo "<h3>Current notifications</h3>\n";
+echo "<h1>log_accum</h1>\n";
+echo "<h2>Current notifications</h2>\n";
 echo "<form action='";
 print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>\n";
 echo "<table>\n";
@@ -236,7 +236,7 @@ $caption=_("Modify");
 echo "<input name='log_accum' type='submit' value='$caption' />\n";
 echo "</form>\n";
 
-echo "<h3>New notification</h3>\n";
+echo "<h2>New notification</h2>\n";
 echo "<form action='";
 print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>\n";
 echo "<ol>\n";
@@ -298,8 +298,8 @@ FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
 WHERE group_id = ?", array($group_id));
 
-echo "<h2>cia (in progress)</h2>\n";
-echo "<h3>Current CIA notifications</h3>\n";
+echo "<h1>cia (in progress)</h1>\n";
+echo "<h2>Current CIA notifications</h2>\n";
 echo "<form action='";
 print htmlentities ($_SERVER['PHP_SELF'])."'>";
 echo "<table>\n";

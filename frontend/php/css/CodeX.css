@@ -65,14 +65,14 @@ a:active { color: #aa6666; }
 	color: #333333; 
 }
 
-h2 {
+h1 {
 	text-indent: 1em;
 	border-collapse: collapse;
         background-color: #e8e8e0;
 	width: 100% ;
   	text-shadow: 0.1em 0.1em #d0d0c6;
 }
-h3 {
+h2 {
 	text-indent: 1em;
 	border-collapse:	collapse;
 	border-bottom: 0.2em solid #e8e8e0; 
@@ -80,7 +80,7 @@ h3 {
 	width: 100% ;
 }
 
-h5 {
+h4 {
 	border-collapse:	collapse;
 	border-bottom: 0.1em solid #e8e8e0; 
   	text-shadow: 0.1em 0.1em #e8e8e0;

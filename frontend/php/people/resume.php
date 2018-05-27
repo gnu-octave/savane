@@ -49,10 +49,10 @@ print '<p>'.sprintf(_("Follows Resume & Skills of %s."),
 ';
 utils_get_content("people/viewprofile");
 
-print '<h3>'._("Resume")."</h3>\n";
+print '<h2>'._("Resume")."</h2>\n";
 print markup_full(htmlspecialchars(db_result($result,0,'people_resume')));
 
-print '<h3>'._("Skills")."</h3>\n";
+print '<h2>'._("Skills")."</h2>\n";
 print people_show_skill_inventory($user_id);
 
 site_footer(array());

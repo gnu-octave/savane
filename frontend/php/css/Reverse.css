@@ -50,13 +50,13 @@ a:active { color: #ff9393; }
 
 /* Titles */
 
-h3 {
+h2 {
 	border-top: thin solid #727272;
 	border-bottom: thin solid #bcbcbc;
 	background-color: #a3a3a3; 
 }
 
-h5 {
+h4 {
 	margin: 1px 1px 1px 1px;
 	border-top: thin solid #727272;
 	border-bottom: thin solid #bcbcbc;

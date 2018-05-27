@@ -225,7 +225,7 @@ else
   # GENERAL SETTINGS
   # ####################################################################
 
-  print '<h3>'.no_i18n("General Default Settings for Groups of this Type").'</h3>
+  print '<h2>'.no_i18n("General Default Settings for Groups of this Type").'</h2>
 ';
 
   $textfield_size='65';

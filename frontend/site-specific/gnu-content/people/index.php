@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-print '<h3>'._('Projects Needing Help').'</h3>
+print '<h2>'._('Projects Needing Help').'</h2>
 
 <p>'
 ._('Browse through the category menu to find projects looking for your help.')
