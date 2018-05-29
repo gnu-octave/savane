@@ -352,6 +352,66 @@ function context_title ()
   return $title;
 }
 
+function context_alt ()
+{
+  $alt_texts = array ();
+  $alt_texts['admin'] =
+# TRANSLATORS: this is website context.
+                       _('admin');
+  $alt_texts['people'] =
+# TRANSLATORS: this is website context.
+                       _('people');
+  $alt_texts['preferences'] =
+# TRANSLATORS: this is website context.
+                       _('preferences');
+  $alt_texts['desktop'] =
+# TRANSLATORS: this is website context.
+                       _('desktop');
+  $alt_texts['directory'] =
+# TRANSLATORS: this is website context.
+                       _('directory');
+  $alt_texts['keys'] =
+# TRANSLATORS: this is website context (GPG keys).
+                       _('keys');
+  $alt_texts['main'] =
+# TRANSLATORS: this is website context.
+                       _('main');
+  $alt_texts['bug'] =
+# TRANSLATORS: this is website context.
+                       _('bug');
+  $alt_texts['man'] =
+# TRANSLATORS: this is website context (documentation).
+                       _('man');
+  $alt_texts['help'] =
+# TRANSLATORS: this is website context (support).
+                       _('help');
+  $alt_texts['mail'] =
+# TRANSLATORS: this is website context.
+                       _('mail');
+  $alt_texts['task'] =
+# TRANSLATORS: this is website context.
+                       _('task');
+  $alt_texts['cvs'] =
+# TRANSLATORS: this is website context (VCS).
+                       _('cvs');
+  $alt_texts['news'] =
+# TRANSLATORS: this is website context.
+                       _('news');
+  $alt_texts['patch'] =
+# TRANSLATORS: this is website context.
+                       _('patch');
+  $alt_texts['download'] =
+# TRANSLATORS: this is website context.
+                       _('download');
+  $alt_texts['directory'] =
+# TRANSLATORS: this is website context.
+                       _('directory');
+  $icon = context_icon ();
+  if (in_array($icon, $alt_texts))
+    return $alt_texts[$icon];
+  return $alt_texts['main'];
+}
+
 function context_icon ()
 {
   switch (CONTEXT)

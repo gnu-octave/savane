@@ -34,31 +34,45 @@
 # result. We ll be doing dumb code, code that we ll be able to debug.
 # (you need to be smarter than the code to be able to debug it, so lets avoid
 # writing the smartest code, so we still have a chance)
-function artifact_name ($artifact)
+function artifact_name_prefixed ($artifact)
 {
    switch($artifact)
      {
        case 'bugs': return
-       # TRANSLATORS: this string is used in context of "%s tracker".
-                           _('bug');
+       # TRANSLATORS: this string (after removing '[artifact]')
+       # is used in context of "%s tracker".
+                           _('[artifact]bug');
        case 'patch': return
-       # TRANSLATORS: this string is used in context of "%s tracker".
-                           _('patch');
+       # TRANSLATORS: this string (after removing '[artifact]')
+       # is used in context of "%s tracker".
+                           _('[artifact]patch');
        case 'task': return
-       # TRANSLATORS: this string is used in context of "%s tracker".
-                           _('task');
+       # TRANSLATORS: this string (after removing '[artifact]')
+       # is used in context of "%s tracker".
+                           _('[artifact]task');
        case 'cookbook': return
-       # TRANSLATORS: this string is used in context of "%s tracker".
-                               _('cookbook');
+       # TRANSLATORS: this string (after removing '[artifact]')
+       # is used in context of "%s tracker".
+                               _('[artifact]cookbook');
        case 'support': return
-       # TRANSLATORS: this string is used in context of "%s tracker".
-                              _('support');
+       # TRANSLATORS: this string (after removing '[artifact]')
+       # is used in context of "%s tracker".
+                              _('[artifact]support');
        case 'news': return
-       # TRANSLATORS: this string is used in context of "%s tracker".
-                             _('news');
+       # TRANSLATORS: this string (after removing '[artifact]')
+       # is used in context of "%s tracker".
+                             _('[artifact]news');
        default: return $artifact;
      }
    return $artifact;
+}
+function artifact_name ($artifact)
+{
+  $name = artifact_name_prefixed ($artifact);
+  $pos = strpos ($name, ']');
+  if ($pos === false)
+    return $name;
+  return substr ($name, $pos + 1);
 }
 
 function trackers_conf_copy ($group_id, $artifact, $from_group_id)
@@ -338,7 +352,7 @@ lost.").'</p>
 <span class="preinput">'._("Projects:").'</span><br />
 &nbsp;&nbsp;&nbsp;
 ';
-      print html_build_select_box_from_arrays($vals, $texts,'from_group_id');
+      print html_build_select_box_from_arrays($vals,$texts,'from_group_id');
       print form_footer();
     }
   else
