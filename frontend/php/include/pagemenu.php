@@ -98,7 +98,21 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
       <span class="topmenutitle" title="'.sprintf(_("%s Scope"), $scope).'">
         '.$scope.'
       </span><!-- end topmenutitle -->
-      <div class="topmenuitem"><ul id="topmenuitem">
+';
+
+  $have_context = false;
+  switch (CONTEXT)
+    {
+    case 'my': case 'siteadmin': $have_context = true;
+    }
+  if (isset($GLOBALS['group_id']))
+    {
+      $project = project_get_object($GLOBALS['group_id']);
+      if (!$project->isError())
+        $have_context = true;
+    }
+  if ($have_context)
+    print '       <div class="topmenuitem"><ul id="topmenuitem">
 
 ';
   # Call the relevant menu.
@@ -108,9 +122,10 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
     case 'siteadmin': pagemenu_siteadmin(); break;
     case isset($GLOBALS['group_id']): pagemenu_group(); break;
     }
-  print  '      </ul></div><!-- end topmenuitem -->
-    </div>
-<!-- end pagemenu -->
+  if ($have_context)
+    print  '      </ul></div><!-- end topmenuitem -->
+';
+print ' </div><!-- end pagemenu -->
 ';
   # Add the stone age submenu if relevant.
   if (!empty($GLOBALS['stone_age_menu'])
