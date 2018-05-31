@@ -412,6 +412,9 @@ h5 a {
 .menu a {
 	display: block;
 }
+.menu {
+	list-style-type: none;
+}
 
 .menusearch {
 	text-indent: 0;
