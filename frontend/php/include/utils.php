@@ -270,9 +270,8 @@ function utils_format_date($timestamp, $format="default")
       }
     case 'natural':
       {
-        if (time () < 12 * 60 * 60 + $timestamp
-            && time () + 12 * 60 * 60 > $timestamp)
-        # Nearest events, both past and future.
+        if (time () < 12 * 60 * 60 + $timestamp && time () > $timestamp)
+        # Nearest past events are shown as time.
           $date_fmt = '%H:%M';
         else
           $date_fmt = '%Y-%m-%d';
