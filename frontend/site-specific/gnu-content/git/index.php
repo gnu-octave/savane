@@ -70,12 +70,14 @@ if ($username == "NA")
 if ($n > 0)
   echo $main_desc;
 
-echo "git clone " . $username . "@git.sv.gnu.org:"
+echo "git clone " . $username . "@git."
+     . $project->getTypeBaseHost() . ":"
      .  $project->getTypeDir('git') . "\n";
 for ($i = 0; $i < $n; $i++)
   {
     echo "\n" . $desc[$i] . "\n";
-    echo "git clone " . $username . "@git.sv.gnu.org:" . $repo[$i] . "\n";
+    echo "git clone " . $username . "@git."
+         . $project->getTypeBaseHost() . ":" . $repo[$i] . "\n";
   }
 print '
 </pre>
