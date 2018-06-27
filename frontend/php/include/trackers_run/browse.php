@@ -301,7 +301,8 @@ else if ($set=='custom')
       {
         while (list(,$value_id) = each($arr_val))
           {
-            $pref_stg .= '&amp;'.$field.'[]='.$value_id;
+            $pref_stg .= '&amp;'.htmlspecialchars ($field).'[]='
+                         .htmlspecialchars ($value_id);
           }
 
       # build part of the HTML title of this page for more friendly bookmarking
@@ -314,12 +315,12 @@ else if ($set=='custom')
                .trackers_data_get_value($field,$group_id,$value_id);
           }
       }
-    $pref_stg .= '&amp;advsrch='.$advsrch;
-    $pref_stg .= '&amp;msort='.$msort;
+    $pref_stg .= '&amp;advsrch='.htmlspecialchars ($advsrch);
+    $pref_stg .= '&amp;msort='.htmlspecialchars ($msort);
     $pref_stg .= '&amp;chunksz='.$chunksz;
-    $pref_stg .= '&amp;spamscore='.$spamscore;
-    $pref_stg .= '&amp;report_id='.$report_id;
-    $pref_stg .= '&amp;sumORdet='.$sumORdet;
+    $pref_stg .= '&amp;spamscore='.htmlspecialchars ($spamscore);
+    $pref_stg .= '&amp;report_id='.htmlspecialchars ($report_id);
+    $pref_stg .= '&amp;sumORdet='.htmlspecialchars ($sumORdet);
 
     if ($pref_stg != user_get_preference($preference_prefix.'_brow_cust'
                                          .$group_id))
@@ -908,10 +909,10 @@ if ($browse_preamble)
 $form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
                 .'#options" method="get" name="bug_form">';
 $form = '
-          <input type="hidden" name="group" value="'.$group.'" />
-          <input type="hidden" name="func" value="'.$func.'" />
+          <input type="hidden" name="group" value="'.htmlspecialchars ($group).'" />
+          <input type="hidden" name="func" value="'.htmlspecialchars ($func).'" />
           <input type="hidden" name="set" value="custom" />
-          <input type="hidden" name="msort" value="'.$msort.'" />';
+          <input type="hidden" name="msort" value="'.htmlspecialchars ($msort).'" />';
 
 # Show the list of available bug reports kind.
 $res_report = trackers_data_get_reports($group_id,user_getid(),$sober);
@@ -941,12 +942,14 @@ else
   }
 
 # Start building the URL that we use to for hyperlink in the form
-$url = $GLOBALS['sys_home'].ARTIFACT."/?group=$group&amp;func=".$func
-       ."&amp;set=$set&amp;msort=$msort";
+$url = $GLOBALS['sys_home'].ARTIFACT."/?group="
+       .htmlspecialchars ($group)."&amp;func=".htmlspecialchars ($func)
+       ."&amp;set=".htmlspecialchars ($set)."&amp;msort="
+       .htmlspecialchars ($msort);
 if ($set == 'custom')
   $url .= $pref_stg;
 else
-  $url .= '&amp;advsrch='.$advsrch;
+  $url .= '&amp;advsrch='.htmlspecialchars ($advsrch);
 
 $url_nomorder = $url;
 # the htmlspecialchars() is necessary, because $morder
@@ -1064,8 +1067,8 @@ if (($details_search == 1) && ($summary_search == 1))
           ."</p>\n";
       }
 
-    # Update the url
-    $url .= "&amp;sumOrdet=$sumORdet";
+    # Update the URL.
+    $url .= "&amp;sumOrdet=".htmlspecialchars ($sumORdet);
   }
 
 ## Propose to search for field updated since a certain date
@@ -1183,9 +1186,11 @@ if (!$sober)
 
 if ($history_search)
   # Update the url
-  $url .= "&amp;history_search=$history_search&amp;history_field="
-          ."$history_field&amp;history_event="
-          ."$history_event&amp;history_date=$history_date";
+  $url .= "&amp;history_search="
+          .htmlspecialchars ($history_search)."&amp;history_field="
+          .htmlspecialchars ($history_field)."&amp;history_event="
+          .htmlspecialchars ($history_event)."&amp;history_date="
+          .htmlspecialchars ($history_date);
 
 # Number of items printed at once
 # In sober mode, they are all printed
