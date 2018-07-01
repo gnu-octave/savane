@@ -7550,7 +7550,7 @@ msgid "Jump to the recipe preview"
 msgstr "Предварительный просмотр рецепта"
 
 #: frontend/php/include/trackers/format.php:243
-msgid "This item as been reported to be a spam"
+msgid "This item has been reported to be a spam"
 msgstr "Об этой заявке сообщили как о спаме"
 
 #: frontend/php/include/trackers/format.php:249

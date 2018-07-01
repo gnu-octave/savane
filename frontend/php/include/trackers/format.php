@@ -231,17 +231,13 @@ Follow-up Comments:\n\n";
 	{ $comment_number = $i; }
 
       extract(sane_import('get', array('func', 'comment_internal_id')));
-      # Handle spam special cases here
+      # Handle spam special cases here.
       if ($is_spam)
-	{
-	  # If we are dealing with the original submission put a feedback
-	  # warning
-	  # (not if the item was just flagged)
-	  if ($entry['comment_internal_id'] < 1 &&
-	      $func != "flagspam")
-	    {
-	      fb(_("This item as been reported to be a spam"), 1);
-	    }
+        {
+          # If we are dealing with the original submission put a feedback
+          # warning (not if the item was just flagged).
+          if ($entry['comment_internal_id'] < 1 && $func != "flagspam")
+            fb(_("This item has been reported to be a spam"), 1);
 
 	  if ($entry['user_id'] != 100)
 	    { $spammer_user_name = $entry['user_name'];  }
