@@ -490,7 +490,7 @@ you can think of.")."</p>\n";
   # will do it.
   print '
  <form action="'.$form_action.'" method="post">
-   <input type="hidden" name="touser" value="'.htmlspecalchars($user_id).'" />
+   <input type="hidden" name="touser" value="'.htmlspecialchars($user_id).'" />
    <input type="hidden" name="fromuser" value="'.user_getname().'" />
 
    <span class="preinput">'._("From:").'</span><br />&nbsp;&nbsp;&nbsp;'
