@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2013, 2017 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2013, 2017, 2018 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -78,7 +78,8 @@ function people_show_table()
                                  WHERE category_id=? AND status_id=1",
                                  array(db_result($result,$i,'category_id')));
           print db_error();
-          $return .= '<input type="checkbox" title="'.db_result($result,$i,'name')
+          $return .= '<input type="checkbox" title="'
+             .db_result($result,$i,'name')
              .'" name="categories[]" value="'
              .db_result($result,$i,'category_id') .'"><a href="'
              .htmlentities ($_SERVER["PHP_SELF"]).'?categories[]='
@@ -369,7 +370,7 @@ function people_draw_skill_box ($result, $job_id=false, $group_id=false)
                 . db_result($result,$i,''.$infix.'_inventory_id') .'" />
 <input type="hidden" name="'.$infix.'_id" value="'. db_result($result,$i,''.$infix.'_id')
                 .'" />
-<input type="hidden" name="group_id" value="'.$group_id.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
 <span class="smaller">'. db_result($result,$i,'skill_name') . '</span></td>
 <td><span class="smaller">'
 . people_skill_level_box('skill_level_id', db_result($result,$i,'skill_level_id'))
@@ -403,8 +404,8 @@ print '
 <td>';
 
 if ($job_id === false)
-  print '<input type="hidden" name="'.$infix.'_id" value="'. $job_id .'" />
-<input type="hidden" name="group_id" value="'.$group_id.'" />
+  print '<input type="hidden" name="'.$infix.'_id" value="'.$job_id.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
 ';
 
 print '<span class="smaller">'. people_skill_box('skill_id'). '</span></td>

@@ -782,7 +782,8 @@ elseif ($item == "delete")
         $preamble = _('Push &ldquo;Update&rdquo; to confirm your account deletion');
         $input_title = _('Confirmation hash:');
         $input_specific = "<input type='text' readonly='readonly' "
-                          ."name='confirm_hash' value='$confirm_hash' />";
+                          .'name="confirm_hash" value="'
+                          .htmlentities($confirm_hash).'" />';
         $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
       }
   }

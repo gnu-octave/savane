@@ -1,5 +1,5 @@
 <?php
-# Add and edit project mailing lists
+# Add and edit project mailing lists.
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2006  BBN Technologies Corp
@@ -357,7 +357,7 @@ utils_get_content("mail/about_list_creation");
 print '
 <p>
 <input type="hidden" name="post_changes" value="y" />
-<input type="hidden" name="group_id" value="'.$group_id.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
 </p>
 <h2>'._('Create a new mailing list:').'</h2> ';
 
@@ -396,3 +396,4 @@ print '<p>
 
 print form_footer();
 site_project_footer(array());
+?>

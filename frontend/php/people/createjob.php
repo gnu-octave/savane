@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -36,7 +36,7 @@ utils_get_content("people/createjob");
 
 print '
 <form action="'.$GLOBALS['sys_home'].'people/editjob.php" method="POST">
-<input type="hidden" name="group_id" value="'.$group_id.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
 <strong>'
     ._("Category:")."</strong><br />\n"
     . people_job_category_box('category_id') .'

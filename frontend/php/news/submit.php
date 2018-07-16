@@ -94,7 +94,8 @@ print '<p class="warn">'
 .form_input("hidden", "group_id", $group_id).'
 <span class="preinput"><label for="summary">'._("Subject:")
 .'</label></span><br/>&nbsp;&nbsp;
-<input type="text" id="summary" name="summary" value="'.$summary
+<input type="text" id="summary" name="summary" value="'
+.htmlspecialchars($summary)
 .'" size="65" maxlenght="80" />
 <br />
 <span class="preinput"><label for="details">'._("Details")

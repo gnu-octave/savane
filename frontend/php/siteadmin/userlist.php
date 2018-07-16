@@ -3,7 +3,7 @@
 # 
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -92,7 +92,8 @@ print '<br />'.no_i18n("Search by email, username, realname or userid").':';
 print '
 <form name="usersrch" action="'.htmlentities ($_SERVER["PHP_SELF"])
   .'" method="GET">
-  <input type="text" name="text_search" value="'.$text_search.'" />
+  <input type="text" name="text_search" value="'.htmlspecialchars($text_search)
+         .'" />
   <input type="hidden" name="usersearch" value="1" />
   <input type="submit" value="'.no_i18n("Search").'" />
 </form>

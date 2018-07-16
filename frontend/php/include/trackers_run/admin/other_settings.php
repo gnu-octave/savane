@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -60,7 +60,7 @@ echo '<h2>'._("Item Post Form Preamble")."</h2>\n";
 echo '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">';
 
 # FIXME: preamble should not be in the groups table!!
-echo '<input type="hidden" name="group_id" value="'.$group_id.'" />';
+echo '<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />';
 echo '<span class="preinput"><label for="form_preamble">';
 print _("Introductory message showing at the top of the item submission form");
 print '</label> '.markup_info("rich").'</span>

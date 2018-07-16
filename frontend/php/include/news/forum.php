@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2005 Mathieu Roy <yeupou--gnu.org>.
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -521,7 +521,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
     {
       if ($subject)
         {
-          #if this is a followup, put a RE: before it if needed
+          # If this is a followup, put a RE: before it if needed.
           if (!eregi('RE:',$subject,$test))
             {
               $subject ='RE: '.$subject;
@@ -530,20 +530,21 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
       print '<center>
 <form action="'.$GLOBALS['sys_home'].'forum/forum.php" method="POST">
 <input type="hidden" name="post_message" value="y" />
-<input type="HIDDEN" name="forum_id" value="'.$forum_id.'" />
-<input type="HIDDEN" name="thread_id" value="'.$thread_id.'" />
-<input type="HIDDEN" name="is_followup_to" value="'.$is_followup_to.'" />
+<input type="hidden" name="forum_id" value="'.htmlspecialchars($forum_id).'" />
+<input type="hidden" name="thread_id" value="'.htmlspecialchars($thread_id).'" />
+<input type="hidden" name="is_followup_to" value="'
+       .htmlspecialchars($is_followup_to).'" />
 <table><tr><td><strong>'._("Subject").':</td><td>
-<input type="TEXT" name="subject" value="'.$subject
+<input type="text" name="subject" value="'.htmlspecialchars($subject)
 .'" size="60" maxlength="45" />
 </td></tr>
 <tr><td><strong>'._("Message:").'</td><td>
 <textarea name="body" value="" rows="25" cols="60" wrap="SOFT"></textarea>
 </td></tr>
-<tr><td colspan="2" align="MIDDLE">
+<tr><td colspan="2" align="middle">
 <span class="warn">HTML tags will display in your post as text</span>
 <br />
-<input type="SUBMIT" name="SUBMIT" value="'._("Post Comment").'" />
+<input type="submit" name="submit" value="'._("Post Comment").'" />
 </td></tr></table>
 </form>
 </center>

@@ -37,56 +37,47 @@ $HTML->header(array('title'=>no_i18n('Admin: User Info')));
 extract(sane_import('request', array('user_id', 'action')));
 extract(sane_import('post', array('admin_flags', 'email')));
 
-// user remove from group
-if ($action=='remove_user_from_group') {
-        # Remove this user from this group
-
-	$result = db_execute("DELETE FROM user_group "
-                             ."WHERE user_id=? AND group_id=?",
-			     array($user_id, $group_id));
-	if (!$result || db_affected_rows($result) < 1) {
-		fb(no_i18n('Error Removing User:').' '.db_error(), 1);
-	} else {
-		fb (no_i18n('Successfully removed user'));
-	}
-
-} else if ($action=='update_user_group') {
-        # Update the user/group entry
-
-	$result = db_execute("UPDATE user_group SET admin_flags=? "
-		. "WHERE user_id=? AND "
-		. "group_id=?", array($admin_flags, $user_id, $group_id));
-	if (!$result || db_affected_rows($result) < 1) {
-		fb(no_i18n('Error Updating User Group:').' '.db_error(), 1);
-	} else {
-		fb(no_i18n('Successfully updated user group'));
-	}
-
-
-} else if ($action=='update_user') {
-        # Update the user
-
-	$result=db_execute("UPDATE user SET email=? WHERE user_id=?",
-			   array($email, $user_id));
-	if (!$result || db_affected_rows($result) < 1) {
-		fb(no_i18n('Error Updating User:').$result.' '.db_error(), 1);
-	} else {
-		fb(no_i18n('Successfully updated user'));
-	}
-
-} else if ($action=='add_user_to_group') {
-        # Add this user to a group
-	$result=db_execute("INSERT INTO user_group (user_id, group_id) "
+if ($action=='remove_user_from_group')
+  {
+    $result = db_execute("DELETE FROM user_group "
+                         ."WHERE user_id=? AND group_id=?",
+                         array($user_id, $group_id));
+    if (!$result || db_affected_rows($result) < 1)
+      fb(no_i18n('Error Removing User:').' '.db_error(), 1);
+    else
+      fb (no_i18n('Successfully removed user'));
+  }
+elseif ($action=='update_user_group')
+  {
+    $result = db_execute("UPDATE user_group SET admin_flags=? "
+                         . "WHERE user_id=? AND group_id=?",
+                         array($admin_flags, $user_id, $group_id));
+    if (!$result || db_affected_rows($result) < 1)
+      fb(no_i18n('Error Updating User Group:').' '.db_error(), 1);
+    else
+      fb(no_i18n('Successfully updated user group'));
+  }
+elseif ($action=='update_user')
+  {
+    $result=db_execute("UPDATE user SET email=? WHERE user_id=?",
+                       array($email, $user_id));
+    if (!$result || db_affected_rows($result) < 1)
+      fb(no_i18n('Error Updating User:').$result.' '.db_error(), 1);
+    else
+      fb(no_i18n('Successfully updated user'));
+  }
+elseif ($action=='add_user_to_group')
+  {
+    $result=db_execute("INSERT INTO user_group (user_id, group_id) "
                            ."VALUES (?, ?)",
-			   array($user_id, $group_id));
-	if (!$result || db_affected_rows($result) < 1) {
-		fb(no_i18n('Error Adding User to Group:').' '.db_error(), 1);
-	} else {
-		fb(no_i18n('Successfully added user to group'));
-	}
-}
+                       array($user_id, $group_id));
+    if (!$result || db_affected_rows($result) < 1)
+      fb(no_i18n('Error Adding User to Group:').' '.db_error(), 1);
+    else
+      fb(no_i18n('Successfully added user to group'));
+  }
 
-// get user info
+# Get user info.
 $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));
 $row_user = db_fetch_array($res_user);
 
@@ -97,7 +88,7 @@ print '
 '.no_i18n('Account Info:').'
 <form method="post" action="'.htmlentities ($_SERVER['PHP_SELF']).'">
 <input type="hidden" name="action" value="update_user">
-<input type="hidden" name="user_id" value="'.$user_id.'">
+<input type="hidden" name="user_id" value="'.htmlspecialchars($user_id).'">
 </p>
 <p>
 <input type="text" title="'.no_i18n("Email").'" name="email" value="'
@@ -113,26 +104,27 @@ print '
 <h2>'.no_i18n('Current Groups').'</h2>
 ';
 
-# Iterate and show groups this user is in
+# Iterate and show groups this user is in.
 $res_cat = db_execute("SELECT groups.group_name AS group_name, "
-	. "groups.group_id AS group_id, "
-	. "user_group.admin_flags AS admin_flags FROM "
-	. "groups,user_group WHERE user_group.user_id=? AND "
-	. "groups.group_id=user_group.group_id", array($user_id));
+           . "groups.group_id AS group_id, "
+           . "user_group.admin_flags AS admin_flags FROM "
+           . "groups,user_group WHERE user_group.user_id=? AND "
+           . "groups.group_id=user_group.group_id", array($user_id));
 
-	while ($row_cat = db_fetch_array($res_cat)) {
-		print ("<br /><hr /><strong>"
-                        . group_getname($row_cat['group_id']) . "</strong> "
-			. "<a href=\"usergroup.php?user_id="
-                        . "$user_id&action=remove_user_from_group&group_id="
-                        . "$row_cat[group_id]\">"
-			. "[".no_i18n('Remove User from Group')."]</a>");
-		# editing for flags
-print '
+while ($row_cat = db_fetch_array($res_cat))
+  {
+    print ("<br /><hr /><strong>"
+         . group_getname($row_cat['group_id']) . "</strong> "
+         . "<a href=\"usergroup.php?user_id="
+         . htmlspecialchars($user_id)."&action=remove_user_from_group&group_id="
+         . htmlspecialchars($row_cat[group_id])."\">"
+         . "[".no_i18n('Remove User from Group')."]</a>");
+    print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="action" value="update_user_group">
-<input name="user_id" type="hidden" value="'.$user_id.'">
-<input name="group_id" type="hidden" value="'.$row_cat['group_id'].'">
+<input name="user_id" type="hidden" value="'.htmlspecialchars($user_id).'">
+<input name="group_id" type="hidden" value="'
+       .htmlspecialchars($row_cat['group_id']).'">
 <br /><label for="admin_flags">
 '.no_i18n('Admin Flags:').'</label>
 <br />
@@ -142,15 +134,15 @@ print '
 <input type="submit" name="Update_Group" value="'.no_i18n('Update').'" />
 </form>
 ';
-	}
+  }
 
-# Show a form so a user can be added to a group
+# Show a form so a user can be added to a group.
 print '
 <hr />
 <p>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="action" value="add_user_to_group">
-<input name="user_id" type="hidden" value="'.$user_id.'">
+<input name="user_id" type="hidden" value="'.htmlspecialchars($user_id).'">
 <p><label for="group_id">
 '.no_i18n('Add User to Group (group_id):').'</label>
 <br />
@@ -161,7 +153,7 @@ print '
 </form>
 
 <p><a href="user_changepw.php?user_id='
-.$user_id.'">['.no_i18n('Change User\'s Password').']</a>
+.htmlspecialchars($user_id).'">['.no_i18n('Change User\'s Password').']</a>
 </p>
 ';
 

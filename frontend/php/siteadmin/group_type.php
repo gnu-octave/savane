@@ -199,10 +199,10 @@ if (!isset($type_id))
 ';
       $last=$usr['type_id'];
     }
-  # Find an appropriate unused group type ID (skip value 100)
+  # Find an appropriate unused group type ID (skip value 100).
   $type=$last+1;
   if ($type == 100)
-    { $type = 101; }
+    $type = 101;
 
   print '<a href="'.htmlentities ($_SERVER['PHP_SELF']).'?type_id='.$type
         .'&amp;create=1">'.no_i18n('Create new group type').'</a>';
@@ -233,16 +233,12 @@ else
 
 
   print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="type_id" value="'.$type_id.'" />';
-
-  # General settings
+<input type="hidden" name="type_id" value="'.htmlspecialchars($type_id).'" />';
 
   print '<h2>'.no_i18n("General Default Settings for Groups of this Type").'</h2>
 ';
 
   $textfield_size='65';
-
-  # Help
 
   print '
 <p>'.no_i18n('Basic Help: host means hostname (as savannah.gnu.org), dir means directory
@@ -325,13 +321,16 @@ frontend related to the homepage management.').'</p>
 			  $row_grp['dir_type_homepage']);
   print specific_showinput(
 no_i18n("Homepage Dir (path on the filesystem) [BACKEND SPECIFIC]:"),
- '<input type="text" name="dir_homepage" id="dir_homepage" value="'.$row_grp['dir_homepage']
+ '<input type="text" name="dir_homepage" id="dir_homepage" value="'
+ .$row_grp['dir_homepage']
  .'" size="'.$textfield_size.'" />', 'dir_homepage');
   print specific_showinput(no_i18n("Homepage URL:"),
- '<input type="text" name="url_homepage" id="url_homepage" value="'.$row_grp['url_homepage']
+ '<input type="text" name="url_homepage" id="url_homepage" value="'
+ .$row_grp['url_homepage']
  .'" size="'.$textfield_size.'" />', 'url_homepage');
   print specific_showinput(no_i18n("Homepage CVS view URL (webcvs, viewcvs):"),
- '<input type="text" name="url_cvs_viewcvs_homepage" id="url_cvs_viewcvs_homepage" value="'
+ '<input type="text" name="url_cvs_viewcvs_homepage" '
+ .'id="url_cvs_viewcvs_homepage" value="'
  .$row_grp['url_cvs_viewcvs_homepage'].'" size="'.$textfield_size.'" />',
          'url_cvs_viewcvs_homepage');
 
@@ -744,8 +743,6 @@ on this group trackers.").'</p>';
 .'" /></p>
 </form>
 ';
-
 }
-
 site_admin_footer(array());
 ?>

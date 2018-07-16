@@ -347,8 +347,8 @@ currently membership record)."), artifact_name ($artifact)).'</p>
 lost.").'</p>
 
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group_id" value="'.$group_id.'" />
-<input type="hidden" name="artifact" value="'.$artifact.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
+<input type="hidden" name="artifact" value="'.htmlspecialchars($artifact).'" />
 <span class="preinput"><label for="from_group_id">'._("Projects:")
 .'</label></span>&nbsp;&nbsp;&nbsp;
 ';

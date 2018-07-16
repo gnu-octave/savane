@@ -113,8 +113,8 @@ if ($update_field)
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
           .'" method="post">';
     print '<input type="hidden" name="post_changes" value="y" />
-    <input type="hidden" name="field" value="'.$field.'" />
-    <input type="hidden" name="group_id" value="'.$group_id.'" />
+    <input type="hidden" name="field" value="'.htmlspeckalchars($field).'" />
+    <input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
     <h1>'
       ._("Field Label:").' ';
 

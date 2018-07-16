@@ -5,7 +5,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Nicodemo Alvaro
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -241,7 +241,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
   if (isset($group_id))
     {
-      $ret .="<input type=\"hidden\" value=\"$group_id\" "
+      $ret .="<input type=\"hidden\" value=\"".htmlspecialchars($group_id)."\" "
              ."name=\"only_group_id\" />\n";
     }
 
@@ -265,7 +265,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
               .sprintf(ngettext("%s result per page", "%s results per page",
                                 intval($max_rows)),
                        '<input type="text" name="max_rows" value="'
-                       .$max_rows.'" title="'
+                       .htmlspecialchars($max_rows).'" title="'
                        ._("Number of items to show per page")
                        .'" size="4" />')."\n";
       if (!isset($group_id))

@@ -48,7 +48,8 @@ ngettext("Show summaries for the %s latest news.",
  '<input type="text" title="'._("Number of news to show")
 .'" name="limit" size="4" value="'.$limit.'" />');
 if (isset($group))
-  $form .= '<input type="hidden" name="group" value="'.$group.'" />';
+  $form .= '<input type="hidden" name="group" value="'
+        .htmlspecialchars($group).'" />';
 $form_submit = '<input class="bold" type="submit" value="'._("Apply").'"  />';
 
 print html_show_displayoptions($form, $form_opening, $form_submit);

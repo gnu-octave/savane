@@ -1,6 +1,6 @@
 <?php
-# Edit one group as superuser
-# 
+# Edit one group as superuser.
+#
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
@@ -8,24 +8,23 @@
 # Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 require_once('../include/init.php');
 require_once('../include/vars.php');
-# needed for group history :
+# Needed for group history.
 require_directory("project");
 
 session_require(array('group'=>$sys_group_id,'admin_flags'=>'A'));
@@ -39,82 +38,68 @@ function no_i18n($string)
 
 extract(sane_import('post',
   array('update', 'form_name', 'form_status', 'form_public',
-	'form_license', 'form_license_other', 'group_type',
-	'form_dir_cvs', 'form_dir_arch', 'form_dir_svn', 'form_dir_git',
-	'form_dir_hg', 'form_dir_bzr', 'form_dir_homepage', 'form_dir_download')));
+        'form_license', 'form_license_other', 'group_type',
+        'form_dir_cvs', 'form_dir_arch', 'form_dir_svn', 'form_dir_git',
+        'form_dir_hg', 'form_dir_bzr', 'form_dir_homepage', 'form_dir_download')));
 extract(sane_import('get',
   array('updatefast', 'status')));
 
-# group public choice
 if ($update || $updatefast)
-{
-  # Full details update
-  if ($update) 
-    {
-      $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?",
-                            array($group_id));
-      $res_type = db_execute("SELECT * FROM group_type WHERE type_id=?",
-                             array($group_type));
-      
-      if (db_result($res_grp,0,'status') != $form_status)
-	{
-	  group_add_history ('status',db_result($res_grp,0,'status'),$group_id);
-	}
-      if (db_result($res_grp,0,'is_public') != $form_public)
-	{
-	  group_add_history ('is_public',db_result($res_grp,0,'is_public'),
+  {
+    # Full details update.
+    if ($update)
+      {
+        $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?",
+                              array($group_id));
+        $res_type = db_execute("SELECT * FROM group_type WHERE type_id=?",
+                               array($group_type));
+
+        if (db_result($res_grp,0,'status') != $form_status)
+          group_add_history ('status',db_result($res_grp,0,'status'),$group_id);
+        if (db_result($res_grp,0,'is_public') != $form_public)
+          group_add_history ('is_public',db_result($res_grp,0,'is_public'),
                              $group_id);
-	}
-      if (db_result($res_grp,0,'type') != $group_type)
-	{
-	  group_add_history ('type',db_result($res_grp,0,'type'),$group_id);
-	}
-      if (db_result($res_grp,0,'unix_group_name') != $form_name)
-	{
-	  group_add_history ('unix_group_name',
+        if (db_result($res_grp,0,'type') != $group_type)
+          group_add_history ('type',db_result($res_grp,0,'type'),$group_id);
+        if (db_result($res_grp,0,'unix_group_name') != $form_name)
+          group_add_history ('unix_group_name',
                              db_result($res_grp,0,'unix_group_name'),
                              $group_id);
-	}
-      
-      db_autoexecute('groups',
-        array(
-	  'is_public' => $form_public,
-	  'status' => $form_status,
-	  'license' => $form_license,
-	  'license_other' => $form_license_other,
-	  'type' => $group_type,
-	  'unix_group_name' => $form_name,
-	  'dir_cvs' => $form_dir_cvs,
-	  'dir_arch' => $form_dir_arch,
-	  'dir_svn' => $form_dir_svn,
-	  'dir_git' => $form_dir_git,
-	  'dir_hg' => $form_dir_hg,
-	  'dir_bzr' => $form_dir_bzr,
-	  'dir_homepage' => $form_dir_homepage,
-	  'dir_download' => $form_dir_download,
-	), DB_AUTOQUERY_UPDATE,
-        "group_id=?", array($group_id));
-    }
-  if ($updatefast) 
-    {
+        db_autoexecute('groups',
+                       array(
+                             'is_public' => $form_public,
+                             'status' => $form_status,
+                             'license' => $form_license,
+                             'license_other' => $form_license_other,
+                             'type' => $group_type,
+                             'unix_group_name' => $form_name,
+                             'dir_cvs' => $form_dir_cvs,
+                             'dir_arch' => $form_dir_arch,
+                             'dir_svn' => $form_dir_svn,
+                             'dir_git' => $form_dir_git,
+                             'dir_hg' => $form_dir_hg,
+                             'dir_bzr' => $form_dir_bzr,
+                             'dir_homepage' => $form_dir_homepage,
+                             'dir_download' => $form_dir_download,
+                             ), DB_AUTOQUERY_UPDATE,
+                       "group_id=?", array($group_id));
+      }
+    if ($updatefast)
       db_execute("UPDATE groups SET status=? WHERE group_id=?",
                  array($status, $group_id));
-    }
-  fb(no_i18n("Updating Project Info"));
-}
-
-
-# get current information
+    fb(no_i18n("Updating Project Info"));
+  }
+# Get current information.
 $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 
 site_admin_header(array('title'=>no_i18n("Group List"),'context'=>'admgroup'));
 
-
-if (db_numrows($res_grp) < 1) {
-	fb(no_i18n("Invalid Group: Invalid group was passed in."));
-	site_admin_footer(array());
-	exit;
-}
+if (db_numrows($res_grp) < 1)
+  {
+    fb(no_i18n("Invalid Group: Invalid group was passed in."));
+    site_admin_footer(array());
+    exit;
+  }
 
 $row_grp = db_fetch_array($res_grp);
 
@@ -126,7 +111,6 @@ print "<a href='../projects/{$row_grp['unix_group_name']}'>"
 print '</p>
 ';
 
-# MODIFICATORS SHORTCUTS
 print '<h2>'.no_i18n("Registration Management Shortcuts").'</h2>
 ';
 print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
@@ -143,7 +127,6 @@ print '<a href="triggercreation.php?group_id='.$group_id.'"><img src="'
 .no_i18n("Send New Project Instruction Email and Trigger Project Creation (should be
 done only once)").'" /></a>';
 
-# MODIFICATORS
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
 .'" method="POST">';
 print '<h2>'.no_i18n("Detailed Interface").'</h2>
@@ -245,7 +228,8 @@ print no_i18n("If other:").'</label><br />
 .$row_grp['license_other'].'" />';
 print '</p>
 ';
-print '<input type="hidden" name="group_id" value="'.$group_id.'" />';
+print '<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id)
+              .'" />';
 
 $i++;
 print '</td>
@@ -263,14 +247,12 @@ done only once)").'</a>';
 print '</p>
 ';
 
-# INFORMATION: redundant with the content of the approval task
 $HTML->box1_top(no_i18n("Submitted Information"));
 
 project_admin_registration_info($row_grp);
 
 $HTML->box1_bottom();
 
-# BACKEND SPECIFIC
 print '<p>';
 $HTML->box1_top(no_i18n("Specific Backend Settings"));
 print no_i18n('[BACKEND SPECIFIC] If this group must have specific directories for
@@ -334,8 +316,6 @@ print '
 <p><input type="submit" name="update" value="'.no_i18n("Update").'">';
 
 $HTML->box1_bottom();
-
 utils_get_content("admin/groupedit_outro");
-
 site_admin_footer(array());
 ?>

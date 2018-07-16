@@ -2,7 +2,7 @@
 # Display forum.
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -189,7 +189,7 @@ if it was a custom set just posted && logged in, set pref if it's changed.  */
         $ret_val .= '<table border="0" width="50%">
 <form action="'. htmlentities ($_SERVER['PHP_SELF'] ).'" METHOD="get">
 <input type="hidden" name="set" value="custom">
-<input type="hidden" name="forum_id" value="'.$forum_id.'">
+<input type="hidden" name="forum_id" value="'.htmlspecialchars($forum_id).'">
 <tr>
 <td><span class="smaller">'. $options_popup . '</span></td>
 <td><span class="smaller">'. $max_row_popup . '</span></td>

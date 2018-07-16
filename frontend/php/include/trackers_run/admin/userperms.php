@@ -5,7 +5,7 @@
 # Copyright (C) 2000-2003 Free Software Foundation
 # Copyright (C) 2000-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2005 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -21,10 +21,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-###
-### WARNING: whenever you modify this page, you should modify
-###   project/admin/userperms.php as well.
 
 require_directory("project");
 $is_admin_page='y';
@@ -44,7 +40,7 @@ if ($update)
       db_execute("INSERT INTO groups_default_permissions (group_id)
                   VALUES (?)", array($group_id));
 
-  # ##### Update posting restrictions.
+  # Update posting restrictions.
     $newitem_restrict_event1 = ARTIFACT."_restrict_event1";
     $newitem_restrict_event2 = ARTIFACT."_restrict_event2";
     $flags = ($$newitem_restrict_event2)*100 + $$newitem_restrict_event1;
@@ -68,15 +64,12 @@ if ($update)
       }
   }
 
-# Start HTML.
 trackers_header_admin(array ('title'=>_("Set Permissions")));
 
-########################### POSTING RESTRICTIONS
 print '<h2>'._("Posting Restrictions")."</h2>\n";
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group" value="'.$group.'" />';
+<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />';
 
-## post restriction
 print '<span class="preinput">'
 ._("Authentication level required to be able to post new items on this tracker:")
 ." </span><br />\n";
@@ -84,7 +77,6 @@ print '&nbsp;&nbsp;&nbsp;';
 print html_select_restriction_box(ARTIFACT,
                                   group_getrestrictions($group_id, ARTIFACT),
                                   $group,'', 1);
-## comment restriction
 print '<br /><br />
 <span class="preinput">'
 ._("Authentication level required to be able to post comments (and to attach

@@ -2,7 +2,7 @@
 # Reset field values.
 #
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -44,8 +44,10 @@ if (!$confirm)
 
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
           .'" method="post">'."\n";
-    print '<input type="hidden" name="group_id" value="'.$group_id.'" />'."\n";
-    print '<input type="hidden" name="field" value="'.$field.'" />'."\n";
+    print '<input type="hidden" name="group_id" value="'
+                  .htmlspecialchars($group_id).'" />'."\n";
+    print '<input type="hidden" name="field" value="'.htmlspecialchars($field)
+                  .'" />'."\n";
     print '<span class="preinput">'
 .sprintf(_("You are about to reset values of the field %s.
 This action will not be undoable, please confirm:"),

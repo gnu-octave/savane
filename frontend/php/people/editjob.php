@@ -1,9 +1,9 @@
 <?php
-# Job editor
+# Job editor.
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
-# Copyright 2006, 2007, 2008 Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2006, 2007, 2008 Sylvain Beucler
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -173,8 +173,8 @@ if ($job_id)
         utils_get_content("people/editjob");
         print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-<input type="hidden" name="group_id" value="'.$group_id.'" />
-<input type="hidden" name="job_id" value="'.$job_id.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
+<input type="hidden" name="job_id" value="'.htmlspecialchars($job_id).'" />
 <strong>'
         ._("Category:").'</strong><br />'
         . people_job_category_box('category_id',db_result($result,0,

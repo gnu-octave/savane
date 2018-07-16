@@ -4,7 +4,7 @@
 #  Copyright (C) 2003-2005 Frederik Orellana <frederik.orellana--cern.ch>
 #  Copyright (C) 2003-2005 Derek Feichtinger <derek.feichtinger--cern.ch>
 #  Copyright (C) 2003-2005 Mathieu Roy <yeupou--gnu.org>
-#  Copyright (C) 2017 Ineiev
+#  Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -54,7 +54,8 @@ from group.&rdquo;")."</p>
     print '<option>'._("None found").'</option>';
 
   print "</select>
-        <input type=\"hidden\" name=\"group_id\" value=\"$group_id\" />
+        <input type=\"hidden\" name=\"group_id\" value=\""
+        .htmlspecialchars($group_id)."\" />
         <p>
         <input type=\"submit\" name=\"Submit\" value=\""
 ._("Approve users for group")."\" />
@@ -101,7 +102,8 @@ Pending users are at the bottom of the list.")."</p>
 
   print "</select>
         <br />
-        <input type=\"hidden\" name=\"group_id\" value=\"$group_id\" />
+        <input type=\"hidden\" name=\"group_id\" value=\""
+        .htmlspecialchars($group_id)."\" />
         <p>
         <input type=\"submit\" name=\"Submit\" value=\""
 ._("Remove users from group")."\" />
@@ -122,9 +124,10 @@ names you'll type in this form, will be generated.").'
         <input type="hidden" name="action" value="add_to_group_list" />
         <input type="text" size="35" title="'._("Search users")
         .'" name="words" value="'
-        .$previous_search.'" /><br />
+        .htmlspecialchars($previous_search).'" /><br />
         <p>
-        <input type="hidden" name="group_id" value="'.$group_id.'" />
+        <input type="hidden" name="group_id" value="'
+        .htmlspecialchars($group_id).'" />
         <input type="submit" name="Submit" value="'._("Search users").'" />
         </p>
 </form>';
@@ -153,9 +156,11 @@ function show_all_users_add_list ($result, $group_id)
 
   print "</select>
         <br />
-        <input type=\"hidden\" name=\"group_id\" value=\"$group_id\" />
+        <input type=\"hidden\" name=\"group_id\" value=\""
+        .htmlspecialchars($group_id)."\" />
         <p>
-        <input type=\"submit\" name=\"Submit\" value=\""._("Add users to group")."\" />
+        <input type=\"submit\" name=\"Submit\" value=\""
+        ._("Add users to group")."\" />
         </p>
 </form>";
 }

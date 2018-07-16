@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -258,7 +258,8 @@ if ($new_report)
     print'
       <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
          <input type="hidden" name="create_report" value="y" />
-         <input type="hidden" name="group_id" value="'.$group_id.'" />
+         <input type="hidden" name="group_id" value="'
+         .htmlspecialchars($group_id).'" />
          <input type="hidden" name="post_changes" value="y" />
          <p>
          <span class="preinput"><label for="rep_name"'
@@ -403,8 +404,10 @@ else if ($show_report)
 
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
              <input type="hidden" name="update_report" value="y" />
-             <input type="hidden" name="group_id" value="'.$group_id.'" />
-             <input type="hidden" name="report_id" value="'.$report_id.'" />
+             <input type="hidden" name="group_id" value="'
+                    .htmlspecialchars($group_id).'" />
+             <input type="hidden" name="report_id" value="'
+                    .htmlspecialchars($report_id).'" />
              <input type="hidden" name="post_changes" value="y" />
              <span class="preinput"><label for="rep_name">'._("Name:")
              .'</label> </span><br />&nbsp;&nbsp;&nbsp;
@@ -494,7 +497,7 @@ else if ($show_report)
   } # if ($show_report)
 else
   {
-# Front page
+# Front page.
     trackers_header_admin(array ('title'=>_("Edit Query Forms")));
     $res = db_execute("SELECT * FROM ".ARTIFACT."_report WHERE group_id=? "
                       .' AND (user_id=? OR scope=\'P\')',

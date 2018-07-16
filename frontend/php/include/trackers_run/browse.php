@@ -1277,7 +1277,7 @@ print html_show_displayoptions($form,$form_opening,$form_submit);
 
 if ($digest)
   print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="get">
-<input type="hidden" name="group" value="'.$group.'" />
+<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />
 <input type="hidden" name="func" value="digestselectfield" />
 ';
 

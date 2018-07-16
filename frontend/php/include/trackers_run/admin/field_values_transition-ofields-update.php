@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2004 Mathieu Roy <yeupou--at--gnu.org>
 # Copyright (C) 2004 Yves Perrin <yves.perrin--at--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -130,8 +130,9 @@ his role in the project) to modify a specific field value, any automatic
 update supposed to apply to this field will be disregarded.")."</p>\n";
 
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group" value="'.$group.'" />
-<input type="hidden" name="transition_id" value="'.$transition_id.'" />
+<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />
+<input type="hidden" name="transition_id" value="'
+       .htmlspecialchars($transition_id).'" />
 ';
 
 $title_arr=array();

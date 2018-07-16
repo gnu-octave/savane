@@ -376,8 +376,9 @@ that suits your needs.")."</p>\n";
       <input type="hidden" name="post_changes" value="y" />
       <input type="hidden" name="create_value" value="y" />
       <input type="hidden" name="list_value" value="y" />
-      <input type="hidden" name="field" value="'.$field.'" />
-      <input type="hidden" name="group_id" value="'.$group_id.'" />
+      <input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
+      <input type="hidden" name="group_id" value="'.htmlspecialchars($group_id)
+             .'" />
       <span class="preinput"><label for="title">'._("Value:").'</label> </span>'
               .form_input("text", "title", "", 'size="30" maxlength="60"').'
       &nbsp;&nbsp;
@@ -416,8 +417,8 @@ that suits your needs.")."</p>\n";
 default ones, use the following form:").'</p>
 
 <form action="field_values_reset.php" method="post" class="center">
-<input type="hidden" name="group_id" value="'.$group_id.'" />
-<input type="hidden" name="field" value="'.$field.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
+<input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
 <input type="submit" name="submit" value="'._("Reset values").'" />
 </form>
 <p>'._("For your information, the default active values are:")."</p>\n";
@@ -613,8 +614,8 @@ allowed to customize it"),$field));
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'#registered" method="post">
 <input type="hidden" name="post_transition_changes" value="y" />
 <input type="hidden" name="list_value" value="y" />
-<input type="hidden" name="field" value="'.$field.'" />
-<input type="hidden" name="group_id" value="'.$group_id.'" />';
+<input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />';
 
         $result = db_execute("SELECT transition_default_auth FROM ".ARTIFACT
                              ."_field_usage "
@@ -702,8 +703,9 @@ elseif ($update_value)
     <input type="hidden" name="update_value" value="y" />
     <input type="hidden" name="list_value" value="y" />
     <input type="hidden" name="fv_id" value="'.$fv_id.'" />
-    <input type="hidden" name="field" value="'.$field.'" />
-    <input type="hidden" name="group_id" value="'.$group_id.'" />
+    <input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
+    <input type="hidden" name="group_id" value="'.htmlspecialchars($group_id)
+           .'" />
     <p><span class="preinput"><label for="title">'
 ._("Value:").'</label> </span><br />
 '
@@ -850,8 +852,9 @@ common responses.").'</p>
 <p>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="update_canned" value="y" />
-<input type="hidden" name="group_id" value="'.$group_id.'" />
-<input type="hidden" name="item_canned_id" value="'.$item_canned_id.'" />
+<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
+<input type="hidden" name="item_canned_id" value="'
+       .htmlspecialchars($item_canned_id).'" />
 <input type="hidden" name="post_changes" value="y" />
 <span class="preinput">'._("Title").':</span><br />
 &nbsp;&nbsp;<input type="text" name="title" value="'
@@ -873,7 +876,7 @@ common responses.").'</p>
   }
 else
   {
-######## Complete list of fields.
+# Complete list of fields.
     trackers_header_admin(array ('title'=>_("Edit Fields Values")));
 
     # Add space to avoid overlaps.

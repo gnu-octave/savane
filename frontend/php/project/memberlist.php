@@ -6,7 +6,7 @@
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2000-2006 Lorenzo Hernandez Garcia-Hierro
 #                                      <lorenzohgh--tuxedo-es.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -58,7 +58,7 @@ $selector =
  .$checked.'>';
 # TRANSLATORS: this is used in context of "Browse with the %s memberlist."
 $selector .= _("detailed").'</option></select>'
- .'<input type="hidden" name="group" value="'.$group.'" />';
+ .'<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />';
 # TRANSLATORS: the argument is "basic" or "detailed".
 print html_show_displayoptions(sprintf(_("Browse with the %s memberlist."),
                                        $selector),
