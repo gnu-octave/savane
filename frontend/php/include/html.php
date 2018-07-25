@@ -255,7 +255,8 @@ function html_nextprev ($search_url, $rows, $rows_returned, $varprefix=false)
       if ($offset != 0)
         {
           print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
-                .($offset-$rows).'&amp;'.$varprefix.'max_rows='.$max_rows
+                .($offset-$rows).'&amp;'.$varprefix.'max_rows='
+                .htmlspecialchars($max_rows)
                 .'#'.$varprefix.'results">';
           print '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
                 .'.theme/arrows/previous.png" border="0" alt="" />'
@@ -272,7 +273,8 @@ function html_nextprev ($search_url, $rows, $rows_returned, $varprefix=false)
       if ($rows_returned > $rows)
         {
           print '<a href="'.$search_url.'&amp;'.$varprefix.'offset='
-                .($offset+$rows).'&amp;'.$varprefix.'max_rows='.$max_rows
+                .($offset+$rows).'&amp;'.$varprefix.'max_rows='
+                .htmlspecialchars($max_rows)
                 .'#'.$varprefix.'results">';
           print _("Next Results").' <img src="'.$GLOBALS['sys_home'].'images/'
                 .SV_THEME.'.theme/arrows/next.png" border="0" alt="" /></a>';

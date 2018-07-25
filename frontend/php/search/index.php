@@ -204,10 +204,10 @@ $nextprev_url = $GLOBALS['sys_home']
                 ."search/?type_of_search=$type_of_search&amp;words="
                 .urlencode($words);
 if (isset($type))
-  $nextprev_url .= "&amp;type=$type";
+  $nextprev_url .= "&amp;type=".htmlspecialchars($type);
 if ($group_id)
-  $nextprev_url .= "&amp;only_group_id=$group_id";
+  $nextprev_url .= "&amp;only_group_id=".htmlspecialchars($group_id);
 
-html_nextprev($nextprev_url,$rows,$rows_returned);
+html_nextprev($nextprev_url, $rows, $rows_returned);
 site_footer(Array());
 ?>
