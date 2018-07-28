@@ -6,7 +6,7 @@
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -297,9 +297,10 @@ class Group extends Error
   {
     if (isset($this->data_array['group_name']))
       return $this->data_array['group_name'];
+    return sprintf(
 # TRANSLATORS: this is a placeholder for the name of a deleted group;
 # the argument is group id (a number).
-    return sprintf(_("[Deleted group #%s]"), $this->group_id);
+                   _("[Deleted group #%s]"), $this->group_id);
   }
 
   # alias
@@ -318,7 +319,10 @@ class Group extends Error
     return $this->data_array['license_other'];
   }
 
-  function getDevelStatus() {
+  function getDevelStatus()
+  {
+    if ($this->data_array['devel_status'] == '')
+      return 0;
     return $this->data_array['devel_status'];
   }
   function getGPGKeyring()
