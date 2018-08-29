@@ -408,11 +408,10 @@ _("-- the %s team."), $GLOBALS['sys_name'])."\n";
                                   $warning_message);
                     if ($success)
                       {
-                        sprintf(
+                        fb(sprintf(
 # TRANSLATORS: the argument is email address.
-_("Confirmation mailed to %s."), $newvalue);
-                        fb(
-_("Follow the instructions in the email to complete the email change."));
+_("Confirmation mailed to %s."), $newvalue) . ' '
+._("Follow the instructions in the email to complete the email change."));
                       }
                     else
                       fb(_("The system reported a failure when trying to send
