@@ -1009,7 +1009,7 @@ function trackers_mail_followup ($item_id,$more_addresses=false,$changes=false,
                      '<em>' . htmlspecialchars($artifact) . '</em>'));
 
   $result = db_execute("SELECT * from $artifact WHERE bug_id=?", array($item_id));
-  $bug_href = "http://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']
+  $bug_href = "https://".$GLOBALS['sys_default_domain'].$GLOBALS['sys_home']
               ."$artifact/?$item_id";
 
   if ($result && db_numrows($result) <= 0)
