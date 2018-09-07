@@ -315,7 +315,7 @@ print '
                        .'#searchgroup" method="post">
         <input type="hidden" name="action" value="searchgroup" />
         <input type="text" title="'._("Group to look for").'" size="35"
-               name="words" value="'.$words.'" /><br />
+               name="words" value="'.htmlspecialchars($words).'" /><br />
         <br /><br />
         <input type="submit" name="Submit" value="'
         ._("Search Groups").'" />

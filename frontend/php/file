@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2018  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -46,7 +46,7 @@ if ($result && db_numrows($result) > 0)
   }
 else
 # TRANSLATORS: the argument is file id (a number).
-  util_die (sprintf(_("File #%s not found"), $file_id));
+  util_die (sprintf(_("File #%s not found"), htmlspecialchars($file_id)));
 
 # TRANSLATORS: the argument is artifact ID.
 if (!ctype_alnum($artifact))
@@ -108,6 +108,7 @@ _("The filename in the URL does not match the filename registered in the databas
 else
 {
   header('HTTP/1.0 404 Not Found');
-  echo _("Couldn't find attached file")." (file #$file_id)";
+  echo _("Couldn't find attached file")
+       ." (file #".htmlspecialchars($file_id).")";
 }
 ?>

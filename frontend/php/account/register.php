@@ -277,7 +277,7 @@ spam filters. Do not use a hotmail or comcast address here.")
         print '<p><span class="preinput">'._("Antispam test:")
               .'</span><br />&nbsp;&nbsp;';
         print '<input size="30" type="text" name="form_year" value="'
-              .$form_year.'" />';
+              .htmlentities($form_year, ENT_QUOTES, 'UTF-8').'" />';
         print "<br />\n".'<span class="text">'
               .sprintf(
 _("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),

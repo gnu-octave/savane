@@ -110,7 +110,7 @@ print '<br />
 print '
 <form name="gpsrch" action="grouplist.php" method="POST">
   <input type="text" title="'.no_i18n("Group name")
-  .'" name="search" value ="'.$search.'" />
+  .'" name="search" value ="'.htmlspecialchars($search).'" />
   <input type="hidden" name="groupsearch" value="1" />
   <input type="submit" value="'.no_i18n("Search").'" />
 </form>
@@ -141,7 +141,8 @@ else if (!empty($status_arr[$status]))
 }
 else if ($groupsearch)
 {
-  $msg = no_i18n("Groups that match")." <strong>'" .$search. "'</strong>\n";
+  $msg = no_i18n("Groups that match")." <strong>'" .htmlspecialchars($search)
+                                     . "'</strong>\n";
   $where = "group_id LIKE '%$search%' OR unix_group_name "
            ."LIKE '%$search%' OR group_name LIKE '%$search%'";
   $search_url = "&groupsearch=1&search=".urlencode($search)."";

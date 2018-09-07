@@ -53,12 +53,13 @@ if ($edit)
                   .'" method="post">';
             print '<span class="preinput">'._("Title:").'</span>';
             print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="title" value="'
-                  .$title.'" size="50" />';
+                  .htmlspecialchars($title).'" size="50" />';
             print '<br />';
             print '<span class="preinput">'._("Address:").'</span>';
             print '<br />&nbsp;&nbsp;&nbsp;<input type="text" name="url" value="'
-                  .$url.'" size="50" />';
-            print '<input type="hidden" name="edit" value="'.$edit.'" /></p>';
+                  .htmlspecialchars($url).'" size="50" />';
+            print '<input type="hidden" name="edit" value="'
+                  .htmlspecialchars($edit).'" /></p>';
             print '<p><input type="submit" name="update" value="'._("Update")
                   .'" /></p>';
             print '</form>';

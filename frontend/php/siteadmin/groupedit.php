@@ -115,14 +115,14 @@ print '<h2>'.no_i18n("Registration Management Shortcuts").'</h2>
 ';
 print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
 .'?status=A&amp;updatefast=1&amp;group_id='
-.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+.htmlspecialchars($group_id).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/bool/ok.orig.png" alt="'.no_i18n("Approve").'" /></a>&nbsp;&nbsp;&nbsp;';
 print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
 .'?status=D&amp;updatefast=1&amp;group_id='
-.$group_id.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+.htmlspecialchars($group_id).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/bool/wrong.orig.png" alt="'.no_i18n("Discard").'" /></a>&nbsp;&nbsp;&nbsp;';
-print '<a href="triggercreation.php?group_id='.$group_id.'"><img src="'
-.$GLOBALS['sys_home'].'images/'.SV_THEME
+print '<a href="triggercreation.php?group_id='.htmlspecialchars($group_id)
+.'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/contexts/preferences.orig.png" alt="'
 .no_i18n("Send New Project Instruction Email and Trigger Project Creation (should be
 done only once)").'" /></a>';
@@ -241,7 +241,7 @@ print '
 
 $HTML->box1_bottom();
 
-print '<p><a href="triggercreation.php?group_id='.$group_id.'">'
+print '<p><a href="triggercreation.php?group_id='.htmlspecialchars($group_id).'">'
 .no_i18n("Send New Project Instruction Email and Trigger Project Creation (should be
 done only once)").'</a>';
 print '</p>
