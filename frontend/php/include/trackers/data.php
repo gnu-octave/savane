@@ -1530,7 +1530,7 @@ function trackers_data_add_history ($field_name,
       'mod_by' => $user,
       'date' => time(),
       'spamscore' => $spamscore,
-      'ip' => $_SERVER['REMOTE_ADDR'],
+      'ip' => '127.0.0.1',
       'type' => $val_type
     ), DB_AUTOQUERY_INSERT);
   $insert_id = db_insertid($result);
@@ -2448,14 +2448,9 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
   $insert_fields['summary'] = htmlspecialchars($vfl['summary']);
   $insert_fields['details'] = htmlspecialchars($vfl['details']);
   $insert_fields['spamscore'] = $spamscore;
+  $insert_fields['ip'] = '127.0.0.1';
 
-  # If not project member, save the IP.
-  if (!member_check(0, $group_id))
-    {
-      $insert_fields['ip'] = $_SERVER['REMOTE_ADDR'];
-    }
-
-  # Actually insert the entry
+  # Actually insert the entry.
   $result=db_autoexecute(ARTIFACT, $insert_fields, DB_AUTOQUERY_INSERT);
   $item_id=db_insertid($result);
 

@@ -185,7 +185,7 @@ switch ($func)
 			  'type' => 'new',
 			  'user_id' => user_isloggedin() ? user_getid() : null,
 			  'form_id' => $fields['form_id'],
-			  'ip' => $_SERVER['REMOTE_ADDR'],
+			  'ip' => '127.0.0.1',
 			  'check_value' => $fields['check'],
 			  'details' => $fields['details']));
      $stat_id = mysql_insert_id();
@@ -349,7 +349,7 @@ switch ($func)
                           'type' => 'comment',
                           'user_id' => user_isloggedin() ? user_getid() : null,
                           'form_id' => $fields['form_id'],
-                          'ip' => $_SERVER['REMOTE_ADDR'],
+                          'ip' => '127.0.0.1',
                           'check_value' => $fields['check'],
                           'details' => $fields['comment']));
 
@@ -576,7 +576,7 @@ project and submit the form."),
 			  'user_id' => user_isloggedin() ? user_getid() : null,
 			  // 'date' => strftime("%Y-%m-%d %T"), // automatically filled by MySQL
 			  'form_id' => $fields['form_id'],
-			  'ip' => $_SERVER['REMOTE_ADDR'],
+			  'ip' => '127.0.0.1',
 			  'check_value' => $fields['check'],
 			  'details' => $fields['comment']));
  if (!user_isloggedin() && (!isset($_POST['check'])
