@@ -266,7 +266,7 @@ print '</td>
 </tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-function vcs_directory ($vcs, $label)
+function vcs_directory ($vcs, $label, $row_grp)
 {
   print '<p><span class="preinput"><label for="form_dir_'.$vcs.'">'
   .$label.'</label></span><br />
@@ -275,29 +275,29 @@ print '<input type="text" name="form_dir_'.$vcs.'" id="form_dir_'.$vcs
       .'" value="'.$row_grp['dir_'.$vcs.''].'" size="50" />';
 }
 
-vcs_directory ('cvs', no_i18n("CVS directory:"));
+vcs_directory ('cvs', no_i18n("CVS directory:"), $row_grp);
 $i++;
 print '</td></tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-vcs_directory ('arch', no_i18n("GNU Arch directory:"));
+vcs_directory ('arch', no_i18n("GNU Arch directory:"), $row_grp);
 $i++;
 print '</td></tr>
 <tr><td class="'.utils_get_alt_row_color($i).'">';
 
-vcs_directory ('svn', no_i18n("Subversion directory:"));
+vcs_directory ('svn', no_i18n("Subversion directory:"), $row_grp);
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-vcs_directory ('git', no_i18n("Git directory:"));
+vcs_directory ('git', no_i18n("Git directory:"), $row_grp);
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-vcs_directory ('hg', no_i18n("Mercurial directory:"));
+vcs_directory ('hg', no_i18n("Mercurial directory:"), $row_grp);
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
-vcs_directory ('bzr', no_i18n("Bazaar directory:"));
+vcs_directory ('bzr', no_i18n("Bazaar directory:"), $row_grp);
 $i++;
 print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
 
