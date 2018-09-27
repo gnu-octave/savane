@@ -1,158 +1,135 @@
-/* <one line to give a brief idea of what this does.>
- * 
- * Copyright 2006     (c) Mathieu Roy <yeupou--gnu.org>
- *                        Yves Perrin <yves.perrin--cern.ch>
- * See the changelog file for a detailed list of changes
- *
- *  http://gna.org/p/savane
- *
- * This file is part of Savane.
- * 
- * Savane is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * 
- * Savane is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
-*/
+/* A collection of dirdy hacks for MSIE
+
+Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+Copyright (C) 2006 Yves Perrin <yves.perrin--cern.ch>
+Copyright (C) 2018 Ineiev
+
+This file is part of Savane.
+
+Savane is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Savane is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* This is not a theme but a collection of dirty hacks for MSIE, in order
-	to fix its bad behavior regarding standards.
+   to fix its bad behavior regarding standards.
 
-	PLEASE NEVER ADD EXTRA FUNCTIONNALITY HERE, WE DO NOT WANT TO 
-	PROVIDE EXTRA STUFF FOR PEOPLE USING A SOFTWARE THAT FORCE US
-	TO MAINTAIN DIRTY HACKS.
- 
-*/
+   PLEASE NEVER ADD EXTRA FUNCTIONNALITY HERE, WE DO NOT WANT TO
+   PROVIDE EXTRA STUFF FOR PEOPLE USING A SOFTWARE THAT FORCE US
+   TO MAINTAIN DIRTY HACKS.  */
 
-/* ****************************************
- Fix problem with the page width that would be to big */
+/* Fix problem with the page width that would be to big.  */
 
-.main {
-	position: absolute;
-	width: 80%;
-	margin-left: 0.5%;
-	overflow: visible
+.main
+{
+  position: absolute;
+  width: 80%;
+  margin-left: 0.5%;
+  overflow: visible
 }
 
-.menu {
- 	margin-top: 2px;
-	margin-left: 2px;
-  	padding-left: 5px;
-  	padding-right: 5px;
-  	padding-bottom: 5px;
-  	width: 14%;
+.menu
+{
+  margin-top: 2px;
+  margin-left: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  width: 14%;
 }
 
-.indexcenter {
-	width: 100%;
+.indexcenter
+{
+  width: 100%;
 }
 
+/* MSIE have a fixed feedback.  */
 
-/* ****************************************
- MSIE have a fixed feedback */
-
-.feedbackback {
-	display: none;
-	width: 15%;
-	margin-left: 70%;
+.feedbackback
+{
+  display: none;
+  width: 15%;
+  margin-left: 70%;
 }
 
-.feedback, .feedbackerror {
-	margin-top: 1em;
-	margin-bottom: 1em;
-	cursor: default;
+.feedback, .feedbackerror
+{
+  margin-top: 1em;
+  margin-bottom: 1em;
+  cursor: default;
 }
 
-
-
-
-h1, h2, h3, h4, h5, .feedback, .feedbackerror {
-	margin-left: 2%;
-	margin-left: 2%;
-	width: 96%;
-
+h1, h2, h3, h4, h5, .feedback, .feedbackerror
+{
+  margin-left: 2%;
+  margin-left: 2%;
+  width: 96%;
 }
 
-/* ****************************************
- Fix problems related to the top-menu */
+/* Fix problems related to the top-menu.  */
 
-
-#topmenu {
-        float: left;
-        padding-right: 0.5em;
-        padding-left: 0.5em;
-        padding-bottom: 1em;
-        margin: 0;
+#topmenu
+{
+  float: left;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+  padding-bottom: 1em;
+  margin: 0;
 }
 
-
-#topmenuitem {
-        float: left;
-        padding-right: 0.5em;
-        padding-left: 0.5em;
-        padding-bottom: 0;
-        margin: 0;
-        line-height: 1em;
-        list-style-type: none;
+#topmenuitem
+{
+  float: left;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+  padding-bottom: 0;
+  margin: 0;
+  line-height: 1em;
+  list-style-type: none;
 }
 
-.topmenuitem {
-	width: 80%;
-	float: left;
-	padding-left: 0;
- 	overflow: visible;
+.topmenuitem
+{
+  width: 80%;
+  float: left;
+  padding-left: 0;
+  overflow: visible;
 }
 
 
-li.topmenuitemmainitem {
-      	position: static;
+li.topmenuitemmainitem
+{
+  position: static;
 }
 
-li.topmenuitemmainitem a { 
-        display: block;
+li.topmenuitemmainitem a
+{
+  display: block;
 }
 
-
-ul.topmenuitemsubmenu {
-	visibility: visible;
-        top: auto;
-	left: -999em;
+ul.topmenuitemsubmenu
+{
+  visibility: visible;
+  top: auto;
+  left: -999em;
 }
 
-.topmenuitemsubmenu.hover ul {
-	left: auto;
+.topmenuitemsubmenu.hover ul
+{
+  left: auto;
 }
 
-.topmenuitemsubmenu.sfhover ul {
-	left: auto;
+.topmenuitemsubmenu
+{
+  /* This one is über-important, without it, MSIE will close the submenu
+     each time the mouse is over another link under the menu */
+  background: #FBFFFF;
 }
-
-
-.topmenuitemsubmenu {
-	/* This one is über-important, without it, MSIE will close the submenu
-	   each time the mouse is over another link under the menu */ 
-	background: #FBFFFF;
-}
-
-
-
-
-/* This is not a theme but a collection of dirty hacks for MSIE, in order
-	to fix its bad behavior regarding standards.
-
-	PLEASE NEVER ADD EXTRA FUNCTIONNALITY HERE, WE DO NOT WANT TO 
-	PROVIDE EXTRA STUFF FOR PEOPLE USING A SOFTWARE THAT FORCE US
-	TO MAINTAIN DIRTY HACKS.
-
-
-*/

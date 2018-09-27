@@ -46,25 +46,7 @@ function pagemenu ($params)
   if (is_broken_msie()
       && empty($_GET['printer'])
       && !$GLOBALS['stone_age_menu'])
-    {
-      print '<!-- begin pagemenu -->
-<script type=text/javascript><!--//--><![CDATA[//><!--
-
-sfHover = function() {
-        var sfEls = document.getElementById("topmenuitem").getElementsByTagName("LI");
-        for (var i=0; i<sfEls.length; i++) {
-                sfEls[i].onmouseover=function() {
-                        this.className+=" sfhover";
-                }
-                sfEls[i].onmouseout=function() {
-                        this.className=this.className.replace(new RegExp(" sfhover\\\\b"), "");
-                }
-        }
-}
-if (window.attachEvent) window.attachEvent("onload", sfHover);
-
-//--><!]]></SCRIPT>';
-    }
+    print "<!-- begin pagemenu -->\n";
 
   print '
 <h1 class="toptitle"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
@@ -665,15 +647,13 @@ function pagemenu_group ()
                                    .$project->getUnixName(),
                                    1,
                                    _("News Manager: edit notifications"));
-
         }
       pagemenu_submenu_content($ret);
       pagemenu_submenu_end();
     }
 }
 
-
-# Menu specific to the trackers pages.
+# Menu-specific to the trackers pages.
 function pagemenu_group_trackers ($tracker)
 {
   global $project, $group_id, $sys_group_id;
@@ -726,20 +706,18 @@ function pagemenu_group_trackers ($tracker)
                                      $GLOBALS['sys_home'].$tracker
                                      .'/?func=search&amp;group='
                                      .$project->getUnixName());
-
     }
   elseif ($tracker == "cookbook")
     {
-         # Quite similar to other trackers, the cookbook have some specific
-         # links.
+      # Quite similar to other trackers, the cookbook have some specific
+      # links.
 
-
-            # If there are external docs (extra link), consider them prior
-            # to the cookbook: if the users use two doc tool, there is no
-            # reason to consider the external less important than the Savane,
-            # at the contrary, we can assume that they made the choice to
-            # use another one for good reasons and we do not have to enforce
-            # anything at this point.
+      # If there are external docs (extra link), consider them prior
+      # to the cookbook: if the users use two doc tool, there is no
+      # reason to consider the external less important than the Savane,
+      # at the contrary, we can assume that they made the choice to
+      # use another one for good reasons and we do not have to enforce
+      # anything at this point.
       if ($project->Uses("extralink_documentation"))
         {
           $ret .= pagemenu_submenu_entry(_("Browse (External to Savane)"),
@@ -872,8 +850,8 @@ function pagemenu_siteadmin ()
   if (SUBCONTEXT == 'manage' && !empty($GLOBALS['group_name']))
     {
 
-      $extralinks = pagemenu_submenu_entry_separator().
-        pagemenu_submenu_entry('<strong>'._("Currently Shown Project:")
+      $extralinks = pagemenu_submenu_entry_separator()
+        .pagemenu_submenu_entry('<strong>'._("Currently Shown Project:")
                                .'</strong>', '#')
         .pagemenu_submenu_entry(_("Administer"),
                                 $GLOBALS['sys_home'].'project/admin/?group='
