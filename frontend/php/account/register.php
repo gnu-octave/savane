@@ -288,9 +288,9 @@ _("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),
       {
         print '<img id="captcha" src="' . $GLOBALS['sys_home']
               . 'gencaptcha.php" alt="CAPTCHA" /><br />';
-        print '[ <a href="#" onclick="document.getElementById(\'captcha\').src = \''
-            .$GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random(); '
-            .'return false">Different Image</a> ] ';
+        print '[ <a href="#" id="captcha_js_link">Different Image</a> ] '."\n"
+             .'<script type="text/javascript" src="/js/captcha.php"></script>'
+             ."\n";
         print '[ <a href="' . $GLOBALS['sys_home'] . 'playcaptcha.php">'
               . _("Play Captcha") . "</a> ]<br />\n";
         print _("Antispam test:")

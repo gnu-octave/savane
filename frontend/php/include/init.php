@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gna.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -21,10 +21,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Set up proper use of UTF-8, even if the webserver does
-   not serve it by default. */
+   not serve it by default.  */
 header('Content-Type: text/html; charset=utf-8');
-/* Disallow embedding in any frames. */
+/* Disallow embedding in any frames.  */
 header('X-Frame-Options: DENY');
+header("Content-Security-Policy: default-src 'self'; "
+       ."style-src 'unsafe-inline' 'self'; frame-ancestors 'none'; "
+       ."img-src 'self' static.fsf.org");
 # Database abstraction.
 require_once(dirname(__FILE__).'/database.php');
 # Security library.

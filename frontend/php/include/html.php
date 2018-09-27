@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Pogonyshev <pogonyshev--gmx.net>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2013, 2017 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2013, 2017, 2018 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -39,76 +39,31 @@ function html_show_displayoptions ($content, $form_opening=0, $submit=0)
 
 function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 {
-  $script_hide =
-"document.getElementById('boxoptionscontent').style.display='none'; "
-."document.getElementById('boxoptionslinkhide').style.display='none'; "
-."document.getElementById('boxoptionslinkshow').style.display='inline';";
-
-  $script_show =
-"document.getElementById('boxoptionscontent').style.display='inline'; "
-."document.getElementById('boxoptionslinkhide').style.display='inline'; "
-."document.getElementById('boxoptionslinkshow').style.display='none';";
-
   $ret = '
 <fieldset id="options" class="boxoptions">
 <legend>';
 
-  # yeupou, 2006-02: it is not ubercool to use monospace font to show
-  # plus or minus button, but all the tests I made with icons so far ended up
-  # in quite an ugly thing when the font scale change.
-  $ret .= '
-  <script type="text/javascript">';
-
   extract(sane_import('request', array('boxoptionwanted')));
 
   if ($boxoptionwanted != 1)
-    {
-      $ret .= '
-    document.write(\'<span onclick="'.addslashes($script_hide)
-    .'" id="boxoptionslinkhide" style="display: none">'
-    .'<span class="minusorplus">(-)</span>'
-    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');
-    document.write(\'<span onclick="'.addslashes($script_show)
-    .'" id="boxoptionslinkshow" style="display: inline">'
-    .'<span class="minusorplus">(+)</span>'
-    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');';
-    }
-  else
-    {
-      $ret .= '
-    document.write(\'<span onclick="'.addslashes($script_hide)
-    .'" id="boxoptionslinkhide" style="display: inline">'
-    .'<span class="minusorplus">(-)</span>'
-    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');
-    document.write(\'<span onclick="'.addslashes($script_show)
-    .'" id="boxoptionslinkshow" style="display: none">'
-    .'<span class="minusorplus">(+)</span>'
-    .htmlspecialchars($legend, ENT_QUOTES).'</span>\');';
-    }
+    $boxoptionwanted = 0;
+
   $ret .= '
-  </script>
+  <script type="text/javascript" src="/js/show-hide.php?'
+  ."deploy=".$boxoptionwanted."&amp;legend=".urlencode($legend)."&amp;"
+  .'box_id=boxoptions&amp;suffix="></script>';
+  $ret .= '
   <noscript>
     <span id="boxoptionslinkshow">'.$legend.'</span>
   </noscript>
 </legend>';
-
+  $ret .= '
+  <span id="boxoptionscontent">
+';
   if ($boxoptionwanted != 1)
-    {
-      $ret .= '
-<script type="text/javascript">
-  document.write(\'<span id="boxoptionscontent" style="display: none">\');
-</script>
-<noscript>
-  <span id="boxoptionscontent">
-</noscript>
+    $ret .= '
+<script type="text/javascript" src="/js/hide-span.php?box_id=boxoptionscontent"></script>
 ';
-    }
-  else
-    {
-      $ret .= '
-  <span id="boxoptionscontent">
-';
-    }
 
   if ($form_opening && $submit)
     {
@@ -153,69 +108,29 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
   # use an array to determine what is deployed, this matters more).
   if (is_array($is_deployed)
       && array_key_exists($uniqueid, $is_deployed))
-    {
-      $deployed = $is_deployed[$uniqueid];
-    }
-  $script_hide =
- "document.getElementById('hidsubpartcontent$uniqueid').style.display='none'; "
-."document.getElementById('hidsubpartlinkhide$uniqueid').style.display='none'; "
-."document.getElementById('hidsubpartlinkshow$uniqueid').style.display='block';";
-  $script_show =
-"document.getElementById('hidsubpartcontent$uniqueid').style.display='inline'; "
-."document.getElementById('hidsubpartlinkhide$uniqueid').style.display='block'; "
-."document.getElementById('hidsubpartlinkshow$uniqueid').style.display='none';";
+    $deployed = $is_deployed[$uniqueid];
+  if ($deployed != 1)
+    $deployed = 0;
 
   $ret = '
   <h2 id="'.$uniqueid.'">
-  <script type="text/javascript">';
-
-  if (!$deployed)
-    {
-      $ret .= '
-    document.write(\'<a onclick="'.addslashes($script_hide)
-  .'" id="hidsubpartlinkhide'.$uniqueid.'" style="display: none" href="#'
-  .$uniqueid.'"><span class="minusorplus">(-)</span> '
-  .htmlspecialchars($title, ENT_QUOTES).'</a>\');
-    document.write(\'<a onclick="'.addslashes($script_show)
-  .'" id="hidsubpartlinkshow'.$uniqueid.'" style="display: block" href="#'
-  .$uniqueid.'"><span class="minusorplus">(+)</span> '
-  .htmlspecialchars($title, ENT_QUOTES).'</a>\');';
-    }
-  else
-    {
-      $ret .= '
-    document.write(\'<a onclick="'.addslashes($script_hide)
-  .'" id="hidsubpartlinkhide'.$uniqueid.'" style="display: block" href="#'
-  .$uniqueid.'"><span class="minusorplus">(-)</span> '
-  .htmlspecialchars($title, ENT_QUOTES).'</a>\');
-    document.write(\'<a onclick="'.addslashes($script_show)
-  .'" id="hidsubpartlinkshow'.$uniqueid.'" style="display: none" href="#'
-  .$uniqueid.'"><span class="minusorplus">(+)</span> '
-  .htmlspecialchars($title, ENT_QUOTES).'</a>\');';
-    }
+  <script type="text/javascript" src="/js/show-hide.php?'
+  ."deploy=".$deployed."&amp;legend=".urlencode($title)
+  ."&amp;box_id=hidsubpart&amp;suffix=".$uniqueid.'"></script>'."\n";
   $ret .= '
-  </script>
   <noscript>
     <a href="#'.$uniqueid.'">'.$title.'</a>
   </noscript>
   </h2>
 ';
+  $ret .= '
+<span id="hidsubpartcontent'.$uniqueid.'">
+';
   if (!$deployed)
     {
       $ret .= '
-<script type="text/javascript">
-  document.write(\'<span id="hidsubpartcontent'.$uniqueid
-  .'" style="display: none">\');
-</script>
-<noscript>
-  <span id="hidsubpartcontent'.$uniqueid.'">
-</noscript>
-';
-    }
-  else
-    {
-      $ret .= '
-<span id="hidsubpartcontent'.$uniqueid.'">
+<script type="text/javascript" '
+.'src="/js/hide-span.php?box_id=hidsubpartcontent'.$uniqueid.'"></script>
 ';
     }
   return $ret;
@@ -320,14 +235,10 @@ function html_feedback($bottom)
   if ($bottom)
     $suffix = '_bottom';
 
-  $script_hide = 'onclick="document.getElementById(\'feedback'.$suffix.'\')'.
-                 '.style.visibility=\'hidden\'; '.
-                 'document.getElementById(\'feedbackback'.$suffix.
-                 '\').style.visibility=\'visible\';"';
-  $script_show = 'onclick="document.getElementById(\'feedback'.$suffix.'\')'.
-                 '.style.visibility=\'visible\'; '.
-                 'document.getElementById(\'feedbackback'.$suffix.
-                 '\').style.visibility=\'hidden\';"';
+  $script_hide = '<script type="text/javascript" '
+      . 'src="/js/hide-feedback.php?suffix=' . $suffix . '"></script>' . "\n";
+
+  $style_hide = '';
 
   # With MSIE  the feedback will be
   # in relative position, so the hiding link will not make sense.
@@ -339,22 +250,25 @@ function html_feedback($bottom)
   # mozilla that slow scrolling down/up when there is such fixed box on the
   # page).
   if (user_get_preference("nonfixed_feedback"))
-    $script_hide =
-       'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"';
+    {
+      $style_hide =
+         'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"';
+      $script_hide = '';
+    }
 
-  print '<div '.$script_show.
-        ' id="feedbackback'.$suffix.'" class="feedbackback">'.
+  print '<div id="feedbackback'.$suffix.'" class="feedbackback">'.
         _("Show feedback again")."</div>\n";
+  print '<script type="text/javascript" src="/js/show-feedback.php?suffix='
+        .$suffix.'"></script>'."\n";
 
   # Only success.
   if ($GLOBALS['feedback'] && !$GLOBALS['ffeedback'])
-    {
-        print '<div id="feedback'.$suffix.'" class="feedback" '.
-              $script_hide.'><span class="feedbacktitle"><img src="'.
-              $GLOBALS['sys_home'].'images/'.SV_THEME.
-              '.theme/bool/ok.png" class="feedbackimage" alt="" /> '.
-              _("Success:").'</span> '.$GLOBALS['feedback']."</div>\n";
-    }
+    print '<div id="feedback'.$suffix.'" class="feedback" '.
+           $style_hide.'><span class="feedbacktitle"><img src="'.
+           $GLOBALS['sys_home'].'images/'.SV_THEME.
+           '.theme/bool/ok.png" class="feedbackimage" alt="" /> '.
+           _("Success:").'</span> '.$GLOBALS['feedback']."</div>\n"
+           . $script_hide;
 
   # Only errors.
   if ($GLOBALS['ffeedback'] && !$GLOBALS['feedback'])
