@@ -36,10 +36,6 @@ extract(sane_import('get', array('field')));
 # But if some specific installation need to do so for whatever reason,
 # we can make that a configuration option.
 
-trackers_header(array ("title"=>_("Statistics")));
-
-# FIXME: work in progress. We need to study how to mix infos coming from
-# trackers_data_...()
 # If artifact is not defined, we want statistics of all trackers.
 if (ARTIFACT == "project")
   $artifact = "bugs,task,patch,support";
@@ -77,15 +73,19 @@ function specific_reports_list ($thisfield=0)
   print "</ul>\n";
 }
 
-# Initialize the global data structure before anything else
+# Initialize the global data structure before anything else.
 trackers_init($group_id);
+
+$page = "";
+$graph_id = 0;
+$widths = "";
 
 if ($field)
   {
     if ($field == 'aging')
       {
 # TRANSLATORS: aging statistics is statistics by date.
-        print '<h2>'._("Aging statistics:")."</h2>\n";
+        $page .= '<h2>'._("Aging statistics:")."</h2>\n";
 
         $time_now=time();
         unset($content);
@@ -107,10 +107,17 @@ if ($field)
             $content[$key] = db_result($result, 0,0);
           }
 
-        print '<h3>'._("Average Turnaround Time for Closed Items")."</h3>\n";
-        graphs_build($content,0,0);
+        $page .= '<h3>'._("Average Turnaround Time for Closed Items")."</h3>\n";
+        $build = graphs_build ($content, 0, 0, 0, $graph_id);
+        if ($graph_id != $build[0])
+          {
+            $widths = $widths . "," . $build[1];
+            $graph_id = $build[0];
+          }
+        $page .= $build[2];
+
         unset($content);
-        print "<p>&nbsp;&nbsp;</p>\n";
+        $page .= "<p>&nbsp;&nbsp;</p>\n";
 
         for ($counter=1; $counter<=8; $counter++)
           {
@@ -128,10 +135,16 @@ if ($field)
             $content[$key] = db_result($result, 0,0);
           }
 
-        print '<h3>'._("Number of Items Opened")."</h3>\n";
-        graphs_build($content,0,0);
+        $page .= '<h3>'._("Number of Items Opened")."</h3>\n";
+        $build = graphs_build ($content, 0, 0, 0, $graph_id);
+        if ($graph_id != $build[0])
+          {
+            $widths = $widths . "," . $build[1];
+            $graph_id = $build[0];
+          }
+        $page .= $build[2];
         unset($content);
-        print "<p>&nbsp;&nbsp;</p>\n";
+        $page .= "<p>&nbsp;&nbsp;</p>\n";
 
         for ($counter=1; $counter<=8; $counter++)
           {
@@ -148,10 +161,16 @@ if ($field)
             $content[utils_format_date($end)] = db_result($result, 0,0);
           }
 
-        print "\n<h3>"._("Number of Items Still Open")."</h3>\n";
-        graphs_build($content,0,0);
+        $page .= "\n<h3>"._("Number of Items Still Open")."</h3>\n";
+        $build = graphs_build ($content, 0, 0, 0, $graph_id);
+        if ($graph_id != $build[0])
+          {
+            $widths = $widths . "," . $build[1];
+            $graph_id = $build[0];
+          }
+        $page .= $build[2];
         unset($content);
-        print "<p>&nbsp;&nbsp;</p>\n";
+        $page .= "<p>&nbsp;&nbsp;</p>\n";
       }
     else
       {
@@ -160,14 +179,14 @@ if ($field)
 
         # Title + field description
         # TRANSLATORS: the argument is field label.
-        print '<h2>'.sprintf(_("Statistics by '%s':"), $label)."</h2>\n"
+        $page .= '<h2>'.sprintf(_("Statistics by '%s':"), $label)."</h2>\n"
           .'<p><em>'._('Field Description:').'</em> '
           .trackers_data_get_description($field)."</p>\n";
 
         # Make sure it is a correct field
         if (trackers_data_is_special($field) || !trackers_data_is_used($field)
             || !trackers_data_is_select_box($field))
-          print '<p class="error">'
+          $page .= '<p class="error">'
         # TRANSLATORS: the argument is field label.
             .sprintf(_("Can't generate report for field %s"), $label)."</p>\n";
         else
@@ -178,7 +197,7 @@ if ($field)
 
             if ($field != 'status_id')
               {
-                print "\n<h3>".sprintf(_("Open Items"), $label)."</h3>\n";
+                $page .= "\n<h3>".sprintf(_("Open Items"), $label)."</h3>\n";
 
                 # First graph the bug distribution for Open item only.
                 # Assigned to must be handle in a specific way.
@@ -227,14 +246,22 @@ if ($field)
 
                 $result=db_execute($sql, $params);
                 if ($result && db_numrows($result) > 0)
-                  graphs_build($result, $field);
+                  {
+                    $build = graphs_build ($result, $field, 1, 0, $graph_id);
+                    if ($graph_id != $build[0])
+                      {
+                        $widths = $widths . "," . $build[1];
+                        $graph_id = $build[0];
+                      }
+                    $page .= $build[2];
+                  }
                 else
-                  print _("No item found.");
-                print "<p>&nbsp;&nbsp;</p>\n";
+                  $page .= _("No item found.");
+                $page .= "<p>&nbsp;&nbsp;</p>\n";
                }
 
             #Second  graph the bug distribution for all items
-            print "\n<h3>".sprintf(_("All Items"), $label)."</h3>\n";
+            $page .= "\n<h3>".sprintf(_("All Items"), $label)."</h3>\n";
 
             if ($field == 'assigned_to')
               {
@@ -255,8 +282,8 @@ if ($field)
                 if ($result && db_numrows($result) > 0)
                   $group_to_be_used = $group_id;
                 else
-                  # the project does not have its own instance so
-                  # use the default one (group_id  = '100')
+                  # The project does not have its own instance, so
+                  # use the default one (group_id  = '100').
                   $group_to_be_used = 100;
 
                 $sql="SELECT ".$artifact
@@ -273,12 +300,27 @@ if ($field)
               }
             $result=db_execute($sql, $params);
             if ($result && db_numrows($result) > 0)
-              graphs_build($result, $field);
+              {
+                $build = graphs_build ($result, $field, 1, 0, $graph_id);
+                if ($graph_id != $build[0])
+                  {
+                    $widths = $widths . "," . $build[1];
+                    $graph_id = $build[0];
+                  }
+                $page .= $build[2];
+              }
             else
-              print _("No item found. This field is probably unused");
+              $page .= _("No item found. This field is probably unused");
           }
       }
   }
+
+$css = "";
+if ($widths != '')
+  $css = '/css/graph-widths.php?widths=' . substr ($widths, 1);
+
+trackers_header(array ("title"=>_("Statistics"), "css" => $css));
+print $page;
 specific_reports_list($field);
 trackers_footer(array());
 ?>

@@ -30,32 +30,33 @@ register_globals_off();
 
 extract(sane_import('get',
   array('update', 'since_month', 'since_day', 'since_year',
-	          'until_month', 'until_day', 'until_year')));
+        'until_month', 'until_day', 'until_year')));
 
-site_header(array('title'=>"Statistics"));
+# Assemble page body first because we need to insert a link to generated
+# stylesheet in its header.
 
-######################## BETWEEN TWO DATES
+$page = '';
 
 if (empty($update))
-{
-  # Replace since_ and util_ parameters
-  $since_month = date("m")-1;
-  $since_day = date("d");
-  $since_year = date("Y");
+  {
+    # Replace since_ and util_ parameters.
+    $since_month = date("m")-1;
+    $since_day = date("d");
+    $since_year = date("Y");
 
-  $until_month = date("m");
-  $until_day = date("d");
-  $until_year = date("Y");
+    $until_month = date("m");
+    $until_day = date("d");
+    $until_year = date("Y");
 
-  $hour = date("H");
-  $min = date("i");
-}
+    $hour = date("H");
+    $min = date("i");
+  }
 else
-{
-  # If the user selected date, assume he speaks of completed days
-  $hour = 0;
-  $min = 0;
-}
+  {
+    # If the user selected date, assume he speaks of completed days.
+    $hour = 0;
+    $min = 0;
+  }
 
 $since = mktime($hour,$min,0,$since_month, $since_day, $since_year);
 $until = mktime($hour,$min,0,$until_month, $until_day, $until_year);
@@ -64,10 +65,11 @@ $form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
                 .'#options" method="GET">';
 $form_submit = '<input class="bold" value="'._("Apply")
                .'" name="update" type="submit" />';
+$page .= html_show_displayoptions(
+       sprintf(
 # TRANSLATORS: The arguments are two dates.
 # Example: "From 12. September 2005 till 14. September 2005"
-print html_show_displayoptions(
-       sprintf(_('From %1$s till %2$s.'),
+               _('From %1$s till %2$s.'),
                calendar_select_date($since_day, $since_month,
                                     htmlentities ($since_year),
                                     array ("since_day", "since_month",
@@ -78,22 +80,21 @@ print html_show_displayoptions(
                                            "until_year"))),
                $form_opening, $form_submit);
 
+$page .= '
+<h2>'.html_anchor(sprintf(
 # TRANSLATORS: The arguments are two dates.
 # Example: "From 12. September 2005 till 14. September 2005"
-print '
-<h2>'.html_anchor(sprintf(_('From %1$s till %2$s'),utils_format_date($since),
+                          _('From %1$s till %2$s'),utils_format_date($since),
                           utils_format_date($until)),"between")
 .'</h2>
 ';
 
 if ($since > $until)
-{
-  print '<p class="error">'
+  $page .= '<p class="error">'
   ._("The begin of the period you asked for is later than its end.").'</p>
 ';
-}
 
-print '
+$page .= '
 <h3>'._("Accounts").'</h3>
 <ul>
 ';
@@ -108,7 +109,7 @@ $count = stats_getusers("add_date>='$since' AND add_date<='$until'");
 $key = _("New users");
 $content[$key] = $count;
 $total[$key] = $count_users;
-print '<li>'.sprintf(ngettext("%s new user", "%s new users", $count),
+$page .= '<li>'.sprintf(ngettext("%s new user", "%s new users", $count),
                                $count)."</li>\n";
 
 $count = stats_getprojects("","",
@@ -116,12 +117,20 @@ $count = stats_getprojects("","",
 $key = _("New groups");
 $content[$key] = $count;
 $total[$key] = $count_groups;
-print '
+$page .= '
 <li> '.sprintf(ngettext("%s new project", "%s new projects",
                                         $count),$count)."</li>\n</ul>\n";
 
-print '<h3>'._("New users and new groups / total")."</h3>\n";
-graphs_build($content,0,0,$total);
+$page .= '<h3>'._("New users and new groups / total")."</h3>\n";
+$graph_id = 0;
+$widths = "";
+$build = graphs_build ($content, 0, 0, $total, $graph_id);
+if ($graph_id != $build[0])
+  {
+    $widths = $widths . "," . $build[1];
+    $graph_id = $build[0];
+  }
+$page .= $build[2];
 
 $content = array();
 $total = 0;
@@ -131,28 +140,24 @@ $total_task = stats_getitems("task");
 $total_bugs = stats_getitems("bugs");
 $total_support = stats_getitems("support");
 
-
-print '
+$page .= '
 <h3>'._("Trackers").'</h3>
 ';
 if (($total_patch + $total_task + $total_support + $total_bugs > 0))
-  print "<ul>\n";
-
-### FIXME: ngettext force us to split several sentences in different bit.
-### It may be severily unsuitable for proper translation.
+  $page .= "<ul>\n";
 
 $content = array();
 $content_total = array();
 
 $total_open = 0;
 if ($total_support > 0)
-{
-  $count = stats_getitems("support", 0, "date>='$since' AND date<='$until'");
-  $total = $count;
-  $count_open = stats_getitems("support", 3, "date>='$since' AND date<='$until'");
-  $total_open += $count_open;
+  {
+    $count = stats_getitems("support", 0, "date>='$since' AND date<='$until'");
+    $total = $count;
+    $count_open = stats_getitems("support", 3, "date>='$since' AND date<='$until'");
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -162,19 +167,19 @@ if ($total_support > 0)
                     "including %s already closed<!-- support requests -->",
            $count_open),
            $count_open)."</li>\n";
-  $key = _("Support requests");
-  $content[$key] = $count;
-  $content_total[$key] = $total_support;
-}
+    $key = _("Support requests");
+    $content[$key] = $count;
+    $content_total[$key] = $total_support;
+  }
 
 if ($total_bugs > 0)
-{
-  $count = stats_getitems("bugs", 0, "date>='$since' AND date<='$until'");
-  $total += $count;
-  $count_open = stats_getitems("bugs", 3, "date>='$since' AND date<='$until'");
-  $total_open += $count_open;
+  {
+    $count = stats_getitems("bugs", 0, "date>='$since' AND date<='$until'");
+    $total += $count;
+    $count_open = stats_getitems("bugs", 3, "date>='$since' AND date<='$until'");
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -182,20 +187,20 @@ if ($total_bugs > 0)
   .sprintf(ngettext("including %s already closed<!-- bug -->",
                     "including %s already closed<!-- bugs -->", $count_open),
            $count_open)
-  ."</li>\n";
-  $key = _("Bugs");
-  $content[$key] = $count;
-  $content_total[$key] = $total_bugs;
-}
+    ."</li>\n";
+    $key = _("Bugs");
+    $content[$key] = $count;
+    $content_total[$key] = $total_bugs;
+  }
 
 if ($total_task > 0)
-{
-  $count = stats_getitems("task", 0, "date>='$since' AND date<='$until'");
-  $total += $count;
-  $count_open = stats_getitems("task", 3, "date>='$since' AND date<='$until'");
-  $total_open += $count_open;
+  {
+    $count = stats_getitems("task", 0, "date>='$since' AND date<='$until'");
+    $total += $count;
+    $count_open = stats_getitems("task", 3, "date>='$since' AND date<='$until'");
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -204,19 +209,19 @@ if ($total_task > 0)
                     "including %s already closed<!-- tasks -->",
            $count_open),
            $count_open)."</li>\n";
-  $key = _("Tasks");
-  $content[$key] = $count;
-  $content_total[$key] = $total_task;
-}
+    $key = _("Tasks");
+    $content[$key] = $count;
+    $content_total[$key] = $total_task;
+  }
 
 if ($total_patch > 0)
-{
-  $count = stats_getitems("patch", 0, "date>='$since' AND date<='$until'");
-  $total += $count;
-  $count_open = stats_getitems("patch", 3, "date>='$since' AND date<='$until'");
-  $total_open += $count_open;
+  {
+    $count = stats_getitems("patch", 0, "date>='$since' AND date<='$until'");
+    $total += $count;
+    $count_open = stats_getitems("patch", 3, "date>='$since' AND date<='$until'");
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -224,52 +229,52 @@ if ($total_patch > 0)
   .sprintf(ngettext("including %s already closed<!-- patch -->",
                     "including %s already closed<!-- patches -->", $count_open),
            $count_open)."</li>\n";
-  $key = _("Patches");
-  $content[$key] = $count;
-  $content_total[$key] = $total_patch;
-}
+    $key = _("Patches");
+    $content[$key] = $count;
+    $content_total[$key] = $total_patch;
+  }
 
 if ($total_patch < 1 &&  $total_task  < 1 && $total_support < 1 && $total_bugs < 1)
-{
-  print _("The trackers look unused, no items were found");
-}
+  $page .= _("The trackers look unused, no items were found");
 else
-{
-  print "<li>"
+  {
+    $page .= "<li>"
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
-  .sprintf(ngettext("%s new item,", "%s new items,", $total), $total)." "
-  .sprintf(ngettext("including %s already closed<!-- item -->",
-                    "including %s already closed<!-- items -->", $total_open),
-           $total_open)."</li>\n";
+    .sprintf(ngettext("%s new item,", "%s new items,", $total), $total)." "
+    .sprintf(ngettext("including %s already closed<!-- item -->",
+                      "including %s already closed<!-- items -->", $total_open),
+             $total_open)."</li>\n";
 
-  print '</ul>
+    $page .= '</ul>
 <h3>'._("New items per tracker / tracker total")."</h3>\n";
-  graphs_build($content,0,0,$content_total);
-  unset($content,$content_total);
-}
+    $build = graphs_build ($content, 0, 0, $content_total, $graph_id);
+    if ($graph_id != $build[0])
+      {
+        $widths = $widths . "," . $build[1];
+        $graph_id = $build[0];
+      }
+    $page .= $build[2];
+    unset($content,$content_total);
+  }
 
-print "</p>\n";
+$page .= "</p>\n";
 
-print '<p>&nbsp;</p>';
+$page .= '<p>&nbsp;</p>';
 
 ##################### GENERAL
-print '
-<h2>'.html_anchor(_("Overall"),"overall").'</h2>
-';
+$page .= '
+<h2>'.html_anchor(_("Overall"),"overall")."</h2>\n";
 
-print '
-<h3>'._("Accounts").'</h3>
-<ul>
-';
+$page .= "\n<h3>"._("Accounts")."</h3>\n<ul>\n";
 
 $content = array();
 
-print '<li>'.sprintf(ngettext("%s user", "%s users", $count_users),
+$page .= '<li>'.sprintf(ngettext("%s user", "%s users", $count_users),
                                $count_users)."</li>\n";
 $count_groups_private = stats_getprojects("","0");
-print '<li>'
+$page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   .sprintf(ngettext("%s project,", "%s projects,", $count_groups),
            $count_groups)." "
@@ -279,16 +284,20 @@ print '<li>'
 
 $result = db_query("SELECT type_id,name FROM group_type ORDER BY name");
 while ($eachtype = db_fetch_array($result))
-{
   $content[$eachtype['name']] = stats_getprojects($eachtype['type_id']);
-}
 
-print '
+$page .= '
 <h3>'._("Projects per group type")."</h3>\n";
-graphs_build($content,0,0);
+$build = graphs_build ($content, 0, 0, 0, $graph_id);
+if ($graph_id != $build[0])
+  {
+    $widths = $widths . "," . $build[1];
+    $graph_id = $build[0];
+  }
+$page .= $build[2];
 unset($content);
 
-print '<h3>'._("Trackers").'</h3>
+$page .= '<h3>'._("Trackers").'</h3>
 <ul>
 ';
 
@@ -298,11 +307,11 @@ $count = $total_support;
 $total = $count;
 $total_open = 0;
 if ($count > 0)
-{
-  $count_open = stats_getitems("support", 1);
-  $total_open += $count_open;
+  {
+    $count_open = stats_getitems("support", 1);
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -311,17 +320,17 @@ if ($count > 0)
                     "including %s still open<!-- support requests -->",
                     $count_open), $count_open)."</li>\n";
 
-  $content[_("Support requests")] = $count;
-}
+    $content[_("Support requests")] = $count;
+  }
 
 $count = $total_bugs;
 $total += $count;
 if ($count > 0)
-{
-  $count_open = stats_getitems("bugs", 1);
-  $total_open += $count_open;
+  {
+    $count_open = stats_getitems("bugs", 1);
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -329,19 +338,19 @@ if ($count > 0)
   .sprintf(ngettext("including %s still open<!-- bug -->",
                     "including %s still open<!-- bugs -->", $count_open),
            $count_open)
-  ."</li>\n";
+    ."</li>\n";
 
-  $content[_("Bugs")] = $count;
-}
+    $content[_("Bugs")] = $count;
+  }
 
 $count = $total_task;
 $total += $count;
 if ($count > 0)
-{
-  $count_open = stats_getitems("task", 1);
-  $total_open += $count_open;
+  {
+    $count_open = stats_getitems("task", 1);
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -350,28 +359,28 @@ if ($count > 0)
                     "including %s still open<!-- tasks -->", $count_open),
            $count_open)."</li>\n";
 
-  $content[_("Tasks")] = $count;
-}
+    $content[_("Tasks")] = $count;
+  }
 
 $count = $total_patch;
 $total += $count;
 if ($count > 0)
-{
-  $count_open = stats_getitems("patch", 1);
-  $total_open += $count_open;
+  {
+    $count_open = stats_getitems("patch", 1);
+    $total_open += $count_open;
 
-  print '<li>'
+    $page .= '<li>'
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
-  .sprintf(ngettext("%s patch,", "%s patches,", $count), $count)." "
-  .sprintf(ngettext("including %s still open<!-- patch -->",
+    .sprintf(ngettext("%s patch,", "%s patches,", $count), $count)." "
+    .sprintf(ngettext("including %s still open<!-- patch -->",
                     "including %s still open<!-- patches -->", $count_open),
-           $count_open)."</li>\n";
+             $count_open)."</li>\n";
 
-  $content[_("Patches")] = $count;
-}
-print "<li>"
+    $content[_("Patches")] = $count;
+  }
+$page .= "<li>"
   # TRANSLATORS: The next two msgids form one sentence.
   # The HTML comment in the second part is used to differentiate it
   # from the same texts used with other first part.
@@ -380,56 +389,64 @@ print "<li>"
                   "including %s still open<!-- items -->", $total_open),
          $total_open)."</li>\n</ul>\n";
 
-print '
+$page .= '
 <h3>'._("Items per tracker")."</h3>\n";
-graphs_build($content,0,0);
+$build = graphs_build ($content, 0, 0, 0, $graph_id);
+if ($graph_id != $build[0])
+  {
+    $widths = $widths . "," . $build[1];
+    $graph_id = $build[0];
+  }
+$page .= $build[2];
+$css = "";
+if ($widths != '')
+  $css = '/css/graph-widths.php?widths=' . substr ($widths, 1);
 unset($content);
 
-print '
+$page .= '
 <h3>'._("Most popular themes").'</h3>
 ';
 
-# Get the more popular themes. 7 at most, all superior to 0%
+# Get the more popular themes. 7 at most, all superior to 0%.
 $themes_list = theme_list();
 $popular_themes = array();
 
-// Check if there's already at least one user registered
+# Check if there's already at least one user registered.
 if ($count_users)
-{
-  print "<ul>\n";
-  while (list(,$theme) = each($themes_list))
-    {
-      // Get the number of users of the theme
-      unset($count);
-      $count = stats_getthemeusers(strtolower($theme));
-      if (strtolower($theme) == strtolower($GLOBALS['sys_themedefault']))
-	{ 
-	  // If it is the default theme, add the users that use the default
-	  $count += stats_getthemeusers("");
-	}
-      
-      // Compute the percentage of users using it
-      $percent = ($count / $count_users) * 100;
-      
-      // Store it only if superior to 0
-      if (round($percent))
-	{
-	  $popular_themes[$theme] = $percent;
-	}
-    }
+  {
+    $page .= "<ul>\n";
+    while (list(,$theme) = each($themes_list))
+      {
+        # Get the number of users of the theme.
+        unset($count);
+        $count = stats_getthemeusers(strtolower($theme));
+        if (strtolower($theme) == strtolower($GLOBALS['sys_themedefault']))
+          # If it is the default theme, add the users that use the default.
+          $count += stats_getthemeusers("");
+        
+        # Compute the percentage of users using it.
+        $percent = ($count / $count_users) * 100;
+        
+        # Store it only if superior to 0.
+        if (round($percent))
+          $popular_themes[$theme] = $percent;
+      }
+    arsort($popular_themes);
+    $themes = '';
+    while (list($theme,$percent) = each($popular_themes))
+      $page .= ("<li>".$theme." (".round($percent)."%)</li>\n");
+    $page .= "</ul>\n";
+  }
+else
+  $page .= _('No users yet.');
 
-  // Print the most popular theme
-  arsort($popular_themes);
-  $themes = '';
-  while (list($theme,$percent) = each($popular_themes))
-    print ("<li>".$theme." (".round($percent)."%)</li>\n");
-  print "</ul>\n";
-} else {
-  print _('No users yet.');
-}
-
-print '
+$page .= '
 </p>';
+
+# Assemble page.
+site_header(array('title' => "Statistics", 'css' => $css));
+
+print $page;
 
 site_footer(0);
 ?>

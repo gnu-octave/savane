@@ -25,8 +25,8 @@
 header('Content-Type: text/html; charset=utf-8');
 /* Disallow embedding in any frames.  */
 header('X-Frame-Options: DENY');
-header("Content-Security-Policy: default-src 'self'; "
-       ."style-src 'unsafe-inline' 'self'; frame-ancestors 'none'; "
+/* Declare more restrictions on how browsers may assemble pages.  */
+header("Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; "
        ."img-src 'self' static.fsf.org");
 # Database abstraction.
 require_once(dirname(__FILE__).'/database.php');

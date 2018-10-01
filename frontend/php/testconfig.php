@@ -1,8 +1,9 @@
 <?php
 # Check your configuration against recommended values
 # 
-# Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2007 Sylvain Beucler
+# Copyright (C) 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -45,12 +46,7 @@ print "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en_US\">\n";
 print "<head>\n";
 print "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n";
 print "<title>Basic PHP tests</title>\n";
-print "<style type=\"text/css\">\n";
-print "<!--\n";
-print ".different { background-color: #ffadad; color: black; }\n";
-print ".unset { background-color: #ffdada; color: black; }\n";
-print "-->\n";
-print "</style>\n";
+print "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/internal/testconfig.css\" />\n";
 print "</head>\n\n";
 print "<body>\n";
 
@@ -62,7 +58,7 @@ if (empty($inside_siteadmin))
 }
  
 #==============================================================================
-print "<h1>Base PHP configuration</h1>\n";
+print "<h2>Base PHP configuration</h2>\n";
 
 # cf. http://php.net/manual/en/ini.php
 $phptags = array (
@@ -139,7 +135,7 @@ if ($unset)
 
 
 #==============================================================================
-print "<h1>PHP functions</h1>\n";
+print "<h2>PHP functions</h2>\n";
 
 $phpfunctions = array (
 	'mysql_connect' => 'You must install/configure php-mysql ! [REQUIRED]',
@@ -158,7 +154,7 @@ foreach ( $phpfunctions as $func => $comment ) {
 }
 
 #==============================================================================
-print "<h1>Apache environment vars</h1>\n";
+print "<h2>Apache environment vars</h2>\n";
 
 $configfile = '/etc/savane/';
 
@@ -184,7 +180,7 @@ if (is_readable($configfile)) {
 }
 
 #==============================================================================
-print "<h1>Savane configuration:</h1>\n";
+print "<h2>Savane configuration:</h2>\n";
 
 if (!is_readable($configfile))
 {
@@ -235,7 +231,7 @@ configuration file.";
 
 
 #=============================================================================
-print "<h1>Optional PHP configuration</h1>\n";
+print "<h2>Optional PHP configuration</h2>\n";
 
 print "The following is not required to run Savane but could enhance security
 of your production server. Displaying errors is recommended: they may
@@ -289,5 +285,5 @@ if ($unset)
 
 #==============================================================================
 
-print "<h1>That's it!</h1>";
+print "<h2>That's it!</h2>";
 print "</body>\n<html>\n";

@@ -9,7 +9,7 @@
 #
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -243,6 +243,9 @@ class Layout extends Error
               .$GLOBALS['sys_home'].'css/internal/stone-age-menu.css" />
 ';
       }
+    if (!empty($params['css']))
+      print '  <link rel="stylesheet" type="text/css" href="'
+            . $params['css'] . '" />' . "\n";
 
     print '  <link rel="icon" type="image/png" href="'.$GLOBALS['sys_home']
           .'images/'.SV_THEME.'.theme/icon.png" />

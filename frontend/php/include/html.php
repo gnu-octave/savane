@@ -238,7 +238,7 @@ function html_feedback($bottom)
   $script_hide = '<script type="text/javascript" '
       . 'src="/js/hide-feedback.php?suffix=' . $suffix . '"></script>' . "\n";
 
-  $style_hide = '';
+  $class_hide = 'feedback';
 
   # With MSIE  the feedback will be
   # in relative position, so the hiding link will not make sense.
@@ -251,8 +251,7 @@ function html_feedback($bottom)
   # page).
   if (user_get_preference("nonfixed_feedback"))
     {
-      $style_hide =
-         'style="top: 0; right: 0; bottom: 0; left: 0; position: relative"';
+      $class_hide = 'feedback feedback-hide';
       $script_hide = '';
     }
 
@@ -263,8 +262,8 @@ function html_feedback($bottom)
 
   # Only success.
   if ($GLOBALS['feedback'] && !$GLOBALS['ffeedback'])
-    print '<div id="feedback'.$suffix.'" class="feedback" '.
-           $style_hide.'><span class="feedbacktitle"><img src="'.
+    print '<div id="feedback'.$suffix.'" class="'.
+           $class_hide.'"><span class="feedbacktitle"><img src="'.
            $GLOBALS['sys_home'].'images/'.SV_THEME.
            '.theme/bool/ok.png" class="feedbackimage" alt="" /> '.
            _("Success:").'</span> '.$GLOBALS['feedback']."</div>\n"

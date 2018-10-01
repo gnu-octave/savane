@@ -135,7 +135,7 @@ class GPLQuickForm_Element
     $value = $this->getValue();
     if ($this->type == 'header')
       {
-        print "<tr><td colspan=2 style='background: lightgrey;"
+        print "<tr><td colspan=2 class='lightgrey;"
           . " text-align: left; font-weight: bold'>"
           . "{$this->label}</td></tr>";
       }
@@ -302,7 +302,7 @@ class GPLQuickForm
   private $in = array();
 
   private $requiredNote =
-   '<span style="font-size: smaller"><span style="color: red">*</span> required field</span>';
+   '<span class="smaller"><span class="red">*</span> required field</span>';
   private $jsWarnings_pref = 'The form is not valid';
   private $jsWarnings_post = '';
   private $elements = array();
@@ -312,8 +312,8 @@ class GPLQuickForm
   {
     $this->name = $name;
     $this->method = $method;
-    $this->requiredNote = '<span style="font-size: smaller">'
-           .'<span style="color: red">*</span> '._('required field').'</span>';
+    $this->requiredNote = '<span class="smaller">'
+           .'<span class="red">*</span> '._('required field').'</span>';
 
     switch ($method)
       {
@@ -503,22 +503,9 @@ class GPLQuickForm
 
   public function display()
   {
-    print "<form id='$this->name' action='"
+    print "<form class='gpl-quick-form' id='$this->name' action='"
           .htmlentities ($_SERVER['PHP_SELF'])."'"
           ." method='$this->method'>
-<style type='text/css'><!--
-#$this->name .label {
-  text-align: right;
-  font-weight: bold;
-}
-#$this->name .element {
-  text-align: left;
-}
-#$this->name .error {
-  color: red;
-}
-// -->
-</style>
 ";
     print '<table>
 ';

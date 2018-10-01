@@ -70,12 +70,12 @@ $form = new GPLQuickForm('change_date');
 $form->addElement('header', 'title_name', _('Project name'));
 $form->addElement('text', 'full_name', _('Full name'));
 $form->addElement('text', 'unix_name', _('Short/system name')
-  . '<br /><span style="font-size: smaller">'
+  . '<br /><span class="smaller">'
   . _('(used in URLs, mailing lists names, etc.)') . '</span>');
 
 $form->addElement('header', 'title_information', _('Project information'));
 $form->addElement('textarea', 'purpose', _('~20-lines technical description') 
-  . '<br /><span style="font-size: smaller">'
+  . '<br /><span class="smaller">'
   . _('What is your project?') . '<br />'
   . _('(purpose, topic, programming language...)') . '<br />'
   . _('What is special about it?') . '</span>');
@@ -121,11 +121,11 @@ $form->addElement('checkbox', 'cl_requirements',
 
 $form->addElement('header', 'title_details', _('Details'));
 $form->addElement('textarea', 'required_sw', _('Dependencies')
-  . '<br /><span style="font-size: smaller">'
+  . '<br /><span class="smaller">'
   . _('name + license + website for each dependency') . '</span>');
 $form->addElement('textarea', 'comments', _('Other Comments'));
 $form->addElement('text', 'tarball_url', _('Tarball (.tar.gz) URL')
-  . '<br /><span style="font-size: smaller">'
+  . '<br /><span class="smaller">'
   . sprintf (
 _('(or <a href="%s" target="_blank">upload file</a> to Savannah.)'),
              'upload.php')
@@ -324,7 +324,7 @@ else
   echo "<p>"
 ._("Please fill in this submission form. The Savannah Hackers will then review
 it for hosting compliance.")."</p>\n";
-  echo "<p style='font-size: smaller'>"
+  echo '<p class="smaller">'
 .sprintf(_("Note: if you wish to submit your package for GNU Evaluation, please
 check the <a href='%s'>GNU Software Evaluation</a> webpage instead."),
  'https://www.gnu.org/help/evaluation.html')."</p>\n";

@@ -40,7 +40,7 @@ print '
   <br />
 ';
   print '<a href="//www.fsf.org/associate/support_freedom/join_fsf?referrer=2442">'
-.'<img style="width: 100%; margin-bottom: 0.2em"
+.'<img class="support-freedom"
   src="//static.fsf.org/fsforg/img/thin-image.png" alt="'
         ._('Support freedom').'" title="'
         ._('Help protect your freedom, join the Free Software Foundation')

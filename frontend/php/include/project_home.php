@@ -190,7 +190,7 @@ if ($project->Uses("news"))
     print $HTML->box_top(_("Latest News")
                          . "&nbsp;<a href='{$GLOBALS['sys_home']}news/atom.php?"
                          . "group=$group'"
-                         . " style='display: inline'><img alt='rss feed'"
+                         . " class='inline-link'><img alt='rss feed'"
                          . " src='{$GLOBALS['sys_home']}images/common/feed16.png'"
                          . " /></a>");
     print news_show_latest($group_id,4,"true");

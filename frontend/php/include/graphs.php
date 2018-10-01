@@ -3,7 +3,7 @@
 # and w3c-compliant.
 #
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -22,12 +22,12 @@
 
 # It can accept db result directy or an array.
 # Total must be an array too, if provided.
-function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
+function graphs_build ($result, $field=0, $dbdirect=1, $total=0, $id0 = 0)
 {
   if (!$result)
     {
       fb(_("No data to work on, no graph will be built"), 1);
-      return;
+      return array($id0, '', '');
     }
 
   if ($dbdirect)
@@ -66,11 +66,14 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
       $totalvar = 1;
     }
 
+  $id = $id0;
+  $widths = "";
+  $output = "";
   # Print the stats, unless $total is nul.
   # If total was passed as argument, strange result may be printed.
   if ($totalvar)
     {
-      print "\n\n".'<table style="width: 98%;">'."\n";
+      $output .= "\n\n".'<table class="graphs">'."\n";
       reset($content);
       while(list($k, $v)=each($content))
         {
@@ -97,26 +100,27 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0)
           else
             $class = 'closed';
 
-          print '<tr style="width: 50%;">
-<td style="width: 15%; text-align: right; vertical-align: center;">'.$title.'</td>
-<td style="width: 5%; text-align: right; vertical-align: center;">'
+          $output .= '<tr class="half-width">
+<td class="first">'.$title.'</td>
+<td class="second">'
 # TRANSLATORS: the arguments mean "%1$s of (total) %2$s".
   .sprintf(_('%1$s/%2$s'), $v, $total[$k]).'</td>
-<td style="width: 5%; text-align: right; vertical-align: center;">'
-  .$percent_print.'</td>
-<td style="width: 75%; text-align: left; vertical-align: center;">'
-.'<div style="width: 95%;" class="prioraclosed"><div class="priori'.$class
-.'" style="padding: 1px; line-height: 1em; width: '.$percent_width
-.'%; border-top: 0; border-left: 0; border-bottom: 0;">&nbsp;</div></div></td>
+<td class="second">'.$percent_print.'</td>
+<td class="third">'
+.'<div class="prioraclosed"><div class="priori'.$class
+.'" id="graph-bar'.$id.'">&nbsp;</div></div></td>
 </tr>';
+          $widths = $widths . "," . $percent_width;
+          $id++;
         }
-      print "\n</table>\n\n";
+      $output .= "\n</table>\n\n";
     }
   else
     {
-      print '<p class="warn">';
-      print _("The total number of results is zero.");
-      print '</p>';
+      $output .= '<p class="warn">';
+      $output .= _("The total number of results is zero.");
+      $output .= '</p>';
     }
+  return array($id, substr ($widths, 1), $output);
 }
 ?>
