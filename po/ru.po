@@ -31,7 +31,7 @@ msgstr ""
 "Project-Id-Version: savannah 3.3\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
 "POT-Creation-Date: 2018-06-05 17:21+0000\n"
-"PO-Revision-Date: 2018-06-05 15:44+0000\n"
+"PO-Revision-Date: 2018-10-03 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
 "Language: ru\n"
@@ -2103,7 +2103,7 @@ msgid ""
 "You may also be interested in the <a href=\"%s\">GPG Keyring of\n"
 "this project</a>"
 msgstr ""
-"Вы можете также получить <a href=\"%s\">Связку ключей GPG этого проекта</a>"
+"Вы можете также получить <a href=\"%s\">связку ключей GPG этого проекта</a>"
 
 #: frontend/php/project/memberlist-gpgkeys.php:30
 msgid "The GPG Keyring of the project is empty, no keys were registered"
@@ -2120,7 +2120,7 @@ msgid ""
 "You can <a href=\"%s\">download the keyring</a> and import it with\n"
 "the command %s."
 msgstr ""
-"Можно <a href=\"%s\">получить связку ключей</a> и импортировать командой%s."
+"Можно <a href=\"%s\">получить связку ключей</a> и импортировать командой %s."
 
 #: frontend/php/project/admin/conf-copy.php:37
 #: frontend/php/project/admin/index.php:114
