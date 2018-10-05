@@ -824,7 +824,8 @@ if ($history_search)
       }
     else
       {
-        $from = $from.' LEFT JOIN '.ARTIFACT.'_history ON (('.ARTIFACT
+        $from = 'FROM (' . substr($from, 5)
+          .') LEFT JOIN '.ARTIFACT.'_history ON (('.ARTIFACT
           .'_history.bug_id = '.ARTIFACT.'.bug_id ) AND ('.ARTIFACT
           .'_history.date >= ?) ';
         $from_params[] = $unix_history_date;
