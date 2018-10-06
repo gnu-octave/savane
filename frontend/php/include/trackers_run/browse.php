@@ -272,9 +272,7 @@ if (!$set)
                       .$history_field.'>'.$history_event.'>'.$history_date;
                   }
                 else
-                  {
-                    $url_params[$field][] = $value_id;
-                  }
+                  $url_params[$field][] = $value_id;
               }
             $set='custom';
           } # $custom_pref
@@ -300,10 +298,7 @@ else if ($set=='custom')
     while (list($field,$arr_val) = each($url_params))
       {
         while (list(,$value_id) = each($arr_val))
-          {
-            $pref_stg .= '&amp;'.htmlspecialchars ($field).'[]='
-                         .htmlspecialchars ($value_id);
-          }
+          $pref_stg .= '&amp;'.$field.'[]=' . $value_id;
 
       # build part of the HTML title of this page for more friendly bookmarking
       # Do not add the criteria in the header if value is "Any"
@@ -315,12 +310,12 @@ else if ($set=='custom')
                .trackers_data_get_value($field,$group_id,$value_id);
           }
       }
-    $pref_stg .= '&amp;advsrch='.htmlspecialchars ($advsrch);
-    $pref_stg .= '&amp;msort='.htmlspecialchars ($msort);
+    $pref_stg .= '&amp;advsrch='.$advsrch;
+    $pref_stg .= '&amp;msort='.$msort;
     $pref_stg .= '&amp;chunksz='.$chunksz;
-    $pref_stg .= '&amp;spamscore='.htmlspecialchars ($spamscore);
-    $pref_stg .= '&amp;report_id='.htmlspecialchars ($report_id);
-    $pref_stg .= '&amp;sumORdet='.htmlspecialchars ($sumORdet);
+    $pref_stg .= '&amp;spamscore='.$spamscore;
+    $pref_stg .= '&amp;report_id='.$report_id;
+    $pref_stg .= '&amp;sumORdet='.$sumORdet;
 
     if ($pref_stg != user_get_preference($preference_prefix.'_brow_cust'
                                          .$group_id))
