@@ -797,7 +797,7 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
       # user names requires some special processing to display the username
       # instead of the user_id
         $select .= ",user_$field.user_name AS $field";
-        $from .= ",user user_$field";
+        $from = "FROM user user_$field, " . substr ($from, 5);
         $where .= " AND user_$field.user_id=".ARTIFACT.".$field ";
       }
     else
@@ -824,8 +824,7 @@ if ($history_search)
       }
     else
       {
-        $from = 'FROM (' . substr($from, 5)
-          .') LEFT JOIN '.ARTIFACT.'_history ON (('.ARTIFACT
+        $from .= ' LEFT JOIN '.ARTIFACT.'_history ON (('.ARTIFACT
           .'_history.bug_id = '.ARTIFACT.'.bug_id ) AND ('.ARTIFACT
           .'_history.date >= ?) ';
         $from_params[] = $unix_history_date;
@@ -837,7 +836,7 @@ if ($history_search)
         else
           $from .= ') ';
         $where .= ' AND '.ARTIFACT.'_history.bug_id IS NULL';
-    }
+      }
   }
 
 /* ==================================================
