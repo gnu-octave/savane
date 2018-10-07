@@ -273,7 +273,7 @@ function html_feedback($bottom)
   if ($GLOBALS['ffeedback'] && !$GLOBALS['feedback'])
     {
       print '<div id="feedback'.$suffix.'" class="feedbackerror" '.
-            $script_hide.'><span class="feedbackerrortitle"><img src="'.
+            $class_hide.'><span class="feedbackerrortitle"><img src="'.
             $GLOBALS['sys_home'].'images/'.SV_THEME.
             '.theme/bool/wrong.png" class="feedbackimage" alt="" /> '.
             _("Error:").'</span><br/>'.$GLOBALS['ffeedback']."</div>\n";
@@ -282,8 +282,8 @@ function html_feedback($bottom)
   # Errors and success.
   if ($GLOBALS['ffeedback'] && $GLOBALS['feedback'])
     {
-      print '<div id="feedback'.$suffix.'" class="feedbackerrorandsuccess" '.
-            $script_hide.'><span class="feedbackerrorandsuccesstitle">'.
+      print '<div id="feedback'.$suffix.'" class="feedbackerrorandsuccess '.
+            $class_hide.'"><span class="feedbackerrorandsuccesstitle">'.
             '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.
             '.theme/bool/wrong.png" class="feedbackimage" alt="" /> '.
             _("Some Errors:").'</span>'.$GLOBALS['feedback'].' '.
