@@ -1,26 +1,26 @@
 <?php
 # Check your configuration against recommended values
-# 
+#
 # Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007 Sylvain Beucler
 # Copyright (C) 2018 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-function return_bytes($val) 
+function return_bytes($val)
 {
   $val = trim($val);
   $last = strtolower($val{strlen($val)-1});
@@ -53,11 +53,11 @@ print "<body>\n";
 
 print "<h1>Basic PHP pre-tests for Savane installation</h1>\n";
 if (empty($inside_siteadmin))
-{
-  print "<p>This page should help you to check whether your installation is properly configured. Once your installation is running, you should remove this file or restrict its access, since it could give details about your setup to anybody.</p>";
-}
- 
-#==============================================================================
+  print "<p>This page should help you to check whether your
+installation is properly configured. Once your installation is running,
+you should remove this file or restrict its access, since it could give
+details about your setup to anybody.</p>\n";
+
 print "<h2>Base PHP configuration</h2>\n";
 
 # cf. http://php.net/manual/en/ini.php
@@ -138,10 +138,14 @@ if ($unset)
 print "<h2>PHP functions</h2>\n";
 
 $phpfunctions = array (
-	'mysql_connect' => 'You must install/configure php-mysql ! [REQUIRED]',
-	'gettext' => 'You should install/configure php with gettext support ! [RECOMMENDED]',
-	'ctype_digit' => 'You must have a PHP version supporting ctype (--enable-ctype) ! [REQUIRED]',
-	'pam_auth' => 'You must have a PHP version supporting pam_auth only if you set up authentification via PAM (kerberos, AFS, etc)',  
+        'mysql_connect' => 'You must install/configure php-mysql ! [REQUIRED]',
+        'gettext' => 'You should install/configure php with gettext support '
+                         . '! [RECOMMENDED]',
+        'ctype_digit' => 'You must have a PHP version supporting ctype '
+                         . '(--enable-ctype) ! [REQUIRED]',
+        'pam_auth' => 'You must have a PHP version supporting pam_auth '
+                      . 'only if you set up authentification via '
+                      . 'PAM (kerberos, AFS, etc)',
 );
 
 foreach ( $phpfunctions as $func => $comment ) {
@@ -158,34 +162,36 @@ print "<h2>Apache environment vars</h2>\n";
 
 $configfile = '/etc/savane/';
 
-if ( getenv('SAVANE_CONF') ) {
-	$configfile = getenv('SAVANE_CONF');
-	print "SAVANE_CONF configured to ".$configfile."<br />\n";
-} elseif ( getenv('SV_LOCAL_INC_PREFIX') ) {
-	$configfile = getenv('SV_LOCAL_INC_PREFIX');
-	print "SV_LOCAL_INC_PREFIX configured to ".$configfile."<br />\n";
-} else {
-	print "SAVANE_CONF or SV_LOCAL_INC_PREFIX are not set, falling back to default <strong>".$configfile."</strong>) <br />\n";
-}
-# add a trailing slash
-if (!ereg('/$', $configfile))
+if (getenv('SAVANE_CONF'))
+  {
+    $configfile = getenv('SAVANE_CONF');
+    print "SAVANE_CONF configured to ".$configfile."<br />\n";
+  }
+elseif (getenv('SV_LOCAL_INC_PREFIX'))
+  {
+    $configfile = getenv('SV_LOCAL_INC_PREFIX');
+    print "SV_LOCAL_INC_PREFIX configured to ".$configfile."<br />\n";
+  }
+else
+  print "SAVANE_CONF or SV_LOCAL_INC_PREFIX are not set, "
+        . "falling back to default <strong>".$configfile."</strong>) <br />\n";
+
+# Add a trailing slash.
+if (!preg_match ('#/$#', $configfile))
   $configfile .= '/';
 
 $configfile .= '.savane.conf.php';
 
-if (is_readable($configfile)) {
-   print "File <strong>$configfile</strong> exists and is readable.";
-} else {
-   print "File <strong>$configfile</strong> does not exist or is not readable!";
-}
+if (is_readable ($configfile))
+  print "File <strong>$configfile</strong> exists and is readable.";
+else
+  print "File <strong>$configfile</strong> does not exist or is not readable!";
 
-#==============================================================================
 print "<h2>Savane configuration:</h2>\n";
 
-if (!is_readable($configfile))
-{
-  print "Since $configfile does not exist or is not readable, this part cannot be checked.";
-}
+if (!is_readable ($configfile))
+  print "Since $configfile does not exist or is not readable, "
+        . "this part cannot be checked.";
 else
 {
   include $configfile;
@@ -220,7 +226,7 @@ else
     // Is set
     if ($tag == "sys_dbpasswd")
       $value = "**************";
-    
+
     printf ("<tr><td>%s</td><td>%s</td></tr>\n", $tag, htmlentities($value));
   }
 

@@ -2306,7 +2306,7 @@ This item URL is:";
       $more_addr_arr = explode(',',$more_addresses);
       while (list(,$maddr) = each($more_addr_arr))
         {
-          $maddr = ereg_replace(" ","", $maddr);
+          $maddr = str_replace (" ", "", $maddr);
           if (validate_email($maddr))
             $repl_addresses .= ($repl_addresses ? ',':'').$maddr;
           else

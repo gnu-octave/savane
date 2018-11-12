@@ -130,12 +130,12 @@ class Group extends Error
   # (all takes an argument)
 
   function getTypeUrl($artifact)
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
+    { return str_replace ("%PROJECT", $this->getUnixName(),
 			  $this->type_data_array['url_'.$artifact]);
     }
 
   function getTypeDir($artifact)
-    { return ereg_replace("%PROJECT", $this->getUnixName(),
+    { return str_replace ("%PROJECT", $this->getUnixName(),
 			  $this->type_data_array['dir_'.$artifact]);
     }
 

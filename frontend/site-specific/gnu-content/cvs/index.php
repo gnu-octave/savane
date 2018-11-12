@@ -120,7 +120,7 @@ if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
           . "@cvs."
           . $project->getTypeBaseHost()
           . ":"
-          . ereg_replace('/$', "", $project->getTypeDir("homepage"))
+          . preg_replace ('#/$#', "", $project->getTypeDir ("homepage"))
           . " co "
           . $project->getUnixName()
           . "</pre></p>\n";

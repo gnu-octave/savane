@@ -251,7 +251,7 @@ function session_cookie($name, $value, $cookie_for_a_year=0, $secure=0)
   # accepted (eg 'localhost'). See explanation at the top of this
   # file).
   $domain = $GLOBALS['sys_default_domain'];
-  if (!eregi('[a-z0-9-]\.[a-z0-9-]', $domain))
+  if (!preg_match ('/[a-z0-9-]\.[a-z0-9-]/i', $domain))
     $domain = '';
 
   # Remove the port from the domain name, this is not supported in
@@ -272,7 +272,7 @@ function session_delete_cookie($n)
   $path = $GLOBALS['sys_home'];
   # Specify domain? - cf. session_cookie ^^^.
   $domain = $GLOBALS['sys_default_domain'];
-  if (!eregi('[a-z0-9-]\.[a-z0-9-]', $domain))
+  if (!preg_match ('/[a-z0-9-]\.[a-z0-9-]/i', $domain))
       $domain = '';
   setcookie($n, '', $expiration, $path, $domain);
 }

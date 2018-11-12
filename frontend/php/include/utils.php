@@ -61,7 +61,7 @@ information from file '%s', please contact administrators"),
 # Make sure that to avoid malicious file paths.
 function utils_check_path ($path)
 {
-  if (eregi(".*\.\.\/.*", $path))
+  if (strpos ($path, "../") !== FALSE)
     {
       exit_error(_('Error'),
 # TRANSLATORS: the argument is file path.
@@ -519,8 +519,8 @@ function utils_unconvert_htmlspecialchars($string)
 
 function utils_remove_htmlheader($string)
 {
-  $string = eregi_replace(
-    '(^.*<html[^>]*>.*<body[^>]*>)|(</body[^>]*>.*</html[^>]*>.*$)', '',
+  $string = preg_replace (
+    '#(^.*<html[^>]*>.*<body[^>]*>)|(</body[^>]*>.*</html[^>]*>.*$)#i', '',
     $string);
   return $string;
 }
@@ -869,7 +869,7 @@ function utils_normalize_email ($address)
 function utils_split_emails($addresses)
 {
   $addresses = utils_cleanup_emails($addresses);
-  $addresses = ereg_replace(";", ",", $addresses);
+  $addresses = str_replace (";", ",", $addresses);
   return split(',',$addresses);
 }
 
@@ -877,9 +877,9 @@ function utils_split_emails($addresses)
 function validate_email ($address)
 {
   # FIXME: this allows in domain names some characters that are not allowed
-  return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'
-               . '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.'
-               . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
+  return (preg_match (',^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'
+                      . '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.'
+                      . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$,', $address));
 }
 
 # Verification of comma separated list of email addresses.
@@ -896,7 +896,7 @@ function validate_emails ($addresses)
 
 function utils_is_valid_filename ($file)
 {
-  if (ereg("[]~`! ~@#\"$%^,&*();=|[{}<>?/]",$file))
+  if (preg_match ("/[]~`! ~@#\"$%^,&*();=|[{}<>?\/]/", $file))
     return false;
   if (strstr($file,'..'))
     return false;

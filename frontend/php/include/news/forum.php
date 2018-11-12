@@ -522,10 +522,8 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
       if ($subject)
         {
           # If this is a followup, put a RE: before it if needed.
-          if (!eregi('RE:',$subject,$test))
-            {
-              $subject ='RE: '.$subject;
-            }
+          if (!preg_match ('/RE:/i', $subject))
+            $subject ='RE: ' . $subject;
         }
       print '<center>
 <form action="'.$GLOBALS['sys_home'].'forum/forum.php" method="POST">
@@ -714,6 +712,6 @@ function recursive_delete($msg_id,$forum_id)
 # US validate forum
 function validate_forum_name ($forum_name)
 {
-  return (ereg('^[a-zA-Z0-9\-]+$',$forum_name));
+  return (preg_match ('/^[a-zA-Z0-9\-]+$/', $forum_name));
 }
 ?>

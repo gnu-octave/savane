@@ -239,12 +239,12 @@ function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
     }
 
   # Unacceptable names.
-  if (eregi("^((root)|(savane-keyrings)|(bin)|(daemon)|(adm)"
-            . "|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)"
-            . "|(uucp)|(apache)|(operator)|(invalid)|(games)"
-            . "|(mysql)|(httpd)|(nobody)|(dummy)|(opensource)"
-            . "|(web)|(www)|(cvs)|(anoncvs)|(anonymous)|(shell)"
-            . "|(ftp)|(irc)|(debian)|(ns)|(download))$",$name))
+  if (preg_match (",^((root)|(savane-keyrings)|(bin)|(daemon)|(adm)"
+                  . "|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)"
+                  . "|(uucp)|(apache)|(operator)|(invalid)|(games)"
+                  . "|(mysql)|(httpd)|(nobody)|(dummy)|(opensource)"
+                  . "|(web)|(www)|(cvs)|(anoncvs)|(anonymous)|(shell)"
+                  . "|(ftp)|(irc)|(debian)|(ns)|(download))$,i", $name))
     {
       fb(_("That name is reserved."), 1);
       return 0;
@@ -362,7 +362,7 @@ function account_groupnamevalid ($name)
         }
     }
 
-  if (eregi("_",$name))
+  if (strpos ($name, "_") !== FALSE)
     {
       fb(_("Group name cannot contain underscore for DNS reasons."),1);
       return 0;

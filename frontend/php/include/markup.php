@@ -627,7 +627,7 @@ function _markup_inline($line)
   # an url (e.g. for pointers to mailing lists). This way, the
   # @ sign doesn't get mangled in the e-mail markup code
   # below. See bug #2689 on http://gna.org/ for reference.
-  $line = eregi_replace("([a-z]+://[^<>[:space:]]+)@", "\\1&#64;", $line);
+  $line = preg_replace ("#([a-z]+://[^<>[:space:]]+)@#i", "\\1&#64;", $line);
 
   # Prepare the markup for normal links, e.g. http://test.org, by
   # surrounding them with braces []

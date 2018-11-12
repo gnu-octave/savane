@@ -429,7 +429,7 @@ administrators."), 1);
           {
             $success = false;
 
-            if (ereg("^[a-f0-9]{16}$",$confirm_hash))
+            if (preg_match ("/^[a-f0-9]{16}$/", $confirm_hash))
               {
                 $res_user = db_execute("SELECT * FROM user WHERE confirm_hash=?",
                                        array($confirm_hash));

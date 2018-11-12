@@ -214,7 +214,7 @@ function user_getrealname($user_id=0, $rfc822_compliant=0)
   $ret = user_getname($user_id, 1);
   # rfc822 requires some characters to be escaped. We usually care about this
   # compliance only in email headers.
-  if ($rfc822_compliant && ereg("\.|\,|\@|\/|\\|\||\;|\!", $ret))
+  if ($rfc822_compliant && preg_match ("#\.|\,|\@|\/|\\|\||\;|\!#", $ret))
     $ret = "\"$ret\"";
   return $ret;
 }

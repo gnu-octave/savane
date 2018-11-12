@@ -433,13 +433,13 @@ function search_keywords_in_fields($keywords, $fields, $and_or='OR')
           $thisfield_sql_bits[] = "$field LIKE ?";
           if (preg_match('/_id$/', $field))
             {
-              // strip "#" from, eg, "#153"
-              $thisfield_sql_params[] = '%'.ereg_replace('#','',$keyword).'%';
+              # Strip "#" from, eg, "#153".
+              $thisfield_sql_params[] = '%'
+                                        . str_replace ('#', '', $keyword)
+                                        . '%';
             }
           else
-            {
-              $thisfield_sql_params[] = '%'.$keyword.'%';
-            }
+            $thisfield_sql_params[] = '%'.$keyword.'%';
         }
       $allfields_sql_bits[] = '(' . implode(" $and_or ", $thisfield_sql_bits)
                               . ')';

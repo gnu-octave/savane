@@ -1,10 +1,11 @@
 <?php # -*- PHP -*-
-# User homepage
+# User homepage.
 # 
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2000-2003 Free Software Foundation
 # Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2007  Sylvain Beucler
+# Copyright (C) 2007 Sylvain Beucler
+# Copyright (C) 2018 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -26,20 +27,13 @@ define('CONTEXT', 'people');
 require_once('include/init.php');
 require_once('include/sendmail.php');
 
-# Extract the user name
-$res_user = user_get_result_set_from_unix(
-              ereg_replace("\?.*", "", basename($_SERVER['REQUEST_URI'])));
+# Extract user's name.
+$res_user = user_get_result_set_from_unix (
+              preg_replace ("/\?.*/", "", basename($_SERVER['REQUEST_URI'])));
 
-if (db_numrows($res_user) < 1) {
+if (db_numrows($res_user) < 1)
+  exit_error (_("Invalid User"), _("That user does not exist."));
 
-	exit_error(_("Invalid User"),_("That user does not exist."));
-
-} else {
-
-	# set up the group_id
-	$user_id = db_result($res_user,0,'user_id');
-
-	# now show the project page
-	include ('include/user_home.php');
-}
+$user_id = db_result ($res_user, 0, 'user_id');
+include ('include/user_home.php');
 ?>

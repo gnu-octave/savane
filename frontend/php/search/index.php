@@ -4,7 +4,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017,2018 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -116,13 +116,13 @@ elseif ($type_of_search == "people")
         print "\n";
 
         for ( $i = 0; $i < $rows; $i++ )
-	  {
-	    $namequery = eregi_replace('[^a-z]+', '+', db_result($result,$i,
-                                                               'realname'));
-	    print "<tr class=\"". html_get_alt_row_color($i) ."\"><td>"
-	      .utils_user_link(db_result($result, $i, 'user_name'))
-	      . "</td>\n<td>".db_result($result,$i,'realname')."</td>\n</tr>\n";
-	  }
+          {
+            $namequery = preg_replace ('/[^a-z]+/i', '+',
+                                       db_result ($result, $i, 'realname'));
+            print "<tr class=\"". html_get_alt_row_color($i) ."\"><td>"
+              .utils_user_link(db_result($result, $i, 'user_name'))
+              . "</td>\n<td>".db_result($result,$i,'realname')."</td>\n</tr>\n";
+          }
         print "</table>\n";
       }
   }

@@ -2,7 +2,7 @@
 # Every mails sent should be using functions listed here.
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
 #
@@ -49,7 +49,7 @@ function sendmail_mail ($from,
   # Make also sure we havent got excessive slashes escaping.
   $message = wordwrap($message, 78);
 
-  $to = ereg_replace(";", ",", $to);
+  $to = str_replace (";", ",", $to);
 
   # Transform $to in an ordered list, without duplicates
   # (remove blankspaces).
@@ -59,7 +59,7 @@ function sendmail_mail ($from,
   # (check on $to necessary because explode returns a one element array in case
   # iet has to explode an empty string and this screws the code later on).
   if ($to != "")
-    $to = array_unique(explode(",", ereg_replace(" ", "", $to)));
+    $to = array_unique(explode(",", str_replace (" ", "", $to)));
   else
     $to = array();
 
@@ -158,8 +158,9 @@ function sendmail_mail ($from,
   $exclude = array();
   if ($exclude_list)
     {
-      $exclude_list = ereg_replace(";", ",", $exclude_list);
-      $exclude = array_unique(explode(",", ereg_replace(" ", "", $exclude_list)));
+      $exclude_list = str_replace (";", ",", $exclude_list);
+      $exclude = array_unique(explode(",", str_replace (" ", "",
+                                                        $exclude_list)));
     }
 
   while (list(,$v) = each($exclude))
@@ -452,7 +453,7 @@ function sendmail_encode_recipients ($recipients)
 function sendmail_encode_header_content ($header, $charset="UTF-8")
 {
   $withquotes = FALSE;
-  if (ereg('"', $header))
+  if (strpos ($header, '"') !== FALSE)
     {
       # Quotes found, we each quoted part will be a string to encode.
       $words = split('"', $header);
@@ -516,11 +517,11 @@ you can think of.")."</p>\n";
 function sendmail_format_subject_line ($subject_line, $savane_project="",
                                        $savane_tracker="", $savane_item_id="")
 {
-  $subject_line = ereg_replace("%SERVER", $GLOBALS['sys_default_domain'],
+  $subject_line = str_replace ("%SERVER", $GLOBALS['sys_default_domain'],
                                $subject_line);
-  $subject_line = ereg_replace("%PROJECT", $savane_project, $subject_line);
-  $subject_line = ereg_replace("%TRACKER", $savane_tracker, $subject_line);
-  return ereg_replace("%ITEM", "#".$savane_item_id, $subject_line);
+  $subject_line = str_replace ("%PROJECT", $savane_project, $subject_line);
+  $subject_line = str_replace ("%TRACKER", $savane_tracker, $subject_line);
+  return str_replace ("%ITEM", "#".$savane_item_id, $subject_line);
 }
 
 function sendmail_create_msgid ()

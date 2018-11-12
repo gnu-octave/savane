@@ -187,7 +187,7 @@ class Layout extends Error
             || "my" == $context
             || "myitems" == $context
             || "mygroups" == $context
-            || ereg("^a", $context))
+            || preg_match ("/^a/", $context))
           {
             header("Expires: Thu, 22 Dec 1977 15:00:00 GMT");
             dbg("Expires is set.");
