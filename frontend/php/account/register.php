@@ -248,17 +248,14 @@ else
                                                          'UTF-8'));
     print '<p><span class="preinput">'._("Login Name:")
           .'</span>'."<br />\n".'&nbsp;&nbsp;';
-    print form_input("text", "form_loginname",
-                     htmlentities($form_loginname, ENT_QUOTES , 'UTF-8'));
+    print form_input("text", "form_loginname", $form_loginname);
     print '<p><span class="preinput">'._("Password / passphrase:")
            ." ".account_password_help().'</span><br />&nbsp;&nbsp;';
-    print form_input("password", "form_pw", htmlentities($form_pw, ENT_QUOTES,
-                                                         'UTF-8'));
+    print form_input("password", "form_pw", $form_pw);
     print "</p>\n";
     print '<p><span class="preinput">'._("Re-type Password:")
           .'</span><br />&nbsp;&nbsp;';
-    print form_input("password", "form_pw2",
-                     htmlentities($form_pw2, ENT_QUOTES , 'UTF-8'));
+    print form_input("password", "form_pw2", $form_pw2);
     print "</p>\n";
     print '<p><span class="preinput">'._("Real Name:").'</span><br />&nbsp;&nbsp;';
     print '<input size="30" type="text" name="form_realname" value="'
