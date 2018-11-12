@@ -386,8 +386,8 @@ class GPLQuickForm
   public function exportValues()
   {
     $retval = array();
-    foreach ($this->elements as $name => $object)
-      $retval[$name] = $object->getValue();
+    foreach ($this->elements as $name => $obj)
+      $retval[$name] = $obj->getValue();
     return $retval;
   }
 
