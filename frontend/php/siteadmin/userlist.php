@@ -38,7 +38,7 @@ extract(sane_import('request', array('search')));
 # Administrative functions.
 if ($action=='delete')
   {
-    db_execute("UPDATE user SET status='D' WHERE user_id=?", array($user_id));
+    user_delete ($user_id);
 # TRANSLATORS: this message is used as status in contect of
 # 'Status updated to DELETE for user %s'.
     $out = no_i18n("DELETE");
