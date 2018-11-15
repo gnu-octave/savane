@@ -1,22 +1,22 @@
 <?php
 # List users.
-# 
+#
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2017, 2018 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -32,36 +32,35 @@ require_once('../include/init.php');
 site_admin_header(array('title'=>no_i18n("User List"),'context'=>'admuser'));
 
 extract(sane_import('get', array('user_name_search', 'offset', 'text_search',
-				 'action', 'user_id')));
+                                 'action', 'user_id')));
 extract(sane_import('request', array('search')));
 
-# Administrative functions
-if ($action=='delete') 
-{
-  db_execute("UPDATE user SET status='D' WHERE user_id=?", array($user_id));
+# Administrative functions.
+if ($action=='delete')
+  {
+    db_execute("UPDATE user SET status='D' WHERE user_id=?", array($user_id));
 # TRANSLATORS: this message is used as status in contect of
-# 'Status updated to DELETE for user %s'
-  $out = no_i18n("DELETE");
-} 
-else if ($action=='activate') 
-{
-  
-  db_execute("UPDATE user SET status='A' WHERE user_id=?", array($user_id));
+# 'Status updated to DELETE for user %s'.
+    $out = no_i18n("DELETE");
+  }
+elseif ($action=='activate')
+  {
+    db_execute("UPDATE user SET status='A' WHERE user_id=?", array($user_id));
 # TRANSLATORS: this message is used as status in contect of
-# 'Status updated to ACTIVE for user %s'
-  $out = no_i18n("ACTIVE");
-} 
-else if ($action=='suspend') 
-{
-  db_execute("UPDATE user SET status='S' WHERE user_id=?", array($user_id));
+# 'Status updated to ACTIVE for user %s'.
+    $out = no_i18n("ACTIVE");
+  }
+elseif ($action=='suspend')
+  {
+    db_execute("UPDATE user SET status='S' WHERE user_id=?", array($user_id));
 # TRANSLATORS: this message is used as status in contect of
-# 'Status updated to SUSPEND for user %s'
-  $out = no_i18n("SUSPEND");
-}
+# 'Status updated to SUSPEND for user %s'.
+    $out = no_i18n("SUSPEND");
+  }
 else
   $action = false;
 
-if ($action) 
+if ($action)
 {
   print '<h2>'.no_i18n("Action done").' :</h2>';
   print '<p>';
@@ -74,7 +73,7 @@ if ($action)
 }
 
 
-# Search users 
+# Search users
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N',
                    'O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1',
                    '2','3','4','5','6','7','8','9');
@@ -104,24 +103,24 @@ print '
 
 
 $MAX_ROW=100;
-if (!$offset) 
+if (!$offset)
 { $offset = 0; }
 else
 { $offset = intval($offset); }
 
-if (!$group_id) 
+if (!$group_id)
 {
 # TRANSLATORS: this message is used in the context
 # of 'User List for All Groups'.
   $group_listed = no_i18n("All Groups");
-  
-  if ($user_name_search) 
+
+  if ($user_name_search)
     {
       $result = db_execute("SELECT user_name,user_id,status,people_view_skills "
                            ."FROM user WHERE user_name LIKE ? "
                            ."ORDER BY user_name LIMIT ?,?",
                            array($user_name_search.'%', $offset, $MAX_ROW+1));
-    } 
+    }
   elseif ($text_search)
     $result = db_execute("SELECT user_name,user_id,status,people_view_skills
                           FROM user WHERE user_name LIKE ? OR user_id LIKE ?
@@ -130,27 +129,27 @@ if (!$group_id)
                           array($text_search, $text_search,
                                 $text_search, $text_search,
                                 $offset, $MAX_ROW+1));
-  else 
+  else
     {
       $result = db_execute("SELECT user_name,user_id,status,people_view_skills "
                            ."FROM user ORDER BY user_name LIMIT ?,?",
                            array($offset, $MAX_ROW+1));
     }
-  
+
 }
 else
 {
   # Show list for one group
   $group_listed = group_getname($group_id);
-   
+
   $result = db_execute("SELECT user.user_id AS user_id, user.user_name "
                      . "AS user_name, user.status AS status, "
                      . "user.people_view_skills AS people_view_skills "
-		     . "FROM user,user_group "
-		     . "WHERE user.user_id=user_group.user_id AND "
-		     . "user_group.group_id=? ORDER BY user.user_name LIMIT ?,?",
-		       array($group_id, $offset, $MAX_ROW+1));
-  
+                     . "FROM user,user_group "
+                     . "WHERE user.user_id=user_group.user_id AND "
+                     . "user_group.group_id=? ORDER BY user.user_name LIMIT ?,?",
+                       array($group_id, $offset, $MAX_ROW+1));
+
 }
 
 # TRANSLATORS: the argument is group name or 'All Groups'.
@@ -169,20 +168,20 @@ $title_arr[]=no_i18n("Action");
 print html_build_list_table_top ($title_arr);
 
 $inc = 0;
-if ($rows_returned < 1) 
+if ($rows_returned < 1)
 {
   print '<tr class="'.utils_get_alt_row_color($inc++).'"><td colspan="7">';
   print no_i18n("No matches");
   print '.</td></tr>
 ';
-  
-} 
-else 
+
+}
+else
 {
-  if ($rows_returned > $MAX_ROW) {
+  if ($rows_returned > $MAX_ROW)
     $rows = $MAX_ROW;
-  }
-  for ($i = 0; $i < $rows; $i++) 
+
+  for ($i = 0; $i < $rows; $i++)
     {
       $usr = db_fetch_array($result);
       print '<tr class="'.utils_get_alt_row_color($inc++).'"><td>'
@@ -190,38 +189,38 @@ else
             .$usr['user_id'].'">';
       print "$usr[user_name]</a>";
       print "</td>\n<td>\n";
-      
-      switch ($usr['status']) 
-	{
-	case 'A': print no_i18n("Active"); break;
-	case 'D': print no_i18n("Deleted"); break;
-	case 'S': print no_i18n("Suspended"); break;
-	case 'SQD': print no_i18n("Active (Squad)"); break;
-	case 'P': print no_i18n("Pending"); break;
-	default: print no_i18n("Unknown status")." : ".$usr['status']; break;
-	}
-      if ($usr['people_view_skills'] == 1 ) 
-	{
-	  print '<td><a href="'.$GLOBALS['sys_home']
+
+      switch ($usr['status'])
+        {
+        case 'A': print no_i18n("Active"); break;
+        case 'D': print no_i18n("Deleted"); break;
+        case 'S': print no_i18n("Suspended"); break;
+        case 'SQD': print no_i18n("Active (Squad)"); break;
+        case 'P': print no_i18n("Pending"); break;
+        default: print no_i18n("Unknown status")." : ".$usr['status']; break;
+        }
+      if ($usr['people_view_skills'] == 1 )
+        {
+          print '<td><a href="'.$GLOBALS['sys_home']
                 .'people/resume.php?user_id='.$usr['user_id'].'">['.no_i18n("View")
                 .']</a></td>
 ';
-	} 
-      else 
-	{
-	  print '<td>('.no_i18n("Private").')</td>
+        }
+      else
+        {
+          print '<td>('.no_i18n("Private").')</td>
 ';
-	}
+        }
       print '<td>';
       if ($usr['status'] != 'D')
-	{ print '<a href="?action=delete&user_id='.$usr['user_id'].'">['
-                .no_i18n("Delete").']</a> '; }
-      if ($usr['status'] != 'S') 
-	{ print '<a href="?action=suspend&user_id='.$usr['user_id'].'">['
-                .no_i18n("Suspend").']</a> '; }
+        print '<a href="?action=delete&user_id='.$usr['user_id'].'">['
+                .no_i18n("Delete").']</a> ';
+      if ($usr['status'] != 'S')
+        print '<a href="?action=suspend&user_id='.$usr['user_id'].'">['
+                .no_i18n("Suspend").']</a> ';
       if ($usr['status'] != 'A' && $usr['status'] != 'SQD')
-	{ print '<a href="?action=activate&user_id='.$usr['user_id'].'">['
-                .no_i18n("Activate").']</a> '; }
+        print '<a href="?action=activate&user_id='.$usr['user_id'].'">['
+                .no_i18n("Activate").']</a> ';
       print "</td>\n</tr>\n";
     }
 }
