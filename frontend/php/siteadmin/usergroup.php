@@ -117,7 +117,7 @@ while ($row_cat = db_fetch_array($res_cat))
          . group_getname($row_cat['group_id']) . "</strong> "
          . "<a href=\"usergroup.php?user_id="
          . htmlspecialchars($user_id)."&action=remove_user_from_group&group_id="
-         . htmlspecialchars($row_cat[group_id])."\">"
+         . htmlspecialchars($row_cat['group_id'])."\">"
          . "[".no_i18n('Remove User from Group')."]</a>");
     print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
