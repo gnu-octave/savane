@@ -378,7 +378,7 @@ while ($field = trackers_list_all_fields())
 # Force the selection of priority because it is always shown as color code
 # Force the selection of privacy, we always want to be sure that no private
 # item title is provided to everybody.
-$full_field_list = $col_list = $lbl_list = array();
+$full_field_list = $col_list = $width_list = $lbl_list = array();
 $select_count = 'SELECT count(DISTINCT '.ARTIFACT.'.bug_id) AS count ';
 $select = 'SELECT DISTINCT '.ARTIFACT.'.group_id,'.ARTIFACT.'.priority,'
   .ARTIFACT.'.privacy,'.ARTIFACT.'.status_id,'.ARTIFACT.'.submitted_by ';
@@ -857,11 +857,11 @@ $result = db_execute($sql, array_merge($from_params, $where_params,
 $result_array = array();
 while ($thisarray = db_fetch_array($result))
   {
-  # Get the id
+  # Get the id.
     $thisitem_id = $thisarray['bug_id'];
 
   # Do not show private item, apart to technician level members
-  # and submitter
+  # and submitter.
     if ($thisarray['privacy'] == '2'
         && !member_check_private(0,$group_id)
         && $thisarray['submitted_by'] != user_getname())
