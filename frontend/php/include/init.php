@@ -25,6 +25,10 @@
 header('Content-Type: text/html; charset=utf-8');
 /* Disallow embedding in any frames.  */
 header('X-Frame-Options: SAMEORIGIN');
+/* Declare more restrictions on how browsers may assemble pages.  */
+header("Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; "
+       ."frame-src https://static.gnu.org/nosvn/banners/2018fundraiser/ "
+       ."img-src 'self' static.fsf.org");
 # Database abstraction.
 require_once(dirname(__FILE__).'/database.php');
 # Security library.
