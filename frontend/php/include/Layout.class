@@ -290,7 +290,6 @@ class Layout extends Error
     print '
 <body>
 <div class="realbody">
-<iframe src="https://static.gnu.org/nosvn/banners/2018fundraiser/" width="100%" height="100%" scrolling="no" style="overflow: hidden; border: 0 none;"></iframe>
 ';
     sitemenu($params);
 
