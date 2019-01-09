@@ -4,7 +4,7 @@
 # Copyright (C) 2016 Karl Berry (disable languages)
 # Copyright (C) 2003-2006 Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -48,8 +48,8 @@ function register_language ($code, $locale, $name = "")
 #register_language ("de", "de_DE", "Deutsch");
 register_language ("en", "en_US", "English");
 #register_language ("en-gb", "en_GB");
-#register_language ("es", "es_ES", "español");
-#register_language ("fr", "fr_FR", "français");
+register_language ("es", "es_ES", "español");
+register_language ("fr", "fr_FR", "français");
 #register_language ("fr-fr", "fr_FR");
 #register_language ("it", "it_IT", "italiano");
 #register_language ("ja", "ja_JP", "日本語");
@@ -61,7 +61,8 @@ register_language ("en", "en_US", "English");
 register_language ("ru", "ru_RU", "русский");
 #register_language ("sv", "sv_SE", "svenska");
 #register_language ("sv-se", "sv_SE");
-
+#register_language ("zh", "zh_CN", "简体中文");
+#register_language ("zh-cn", "zh_CN");
 
 # Get user's preferred languages from UA headers.
 $accept_language = strtolower (str_replace (array (' ', '	'), '',
