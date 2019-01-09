@@ -1,3 +1,53 @@
+2019-01-09 3.4
+
+[CONFIGURATION]
+
+* Tarball name is fixed: savannah -> savane.
+
+[I18N]
+
+* Update translations from TranslationProject.
+
+* Enable French, Russian and Spanish translations.
+
+* Make context_icon alt attribute localizable.
+
+[FRONTEND]
+
+* Improve page handling user's GPG keys.  Add a means to test submitted
+  keys.
+
+* Multiple cosmetic HTML improvements.
+
+* Show shorter dates in trackers when possible; render full dates
+  with ISO format.
+
+* Fix HTML errors found with HTML_CodeSniffer.
+
+* Fix handling user input per OBB-636261 and OBB-647866.
+
+* Use HTTPS URLs in email notifications.
+
+* Drop logging user's IPs.
+
+* Disallow emgedding in frames; move JavaScript and styles to separate
+  files; add a CSP header.
+
+* Fix a few bugs.
+
+* Make the code PHP 7.0-compatible:
+
+** Avoid reserved names.
+
+** Eliminate egreg*.
+
+* Use user_delete to delete users instead of settings their status
+  to 'D'.
+
+[BACKEND]
+
+* sv_membersh: prevent user from breaking out of scp-restricted shell
+
 2018-05-20 3.3
 
 [I18N]
