@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -136,6 +136,17 @@ if (db_result($res_user,0,'status') == "D" && user_is_super_user())
         <td>'
         ._("Note:").' </td>
         <td><strong>'._("The account was deleted").'</strong></td>
+</tr>';
+# We don't translate the text of these links because it's for sysadmins only.
+if (user_is_super_user())
+  print '
+<tr valign="top">
+         <td><a href="/siteadmin/usergroup.php?user_id='
+     .$user_id.'">[Edit User]</a></td>
+         </td>
+         <td>'
+     .'<a href="/siteadmin/userlist.php?action=delete&user_id='
+     .$user_id.'">[Delete User]</a></td>
 </tr>';
 print '
 <tr valign="top">
