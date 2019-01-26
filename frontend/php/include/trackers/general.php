@@ -1193,7 +1193,8 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
         {
           $comment .= "file #$file_id, ";
           $changes['attach'][] = array('name' => $file['name'],
-                                       'size' => $file['size']);
+                                       'size' => $file['size'],
+                                       'id' => $file_id);
         }
     }
 

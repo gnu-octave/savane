@@ -5,7 +5,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017-2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -607,9 +607,12 @@ function format_item_changes ($changes,$item_id,$group_id)
       
       foreach ($changes['attach'] as $file)
 	{ 
-	  $out_att .= sprintf("File name: %-30s Size:%d KB\n",
+	  $out_att .= sprintf("File name: %-30s Size:%d KB\n"
+                             ."    <%s>\n\n",
 			      $file['name'],
-			      intval($file['size']/1024));
+			      intval($file['size']/1024),
+                              "https://".$GLOBALS['sys_default_domain']
+                              .'/file/'.$file['name'].'?file_id='.$file['id']);
 
 	}
       unset($changes['attach']);
