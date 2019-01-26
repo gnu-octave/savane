@@ -26,14 +26,14 @@ function format_item_details ($item_id, $group_id, $ascii=false,
                               $item_assigned_to=false,$quoted=false,
                               $new_comment=false)
 {
-  ## ASCII must not be translated
-  #  Format the details rows from trackers_history
+  # ASCII must not be translated.
+  #  Format the details rows from trackers_history.
   global $sys_datefmt;
 
-  ## Obtain data.
+  # Obtain data.
   $data = array();
   $i = 0;
-  
+
   # Get original submission
   $result = db_execute("SELECT user.user_id,user.user_name,user.realname,"
                        .ARTIFACT.".date,".ARTIFACT.".details,".ARTIFACT
@@ -46,13 +46,13 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   $data[$i]['user_name'] = $entry['user_name'];
   $data[$i]['realname'] = $entry['realname'];
   $data[$i]['date'] = $entry['date'];
-  $data[$i]['content'] = $entry['details'];  
-  $data[$i]['comment_internal_id'] = '0';  
-  $data[$i]['spamscore'] = $entry['spamscore'];  
+  $data[$i]['content'] = $entry['details'];
+  $data[$i]['comment_internal_id'] = '0';
+  $data[$i]['spamscore'] = $entry['spamscore'];
 
   # Get comments
-  # (the spams are included to avoid the comment #nnn refs to change, that 
-  # could be puzzling to users)
+  # (the spam is included to avoid the comment #nnn refs to change, that
+  # could be puzzling to users).
   $result = trackers_data_get_followups($item_id);
   $svn_entries_exist = false;
   $max_entries = 0;
@@ -70,18 +70,18 @@ function format_item_details ($item_id, $group_id, $ascii=false,
 	  $data[$i]['content'] = $entry['old_value'];
           if ($data[$i]['comment_type'] == 'None')
             $data[$i]['content'] = trackers_decode_value ($entry['old_value']);
-	  $data[$i]['comment_internal_id'] = $entry['bug_history_id']; 
+	  $data[$i]['comment_internal_id'] = $entry['bug_history_id'];
 	  $hist_id = $entry['bug_history_id'] + 1;
 
-	  $data[$i]['spamscore'] = $entry['spamscore'];   
+	  $data[$i]['spamscore'] = $entry['spamscore'];
 	  if ($entry['spamscore'] < 5)
 	    {
-	      # count the entry only if not a spam
+	      # Count the entry only if not a spam.
 	      $max_entries++;
 	    }
 
 	  # Special case: if the field_name is svncommit, set the comment_type
-	  # to remind that is not an usual comment
+	  # to remind that is not an usual comment.
 	  if ($entry['field_name'] == 'svncommit')
 	    {
 	      $data[$i]['comment_type'] = "SVN";
@@ -106,28 +106,26 @@ function format_item_details ($item_id, $group_id, $ascii=false,
       $data[$i]['spamscore'] = '0';
     }
 
-  # Not in text output (mail notif) and if there are svn commits, 
-  # find out if there is a relevant link to add
+  # Not in text output (mail notif) and if there are svn commits,
+  # find out if there is a relevant link to add.
   unset($svn_link);
   if (!$ascii && $svn_entries_exist)
     {
       global $project;
       if ($project->getUrl("svn_viewcvs") != 'http://'
 	  && $project->getUrl("svn_viewcvs") != '')
-	{
-	  $svn_link .= $project->getUrl("svn_viewcvs");
-	}
-    }  
+        $svn_link .= $project->getUrl("svn_viewcvs");
+    }
 
-  # Sort entries according to user config
-  $user_pref_fromoldertonewer = 
+  # Sort entries according to user config.
+  $user_pref_fromoldertonewer =
     user_get_preference("reverse_comments_order");
   if (!$ascii && $user_pref_fromoldertonewer)
-    { ksort($data); }
+    ksort($data);
   else
-    { krsort($data); }
+    krsort($data);
 
-  # No followup comment -> return now
+  # No followup comment -> return now.
   $out = '';
   if (!count($data))
     {
@@ -137,11 +135,9 @@ function format_item_details ($item_id, $group_id, $ascii=false,
     }
 
   # Only one comment: it is the original submission, skip it in ascii mode
-  # because it will be already included elsewhere
+  # because it will be already included elsewhere.
   if (count($data) < 2 && $ascii)
-    {
-      return;
-    }
+    return;
 
   # Header first
   if ($ascii)
@@ -157,10 +153,10 @@ Follow-up Comments:\n\n";
     }
 
   # Find how to which users the item was assigned to: if it is squad, several
-  # users may be assignees
+  # users may be assignees.
   $assignee_id = user_getid($item_assigned_to);
   $assignees_id = array();
-  $assignees_id[$assignee_id] = true;  
+  $assignees_id[$assignee_id] = true;
   if (member_check_squad($assignee_id, $group_id))
     {
       $result_assignee_squad = db_execute("SELECT user_id FROM user_squad
@@ -173,62 +169,48 @@ Follow-up Comments:\n\n";
     }
 
   # Provide a shortcut to the original submission, if more than 5 comments
-  # and not in reversed order
+  # and not in reversed order.
   if (!$ascii && empty($_REQUEST['printer'])
       && $max_entries > 5 && !$user_pref_fromoldertonewer)
     {
       $jumpto_text = _("Jump to the original submission");
       if (ARTIFACT == "cookbook")
-	{ $jumpto_text = _("Jump to the recipe preview"); }
+	$jumpto_text = _("Jump to the recipe preview");
+
       print '<p class="center"><span class="xsmall">'
 .'(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/arrows/bottom.png" class="icon" alt="'.'" /> '
 .$jumpto_text."</a>)</span></p>\n";
     }
 
-  # Loop throuh the follow-up comments and format them
+  # Loop throuh the follow-up comments and format them.
   reset($data);
   $i = 0;
   $j = 0;
   $previous = false;
   $is_admin = member_check(0, $group_id, 'A');
-  foreach ($data as $entry) 
+  foreach ($data as $entry)
     {
-      # Ignore if found an entry without date (should not happen)
+      # Ignore if found an entry without date (should not happen).
       if ($entry['date'] < 1)
-	{ continue; }
+	continue;
 
-      # Determine if it is a spam
+      # Determine if it is a spam.
       $is_spam = false;
       if ($entry['spamscore'] > 4)
-	{ $is_spam = true; }
-      
-      # In ascii output, always ignore spams
+	$is_spam = true;
+
+      # In ascii output, always ignore spam.
       if ($ascii && $is_spam)
-	{ continue; }
-  
-      # In html output, show spams only to project admin
-      # (note that comment #nnn may loose accurracy if a previous comment
-      # is set to spam. The only alternative option would be to count spams
-      # but that could look very awkward too, as there were seemingly holes
-      # in the comment list)
-      # FIXME: no sure about this, it may be convenient to help handling
-      # false positives to allow anyone to check -> for now, restrict to 
-      # logged in users
-      # yeupou, 2006-11-17: as we use the spamscore to delay post from 
-      # anonymous, it matters that they can still see that their stuff was
-      # posted
-      #if ($is_spam && !user_isloggedin())
-      # { continue; }
+	continue;
 
-      # Counter for background color
-      $j++;
+      $j++; # Counter for background color.
 
-      # Find out what would be this comment number
+      # Find out what would be this comment number.
       if (!$user_pref_fromoldertonewer)
-	{ $comment_number = ($max_entries-$i); }
+	$comment_number = ($max_entries-$i);
       else
-	{ $comment_number = $i; }
+	$comment_number = $i;
 
       extract(sane_import('get', array('func', 'comment_internal_id')));
       # Handle spam special cases here.
@@ -240,24 +222,24 @@ Follow-up Comments:\n\n";
             fb(_("This item has been reported to be a spam"), 1);
 
 	  if ($entry['user_id'] != 100)
-	    { $spammer_user_name = $entry['user_name'];  }
+	    $spammer_user_name = $entry['user_name'];
 	  else
-	    { $spammer_user_name = _("anonymous"); }
+	    $spammer_user_name = _("anonymous");
 
 	  # If we are in printer mode, simply skip if
 	  if (!empty($_REQUEST['printer']))
-	    { continue; }
+	    continue;
 
 	  $class = utils_get_alt_row_color($j);
 
-	  # The admin may actually want to see the incriminated item
-	  # The submitter too
-	  if (($func == "viewspam" &&
-	      $comment_internal_id == $entry['comment_internal_id']) ||
-	      ($entry['user_id'] != 100 && user_getid() == $entry['user_id']))
+	  # The admin may actually want to see the incriminated item.
+	  # The submitter too.
+	  if (($func == "viewspam"
+               && $comment_internal_id == $entry['comment_internal_id'])
+              || ($entry['user_id'] != 100 && user_getid() == $entry['user_id']))
 	    {
-	      # Should the item content, without making links, with no markup
-	      # It is only for checks purpose, nothing else
+	      # Should be item content, without making links, with no markup.
+	      # It is only for checks purpose, nothing else.
 	      $out .= "\n".'<tr class="'.$class.'">'.
 		'<td valign="top"><span class="warn">('
 ._("Why is this post is considered to be spam? Users may have reported it to be
@@ -268,7 +250,7 @@ to be run.")
 .'</span><br />
 <br />'.nl2br($entry['content'])."</td>\n"
 .'<td class="'.$class.'extra" id="spam'.$entry['comment_internal_id'].'">'."\n";
-	      
+
 	      $out .= utils_user_link($entry['user_name'],
                                       $entry['realname'], true)
                 ."<br />\n";
@@ -286,7 +268,7 @@ to be run.")
 	      $out .= "</td></tr>\n";
 	    }
 	  else
-	    {	   
+	    {
 	      $out .= "\n".'<tr class="'.$class.'extra">'
 ."<td class=\"xsmall\">&nbsp;</td>\n"
 .'<td class="xsmall"><a href="'
@@ -297,48 +279,38 @@ to be run.")
 .sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'
 ."</td></tr>\n";
 	    }
-          # Now go to the next comment.
 	  continue;
 	}
-      # Now print a normal comment
-      # Increment the comment count
+
       $i++;
-      
       $comment_type = isset($entry['comment_type']) ? $entry['comment_type']
                                                       : null;
       $is_svn = false;
       if ($comment_type == 'SVN')
-	{ $is_svn = true; }
+	$is_svn = true;
       if ($comment_type == 'None' || $comment_type == '')
-	{ $comment_type = ''; }
+	$comment_type = '';
       else
-	{ $comment_type = '['.$comment_type.']'; }
-      
+	$comment_type = '['.$comment_type.']';
+
       if ($ascii)
 	{
 	  $fmt = "\n-------------------------------------------------------\n".
 	    "Date: %-30sBy: %s\n";
 	  if ($comment_type)
-	    { $fmt .= "%s\n%s"; }
+	    $fmt .= "%s\n%s";
 	  else
-	    { $fmt .= "%s%s"; }
+	    $fmt .= "%s%s";
 	  $fmt .= "\n";
 	}
-      
-      # I wish we had sprintf argument swapping in PHP3 but
-      # we dont so do it the ugly way...
+
       if ($ascii)
 	{
           if ($entry['realname'])
-            {
-              $name = $entry['realname']." <".$entry['user_name'].">";
-            }
+            $name = $entry['realname']." <".$entry['user_name'].">";
           else
-            {
-              # must not be translated, part of mails notifs
-              $name = "Anonymous"; 
-	    }
-	  
+            $name = "Anonymous";
+
 	  $out .= sprintf($fmt,
 			  utils_format_date($entry['date']),
 			  $name,
@@ -349,29 +321,29 @@ to be run.")
       else
 	{
 	  # If comment type is special commit thing, unset it so it does
-	  # not appear in text
+	  # not appear in text.
 	  if ($is_svn)
-	    { unset($comment_type); }
+	    unset($comment_type);
 	  if ($comment_type)
 	    {
-	      # put the comment type in strong
+	      # Put the comment type in strong.
 	      $comment_type = '<strong>'.$comment_type."</strong><br />\n";
 	    }
-	  
+
 	  $icon = '';
 	  $icon_alt = '';
 	  $class = utils_get_alt_row_color($j);
 
-	  # Find out the user id of the comment author
+	  # Find out the user id of the comment author.
 	  $poster_id = $entry['user_id'];
 
-	  # Ignore user 100 (anonymous)
+	  # Ignore user 100 (anonymous).
 	  if ($poster_id != 100)
 	    {
-	      # Cosmetics if the user is assignee
+	      # Cosmetics if the user is assignee.
 	      if (array_key_exists($poster_id, $assignees_id))
 		{
-		  # Highlight the latest comment of the assignee
+		  # Highlight the latest comment of the assignee.
 		  if ($previous != 1)
 		    {
 		      $class = "boxhighlight";
@@ -386,7 +358,7 @@ to be run.")
 	      if (member_check($poster_id, $group_id, 'A'))
 		{
 		  # Project admin case: if the group is the admin group,
-		  # show the specific site admin icon
+		  # show the specific site admin icon.
 		  if ($group_id == $GLOBALS['sys_group_id'])
 		    {
 		      $icon = "site-admin";
@@ -400,72 +372,56 @@ to be run.")
 		}
 	      elseif (member_check($poster_id, $group_id))
 		{
-		  # Simple project member
+		  # Simple project member.
 		  $icon = "project-member";
 		  $icon_alt = _("Project Member");
-		}	      
-	    }		 
-	  
-	  
-          # FIXME: we should provide a javascript to enable to a simple
-	  # quote, as this will easily get broken with formatting 
-	  # functions
-	  if (!$quoted)
-	    {
-	      $text_to_markup = $entry['content'];
+		}
 	    }
+
+	  if (!$quoted)
+	    $text_to_markup = $entry['content'];
 	  else
 	    {
 	      $text_to_markup = str_replace("\n", "&gt; ",
 					    wordwrap("\n".$entry['content'],
                                             78, "\r\n"));
 	    }
-	  
+
 	  $out .= "\n".'<tr class="'.$class.'"><td valign="top">';
 	  $out .= '<a id="comment'.$comment_number.'" href="#comment'
                   .$comment_number.'" class="preinput">';
 	  $out .= utils_format_date($entry['date']);
 	  $out .= ', ';
-	  
+
 	  if (!$is_svn)
 	    {
 	      if ($comment_number < 1)
 		{
 		  if (ARTIFACT != "cookbook")
-		    {
-		      $out .= '<strong>'._("original submission:")."</strong>\n";
-		    }
+		    $out .= '<strong>'._("original submission:")."</strong>\n";
 		  else
-		    {
-		      $out .= '<strong>'._("recipe preview:")."</strong>\n";
-   		    }
+		    $out .= '<strong>'._("recipe preview:")."</strong>\n";
 		}
-	      else	   
-		{
-		  $out .= sprintf(_("comment #%s:"), $comment_number);
-		}
+	      else
+		$out .= sprintf(_("comment #%s:"), $comment_number);
 	    }
 	  else
-	    {	      
+	    {
 	      # No # in front of the revision number so users don't get
 	      # confused and do use it as a ref that will be made link
-	      # (in the future, we could imagine doing such links)
+	      # (in the future, we could imagine doing such links).
 	      $out .= sprintf(_("SVN revision %s:"), $entry['revision']);
 	    }
-	  
-	  $out .= "</a><br />\n".$comment_type;
-	  
-	  # Full markup only for original submission
-	  if ($comment_number < 1)
-	    {
-	      $out .= markup_full($text_to_markup);
-	    }
-	  else
-	    {
-	      $out .= markup_rich($text_to_markup);
-	    }
 
-	  # Add an svn link if relevant (it supports viewcvs syntax)
+	  $out .= "</a><br />\n".$comment_type;
+
+	  # Full markup only for original submission.
+	  if ($comment_number < 1)
+	    $out .= markup_full($text_to_markup);
+	  else
+	    $out .= markup_rich($text_to_markup);
+
+	  # Add an svn link if relevant (it supports viewcvs syntax).
 	  if ($is_svn && $svn_link)
 	    {
 	      $out .= '<p>(<a href="'.$svn_link.'?rev='.$entry['revision']
@@ -478,7 +434,7 @@ to be run.")
 	  $out .= '<td class="'.$class.'extra">'
                   .utils_user_link($entry['user_name'],
                                    $entry['realname'], true);
-	  
+
 	  if ($icon)
 	    {
 	      $out .= '<br /><span class="help" title="'.$icon_alt
@@ -486,7 +442,7 @@ to be run.")
                       .'.theme/roles/'.$icon.'.png" alt="'.$icon_alt
                       .'" /></span>';
 	    }
-	  
+
 	  if ($poster_id != 100 && array_key_exists($poster_id, $assignees_id))
 	    {
 	      $out .= '<span class="help" title="'._("In charge of this item.")
@@ -495,16 +451,15 @@ to be run.")
                       ._("In charge of this item.").'" /></span>';
 	    }
 
-	  # If not a member of the project, allow to mark as spam
+	  # If not a member of the project, allow to mark as spam.
 	  # For performance reason, do not check here if the user already
 	  # flagged the comment as spam, it will be done only if he tries to
-	  # to it twice
+	  # to it twice.
 	  if (!$is_svn && user_isloggedin() && !$icon
               && $poster_id != user_getid() && empty($_REQUEST['printer']))
 	    {
-              # Surround by two line breaks, to keep that link clearly 
-	      # separated from 
-	      # anything else, to avoid clicks by error
+              # Surround by two line breaks, to keep that link clearly
+	      # separated from anything else, to avoid clicks by error.
 	      $out .= '<br /><br />(<a title="'
 .sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'
 .htmlentities ($_SERVER['PHP_SELF']).'?func=flagspam&amp;item_id='.$item_id
@@ -517,7 +472,6 @@ to be run.")
 	}
     }
 
-  # final touch...
   $out .= ($ascii ? "\n\n\n" : "</table>\n");
 
   return $out;
@@ -525,7 +479,7 @@ to be run.")
 
 function format_item_changes ($changes,$item_id,$group_id)
 {
-  # ASCII must not be translated
+  # ASCII must not be translated.
   global $sys_datefmt;
 
   # FIXME: strange, with %25s it does not behave exactly like
@@ -534,26 +488,26 @@ function format_item_changes ($changes,$item_id,$group_id)
 
   $separator = "\n    _______________________________________________________\n\n";
 
-  # Process most of the fields
+  # Process most of the fields.
   reset($changes);
   $out = '';
   while (list($field,$h) = each($changes))
     {
-      # If both removed and added items are empty skip - Sanity check
+      # If both removed and added items are empty skip - Sanity check.
       if (empty($h['del']) && empty($h['add']))
-	{ continue; }
+	continue;
 
       if ($field == "details" || $field == "attach")
-        { continue; }
+        continue;
 
       # Since details is used for followups (creepy!), we are forced to play
       # with "realdetails" non existant field.
       if ($field == "realdetails")
-        { $field = "details"; }
+        $field = "details";
 
       $label = trackers_data_get_label($field);
       if (!$label)
-	{ $label = $field; }
+	$label = $field;
       $out .= sprintf($fmt, $label,
 		      isset($h['del']) ? $h['del'] : null,
 		      isset($h['add']) ? $h['add'] : null);
@@ -565,11 +519,11 @@ function format_item_changes ($changes,$item_id,$group_id)
              ." (project ".group_getunixname($group_id)."):\n\n".$out;
     }
 
-  # Process special cases: follow-up comments
+  # Process special cases: follow-up comments.
   if (!empty($changes['details']))
     {
       if ($out)
-        { $out .= $separator; }
+        $out .= $separator;
 
       $out_com = "Follow-up Comment #"
                  .db_numrows(trackers_data_get_followups($item_id));
@@ -582,20 +536,18 @@ function format_item_changes ($changes,$item_id,$group_id)
       $out_com .= ":\n\n";
       if ($changes['details']['type'] != 'None'
           && $changes['details']['type'] != '(Error - Not Found)')
-	{
-	  $out_com .= '['.$changes['details']['type']."]\n";
-	}
+	$out_com .= '['.$changes['details']['type']."]\n";
       $out_com .= utils_unconvert_htmlspecialchars($changes['details']['add']);
       unset($changes['details']);
 
       $out .= $out_com;
     }
 
-  # Process special cases: file attachment
+  # Process special cases: file attachment.
   if (!empty($changes['attach']))
     {
       if ($out)
-        { $out .= $separator; }
+        $out .= $separator;
 
       $out_att = "Additional Item Attachment";
       if (!$out)
@@ -604,9 +556,9 @@ function format_item_changes ($changes,$item_id,$group_id)
                       ." (project ".group_getunixname($group_id).")";
         }
       $out_att .= ":\n\n";
-      
+
       foreach ($changes['attach'] as $file)
-	{ 
+	{
 	  $out_att .= sprintf("File name: %-30s Size:%d KB\n"
                              ."    <%s>\n\n",
 			      $file['name'],
@@ -631,7 +583,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
 
   if (!$sober)
     {
-      $result=trackers_data_get_attached_files($item_id);
+      $result = trackers_data_get_attached_files($item_id);
     }
   else
     {
@@ -641,11 +593,11 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
       # of the item is likely to have posted them in the order of their use.
       # On the other hand, on non-sober output, what matters is the latest
       # submitted item.
-      $result=trackers_data_get_attached_files($item_id, 'ASC');
+      $result = trackers_data_get_attached_files($item_id, 'ASC');
     }
-  $rows=db_numrows($result);
+  $rows = db_numrows($result);
 
-  # No file attached -> return now
+  # No file attached -> return now.
   if ($rows <= 0)
     {
       if ($ascii)
@@ -655,7 +607,7 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
       return $out;
     }
 
-  # Header first
+  # Header first.
   if ($ascii)
     {
       $out .= "    _______________________________________________________\n
@@ -664,19 +616,17 @@ File Attachments:\n\n";
   else
     {
       if (!$sober)
-	{
-	  $out .= $HTML->box_top(_("Attached Files"),'',1);
-	}
+	$out .= $HTML->box_top(_("Attached Files"),'',1);
     }
 
-  # Determine what the print out format is based on output type (Ascii, HTML
+  # Determine what the print out format is based on output type (Ascii, HTML).
   if ($ascii)
     {
       $fmt = "\n-------------------------------------------------------\n".
 	 "Date: %s  Name: %s  Size: %s   By: %s\n%s\n%s";
     }
 
-  # Loop throuh the attached files and format them
+  # Loop throuh the attached files and format them.
   for ($i=0; $i < $rows; $i++)
     {
       $item_file_id = db_result($result, $i, 'file_id');
@@ -708,19 +658,20 @@ File Attachments:\n\n";
 .'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 
-	  if (!$sober)
+	  if ($sober)
+	    $out .= '<div>&nbsp;&nbsp;&nbsp;- ';
+	  else
 	    {
 	      $out .= '<div class="'.utils_get_alt_row_color($i).'">'
                       .$html_delete;
 	    }
-	  else
-	    {
-	      $out .= '<div>&nbsp;&nbsp;&nbsp;- ';
-	    }
 
 	  $out .= '<a href="'.$href.'">file #'.$item_file_id.(": ").'&nbsp;';
 
-	  if (!$sober)
+	  if ($sober)
+	      $out .= '<a href="'.$href.'">'.db_result($result, $i, 'filename')
+                      .'</a>';
+	  else
 	    {
 # TRANSLATORS: the first argument is file name, the second is user's name.
 	      $out .= sprintf(_('<!-- file -->%1$s added by %2$s'),
@@ -728,19 +679,12 @@ File Attachments:\n\n";
                               utils_user_link(db_result($result, $i,
                                                         'user_name')));
 	    }
-	  else
-	    {
-	      $out .= '<a href="'.$href.'">'.db_result($result, $i, 'filename')
-                      .'</a>';
-	    }
 
 	  $out .= ' <span class="smaller">('
                   .utils_filesize(0, db_result($result, $i, 'filesize'));
 
 	  if (db_result($result, $i, 'filetype'))
-	    {
-	      $out .= ' - '.db_result($result, $i, 'filetype');
-	    }
+	    $out .= ' - '.db_result($result, $i, 'filetype');
 
 	  if (db_result($result, $i, 'description'))
 	    {
@@ -751,7 +695,6 @@ File Attachments:\n\n";
 	}
     }
 
-  # final touch...
   if ($ascii || $sober)
     $out .= "\n";
   else
@@ -763,15 +706,15 @@ File Attachments:\n\n";
 # Show the files attached to this bug.
 function format_item_cc_list ($item_id,$group_id, $ascii=false)
 {
-# ASCII must not be translated
+# ASCII must not be translated.
   global $sys_datefmt, $HTML;
 
-  $result=trackers_data_get_cc_list($item_id);
-  $rows=db_numrows($result);
+  $result = trackers_data_get_cc_list($item_id);
+  $rows = db_numrows($result);
 
   $out = '';
 
-  # No file attached -> return now
+  # No file attached -> return now.
   if ($rows <= 0)
     {
       if (!$ascii)
@@ -780,7 +723,7 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
     }
 
   # Header first an determine what the print out format is
-  # based on output type (Ascii, HTML)
+  # based on output type (Ascii, HTML).
   if ($ascii)
     {
       $out .= "    _______________________________________________________\n\n"
@@ -791,18 +734,16 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
         "------------------------------------+-----------------------------\n";
     }
   else
-    {
-      $out .= $HTML->box_top(_("Carbon-Copy List"),'',1);
-    }
+    $out .= $HTML->box_top(_("Carbon-Copy List"),'',1);
 
-  # Loop through the cc and format them
-  for ($i=0; $i < $rows; $i++)
+  # Loop through the cc and format them.
+  for ($i = 0; $i < $rows; $i++)
     {
 
       if ($ascii)
 	{
 	  # We wont provide the CC address in the mail, we keep that
-	  # information only on the web interface
+	  # information only on the web interface.
 	  $email = "Available only on the item webpage";
 	}
       else
@@ -810,44 +751,44 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	  $email = db_result($result, $i, 'email');
 
 	  # If email is numeric, it must be an user id. Try to convert it
-	  # to the username
+	  # to the username.
 	  if (ctype_digit($email) && user_exists($email))
 	    { $email =  user_getname($email); }
 
-	  # HTML preformat the address
+	  # HTML preformat the address.
 	  $email = utils_email($email);
 	}
       $item_cc_id = db_result($result, $i, 'bug_cc_id');
       $href_cc = $email;
 
       # If the comment is -SUB-, -UPD- or -COM-, it means submitter
-      # or commenter, etc
-      # It appears like this because the comment was automatically inserted
+      # or commenter, etc.
+      # It appears like this because the comment was automatically inserted.
       # It allows us to translated it only now, so the translation is the
-      # one of the page viewer, not the one of that made the CC to be added
+      # one of the page viewer, not the one of that made the CC to be added.
       $comment = db_result($result, $i, 'comment');
       if ($comment == '-SUB-')
 	{
 	  if ($ascii)
-	    { $comment = 'Submitted the item'; }
+	    $comment = 'Submitted the item';
 	  else
-	    { $comment = _('Submitted the item'); }
+	    $comment = _('Submitted the item');
 	}
 
       if ($comment == '-COM-')
 	{
 	  if ($ascii)
-	    { $comment = 'Posted a comment'; }
+	    $comment = 'Posted a comment';
 	  else
-	    { $comment = _('Posted a comment'); }
+	    $comment = _('Posted a comment');
 	}
 
       if ($comment == '-UPD-')
 	{
 	  if ($ascii)
-	    { $comment = 'Updated the item'; }
+	    $comment = 'Updated the item';
 	  else
-	    { $comment = _('Updated the item'); }
+	    $comment = _('Updated the item');
 	}
 
       if ($comment == '-VOT-'
@@ -861,16 +802,14 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 	}
 
       if ($ascii)
-	{
-	  $out .= sprintf($fmt, $email, $comment);
-	}
+	$out .= sprintf($fmt, $email, $comment);
       else
 	{
-	  # show CC delete icon if one of the condition is met:
-	  # a) current user is a tracker manager
-	  # b) then CC name is the current user
-	  # c) the CC email address matches the one of the current user
-	  # d) the current user is the person who added a given name in CC list
+	  # Show CC delete icon if one of the condition is met:
+	  # a) current user is a tracker manager;
+	  # b) then CC name is the current user;
+	  # c) the CC email address matches the one of the current user;
+	  # d) the current user is the person who added a given name in CC list.
 	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2')
               || (user_getname(user_getid()) == $email)
               || (user_getemail(user_getid()) == $email)
@@ -884,22 +823,17 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
 .'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
 	    }
 	  else
-            {
-	      $html_delete = '';
-	    }
+	    $html_delete = '';
 
           $out .= '<li class="'.utils_get_alt_row_color($i).'">'.$html_delete
 # TRANSLATORS: the first argument is email, the second is user's name.
 	  .sprintf(_('<!-- email --> %1$s added by %2$s'), $email,
                    utils_user_link(db_result($result, $i, 'user_name')));
           if ($comment)
-           {
-	     $out .= ' <span class="smaller">('.markup_basic($comment).')</span>';
-           }
+	    $out .= ' <span class="smaller">('.markup_basic($comment).')</span>';
         }
     }
 
-  # final touch...
   $out .= ($ascii ? "\n" : $HTML->box_bottom(1));
 
   return($out);
