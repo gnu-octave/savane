@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gna.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -235,8 +235,8 @@ account. The email is sent from &lt;%s&gt;, it contains a text like this:"),
 . $message_head . "XXXXXXXXXXXXXXXXXXXXXXXXX" . $message_tail
 ."\n</pre></blockquote>\n"
 .'<p><em>'
-._("Accounts not confirmed after two days are deleted from the
-database.")."</em></p>\n";
+._("If you don't receive it within a reasonable time, contact website
+administration.")."</em></p>\n";
       }
   }
 # Not valid registration, or first time to page.

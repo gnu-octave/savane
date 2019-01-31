@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2005 Joxean Koret <joxeankoret--yahoo.es>
-# Copyright (C) 2017, 2018 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2017, 2018, 2019 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -63,8 +63,17 @@ $confirm_hash = md5(strval(time()) . strval(rand()));
 $res_user = db_execute("SELECT * FROM user WHERE user_name=? AND status='A'",
                        array($form_loginname));
 if (db_numrows($res_user) < 1)
-  exit_error(_("Invalid User"),
-             _("This account does not exist or has not been activated"));
+  {
+    $res_user = db_execute("SELECT status FROM user WHERE user_name=? AND status='P'",
+                           array($form_loginname));
+    if (db_numrows($res_user) > 0)
+      $msg =
+ _("This account hasn't been activated, please contact website administration");
+    else
+      $msg = _("This account does not exist");
+
+    exit_error(_("Invalid User"), $msg);
+  }
 $row_user = db_fetch_array($res_user);
 
 # Notification count check:
