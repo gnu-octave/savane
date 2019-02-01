@@ -6,7 +6,7 @@
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017-2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -328,7 +328,7 @@ class Group extends Error
   function getGPGKeyring()
   {
     $keyring = "";
-    $res = db_execute("SELECT gpg_key
+    $res = db_execute("SELECT user_name,realname,gpg_key
         FROM user JOIN user_group ON user.user_id = user_group.user_id
         WHERE admin_flags<>'P' AND status='A' AND group_id=?",
                     array($this->group_id));
@@ -336,8 +336,15 @@ class Group extends Error
     for ($j = 0; $j < $rows; $j++)
       {
         $key = db_result ($res, $j, 'gpg_key');
+        $user = db_result ($res, $j, 'user_name');
+        $name = db_result ($res, $j, 'realname');
         if ($key)
-          $keyring .= $key . "\n";
+          {
+            $keyring .= sprintf(
+# TRANSLATORS: the first argument is the full name, the second is the login.
+              _("GPG keys of %s <%s>"), $name, $user);
+            $keyring .= "\n" . $key . "\n";
+          }
       }
     return $keyring;
   }
@@ -351,9 +358,9 @@ class Group extends Error
       # similar to getArtifactUrl but refers to GroupType in case nothing
       # is special, not to Savane core tools.
       if ($this->data_array['url_'.$artifact] != "")
-	{ return $this->data_array['url_'.$artifact]; }
+        return $this->data_array['url_'.$artifact];
       else
-	{ return $this->getTypeUrl($artifact); }
+        return $this->getTypeUrl($artifact);
     }
 
   function getArtifactUrl($artifact)
@@ -366,9 +373,9 @@ class Group extends Error
       # And it can be justified anyway to keep a value entered already.
       # The best would be the software to list conflicting cases to sysadmin.
       if (empty($this->data_array['url_'.$artifact]))
-	{ return $GLOBALS['sys_home'].$artifact.'/?group='.$this->getUnixName(); }
+        return $GLOBALS['sys_home'].$artifact.'/?group='.$this->getUnixName();
       else
-	{ return $this->data_array['url_'.$artifact]; }
+        return $this->data_array['url_'.$artifact];
     }
 
   function getDir($artifact)
