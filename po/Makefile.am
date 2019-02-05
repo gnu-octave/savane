@@ -52,7 +52,7 @@ MSGID_BUGS_ADDRESS = savannah-hackers-public@gnu.org
 # message catalogs shall be used.  It is usually empty.
 EXTRA_LOCALE_CATEGORIES =
 
-MSGMERGE = msgmerge
+MSGMERGE = @MSGMERGE@
 MSGMERGE_UPDATE = @MSGMERGE@ --update
 MSGINIT = msginit
 MSGCONV = msgconv
