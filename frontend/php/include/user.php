@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -22,7 +22,7 @@
 
 require_once(dirname(__FILE__).'/member.php');
 
-# Unset these globals until register_globals if off everywhere
+# Unset these globals until register_globals if off everywhere.
 unset($USER_IS_SUPER_USER);
 $USER_RES=array();
 
@@ -39,7 +39,7 @@ function user_can_be_super_user()
   global $USER_IS_SUPER_USER;
 # Members of sys_group_id  are admins and have super-user privs site-wide.
   if (isset($USER_IS_SUPER_USER))
-      return $USER_IS_SUPER_USER;
+    return $USER_IS_SUPER_USER;
   if (user_isloggedin())
     {
       $result=db_execute("SELECT * FROM user_group WHERE user_id=? "
@@ -151,8 +151,9 @@ function user_getname($user_id=0, $getrealname=0)
     }
   # Use current user if one is not passed in.
   if (!$user_id && $getrealname == 0)
-# TRANSLATORS: "Not applicable".
-    return ($G_USER?$G_USER['user_name']:_("NA"));
+    return ($G_USER?$G_USER['user_name']:
+            # TRANSLATORS: "Not applicable".
+                                         _("NA"));
 
   if ($user_id == 0)
     {
@@ -370,9 +371,7 @@ function user_use_votes ($user_id=false)
   $result = db_execute("SELECT vote_id FROM user_votes WHERE user_id=?",
                        array($user_id));
   if (db_numrows($result) > 0)
-    {
-      return true;
-    }
+    return true;
   return false;
 }
 
@@ -427,9 +426,7 @@ function user_delete ($user_id=false, $confirm_hash=false)
   # Serious deal, serious check of credentials: allowed only to superuser
   # and owner of the account.
   if (!user_is_super_user() && $user_id != user_getid())
-    {
-      exit_permission_denied();
-    }
+    exit_permission_denied();
 
   # If self-destruct, the correct confirm_hash must be provided
   if (!user_is_super_user())
@@ -443,9 +440,12 @@ function user_delete ($user_id=false, $confirm_hash=false)
       $confirm_hash_param = array();
     }
 
+  $new_realname = '-*-';
+  if ($user_id == user_getid ())
+    $new_realname = '-';
   $success = db_autoexecute('user',
    array('user_pw' => '!',
-         'realname' => '-X-',
+         'realname' => $new_realname,
          'status' => 'S',
          'email' => 'idontexist@example.net',
          'confirm_hash' => '',
