@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.3\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2019-01-31 12:40+0000\n"
+"POT-Creation-Date: 2019-02-05 07:20+0000\n"
 "PO-Revision-Date: 2019-01-31 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
@@ -3490,16 +3490,16 @@ msgid "ERROR - skill already in your inventory"
 msgstr "Ошибка: навык уже в наборе"
 
 #. TRANSLATORS: "Not applicable".
-#: frontend/php/include/user.php:155 frontend/php/include/user.php:160
+#: frontend/php/include/user.php:156 frontend/php/include/user.php:161
 msgid "NA"
 msgstr "-"
 
-#: frontend/php/include/user.php:161
+#: frontend/php/include/user.php:162
 #: frontend/php/include/trackers/format.php:227
 msgid "anonymous"
 msgstr "анонимный"
 
-#: frontend/php/include/user.php:180
+#: frontend/php/include/user.php:181
 msgid "Invalid User ID"
 msgstr "Неправильный идентификатор пользователя"
 
@@ -7258,15 +7258,21 @@ msgstr "Вверх страницы"
 msgid "[Deleted group #%s]"
 msgstr "[Группа №%s (удалена)]"
 
-#: frontend/php/include/Group.class:611
+#. TRANSLATORS: the first argument is the full name, the second is the login.
+#: frontend/php/include/Group.class:345
+#, php-format
+msgid "GPG keys of %s <%s>"
+msgstr "Ключи GPG пользователя %s <%s>"
+
+#: frontend/php/include/Group.class:618
 msgid "It is possible to post anonymously on this tracker."
 msgstr "В этом журнале анонимные комментарии не допускаются."
 
-#: frontend/php/include/Group.class:614
+#: frontend/php/include/Group.class:621
 msgid "Project Membership is required to post on this tracker."
 msgstr "В этом журнале могут переписываться только члены проекта."
 
-#: frontend/php/include/Group.class:617
+#: frontend/php/include/Group.class:624
 msgid "Being logged-in is required to post on this tracker."
 msgstr "Чтобы писать в этом журнале, нужно представиться системе."
 
