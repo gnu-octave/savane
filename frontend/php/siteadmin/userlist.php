@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -35,38 +35,40 @@ extract(sane_import('get', array('user_name_search', 'offset', 'text_search',
                                  'action', 'user_id')));
 extract(sane_import('request', array('search')));
 
-# Administrative functions.
-if ($action=='delete')
+# Get user_name and realname as they were before the action to display
+# in further feedback.
+if ($action == 'delete' || $action == 'activate' || $action == 'suspend')
   {
-    user_delete ($user_id);
-# TRANSLATORS: this message is used as status in contect of
-# 'Status updated to DELETE for user %s'.
-    $out = no_i18n("DELETE");
-  }
-elseif ($action=='activate')
-  {
-    db_execute("UPDATE user SET status='A' WHERE user_id=?", array($user_id));
-# TRANSLATORS: this message is used as status in contect of
-# 'Status updated to ACTIVE for user %s'.
-    $out = no_i18n("ACTIVE");
-  }
-elseif ($action=='suspend')
-  {
-    db_execute("UPDATE user SET status='S' WHERE user_id=?", array($user_id));
-# TRANSLATORS: this message is used as status in contect of
-# 'Status updated to SUSPEND for user %s'.
-    $out = no_i18n("SUSPEND");
+    $result = db_execute("SELECT user_name,realname FROM user WHERE user_id=?",
+                         array($user_id));
   }
 else
   $action = false;
+
+if ($action == 'delete')
+  {
+    user_delete ($user_id);
+    $out = no_i18n("DELETE");
+  }
+elseif ($action == 'activate')
+  {
+    db_execute("UPDATE user SET status='A' WHERE user_id=?", array($user_id));
+    $out = no_i18n("ACTIVE");
+  }
+elseif ($action == 'suspend')
+  {
+    db_execute("UPDATE user SET status='S' WHERE user_id=?", array($user_id));
+    $out = no_i18n("SUSPEND");
+  }
 
 if ($action)
 {
   print '<h2>'.no_i18n("Action done").' :</h2>';
   print '<p>';
-# TRANSLATORS: the first argument is status (DELETE, ACTIVE, SUSPEND),
-# the second argument is user id (number).
-  printf(no_i18n('Status updated to %1$s for user %2$s.'), $out, $user_id);
+
+  $usr = db_fetch_array($result);
+  printf(no_i18n('Status updated to %s for user %s %s.'), $out, $user_id,
+         utils_user_link ($usr['user_name'], $usr['realname']));
   print '</p>
 ';
   print db_error();
@@ -99,19 +101,16 @@ print '
 </p>
 ';
 
-# Show list of users
-
+# Show list of users.
 
 $MAX_ROW=100;
 if (!$offset)
-{ $offset = 0; }
+  $offset = 0;
 else
-{ $offset = intval($offset); }
+  $offset = intval($offset);
 
 if (!$group_id)
 {
-# TRANSLATORS: this message is used in the context
-# of 'User List for All Groups'.
   $group_listed = no_i18n("All Groups");
 
   if ($user_name_search)
@@ -139,7 +138,7 @@ if (!$group_id)
 }
 else
 {
-  # Show list for one group
+  # Show list for one group.
   $group_listed = group_getname($group_id);
 
   $result = db_execute("SELECT user.user_id AS user_id, user.user_name "
@@ -152,7 +151,6 @@ else
 
 }
 
-# TRANSLATORS: the argument is group name or 'All Groups'.
 print '<h2>'.sprintf(no_i18n("User List for %s"),
                      '<strong>'.$group_listed.'</strong>')."</h2>\n";
 
