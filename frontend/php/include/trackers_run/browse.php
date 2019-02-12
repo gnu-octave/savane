@@ -1143,11 +1143,19 @@ if (!$sober)
       # In printer mode, if the additional constraint is off,
       # no need to print it.
       {
+        $form_activated =
 # TRANSLATORS: this string is used as the argument in
 # 'Additional constraint %s'.
-        $form_activated = _("activated");
+                          _("activated");
         $form_fieldname = $flabel[$history_field];
-        $form_modified = $hist_ev_text[$history_event];
+        $form_modified = $hist_ev_text[0];
+        $rows = count($hist_ev_text);
+        for ($i = 0; $i < $rows; $i++)
+          if ($hist_ev_value[$i] == $history_event)
+            {
+              $form_modified = $hist_ev_text[$history_event];
+              break;
+            }
         $form_since = trackers_field_date('history_date',
                                           $history_date,
                                           0,
