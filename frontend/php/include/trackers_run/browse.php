@@ -1153,7 +1153,7 @@ if (!$sober)
         for ($i = 0; $i < $rows; $i++)
           if ($hist_ev_value[$i] == $history_event)
             {
-              $form_modified = $hist_ev_text[$history_event];
+              $form_modified = $hist_ev_text[$i];
               break;
             }
         $form_since = trackers_field_date('history_date',
