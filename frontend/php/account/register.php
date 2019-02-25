@@ -249,8 +249,9 @@ else
     print '<p><span class="preinput">'._("Login Name:")
           .'</span>'."<br />\n".'&nbsp;&nbsp;';
     print form_input("text", "form_loginname", $form_loginname);
+    print '<p><span class="preinput">'.account_password_help().'</span></p>';
     print '<p><span class="preinput">'._("Password / passphrase:")
-           ." ".account_password_help().'</span><br />&nbsp;&nbsp;';
+           .'</span><br />&nbsp;&nbsp;';
     print form_input("password", "form_pw", $form_pw);
     print "</p>\n";
     print '<p><span class="preinput">'._("Re-type Password:")

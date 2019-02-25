@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -62,9 +62,9 @@ print ' '._("You may now change your password").'.</p>';
 
 print form_header($_SERVER['PHP_SELF']);
 
+print '<div>'.account_password_help().'</div>';
 print '<div class="inputfield"><strong>'._("New password / passphrase:")
       .'</strong>';
-print '<div>'.account_password_help().'</div>';
 print form_input("password", "form_pw").'</div>';
 
 print '<div class="inputfield"><strong>'._("New Password (repeat):").'</strong>';
