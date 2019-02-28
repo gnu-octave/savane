@@ -210,6 +210,22 @@ function user_exists($user_id, $squad_only=false)
   return false;
 }
 
+function user_is_active ($user_id)
+{
+  $result = user_get_result_set ($user_id);
+  if ($result && db_numrows($result) > 0)
+    return db_result ($result, 0, "status") == 'A';
+  return false;
+}
+
+function user_fetch_name ($user_id)
+{
+  $result = user_get_result_set ($user_id);
+  if ($result && db_numrows($result) > 0)
+    return db_result ($result, 0, 'user_name');
+  return '';
+}
+
 function user_getrealname($user_id=0, $rfc822_compliant=0)
 {
   $ret = user_getname($user_id, 1);
@@ -414,7 +430,98 @@ function user_guess ()
   return true;
 }
 
-# Function that should always be used to remove an user account
+# Return true when account has any trances in the trackers and group_history,
+# so it should not be removed from the database.
+function user_has_history ($user_id)
+{
+  $trackers = array ('bugs', 'support', 'task', 'patch', 'cookbook');
+  $name = user_fetch_name ($user_id);
+  if ($name == '')
+    return false;
+  foreach ($trackers as $tr)
+    {
+      $result = db_execute ("SELECT bug_id FROM $tr WHERE submitted_by=? LIMIT 1",
+                            array ($user_id));
+      if ($result && db_numrows ($result) > 0)
+        return true;
+      $result = db_execute ("SELECT bug_history_id FROM "
+                             .$tr."_history WHERE mod_by=? LIMIT 1",
+                            array ($user_id));
+      if ($result && db_numrows ($result) > 0)
+        return true;
+    }
+  $result = db_execute ("SELECT group_history_id FROM group_history
+                           WHERE old_value=?
+                             AND (field_name='Added User'
+                                  OR field_name='User Requested Membership'
+                                  OR field_name='Removed User'
+                                  OR field_name='Changed User Permissions'
+                                  OR field_name LIKE 'Added User to Squad %'
+                                  OR field_name LIKE 'Removed User from Squad %'
+                                  OR field_name='Approved User') LIMIT 1",
+                        array ($name));
+  if ($result && db_numrows ($result) > 0)
+    return true;
+  return false;
+}
+
+# Completely remove account from the database; should only be done
+# when there was no activity related to the account on trackers
+# and in group_history.
+function user_purge ($user_id)
+{
+  db_execute ("DELETE FROM user where user_id=?", array($user_id));
+}
+
+# Check if the user has ever been added to any group, so
+# vcs cron job may have created a respective account.
+function user_may_have_vcs_account ($user_id)
+{
+  $name = user_fetch_name ($user_id);
+  if ($name == '')
+    return false;
+  return 0 < db_numrows (db_execute ("SELECT group_history_id
+                                      FROM group_history
+                                      WHERE old_value=?
+                                        AND (field_name='Added User'
+                                             OR field_name='Approved User')
+                                      LIMIT 1",
+                                     array ($name)));
+}
+
+# Rename account, with necessary history adjustments in the database (unless
+# that would raise any concerns); perhaps only useful for removing accounts.
+function user_rename ($user_id, $new_name)
+{
+  if (user_may_have_vcs_account ($user_id))
+    # VCS may have an account with current user_name; if this user_name
+    # is freed, a new account may re-use it, with a potential collision in VCS.
+    return false;
+  $old_name = user_fetch_name ($user_id);
+  if ($old_name == '')
+    # No user with such user_id.
+    return false;
+  if (db_numrows(db_execute("SELECT user_id FROM user WHERE user_name = ?",
+                            array($new_name))) > 0)
+    # The user with user_name == $new_name already exists.
+    return false;
+  db_execute ("UPDATE user SET user_name=? WHERE user_id=?",
+              array($new_name, $user_id));
+  # In fact, only the first two field_name values may occur, because the user
+  # has never been added to any group.
+  db_execute ("UPDATE group_history set old_value=?
+                      WHERE old_value=?
+                        AND (field_name='User Requested Membership'
+                             OR field_name='Removed User'
+                             OR field_name='Added User'
+                             OR field_name LIKE 'Added User to Squad %'
+                             OR field_name LIKE 'Removed User from Squad %'
+                             OR field_name='Approved User')",
+              array ($new_name, $old_name));
+  return true;
+}
+
+# Function that should always be used to remove an user account.
 # This function should always be used in a secure context, when user_id
 # is 100% sure.
 # Best is to not to pass the user_id argument unless necessary.
@@ -428,7 +535,7 @@ function user_delete ($user_id=false, $confirm_hash=false)
   if (!user_is_super_user() && $user_id != user_getid())
     exit_permission_denied();
 
-  # If self-destruct, the correct confirm_hash must be provided
+  # If self-destruct, the correct confirm_hash must be provided.
   if (!user_is_super_user())
     {
       $confirm_hash_test = " confirm_hash=? AND ";
@@ -438,6 +545,12 @@ function user_delete ($user_id=false, $confirm_hash=false)
     {
       $confirm_hash_test = '';
       $confirm_hash_param = array();
+    }
+
+  if (!user_has_history ($user_id))
+    {
+      user_purge ($user_id);
+      return true;
     }
 
   $new_realname = '-*-';
@@ -459,25 +572,27 @@ function user_delete ($user_id=false, $confirm_hash=false)
    DB_AUTOQUERY_UPDATE,
    "$confirm_hash_test user_id=?", array_merge($confirm_hash_param,
                                                array($user_id)));
-  if ($success)
+  if (!$success)
     {
-      # Remove from any groups, if by any chances this was not done before
-      # (normally, an user must quit groups before being allowed to delete his
-      # account).
-      db_execute("DELETE FROM user_group WHERE user_id=?", array($user_id));
-      db_execute("DELETE FROM user_squad WHERE user_id=?", array($user_id));
-
-      # Additionally, clean up sessions, remove prefs
-      db_execute("DELETE FROM user_bookmarks WHERE user_id=?", array($user_id));
-      db_execute("DELETE FROM user_preferences WHERE user_id=?", array($user_id));
-      db_execute("DELETE FROM user_votes WHERE user_id=?", array($user_id));
-      db_execute("DELETE FROM session WHERE user_id=?", array($user_id));
-
-      fb(_("Account deleted."));
-      return true;
+      fb(_("Failed to update the database."), 1);
+      return false;
     }
+  # Remove from any groups, if by any chances this was not done before
+  # (normally, an user must quit groups before being allowed to delete his
+  # account).
+  db_execute("DELETE FROM user_group WHERE user_id=?", array($user_id));
+  db_execute("DELETE FROM user_squad WHERE user_id=?", array($user_id));
 
-  fb(_("Failed to update the database."), 1);
-  return false;
+  # Additionally, clean up sessions, remove prefs
+  db_execute("DELETE FROM user_bookmarks WHERE user_id=?", array($user_id));
+  db_execute("DELETE FROM user_preferences WHERE user_id=?", array($user_id));
+  db_execute("DELETE FROM user_votes WHERE user_id=?", array($user_id));
+  db_execute("DELETE FROM session WHERE user_id=?", array($user_id));
+  # Rename user; the name starts with '_' so it can't be registered manually,
+  # and it shall be unique because it's derived from $user_id.
+  user_rename($user_id, "_$user_id");
+
+  fb(_("Account deleted."));
+  return true;
 }
 ?>
