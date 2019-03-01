@@ -198,7 +198,7 @@ if ($big_cleanup)
       }
 
     # Browse each tracker item to found out if there are items to trash.
-    my @trackers = ("bugs", "support", "task", "patch");
+    my @trackers = ("bugs", "support", "task", "patch", "cookbook");
     foreach my $tracker (@trackers)
       {
         my @items_to_delete;
