@@ -177,19 +177,19 @@ print LOG strftime
       "[$script] %c ---- deleted $result lost password request\n", localtime
   if $result > 0;
 
-# BIG CLEANUP PART
+# BIG CLEANUP
 
 if ($big_cleanup)
   {
     # Remove items from groups that no longer exists in the database.
-    # When a group is deleted, his items no longer make sense.
+    # When a group is deleted, its items no longer make sense.
     #
-    # It will also make sure there no configuration remains, or user associated
+    # It will also make sure that no configuration remains, or user associated
     # with the group.
 
     # First build an hash of valid group_id. We take as valid any group_id
-    # actually in the database. We want to remove items only if they no longer
-    # exists at all in the database.
+    # actually in the database. We want to remove items only if the group
+    # no longer exists in the database.
     my @group_ids = GetGroupList("1", "group_id");
     my %group_exists;
     for (@group_ids)
@@ -216,7 +216,7 @@ if ($big_cleanup)
                       ."because group $group_id is dead\n"
                   if $debug;
                 # That information is important, we log it (before doing the
-                # actual removal.
+                # actual removal).
                 print LOG strftime
                       "[$script] %c ---- deleted $tracker #$item_id, "
                       ."from dead group #$group_id\n", localtime
@@ -224,12 +224,12 @@ if ($big_cleanup)
              }
           }
 
-        # Now do the cleanup on trackers
+        # Now do the cleanup on trackers.
         unless ($debug)
           {
             foreach my $item (@items_to_delete)
               {
-                # Clean tables that tracker-specific.
+                # Clean tables that are tracker-specific.
                 DeleteDB($tracker, "bug_id='$item'");
                 DeleteDB($tracker."_cc", "bug_id='$item'");
                 DeleteDB($tracker."_history", "bug_id='$item'");
@@ -242,7 +242,7 @@ if ($big_cleanup)
                          "artifact='$tracker' AND item_id='$item'");
               }
           }
-      }
+      } # foreach my $tracker (@trackers)
 
     # Now look in others tables to find if there was entries of deleted
     # groups. To keep it simple and not too much rendudant, we first get
