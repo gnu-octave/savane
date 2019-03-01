@@ -171,8 +171,7 @@ print LOG strftime
 # Remove lost password request count, if they were not made this day.
 
 my $result =
-  DeleteDB("user_lostpw",
-           "DAYOFYEAR(DATE) <> DAYOFYEAR(CURRENT_DATE) OR HOUR(DATE) <> HOUR(NOW())");
+  DeleteDB("user_lostpw", "TIMESTAMPDIFF(hour, date, now()) > 23");
 
 print LOG strftime
       "[$script] %c ---- deleted $result lost password request\n", localtime
