@@ -105,21 +105,7 @@ print LOG strftime
       "[$script] %c ---- deleted $result unconfirmed user accounts\n", localtime
   if $result > 0;
 
-# Remove inactive projects, usually registration interrupted.
-
-my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
-($year,$month,$day) = Add_Delta_YMD($year,$month,$day,
-                                    0,0,-1);
-my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
-
-my $result = DeleteGroups("status='I' AND register_time < $date");
-
-print LOG strftime
-      "[$script] %c ---- deleted $result inactive groups\n", localtime
-  if $result > 0;
-
-# Remove deleted projects, no matter their registration time.
-
+# Remove deleted projects.
 my $result = DeleteGroups("status='D'");
 
 print LOG strftime
@@ -138,22 +124,6 @@ my $result = DeleteDB("form", "timestamp < $date");
 
 print LOG strftime
       "[$script] %c ---- deleted $result outdated form ids\n", localtime
-  if $result > 0;
-
-
-# Remove IP from the spam ban list added since more than 6 hours.
-
-my ($year, $month, $day, $hour, $min, $sec) = split(",",
-                                                    `date +%Y,%m,%d,%H,%M,0`);
-($year,$month,$day,$hour,$min,$sec) = Add_Delta_YMDHMS($year,$month,$day,
-                                                       $hour,$min,0,
-                                                       0,0,0,-6,0,0);
-my $date = timelocal($sec,$min,$hour,$day,($month-1),($year-1900));
-
-my $result = DeleteDB("trackers_spamban", "date < $date");
-
-print LOG strftime
-      "[$script] %c ---- deleted $result outdated IPs bans\n", localtime
   if $result > 0;
 
 # Remove too old sessions, session older than one year.
