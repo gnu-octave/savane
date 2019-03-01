@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -49,11 +49,14 @@ print '<p>'.sprintf(_("Follows Resume & Skills of %s."),
 ';
 utils_get_content("people/viewprofile");
 
-print '<h2>'._("Resume")."</h2>\n";
-print markup_full(htmlspecialchars(db_result($result,0,'people_resume')));
-
-print '<h2>'._("Skills")."</h2>\n";
-print people_show_skill_inventory($user_id);
+$resume = db_result ($result, 0, 'people_resume');
+if ($resume != '')
+  {
+    print '<h2>' . _("Resume") . "</h2>\n";
+    print markup_full (htmlspecialchars ($resume));
+  }
+print '<h2>' . _("Skills") ."</h2>\n";
+print people_show_skill_inventory ($user_id);
 
 site_footer(array());
 ?>

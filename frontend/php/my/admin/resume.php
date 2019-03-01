@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -37,19 +37,17 @@ extract(sane_import('post',
 if ($update_profile)
   {
     if (!$people_resume)
-      fb(_("Missing info: fill in all required fields"), 1);
+      $people_resume = '';
     else
-      {
-        $people_resume = utils_unconvert_htmlspecialchars($people_resume);
-        $result = db_execute("UPDATE user SET people_view_skills=?, "
-           ."people_resume=? WHERE user_id=?", array($people_view_skills,
-                                                     $people_resume,
-                                                     user_getid()));
-        if (!$result || db_affected_rows($result) < 1)
-          fb(_("Update failed"), 1);
-        else
-          fb(_("Updated successfully"));
-      }
+      $people_resume = utils_unconvert_htmlspecialchars ($people_resume);
+    $result = db_execute ("UPDATE user SET people_view_skills=?, "
+                          ."people_resume=? WHERE user_id=?",
+                          array($people_view_skills,
+                                $people_resume, user_getid()));
+    if (!$result || db_affected_rows ($result) < 1)
+      fb(_("Update failed"), 1);
+    else
+      fb(_("Updated successfully"));
   }
 elseif ($add_to_skill_inventory)
   {
