@@ -20,12 +20,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 require_once('../../include/init.php');
 require_directory("people");
 register_globals_off();
 
-if ( ! user_isloggedin())
+if (!user_isloggedin())
   exit_not_logged_in();
 
 extract(sane_import('post',
@@ -34,20 +33,45 @@ extract(sane_import('post',
         'delete_from_skill_inventory', 'skill_id', 'skill_level_id',
         'skill_year_id', 'skill_inventory_id')));
 
+# Check if resume should be editable at all.
+$allow_resume = false;
+# Let edit resume when it already exists.
+$result = db_execute ("SELECT people_resume FROM user WHERE user_id=?",
+                      array(user_getid()));
+if ($result && db_numrows ($result) > 0)
+  {
+    if ('' != db_result ($result, 0, 'people_resume'))
+      $allow_resume = true;
+  }
+# Let members of any group edit their resume.
+if (!$allow_resume)
+  {
+    $result = db_execute ("SELECT group_id FROM user_group
+                           WHERE user_id=? AND admin_flags != 'P' LIMIT 1",
+                          array(user_getid()));
+    if ($result && db_numrows ($result) > 0)
+      $allow_resume = true;
+  }
+
 if ($update_profile)
   {
-    if (!$people_resume)
-      $people_resume = '';
+    if ($allow_resume)
+      {
+        if (!$people_resume)
+          $people_resume = '';
+        else
+          $people_resume = utils_unconvert_htmlspecialchars ($people_resume);
+        $result = db_execute ("UPDATE user SET people_view_skills=?, "
+                              ."people_resume=? WHERE user_id=?",
+                              array($people_view_skills,
+                                    $people_resume, user_getid()));
+        if (!$result || db_affected_rows ($result) < 1)
+          fb(_("Update failed"), 1);
+        else
+          fb(_("Updated successfully"));
+      }
     else
-      $people_resume = utils_unconvert_htmlspecialchars ($people_resume);
-    $result = db_execute ("UPDATE user SET people_view_skills=?, "
-                          ."people_resume=? WHERE user_id=?",
-                          array($people_view_skills,
-                                $people_resume, user_getid()));
-    if (!$result || db_affected_rows ($result) < 1)
       fb(_("Update failed"), 1);
-    else
-      fb(_("Updated successfully"));
   }
 elseif ($add_to_skill_inventory)
   {
@@ -115,16 +139,18 @@ print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">'
                                   db_result($result,0,'people_view_skills'), 0,
                                   _("Activate resume"));
 
-print '<h2><label for="people_resume">'
-      ._("Resume - Description of Experience").'</label></h2>
-<p>'.markup_info("full").'</p>
-<textarea id="people_resume" name="people_resume" rows="15" cols="60" wrap="soft">'
-. db_result($result,0,'people_resume') .'</textarea>
-';
+if ($allow_resume)
+  {
+    print '<h2><label for="people_resume">'
+          ._("Resume - Description of Experience")
+          ."</label></h2>\n<p>".markup_info("full")."</p>\n"
+          .'<textarea id="people_resume" name="people_resume" rows="15" '
+          .'cols="60" wrap="soft">'.db_result($result, 0, 'people_resume')
+          ."</textarea>\n<br /><br />\n";
 
-print '<br /><br />
-<div class="center"><input type="submit" name="update_profile" value="'
-._("Update Profile").'" /></div></form>';
+    print '<div class="center"><input type="submit" name="update_profile" '
+          .'value="'._("Update Profile").'" /></div></form>';
+  }
 
 print '<h2>'._("Skills").'</h2>';
 # Now show the list of desired skills.
