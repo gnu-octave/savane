@@ -36,7 +36,6 @@ use Getopt::Long;
 use Term::ANSIColor qw(:constants);
 use POSIX qw(strftime);
 use Time::Local;
-use Date::Calc qw(Add_Delta_YMD Add_Delta_YMDHMS);
 
 our $sys_cron_cleaner;
 
@@ -93,13 +92,9 @@ AcquireReplicationLock();
 # NORMAL CLEANUP
 
 # Remove user account registration not confirmed after three days.
-
-my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
-($year,$month,$day) = Add_Delta_YMD($year,$month,$day,
-                                    0,0,-3);
-my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
-
-my $result = DeleteUsers("status='P' AND add_date < $date");
+my $result = DeleteUsers("status='P' AND "
+                         ."TIMESTAMPDIFF(hour, FROM_UNIXTIME(add_date), now())"
+                         ." > 71");
 
 print LOG strftime
       "[$script] %c ---- deleted $result unconfirmed user accounts\n", localtime
@@ -114,32 +109,22 @@ print LOG strftime
 
 # Remove too old form_id, forms created more than one day ago an still
 # not submitted.
-
-my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
-($year,$month,$day) = Add_Delta_YMD($year,$month,$day,
-                                    0,0,-1);
-my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
-
-my $result = DeleteDB("form", "timestamp < $date");
+my $result = DeleteDB("form",
+                      "TIMESTAMPDIFF(hour, FROM_UNIXTIME(timestamp), now() > 23");
 
 print LOG strftime
       "[$script] %c ---- deleted $result outdated form ids\n", localtime
   if $result > 0;
 
-# Remove too old sessions, session older than one year.
-
-my ($year, $month, $day) = split(",", `date +%Y,%m,%d`);
-($year,$month,$day) = Add_Delta_YMD($year,$month,$day, -1,0,0);
-my $date = timelocal("0","0","0",$day,($month-1),($year-1900));
-
-my $result = DeleteDB("session", "time < $date");
+# Remove session more than one year old.
+my $result = DeleteDB("session",
+                      "TIMESTAMPDIFF(day, FROM_UNIXTIME(time), now()) > 365");
 
 print LOG strftime
       "[$script] %c ---- deleted $result sessions older than one year\n", localtime
   if $result > 0;
 
 # Remove lost password request count, if they were not made this day.
-
 my $result =
   DeleteDB("user_lostpw", "TIMESTAMPDIFF(hour, date, now()) > 23");
 
