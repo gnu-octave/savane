@@ -110,7 +110,7 @@ print LOG strftime
 # Remove too old form_id, forms created more than one day ago an still
 # not submitted.
 my $result = DeleteDB("form",
-                      "TIMESTAMPDIFF(hour, FROM_UNIXTIME(timestamp), now() > 23");
+                      "TIMESTAMPDIFF(hour, FROM_UNIXTIME(timestamp), now()) > 23");
 
 print LOG strftime
       "[$script] %c ---- deleted $result outdated form ids\n", localtime
