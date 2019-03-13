@@ -25,39 +25,34 @@ require_directory("my");
 
 # Assumes $res_user result handle is present.
 if (!$res_user || db_numrows($res_user) < 1)
-{
   exit_error(_('No Such User'),_('No Such User'));
-}
 
-$realname = db_result($res_user,0,'realname');
+$realname = db_result($res_user, 0, 'realname');
+$account_status = db_result($res_user, 0, 'status');
 
-if (!user_is_super_user() && db_result($res_user,0,'status') == 'D')
+# For deleted account, we will print only very basic info:
+# accound id, login + description as deleted account.
+$is_suspended = $account_status == 'S' || $account_status == 'D';
+
+if ($is_suspended && !user_is_super_user())
   {
     $realname = _('-deleted account-');
     $email_address = _('-deleted account-');
   }
 
+site_header(array('title'=>sprintf(
 # TRANSLATORS: the argument is user's name (like Assaf Gordon).
-site_header(array('title'=>sprintf(_("%s Profile"),$realname),
+                                   _("%s Profile"),$realname),
                   'context'=>'people'));
-
-# For suspended account, we will print only very basic info:
-# accound id, login + description as deleted account.
-$is_suspended = false;
-if (db_result($res_user,0,'status') == 'S')
-  $is_suspended = true;
-
-# The same for deleted accounts.
-if (db_result($res_user,0,'status') == 'D')
-  $is_suspended = true;
 
 $is_squad = false;
 if (db_result($res_user,0,'status') == 'SQD')
   $is_squad = true;
 
 # For squad account, we will print some specific info.
-# TRANSLATORS: the argument is user's name (like Assaf Gordon).
-print '<p>'.sprintf(_("Follows the Profile of %s."),
+print '<p>'.sprintf(
+# TRANSLATORS: the argument is user's name (like J. Random Hacker).
+                    _("Follows the Profile of %s."),
                     utils_user_link(db_result($res_user, 0, 'user_name'),
                     $realname));
 
@@ -130,7 +125,7 @@ print $HTML->box_top(_("General Information"));
 print '
 <br />
 <table width="100%" cellpadding="0" cellspacing="0" border="0">';
-if (db_result($res_user,0,'status') == "D" && user_is_super_user())
+if ($is_suspended && user_is_super_user())
   print '
 <tr valign="top">
         <td>'
@@ -158,7 +153,7 @@ print '
         <td>'._("Login Name:").' </td>
         <td><strong>'.db_result($res_user,0,'user_name').'</strong></td>
 </tr>';
-if (db_result($res_user,0,'status') != "D" || user_is_super_user())
+if (user_is_super_user() || !$is_suspended)
   {
     print '
 <tr valign="top">

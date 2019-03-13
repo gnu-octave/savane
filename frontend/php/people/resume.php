@@ -35,7 +35,9 @@ if (!$result || (db_numrows($result) < 1))
   exit_error(_("User not found"));
 elseif (db_result($result,0,'people_view_skills') != 1)
   exit_error(_("This user deactivated his/her Resume & Skills page"));
-elseif (db_result($result,0,'status') == 'D' && !user_is_super_user())
+elseif ((db_result($result,0,'status') == 'D'
+         || db_result($result,0,'status') == 'S')
+        && !user_is_super_user())
   exit_error(_("This account was deleted."));
 # TRANSLATORS: the argument is user's name.
 site_header(array('title'=>sprintf(_("%s Resume & Skills"),

@@ -45,7 +45,7 @@ if ($action == 'delete' || $action == 'activate' || $action == 'suspend')
 else
   $action = false;
 
-if ($action == 'delete')
+if ($action == 'delete' || $action == 'suspend')
   {
     user_delete ($user_id);
     $out = no_i18n("DELETE");
@@ -54,11 +54,6 @@ elseif ($action == 'activate')
   {
     db_execute("UPDATE user SET status='A' WHERE user_id=?", array($user_id));
     $out = no_i18n("ACTIVE");
-  }
-elseif ($action == 'suspend')
-  {
-    db_execute("UPDATE user SET status='S' WHERE user_id=?", array($user_id));
-    $out = no_i18n("SUSPEND");
   }
 
 if ($action)
@@ -191,8 +186,8 @@ else
       switch ($usr['status'])
         {
         case 'A': print no_i18n("Active"); break;
-        case 'D': print no_i18n("Deleted"); break;
-        case 'S': print no_i18n("Suspended"); break;
+        case 'D': # Fall through.
+        case 'S': print no_i18n("Deleted"); break;
         case 'SQD': print no_i18n("Active (Squad)"); break;
         case 'P': print no_i18n("Pending"); break;
         default: print no_i18n("Unknown status")." : ".$usr['status']; break;
@@ -210,12 +205,9 @@ else
 ';
         }
       print '<td>';
-      if ($usr['status'] != 'D')
+      if ($usr['status'] != 'D' && $usr['status'] != 'S')
         print '<a href="?action=delete&user_id='.$usr['user_id'].'">['
                 .no_i18n("Delete").']</a> ';
-      if ($usr['status'] != 'S')
-        print '<a href="?action=suspend&user_id='.$usr['user_id'].'">['
-                .no_i18n("Suspend").']</a> ';
       if ($usr['status'] != 'A' && $usr['status'] != 'SQD')
         print '<a href="?action=activate&user_id='.$usr['user_id'].'">['
                 .no_i18n("Activate").']</a> ';
