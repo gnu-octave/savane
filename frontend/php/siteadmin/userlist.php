@@ -70,10 +70,10 @@ if ($action)
 }
 
 
-# Search users
+# Search users.
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N',
                    'O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1',
-                   '2','3','4','5','6','7','8','9');
+                   '2','3','4','5','6','7','8','9', '_');
 
 print '<h2>'.no_i18n("User Search").'</h2>
 <p>'.no_i18n("Display users beginning with").': ';
@@ -113,7 +113,8 @@ if (!$group_id)
       $result = db_execute("SELECT user_name,user_id,status,people_view_skills "
                            ."FROM user WHERE user_name LIKE ? "
                            ."ORDER BY user_name LIMIT ?,?",
-                           array($user_name_search.'%', $offset, $MAX_ROW+1));
+                           array(str_replace ('_', '\_', $user_name_search).'%',
+                                 $offset, $MAX_ROW+1));
     }
   elseif ($text_search)
     $result = db_execute("SELECT user_name,user_id,status,people_view_skills
