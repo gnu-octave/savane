@@ -1,23 +1,23 @@
 <?php
 # Edit user's groups.
-# 
+#
 # This file is part of the Savane project
-# 
+#
 # Copyright (C) 1999-2000 The SourceForge Crew
-# Copyright (C) 2017, 2018 Ineiev
-# 
+# Copyright (C) 2017, 2018, 2019 Ineiev
+#
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -35,7 +35,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $HTML->header(array('title'=>no_i18n('Admin: User Info')));
 
 extract(sane_import('request', array('user_id', 'action')));
-extract(sane_import('post', array('admin_flags', 'email')));
+extract(sane_import('post', array('admin_flags', 'email', 'new_name')));
 
 if ($action=='remove_user_from_group')
   {
@@ -76,6 +76,26 @@ elseif ($action=='add_user_to_group')
     else
       fb(no_i18n('Successfully added user to group'));
   }
+elseif ($action == 'rename')
+  {
+    if (!account_namevalid ($new_name))
+      {
+        fb(no_i18n(sprintf('New account name <%s> is invalid', $new_name), 1));
+      }
+    else
+      {
+        $res = user_rename ($user_id, $new_name);
+        if ('' == $res)
+          {
+            fb(no_i18n('Successfully renamed account to '). $new_name);
+          }
+        else
+          {
+            fb(no_i18n('Error renaming account to <'. $new_name . '>:' . $res),
+                       1);
+          }
+      }
+  }
 
 # Get user info.
 $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));
@@ -93,9 +113,21 @@ print '
 <p>
 <input type="text" title="'.no_i18n("Email").'" name="email" value="'
 .htmlspecialchars($row_user['email']).'" size="25" maxlength="55">
-
+</p>
 <p>
 <input type="submit" name="Update_Unix" value="'.no_i18n('Update').'">
+</p>
+</form>
+<form method="post" action="'.htmlentities ($_SERVER['PHP_SELF']).'">
+<input type="hidden" name="action" value="rename">
+<input type="hidden" name="user_id" value="'.htmlspecialchars($user_id).'">
+<p>
+<input type="text" title="'.no_i18n("New name").'" name="new_name" value="'
+.htmlspecialchars($row_user['new_name']).'" size="25" maxlength="55">
+</p>
+<p>
+<input type="submit" name="'.no_i18n('Update_Name').'" value="'
+ .no_i18n('Rename').'">
 </p>
 </form>
 <hr />
