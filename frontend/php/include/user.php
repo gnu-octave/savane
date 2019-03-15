@@ -430,7 +430,7 @@ function user_guess ()
   return true;
 }
 
-# Return true when account has any trances in the trackers and group_history,
+# Return true when account has any traces in the trackers and group_history,
 # so it should not be removed from the database.
 function user_has_history ($user_id)
 {
@@ -450,16 +450,21 @@ function user_has_history ($user_id)
       if ($result && db_numrows ($result) > 0)
         return true;
     }
-  $result = db_execute ("SELECT group_history_id FROM group_history
-                           WHERE old_value=?
-                             AND (field_name='Added User'
-                                  OR field_name='User Requested Membership'
-                                  OR field_name='Removed User'
-                                  OR field_name='Changed User Permissions'
-                                  OR field_name LIKE 'Added User to Squad %'
-                                  OR field_name LIKE 'Removed User from Squad %'
-                                  OR field_name='Approved User') LIMIT 1",
-                        array ($name));
+  $result = db_execute (
+"SELECT group_history_id FROM group_history
+ WHERE
+   mod_by=?
+   OR
+    (old_value=?
+     AND
+     (field_name='Added User'
+      OR field_name='User Requested Membership'
+      OR field_name='Removed User'
+      OR field_name='Changed User Permissions'
+      OR field_name LIKE 'Added User to Squad %'
+      OR field_name LIKE 'Removed User from Squad %'
+      OR field_name='Approved User'))
+ LIMIT 1", array ($user_id, $name));
   if ($result && db_numrows ($result) > 0)
     return true;
   return false;
@@ -473,38 +478,16 @@ function user_purge ($user_id)
   db_execute ("DELETE FROM user where user_id=?", array($user_id));
 }
 
-# Check if the user has ever been added to any group, so
-# vcs cron job may have created a respective account.
-function user_may_have_vcs_account ($user_id)
-{
-  $name = user_fetch_name ($user_id);
-  if ($name == '')
-    return false;
-  return 0 < db_numrows (db_execute ("SELECT group_history_id
-                                      FROM group_history
-                                      WHERE old_value=?
-                                        AND (field_name='Added User'
-                                             OR field_name='Approved User')
-                                      LIMIT 1",
-                                     array ($name)));
-}
-
 # Rename account, with necessary history adjustments in the database (unless
-# that would raise any concerns); perhaps only useful for removing accounts.
+# that would raise any concerns).
 function user_rename ($user_id, $new_name)
 {
-  if (user_may_have_vcs_account ($user_id))
-    # VCS may have an account with current user_name; if this user_name
-    # is freed, a new account may re-use it, with a potential collision in VCS.
-    return false;
   $old_name = user_fetch_name ($user_id);
   if ($old_name == '')
-    # No user with such user_id.
-    return false;
+    return sprintf ('No user #%i in the database', $user_id);
   if (db_numrows(db_execute("SELECT user_id FROM user WHERE user_name = ?",
                             array($new_name))) > 0)
-    # The user with user_name == $new_name already exists.
-    return false;
+    return sprintf ('User <%s> alredy exists', $new_name);
   db_execute ("UPDATE user SET user_name=? WHERE user_id=?",
               array($new_name, $user_id));
   # In fact, only the first two field_name values may occur, because the user
@@ -518,7 +501,7 @@ function user_rename ($user_id, $new_name)
                              OR field_name LIKE 'Removed User from Squad %'
                              OR field_name='Approved User')",
               array ($new_name, $old_name));
-  return true;
+  return '';
 }
 
 # Function that should always be used to remove an user account.
@@ -550,6 +533,7 @@ function user_delete ($user_id=false, $confirm_hash=false)
   if (!user_has_history ($user_id))
     {
       user_purge ($user_id);
+      fb(_("Account deleted."));
       return true;
     }
 
