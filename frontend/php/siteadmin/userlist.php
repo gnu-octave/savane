@@ -206,7 +206,7 @@ else
 ';
         }
       print '<td>';
-      if ($usr['status'] != 'D' && $usr['status'] != 'S')
+      if ($usr['status'] != 'D' && $usr['status'] != 'S' && $usr['status'] != 'SQD')
         print '<a href="?action=delete&user_id='.$usr['user_id'].'">['
                 .no_i18n("Delete").']</a> ';
       if ($usr['status'] != 'A' && $usr['status'] != 'SQD')

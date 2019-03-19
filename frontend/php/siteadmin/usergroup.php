@@ -103,14 +103,19 @@ $row_user = db_fetch_array($res_user);
 
 print '
 <p>'.no_i18n('Savannah User Group Edit for user:').' <strong>'
-.$user_id. ' ' .user_getname($user_id).'</strong></p>
-<p>
+.$user_id. ' ' .user_getname($user_id)."</strong></p>\n";
+if ($row_user['status'] == 'SQD')
+  print '<p>'.no_i18n('Account info: this is a squad.').'</p>';
+else
+  {
+   print
+'<p>
 '.no_i18n('Account Info:').'
 <form method="post" action="'.htmlentities ($_SERVER['PHP_SELF']).'">
 <input type="hidden" name="action" value="update_user">
 <input type="hidden" name="user_id" value="'.htmlspecialchars($user_id).'">
 </p>
-<p>
+<p>Email:
 <input type="text" title="'.no_i18n("Email").'" name="email" value="'
 .htmlspecialchars($row_user['email']).'" size="25" maxlength="55">
 </p>
@@ -121,7 +126,7 @@ print '
 <form method="post" action="'.htmlentities ($_SERVER['PHP_SELF']).'">
 <input type="hidden" name="action" value="rename">
 <input type="hidden" name="user_id" value="'.htmlspecialchars($user_id).'">
-<p>
+<p>Account name:
 <input type="text" title="'.no_i18n("New name").'" name="new_name" value="'
 .htmlspecialchars($row_user['new_name']).'" size="25" maxlength="55">
 </p>
@@ -130,9 +135,9 @@ print '
  .no_i18n('Rename').'">
 </p>
 </form>
-<hr />
-
-<p>
+<hr />';
+  } #  $row_user['status'] != 'SQD'
+print '
 <h2>'.no_i18n('Current Groups').'</h2>
 ';
 
@@ -145,6 +150,14 @@ $res_cat = db_execute("SELECT groups.group_name AS group_name, "
 
 while ($row_cat = db_fetch_array($res_cat))
   {
+    if ($row_user['status'] == 'SQD')
+      {
+        print "<br />\n"
+         . '<a href="/project/admin/squadadmin.php?squad_id='
+         . htmlspecialchars($user_id) . '&group_id=' . $row_cat['group_id']
+         . '">' . group_getname($row_cat['group_id']) . "</a>\n";
+        continue;
+      }
     print ("<br /><hr /><strong>"
          . group_getname($row_cat['group_id']) . "</strong> "
          . "<a href=\"usergroup.php?user_id="
@@ -167,9 +180,10 @@ while ($row_cat = db_fetch_array($res_cat))
 </form>
 ';
   }
-
+if ($row_user['status'] != 'SQD')
+  {
 # Show a form so a user can be added to a group.
-print '
+  print '
 <hr />
 <p>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
@@ -188,6 +202,7 @@ print '
 .htmlspecialchars($user_id).'">['.no_i18n('Change User\'s Password').']</a>
 </p>
 ';
+  }
 
 html_feedback_bottom($feedback);
 $HTML->footer(array());
