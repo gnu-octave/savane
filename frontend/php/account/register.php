@@ -223,8 +223,8 @@ actually can read those messages).'). "\n";
         ._("New Account Registration Confirmation")."</h2>\n";
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
       printf(_("Congratulations. You have registered on %s."),
-             $GLOBALS['sys_name'])
-        ."\n".sprintf(_("Your login is %s."),
+             $GLOBALS['sys_name']);
+      print "\n".sprintf(_("Your login is %s."),
           '<strong>'.user_getname($newuserid).'</strong>')."\n";
       print '<p>'
 .sprintf(_("You are now being sent a confirmation email to verify your
