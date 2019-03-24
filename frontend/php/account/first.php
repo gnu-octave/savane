@@ -1,10 +1,10 @@
 <?php
-# First valid login, after account confirmation
+# First valid login, after account confirmation.
 # 
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -29,23 +29,19 @@ site_user_header(array('title'=>sprintf(_("Welcome to %s"),$GLOBALS['sys_name'])
                        'context'=>'account'));
 
 # TRANSLATORS: the argument is system name (like Savannah).
-print '<p>'.sprintf(_("You are now a registered user on %s."),
-                    $GLOBALS['sys_name']).'</p>';
+print '<p>' . sprintf(_("You are now a registered user on %s."),
+                      $GLOBALS['sys_name']) . "</p>\n";
 
 print '<p>'
   .sprintf(
 # TRANSLATORS: the argument is system name (like Savannah).
 _("As a registered user, you can participate fully in the activities
 on the site.  You may now post items to issue trackers in %s, sign on as a
-project member, or even start your own project."), $GLOBALS['sys_name']).'</p>';
+project member, or even start your own project."), $GLOBALS['sys_name'])
+  . "</p>\n";
 
-print '<p>'
-  .sprintf(
-# TRANSLATORS: the second argument is system name (like Savannah).
-_('You should take some time to read the <a href="%1$s">Savane User
-Guide</a> so that you may take full advantage of %2$s.'),
-           $GLOBALS['sys_home'].'userguide/',$GLOBALS['sys_name']).'</p>';
+utils_get_content("account/first");
 
-print '<p>'._("Enjoy the site.").'</p>';
+print '<p>' . _("Enjoy the site.") . "</p>\n";
 
 site_user_footer(array());
