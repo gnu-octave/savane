@@ -57,6 +57,9 @@ dnl AC_SUBST(localedir)
 dnl Support for the po directory.
 AM_PO_SUBDIRS
 
+if test -z "$MSGFMT" || test "x$MSGFMT" = "x:"; then
+  AC_MSG_ERROR([msgfmt not found; please install GNU gettext])
+fi
 
 AC_PATH_PROG(PERL, perl)
 if test -z "$PERL"; then
