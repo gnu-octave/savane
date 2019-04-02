@@ -37,7 +37,10 @@ use Term::ANSIColor qw(:constants);
 use POSIX qw(strftime);
 use Time::Local;
 
+our $dbd;
+
 our $sys_cron_cleaner;
+our $sys_dry_remove_idle_accounts;
 
 my $script = "sv_cleaner";
 my $logfile = "/var/log/sv_cleaner.log";
@@ -47,6 +50,8 @@ my $debug;
 my $big_cleanup;
 my $cron;
 my $version = GetVersion();
+
+my @trackers = ("bugs", "support", "task", "patch", "cookbook");
 
 eval {
     $getopt = GetOptions("help" => \$help,
@@ -79,12 +84,19 @@ EOF
 exit(1);
   }
 
+sub add_to_log
+{
+  my $msg = shift;
+
+  print LOG strftime "[$script] %c " . $msg . "\n", localtime;
+}
+
 # Test if we should run, according to conf file.
 exit if ($cron && ! $sys_cron_cleaner);
 
 # Log: Start logging.
 open (LOG, ">>$logfile");
-print LOG strftime "[$script] %c - starting\n", localtime;
+add_to_log ("- starting");
 
 # Locks: This script should not run concurrently.
 AcquireReplicationLock();
@@ -96,43 +108,118 @@ my $result = DeleteUsers("status='P' AND "
                          ."TIMESTAMPDIFF(hour, FROM_UNIXTIME(add_date), now())"
                          ." > 71");
 
-print LOG strftime
-      "[$script] %c ---- deleted $result unconfirmed user accounts\n", localtime
-  if $result > 0;
+add_to_log ("---- deleted $result unconfirmed user accounts") if $result > 0;
 
 # Remove deleted projects.
 my $result = DeleteGroups("status='D'");
 
-print LOG strftime
-      "[$script] %c ---- deleted $result deleted groups\n", localtime
-  if $result > 0;
+add_to_log ("---- deleted $result deleted groups") if $result > 0;
 
 # Remove too old form_id, forms created more than one day ago an still
 # not submitted.
 my $result = DeleteDB("form",
                       "TIMESTAMPDIFF(hour, FROM_UNIXTIME(timestamp), now()) > 23");
 
-print LOG strftime
-      "[$script] %c ---- deleted $result outdated form ids\n", localtime
-  if $result > 0;
+add_to_log ("---- deleted $result outdated form ids") if $result > 0;
 
 # Remove session more than one year old.
 my $result = DeleteDB("session",
                       "TIMESTAMPDIFF(day, FROM_UNIXTIME(time), now()) > 365");
 
-print LOG strftime
-      "[$script] %c ---- deleted $result sessions older than one year\n", localtime
+add_to_log ("---- deleted $result sessions older than one year")
   if $result > 0;
 
 # Remove lost password request count, if they were not made this day.
 my $result =
   DeleteDB("user_lostpw", "TIMESTAMPDIFF(hour, date, now()) > 23");
 
-print LOG strftime
-      "[$script] %c ---- deleted $result lost password request\n", localtime
-  if $result > 0;
+add_to_log ("---- deleted $result lost password request") if $result > 0;
 
-# BIG CLEANUP
+sub remove_account
+{
+  my ($id, $name, $purge) = @_;
+
+  if ($purge)
+    {
+      $dbd->do("DELETE FROM user WHERE user_id=$id")
+        unless ($sys_dry_remove_idle_accounts);
+      add_to_log ("----- purged account #$id <$name>"
+                  . ($sys_dry_remove_idle_accounts? " (dry run)": ""));
+    }
+  else
+    {
+      unless ($sys_dry_remove_idle_accounts)
+        {
+          $dbd->do("UPDATE group_history SET old_value = '_" . $id . "'"
+                   . " WHERE old_value = '" . $name . "'");
+          $dbd->do("UPDATE user SET user_name = '_" . $id . "',
+                                user_pw = '!',
+                                realname = '-*-',
+                                status = 'S',
+                                email = 'idontexist\@example.net',
+                                confirm_hash = '',
+                                authorized_keys = '',
+                                people_view_skills = 0,
+                                people_resume = '',
+                                timezone = 'GMT',
+                                theme = '',
+                                gpg_key = '',
+                                email_new = ''
+                            WHERE user_id = $id");
+        }
+      add_to_log ("----- suspended account #$id <$name>"
+                  . ($sys_dry_remove_idle_accounts? " (dry run)": ""));
+    }
+}
+
+sub clean_idle_accounts
+{
+  my $t1 = `date +%s` - 17 * 24 * 3600;
+  my $t0 = $t1 - 24 * 3600;
+
+  foreach my $user (GetDB("user",
+                    "status = 'A' and add_date > $t0 and add_date < $t1",
+                    "user_id,user_name,realname,email,status,from_unixtime(add_date)"))
+    {
+      my $active = 0;
+      chomp ($user);
+      my ($id, $name, $realname, $email, $status, $from_unixtime) =
+          split (",", $user);
+      foreach my $tracker (@trackers)
+        {
+          foreach my $line (GetDB($tracker, "submitted_by = $id limit 1"))
+            {
+              $active = 2;
+            }
+          last if $active;
+          foreach my $line (GetDB($tracker."_history", "mod_by = $id limit 1"))
+            {
+              $active = 2;
+            }
+          last if $active;
+        }
+      next if $active;
+      foreach my $line (GetDB("group_history",
+                              "old_value = '$name'", "field_name"))
+        {
+          chomp ($line);
+          $active = 2;
+          $active = 1 if $line eq 'User Requested Membership' and $active < 1;
+          last if $active > 1;
+        }
+      next if $active > 1;
+      foreach my $line (GetDB("user_group",
+                              "user_id = '$id' AND admin_flags != 'P' limit 1"))
+        {
+          $active = 2;
+        }
+      next if $active > 1;
+      add_to_log ("---- removing $user: $active");
+      remove_account ($id, $name, $active < 1);
+    }
+}
+
+clean_idle_accounts ();
 
 if ($big_cleanup)
   {
@@ -153,7 +240,6 @@ if ($big_cleanup)
       }
 
     # Browse each tracker item to found out if there are items to trash.
-    my @trackers = ("bugs", "support", "task", "patch", "cookbook");
     foreach my $tracker (@trackers)
       {
         my @items_to_delete;
@@ -172,9 +258,8 @@ if ($big_cleanup)
                   if $debug;
                 # That information is important, we log it (before doing the
                 # actual removal).
-                print LOG strftime
-                      "[$script] %c ---- deleted $tracker #$item_id, "
-                      ."from dead group #$group_id\n", localtime
+                add_to_log ("---- deleted $tracker #$item_id, "
+                            ."from dead group #$group_id")
                   unless $debug;
              }
           }
@@ -266,9 +351,8 @@ if ($big_cleanup)
             # Die if the current group_id is not something valid.
             die "Strange wrong id found for dead group, exiting"
               if $group_id eq "";
-            print LOG strftime
-                  "[$script] %c ---- delete anything else "
-                  ."that belong to dead group #$group_id\n", localtime;
+            add_to_log ("---- delete anything else "
+                        ."that belong to dead group #$group_id");
 
             DeleteDB("user_group", "group_id='$group_id'");
             DeleteDB("groups_default_permissions", "group_id='$group_id'");
@@ -298,5 +382,5 @@ if ($big_cleanup)
       } # unless ($debug)
   } # if($big_cleanup)
 
-print LOG strftime "[$script] %c - work finished\n", localtime;
+add_to_log ("- work finished");
 print LOG "[$script] ------------------------------------------------------\n";
