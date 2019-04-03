@@ -55,8 +55,9 @@ if ($msg_id)
       exit_error (_('Message not found.'));
 
     $title_arr=array();
+    $title_arr[] = sprintf (
 # TRANSLATORS: the argment is message id.
-    $title_arr[]=_('Message %s').$msg_id;
+                            _('Message %s'), $msg_id);
     print html_build_list_table_top ($title_arr);
 
     print "<tr>\n<td>\n";
