@@ -403,7 +403,7 @@ print '
 <tr class="'. utils_get_alt_row_color($i) .'">
 <td>';
 
-if ($job_id === false)
+if ($job_id !== false)
   print '<input type="hidden" name="'.$infix.'_id" value="'.$job_id.'" />
 <input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
 ';
