@@ -67,12 +67,15 @@ if ($result)
 
     for ($i = 0; $i < $rows; $i++)
       {
+        $item = db_fetch_array ($result);
+        if ($item === FALSE)
+          continue;
         $bug_id = "";
         print "<h2>Item " . ($i + 1) . "</h2>\n";
         for ($j = 0; $j < $cols; $j++)
           {
             $field_name = db_fieldname ($result, $j);
-            $val = db_result ($result, $i, $j);
+            $val = $item [$j];
             if ($field_name == "bug_id")
               $bug_id = $val;
             if ($i != 0 && $val == $prev_bug[$j])
@@ -95,10 +98,13 @@ if ($result)
 
         for ($k = 0; $k < $r; $k++)
           {
+            $comment = db_fetch_array ($res);
+            if ($comment === FALSE)
+              continue;
             print "<h4>Comment " . ($k + 1) . "</h4>\n";
             for ($l = 0; $l < $c; $l++)
               {
-                $val = db_result ($res, $k, $l);
+                $val = $comment [$l];
                 if (($k != 0 || $i != 0) && $val == $prev_comment[$l])
                   continue;
                 $prev_comment[$l] = $val;
