@@ -254,7 +254,7 @@ echo "Matching type: ";
 echo match_type_box ("arr_match_type[new]", $row['match_type']);
 echo "<ul>
   <li><i>Always</i> is always performed (even in addition to Fallback)</li>
-  <li><i>Module list</i> if you specify a list of directories (see below)<li/>
+  <li><i>Module list</i> if you specify a list of directories (see below)</li>
   <li><i>Fallback</i> is used when nothing matches</li>
 </ul>\n";
 echo "</li>\n<li>";
