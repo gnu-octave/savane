@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007 Sylvain Beucler
-# Copyright (C) 2018 Ineiev
+# Copyright (C) 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -135,7 +135,8 @@ if ($unset)
 print "<h2>PHP functions</h2>\n";
 
 $phpfunctions = array (
-        'mysql_connect' => 'You must install/configure php-mysql ! [REQUIRED]',
+        'mysqli_connect|mysql_connect' =>
+          'You must install/configure php-mysql ! [REQUIRED]',
         'gettext' => 'You should install/configure php with gettext support '
                          . '! [RECOMMENDED]',
         'ctype_digit' => 'You must have a PHP version supporting ctype '
@@ -146,11 +147,19 @@ $phpfunctions = array (
 
 foreach ($phpfunctions as $func => $comment)
   {
-    if (function_exists($func))
-      print "function <strong>" . $func . "()</strong> exist.<br />\n";
+    $funcs = explode ("|", $func);
+    $have_func = false;
+    foreach ($funcs as $i => $f)
+      if (function_exists ($f))
+        {
+          $have_func = true;
+          break;
+        }
+    if ($have_func)
+      print "function <strong>" . $f . "</strong> exist.<br />\n";
     else
-      print "function <strong>" . $func
-            . "()</strong> does not exist. $comment <br />\n";
+      print "function(s) <strong>" . $func
+            . "</strong> not found. $comment <br />\n";
   }
 
 print "<h2>Apache environment vars</h2>\n";
