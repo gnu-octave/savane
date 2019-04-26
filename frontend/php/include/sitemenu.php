@@ -307,7 +307,7 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
   # the SQL should not fail - so error reporting works in other usages of db_query.
   $result = db_query("DESCRIBE cookbook_context2recipe");
   $valid_contexts = array();
-  while($row = mysql_fetch_array($result))
+  while ($row = db_fetch_array ($result))
     $valid_contexts[] = $row['Field'];
 
   if (in_array('context_'.CONTEXT, $valid_contexts)

@@ -188,7 +188,7 @@ switch ($func)
 			  'ip' => '127.0.0.1',
 			  'check_value' => $fields['check'],
 			  'details' => $fields['details']));
-     $stat_id = mysql_insert_id();
+     $stat_id = db_insertid (NULL);
 
  if (!user_isloggedin() && ($_POST['check'] != 1984))
  { exit_error(_("You're not logged in and you didn't enter the magic anti-spam number, please go back!")); }

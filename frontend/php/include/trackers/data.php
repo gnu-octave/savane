@@ -2076,7 +2076,7 @@ reassigned, exiting."), 1);
       fb(_("New item created."));
 
       # Need to get the new item value.
-      $new_item_id =  mysql_insert_id();
+      $new_item_id =  db_insertid ($result);
       if (!$new_item_id)
         {
           fb(_("Unable to find the ID of the new item."), 1);

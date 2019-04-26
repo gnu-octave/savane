@@ -69,7 +69,7 @@ if (isset($log_accum))
                   FROM cvs_hooks, cvs_hooks_log_accum
                   WHERE cvs_hooks.id = cvs_hooks_log_accum.hook_id
                     AND group_id=? AND id=?",
-                 array($group_id, $hook_id)) or die(mysql_error());
+                 array($group_id, $hook_id)) or die(db_error());
           }
       }
     if (isset($arr_id) and is_array($arr_id))
@@ -135,8 +135,8 @@ _("Invalid list of diff notification emails"));
                                                         ? null : $dir_list),
                                          'hook_name' => 'log_accum',
                                          'needs_refresh' => 1),
-                                   DB_AUTOQUERY_INSERT) or die(mysql_error());
-                    $new_hook_id = mysql_insert_id();
+                                   DB_AUTOQUERY_INSERT) or die(db_error());
+                    $new_hook_id = db_insertid (NULL);
                     db_autoexecute('cvs_hooks_log_accum',
                                    array('hook_id' => $new_hook_id,
                                          'branches' => (!isset($branches)
@@ -145,7 +145,7 @@ _("Invalid list of diff notification emails"));
                                          'enable_diff' => $enable_diff,
                                          'emails_diff' => (!isset($emails_diff)
                                                            ? null : $emails_diff)),
-                                   DB_AUTOQUERY_INSERT) or die(mysql_error());
+                                   DB_AUTOQUERY_INSERT) or die(db_error());
                   }
                 else
                   {
@@ -167,7 +167,7 @@ _("Invalid list of diff notification emails"));
                                    DB_AUTOQUERY_UPDATE,
                                    "cvs_hooks.id = cvs_hooks_log_accum.hook_id
                                     AND group_id=? AND id=?",
-                                   array($group_id, $hook_id)) or die(mysql_error());
+                                   array($group_id, $hook_id)) or die(db_error());
                 }
               } # if (!isset($arr_remove[$hook_id]))
           } # foreach ($arr_id as $hook_id => $ignored)
@@ -206,7 +206,7 @@ echo html_build_list_table_top(array('X', 'Repository', 'Match type',
                                      'Notification to', 'Diff?',
                                      'Separate diffs to', 'Updated?'));
 
-while ($row = mysql_fetch_assoc($result))
+while ($row = db_fetch_array ($result))
   {
     $cur= $row['hook_id'];
     echo "<tr>\n";
@@ -308,7 +308,7 @@ print htmlentities ($_SERVER['PHP_SELF'])."'>";
 echo "<table>\n";
 echo html_build_list_table_top(array('X', 'Repository', 'Match type',
                                      'Module list', 'CIA Project', 'Updated?'));
-while ($row = mysql_fetch_assoc($result))
+while ($row = db_fetch_array ($result))
   {
     echo "<tr>";
     echo "<td>";
