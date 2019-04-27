@@ -27,7 +27,7 @@ if (!$group_id)
 $project = project_get_object($group_id);
 
 if (!member_check_private (0, $group_id))
-  exit_error(_("Data Export needs a permission to read private data of the group"));
+  exit_error(_("Data Export requires an access to private data of the group"));
 
 trackers_init($group_id);
 
