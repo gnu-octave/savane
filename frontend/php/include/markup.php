@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2005-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -132,8 +132,6 @@ function markup_full($text, $allow_headings=true)
         {
           $verbatim = 1;
           $verbatim_buffer = '';
-          $verbatim_buffer_linecount = 0;
-
           $line = join("\n", $context_stack);
 
           if (empty($printer))
@@ -158,32 +156,12 @@ function markup_full($text, $allow_headings=true)
           $line = join("\n", $context_stack);
           array_shift($context_stack);
 
-          if (empty($printer))
-            {
-              # Limit the textarea to 20 lines.
-              if ($verbatim_buffer_linecount > 20)
-                $verbatim_buffer_linecount = 20;
-
-              # Use a text input if it is not multiline
-              if ($verbatim_buffer_linecount < 2)
-                {
-                  $result[] = '<input type="text" class="verbatim"'
-                              .' readonly="readonly" size="60" value="'
-                              .$verbatim_buffer.'" />';
-                }
-              else
-                {
-                  $result[] = '<textarea class="verbatim" readonly="readonly" rows="'
-                              .$verbatim_buffer_linecount.'" cols="80">'
-                              .$verbatim_buffer.'</textarea>';
-                }
-            }
-          else
-            {
-              $result[] = '<pre class="verbatim">'.$verbatim_buffer.'</pre>';
-            }
+          $verbatim_buffer = str_replace ("\r\n", "\n", $verbatim_buffer);
+          $verbatim_buffer = str_replace ("\n\r", "\n", $verbatim_buffer);
+          $verbatim_buffer = str_replace ("\r", "\n", $verbatim_buffer);
+          $verbatim_buffer = str_replace ("\n", "<br />\n", $verbatim_buffer);
+          $result[] = '<p class="verbatim">' . $verbatim_buffer . "</p>\n";
           $verbatim_buffer = '';
-          $verbatim_buffer_linecount = 0;
 
           # Jump to the next line, assuming that we can ignore the rest of the
           # line.
@@ -206,7 +184,6 @@ function markup_full($text, $allow_headings=true)
             'no-1a4f67a7-4eae-4aa1-a2ef-eecd8af6a997-markup', $line);
           $lines[$index] = $escaped_line;
           $verbatim_buffer .= $escaped_line;
-          $verbatim_buffer_linecount++;
         }
       else
         {

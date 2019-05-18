@@ -1,7 +1,7 @@
 /* Common stylesheet for all themes.
  *
  * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
- * Copyright (C) 2018 Ineiev
+ * Copyright (C) 2018, 2019 Ineiev
  *
  * This file is part of Savane.
  *
@@ -49,13 +49,13 @@ strong { font-weight: bold; }
 em { font-style: italic; }
 .italic { font-style: italic; }
 
-.verbatim {
-        /* useful to put code blocks, should look by default like postit */
-        border: thin solid #E5E297 !important;
-        margin-left: 0.5em;
-        background-color: #FFFCA8 !important;
-        color: black !important;
-        font-family: monospace;
+.verbatim
+{ /* useful to put code blocks, should look by default like postit */
+  border: thin dashed black;
+  margin-left: 0.5em;
+  background-color: #FFFCA8;
+  color: black;
+  font-family: monospace;
 }
 
 code { border: solid thin; }
