@@ -9,7 +9,7 @@
 #
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -28,7 +28,7 @@
 
 
 # base error library for new objects
-require_once(dirname(__FILE__).'/Error.class');
+require_once(dirname(__FILE__).'/savane_error.class');
 # left-hand and top menu nav library (requires context to be set)
 require_once(dirname(__FILE__).'/sitemenu.php');
 require_once(dirname(__FILE__).'/pagemenu.php');
@@ -39,7 +39,7 @@ require_once(dirname(__FILE__).'/theme.php');
 # various utilities - broken_msie...
 require_once(dirname(__FILE__).'/utils.php');
 
-class Layout extends Error
+class Layout extends savane_error
 {
 
 ########################################## BASIC HTML
@@ -50,7 +50,7 @@ class Layout extends Error
   {
     GLOBAL $bgpri;
 # Constructor for parent class...
-    $this->Error();
+    $this->savane_error();
 
 # Setup the priority color array one time only.
     $bgpri[1] = 'priora';

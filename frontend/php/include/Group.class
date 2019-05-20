@@ -24,7 +24,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-require_once(dirname(__FILE__).'/Error.class');
+require_once(dirname(__FILE__).'/savane_error.class');
 
 $PROJECT_OBJ=array();
 
@@ -43,7 +43,7 @@ function project_get_object($group_id)
 }
 
 
-class Group extends Error
+class Group extends savane_error
 {
 
   #associative array of data from db
@@ -59,7 +59,7 @@ class Group extends Error
 
   function Group($id)
     {
-      $this->Error();
+      $this->savane_error();
       $this->group_id=$id;
       $this->db_result=db_execute("SELECT * FROM groups WHERE group_id=?", array($id));
       if (db_numrows($this->db_result) < 1)
