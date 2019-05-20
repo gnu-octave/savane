@@ -118,7 +118,7 @@ if (isset($_COOKIE['LANGUAGE']) && isset($locale_list[$_COOKIE['LANGUAGE']]))
 $locale = $locale_list[$best_lang];
 define('SV_LANG', $best_lang);
 
-setlocale('LC_ALL', $locale);
+setlocale(LC_ALL, $locale);
 
 # Specify the .mo path; defaults to gettext's compile-time $datadir/locale otherwise
 if (!empty($sys_localedir))
