@@ -17,6 +17,10 @@ if [ "x$1" = xclean ]; then
     exit;
 fi
 
+cd lib
+perl -f Makefile.PL
+cd ..
+
 # Enable no-portability to disable GNU make extensions warnings, such as $(shell)
 #if autoreconf --install --symlink --warnings=all --warnings=no-portability $*
 if autoreconf --install --symlink --warnings=all $*
