@@ -38,9 +38,12 @@ function utils_get_content_filename ($file)
   if (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.txt'))
     return $GLOBALS['sys_incdir'].'/php/'.$file.'.txt';
 # Fallback to legacy location.
-  if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
-    # There is a localized version of the file:
-    return $GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale'];
+  if (isset ($GLOBALS['locale']))
+    {
+      if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
+        # There is a localized version of the file:
+        return $GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale'];
+    }
   if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.txt'))
     return $GLOBALS['sys_incdir'].'/'.$file.'.txt';
   return null;
