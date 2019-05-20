@@ -52,14 +52,16 @@ print "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en_US\">\n"
 . "</head>\n\n"
 . "<body>\n";
 
-print "<h1>Basic PHP pre-tests for Savane installation</h1>\n";
+print "<h1>Basic PHP pre-tests for Savane installation</h1>\n\n";
 if (empty($inside_siteadmin))
   print "<p>This page should help you to check whether your
 installation is properly configured. Once your installation is running,
 you should remove this file or restrict its access, since it could give
 details about your setup to anybody.</p>\n";
 
-print "<h2>Base PHP configuration</h2>\n";
+print "\n<h2>Base PHP configuration</h2>\n\n";
+
+print "<p>PHP version: " . phpversion() . "</p>\n";
 
 # cf. http://php.net/manual/en/ini.php
 $phptags = array (
@@ -74,7 +76,7 @@ $all_inis = ini_get_all();
 define('PHP_INI_SYSTEM', 4);
 # Cf. http://www.php.net/manual/en/ini.core.php
 
-print "<table border=\"1\" summary=\"PHP configuration\">\n";
+print "\n<table border=\"1\" summary=\"PHP configuration\">\n";
 print "<tr><th>PHP Tag name</th><th>Local value</th>"
     . "<th>Suggested/Required value</th></tr>\n";
 $unset = 0;
@@ -126,13 +128,13 @@ foreach ($phptags as $tag => $goodval)
         $unset = 1;
       }
   }
-print "</table>\n";
+print "</table>\n\n";
 if ($unset)
   echo "<blockquote>* This tag was not found at all. It is probably "
        . "irrelevant to your PHP version so you may ignore this "
        . "entry.</blockquote>\n";
 
-print "<h2>PHP functions</h2>\n";
+print "\n<h2>PHP functions</h2>\n\n";
 
 $phpfunctions = array (
         'mysqli_connect|mysql_connect' =>
@@ -145,6 +147,7 @@ $phpfunctions = array (
                       . 'only if you set up authentification via '
                       . 'PAM (kerberos, AFS, etc)');
 
+print "<p>";
 foreach ($phpfunctions as $func => $comment)
   {
     $funcs = explode ("|", $func);
@@ -156,13 +159,14 @@ foreach ($phpfunctions as $func => $comment)
           break;
         }
     if ($have_func)
-      print "function <strong>" . $f . "</strong> exist.<br />\n";
+      print "function <strong>" . $f . "</strong> exists.<br />\n";
     else
-      print "function(s) <strong>" . $func
-            . "</strong> not found. $comment <br />\n";
+      print "function <strong>" . $func
+            . "</strong> not found. <em>$comment</em> <br />\n";
   }
+print "</p>\n";
 
-print "<h2>Apache environment vars</h2>\n";
+print "\n<h2>Apache environment vars</h2>\n\n";
 $configfile = '/etc/savane/';
 
 if (getenv('SAVANE_CONF'))
@@ -190,7 +194,7 @@ if (is_readable ($configfile))
 else
   print "File <strong>$configfile</strong> does not exist or is not readable!";
 
-print "<h2>Savane configuration:</h2>\n";
+print "\n<h2>Savane configuration:</h2>\n\n";
 
 if (!is_readable ($configfile))
   print "Since $configfile does not exist or is not readable, "
@@ -235,16 +239,64 @@ else
     print "</table>\n";
     print "<p>Savane uses safe defaults values when variables are not set
 in the configuration file.</p>\n";
-  }
 
-print "<h2>Optional PHP configuration</h2>\n";
+    print "\n<h2>MySQL configuration</h2>\n\n";
+    require_once ("include/utils.php");
+    require_once ("include/database.php");
+    if (!db_connect ())
+      print "<blockquote>Can't connect to database.</blockquote>\n";
+    else
+      {
+        # When sql_mode contains 'ONLY_FULL_GROUP_BY', queries like
+        # "SELECT groups.group_name,"
+        # . "groups.group_id,"
+        # . "groups.unix_group_name,"
+        # ...
+        # . "GROUP BY groups.unix_group_name "
+        # . "ORDER BY groups.unix_group_name"
+        # used e.g. in my/groups.php result in an error.
+        #
+        # Since MySQL 5.7, this is default. We could use ANY_VALUE ()
+        # to workaround this, but it is only introduced in 5.7,
+        # so won't work with older MySQLs.
+        $mysql_params = array ('@@GLOBAL.version' => NULL,
+                               '@@GLOBAL.sql_mode' => NULL,
+                               '@@SESSION.sql_mode' =>
+                "<em>This should</em> <strong>not</strong> <em>include</em> "
+                . "<code>ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES</code><em>.</em>");
+        $mysql_highlight = array ('@@GLOBAL.sql_mode' =>
+                                  'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES',
+                                  '@@SESSION.sql_mode' =>
+                                  'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES');
+        print "<dl>\n";
+        foreach ($mysql_params as $param => $comment)
+          {
+            $result = db_query ('SELECT ' . $param);
+            $value = db_result ($result, 0, $param);
+            if (isset ($mysql_highlight[$param]))
+              {
+                $vals = explode (",", $mysql_highlight[$param]);
+                foreach ($vals as $i => $v)
+                  $value = str_replace ($v, '<strong>' . $v . '</strong>',
+                                        $value);
+              }
+            print '<dt>' . $param . "</dt>\n<dd>'" . $value . "'";
+            if ($comment !== NULL)
+              print " $comment";
+            print "</dd>\n";
+          }
+        print "</dl>\n";
+      } # db_connect ()
+  } # is_readable ($configfile)
 
-print "The following is not required to run Savane but could enhance security
+print "\n<h2>Optional PHP configuration</h2>\n\n";
+
+print "<p>The following is not required to run Savane but could enhance security
 of your production server. Displaying errors is recommended: they may
 annoy the user with warnings but allow you to spot and report
-potentially harmful bugs (concerns about \"security\" or information
+potentially harmful bugs (concerns about &ldquo;security&rdquo; or information
 leak are void since this is free software and the source code is
-available to all).";
+available to all).</p>\n";
 
 $phptags = array (
         'display_errors' => '1',
@@ -254,7 +306,7 @@ $phptags = array (
         'disable_functions' => 'exec,passthru,popen,shell_exec,system',
 );
 
-print "<table border=\"1\">\n"
+print "\n<table border=\"1\">\n"
 . "<tr><th>PHP Tag name</th><th>Local value</th>"
 . "<th>Suggested/Required value</th></tr>\n";
 $unset = 0;
@@ -284,10 +336,10 @@ foreach ($phptags as $tag => $goodval)
         $unset = 1;
       }
   }
-print "</table>\n";
+print "</table>\n\n";
 if ($unset)
   echo "<blockquote>* This tag was not found at all. It is probably irrelevant "
-       . "to your PHP version so you may ignore this entry.</blockquote>";
+       . "to your PHP version so you may ignore this entry.</blockquote>\n\n";
 
-print "<h2>That's it!</h2>";
+print "\n<h2>That's it!</h2>\n";
 print "</body>\n<html>\n";
