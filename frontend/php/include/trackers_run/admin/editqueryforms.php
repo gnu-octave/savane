@@ -218,14 +218,14 @@ if ($post_changes)
         if ($create_report)
           fb(sprintf(_("Query form '%s' created successfully"),$rep_name));
         else
-          fb(sprintf(_("Query form '%s' updated successfully"),$rep_name),1);
+          fb(sprintf(_("Query form '%s' updated successfully"),$rep_name));
       }
     else
       {
         if ($create_report)
-          fb(sprintf(_("Failed to create query form '%s'"),$rep_name));
+          fb(sprintf(_("Failed to create query form '%s'"),$rep_name), 1);
         else
-          fb(sprintf(_("Failed to update query form '%s'"),$rep_name),1);
+          fb(sprintf(_("Failed to update query form '%s'"),$rep_name), 1);
       }
   } /* if($post_changes) */
 else if ($delete_report)
