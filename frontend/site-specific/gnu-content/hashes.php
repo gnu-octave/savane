@@ -35,6 +35,8 @@
 
 # Every entry is defined in English (for the admins)
 # and in localized form (for the users).
+$LICENSE_EN['gplv3orlater'] = ('GNU General Public License v3 or later');
+$LICENSE['gplv3orlater'] = _('GNU General Public License v3 or later');
 $LICENSE_EN['gpl'] = ('GNU General Public License v2 or later');
 $LICENSE['gpl'] = _('GNU General Public License v2 or later');
 $LICENSE_EN['lgpl'] = ('GNU Lesser General Public License');
@@ -83,8 +85,6 @@ $LICENSE_EN['dual-gpl'] =
   ('GNU General Public License v2 or later (+ dual licensing)');
 $LICENSE['dual-gpl'] =
   _('GNU General Public License v2 or later (+ dual licensing)');
-$LICENSE_EN['gplv3orlater'] = ('GNU General Public License v3 or later');
-$LICENSE['gplv3orlater'] = _('GNU General Public License v3 or later');
 $LICENSE_EN['agpl'] = ('GNU Affero General Public License v3 or later');
 $LICENSE['agpl'] = _('GNU Affero General Public License v3 or later');
 $LICENSE_EN['apache2'] = ('Apache 2.0');
