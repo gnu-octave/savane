@@ -259,7 +259,7 @@ function markup_full($text, $allow_headings=true)
   # To do this, we need to look for closing tags which have been deleted.
   if ($nomarkup_level > 0)
     {
-      $trailing_markup = array_reverse(split("\n", $last_tags));
+      $trailing_markup = array_reverse(explode ("\n", $last_tags));
       $restored_tags = '';
       foreach ($trailing_markup as $tag)
         {

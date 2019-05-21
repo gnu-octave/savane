@@ -362,7 +362,7 @@ print '
 <h2>'._('Create a new mailing list:').'</h2> ';
 
 $project_list_format  = $grp->getTypeMailingListFormat();
-$project_list_formats = split(',', $project_list_format);
+$project_list_formats = explode (',', $project_list_format);
 
 $i = 0;
 foreach ($project_list_formats as $format)

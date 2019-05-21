@@ -209,33 +209,29 @@ class Group extends savane_error
                             $this->type_data_array['url_mailing_list_unsubscribe']));
     }
 
-  /**
-   * $list -> $list@mydomain.tld
-   * Default: no %LIST substitution (but %PROJECT substitution nonetheless)
-   */
+   # $list -> $list@mydomain.tld
+   # Default: no %LIST substitution (but %PROJECT substitution nonetheless)
   function getTypeMailingListAddress($list="%LIST")
     { return str_replace("%PROJECT", $this->getUnixName(),
 			  str_replace("%LIST", $list,
                             $this->type_data_array['mailing_list_address']));
     }
 
-  /**
-   * $list ~> project-$list
-   * Default: no %NAME substitution (but %PROJECT substitution nonetheless)
-   */
+   # $list ~> project-$list
+   # Default: no %NAME substitution (but %PROJECT substitution nonetheless)
   function getTypeMailingListFormat($list="%NAME", $index=null)
     {
       if (!isset($index))
 	{
-	  // return raw format (multiple formats separated by commas)
+	  # Return raw format (multiple formats separated by commas).
 	  return str_replace("%PROJECT", $this->getUnixName(),
 			     str_replace("%NAME", $list,
                                $this->type_data_array['mailing_list_format']));
 	}
       else
 	{
-	  // return format with number $index
-	  $formats = split(',', $this->type_data_array['mailing_list_format']);
+	  # Return format with number $index.
+	  $formats = explode (',', $this->type_data_array['mailing_list_format']);
 	  return str_replace("%PROJECT", $this->getUnixName(),
 			     str_replace("%NAME", $list, $formats[$index]));
 	}

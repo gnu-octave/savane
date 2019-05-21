@@ -100,7 +100,7 @@ function sendmail_mail ($from,
       # Look if there is a (internal) comment id set.
       if (strpos($savane_item_id, ":"))
         {
-          list($savane_item_id, $savane_comment_id) = split(":", $savane_item_id);
+          list($savane_item_id, $savane_comment_id) = explode (":", $savane_item_id);
         }
       $more_headers .= "X-Savane-Item-ID: ".$savane_item_id."\n";
     }
@@ -456,14 +456,14 @@ function sendmail_encode_header_content ($header, $charset="UTF-8")
   if (strpos ($header, '"') !== FALSE)
     {
       # Quotes found, we each quoted part will be a string to encode.
-      $words = split('"', $header);
+      $words = explode ('"', $header);
       $withquotes = 1;
     }
   else
     {
       # Otherwise, the default behavior is to consider words as strings to
       # encode.
-      $words = split(' ', $header);
+      $words = explode (' ', $header);
     }
   while (list($key,$word) = each($words))
     {

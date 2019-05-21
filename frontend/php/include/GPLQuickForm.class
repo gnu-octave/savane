@@ -90,7 +90,7 @@ class GPLQuickForm_Element
 
   private function dateConvert($str)
   {
-    list($year, $month, $day) = split('-', $str);
+    list($year, $month, $day) = explode ('-', $str);
     return array('d' => $day, 'M' => $month, 'Y' => $year);
   }
   public function setValue($value)

@@ -84,7 +84,7 @@ Please upgrade your system and regenerate it
                                 array(user_getid()));
     $row_orig_keys = db_fetch_array($res_orig_keys);
     $orig_keys = $row_orig_keys['authorized_keys'];
-    $new_keys = array_diff(split("###", $keys), split('###', $orig_keys));
+    $new_keys = array_diff(explode ("###", $keys), explode ('###', $orig_keys));
 
     if (count($new_keys))
       {
@@ -128,7 +128,7 @@ else # !$update
     $res_keys = db_execute("SELECT authorized_keys FROM user WHERE user_id = ?",
                            array(user_getid()));
     $row_keys = db_fetch_array($res_keys);
-    $form_authorized_keys = split("###", $row_keys['authorized_keys'], 25);
+    $form_authorized_keys = explode ("###", $row_keys['authorized_keys'], 25);
   }
 # Not valid registration, or first time to page.
 site_user_header(array('title' => _("Change Authorized Keys"),

@@ -873,7 +873,7 @@ function utils_split_emails($addresses)
 {
   $addresses = utils_cleanup_emails($addresses);
   $addresses = str_replace (";", ",", $addresses);
-  return split(',',$addresses);
+  return explode (',', $addresses);
 }
 
 # Email Verification.
