@@ -56,20 +56,17 @@ a:active {
 }
 
 
-.unavailable {
-	text-decoration: line-through;
-	font-style: italic;
-	color: #515151;
+.unavailable
+{
+  font-style: italic;
+  color: #515151;
 }
-.unavailable:hover { 
-	text-decoration: line-through;
-	font-style: italic;
-	color: #d36363;
+.unavailable:hover
+{
+  font-style: italic;
+  color: #d36363;
 }
-.unavailable:active { 
-	color: #553b63; 
-}
-
+.unavailable:active { color: #553b63; }
 
 
 h2 {

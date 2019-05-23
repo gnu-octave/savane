@@ -35,7 +35,7 @@ Very basic (mostly text) items:
 
 	* "body" defines margins, default color (background and foreground)
 	* "a" defines links style.
-	* "unavailable" defines links style for unavailable actions.
+	* "unavailable" defines style for unavailable actions.
 	* "footer" defines the little text on each page bottom.
 	* "warn","error" defines error/warning messages style.
 	* "feedback", "feedbackerror" defines feedback messages style

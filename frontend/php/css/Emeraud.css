@@ -52,12 +52,9 @@ a:active {
 	color: #00c6a5;
 }
 
-.unavailable {
-	color: #D7D7CF !important;
-	text-decoration: none !important;
-}
-.unavailable:hover {
-	color: #D7D7CF !important;
+.unavailable, .unavailable:hover
+{
+  color: #D7D7CF !important;
 }
 
 .error { font-weight: bold; color: #c12424; }

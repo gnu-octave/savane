@@ -50,7 +50,7 @@ a:active { color: #ff0000; }
 
 
 .unavailable { color: #000000; }
-.unavailable:hover { text-decoration: line-through; color: #772c2c;}
+.unavailable:hover { color: #772c2c;}
 
 
 .footer { font-size: x-small; color: #333333; }

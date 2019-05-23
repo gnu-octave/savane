@@ -41,16 +41,13 @@ a:hover { background-color: #c7ffbf; color: #004f1b; }
 a:active { color: #000000; }
 
 
-.unavailable {
-	text-decoration: line-through;
-	color: #1a750c;
+.unavailable { color: #1a750c; }
+.unavailable:hover
+{
+  background-color: #ffc9c9;
+  color: #004f1b;
 }
-.unavailable:hover { 
-	background-color: #ffc9c9; color: #004f1b;
-}
-.unavailable:active { 
-	color: #ffaaaa; 
-}
+.unavailable:active { color: #ffaaaa; }
 
 
 .smaller { font-size: smaller; }

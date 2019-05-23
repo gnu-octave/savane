@@ -46,12 +46,8 @@ a:hover { color: #ff0000; }
 a:active { color: #000000; }
 .boxtitle a { color: #FFFFFF; }
 
-.unavailable {
-  text-decoration: none;
-  color: #cab79f;
-}
-
-.unavailable:hover {
+.unavailable, .unavailable:hover
+{
   text-decoration: none;
   color: #cab79f;
 }

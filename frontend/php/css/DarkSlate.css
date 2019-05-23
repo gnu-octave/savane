@@ -83,19 +83,17 @@ a { text-decoration: none; color: #add7e7; }
 a:hover { text-decoration: underline; color: #deffff; }
 a:active { color: #ffffff; }
 
-.unavailable {
-	text-decoration: line-through;
-	font-style: italic;
-	color: #ffb6bd;
+.unavailable
+{
+  font-style: italic;
+  color: #ffb6bd;
 }
-.unavailable:hover { 
-	text-decoration: line-through;
-	font-style: italic;
-	color: #d36363;
+.unavailable:hover
+{
+  font-style: italic;
+  color: #d36363;
 }
-.unavailable:active { 
-	color: #553b63; 
-}
+.unavailable:active { color: #553b63; }
 
 .footer { font-size: x-small; color: #333333; }
 .warn { color: #ff7173; }

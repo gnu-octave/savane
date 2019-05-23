@@ -42,19 +42,12 @@ a { text-decoration: none; color: #ffce96;}
 a:hover {  text-decoration: underline; }
 a:active { color: #ffe6c9; }
 
-.unavailable {
-	text-decoration: line-through;
-	font-style: italic;
-	color: #cab79f;
+.unavailable, .unavailable:hover
+{
+  font-style: italic;
+  color: #cab79f;
 }
-.unavailable:hover { 
-	text-decoration: line-through;
-	font-style: italic;
-	color: #cab79f;
-}
-.unavailable:active { 
-	color: red; 
-}
+.unavailable:active { color: red; }
 
 .footer { font-size: x-small; color: #7c7c7c; }
 .warn { color: white; }

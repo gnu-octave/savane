@@ -54,13 +54,9 @@ a:active {
 }
 
 
-.unavailable {
-	color: #c1c1b0 !important;
-	text-decoration: none !important;
-}
-.unavailable:hover {
-	text-decoration: line-through;
-	color: #c1c1b0 !important;
+.unavailable, .unavailable:hover
+{
+  color: #c1c1b0 !important;
 }
 
 

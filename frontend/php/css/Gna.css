@@ -52,14 +52,7 @@ a:active {
 	color: #00c6a5;
 }
 
-a.unavailable {
-	color: #acc7c7 !important;
-	text-decoration: none !important;
-}
-
-a.unavailable:hover {
-	color: #acc7c7 !important;
-}
+.unavailable, .unavailable:hover { color: #acc7c7 !important; }
 
 .error { font-weight: bold; color: #c12424; }
 .warn { color: #d36363; }

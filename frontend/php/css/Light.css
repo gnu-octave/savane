@@ -52,19 +52,17 @@ a:active {
 }
 
 
-.unavailable {
-	text-decoration: line-through;
+.unavailable
+{
 	font-style: italic;
 	color: #606060;
 }
-.unavailable:hover { 
-	text-decoration: line-through;
+.unavailable:hover
+{
 	font-style: italic;
 	color: #d36363;
 }
-.unavailable:active { 
-	color: #553b63; 
-}
+.unavailable:active { color: #553b63; }
 
 .error { font-weight: bold; color: #c12424; }
 .warn {  color: #c12424; }

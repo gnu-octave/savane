@@ -50,8 +50,7 @@ a { text-decoration: none; color: #a3bdff;}
 a:hover { text-decoration: underline; color: #fffaba; }
 a:active { color: #ffc4ba; }
 
-.unavailable { text-decoration: line-through; font-style: italic;  }
-.unavailable:hover { text-decoration: line-through; font-style: italic;  }
+.unavailable, .unavailable:hover { font-style: italic; }
 
 
 .footer { font-size: x-small; }

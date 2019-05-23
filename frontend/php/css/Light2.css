@@ -57,14 +57,7 @@ a:active {
 }
 
 
-.unavailable { 
-	color: #c1c1b0; 
-	text-decoration: none; 
-}
-.unavailable:hover { 
-	text-decoration: line-through; 
-	color: #c1c1b0; 
-}
+.unavailable, .unavailable:hover { color: #c1c1b0; }
 
 
 .footer { font-size: x-small; color: #a0a092; }

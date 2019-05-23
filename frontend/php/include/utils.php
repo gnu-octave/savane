@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
 # Copyright (C) 2006, 2007, 2008, 2010 Sylvain Beucler
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -72,14 +72,22 @@ function utils_check_path ($path)
     }
 }
 
-# Add unavailable css class to a link if required.
+# Return text for a control: a link when $available, else a <span>
+# with 'unavailable' CSS class.  Unavailable "links" are written
+# with different tags to let CSS-unaware browsers distinguish them.
 function utils_link ($url, $title, $defaultclass=0, $available=1, $help=0,
                      $extra='')
 {
-  if (!$available)
-    $defaultclass = 'unavailable';
+  $closing_tag = '</a>';
+  $return = '<a href="' . $url . '"';
 
-  $return = '<a href="'.$url.'"';
+  if (!$available)
+    {
+      $defaultclass = 'unavailable';
+      $title = '<del>' . $title . '</del>';
+      $return = '<span';
+      $closing_tag = '</span>';
+    }
 
   if ($defaultclass)
     $return .= ' class="'.$defaultclass.'"';
@@ -87,7 +95,7 @@ function utils_link ($url, $title, $defaultclass=0, $available=1, $help=0,
     $return .= ' title="'.$help.'"';
   if ($extra)
     $return .= ' '.$extra;
-  $return .= '>'.$title.'</a>';
+  $return .= '>' . $title . $closing_tag;
   return $return;
 }
 

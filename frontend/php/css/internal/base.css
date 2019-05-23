@@ -276,16 +276,6 @@ pre {
         font-size: xx-small;
 }
 
-.unavailable {
-        text-decoration: line-through !important;
-        cursor: default;
-}
-
-.unavailable:hover {
-        text-decoration: line-through !important;
-        cursor: default;
-}
-
 .help {
         cursor: help;
         text-decoration: underline;

@@ -42,17 +42,10 @@ a:hover { text-decoration: underline; color: #002A4E; }
 a:active { color: #aa6666; }
 
 
-.unavailable {
-	text-decoration: none !important;
-	color: #517FB6 !important;
-}
-.unavailable:hover { 
-	text-decoration: none !important;
-	color: #606060;
-}
-.unavailable:active { 
-	color: #606060; 
-}
+.unavailable { color: #517FB6 !important; }
+.unavailable:hover { color: #606060; }
+.unavailable, .unavailable:hover { text-decoration: none; }
+.unavailable:active { color: #606060; }
 
 
 h1, h2, h4 {

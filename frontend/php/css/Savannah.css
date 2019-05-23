@@ -50,13 +50,8 @@ a { text-decoration: underline; color: #641212;}
 a:hover { text-decoration: none; color: #c40f0f; }
 a:active { color: #ff0000; }
 
-.unavailable {
-	color: #905050;
-	text-decoration: none;
-}
-.unavailable:hover { 
-	color: #B07070;
-}
+.unavailable { color: #905050; }
+.unavailable:hover { color: #B07070; }
 
 .footer {
  color: #333333;

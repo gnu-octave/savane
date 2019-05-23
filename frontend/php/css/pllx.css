@@ -43,8 +43,7 @@ body {
 a { text-decoration: none; color: #7fffd4; }
 a:hover { text-decoration: underline; color: #98fb98; }
 a:active { color: #87ceeb; }
-.unavailable { text-decoration: line-through; font-style: italic; }
-.unavailable:hover { text-decoration: line-through; font-style: italic; }
+.unavailable, .unavailable:hover { font-style: italic; }
 
 
 .footer { font-size: x-small; color: #b5b5b5; }
