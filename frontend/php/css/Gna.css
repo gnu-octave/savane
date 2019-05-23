@@ -1,21 +1,21 @@
 /* Gna theme.
- * 
+ *
  * Copyright (C) 2004-2006 Vincent Caron <zerodeux--gnu.org>
  * Copyright (C) 2018 Ineiev
  * Heavily based on Light theme by Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -86,7 +86,7 @@ h2 {
 	margin-right: 0.5em;
 	text-indent: 0.8em;
 	font-weight: normal;
- 	border: solid #004c8c thin;
+	border: solid #004c8c thin;
 	text-shadow: 0.1em 0.1em #004c8c;
 }
 
@@ -106,7 +106,7 @@ h4 {
 	margin-right: 0.5em;
 	color: #ffffff;
 	font-weight: normal;
- 	border: solid #004c8c thin;
+	border: solid #004c8c thin;
 	text-shadow: 0.1em 0.1em #004c8c;
 }
 
@@ -165,13 +165,13 @@ hr {
 	margin: 0;
 	padding-left: 5px;
 	border-collapse: collapse;
-  	border-right: thin solid #b3e2e3;
+	border-right: thin solid #b3e2e3;
 }
 
 .menutitle {
 	text-indent: 0.8em;
 	text-align: left;
-  	font-weight: bold;
+	font-weight: bold;
 	border-bottom: thin solid black;
 	text-shadow: 0.1em 0.1em #b3e2e3;
 }
@@ -179,19 +179,19 @@ hr {
 .menuitem {
 	list-style-type: none;
 	text-align: left;
-  	border-bottom: thin solid #b3e2e3;
+	border-bottom: thin solid #b3e2e3;
 	padding: 2px;
 }
 
 .relatedrecipes {
 	list-style-type: none;
 	text-align: left;
-  	border-bottom: thin solid #b1cccc;
+	border-bottom: thin solid #b1cccc;
 	padding: 2px;
 }
 
 .relatedrecipesitem {
-  	border-top: thin solid #c0dede;
+	border-top: thin solid #c0dede;
 }
 
 
@@ -204,7 +204,7 @@ cannot be used with item links as blocks
 */
 
 .menu a {
-  	color: #303030;
+	color: #303030;
 	text-decoration: none;
 }
 
@@ -213,8 +213,8 @@ cannot be used with item links as blocks
 }
 
 .topmenu {
-  	border: thin solid white;
-  	border-top: solid thin #004c8c;
+	border: thin solid white;
+	border-top: solid thin #004c8c;
 }
 
 .topmenu a {
@@ -234,8 +234,8 @@ cannot be used with item links as blocks
 
 
 .topmenuitemmainitem {
-        background-color: #cef0f0; 
-  	border: thin solid #b3e2e3;
+        background-color: #cef0f0;
+	border: thin solid #b3e2e3;
 }
 
 .topmenuitemmainitem:hover {
@@ -245,7 +245,7 @@ cannot be used with item links as blocks
 
 ul.topmenuitemsubmenu {
 	background-color: #F4FFFE;
- 	border: thin solid #0869bc;
+	border: thin solid #0869bc;
 }
 
 ul.topmenuitemsubmenu li {
@@ -256,7 +256,7 @@ ul.topmenuitemsubmenu li {
 }
 
 li.topmenuitemsubmenu:hover {
-        background-color: #cef0f0; 
+        background-color: #cef0f0;
 	color: black;
 	border-left: 0.5em solid #0869bc;
 }
@@ -297,7 +297,7 @@ li.topmenuitemsubmenuseparator {
 .boxtitle {
 	background-color: #80c0e0;
 	border: solid #5080c0;
-  	border-width: 0 thin thin 0;
+	border-width: 0 thin thin 0;
 	text-shadow: 0.1em 0.1em #5080c0;
 }
 

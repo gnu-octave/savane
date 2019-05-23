@@ -1,28 +1,22 @@
-/* <one line to give a brief idea of what this does.>
- * 
- * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+/* Light style.
+ *
+ * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
  * See the changelog file for a detailed list of changes
  *
- *  http://gna.org/p/savane
- *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
-*/
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 
 /* GUIDELINES VERSION FOLLOWED: 1.16 */
@@ -35,7 +29,7 @@
  *
  **********************************************************************/
 
-body { 
+body {
   margin-top: 0.5%;
   margin-left: 0.5%;
   margin-right: 0.5%;
@@ -49,12 +43,12 @@ a {
 	text-decoration: none;
 	color: #606060;
 }
-a:hover { 
-	text-decoration: underline; 
+a:hover {
+	text-decoration: underline;
 	color: #000000;
 }
-a:active { 
-	color: #553b63; 
+a:active {
+	color: #553b63;
 }
 
 
@@ -82,22 +76,22 @@ h1 {
 }
 
 h2 {
-	background-color: #f3dbff; 
-	border: thin solid #d19fea; 
-	color: #6a447c; 
+	background-color: #f3dbff;
+	border: thin solid #d19fea;
+	color: #6a447c;
 	text-indent: 0.8em;
 	font-weight: normal;
 }
 
 h4 {
 	border-bottom: thin solid #d19fea;
-	background-color: #f9efff; 
+	background-color: #f9efff;
 	font-weight: normal;
 }
 
-.highlight { 
+.highlight {
 	background-color: #ffd3d3;
-	color: #333333; 
+	color: #333333;
 	border-left: thin dotted #e2c4f2;
 	border-right: thin dotted #e2c4f2;
 	border-bottom: thin dotted #e2c4f2;
@@ -111,9 +105,9 @@ h4 {
  *
  **********************************************************************/
 
-.realbody {  
-	color: #333333; 
-  	border: thin solid #333333; 
+.realbody {
+	color: #333333;
+	border: thin solid #333333;
 	background-color: #ffffff;
 }
 
@@ -124,7 +118,7 @@ h4 {
  **********************************************************************/
 
 .menutitle {
-	background-color: #eaffed; 
+	background-color: #eaffed;
 	border: thin solid #257025;
 	font-weight: bold;
 	text-align: center;
@@ -132,9 +126,9 @@ h4 {
 	padding-top: 0;
 }
 
-.menuitem { 
+.menuitem {
 	list-style-type: none;
-	background-color: #f7fff8; 
+	background-color: #f7fff8;
 	text-align: right;
 	border-left: thin dotted #c1f2c5;
 	border-right: thin dotted #c1f2c5;
@@ -143,17 +137,17 @@ h4 {
 }
 
 .menusearch {
-	background-color: #f7fff8; 
+	background-color: #f7fff8;
 	border-left: thin dotted #c1f2c5;
 	border-right: thin dotted #c1f2c5;
 }
 
 .topmenu {
-  	background-color: #e5fff4; 
+	background-color: #e5fff4;
 	border: thin solid #69f4c3;
 }
 
-.topmenutitle {   
+.topmenutitle {
 	background-color: #f2fff9;
 	border:thin solid #69f4c3;
  }
@@ -191,39 +185,39 @@ li.topmenuitemsubmenu a:hover {
  **********************************************************************/
 
 
-.boxtitle {  
-	background-color: #f3dbff; 
-	border: thin solid #d19fea; 
-	color: #6a447c; 
+.boxtitle {
+	background-color: #f3dbff;
+	border: thin solid #d19fea;
+	color: #6a447c;
 }
 
 .boxtitle a { color: #6a447c; }
 .boxtitle a:hover { color: #ff0000; }
 
-.boxitem {  
-	background-color: #fbf7ff;  
-	color: #333333; 
+.boxitem {
+	background-color: #fbf7ff;
+	color: #333333;
 	border-left: thin dotted #e2c4f2;
 	border-right: thin dotted #e2c4f2;
 	border-bottom: thin dotted #e2c4f2;
 }
-.boxitemalt { 
-	background-color: #ffffff; 
-	color: #333333; 
+.boxitemalt {
+	background-color: #ffffff;
+	color: #333333;
 	border-left: thin dotted #e2c4f2;
 	border-right: thin dotted #e2c4f2;
 	border-bottom: thin dotted #e2c4f2;
 }
-.boxhighlight { 
+.boxhighlight {
 	background-color: #ffd3d3;
-	color: #333333; 
+	color: #333333;
 	border-left: thin dotted #e2c4f2;
 	border-right: thin dotted #e2c4f2;
 	border-bottom: thin dotted #e2c4f2;
 }
-.boxoptions { 
-	background-color: #ffffff; 
-	color: #333333; 
+.boxoptions {
+	background-color: #ffffff;
+	color: #333333;
 	border: thin dotted #e2c4f2;
 }
 
@@ -242,7 +236,7 @@ input {
 
 input:hover { background-color: #d6e9ff; }
 
-select { 
+select {
  background-color: #e8f0ff;
  border: thin solid #004cd1;
  color: #004cd1;
@@ -250,7 +244,7 @@ select {
 
 select:hover { background-color: #d6e9ff; }
 
-textarea { 
+textarea {
  background-color: #e8f0ff;
  border: thin solid #004cd1;
  color: #004cd1;

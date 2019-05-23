@@ -83,7 +83,7 @@ h2 {
 	text-indent: 0.8em;
 	font-weight: normal;
 	text-shadow: 0.1em 0.1em #86CC86;
- 	border: solid #86CC86 thin;
+	border: solid #86CC86 thin;
 	color: #307330;
 }
 
@@ -99,7 +99,7 @@ h2 a:hover {
 h4 {
 	background-color: #BCF4BC;
 	text-shadow: 0.1em 0.1em #86CC86;
- 	border: solid #86CC86 thin;
+	border: solid #86CC86 thin;
 	font-weight: normal;
 	color: #307330;
 }
@@ -160,12 +160,12 @@ hr {
 	padding-left: 5px;
 	padding-bottom: 15px;
 	border-collapse: collapse;
-  	border: thin solid #D7D7CF;
+	border: thin solid #D7D7CF;
 }
 
 .menutitle {
 	text-align: left;
-  	font-weight: bold;
+	font-weight: bold;
 	border-bottom: thin solid black;
 	text-shadow: 0.1em 0.1em #d2d2c2;
 }
@@ -173,19 +173,19 @@ hr {
 .menuitem {
 	text-align: left;
 	list-style-type: none;
-  	border-bottom: thin solid #DBDBD3;
+	border-bottom: thin solid #DBDBD3;
 	padding: 2px;
 }
 
 .relatedrecipes {
 	text-align: left;
 	list-style-type: none;
-  	border-bottom: thin solid #DBDBD3;
+	border-bottom: thin solid #DBDBD3;
 	padding: 2px;
 }
 
 .relatedrecipesitem {
-  	border-top: thin solid #e6e6dd;
+	border-top: thin solid #e6e6dd;
 }
 
 
@@ -206,27 +206,27 @@ hr {
 }
 
 .topmenu {
-  	border-top: thin solid #D7D7CF;
+	border-top: thin solid #D7D7CF;
 }
 
 .topmenutitle {
 	background-color: #E9B879;
 	text-shadow: 0.1em 0.1em #CC885E;
 	font-weight: bold;
-  	border: solid #CC885E thin;
+	border: solid #CC885E thin;
 }
 
 .topmenuitemmainitem {
 	background: #EEEEE6;
-  	border-bottom: thin solid #D7D7CF;
-  	border-left: thin solid #D7D7CF;
-  	border-right: thin solid #D7D7CF;
+	border-bottom: thin solid #D7D7CF;
+	border-left: thin solid #D7D7CF;
+	border-right: thin solid #D7D7CF;
 }
 
 
 ul.topmenuitemsubmenu {
 	background: #fdfdf4;
- 	border: thin solid #545454;
+	border: thin solid #545454;
 }
 
 

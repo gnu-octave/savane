@@ -1,24 +1,21 @@
-/*
- * Part of the Savane! Project
- * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+/* Cafe theme.
+ *
+ * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
 */
 
 /* GUIDELINES VERSION FOLLOWED: 1.16 */
@@ -33,7 +30,7 @@
  **********************************************************************/
 
 
-body { 
+body {
 	margin-top: 1%;
 	margin-left: 1%;
 	margin-right: 1%;
@@ -88,7 +85,7 @@ h4 {
 }
 
 
-.highlight {	
+.highlight {
 	background-color: #ffffff;
 }
 
@@ -101,11 +98,11 @@ h4 {
  **********************************************************************/
 
 .main {
-	vertical-align: top; 
+	vertical-align: top;
 	background-color: #f2e6ab;
 	border-spacing: 0;
 	border: 2px solid #086629;
-} 
+}
 
 
 
@@ -115,19 +112,19 @@ h4 {
  *
  **********************************************************************/
 
-.menu {	
+.menu {
 	background-color: transparent;
 	color: #086629;
 }
 
-.menutitle {	
+.menutitle {
 	vertical-align: top;
 	border: #f2e6ab;
 	font-weight: bold;
 	text-align: center;
 }
 
-.menuitem {	
+.menuitem {
 	vertical-align: top;
 	border: 0;
 	text-align: left;
@@ -141,14 +138,14 @@ h4 {
 
 ul.topmenuitemsubmenu {
 	background-color: #fff4c9;
- 	border: thin solid #086629;
+	border: thin solid #086629;
 }
 
 ul.topmenuitemsubmenu li {
 	background-color: #fff4c9;
 	border: solid thin #086629;
-	/* no top border, that would be make too large separators 
-	 while it is perfectly fine to overload the right and bottom with 
+	/* no top border, that would be make too large separators
+	 while it is perfectly fine to overload the right and bottom with
 	the ul border, it makes some kind of light 3d effect*/
 	border-top: none;
 	border-left: 0.4em solid #086629;
@@ -168,7 +165,7 @@ ul.topmenuitemsubmenu li {
  *
  **********************************************************************/
 
-.boxtitle {	
+.boxtitle {
 	border: 2px solid #086629;
 	font-weight: bold;
 	text-align: left;
@@ -177,21 +174,21 @@ ul.topmenuitemsubmenu li {
 	color: #086629;
 }
 
-.boxitem {	
+.boxitem {
 	text-align: left;
 	background-color: transparent;
 }
 
-.boxitemalt {	
+.boxitemalt {
 	background-color: #fff4c9;
 	text-align: left;
 }
 
-.boxoptions {	
+.boxoptions {
 	background-color: #fff4c9;
 }
 
-.boxhighlight {	
+.boxhighlight {
 	background-color: #ffffff;
 	text-align: left;
 }
@@ -205,7 +202,7 @@ ul.topmenuitemsubmenu li {
 
 input {
 	background-color: #f2e6ab;
-	font-weight: bold; 
+	font-weight: bold;
 	border: 0;
 	border-bottom: thin dashed #167c3a;
 	color: #086629;

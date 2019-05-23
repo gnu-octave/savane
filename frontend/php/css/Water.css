@@ -1,24 +1,21 @@
-/*
+/* Water style.
  *
- * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
 */
 
 
@@ -33,14 +30,12 @@
  *
  **********************************************************************/
 
-body { 
+body {
   margin: 1%;
   border: #d3d3c9;
   background: #002A4E;
   color: #DCDCDC;
 }
-
-
 
 a { text-decoration: none; color: #005096;}
 a:hover { text-decoration: underline; color: #002A4E; }
@@ -66,16 +61,16 @@ h1, h2, h4 {
 }
 
 h1, h2 {
-  	text-shadow: 0.1em 0.1em #002A4E;
+	text-shadow: 0.1em 0.1em #002A4E;
 }
 
 h2, h4 {
-	border-bottom: 0.1em solid #002A4E; 
+	border-bottom: 0.1em solid #002A4E;
 
 }
 
 h2:hover, h4:hover {
-	background: #F1F1F1;	
+	background: #F1F1F1;
 }
 
 
@@ -90,10 +85,10 @@ h2:hover, h4:hover {
  *
  **********************************************************************/
 
-.main { 
+.main {
 	padding: 0.5em;
 	border: thin solid #bcbcb7;
-	background: #ffffff;  
+	background: #ffffff;
 	color: black;
 }
 
@@ -104,22 +99,22 @@ h2:hover, h4:hover {
  *
  **********************************************************************/
 
-.menu { 
+.menu {
 	background-color: #426794;
 	width: 16%;
 	color: white;
 }
 
-.menutitle { 
-	vertical-align: top; 
-	font-weight: bold; 
-	text-align: center; 
-	border-bottom: thin solid #002A4E; 
-  	text-shadow: 0.1em 0.1em #002A4E;
+.menutitle {
+	vertical-align: top;
+	font-weight: bold;
+	text-align: center;
+	border-bottom: thin solid #002A4E;
+	text-shadow: 0.1em 0.1em #002A4E;
 }
-.menuitem { 
+.menuitem {
 	padding-left: 0.5em;
-	color: #333333; 
+	color: #333333;
 	border-bottom: thin solid #517FB6;
 }
 
@@ -140,10 +135,10 @@ h2:hover, h4:hover {
 }
 
 
-.relatedrecipes { 
+.relatedrecipes {
 	text-align: right;
-	color: #333333; 
-	padding-right: 0.5em; 
+	color: #333333;
+	padding-right: 0.5em;
 	list-style-type: none;
 	border-bottom: thin solid #d3d3c9;
 }
@@ -152,9 +147,8 @@ h2:hover, h4:hover {
 .topmenutitle {
 	background-color: #426794;
 	color: white;
-	font-weight: bold; 
-	text-align: center; 
-	/*border-bottom: thin solid black; 	*/
+	font-weight: bold;
+	text-align: center;
 }
 
 .topmenuitemmainitem {
@@ -163,12 +157,12 @@ h2:hover, h4:hover {
 
 ul.topmenuitemsubmenu {
 	background: #639ADE;
- 	border: thin solid #002A4E;
+	border: thin solid #002A4E;
 }
 
 
 ul.topmenuitemsubmenu li {
- 	border: none;
+	border: none;
 	border-left: 1em solid #37567B;
 	border-bottom: thin solid #517FB6;
 }
@@ -198,7 +192,7 @@ li.topmenuitemsubmenuseparator {
   version (RHEL) */
 .tabselect { background: #002A4E; color: white; /* font-weight: bold; */ }
 .tabselect:hover { color: white; /*font-weight: bold;*/ }
-.tabs:hover { 
+.tabs:hover {
 	background: #639ADE;
 	color: white;
 	text-decoration: none;
@@ -212,17 +206,17 @@ li.topmenuitemsubmenuseparator {
  *
  **********************************************************************/
 
-.box { 
-	vertical-align: top; 
-	border-spacing: 1px; 
-	border: 0; 
+.box {
+	vertical-align: top;
+	border-spacing: 1px;
+	border: 0;
 }
 
-.boxtitle { 
+.boxtitle {
 	background-color: #002A4E;
 	color: white;
 	border: thin solid #0061B6;
-  	text-shadow: 0.1em 0.1em #0061B6;
+	text-shadow: 0.1em 0.1em #0061B6;
 }
 .boxtitle a {
 	color: white;
@@ -231,22 +225,22 @@ li.topmenuitemsubmenuseparator {
 .boxtitle a:hover {
 	background-color: #003665;
 }
-.boxitem {  
-	background-color: #efefef; 
-	text-align: left; 
-	color: #333333; 
+.boxitem {
+	background-color: #efefef;
+	text-align: left;
+	color: #333333;
 	border: thin solid #e0e0e0;
 }
-.boxitemalt { 
-	background-color: #ffffff; 
-	text-align: left; 
-	color: #333333; 
+.boxitemalt {
+	background-color: #ffffff;
+	text-align: left;
+	color: #333333;
 	border: thin solid #f4f4f4;
 }
-.boxoptions { 
-	background-color: #f9f5e8; 
-	text-align: left; 
-	color: #333333; 
+.boxoptions {
+	background-color: #f9f5e8;
+	text-align: left;
+	color: #333333;
 }
 .boxhighlight { background-color: #ffe0db; text-align: left; color: #333333; }
 

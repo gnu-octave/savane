@@ -1,24 +1,21 @@
-/*
+/* Forest style
  *
  * Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
 */
 
 
@@ -70,7 +67,7 @@ a:active { color: #000000; }
 h2 {
 	background-color: #def9d1;
 	font-weight: normal;
- 	border: solid #96ad80;
+	border: solid #96ad80;
 	border-width: 0 0 thin 0;
 }
 
@@ -78,13 +75,13 @@ h4 {
 	font-weight: normal;
 	background-color: #def9d1;
 	font-weight: normal;
- 	border: solid #96ad80;
+	border: solid #96ad80;
 	border-width: 0 0 thin 0;
 }
 
 .feedback {
 	border: thin solid black;
-	background-color: #d9ffd6; 
+	background-color: #d9ffd6;
 	text-align: center;
 	color: black;
 
@@ -92,7 +89,7 @@ h4 {
 
 .feedbackerror {
 	border: thin solid #871b00;
-	background-color: #ffbfaf; 
+	background-color: #ffbfaf;
 	text-align: center;
 	color: #871b00
 }
@@ -115,11 +112,11 @@ h4 {
 
 .realbody { width: 99%; border-spacing: 0; border: 0; color: #333333; }
 
-.main { 
+.main {
   background-color: #fffdf7;
   vertical-align: top;
   border-spacing: 0;
-  border: thin solid #e0cd9f; 
+  border: thin solid #e0cd9f;
 }
 
 
@@ -132,14 +129,14 @@ h4 {
 .topmenu {
   background: #efe3bd;
   border-spacing: 0;
-  border-bottom: thin solid #e0cd9f; 
-  border-top: thin solid #e0cd9f;  
+  border-bottom: thin solid #e0cd9f;
+  border-top: thin solid #e0cd9f;
 }
 
 ul.topmenuitemsubmenu li {
 	background-color: #fffdf7;
-	border: thin solid #e0cd9f; 
-	border-left: 0.3em solid #e0cd9f;  
+	border: thin solid #e0cd9f;
+	border-left: 0.3em solid #e0cd9f;
 
 }
 
@@ -151,8 +148,8 @@ ul.topmenuitemsubmenu li {
 .tabselect { background: #efe3bd; color: #000000; /* font-weight: bold; */ }
 .tabselect:hover { background: #c7ffbf; color: #000000; /* font-weight: bold; */ }
 
-.menu { 
-  border: thin solid #e0cd9f; 
+.menu {
+  border: thin solid #e0cd9f;
   vertical-align: top;
   background-color: #efe3bd;
   font-size: small;
@@ -162,7 +159,7 @@ ul.topmenuitemsubmenu li {
   vertical-align: top;
   font-weight: bold;
   text-align: left;
-  border-bottom: thin solid #e0cd9f; 
+  border-bottom: thin solid #e0cd9f;
   color: #333333;
 }
 
@@ -170,7 +167,7 @@ ul.topmenuitemsubmenu li {
   list-style-type: none;
   vertical-align: top;
   text-align: right;
-  border: 0; 
+  border: 0;
   color: #333333;
 }
 
@@ -192,7 +189,7 @@ ul.topmenuitemsubmenu li {
 
 .box {
   border-spacing: 0;
-  border-bottom: thin solid #baeab4; 
+  border-bottom: thin solid #baeab4;
   border-left: thin solid #baeab4;
   border-right: thin solid #baeab4;
   background-color: #f3fff2;
@@ -200,7 +197,7 @@ ul.topmenuitemsubmenu li {
 
 .boxleft {
   border-spacing: 0;
-  border-bottom: thin solid #baeab4; 
+  border-bottom: thin solid #baeab4;
   border-left: thin solid #baeab4;
   border-right: thin solid #baeab4;
   background-color: #f3fff2;
@@ -210,10 +207,10 @@ ul.topmenuitemsubmenu li {
   background-color: #95db95;
   font-weight: bold;
   text-align: center;
-  color: #000000; 
+  color: #000000;
 }
 
-.boxitem { 
+.boxitem {
   background-color: #f3fff2;
   text-align: left;
   color: #333333;

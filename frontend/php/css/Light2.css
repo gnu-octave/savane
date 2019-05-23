@@ -1,21 +1,20 @@
-/*
- * Light2 color scheme.
+/* Light2 color scheme.
  *
  * Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
  * Copyright (C) 2018 Ineiev
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -36,7 +35,7 @@
  *
  **********************************************************************/
 
-body { 
+body {
 	margin-top: 2px;
 	margin-left: 2px;
   	margin-right: 2px;
@@ -45,16 +44,16 @@ body {
  	color: black;
 }
 
-a { 
+a {
 	text-decoration: none;
 	color: #0000c0;
 }
-a:hover { 
-	text-decoration: underline; 
+a:hover {
+	text-decoration: underline;
 	color: #2929f4;
 }
-a:active { 
-	color: #800080; 
+a:active {
+	color: #800080;
 }
 
 
@@ -75,16 +74,16 @@ a:active {
 /* <h1> Page title */
 
 h1.toptitle {
-  	text-shadow: 0.1em 0.1em #d0d0cc;
+	text-shadow: 0.1em 0.1em #d0d0cc;
 }
 
 /* <h2> Section title */
 h2 {
 	background-color: white;
-	text-indent: 1em; 
+	text-indent: 1em;
 	border-top: solid thin black;
 	border-bottom: solid thin black;
-  	text-shadow: 0.1em 0.1em #d0d0cc;
+	text-shadow: 0.1em 0.1em #d0d0cc;
 	color: black;
 }
 
@@ -95,11 +94,11 @@ h4 {
 	background-color: white;
 	border-top: solid thin black;
 	border-bottom: solid thin black;
-  	text-shadow: 0.1em 0.1em #d0d0cc;
+	text-shadow: 0.1em 0.1em #d0d0cc;
 	color: black;
 }
 
-.highlight { 
+.highlight {
 	background-color: #ffdd76;
 	color: black;
 }
@@ -112,7 +111,7 @@ h4 {
  **********************************************************************/
 
 .realbody {  border-spacing: 4; border: 0; }
-.main { vertical-align: top;  
+.main { vertical-align: top;
 	margin-left: 160px; border-spacing: 0; border: 0; }
 
 
@@ -122,40 +121,40 @@ h4 {
  *
  **********************************************************************/
 
-.menu { 
-	vertical-align: top; 
-	width: 150px; 
-	border-spacing: 0; 
-	border: 0; 
+.menu {
+	vertical-align: top;
+	width: 150px;
+	border-spacing: 0;
+	border: 0;
 	font-size: smaller;
 }
 
-.menutitle { 
+.menutitle {
 	background-color: #3e91eb;
 	border: thin outset #3e91eb;
 	color: white;
-	vertical-align: top; 
-	font-weight: bold; 
-	text-align: center; 
-  	text-shadow: 0.1em 0.1em #3b85d9;
+	vertical-align: top;
+	font-weight: bold;
+	text-align: center;
+	text-shadow: 0.1em 0.1em #3b85d9;
 }
 
-.menuitem { 
-	vertical-align: top; 
-	text-align: left; 
+.menuitem {
+	vertical-align: top;
+	text-align: left;
 	background-color: #eeeee6;
 	border: thin outset #eeeee6;
-	
+
 }
 
-.menusearch { 
-	font-size: xx-small; 
+.menusearch {
+	font-size: xx-small;
 	background-color: #eeeee6;
 	border: thin outset #eeeee6;
-} 
+}
 
-.menulink { 
-  	color: black;
+.menulink {
+	color: black;
 }
 .menuitem:hover {
 	background-color: #ffdd76;
@@ -166,17 +165,17 @@ h4 {
 .menulink:hover {
 	background-color: #ffdd76;
 	color: black;
-	text-decoration: none; 
+	text-decoration: none;
 }
 
 .topmenutitle {
 	background-color: #3e91eb;
 	border: thin outset #3e91eb;
-	font-weight: bold; 
-	text-align: center; 
+	font-weight: bold;
+	text-align: center;
 	color: white;
 	padding: 0;
-  	text-shadow: 0.1em 0.1em #3b85d9;
+	text-shadow: 0.1em 0.1em #3b85d9;
 }
 
 .topmenuitemmainitem {
@@ -194,7 +193,7 @@ h4 {
 
 ul.topmenuitemsubmenu {
 	background-color: #f9f9f2;
-	border: thin outset #eeeee6; 
+	border: thin outset #eeeee6;
 }
 
 ul.topmenuitemsubmenu li {
@@ -223,22 +222,22 @@ li.topmenuitemsubmenuseparator {
 
 
 
-.tabs { 
-	color: #000000; 
+.tabs {
+	color: #000000;
 }
 
-.tabs:hover { 
-	color: #000000; 
+.tabs:hover {
+	color: #000000;
 	text-decoration: none;
 }
-.tabselect { 
-	color: #000000; 
+.tabselect {
+	color: #000000;
 /*	font-weight: bold;  buggy with some RHEL konqueror versions */
 	background: #7e8c9e;
 	border: thin outset #7e8c9e;
-	color: white; 
+	color: white;
 }
-.tabselect:hover { 
+.tabselect:hover {
 	background-color: #ffdd76;
 	border: thin outset #ffdd76;
 	color: black;
@@ -252,50 +251,50 @@ li.topmenuitemsubmenuseparator {
  *
  **********************************************************************/
 
-.box { 
-	background-color: #eeeee6; 
-	border-top: 2px outset #eeeee6; 
-	border-left: 2px outset #eeeee6; 
-	border-right: 2px outset #eeeee6; 
-	border-bottom: 1px outset #eeeee6; 
-	border-spacing: 0; 
+.box {
+	background-color: #eeeee6;
+	border-top: 2px outset #eeeee6;
+	border-left: 2px outset #eeeee6;
+	border-right: 2px outset #eeeee6;
+	border-bottom: 1px outset #eeeee6;
+	border-spacing: 0;
 	color: black;
 }
 
-.boxtitle { 
+.boxtitle {
 	background-color: #7e8c9e;
-	font-weight: bold; 
-	text-align: center; 
-	color: white; 
-  	text-shadow: 0.1em 0.1em #a3a292;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+	text-shadow: 0.1em 0.1em #a3a292;
 }
 
-.boxtitle a { 
-	color: white; 
+.boxtitle a {
+	color: white;
 	text-decoration: underline;
 }
-.boxtitle a:hover { 
-	color: #f2ffff; 
+.boxtitle a:hover {
+	color: #f2ffff;
 }
 
-.boxitem { 
+.boxitem {
 	border-bottom: 1px solid #a3a292;
 }
-.boxitemalt { 
+.boxitemalt {
 	background-color: #f9f9f2;
-	border-bottom: 1px solid #a3a292; 	 
+	border-bottom: 1px solid #a3a292;
 }
-.boxhighlight { 
-	background-color: #ffdd76; 
+.boxhighlight {
+	background-color: #ffdd76;
 	color: black;
 }
 
-.boxoptions { 
-	text-align: left; 
+.boxoptions {
+	text-align: left;
 	background-color: #eeeee6;
 	border: thin solid #a3a292;
 	color: black;
-} 
+}
 
 /**********************************************************************
  *
@@ -304,17 +303,17 @@ li.topmenuitemsubmenuseparator {
  **********************************************************************/
 
 
-input { 
-	background-color: white; 
-	color: black; 
+input {
+	background-color: white;
+	color: black;
 }
-select { 
-	background-color: white; 
-	color: black; 
+select {
+	background-color: white;
+	color: black;
 }
-textarea { 
-	background-color: white; 
-	color: black; 
+textarea {
+	background-color: white;
+	color: black;
 }
 
 /* text before inputs */
@@ -328,93 +327,93 @@ textarea {
  *
  **********************************************************************/
 
-.priora { 
-	background-color: #fff2f2; 
-	border: 0;
-	border-bottom: thin solid #ef6e6e; 
-}
-.priorb { 
-	background-color: #ffe8e8; 
-	border: 0; 
-	border-bottom: thin solid #ef6e6e;
-}
-.priorc { 
-	background-color: #ffe0e0; 
-	border: 0;
-	border-bottom: thin solid #ef6e6e; 
-}
-.priord { 
-	background-color: #ffd8d8; 
-	border: 0;
-	border-bottom: thin solid #ef6e6e; 
-}
-.priore { 
-	background-color: #ffcece; 
+.priora {
+	background-color: #fff2f2;
 	border: 0;
 	border-bottom: thin solid #ef6e6e;
 }
-.priorf { 
-	background-color: #ffc6c6;  
+.priorb {
+	background-color: #ffe8e8;
 	border: 0;
 	border-bottom: thin solid #ef6e6e;
 }
-.priorg { 
-	background-color: #ffbfbf;  
+.priorc {
+	background-color: #ffe0e0;
 	border: 0;
 	border-bottom: thin solid #ef6e6e;
 }
-.priorh { 
-	background-color: #ffb7b7;  
+.priord {
+	background-color: #ffd8d8;
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priore {
+	background-color: #ffcece;
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorf {
+	background-color: #ffc6c6;
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorg {
+	background-color: #ffbfbf;
+	border: 0;
+	border-bottom: thin solid #ef6e6e;
+}
+.priorh {
+	background-color: #ffb7b7;
 	border: 0;
 	border-bottom: thin solid #ef6e6e;
  }
-.priori { 
-	background-color: #ffadad;  
+.priori {
+	background-color: #ffadad;
 	border: 0;
 	border-bottom: thin solid #ef6e6e;
 }
 
-.prioraclosed { 
-	background-color: #F5FFEB; 
+.prioraclosed {
+	background-color: #F5FFEB;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.priorbclosed { 
+.priorbclosed {
 	background-color: #EDFFE6;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.priorcclosed { 
+.priorcclosed {
 	background-color: #EEFFE1;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.priordclosed { 
+.priordclosed {
 	background-color: #E0FFD5;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.prioreclosed { 
+.prioreclosed {
 	background-color: #CCFFBB;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.priorfclosed { 
+.priorfclosed {
 	background-color: #C6FFB9;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.priorgclosed { 
+.priorgclosed {
 	background-color: #C0FFB2;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.priorhclosed { 
+.priorhclosed {
 	background-color: #ADFFA4;
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-.prioriclosed { 
+.prioriclosed {
 	background-color: #A0FF9D;
 	border: 0;
 	border-bottom: thin solid #51DA96;

@@ -1,20 +1,20 @@
 /* pllx color scheme.
- * 
+ *
  * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
  * Copyright (C) 2018 Ineiev
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -30,7 +30,7 @@
  *
  **********************************************************************/
 
-body { 
+body {
   margin-top: 1%;
   margin-left: 1%;
   margin-right: 1%;
@@ -57,7 +57,7 @@ h1 {
 }
 /* <h2> Section title */
 h2 {
-	text-indent: 1em;	
+	text-indent: 1em;
 	color: #e0c080;
 	border-bottom: thin solid #e0c080;
 }
@@ -75,10 +75,10 @@ h4 {
 
 .error {
 	color: #ff9e9e;
-	font-weight: bold; 
+	font-weight: bold;
 }
 
-.highlight { background-color: #4f706c; color: white; }  
+.highlight { background-color: #4f706c; color: white; }
 
 /**********************************************************************
  *
@@ -117,14 +117,14 @@ h4 {
 
 
 ul.topmenuitemsubmenu {
-  border: thin solid black; 
+  border: thin solid black;
   background-color: #3d3d3d;
 }
 
 .topmenuitemsubmenu a { color: #7fffd4; }
 .topmenuitemsubmenu a:hover { color: #98fb98; }
 
-.menu { 
+.menu {
   vertical-align: top;
   margin-top: 25px;
   border-spacing: 0;
@@ -132,9 +132,9 @@ ul.topmenuitemsubmenu {
   color: #b5b5b5;
 }
 
-.menutitle { 
+.menutitle {
   background-color: #c6ffc6;
-  border: thin solid #12b76a; 
+  border: thin solid #12b76a;
   color: #12b76a;
   margin-top: 25px;
   padding-top: 0;
@@ -176,33 +176,33 @@ ul.topmenuitemsubmenu {
  *
  **********************************************************************/
 
-.boxtitle {            
-  border: thin solid black; 
+.boxtitle {
+  border: thin solid black;
   font-weight: bold;
   text-align: center;
   background-color: #e5e5e5;
   color: black;
 }
 
-.boxitem {     
-  border: thin solid black; 
+.boxitem {
+  border: thin solid black;
   background-color: #686868;
 }
 
-.boxitemalt { 
-  border: thin solid black; 
+.boxitemalt {
+  border: thin solid black;
   background-color: #3d3d3d;
 }
 
-.boxoptions { 
-  border: thin solid black; 
+.boxoptions {
+  border: thin solid black;
   background-color: #3d3d3d;
 }
 
 .boxtitle a { color: black; }
 .boxtitle a:hover { color: black; }
 
-.boxhighlight { background-color: #4f706c; color: white; }  
+.boxhighlight { background-color: #4f706c; color: white; }
 
 
 /**********************************************************************
@@ -213,7 +213,7 @@ ul.topmenuitemsubmenu {
 
 input {
   background-color: #3d3d3d;
-  border: thin inset #3d3d3d; 
+  border: thin inset #3d3d3d;
   color: #7fffd4;
 }
 
@@ -221,13 +221,13 @@ input:hover { color: #98fb98; }
 
 select {
   background-color: #3d3d3d;
-  border: thin inset #3d3d3d; 
+  border: thin inset #3d3d3d;
   color: #7fffd4;
 }
 
 textarea {
   background-color: #3d3d3d;
-  border: thin inset #3d3d3d; 
+  border: thin inset #3d3d3d;
   color: #7fffd4;
 }
 

@@ -1,21 +1,21 @@
-/* <one line to give a brief idea of what this does.>
- * 
- * Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
- *   
- * Based on Emeraud                      
+/* Cappuccino style.
+ *
+ * Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+ *
+ * Based on Emeraud.
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,15 +33,15 @@
 	border: thin solid #E2DEC7;
 }
 
-.menuitem { 
-  	border-bottom: thin solid #E2DEC7;
+.menuitem {
+	border-bottom: thin solid #E2DEC7;
 }
 
-.menu a:hover { 
+.menu a:hover {
 	color: #535353;
 }
 
-.menu a:hover { 
+.menu a:hover {
 	background-color: #FFFCE6;
 }
 
@@ -75,19 +75,19 @@
 	text-decoration: none;
 }
 
-.tabselect { 
-	color: #535353; 
-	text-decoration: none; 
-} 
+.tabselect {
+	color: #535353;
+	text-decoration: none;
+}
 
-.tabselect:hover, .topmenuitemmainitem:hover { 
+.tabselect:hover, .topmenuitemmainitem:hover {
 	background-color: #FFFCE6;
 	color: #535353;
-	text-decoration: none; 
-} 
+	text-decoration: none;
+}
 
 ul.topmenuitemsubmenu {
- 	border: thin solid #E2DEC7;
+	border: thin solid #E2DEC7;
 }
 
 

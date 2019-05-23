@@ -1,21 +1,21 @@
 /*
- * LCD-oriented style. 
+ * LCD-oriented style.
  *
  * Copyright (C) 2004 Mathieu Roy <yeupou--gnu.org>
  * Copyright (C) 2018 Ineiev
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -27,7 +27,7 @@
 @import "internal/base.css";
 
 
-/* This class is LCD screen oriented: dark background and high contrast 
+/* This class is LCD screen oriented: dark background and high contrast
    is more lisible with this kind of screens. */
 
 /**********************************************************************
@@ -36,7 +36,7 @@
  *
  **********************************************************************/
 
-body { 
+body {
   margin-top: 0.5%;
   margin-left: 0.5%;
   margin-right: 0.5%;
@@ -79,19 +79,19 @@ h2 {
 	font-weight: normal;
 	text-indent: 1em;
 	border-bottom: thin solid #a5a5a5;
-	background-color: #282828; 
+	background-color: #282828;
 }
 /* <h3> Small section title */
 /* <h4> Input form label */
 h4 {
 	font-weight: normal;
-	background-color: #282828; 
+	background-color: #282828;
 	border-bottom: #a5a5a5 solid thin;
 }
 
 
 .highlight  {
-	background-color: #575757;	
+	background-color: #575757;
 	border-left: thin dashed #777777;
 	border-right: thin dashed #777777;
 	border-bottom: thin dashed #777777;
@@ -105,16 +105,16 @@ h4 {
  **********************************************************************/
 
 
-.realbody { 
+.realbody {
 	border-spacing: 0;
- 	background-color: #000000;
-  	border: thin solid #ffffff;
+	background-color: #000000;
+	border: thin solid #ffffff;
 	color: #bcbcbc;
 }
 
 .main {
-  	vertical-align: top;
-  	border-spacing: 0; 
+	vertical-align: top;
+	border-spacing: 0;
 }
 
 
@@ -124,7 +124,7 @@ h4 {
  *
  **********************************************************************/
 
-.menu { 
+.menu {
 	vertical-align: top;
 	border-spacing:	0;
 	border: none;
@@ -133,7 +133,7 @@ h4 {
 	font-size: small;
 }
 
-.menutitle { 
+.menutitle {
 	background-color: #445572;
 	vertical-align: top;
 	font-weight: bold;
@@ -161,19 +161,19 @@ h4 {
 	border-left: thin solid #a3bdff;
 	border-top: thin solid #a3bdff;
 	border-bottom: thin solid #a3bdff;
-	vertical-align: middle;	
+	vertical-align: middle;
 }
 
 
 ul.topmenuitemsubmenu  {
- 	border: thin solid #686868;
+	border: thin solid #686868;
 }
 
 
 ul.topmenuitemsubmenu li {
 	background: #494949;
 	border: none;
- 	border-top: thin solid #686868;
+	border-top: thin solid #686868;
 	border-left: 0.3em solid #a3bdff;
 }
 
@@ -182,9 +182,9 @@ li.topmenuitemsubmenu:hover {
 }
 
 .topmenutitle {
-	font-style: italic; 
+	font-style: italic;
 	width: 13%;
-	padding: 3px 2px 3px 10px;  
+	padding: 3px 2px 3px 10px;
 }
 
 .topmenuitem {
@@ -201,7 +201,7 @@ li.topmenuitemsubmenu:hover {
  **********************************************************************/
 
 
-.boxtitle  {	
+.boxtitle  {
 	background-color: #637899;
 	border: thin solid #ffffff;
 	font-weight: bold;
@@ -216,7 +216,7 @@ li.topmenuitemsubmenu:hover {
 	border-bottom: thin dashed #777777;
 }
 
-.boxitemalt  {	
+.boxitemalt  {
 	text-align: left;
 	background-color: #282828;
 	color: #eaeaea;
@@ -225,7 +225,7 @@ li.topmenuitemsubmenu:hover {
 	border-bottom: thin dashed #777777;
 }
 
-.boxoptions  {	
+.boxoptions  {
 	text-align: left;
 	background-color: #282828;
 	color: #eaeaea;
@@ -234,7 +234,7 @@ li.topmenuitemsubmenu:hover {
 
 
 .boxhighlight  {
-	background-color: #575757;	
+	background-color: #575757;
 	text-align: left;
 	border-left: thin dashed #777777;
 	border-right: thin dashed #777777;
@@ -257,7 +257,7 @@ input {
 
 input:hover { background-color: #282828; }
 
-select { 
+select {
  background-color: #494949;
  border: thin solid #a5a5a5;
  color: #a5a5a5;
@@ -265,7 +265,7 @@ select {
 
 select:hover { background-color: #282828; }
 
-textarea { 
+textarea {
  background-color: #494949;
  border: thin solid #a5a5a5;
  color: #a5a5a5;

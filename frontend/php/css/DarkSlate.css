@@ -2,24 +2,21 @@
  * This file is part of the Savane project
  * <http://gna.org/projects/savane/>
  *
- * $Id$
- * 
- * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
- *                         Philippe Roy <philou--gnu.org>        
- *
+ * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2002-2006 Philippe Roy <philou--gnu.org>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -57,9 +54,9 @@
  * e5f8ff : "lightlightblue philou"
  * 00ffff : "cyan emacs"
  * deffff : "light cyan emacs"
- * 7bffd6 : "aquamarine emacs" 
- * 63cbad : "aquamarine3 emacs" 
- * 428a73 : "aquamarine4 emacs" 
+ * 7bffd6 : "aquamarine emacs"
+ * 63cbad : "aquamarine3 emacs"
+ * 428a73 : "aquamarine4 emacs"
 
  * 94fa94 : "palegreen emacs"
  * 6a997b : "vert clair"
@@ -71,7 +68,7 @@
  *
  **********************************************************************/
 
-body { 
+body {
   margin-top: 0%;
   margin-left: 0%;
   margin-right: 0%;
@@ -79,7 +76,7 @@ body {
   background: #314d52;
   font-family: arial,helvetica;
   color: #f5deb3;
-  
+
 }
 
 a { text-decoration: none; color: #add7e7; }
@@ -104,7 +101,7 @@ a:active { color: #ffffff; }
 .warn { color: #ff7173; }
 .error { font-weight: bold; color: #ff7173; }
 
-.help { 
+.help {
 	font-style: italic;
 }
 
@@ -114,16 +111,16 @@ h1 {
 	text-indent: 0.3em; }
 
 h2 {
-	background-color: #70535a; 
+	background-color: #70535a;
 	border: thin solid #223538; }
 
 h4 {
-	background-color: #70535a; 
+	background-color: #70535a;
         border: thin solid #223538; }
 
 
-.highlight { 
-	      background-color: #24af98; 
+.highlight {
+	      background-color: #24af98;
 }
 
 
@@ -140,7 +137,7 @@ h4 {
  *
  **********************************************************************/
 
-.topmenu { 
+.topmenu {
 	 background-color: #526929;
 	 border: thin solid #223538;
 }
@@ -176,31 +173,31 @@ li.topmenuitemsubmenu:hover {
 }
 
 
-.menu { 
+.menu {
 	background-color: #314d52;
 	border-spacing: 0;
 	border: 0;
-	font-size: small; 
-	margin-bottom: 15%; 
+	font-size: small;
+	margin-bottom: 15%;
 }
 
-.menutitle {  
-	   background-color: #526929;
-	   vertical-align: top; 
-	   font-weight: bold; 
-	   text-align: left;
-	   border: thin solid #223538; 
-  	   padding-top: 0;
-	 margin-top: 15px;
+.menutitle {
+  background-color: #526929;
+  vertical-align: top;
+  font-weight: bold;
+  text-align: left;
+  border: thin solid #223538;
+  padding-top: 0;
+  margin-top: 15px;
 }
 
-.menuitem { 
-	  vertical-align: top; 
-	  text-align: right; 
-	  border-bottom: thin dotted #526929; }	
+.menuitem {
+	  vertical-align: top;
+	  text-align: right;
+	  border-bottom: thin dotted #526929; }
 
 
-.tabselect { 
+.tabselect {
 /* we cannot keep it in bold, it makes an extra space with some konqueror
   version (RHEL) */
 	   /*font-weight: bold; */
@@ -212,48 +209,48 @@ li.topmenuitemsubmenu:hover {
  *
  **********************************************************************/
 
-.box { 
-     vertical-align: top; 
-     border-spacing: 1px; 
+.box {
+     vertical-align: top;
+     border-spacing: 1px;
      border: 0; }
 
-.boxleft { 
-     vertical-align: top; 
-     border-spacing: 1px; 
+.boxleft {
+     vertical-align: top;
+     border-spacing: 1px;
      border: 0; }
 
-.boxtitle { 
-	  background-color: #428a73; 
-	  font-weight: bold; 
-	  text-align: center; 
+.boxtitle {
+	  background-color: #428a73;
+	  font-weight: bold;
+	  text-align: center;
 	  border: thin solid #223538; }
 
-.boxtitle a { 
-	    color: #add7e7; } 
+.boxtitle a {
+	    color: #add7e7; }
 
-.boxitem { 
-	 text-align: left; 
+.boxitem {
+	 text-align: left;
 	 border-left: thin dotted #428a73;
 	 border-right: thin dotted #428a73;
 	 border-bottom: thin dotted #428a73; }
 
-.boxitemalt { 
-	    background-color: #40656b; 
-	    text-align: left; 
+.boxitemalt {
+	    background-color: #40656b;
+	    text-align: left;
 	    border-left: thin dotted #428a73;
 	    border-right: thin dotted #428a73;
 	    border-bottom: thin dotted #428a73; }
 
-.boxhighlight { 
-	      background-color: #24af98; 
-	      text-align: left; 
+.boxhighlight {
+	      background-color: #24af98;
+	      text-align: left;
 	      border-left: thin dotted #428a73;
 	      border-right: thin dotted #428a73;
 	      border-bottom: thin dotted #428a73; }
 
-.boxoptions { 
-	    background-color: #40656b; 
-	    text-align: left; 
+.boxoptions {
+	    background-color: #40656b;
+	    text-align: left;
 	    border: thin dotted #428a73;
 }
 
@@ -269,7 +266,7 @@ input:hover { background: #526929; color: #f5deb3; }
 select { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
 select:hover { background: #526929;  color: #f5deb3; }
 textarea { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
-textarea:hover { background: #526929; color: #f5deb3; } }
+textarea:hover { background: #526929; color: #f5deb3; }
 
 
 /**********************************************************************
@@ -279,7 +276,7 @@ textarea:hover { background: #526929; color: #f5deb3; } }
  **********************************************************************/
 
 
-.priora { background-color: #31513b; border: thin dotted #243924; } 
+.priora { background-color: #31513b; border: thin dotted #243924; }
 
 .priorb { background-color: #426f51; border: thin dotted #243924; } /* 140,41,43 */
 .priorc { background-color: #426f42; border: thin dotted #243924; } /* 120,41,43 */
@@ -289,7 +286,7 @@ textarea:hover { background: #526929; color: #f5deb3; } }
 .priorg { background-color: #6f6042; border: thin dotted #243924; } /* 40,41,43 */
 .priorh { background-color: #6f5142; border: thin dotted #243924; } /* 20,41,43 */
 .priori { background-color: #6f4242; border: thin dotted #243924; } /* 0,41,43 */
-.priora { background-color: #31513b; border: thin dotted #243924; } 
+.priora { background-color: #31513b; border: thin dotted #243924; }
 
 
 .prioraclosed { color: black }

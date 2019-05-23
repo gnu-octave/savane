@@ -1,27 +1,25 @@
 /*
+ * LinuxfrPointOrg style.
  *
- * Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * $Id$
- *
  *    This theme was inspired by the design of the original
  *    http://linuxfr.org website.
- *
 */
 
 
@@ -36,7 +34,7 @@
  *
  **********************************************************************/
 
-body { 
+body {
   margin-top: 0;
   margin-left: 0;
   margin-right: 0;
@@ -63,7 +61,7 @@ a:active { color: #ff0000; }
 /* <h2> Section title */
 h2 {
 	background-color: white;
-	text-indent: 1em; 
+	text-indent: 1em;
 	border-top: solid thin black;
 	border-bottom: solid thin black;
 	color: black;
@@ -83,7 +81,7 @@ h4 {
 .highlight { background-color: #ffffff; color: #333333; }
 
 
-.help {	
+.help {
 	border-bottom: dotted thin black;
 }
 
@@ -94,7 +92,7 @@ h4 {
  **********************************************************************/
 
 .realbody {  border-spacing: 4; border: 0; color: #333333; }
-.main { vertical-align: top;  
+.main { vertical-align: top;
 	margin-left: 160px; border-spacing: 0; border: 0; }
 
 
@@ -109,7 +107,7 @@ h4 {
 .menuitem { vertical-align: top; text-align: left; color: #333333; }
 .menuitem a { color: #333333; }
 .menuitem a:hover {  color: #1010b2; }
-.menusearch { font-size: xx-small; } 
+.menusearch { font-size: xx-small; }
 
 .topmenu {border-top: thin solid #000000; }
 .topmenutitle { background-color: #c9c9c9; font-weight: bold; border: thin solid #000000; border-top: none; color: #333333; }
@@ -121,7 +119,7 @@ h4 {
 
 ul.topmenuitemsubmenu {
 	background-color: white;
- 	border: thin solid black;
+	border: thin solid black;
 }
 
 ul.topmenuitemsubmenu li {

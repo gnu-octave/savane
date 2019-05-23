@@ -1,24 +1,21 @@
-/*
+/* OldCERN theme.
  *
- * Copyright 2003-2005 (c) Yves Perrin <yves.perrin--cern.ch>
+ * Copyright (C) 2003-2005 Yves Perrin <yves.perrin--cern.ch>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
 */
 
 
@@ -75,7 +72,7 @@ a:active { color: #000000; }
 h1 {
   color: #FFFFFF;
   background-color: tan;
-  text-align: center; 
+  text-align: center;
 }
 
 h1.toptitle {
@@ -103,9 +100,9 @@ img.bigicon {
 }
 
 /* mimic boxhighlight */
-.highlight { 
-  background-color: #fff4b2; 
-} 
+.highlight {
+  background-color: #fff4b2;
+}
 
 
 .quote {
@@ -124,13 +121,13 @@ img.bigicon {
 .realbody { border: 0; color: #333333; }
 
 
-.main { 
+.main {
   /* DONT CHANGE width, margin and padding size, or you ll be very sorry for
 	MSIE users */
   margin-top: 2px;
   background-color: #fffdf7;
   vertical-align: top;
-  border-spacing: 5px; 
+  border-spacing: 5px;
   border: 1px solid tan;
   padding-top: 3px;
   padding-left: 3px;
@@ -150,19 +147,19 @@ img.bigicon {
 
 .topmenu {
   border-spacing: 0;
-  border-top: thin solid #e0cd9f;  
+  border-top: thin solid #e0cd9f;
 }
 
 .topmenutitle {
 	background: #efe3bd;
-  	border: thin solid #e0cd9f;
+	border: thin solid #e0cd9f;
 	border-top: none;
-  	text-shadow: 0.1em 0.1em #e2d5af
+	text-shadow: 0.1em 0.1em #e2d5af
 }
 
 .topmenuitemmainitem {
 	background: #efe3bd;
-  	border: thin solid #e0cd9f;
+	border: thin solid #e0cd9f;
 	border-top: none;
 }
 
@@ -170,12 +167,12 @@ img.bigicon {
 
 ul.topmenuitemsubmenu {
 	background: #FFF8D6;
- 	border: thin solid #EEE2BD;
+	border: thin solid #EEE2BD;
 }
 
 
 ul.topmenuitemsubmenu li {
- 	border: thin solid #EEE2BD;
+	border: thin solid #EEE2BD;
 	border-top: none;
 	border-left: 0.3em solid #e0cd9f;
 }
@@ -245,8 +242,8 @@ li.topmenuitemsubmenuseparator {
         content: url("../images/CERN.theme/point.png");
 }
 
-.relatedrecipesitem { 
-  	border-top: thin solid #f7dfbf;
+.relatedrecipesitem {
+	border-top: thin solid #f7dfbf;
 }
 
 .menu a {
@@ -282,14 +279,14 @@ li.topmenuitemsubmenuseparator {
   border-bottom: thin solid #006600;
   border-right: thin solid #006600;
   text-shadow: 0.1em 0.1em #006600;
-  color: #FFFFFF; 
+  color: #FFFFFF;
 }
 
-.boxtitle a:hover { 
+.boxtitle a:hover {
 	background-color: #3aab72;
 }
 
-.boxitemalt { 
+.boxitemalt {
   background-color: cornsilk;
   text-align: left;
   color: #333333;
@@ -297,28 +294,28 @@ li.topmenuitemsubmenuseparator {
   padding: 1%;
 }
 
-.boxitem { 
-  background-color: #fffced; 
-  text-align: left; 
-  color: #333333; 
+.boxitem {
+  background-color: #fffced;
+  text-align: left;
+  color: #333333;
   padding: 1%;
   border-bottom: thin solid #eae2b9;
 }
 
-.boxoptions { 
-  background-color: #fffced; 
-  color: #333333; 
+.boxoptions {
+  background-color: #fffced;
+  color: #333333;
   padding: 1%;
   border: thin solid #eae2b9;
 }
 
-.boxhighlight { 
-  background-color: #fff4b2; 
-  text-align: left; 
-  color: #333333;  
+.boxhighlight {
+  background-color: #fff4b2;
+  text-align: left;
+  color: #333333;
   padding: 1%;
   border-bottom: thin solid #d3c99c;
-} 
+}
 
 
 
