@@ -55,9 +55,8 @@ print "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en_US\">\n"
 print "<h1>Basic PHP pre-tests for Savane installation</h1>\n\n";
 if (empty($inside_siteadmin))
   print "<p>This page should help you to check whether your
-installation is properly configured. Once your installation is running,
-you should remove this file or restrict its access, since it could give
-details about your setup to anybody.</p>\n";
+installation is properly configured. It shouldn't display any sensitive
+information, since it could give details about your setup to anybody.</p>\n";
 
 print "\n<h2>Base PHP configuration</h2>\n\n";
 
