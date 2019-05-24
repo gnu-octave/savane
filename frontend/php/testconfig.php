@@ -234,6 +234,8 @@ else
 
         printf ("<tr><td>%s</td><td>%s</td></tr>\n", $tag, htmlentities($value));
       }
+    if (!isset ($GLOBALS['sys_debug_on']))
+      $GLOBALS['sys_debug_on'] = false;
 
     print "</table>\n";
     print "<p>Savane uses safe defaults values when variables are not set
