@@ -328,6 +328,7 @@ if ($update)
         if (!$step)
           {
             require_once('../../include/account.php');
+            $newvalue = preg_replace ('/\s/', '', $newvalue);
             # Proceed only if it is a valid email address.
             if (account_emailvalid($newvalue))
               {

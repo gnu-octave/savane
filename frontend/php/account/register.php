@@ -39,6 +39,8 @@ extract(sane_import('post',
         'form_year',
         'form_usepam')));
 
+$form_email = preg_replace ('/\s/', '', $form_email);
+
 if (isset($GLOBALS['sys_https_host']) && !session_issecure())
   # Force use of TLS for login.
   header('Location: '.$GLOBALS['sys_https_url'].$_SERVER['REQUEST_URI']);

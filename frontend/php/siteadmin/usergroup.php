@@ -1,5 +1,5 @@
 <?php
-# Edit user's groups.
+# Edit user's groups, email &c.
 #
 # This file is part of the Savane project
 #
@@ -60,7 +60,7 @@ elseif ($action=='update_user_group')
 elseif ($action=='update_user')
   {
     $result=db_execute("UPDATE user SET email=? WHERE user_id=?",
-                       array($email, $user_id));
+                       array(preg_replace ('/\s/', "", $email), $user_id));
     if (!$result || db_affected_rows($result) < 1)
       fb(no_i18n('Error Updating User:').$result.' '.db_error(), 1);
     else
