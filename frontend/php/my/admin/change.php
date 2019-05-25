@@ -223,7 +223,7 @@ if ($update)
           fb(_("You must supply a new real name."), 1);
         else
           {
-            $newvalue = strtr($newvalue, "\'\"\,", "     ");
+            $newvalue = account_sanitize_realname ($newvalue);
             $success = db_autoexecute('user', array('realname' => $newvalue),
                                       DB_AUTOQUERY_UPDATE,
                                       "user_id=?", array(user_getid()));

@@ -155,6 +155,11 @@ function account_pwvalid ($newpass, $oldpass = '', $user = '')
   return 1;
 }
 
+function account_sanitize_realname ($name)
+{
+  return strtr ($name, "'\",<", "    ");
+}
+
 function account_namevalid ($name, $allow_dashes=0, $allow_underscores=1,
                             $allow_dots=0, $MAX_ACCNAME_LENGTH=16,
                             $MIN_ACCNAME_LENGTH=3)

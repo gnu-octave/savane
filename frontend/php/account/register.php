@@ -40,6 +40,7 @@ extract(sane_import('post',
         'form_usepam')));
 
 $form_email = preg_replace ('/\s/', '', $form_email);
+$form_realname = account_sanitize_realname ($form_realname);
 
 if (isset($GLOBALS['sys_https_host']) && !session_issecure())
   # Force use of TLS for login.
