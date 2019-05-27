@@ -207,10 +207,14 @@ priority and open/close items"))) . "</p>\n";
         # on database content.
         if (!isset ($nocache))
           $nocache = false;
-        if (empty($$field_name) || $nocache)
+        if ((empty($$field_name) || $nocache) && !$preview)
           $field_value = db_result($result, 0, $field_name);
         else
-          $field_value = htmlspecialchars($$field_name);
+          {
+            if ($preview)
+              extract(sane_import('post', array ($field_name)));
+            $field_value = htmlspecialchars($$field_name);
+          }
         list($sz,) = trackers_data_get_display_size($field_name);
         $label = trackers_field_label_display ($field_name, $group_id,
                                                false, false);
