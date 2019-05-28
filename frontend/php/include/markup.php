@@ -160,7 +160,8 @@ function markup_full($text, $allow_headings=true)
           $verbatim_buffer = str_replace ("\n\r", "\n", $verbatim_buffer);
           $verbatim_buffer = str_replace ("\r", "\n", $verbatim_buffer);
           $verbatim_buffer = str_replace ("\n", "<br />\n", $verbatim_buffer);
-          $result[] = '<p class="verbatim">' . $verbatim_buffer . "</p>\n";
+          $result[] = '<blockquote class="verbatim"><p>' . $verbatim_buffer
+                      . "</p></blockquote>\n";
           $verbatim_buffer = '';
 
           # Jump to the next line, assuming that we can ignore the rest of the
