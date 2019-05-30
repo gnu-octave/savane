@@ -128,7 +128,7 @@ else
 <input type="hidden" name="user_id" value="'.htmlspecialchars($user_id).'">
 <p>Account name:
 <input type="text" title="'.no_i18n("New name").'" name="new_name" value="'
-.htmlspecialchars($row_user['new_name']).'" size="25" maxlength="55">
+. htmlspecialchars ($row_user['user_name']) . '" size="25" maxlength="55">
 </p>
 <p>
 <input type="submit" name="'.no_i18n('Update_Name').'" value="'
