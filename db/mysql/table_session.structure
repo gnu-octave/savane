@@ -1,4 +1,5 @@
-# This file was generated for Savane SVN (toward 3.1).
+# This file was generated for Savane SVN (toward 3.1),
+# updated manually.
 #
 # This is an SQL file necessary to create the table session part of a
 # Savane database.
@@ -15,7 +16,7 @@ CREATE TABLE `session` (
   `user_id` int(11) NOT NULL default '0',
   `session_hash` char(32) NOT NULL default '',
   `stay_in_ssl` int(1) NOT NULL default '1',
-  `ip_addr` char(15) NOT NULL default '',
+  `ip_addr` char(39) NOT NULL default '',
   `time` int(11) NOT NULL default '0',
   PRIMARY KEY  (`session_hash`),
   KEY `idx_session_user_id` (`user_id`),
