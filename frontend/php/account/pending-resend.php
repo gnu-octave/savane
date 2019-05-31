@@ -29,8 +29,6 @@ require_once('../include/sendmail.php');
 
 # Block here potential robots.
 dnsbl_check();
-# Block banned IP.
-spam_bancheck();
 
 extract(sane_import('get', array('form_user')));
 $res_user = db_execute("SELECT * FROM user WHERE user_name=?", array($form_user));

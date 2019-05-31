@@ -146,12 +146,8 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
 
   # If the affected_user_id is anonymous, end here, obviously we cannot
   # change any personal spamscore.
-  # Set up however an IP-based ban.
   if ($affected_user_id == 100)
-    {
-      spam_banip($item_id, $comment_id, ARTIFACT);
-      return true;
-    }
+    return true;
 
   # If the reporter already flagged a message of this user, end here
   # (we do not want a single user being able to increment by more than one
@@ -361,77 +357,4 @@ filters"), $newscore), 1);
   $GLOBALS['int_delayspamcheck'] = true;
 
   return true;
-}
-
-# Function to set up an IP-based banned for a spammer that is anonymous.
-# This wont prefer the banned IP to login and post content once logged in.
-# So legitimate users have want to workaround a buggy spam flagging.
-function spam_banip ($item_id, $comment_id, $tracker)
-{
-  # Fetch the IP by restricting to:
-  # * anonymously posted content
-  # * content posted during the last 6 hours
-  $since =  mktime((date("H")-6),date("i"));
-
-  assert('ctype_alnum($tracker)');
-
-  if ($comment_id)
-    {
-      $result = db_execute("SELECT ip FROM ".$tracker."_history "
-                           ."WHERE bug_history_id=? AND field_name='details' "
-                           ."AND bug_id=? AND mod_by='100' AND date>=? LIMIT 1",
-                           array($comment_id, $item_id, $since));
-    }
-  else
-    {
-      $result = db_execute("SELECT ip FROM ".$tracker." WHERE bug_id=? "
-                           ."AND submitted_by='100' AND date>=? LIMIT 1",
-                           array($item_id, $since));
-    }
-
-  $ip = null;
-  if (db_numrows($result))
-    $ip = db_result($result, 0, 'ip');
-  # No rows? No IP found? Stop here.
-  if (empty($ip))
-    return false;
-
-  # Now set up the ban.
-  $until =  mktime((date("H")+6),date("i"));
-  db_autoexecute('trackers_spamban',
-                 array('ip' => $ip,
-                       'date' => $until),
-                 DB_AUTOQUERY_INSERT);
-  fb("Poster IP is banned for a few hours");
-  return true;
-}
-
-# Check if the current user is banned.
-function spam_bancheck ()
-{
-  # Bans are effective only against anonymous users. We can easily track
-  # down abusers that are authentified.
-  if (user_isloggedin())
-    return true;
-
-  # Get DB content.
-  $ip = $_SERVER['REMOTE_ADDR'];
-  $result = db_execute("SELECT date FROM trackers_spamban WHERE ip=?", array($ip));
-
-  # Return if not found.
-  if (!db_numrows($result))
-    return true;
-
-  # If we get here, the user is in the blacklist. Return a message that
-  # explain to the user he will be able to post if he logs in, but do not
-  # tell him until when he is banned. We do not want to give up info that
-  # would help to write clever spambots.
-
-  # Log error.
-  exit_log("rejected data from ".$ip." - found in savane spamban list");
-  # Finally, block here.
-  exit_error(_("Your IP address was banned for several hours due to spam
-reports incriminating it. In the meantime, if you log in, you can work around
-this ban. You should investigate about probable cause of spam reports
-incriminating your IP."));
 }

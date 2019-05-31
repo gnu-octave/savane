@@ -156,10 +156,6 @@ function form_check ($form_id)
   # (it will kill the submission if necessary).
   dnsbl_check();
 
-  # Also does a check against savane own blacklist
-  # (will never forbid post to logged-in users).
-  spam_bancheck();
-
   return 1;
 }
 

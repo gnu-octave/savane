@@ -52,8 +52,6 @@ if (user_isloggedin())
 
 # Block here potential robots.
 dnsbl_check();
-# Block banned IP.
-spam_bancheck();
 
 $login_is_valid = false;
 $pw_is_valid = false;

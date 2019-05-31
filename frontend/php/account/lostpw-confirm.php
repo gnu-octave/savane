@@ -37,8 +37,6 @@ if (user_isloggedin())
 
 # Block here potential robots.
 dnsbl_check();
-# Block banned IP.
-spam_bancheck();
 
 # CERN_SPECIFIC: here we also have a speech about AFS which must not be
 # hardcoded.

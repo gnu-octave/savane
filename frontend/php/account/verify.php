@@ -35,8 +35,6 @@ extract(sane_import('post',
 
 # Block here potential robots.
 dnsbl_check();
-# Block banned IP.
-spam_bancheck();
 
 # Logged users have no business here.
 if (user_isloggedin())

@@ -31,7 +31,7 @@ function no_i18n($string)
   return $string;
 }
 
-extract(sane_import('get', array('ban_user_id', 'wash_user_id', 'wash_ip',
+extract(sane_import('get', array('ban_user_id', 'wash_user_id',
                                  'max_rows', 'offset')));
 
 if ($ban_user_id)
@@ -61,9 +61,6 @@ if ($wash_user_id)
                    . "WHERE affected_user_id=?", array($wash_user_id));
       }
   }
-
-if ($wash_ip)
-  db_execute("DELETE FROM trackers_spamban WHERE ip=?", array($wash_ip));
 
 site_admin_header(array('title' => no_i18n("Monitor Spam"),
                         'context' => 'admhome'));
@@ -182,53 +179,6 @@ else
     # More results than $max? Print next/prev.
     html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "users");
   }
-
-print "<p>&nbsp;</p>\n";
-print '<h2>' . html_anchor(no_i18n("Banned IPs"), "ip_results") . "</h2>\n";
-print '<p>'
-. no_i18n("Follow the list of IPs that are currently banned because content
-their owner posted was flagged as spam. This ban affect only anonymous users
-and do not prevent them to log in. IPs are automatically removed by a cronjob
-from this list after a few hours delay but, from here, you can force the
-removal to be done instantly.") . "</p>\n";
-
-$result = db_execute("SELECT ip FROM trackers_spamban WHERE 1 GROUP BY ip "
-                     . "ORDER BY ip LIMIT ?,?",
-                     array($offset, $max_rows+1));
-
-function print_banned_ips ($result)
-{
-  print '<div class="box"><div class="boxtitle">' . no_i18n("IPs")
-        . '</div><div class="boxitem">';
-
-  $i = 0;
-  while ($entry = db_fetch_array($result))
-    {
-      $i++;
-      if ($i > $max_rows)
-        break;
-
-      if ($i > 1)
-        print ', ';
-
-      print utils_link(htmlentities ($_SERVER['PHP_SELF'])
-                       . '?wash_ip=' . $entry['ip'] . '#ip_results',
-                       $entry['ip'] . ' <img src="' . $GLOBALS['sys_home']
-                       . 'images/'
-                       . SV_THEME . '.theme/bool/ok.png" alt="'
-                       . no_i18n("Wash IP") . '" />');
-
-    }
-  print "</div>\n";
-
-  # More results than $max? Print next/prev.
-  html_nextprev(htmlentities ($_SERVER['PHP_SELF']) . '?', $max_rows, $i, "ip");
-}
-
-if (!db_numrows($result))
-  print '<p>' . no_i18n("No IP banned") . "</p>\n";
-else
-  print_banned_ips ($result);
 
 $HTML->footer(array());
 ?>

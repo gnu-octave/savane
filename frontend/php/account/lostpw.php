@@ -28,8 +28,6 @@ if (user_isloggedin())
 
 # Block here potential robots.
 dnsbl_check();
-# Block banned IP.
-spam_bancheck();
 
 $HTML->header(array('title'=>_("Lost Account Password")));
 print '<p><strong>'._("Lost your password?")."</strong></p>\n";
