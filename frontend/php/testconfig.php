@@ -38,6 +38,37 @@ function return_bytes($val)
   return $val;
 }
 
+function test_gpg()
+{
+  print "\n<h2>GnuPG</h2>\n\n";
+
+  print "<dl><dt>GPG command</dt>\n<dd><code>" . $GLOBALS['sys_gpg_name']
+        . "</code></dd>\n";
+
+  $d_spec = array (0 => array("pipe", "r"), 1 => array("pipe", "w"),
+                   2 => array("pipe", "w"));
+
+  $gpg_proc = proc_open ("'" . $GLOBALS['sys_gpg_name'] . "' --version",
+                         $d_spec, $pipes, NULL, $_ENV);
+  if ($gpg_proc === false)
+    {
+      print "</dl>\n\n<p><strong>Can't run GPG.</strong></p>\n";
+      return;
+    }
+  fclose ($pipes[0]);
+  $gpg_output = stream_get_contents ($pipes[1]);
+  $gpg_stderr = stream_get_contents($pipes[2]);
+  fclose ($pipes[1]); fclose ($pipes[2]);
+  $gpg_result = proc_close($gpg_proc);
+  $dd_pre = "<dd style='border: thin dashed black; border-right: none'>"
+            ."<pre style='padding-left: 1em'>\n";
+  print "<dt><code>--version</code> output</dt>\n";
+  print $dd_pre . htmlentities ($gpg_output) . "</pre></dd>\n";
+  print "<dt>Exit code</dt><dd><code>" . $gpg_result . "</code></dd>\n";
+  print "<dt><code>stderr</code> output</dt>\n";
+  print $dd_pre . htmlentities ($gpg_stderr) . "</pre></dd>\n";
+  print "</dl>\n";
+}
 
 print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
@@ -46,13 +77,13 @@ print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
 print "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en_US\">\n"
 . "<head>\n"
 . "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n"
-. "<title>Basic PHP tests</title>\n"
+. "<title>Basic configuration tests</title>\n"
 . "<link rel=\"stylesheet\" type=\"text/css\" "
 . "href=\"/css/internal/testconfig.css\" />\n"
 . "</head>\n\n"
 . "<body>\n";
 
-print "<h1>Basic PHP pre-tests for Savane installation</h1>\n\n";
+print "<h1>Basic pre-tests for Savane installation</h1>\n\n";
 if (empty($inside_siteadmin))
   print "<p>This page should help you to check whether your
 installation is properly configured. It shouldn't display any sensitive
@@ -168,6 +199,7 @@ print "</p>\n";
 print "\n<h2>Apache environment vars</h2>\n\n";
 $configfile = '/etc/savane/';
 
+print "<p>";
 if (getenv('SAVANE_CONF'))
   {
     $configfile = getenv('SAVANE_CONF');
@@ -192,6 +224,7 @@ if (is_readable ($configfile))
   print "File <strong>$configfile</strong> exists and is readable.";
 else
   print "File <strong>$configfile</strong> does not exist or is not readable!";
+print "</p>\n";
 
 print "\n<h2>Savane configuration:</h2>\n\n";
 
@@ -288,6 +321,7 @@ in the configuration file.</p>\n";
           }
         print "</dl>\n";
       } # db_connect ()
+    test_gpg ();
   } # is_readable ($configfile)
 
 print "\n<h2>Optional PHP configuration</h2>\n\n";

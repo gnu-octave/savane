@@ -157,8 +157,8 @@ function run_gpg_checks ($key)
 {
   $ret = "";
   $ret .= "<h2>"._("GnuPG version")."</h2>\n";
-  $gpg_name = 'gpg';
-  $cmd = $gpg_name . " --version";
+  $gpg_name = "'" . $GLOBALS['sys_gpg_name'] . "'";
+  $cmd = $gpg_name . ' --version';
   $d_spec = array (0 => array("pipe", "r"), 1 => array("pipe", "w"),
                    2 => array("file", "/dev/null", "a"));
 

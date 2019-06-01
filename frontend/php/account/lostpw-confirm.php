@@ -157,10 +157,10 @@ $gpg_error = "";
 if(user_get_preference("email_encrypted", $row_user['user_id']))
   {
     $cmd = 'perl ../../perl/encrypt-to-user/index.pl '
-    .'--gpg=gpg '
-    .'--user="'.$row_user['user_id'].'" '
-    .'--dbname="'.$sys_dbname.'" '
-    .'--dbhost="'.$sys_dbhost.'"';
+    . '--gpg="' . $GLOBALS['sys_gpg_name'] . '" '
+    . '--user="' . $row_user['user_id'] . '" '
+    . '--dbname="' . $sys_dbname . '" '
+    . '--dbhost="' . $sys_dbhost . '"';
 
     $d_spec = array(
         0 => array("pipe", "r"), 1 => array("pipe", "w"),
