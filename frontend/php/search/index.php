@@ -207,6 +207,8 @@ if (isset($type))
   $nextprev_url .= "&amp;type=".htmlspecialchars($type);
 if ($group_id)
   $nextprev_url .= "&amp;only_group_id=".htmlspecialchars($group_id);
+if (isset($exact))
+  $nextprev_url .= "&amp;exact=" . htmlspecialchars($exact);
 
 html_nextprev($nextprev_url, $rows, $rows_returned);
 site_footer(Array());
