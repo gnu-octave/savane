@@ -54,7 +54,6 @@
 .topmenutitle, h2, h3, h4 {
 	border: thin solid #006699;
 	background: #8BB9EA;
-	text-shadow: 0.1em 0.1em #006699;
 	color: white;
 }
 
@@ -119,12 +118,10 @@ li.topmenuitemsubmenu a:hover {
 .boxtitle {
 	background: #759BC5;
 	border: thin solid #526D8A;
-	text-shadow: 0.1em 0.1em #526D8A;
 }
 
 
 .boxtitle a, h2 a, h3 a, h4 a {
-	text-shadow: 0.1em 0.1em #526D8A;
 	color: white;
 }
 

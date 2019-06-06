@@ -53,10 +53,6 @@ h1, h2, h4 {
 	border-collapse: collapse;
 }
 
-h1, h2 {
-	text-shadow: 0.1em 0.1em #002A4E;
-}
-
 h2, h4 {
 	border-bottom: 0.1em solid #002A4E;
 
@@ -103,7 +99,6 @@ h2:hover, h4:hover {
 	font-weight: bold;
 	text-align: center;
 	border-bottom: thin solid #002A4E;
-	text-shadow: 0.1em 0.1em #002A4E;
 }
 .menuitem {
 	padding-left: 0.5em;
@@ -209,7 +204,6 @@ li.topmenuitemsubmenuseparator {
 	background-color: #002A4E;
 	color: white;
 	border: thin solid #0061B6;
-	text-shadow: 0.1em 0.1em #0061B6;
 }
 .boxtitle a {
 	color: white;

@@ -72,14 +72,12 @@ a:active {
 
 h1 {
         margin-bottom: 1%;
-	text-shadow: 0.1em 0.1em #c2c2c2;
 }
 
 h2 {
 	background-color: #BCF4BC;
 	text-indent: 0.8em;
 	font-weight: normal;
-	text-shadow: 0.1em 0.1em #86CC86;
 	border: solid #86CC86 thin;
 	color: #307330;
 }
@@ -95,7 +93,6 @@ h2 a:hover {
 
 h4 {
 	background-color: #BCF4BC;
-	text-shadow: 0.1em 0.1em #86CC86;
 	border: solid #86CC86 thin;
 	font-weight: normal;
 	color: #307330;
@@ -164,7 +161,6 @@ hr {
 	text-align: left;
 	font-weight: bold;
 	border-bottom: thin solid black;
-	text-shadow: 0.1em 0.1em #d2d2c2;
 }
 
 .menuitem {
@@ -208,7 +204,6 @@ hr {
 
 .topmenutitle {
 	background-color: #E9B879;
-	text-shadow: 0.1em 0.1em #CC885E;
 	font-weight: bold;
 	border: solid #CC885E thin;
 }
@@ -294,7 +289,6 @@ li.topmenuitemsubmenu a:hover {
 .boxtitle {
 	background-color: #86CC86;
 	border: solid #6BA36B thin;
-	text-shadow: 0.1em 0.1em #6BA36B;
 	color: #ffffff;
 }
 

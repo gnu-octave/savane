@@ -767,28 +767,6 @@ li.topmenuitemsubmenuseparator {
         text-indent: 0;
         list-style-type: none; }
 
-
-h1.priora { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priorb { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priorc { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priord { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priore { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priorf { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priorg { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priorh { text-shadow: 0.1em 0.1em #f89b9b; }
-h1.priori { text-shadow: 0.1em 0.1em #f89b9b; }
-
-h1.prioraclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.priorbclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.priorcclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.priordclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.prioreclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.priorfclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.priorgclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.priorhclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-h1.prioriclosed { text-shadow: 0.1em 0.1em #8cf2bf; }
-
-
 tr.priora a {
         display: block;
 }

@@ -76,12 +76,10 @@ h1.toptitle {
   background-color: bisque;
   text-align: left;
   vertical-align: middle;
-  text-shadow: 0.1em 0.1em #eacdab;
 }
 
 h2 {
   border-bottom: thin solid #cab79f;
-  text-shadow: 0.1em 0.1em #f6e4cd;
 }
 
 h2 a:hover {
@@ -150,7 +148,6 @@ img.bigicon {
 	background: #efe3bd;
 	border: thin solid #e0cd9f;
 	border-top: none;
-	text-shadow: 0.1em 0.1em #e2d5af
 }
 
 .topmenuitemmainitem {
@@ -220,7 +217,6 @@ li.topmenuitemsubmenuseparator {
   border-left: thin solid blanchedalmond;
   border-bottom: thin solid #996633;
   border-right: thin solid #996633;
-  text-shadow: 0.1em 0.1em #996633;
   color: #FFFFFF;
   font-size: smaller;
 }
@@ -274,7 +270,6 @@ li.topmenuitemsubmenuseparator {
   border-left: thin solid limegreen;
   border-bottom: thin solid #006600;
   border-right: thin solid #006600;
-  text-shadow: 0.1em 0.1em #006600;
   color: #FFFFFF;
 }
 

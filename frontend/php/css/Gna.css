@@ -68,7 +68,6 @@ a:active {
 
 h1 {
         margin-bottom: 1%;
-	text-shadow: 0.1em 0.1em #c2c2c2;
 }
 
 
@@ -80,7 +79,6 @@ h2 {
 	text-indent: 0.8em;
 	font-weight: normal;
 	border: solid #004c8c thin;
-	text-shadow: 0.1em 0.1em #004c8c;
 }
 
 h2 a {
@@ -100,7 +98,6 @@ h4 {
 	color: #ffffff;
 	font-weight: normal;
 	border: solid #004c8c thin;
-	text-shadow: 0.1em 0.1em #004c8c;
 }
 
 
@@ -166,7 +163,6 @@ hr {
 	text-align: left;
 	font-weight: bold;
 	border-bottom: thin solid black;
-	text-shadow: 0.1em 0.1em #b3e2e3;
 }
 
 .menuitem {
@@ -222,7 +218,6 @@ cannot be used with item links as blocks
         border-right: thin solid #004c8c;
 	font-weight: bold;
 	color: white;
-	text-shadow: 0.1em 0.1em #004c8c;
 }
 
 
@@ -291,7 +286,6 @@ li.topmenuitemsubmenuseparator {
 	background-color: #80c0e0;
 	border: solid #5080c0;
 	border-width: 0 thin thin 0;
-	text-shadow: 0.1em 0.1em #5080c0;
 }
 
 .boxtitle a {

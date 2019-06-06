@@ -62,20 +62,17 @@ h1 {
 	border-collapse: collapse;
         background-color: #e8e8e0;
 	width: 100% ;
-	text-shadow: 0.1em 0.1em #d0d0c6;
 }
 h2 {
 	text-indent: 1em;
 	border-collapse:	collapse;
 	border-bottom: 0.2em solid #e8e8e0;
-	text-shadow: 0.1em 0.1em #e8e8e0;
 	width: 100% ;
 }
 
 h4 {
 	border-collapse:	collapse;
 	border-bottom: 0.1em solid #e8e8e0;
-	text-shadow: 0.1em 0.1em #e8e8e0;
 	width: 100% ;
 }
 
@@ -118,7 +115,6 @@ h4 {
 	text-align: center;
 	color: #333333;
 	border-bottom: thin solid black;
-	text-shadow: 0.1em 0.1em #d9d9cc;
 }
 .menuitem {
 	text-align: right;
@@ -197,7 +193,6 @@ li.topmenuitemsubmenuseparator {
 	text-align: center;
 	color: #000000;
 	border: thin solid #b7b7ae;
-	text-shadow: 0.1em 0.1em #b7b7ae;
 }
 .boxitem {
 	background-color: #efefef;
