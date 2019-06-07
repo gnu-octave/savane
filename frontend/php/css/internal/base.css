@@ -472,7 +472,7 @@ ul.topmenuitemsubmenu {
         visibility: hidden;
         text-align: left;
         position: absolute;
-        top: 1.1em;
+        top: 1em;
         left: -0.3em;
         width: 13em;
         /* default border, so it the theme is not up to date, it still
