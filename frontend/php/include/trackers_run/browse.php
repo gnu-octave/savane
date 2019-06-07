@@ -846,6 +846,14 @@ $result = db_execute($sql, array_merge($from_params, $where_params,
 $result_array = array();
 while ($thisarray = db_fetch_array($result))
   {
+    if (!isset ($thisarray['bug_id']))
+      {
+        $error_msg = 'trackers_run/browse.php: no bug_id in result; $thisarray: ';
+        foreach ($thisarray as $idx => $val)
+          $error_msg .= " [$idx] => '$val'";
+        $error_msg .= "; URI: '" . ($_SERVER['REQUEST_URI']) . "'";
+        error_log ($error_msg);
+      }
   # Get the id.
     $thisitem_id = $thisarray['bug_id'];
 
