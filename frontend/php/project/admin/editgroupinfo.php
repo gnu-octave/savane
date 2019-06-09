@@ -79,8 +79,9 @@ print '
                                      'size="60" maxlen="254"').'</p>
 ';
 print '
-<p><span class="preinput"><label for="form_shortdesc">'._("Short Description")
-.'</label> '.markup_info("none", ", 255 Characters Max").'</span>
+<p><span class="preinput"><label for="form_shortdesc">'
+. _("Short Description (255 characters max)")
+. '</label> ' . markup_info("none") . '</span>
 <br />&nbsp;&nbsp;&nbsp;'.form_textarea("form_shortdesc",
                                         $row_grp['short_description'],
                                         'cols="70" rows="3" wrap="virtual"').'</p>

@@ -29,7 +29,7 @@
 # Takes as argument the level, being full / rich / basic / none.
 # To avoid making page looking strange, we will put that only on textarea
 # where it is supposed to be the most useful.
-function markup_info($level, $additionnal_string=false)
+function markup_info($level)
 {
   $link_head = '<a href="/cookbook/?func=detailitem&item_id=125">';
   $link_tail = '</a>';
@@ -63,7 +63,7 @@ function markup_info($level, $additionnal_string=false)
          .'.theme/misc/edit.png"
     border="0" class="icon" alt=""'
          .'
-    />'.$string.$link_tail, $text, true).$additionnal_string.')</span>';
+    />' . $string . $link_tail, $text, true) . ')</span>';
 }
 
 # Convert special markup characters in the input text to real HTML.
