@@ -286,7 +286,7 @@ authentication level.");
       if (!$item_discussion_lock)
 	{
 	  print '<p class="noprint"><span class="preinput"> '
-                ._("Add a New Comment").markup_info("rich");
+                . _("Add a New Comment") . ' ' . markup_info("rich");
           print form_submit (_('Preview'), 'preview')
                 ."</span><br />&nbsp;&nbsp;&nbsp;\n";
 	  print trackers_field_textarea('comment', htmlspecialchars($comment),
