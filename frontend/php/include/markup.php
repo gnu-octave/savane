@@ -31,7 +31,7 @@
 # where it is supposed to be the most useful.
 function markup_info($level)
 {
-  $link_head = '<a href="/cookbook/?func=detailitem&item_id=125">';
+  $link_head = '<a target="_blank" href="/cookbook/?func=detailitem&item_id=125">';
   $link_tail = '</a>';
 
   if ($level == 'basic')
