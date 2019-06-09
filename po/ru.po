@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.3\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2019-04-27 15:27+0000\n"
+"POT-Creation-Date: 2019-06-09 07:53+0000\n"
 "PO-Revision-Date: 2019-04-27 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
@@ -184,7 +184,7 @@ msgstr "Подробности"
 
 #: frontend/php/register/index.php:123
 #: frontend/php/include/trackers_run/detail.php:370
-#: frontend/php/include/trackers_run/mod.php:508
+#: frontend/php/include/trackers_run/mod.php:502
 msgid "Dependencies"
 msgstr "Зависимости"
 
@@ -340,7 +340,7 @@ msgstr "наивысшего"
 
 #: frontend/php/my/items.php:163 frontend/php/project/memberlist.php:53
 #: frontend/php/news/index.php:53 frontend/php/stats/index.php:66
-#: frontend/php/include/trackers_run/browse.php:975
+#: frontend/php/include/trackers_run/browse.php:983
 msgid "Apply"
 msgstr "Применить"
 
@@ -847,7 +847,7 @@ msgstr "Частота напоминаний:"
 #: frontend/php/my/admin/change_notifications.php:243
 #: frontend/php/my/admin/index.php:273 frontend/php/my/admin/index.php:465
 #: frontend/php/my/admin/editsshkeys.php:159
-#: frontend/php/my/admin/change.php:855 frontend/php/my/bookmarks.php:63
+#: frontend/php/my/admin/change.php:856 frontend/php/my/bookmarks.php:63
 #: frontend/php/project/admin/editgroupnotifications.php:140
 #: frontend/php/project/admin/squadadmin.php:283
 #: frontend/php/project/admin/squadadmin.php:327
@@ -867,7 +867,7 @@ msgstr ""
 "Активировано меню каменного века, вступит в действие при следующей загрузке "
 "страницы"
 
-#: frontend/php/my/admin/index.php:112 frontend/php/include/utils.php:1081
+#: frontend/php/my/admin/index.php:112 frontend/php/include/utils.php:1092
 msgid "Database successfully updated"
 msgstr "База данных успешно обновлена"
 
@@ -887,7 +887,7 @@ msgstr "Важные настройки"
 msgid "Authentication Setup"
 msgstr "Настройка доступа"
 
-#: frontend/php/my/admin/index.php:133 frontend/php/my/admin/change.php:629
+#: frontend/php/my/admin/index.php:133 frontend/php/my/admin/change.php:630
 msgid "Change Password"
 msgstr "Изменить пароль"
 
@@ -943,7 +943,7 @@ msgstr "Запись о личности"
 msgid "Account #%s"
 msgstr "Учетная запись №%s"
 
-#: frontend/php/my/admin/index.php:204 frontend/php/account/register.php:227
+#: frontend/php/my/admin/index.php:204 frontend/php/account/register.php:228
 #, php-format
 msgid "Your login is %s."
 msgstr "Ваша учетная запись&nbsp;&mdash; %s."
@@ -954,7 +954,7 @@ msgstr "Ваша учетная запись&nbsp;&mdash; %s."
 msgid "You registered your account on %s."
 msgstr "Дата регистрации: %s."
 
-#: frontend/php/my/admin/index.php:215 frontend/php/my/admin/change.php:611
+#: frontend/php/my/admin/index.php:215 frontend/php/my/admin/change.php:612
 msgid "Change Real Name"
 msgstr "Изменить полное имя"
 
@@ -988,7 +988,7 @@ msgstr "Ваш профиль может просматривать каждый
 msgid "Mail Setup"
 msgstr "Настройки почты"
 
-#: frontend/php/my/admin/index.php:242 frontend/php/my/admin/change.php:731
+#: frontend/php/my/admin/index.php:242 frontend/php/my/admin/change.php:732
 msgid "Change Email Address"
 msgstr "Изменить адрес электронной почты"
 
@@ -1047,7 +1047,7 @@ msgstr ""
 msgid "Account Deletion"
 msgstr "Удаление учетной записи"
 
-#: frontend/php/my/admin/index.php:292 frontend/php/my/admin/change.php:770
+#: frontend/php/my/admin/index.php:292 frontend/php/my/admin/change.php:771
 msgid "Delete Account"
 msgstr "Удалить учетную запись"
 
@@ -1118,11 +1118,11 @@ msgid "Cosmetics Setup"
 msgstr "Косметические настройки"
 
 #: frontend/php/my/admin/index.php:361 frontend/php/my/admin/index.php:362
-#: frontend/php/my/admin/change.php:625
+#: frontend/php/my/admin/change.php:626
 msgid "Timezone"
 msgstr "Временной пояс"
 
-#: frontend/php/my/admin/index.php:364 frontend/php/my/admin/change.php:619
+#: frontend/php/my/admin/index.php:364 frontend/php/my/admin/change.php:620
 msgid ""
 "No matter where you live, you can see all dates and times as if it were in\n"
 "your neighborhood."
@@ -1424,10 +1424,10 @@ msgstr ""
 #. TRANSLATORS: the argument is site name (like Savannah).
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
 #: frontend/php/my/admin/editsshkeys.php:106
-#: frontend/php/my/admin/change.php:367 frontend/php/my/admin/change.php:385
-#: frontend/php/my/admin/change.php:526 frontend/php/account/register.php:202
-#: frontend/php/account/pending-resend.php:50
-#: frontend/php/account/lostpw-confirm.php:138
+#: frontend/php/my/admin/change.php:368 frontend/php/my/admin/change.php:386
+#: frontend/php/my/admin/change.php:527 frontend/php/account/register.php:203
+#: frontend/php/account/pending-resend.php:48
+#: frontend/php/account/lostpw-confirm.php:136
 #, php-format
 msgid "-- the %s team."
 msgstr "-- команда сайта %s."
@@ -1489,27 +1489,27 @@ msgid "Importing key"
 msgstr "Импорт ключа"
 
 #: frontend/php/my/admin/change.php:124
-#: frontend/php/account/lostpw-confirm.php:184
+#: frontend/php/account/lostpw-confirm.php:182
 msgid "Encryption failed."
 msgstr "Сбой при шифровании."
 
 #: frontend/php/my/admin/change.php:126
-#: frontend/php/account/lostpw-confirm.php:186
+#: frontend/php/account/lostpw-confirm.php:184
 msgid "No key for encryption found."
 msgstr "Не найден ключ для шифрования."
 
 #: frontend/php/my/admin/change.php:128
-#: frontend/php/account/lostpw-confirm.php:188
+#: frontend/php/account/lostpw-confirm.php:186
 msgid "Can't extract user_id from database."
 msgstr "Не удлось извлечь user_id из базы данных."
 
 #: frontend/php/my/admin/change.php:130
-#: frontend/php/account/lostpw-confirm.php:190
+#: frontend/php/account/lostpw-confirm.php:188
 msgid "Can't create temporary files."
 msgstr "Не удалось создать временные файлы."
 
 #: frontend/php/my/admin/change.php:132
-#: frontend/php/account/lostpw-confirm.php:192
+#: frontend/php/account/lostpw-confirm.php:190
 msgid "Extracted GPG key ID is invalid."
 msgstr "Извлеченный идентификатор ключа GPG недопустим."
 
@@ -1554,8 +1554,8 @@ msgstr "Полное имя обновлено."
 
 #: frontend/php/my/admin/change.php:233 frontend/php/my/admin/change.php:246
 #: frontend/php/my/admin/change.php:311 frontend/php/my/admin/change.php:323
-#: frontend/php/my/admin/change.php:348 frontend/php/my/admin/change.php:461
-#: frontend/php/my/admin/change.php:499 frontend/php/include/user.php:561
+#: frontend/php/my/admin/change.php:349 frontend/php/my/admin/change.php:462
+#: frontend/php/my/admin/change.php:500 frontend/php/include/user.php:561
 msgid "Failed to update the database."
 msgstr "Не удалось обновить базу данных."
 
@@ -1567,7 +1567,7 @@ msgstr "Временной пояс обновлен."
 msgid "Old password is incorrect."
 msgstr "Неправильный старый пароль."
 
-#: frontend/php/my/admin/change.php:289 frontend/php/account/register.php:106
+#: frontend/php/my/admin/change.php:289 frontend/php/account/register.php:107
 msgid "You must supply a password."
 msgstr "Вы должны ввести пароль"
 
@@ -1583,22 +1583,22 @@ msgstr "Пароль обновлен."
 msgid "GPG Key updated."
 msgstr "Ключ GPG обновлен."
 
-#: frontend/php/my/admin/change.php:339 frontend/php/my/admin/change.php:493
-#: frontend/php/account/lostpw-confirm.php:75 frontend/php/link-to-users.php:35
+#: frontend/php/my/admin/change.php:340 frontend/php/my/admin/change.php:494
+#: frontend/php/account/lostpw-confirm.php:73 frontend/php/link-to-users.php:35
 msgid "Invalid User"
 msgstr "Неправильное имя пользователя."
 
-#: frontend/php/my/admin/change.php:340 frontend/php/my/admin/change.php:493
+#: frontend/php/my/admin/change.php:341 frontend/php/my/admin/change.php:494
 #: frontend/php/link-to-users.php:35
 msgid "That user does not exist."
 msgstr "Такого пользователя нет."
 
-#: frontend/php/my/admin/change.php:351 frontend/php/my/admin/change.php:502
+#: frontend/php/my/admin/change.php:352 frontend/php/my/admin/change.php:503
 msgid "Database updated."
 msgstr "База данных обновлена."
 
 #. TRANSLATORS: the argument is site name (like Savannah).
-#: frontend/php/my/admin/change.php:361
+#: frontend/php/my/admin/change.php:362
 #, php-format
 msgid ""
 "You have requested a change of email address on %s.\n"
@@ -1608,7 +1608,7 @@ msgstr ""
 "подтверждения перейдите по следующему URL:"
 
 #. TRANSLATORS: the argument is site name (like Savannah).
-#: frontend/php/my/admin/change.php:372
+#: frontend/php/my/admin/change.php:373
 #, php-format
 msgid ""
 "Someone, presumably you, has requested a change of email address on %s.\n"
@@ -1618,14 +1618,14 @@ msgstr ""
 "сайте %s.\n"
 "Если это не вы, возможно, кто-то пытается захватить вашу учетную запись..."
 
-#: frontend/php/my/admin/change.php:374
+#: frontend/php/my/admin/change.php:375
 #, php-format
 msgid "Your current address is %1$s, the supposedly new address is %2$s."
 msgstr ""
 "Ваш текущий адрес&nbsp;&mdash; %1$s, запрошенный новый адрес&nbsp;&mdash; "
 "%2$s."
 
-#: frontend/php/my/admin/change.php:377
+#: frontend/php/my/admin/change.php:378
 msgid ""
 "If you did not request that change, please visit the following URL\n"
 "to discard the email change and report the problem to us:"
@@ -1633,24 +1633,24 @@ msgstr ""
 "Если вы не запрашивали этого изменения, перейдите, пожалуйста,\n"
 "по следующему URL, чтбы отменить запрос и сообщить нам о проблеме:"
 
-#: frontend/php/my/admin/change.php:391 frontend/php/my/admin/change.php:407
-#: frontend/php/my/admin/change.php:531
+#: frontend/php/my/admin/change.php:392 frontend/php/my/admin/change.php:408
+#: frontend/php/my/admin/change.php:532
 msgid "Verification"
 msgstr "Проверка"
 
 #. TRANSLATORS: the argument is email address.
-#: frontend/php/my/admin/change.php:413
+#: frontend/php/my/admin/change.php:414
 #, php-format
 msgid "Confirmation mailed to %s."
 msgstr "Подтверждение отправлено по адресу %s."
 
-#: frontend/php/my/admin/change.php:414
+#: frontend/php/my/admin/change.php:415
 msgid "Follow the instructions in the email to complete the email change."
 msgstr ""
 "Для завершения смены электронной почты следуйте инструкциям в электронном "
 "письме."
 
-#: frontend/php/my/admin/change.php:417 frontend/php/my/admin/change.php:537
+#: frontend/php/my/admin/change.php:418 frontend/php/my/admin/change.php:538
 msgid ""
 "The system reported a failure when trying to send\n"
 "the confirmation mail. Please retry and report that problem to\n"
@@ -1659,36 +1659,36 @@ msgstr ""
 "Система сообщила об ошибке при попытке отправить\n"
 "письмо с подтверждением. Повторите и сообщите о проблеме администраторам."
 
-#: frontend/php/my/admin/change.php:438 frontend/php/my/admin/change.php:556
+#: frontend/php/my/admin/change.php:439 frontend/php/my/admin/change.php:557
 msgid "This confirmation hash is included in DB more than once."
 msgstr "Этот код подтверждения содержится в базе данных более одного раза."
 
-#: frontend/php/my/admin/change.php:440 frontend/php/my/admin/change.php:445
-#: frontend/php/my/admin/change.php:561 frontend/php/account/lostlogin.php:39
+#: frontend/php/my/admin/change.php:441 frontend/php/my/admin/change.php:446
+#: frontend/php/my/admin/change.php:562 frontend/php/account/lostlogin.php:39
 msgid "Invalid confirmation hash."
 msgstr "Неправильный код подтверждения."
 
-#: frontend/php/my/admin/change.php:459
+#: frontend/php/my/admin/change.php:460
 msgid "Email address updated."
 msgstr "Адрес электронной почты обновлен."
 
-#: frontend/php/my/admin/change.php:473
+#: frontend/php/my/admin/change.php:474
 msgid "Address change process discarded."
 msgstr "Процесс смены адреса прерван."
 
-#: frontend/php/my/admin/change.php:476
+#: frontend/php/my/admin/change.php:477
 msgid ""
 "Failed to discard the address change process, please contact\n"
 "administrators."
 msgstr ""
 "Не удалось отменить процесс смены адреса, обратитесь к администраторам."
 
-#: frontend/php/my/admin/change.php:481 frontend/php/my/admin/change.php:582
+#: frontend/php/my/admin/change.php:482 frontend/php/my/admin/change.php:583
 msgid "Unable to understand what to do, parameters are probably missing"
 msgstr "Неясно, что делать, возможно, не хватает параметров"
 
 #. TRANSLATORS: the argument is site name (like Savannah).
-#: frontend/php/my/admin/change.php:511
+#: frontend/php/my/admin/change.php:512
 #, php-format
 msgid ""
 "Someone, presumably you, has requested your %s account deletion.\n"
@@ -1699,7 +1699,7 @@ msgstr ""
 "Если это не вы, возможно, кто-то захватил вашу учетную запись."
 
 #. TRANSLATORS: the argument is site name (like Savannah).
-#: frontend/php/my/admin/change.php:518
+#: frontend/php/my/admin/change.php:519
 #, php-format
 msgid ""
 "If you did request your %s account deletion, visit the following URL to "
@@ -1709,7 +1709,7 @@ msgstr ""
 "Если вы действительно запрашивали удаление учетной записи %s, перейдите\n"
 "по следующему URL для завершения процесса удаления:"
 
-#: frontend/php/my/admin/change.php:521
+#: frontend/php/my/admin/change.php:522
 msgid ""
 "If you did not request that change, please visit the following URL to "
 "discard\n"
@@ -1718,81 +1718,81 @@ msgstr ""
 "Если это не ваш запрос, перейдите по следующему URL, чтобы отменить\n"
 "процедуру, и как можно скорее сообщите нам о проблеме:"
 
-#: frontend/php/my/admin/change.php:535
+#: frontend/php/my/admin/change.php:536
 msgid "Follow the instructions in the email to complete the account deletion."
 msgstr ""
 "Для завершения удаления учетной записи следуйте инструкциям в электронном "
 "письме."
 
-#: frontend/php/my/admin/change.php:574
+#: frontend/php/my/admin/change.php:575
 msgid "Account deletion process discarded."
 msgstr "Процесс удаления учетной записи прерван."
 
-#: frontend/php/my/admin/change.php:577
+#: frontend/php/my/admin/change.php:578
 msgid ""
 "Failed to discard account deletion process, please contact administrators."
 msgstr "Сбой отмены удаления учетной записи. Свяжитесь с администраторами."
 
-#: frontend/php/my/admin/change.php:612
+#: frontend/php/my/admin/change.php:613
 msgid "New Real Name:"
 msgstr "Новое полное имя:"
 
-#: frontend/php/my/admin/change.php:617
+#: frontend/php/my/admin/change.php:618
 msgid "Change Timezone"
 msgstr "Изменить временной пояс"
 
-#: frontend/php/my/admin/change.php:631
+#: frontend/php/my/admin/change.php:632
 msgid "Current password:"
 msgstr "Текущая фраза-пароль:"
 
-#: frontend/php/my/admin/change.php:632 frontend/php/account/lostlogin.php:66
+#: frontend/php/my/admin/change.php:633 frontend/php/account/lostlogin.php:66
 msgid "New password / passphrase:"
 msgstr "Новая фраза-пароль:"
 
-#: frontend/php/my/admin/change.php:633
+#: frontend/php/my/admin/change.php:634
 msgid "Re-type new password:"
 msgstr "Повторите новую фразу-пароль:"
 
-#: frontend/php/my/admin/change.php:668
+#: frontend/php/my/admin/change.php:669
 msgid "Change GPG Key"
 msgstr "Изменить ключ GPG"
 
-#: frontend/php/my/admin/change.php:671
+#: frontend/php/my/admin/change.php:672
 msgid "Sample GPG key"
 msgstr "Образец ключа GPG"
 
-#: frontend/php/my/admin/change.php:672
+#: frontend/php/my/admin/change.php:673
 msgid "The exported public GPG key should look like this:"
 msgstr "Открытый ключ GPG должен выглядеть так:"
 
-#: frontend/php/my/admin/change.php:707
+#: frontend/php/my/admin/change.php:708
 msgid "Please don't remove begin and end markers when submitting your GPG key."
 msgstr "При вставке не удаляйте метки начала и конца ключа."
 
-#: frontend/php/my/admin/change.php:709
+#: frontend/php/my/admin/change.php:710
 msgid "Update your key in the input area below"
 msgstr "Ниже в поле ввода вы можете обновить свой ключ"
 
-#: frontend/php/my/admin/change.php:711
+#: frontend/php/my/admin/change.php:712
 msgid ""
 "Insert your (ASCII) public key here (made with gpg --export --armor KEYID):"
 msgstr ""
 "Вставьте свой открытый ключ в виде ASCII (выведенный gpg --export --armor "
 "ид_ключа):"
 
-#: frontend/php/my/admin/change.php:717
+#: frontend/php/my/admin/change.php:718
 msgid "New GPG key"
 msgstr "Новый ключ GPG"
 
-#: frontend/php/my/admin/change.php:722
+#: frontend/php/my/admin/change.php:723
 msgid "Test GPG key"
 msgstr "Проверить ключ GPG"
 
-#: frontend/php/my/admin/change.php:732
+#: frontend/php/my/admin/change.php:733
 msgid "New email address:"
 msgstr "Новый адрес электронной почты:"
 
-#: frontend/php/my/admin/change.php:733
+#: frontend/php/my/admin/change.php:734
 msgid ""
 "Changing your email address will require confirmation from\n"
 "your new email address, so that we can ensure we have a good email address "
@@ -1802,7 +1802,7 @@ msgstr ""
 "Для смены адреса электронной почты потребуется подтверждение с вашего нового "
 "адреса, чтобы убедиться, что новый адрес работает."
 
-#: frontend/php/my/admin/change.php:737
+#: frontend/php/my/admin/change.php:738
 msgid ""
 "We need to maintain an accurate email address for each user due to the\n"
 "level of access we grant via this account. If we need to reach a user for\n"
@@ -1813,7 +1813,7 @@ msgstr ""
 "понадобится связаться с пользователем по вопросам, касающимся этого сервера, "
 "важно, чтобы мы могли это сделать."
 
-#: frontend/php/my/admin/change.php:742
+#: frontend/php/my/admin/change.php:743
 msgid ""
 "Submitting the form below will mail a confirmation URL to the new email\n"
 "address; visiting this link will complete the email change. The old address\n"
@@ -1824,45 +1824,45 @@ msgstr ""
 "подтверждения; переход по этой ссылке завершает смену адреса. По старому "
 "адресу также посылается сообщение&nbsp;&mdash; для отмены запроса."
 
-#: frontend/php/my/admin/change.php:750
+#: frontend/php/my/admin/change.php:751
 msgid "Confirm Email Change"
 msgstr "Подтвердить смену адреса"
 
-#: frontend/php/my/admin/change.php:751
+#: frontend/php/my/admin/change.php:752
 msgid "Push &ldquo;Update&rdquo; to confirm your email change"
 msgstr "Нажмите &ldquo;Обновить&rdquo; для подтверждения смены адреса"
 
-#: frontend/php/my/admin/change.php:752 frontend/php/my/admin/change.php:782
+#: frontend/php/my/admin/change.php:753 frontend/php/my/admin/change.php:783
 msgid "Confirmation hash:"
 msgstr "Код подтверждения:"
 
-#: frontend/php/my/admin/change.php:762
+#: frontend/php/my/admin/change.php:763
 msgid "Discard Email Change"
 msgstr "Отменить смену адреса"
 
-#: frontend/php/my/admin/change.php:771
+#: frontend/php/my/admin/change.php:772
 msgid "Do you really want to delete your user account?"
 msgstr "Вы действительно хотите удалить учетную запись?"
 
-#: frontend/php/my/admin/change.php:775
+#: frontend/php/my/admin/change.php:776
 #: frontend/php/project/admin/squadadmin.php:282
 msgid "Yes, I really do"
 msgstr "Да, хочу"
 
-#: frontend/php/my/admin/change.php:776
+#: frontend/php/my/admin/change.php:777
 msgid "This process will require email confirmation."
 msgstr "Эта процедура потребует подтверждения по электронной почте."
 
-#: frontend/php/my/admin/change.php:780
+#: frontend/php/my/admin/change.php:781
 msgid "Confirm account deletion"
 msgstr "Подтвердить удаление учетной записи"
 
-#: frontend/php/my/admin/change.php:781
+#: frontend/php/my/admin/change.php:782
 msgid "Push &ldquo;Update&rdquo; to confirm your account deletion"
 msgstr ""
 "Нажмите &ldquo;Обновить&rdquo;, чтобы подтвердить удаление учетной записи"
 
-#: frontend/php/my/admin/change.php:792
+#: frontend/php/my/admin/change.php:793
 #, php-format
 msgid "Unknown user settings item (%s)"
 msgstr "Неизвестный элемент настроек пользователя (%s)"
@@ -1880,7 +1880,7 @@ msgstr "Адрес:"
 #: frontend/php/include/trackers_run/detail-sober.php:49
 #: frontend/php/include/trackers_run/detail-sober.php:72
 #: frontend/php/include/trackers/data.php:1593
-#: frontend/php/include/init.php:409
+#: frontend/php/include/init.php:410
 msgid "Item not found"
 msgstr "Заявка не найдена"
 
@@ -1938,14 +1938,14 @@ msgstr "Последние новости"
 
 #. TRANSLATORS: these roles are explained in html.php:html_member_explain_roles.
 #: frontend/php/project/memberlist.php:33
-#: frontend/php/include/trackers_run/mod.php:77
-#: frontend/php/include/trackers_run/mod.php:85
+#: frontend/php/include/trackers_run/mod.php:74
+#: frontend/php/include/trackers_run/mod.php:83
 msgid "technician"
 msgstr "техник"
 
 #: frontend/php/project/memberlist.php:34
-#: frontend/php/include/trackers_run/mod.php:79
-#: frontend/php/include/trackers_run/mod.php:92
+#: frontend/php/include/trackers_run/mod.php:76
+#: frontend/php/include/trackers_run/mod.php:91
 msgid "manager"
 msgstr "секретарь"
 
@@ -2213,25 +2213,25 @@ msgstr "Редактирование общедоступной информац
 msgid "Group Name:"
 msgstr "Название группы:"
 
-#: frontend/php/project/admin/editgroupinfo.php:82
-msgid "Short Description"
-msgstr "Краткое описание"
+#: frontend/php/project/admin/editgroupinfo.php:83
+msgid "Short Description (255 characters max)"
+msgstr "Краткое описание (не более 255 символов)"
 
-#: frontend/php/project/admin/editgroupinfo.php:89
+#: frontend/php/project/admin/editgroupinfo.php:90
 msgid "Long Description"
 msgstr "Подробное описание"
 
-#: frontend/php/project/admin/editgroupinfo.php:107
+#: frontend/php/project/admin/editgroupinfo.php:108
 #: frontend/php/include/project_home.php:175
 msgid "Development Status:"
 msgstr "Состояние разработки:"
 
-#: frontend/php/project/admin/editgroupinfo.php:123
+#: frontend/php/project/admin/editgroupinfo.php:124
 #: frontend/php/include/project_home.php:158
 msgid "License:"
 msgstr "Лицензия:"
 
-#: frontend/php/project/admin/editgroupinfo.php:124
+#: frontend/php/project/admin/editgroupinfo.php:125
 msgid ""
 "License changes are moderated by the site administrators. Please contact\n"
 "them to change your project license."
@@ -2239,11 +2239,11 @@ msgstr ""
 "Смена лицензий контролируется администраторами сайта. Для смены лицензии "
 "вашего проекта свяжитесь с ними."
 
-#: frontend/php/project/admin/editgroupinfo.php:131
+#: frontend/php/project/admin/editgroupinfo.php:132
 msgid "GNU GPL v3:"
 msgstr "GNU GPL версии 3:"
 
-#: frontend/php/project/admin/editgroupinfo.php:135
+#: frontend/php/project/admin/editgroupinfo.php:136
 msgid "Upgrade license to &quot;GNU GPLv3 or later&quot;"
 msgstr "Обновить лицензию до &ldquo;GNU GPLv3 или более поздней&rdquo;"
 
@@ -2708,7 +2708,7 @@ msgid "Admin"
 msgstr "Администратор"
 
 #: frontend/php/project/admin/squadadmin.php:53
-#: frontend/php/account/register.php:88
+#: frontend/php/account/register.php:89
 msgid "You must supply a username."
 msgstr "Вы должны ввести имя пользователя."
 
@@ -2718,12 +2718,12 @@ msgid "You must supply a non-empty real name."
 msgstr "Необходимо ввести непустое полное имя."
 
 #: frontend/php/project/admin/squadadmin.php:73
-#: frontend/php/account/register.php:96
+#: frontend/php/account/register.php:97
 msgid "That username already exists."
 msgstr "Имя пользователя занято."
 
 #: frontend/php/project/admin/squadadmin.php:84
-#: frontend/php/account/register.php:101
+#: frontend/php/account/register.php:102
 msgid "That username is blocked to avoid conflict with mailing-list addresses."
 msgstr ""
 "Это имя пользователя заблокировано во избежание наложений на адреса списков "
@@ -2813,7 +2813,7 @@ msgid "User %s is not part of the squad."
 msgstr "Пользователь %s не в звене."
 
 #: frontend/php/project/admin/squadadmin.php:322
-#: frontend/php/account/register.php:261 frontend/php/include/user_home.php:149
+#: frontend/php/account/register.php:262 frontend/php/include/user_home.php:149
 msgid "Real Name:"
 msgstr "Полное имя:"
 
@@ -3114,11 +3114,11 @@ msgid "Start a New Thread:"
 msgstr "Начать новую тему:"
 
 #: frontend/php/forum/forum.php:320 frontend/php/news/admin/index.php:36
-#: frontend/php/search/index.php:198 frontend/php/account/pending-resend.php:41
+#: frontend/php/search/index.php:198 frontend/php/account/pending-resend.php:39
 #: frontend/php/account/lostlogin.php:35 frontend/php/account/lostlogin.php:39
 #: frontend/php/people/viewjob.php:30 frontend/php/include/exit.php:117
 #: frontend/php/include/news/forum.php:375
-#: frontend/php/include/stats/general.php:33 frontend/php/include/utils.php:66
+#: frontend/php/include/stats/general.php:33 frontend/php/include/utils.php:69
 msgid "Error"
 msgstr "Ошибка"
 
@@ -3241,7 +3241,7 @@ msgstr ""
 
 #: frontend/php/news/approve.php:164
 #: frontend/php/include/trackers_run/detail.php:102
-#: frontend/php/include/trackers_run/mod.php:124
+#: frontend/php/include/trackers_run/mod.php:122
 msgid "Submitted by:"
 msgstr "Автор:"
 
@@ -3784,8 +3784,8 @@ msgstr ""
 "Обратите внимание, что <strong>скрытые</strong> проекты на этой странице не "
 "показаны."
 
-#: frontend/php/search/index.php:112 frontend/php/account/verify.php:72
-#: frontend/php/account/verify.php:92 frontend/php/account/login.php:164
+#: frontend/php/search/index.php:112 frontend/php/account/verify.php:70
+#: frontend/php/account/verify.php:90 frontend/php/account/login.php:164
 #: frontend/php/account/login.php:261 frontend/php/include/sitemenu.php:551
 msgid "Login"
 msgstr "Войти"
@@ -3822,15 +3822,15 @@ msgstr "Для этого вам нужно быть администратор�
 msgid "This user doesn't exist."
 msgstr "Этот пользователь не существует."
 
-#: frontend/php/account/lostpw.php:34
+#: frontend/php/account/lostpw.php:32
 msgid "Lost Account Password"
 msgstr "Утерянный пароль"
 
-#: frontend/php/account/lostpw.php:35 frontend/php/account/login.php:219
+#: frontend/php/account/lostpw.php:33 frontend/php/account/login.php:219
 msgid "Lost your password?"
 msgstr "Утерян пароль?"
 
-#: frontend/php/account/lostpw.php:37
+#: frontend/php/account/lostpw.php:35
 msgid ""
 "The form below will email a URL to the email address we have on\n"
 "file for you. In this URL is a 128-bit confirmation hash for your account.\n"
@@ -3841,7 +3841,7 @@ msgstr ""
 "послан URL. В этом URL содержится код сброса для вашей учетной записи. "
 "Перейдя по этому URL, вы сможете сменить свой пароль."
 
-#: frontend/php/account/lostpw.php:41
+#: frontend/php/account/lostpw.php:39
 msgid ""
 "This will work only if your account was already\n"
 "successfully registered and activated. Note that accounts that are not\n"
@@ -3853,41 +3853,41 @@ msgstr ""
 "и активирована. Обратите внимание, что учетные записи, не активированные в "
 "течение трех дней после регистрации, автоматически удаляются."
 
-#: frontend/php/account/lostpw.php:48 frontend/php/account/register.php:249
+#: frontend/php/account/lostpw.php:46 frontend/php/account/register.php:250
 #: frontend/php/account/login.php:210 frontend/php/include/user_home.php:153
 msgid "Login Name:"
 msgstr "Имя учетной записи:"
 
-#: frontend/php/account/lostpw.php:50
+#: frontend/php/account/lostpw.php:48
 msgid "Send lost password hash"
 msgstr "Отправить код для восстановления пароля"
 
-#: frontend/php/account/register.php:68
+#: frontend/php/account/register.php:69
 msgid "Please answer the antispam test!"
 msgstr "Ответьте на антиспамный вопрос!"
 
-#: frontend/php/account/register.php:78
+#: frontend/php/account/register.php:79
 msgid "Please correctly answer the antispam captcha!"
 msgstr "Решите правильно на антиспамную задачу!"
 
-#: frontend/php/account/register.php:110 frontend/php/account/lostlogin.php:45
+#: frontend/php/account/register.php:111 frontend/php/account/lostlogin.php:45
 msgid "Passwords do not match."
 msgstr "Пароли не совпадают."
 
-#: frontend/php/account/register.php:120
+#: frontend/php/account/register.php:121
 msgid "You must supply a valid email address."
 msgstr "Сначала нужно ввести правильный email адрес."
 
-#: frontend/php/account/register.php:129
+#: frontend/php/account/register.php:130
 msgid "You must supply a real name."
 msgstr "Нужно ввести полное имя."
 
-#: frontend/php/account/register.php:139 frontend/php/include/session.php:160
+#: frontend/php/account/register.php:140 frontend/php/include/session.php:160
 msgid "phpkrb5 module failure"
 msgstr "сбой модуля phpkrb5"
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:145
+#: frontend/php/account/register.php:146
 #, php-format
 msgid ""
 "User is a kerberos principal but password do not\n"
@@ -3902,7 +3902,7 @@ msgstr ""
 "учетной записи."
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:191
+#: frontend/php/account/register.php:192
 #, php-format
 msgid ""
 "Thank you for registering on the %s web site.\n"
@@ -3915,13 +3915,13 @@ msgstr ""
 "сообщении не упоминается, чтобы предотвратить создание учетных записей\n"
 "автоматами.)"
 
-#: frontend/php/account/register.php:200
-#: frontend/php/account/pending-resend.php:48 frontend/php/account/first.php:45
+#: frontend/php/account/register.php:201
+#: frontend/php/account/pending-resend.php:46 frontend/php/account/first.php:45
 msgid "Enjoy the site."
 msgstr "Приятного пользования!"
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:208
+#: frontend/php/account/register.php:209
 #, php-format
 msgid ""
 "P.S. Your password is now stored in hashed form\n"
@@ -3930,7 +3930,7 @@ msgstr ""
 "Ваш пароль теперь хранится в виде контрольной суммы\n"
 "в базе данных %s."
 
-#: frontend/php/account/register.php:210
+#: frontend/php/account/register.php:211
 msgid ""
 "For better security we advise you to register\n"
 "an encryption-capable GPG key and enable encryption when sending password "
@@ -3944,26 +3944,26 @@ msgstr ""
 "чтобы убедиться, что вы действительно можете прочесть зашифрованные\n"
 "сообщения)."
 
-#: frontend/php/account/register.php:218
-#: frontend/php/account/pending-resend.php:53
+#: frontend/php/account/register.php:219
+#: frontend/php/account/pending-resend.php:51
 msgid "Account Registration"
 msgstr "Регистрация учетной записи"
 
-#: frontend/php/account/register.php:221
+#: frontend/php/account/register.php:222
 msgid "Register Confirmation"
 msgstr "Подтверждение регистрации"
 
-#: frontend/php/account/register.php:223
+#: frontend/php/account/register.php:224
 msgid "New Account Registration Confirmation"
 msgstr "Подтверждение регистрации новой учетной записи"
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:225
+#: frontend/php/account/register.php:226
 #, php-format
 msgid "Congratulations. You have registered on %s."
 msgstr "Поздравляем! Вы зарегистрированы на %s "
 
-#: frontend/php/account/register.php:230
+#: frontend/php/account/register.php:231
 #, php-format
 msgid ""
 "You are now being sent a confirmation email to verify your\n"
@@ -3976,30 +3976,30 @@ msgstr ""
 "Чтобы активировать учетную запись, перейдите по ссылке из письма. Сообщение "
 "отправлено с адреса &lt;%s&gt;, оно содержит такой текст:"
 
-#: frontend/php/account/register.php:238
+#: frontend/php/account/register.php:239
 msgid ""
 "If you don't receive it within a reasonable time, contact website\n"
 "administration."
 msgstr ""
 "Если вы не получите его в ближайшее время, обратитесь к администрации сайта."
 
-#: frontend/php/account/register.php:245
+#: frontend/php/account/register.php:246
 msgid "User account registration"
 msgstr "Регистрация новой учетной записи"
 
-#: frontend/php/account/register.php:253
+#: frontend/php/account/register.php:254
 msgid "Password / passphrase:"
 msgstr "Фраза-пароль:"
 
-#: frontend/php/account/register.php:257
+#: frontend/php/account/register.php:258
 msgid "Re-type Password:"
 msgstr "Пароль (повтор):"
 
-#: frontend/php/account/register.php:264 frontend/php/include/user_home.php:167
+#: frontend/php/account/register.php:265 frontend/php/include/user_home.php:167
 msgid "Email Address:"
 msgstr "Адрес электронной почты"
 
-#: frontend/php/account/register.php:269
+#: frontend/php/account/register.php:270
 msgid ""
 "This email address will be verified before account activation. Check your\n"
 "spam filters. Do not use a hotmail or comcast address here."
@@ -4009,21 +4009,21 @@ msgstr ""
 "Проверьте свои фильтры спама. Не пользуйтесь здесь адресами hotmail и "
 "comcast."
 
-#: frontend/php/account/register.php:275 frontend/php/account/register.php:294
+#: frontend/php/account/register.php:276 frontend/php/account/register.php:295
 msgid "Antispam test:"
 msgstr "Проверка против спама:"
 
-#: frontend/php/account/register.php:281
+#: frontend/php/account/register.php:282
 #, php-format
 msgid "In what year was the GNU project announced? [<a href='%s'>hint</a>]"
 msgstr ""
 "В каком году было объявлено о проекте GNU? [<a href='%s'>подсказка</a>]"
 
-#: frontend/php/account/register.php:293
+#: frontend/php/account/register.php:294
 msgid "Play Captcha"
 msgstr "Воспроизвести вопрос"
 
-#: frontend/php/account/register.php:304
+#: frontend/php/account/register.php:305
 msgid ""
 "Instead of providing a new password you\n"
 "        may choose to authenticate via an <strong>AFS</strong> account you "
@@ -4036,26 +4036,26 @@ msgstr ""
 "сайте (имя вашей новой учетной записи должно совпадать с именем учетной "
 "записи AFS):"
 
-#: frontend/php/account/register.php:310
+#: frontend/php/account/register.php:311
 msgid "use AFS based authentication"
 msgstr "удостоверять личность по AFS"
 
-#: frontend/php/account/verify.php:52
+#: frontend/php/account/verify.php:50
 msgid "Invalid username."
 msgstr "Неправильное имя пользователя."
 
 #. TRANSLATORS: confirmation hash is a secret code sent to the user.
-#: frontend/php/account/verify.php:57
+#: frontend/php/account/verify.php:55
 msgid "Invalid confirmation hash"
 msgstr "Неправильный код подтверждения"
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/verify.php:74
+#: frontend/php/account/verify.php:72
 #, php-format
 msgid "%s Account Verification"
 msgstr "Проверка учетной записи %s"
 
-#: frontend/php/account/verify.php:76
+#: frontend/php/account/verify.php:74
 msgid ""
 "In order to complete your registration, login now. Your account\n"
 "will then be activated for normal logins."
@@ -4063,11 +4063,11 @@ msgstr ""
 "Для завершения регистрации войдите в систему. После этого ваша учетная "
 "запись будет активирована для обычного входа."
 
-#: frontend/php/account/verify.php:80
+#: frontend/php/account/verify.php:78
 msgid "Login Name"
 msgstr "Имя учетной записи"
 
-#: frontend/php/account/verify.php:84
+#: frontend/php/account/verify.php:82
 msgid "Password"
 msgstr "Пароль"
 
@@ -4075,29 +4075,29 @@ msgstr "Пароль"
 msgid "You shouldn't have come to this page."
 msgstr "Вы не должны были попасть на эту страницу."
 
-#: frontend/php/account/pending-resend.php:41
+#: frontend/php/account/pending-resend.php:39
 msgid "This account is not pending verification."
 msgstr "Эта учетная запись не ожидает подтверждения."
 
-#: frontend/php/account/pending-resend.php:43
+#: frontend/php/account/pending-resend.php:41
 #, php-format
 msgid "Thank you for registering on the %s web site."
 msgstr "Спасибо за регистрацию на сайте %s."
 
-#: frontend/php/account/pending-resend.php:45
+#: frontend/php/account/pending-resend.php:43
 msgid "In order to complete your registration, visit the following URL:"
 msgstr "Чтобы завершить регистрацию, перейдите по URL:"
 
-#: frontend/php/account/pending-resend.php:56
+#: frontend/php/account/pending-resend.php:54
 msgid "Account Pending Verification"
 msgstr "Учетная запись ожидает подтверждения"
 
-#: frontend/php/account/pending-resend.php:58
+#: frontend/php/account/pending-resend.php:56
 #: frontend/php/account/login.php:170
 msgid "Pending Account"
 msgstr "Неподтвержденная учетная запись"
 
-#: frontend/php/account/pending-resend.php:60
+#: frontend/php/account/pending-resend.php:58
 msgid ""
 "Your email confirmation has been resent. Visit the link in this\n"
 "email to complete the registration process."
@@ -4105,11 +4105,11 @@ msgstr ""
 "Подтверждение было отправлено еще раз. Перейдите по ссылке в пришедшем "
 "сообщении, чтобы завершить регистрацию."
 
-#: frontend/php/account/pending-resend.php:63
+#: frontend/php/account/pending-resend.php:61
 msgid "Return to Home Page"
 msgstr "Вернуться на домашнюю страницу"
 
-#: frontend/php/account/lostpw-confirm.php:53
+#: frontend/php/account/lostpw-confirm.php:51
 msgid ""
 "This account uses an AFS password. <strong>You cannot change your\n"
 "AFS password via Savane</strong>. Contact the AFS managers."
@@ -4117,17 +4117,17 @@ msgstr ""
 "В этой учетной записи применяется пароль AFS. <strong>Пароль AFS через "
 "Savane не изменяется</strong>. Обратитесь в администрацию AFS."
 
-#: frontend/php/account/lostpw-confirm.php:71
+#: frontend/php/account/lostpw-confirm.php:69
 msgid ""
 "This account hasn't been activated, please contact website administration"
 msgstr ""
 "Эта учетная запись не была активирована, обратитесь к администрации сайта"
 
-#: frontend/php/account/lostpw-confirm.php:73
+#: frontend/php/account/lostpw-confirm.php:71
 msgid "This account does not exist"
 msgstr "Такой учетной записи нет"
 
-#: frontend/php/account/lostpw-confirm.php:106
+#: frontend/php/account/lostpw-confirm.php:104
 msgid ""
 "An email for your lost password has already been sent.\n"
 "Please wait one hour and try again."
@@ -4136,7 +4136,7 @@ msgstr ""
 
 #. TRANSLATORS: the argument is a domain (like "savannah.gnu.org"
 #. vs. "savannah.nongnu.org").
-#: frontend/php/account/lostpw-confirm.php:120
+#: frontend/php/account/lostpw-confirm.php:118
 #, php-format
 msgid ""
 "Someone (presumably you) on the %s site requested\n"
@@ -4145,11 +4145,11 @@ msgstr ""
 "Кто-то (предположительно, вы) запросил на сайте %s\n"
 "восстановление пароля по электронной почте."
 
-#: frontend/php/account/lostpw-confirm.php:123
+#: frontend/php/account/lostpw-confirm.php:121
 msgid "If this was not you, this could pose a security risk for the system."
 msgstr "Если это не вы, возможно, систему пытаются взломать."
 
-#: frontend/php/account/lostpw-confirm.php:126
+#: frontend/php/account/lostpw-confirm.php:124
 #, php-format
 msgid ""
 "The request came from %s\n"
@@ -4158,12 +4158,12 @@ msgstr ""
 "Запрос пришел из %s\n"
 "(IP: %s; порт: %s; пользовательский агент: %s)"
 
-#: frontend/php/account/lostpw-confirm.php:131
+#: frontend/php/account/lostpw-confirm.php:129
 msgid ""
 "If you requested this verification, visit this URL to change your password:"
 msgstr "Если это действие запросили вы, перейдите для смены пароля по адресу:"
 
-#: frontend/php/account/lostpw-confirm.php:136
+#: frontend/php/account/lostpw-confirm.php:134
 msgid ""
 "In any case make sure that you do not disclose this URL to\n"
 "somebody else, e.g. do not mail this to a public mailinglist!\n"
@@ -4173,23 +4173,23 @@ msgstr ""
 "не посылайте его в открытый список расылки!\n"
 "\n"
 
-#: frontend/php/account/lostpw-confirm.php:211
+#: frontend/php/account/lostpw-confirm.php:209
 msgid "Confirmation mailed"
 msgstr "Подтверждение отправлено по почте"
 
-#: frontend/php/account/lostpw-confirm.php:213
+#: frontend/php/account/lostpw-confirm.php:211
 msgid "Lost Password Confirmation"
 msgstr "Подтверждение утерянного пароля"
 
-#: frontend/php/account/lostpw-confirm.php:214
+#: frontend/php/account/lostpw-confirm.php:212
 msgid "An email has been sent to the address you have on file."
 msgstr "Электронное письмо было отослано на ваш электронный адрес."
 
-#: frontend/php/account/lostpw-confirm.php:216
+#: frontend/php/account/lostpw-confirm.php:214
 msgid "Follow the instructions in the email to change your account password."
 msgstr "Для изменения пароля следуйте инструкциям в электронном письме."
 
-#: frontend/php/account/lostpw-confirm.php:223
+#: frontend/php/account/lostpw-confirm.php:221
 msgid ""
 "Note that the message was sent unencrypted.\n"
 "In order to use encryption, register an encryption-capable GPG key\n"
@@ -4201,7 +4201,7 @@ msgstr ""
 "шифрования и поставьте флажок <b>Шифровать сообщения при сбросе пароля</b>\n"
 "в настройках своей учетной записи."
 
-#: frontend/php/account/lostpw-confirm.php:229
+#: frontend/php/account/lostpw-confirm.php:227
 msgid "Note that it was encrypted with your registered GPG key."
 msgstr ""
 "Обратите внимание, что оно было зашифровано зарегистрированным вами ключом "
@@ -5025,7 +5025,7 @@ msgid "No item found with that id."
 msgstr "Заявка с таким идентификатором не найдена."
 
 #: frontend/php/include/trackers_run/detail.php:58
-#: frontend/php/include/trackers_run/mod.php:60
+#: frontend/php/include/trackers_run/mod.php:59
 msgid ""
 "This item is private. However, you are allowed to read it as you submitted "
 "it."
@@ -5046,32 +5046,32 @@ msgstr ""
 "журнале."
 
 #: frontend/php/include/trackers_run/detail.php:112
-#: frontend/php/include/trackers_run/mod.php:135
+#: frontend/php/include/trackers_run/mod.php:134
 msgid "Submitted on:"
 msgstr "Дата размещения:"
 
 #: frontend/php/include/trackers_run/detail.php:125
-#: frontend/php/include/trackers_run/mod.php:150
+#: frontend/php/include/trackers_run/mod.php:149
 msgid "Votes:"
 msgstr "Голосование:"
 
 #: frontend/php/include/trackers_run/detail.php:284
-#: frontend/php/include/trackers_run/mod.php:392
+#: frontend/php/include/trackers_run/mod.php:388
 msgid "Post a Comment"
 msgstr "Оставить комментарий"
 
 #: frontend/php/include/trackers_run/detail.php:289
-#: frontend/php/include/trackers_run/mod.php:398
+#: frontend/php/include/trackers_run/mod.php:395
 msgid "Add a New Comment"
 msgstr "Добавить комментарий"
 
 #: frontend/php/include/trackers_run/detail.php:290
-#: frontend/php/include/trackers_run/mod.php:400
+#: frontend/php/include/trackers_run/mod.php:397
 msgid "Preview"
 msgstr "Предпросмотр"
 
 #: frontend/php/include/trackers_run/detail.php:293
-#: frontend/php/include/trackers_run/mod.php:402
+#: frontend/php/include/trackers_run/mod.php:400
 msgid "New comment"
 msgstr "Новый комментарий"
 
@@ -5087,19 +5087,19 @@ msgstr ""
 "по электронной почте."
 
 #: frontend/php/include/trackers_run/detail.php:309
-#: frontend/php/include/trackers_run/mod.php:448
+#: frontend/php/include/trackers_run/mod.php:445
 msgid "Discussion locked!"
 msgstr "Обсуждение заблокировано!"
 
 #: frontend/php/include/trackers_run/detail.php:318
-#: frontend/php/include/trackers_run/mod.php:460
+#: frontend/php/include/trackers_run/mod.php:456
 msgid "Discussion"
 msgstr "Обсуждение"
 
 #: frontend/php/include/trackers_run/detail.php:330
 #: frontend/php/include/trackers_run/add.php:198
 #: frontend/php/include/trackers_run/detail-sober.php:176
-#: frontend/php/include/trackers_run/mod.php:474
+#: frontend/php/include/trackers_run/mod.php:469
 #: frontend/php/include/trackers/format.php:619
 msgid "Attached Files"
 msgstr "Присоединенные файлы"
@@ -5115,7 +5115,7 @@ msgstr ""
 
 #: frontend/php/include/trackers_run/detail.php:340
 #: frontend/php/include/trackers_run/add.php:202
-#: frontend/php/include/trackers_run/mod.php:480
+#: frontend/php/include/trackers_run/mod.php:475
 msgid "Attach Files:"
 msgstr "Присоединить файлы:"
 
@@ -5123,10 +5123,10 @@ msgstr "Присоединить файлы:"
 #: frontend/php/include/trackers_run/detail.php:344
 #: frontend/php/include/trackers_run/detail.php:347
 #: frontend/php/include/trackers_run/detail.php:349
+#: frontend/php/include/trackers_run/mod.php:477
+#: frontend/php/include/trackers_run/mod.php:479
 #: frontend/php/include/trackers_run/mod.php:482
 #: frontend/php/include/trackers_run/mod.php:484
-#: frontend/php/include/trackers_run/mod.php:487
-#: frontend/php/include/trackers_run/mod.php:489
 msgid "File to attach"
 msgstr "Файл для присоединения"
 
@@ -5134,25 +5134,25 @@ msgstr "Файл для присоединения"
 #: frontend/php/include/trackers_run/detail.php:398
 #: frontend/php/include/trackers_run/add.php:209
 #: frontend/php/include/trackers_run/add.php:232
-#: frontend/php/include/trackers_run/mod.php:492
-#: frontend/php/include/trackers_run/mod.php:691
+#: frontend/php/include/trackers_run/mod.php:487
+#: frontend/php/include/trackers_run/mod.php:679
 msgid "Comment:"
 msgstr "Комментарий:"
 
 #: frontend/php/include/trackers_run/detail.php:355
-#: frontend/php/include/trackers_run/mod.php:495
+#: frontend/php/include/trackers_run/mod.php:490
 msgid "File description"
 msgstr "Описание файла"
 
 #: frontend/php/include/trackers_run/detail.php:381
-#: frontend/php/include/trackers_run/mod.php:676
+#: frontend/php/include/trackers_run/mod.php:663
 msgid "Mail Notification Carbon-Copy List"
 msgstr "Список уведомлений"
 
 #. TRANSLATORS: the argument is site name (like Savannah).
 #: frontend/php/include/trackers_run/detail.php:389
 #: frontend/php/include/trackers_run/add.php:222
-#: frontend/php/include/trackers_run/mod.php:679
+#: frontend/php/include/trackers_run/mod.php:667
 #, php-format
 msgid ""
 "(Note: for %s users, you can use their login name\n"
@@ -5162,12 +5162,12 @@ msgstr ""
 "указывать учетную запись.)"
 
 #: frontend/php/include/trackers_run/detail.php:394
-#: frontend/php/include/trackers_run/mod.php:684
+#: frontend/php/include/trackers_run/mod.php:672
 msgid "Add Email Addresses (comma as separator):"
 msgstr "Добавить адреса электронной почты (разделенные запятыми):"
 
 #: frontend/php/include/trackers_run/detail.php:414
-#: frontend/php/include/trackers_run/mod.php:715
+#: frontend/php/include/trackers_run/mod.php:701
 #: frontend/php/include/pagemenu.php:248
 msgid "Votes"
 msgstr "Голосование"
@@ -5189,12 +5189,12 @@ msgstr[1] "Этой задаче присвоено %s поощрения."
 msgstr[2] "Этой задаче присвоено %s поощрений."
 
 #: frontend/php/include/trackers_run/detail.php:443
-#: frontend/php/include/trackers_run/mod.php:727
+#: frontend/php/include/trackers_run/mod.php:713
 msgid "Your vote:"
 msgstr "Ваш голос:"
 
 #: frontend/php/include/trackers_run/detail.php:448
-#: frontend/php/include/trackers_run/mod.php:732
+#: frontend/php/include/trackers_run/mod.php:718
 #, php-format
 msgid "/ %s remaining vote"
 msgid_plural "/ %s remaining votes"
@@ -5221,7 +5221,7 @@ msgstr ""
 "wiki/George_Orwell\">Джорджа Оруэлла</a> (это дата):"
 
 #: frontend/php/include/trackers_run/detail.php:486
-#: frontend/php/include/trackers_run/mod.php:873
+#: frontend/php/include/trackers_run/mod.php:849
 msgid "History"
 msgstr "История"
 
@@ -5375,12 +5375,12 @@ msgid "Preamble"
 msgstr "Преамбула"
 
 #: frontend/php/include/trackers_run/add.php:193
-#: frontend/php/include/trackers_run/mod.php:337
+#: frontend/php/include/trackers_run/mod.php:336
 msgid "Mandatory Fields"
 msgstr "Обязательные поля"
 
 #: frontend/php/include/trackers_run/add.php:199
-#: frontend/php/include/trackers_run/mod.php:477
+#: frontend/php/include/trackers_run/mod.php:472
 #, php-format
 msgid ""
 "(Note: upload size limit is set to %s kB, after insertion of\n"
@@ -5475,7 +5475,7 @@ msgstr "Открытая заявка"
 #. TRANSLATORS: anonymous user.
 #: frontend/php/include/trackers_run/digest.php:253
 #: frontend/php/include/html.php:769 frontend/php/include/html.php:778
-#: frontend/php/include/utils.php:631
+#: frontend/php/include/utils.php:642
 msgid "Anonymous"
 msgstr "Аноним"
 
@@ -5495,16 +5495,16 @@ msgstr "Переход не найден"
 #. TRANSLATORS: Displayed when no user is selected.
 #. TRANSLATORS: this string is a job category.
 #: frontend/php/include/trackers_run/admin/field_values_transition-ofields-update.php:105
-#: frontend/php/include/trackers_run/mod.php:255
+#: frontend/php/include/trackers_run/mod.php:254
 #: frontend/php/include/trackers/general.php:272
 #: frontend/php/include/html.php:501 frontend/php/include/html.php:695
-#: frontend/php/include/html.php:713 frontend/php/include/utils.php:629
+#: frontend/php/include/html.php:713 frontend/php/include/utils.php:640
 #: frontend/php/include/people/general.php:205
 msgid "None"
 msgstr "Пусто"
 
 #: frontend/php/include/trackers_run/admin/field_values_transition-ofields-update.php:107
-#: frontend/php/include/trackers_run/mod.php:256
+#: frontend/php/include/trackers_run/mod.php:255
 #: frontend/php/include/html.php:503
 msgid "Any"
 msgstr "Любые"
@@ -6349,20 +6349,9 @@ msgstr "Преамбула размещения заявок"
 msgid "Introductory message showing at the top of the item submission form"
 msgstr "Вводное сообщение, появляющееся сверху формы заявки"
 
-#: frontend/php/include/trackers_run/export-updatetask.php:33
-#: frontend/php/include/trackers_run/export-createtask.php:34
-msgid "Data Export is currently restricted to project members"
-msgstr "Экспорт данных пока разрешен только участникам проекта"
-
-#. TRANSLATORS: the arguments are task and export ids (numbers).
-#: frontend/php/include/trackers_run/export-updatetask.php:74
-#, php-format
-msgid "Export job #%1$s deleted, task #%2$s closed"
-msgstr "Задание на экспорт №%1$s удалено, задача №%2$s закрыта"
-
 #: frontend/php/include/trackers_run/search.php:23
-#: frontend/php/include/trackers_run/mod.php:580
-#: frontend/php/include/trackers_run/mod.php:798
+#: frontend/php/include/trackers_run/mod.php:575
+#: frontend/php/include/trackers_run/mod.php:782
 #: frontend/php/include/context.php:327 frontend/php/include/sitemenu.php:163
 #: frontend/php/include/search/general.php:70
 #: frontend/php/include/search/general.php:252
@@ -6398,7 +6387,7 @@ msgstr ""
 "этой заявки]"
 
 #: frontend/php/include/trackers_run/detail-sober.php:104
-#: frontend/php/include/trackers_run/mod.php:64
+#: frontend/php/include/trackers_run/mod.php:61
 msgid ""
 "This item is private. You are not listed as member\n"
 "allowed to read private items."
@@ -6455,16 +6444,6 @@ msgstr "Редакция заявки"
 msgid "Edit this page"
 msgstr "Править эту страницу"
 
-#: frontend/php/include/trackers_run/export-createtask.php:43
-msgid "This export job cannot be modified"
-msgstr "Изменять это задание на экспорт нельзя"
-
-#. TRANSLATORS: the arguments are job and task ids (numbers).
-#: frontend/php/include/trackers_run/export-createtask.php:129
-#, php-format
-msgid "Export job #%1$s registered, task #%2$s created"
-msgstr "Задание на экспорт №%1$s зарегистрировано, создана задача №%2$s"
-
 #. TRANSLATORS: the argument is file id (a number).
 #: frontend/php/include/trackers_run/download.php:64
 #, php-format
@@ -6475,25 +6454,25 @@ msgstr "Присоединенный файл не найден (файл №%s)
 msgid "File has a null size"
 msgstr "Размер файла равен нулю"
 
-#: frontend/php/include/trackers_run/mod.php:76
+#: frontend/php/include/trackers_run/mod.php:73
 msgid "You are both technician and manager for this tracker."
 msgstr "Вы и техник и секретарь этого журнала."
 
-#: frontend/php/include/trackers_run/mod.php:78
+#: frontend/php/include/trackers_run/mod.php:75
 msgid "can be assigned items, cannot change status or priority"
 msgstr ""
 "может назначаться ответственным за заявку, не может менять состояние и "
 "приоритет"
 
-#: frontend/php/include/trackers_run/mod.php:79
+#: frontend/php/include/trackers_run/mod.php:76
 msgid "fully manage the items"
 msgstr "полностью управляет заявками"
 
-#: frontend/php/include/trackers_run/mod.php:84
+#: frontend/php/include/trackers_run/mod.php:82
 msgid "You are technician for this tracker."
 msgstr "Вы техник этого журнала."
 
-#: frontend/php/include/trackers_run/mod.php:86
+#: frontend/php/include/trackers_run/mod.php:84
 msgid ""
 "you can be assigned tracker's items, but you cannot reassign\n"
 "items, change priority nor open/close"
@@ -6501,11 +6480,11 @@ msgstr ""
 "вам могут поручаться заявки из журнала, но вы не можете перепоручать заявки, "
 "изменять приоритеты, открывать и закрывать заявки"
 
-#: frontend/php/include/trackers_run/mod.php:91
+#: frontend/php/include/trackers_run/mod.php:90
 msgid "You are manager for this tracker."
 msgstr "Вы секретарь этого журнала."
 
-#: frontend/php/include/trackers_run/mod.php:93
+#: frontend/php/include/trackers_run/mod.php:92
 msgid ""
 "you can fully manage the trackers items, including assigning\n"
 "items to technicians, reassign items over trackers and projects, changing\n"
@@ -6515,37 +6494,37 @@ msgstr ""
 "техникам, переназначать заявки на другие журналы и проекты, изменять "
 "приоритеты, открывать и закрывать заявки"
 
-#: frontend/php/include/trackers_run/mod.php:131
-#: frontend/php/include/trackers_run/mod.php:865
+#: frontend/php/include/trackers_run/mod.php:130
+#: frontend/php/include/trackers_run/mod.php:843
 msgid "Submit Changes and Browse Items"
 msgstr "Сохранить и вернуться к списку"
 
 #: frontend/php/include/trackers_run/mod.php:140
-#: frontend/php/include/trackers_run/mod.php:867
+#: frontend/php/include/trackers_run/mod.php:845
 msgid "Submit Changes and Return to this Item"
 msgstr "Сохранить и продолжить редактирование"
 
-#: frontend/php/include/trackers_run/mod.php:406
+#: frontend/php/include/trackers_run/mod.php:404
 msgid "Comment Type & Canned Response:"
 msgstr "Тип комментария и шаблон ответа:"
 
-#: frontend/php/include/trackers_run/mod.php:431
+#: frontend/php/include/trackers_run/mod.php:429
 msgid "Strangely enough, there is no canned response available."
 msgstr "Странно, шаблонов ответа нет."
 
-#: frontend/php/include/trackers_run/mod.php:441
+#: frontend/php/include/trackers_run/mod.php:438
 msgid "Or define a new Canned Response"
 msgstr "Определить новый шаблон ответа"
 
-#: frontend/php/include/trackers_run/mod.php:449
+#: frontend/php/include/trackers_run/mod.php:446
 msgid "Your privileges however allow to override the lock."
 msgstr "Однако ваши привилегии позволяют обходить блокировку."
 
-#: frontend/php/include/trackers_run/mod.php:512
+#: frontend/php/include/trackers_run/mod.php:506
 msgid "Search an item (to fill a dependency against):"
 msgstr "Поиск заявки (для заполнения зависимости):"
 
-#: frontend/php/include/trackers_run/mod.php:517
+#: frontend/php/include/trackers_run/mod.php:511
 msgid ""
 "New search, in case the previous one was not satisfactory (to\n"
 "fill a dependency against):"
@@ -6553,62 +6532,64 @@ msgstr ""
 "Новый поиск на случай, если предыдущий был неудовлетворителен (для "
 "заполнения зависимости):"
 
-#: frontend/php/include/trackers_run/mod.php:523
+#: frontend/php/include/trackers_run/mod.php:517
 #: frontend/php/include/search/general.php:75
 msgid "Terms to look for"
 msgstr "Слова для поиска"
 
-#: frontend/php/include/trackers_run/mod.php:528
+#: frontend/php/include/trackers_run/mod.php:522
 msgid "Tracker to search in"
 msgstr "Журнал для поиска"
 
-#: frontend/php/include/trackers_run/mod.php:533
+#: frontend/php/include/trackers_run/mod.php:526
 msgid "Any Tracker"
 msgstr "любого журнала"
 
-#: frontend/php/include/trackers_run/mod.php:534
+#: frontend/php/include/trackers_run/mod.php:527
 msgid "The Support Tracker Only"
 msgstr "только журнала поддержки"
 
-#: frontend/php/include/trackers_run/mod.php:535
+#: frontend/php/include/trackers_run/mod.php:528
 msgid "The Bug Tracker Only"
 msgstr "только журнала ошибок"
 
-#: frontend/php/include/trackers_run/mod.php:536
+#: frontend/php/include/trackers_run/mod.php:529
 msgid "The Task Manager Only"
 msgstr "только журнала задач"
 
-#: frontend/php/include/trackers_run/mod.php:537
+#: frontend/php/include/trackers_run/mod.php:530
 msgid "The Patch Manager Only"
 msgstr "только журнала заплаток"
 
-#: frontend/php/include/trackers_run/mod.php:549
+#: frontend/php/include/trackers_run/mod.php:542
 msgid "Wether to search in any project"
 msgstr "искать ли во всех проектах"
 
 #. TRANSLATORS: this string is used in the context like
 #. "search an item of [The Bug Tracker Only] of [Any Project]".
-#: frontend/php/include/trackers_run/mod.php:559
+#: frontend/php/include/trackers_run/mod.php:553
 msgid "Any Project"
 msgstr "любого проекта"
 
-#: frontend/php/include/trackers_run/mod.php:571
+#. TRANSLATORS: this string is used in the context like
+#. "search an item of [The Bug Tracker Only] of [This Project Only]".
+#: frontend/php/include/trackers_run/mod.php:565
 msgid "This Project Only"
 msgstr "только этого проекта"
 
 #. TRANSLATORS: the first argument is tracker type (like The Bug Tracker),
 #. the second argument is either 'This Project Only' or 'Any Project'.
-#: frontend/php/include/trackers_run/mod.php:576
+#: frontend/php/include/trackers_run/mod.php:571
 #, php-format
 msgid "Of %1$s of %2$s"
 msgstr "%1$s %2$s"
 
-#: frontend/php/include/trackers_run/mod.php:586
-#: frontend/php/include/trackers_run/mod.php:804
+#: frontend/php/include/trackers_run/mod.php:581
+#: frontend/php/include/trackers_run/mod.php:787
 msgid "New search"
 msgstr "Новый поиск"
 
-#: frontend/php/include/trackers_run/mod.php:594
+#: frontend/php/include/trackers_run/mod.php:589
 #, php-format
 msgid ""
 "Please select a dependency to add in the result of your search\n"
@@ -6616,11 +6597,11 @@ msgid ""
 msgstr ""
 "Выберите зависимость, которую нужно добавить, из результата поиска по '%s':"
 
-#: frontend/php/include/trackers_run/mod.php:644
+#: frontend/php/include/trackers_run/mod.php:639
 msgid "group"
 msgstr "группа"
 
-#: frontend/php/include/trackers_run/mod.php:653
+#: frontend/php/include/trackers_run/mod.php:648
 msgid ""
 "None found. Please note that only search words of more than\n"
 "three characters are valid."
@@ -6628,7 +6609,7 @@ msgstr ""
 "Ничего не найдено. Учтите, что в поиске участвуют только слова, в которых "
 "более трех символов."
 
-#: frontend/php/include/trackers_run/mod.php:716
+#: frontend/php/include/trackers_run/mod.php:702
 #, php-format
 msgid "There is %s vote so far."
 msgid_plural "There are %s votes so far."
@@ -6636,7 +6617,7 @@ msgstr[0] "Пока %s голос."
 msgstr[1] "Пока %s голоса."
 msgstr[2] "Пока %s голосов."
 
-#: frontend/php/include/trackers_run/mod.php:719
+#: frontend/php/include/trackers_run/mod.php:705
 msgid ""
 "Votes easily highlight which items people would like to see resolved\n"
 "in priority, independently of the priority of the item set by tracker\n"
@@ -6645,44 +6626,44 @@ msgstr ""
 "Голосование указывает, решение каких заявок люди хотели бы получить прежде "
 "всего, независимо от приоритета, установленного секретарями журнала."
 
-#: frontend/php/include/trackers_run/mod.php:748
+#: frontend/php/include/trackers_run/mod.php:733
 msgid "Reassign this item"
 msgstr "Переместить эту заявку"
 
-#: frontend/php/include/trackers_run/mod.php:761
+#: frontend/php/include/trackers_run/mod.php:746
 msgid "Tracker to reassign to"
 msgstr "Журнал, в который перемещать"
 
 #. TRANSLATORS: this string is used in the context of "Move to the %s".
-#: frontend/php/include/trackers_run/mod.php:765
+#: frontend/php/include/trackers_run/mod.php:750
 msgid "<!-- Move to the -->Support Tracker"
 msgstr "журнал поддержки"
 
 #. TRANSLATORS: this string is used in the context of "Move to the %s".
-#: frontend/php/include/trackers_run/mod.php:768
+#: frontend/php/include/trackers_run/mod.php:753
 msgid "<!-- Move to the -->Bug Tracker"
 msgstr "журнал ошибок"
 
 #. TRANSLATORS: this string is used in the context of "Move to the %s".
-#: frontend/php/include/trackers_run/mod.php:771
+#: frontend/php/include/trackers_run/mod.php:756
 msgid "<!-- Move to the -->Task Tracker"
 msgstr "журнал задач"
 
 #. TRANSLATORS: this string is used in the context of "Move to the %s".
-#: frontend/php/include/trackers_run/mod.php:774
+#: frontend/php/include/trackers_run/mod.php:759
 msgid "<!-- Move to the -->Patch Tracker"
 msgstr "журнал заплаток"
 
-#: frontend/php/include/trackers_run/mod.php:777
+#: frontend/php/include/trackers_run/mod.php:762
 #, php-format
 msgid "Move to the %s"
 msgstr "Переместить в %s"
 
-#: frontend/php/include/trackers_run/mod.php:783
+#: frontend/php/include/trackers_run/mod.php:768
 msgid "Move to the project:"
 msgstr "Переместить в проект:"
 
-#: frontend/php/include/trackers_run/mod.php:788
+#: frontend/php/include/trackers_run/mod.php:773
 msgid ""
 "New search, in case the previous one was not satisfactory\n"
 "(to reassign the item to another project):"
@@ -6690,11 +6671,11 @@ msgstr ""
 "Новый поиск на случай, если предыдущий не удался (для перемещения заявки в "
 "другой проект):"
 
-#: frontend/php/include/trackers_run/mod.php:793
+#: frontend/php/include/trackers_run/mod.php:778
 msgid "Project to reassign item to"
 msgstr "Проект, в который перемещать заявку"
 
-#: frontend/php/include/trackers_run/mod.php:812
+#: frontend/php/include/trackers_run/mod.php:795
 #, php-format
 msgid ""
 "To which project this bug should be reassigned to? This is\n"
@@ -6702,11 +6683,11 @@ msgid ""
 msgstr ""
 "В какой проект переместить эту заявку? Вот результат поиска по строке '%s':"
 
-#: frontend/php/include/trackers_run/mod.php:821
+#: frontend/php/include/trackers_run/mod.php:804
 msgid "Do not reassign to another project."
 msgstr "Не перемещать заявку в другой проект."
 
-#: frontend/php/include/trackers_run/mod.php:850
+#: frontend/php/include/trackers_run/mod.php:832
 msgid ""
 "None found. Please note that only search words of more\n"
 "than three characters are valid."
@@ -6715,7 +6696,7 @@ msgstr ""
 "более трех символов."
 
 #: frontend/php/include/trackers_run/browse.php:73
-#: frontend/php/include/trackers_run/browse.php:885
+#: frontend/php/include/trackers_run/browse.php:893
 msgid "Browse Items"
 msgstr "Просмотреть заявки"
 
@@ -6726,41 +6707,41 @@ msgid "Browse Items By %s: "
 msgstr "Сортировать заявки по полю %s: "
 
 #. TRANSLATORS: this string is as argument in "Browse with the %s query form".
-#: frontend/php/include/trackers_run/browse.php:913
+#: frontend/php/include/trackers_run/browse.php:921
 msgid "Basic"
 msgstr "простой"
 
-#: frontend/php/include/trackers_run/browse.php:914
+#: frontend/php/include/trackers_run/browse.php:922
 msgid "query form"
 msgstr "форма запроса"
 
-#: frontend/php/include/trackers_run/browse.php:947
+#: frontend/php/include/trackers_run/browse.php:955
 msgid "Simple Search"
 msgstr "Простой поиск"
 
-#: frontend/php/include/trackers_run/browse.php:952
+#: frontend/php/include/trackers_run/browse.php:960
 msgid "Advanced Search"
 msgstr "Расширенный поиск"
 
-#: frontend/php/include/trackers_run/browse.php:968
+#: frontend/php/include/trackers_run/browse.php:976
 msgid "type of search"
 msgstr "тип поиска"
 
 #. TRANSLATORS: this string is used to specify kind of selection.
-#: frontend/php/include/trackers_run/browse.php:972
-#: frontend/php/include/trackers_run/browse.php:985
+#: frontend/php/include/trackers_run/browse.php:980
+#: frontend/php/include/trackers_run/browse.php:993
 msgid "Simple"
 msgstr "простым"
 
 #. TRANSLATORS: this string is used to specify kind of selection.
-#: frontend/php/include/trackers_run/browse.php:974
 #: frontend/php/include/trackers_run/browse.php:982
+#: frontend/php/include/trackers_run/browse.php:990
 msgid "Multiple"
 msgstr "сложным"
 
 #. TRANSLATORS: the first argument is kind of query form (like Basic),
 #. the second argument is kind of selection (Simple or Multiple).
-#: frontend/php/include/trackers_run/browse.php:991
+#: frontend/php/include/trackers_run/browse.php:999
 #, php-format
 msgid "Browse with the %1$s query form and %2$s selection."
 msgstr "Просмотреть с %1$s формой запроса и %2$s выбором."
@@ -6771,93 +6752,93 @@ msgstr "Просмотреть с %1$s формой запроса и %2$s вы�
 #. TRANSLATORS: the first argument is operator (AND or OR),
 #. the second argument is label for 'summary' field,
 #. the third argument is label for 'details field.
-#: frontend/php/include/trackers_run/browse.php:1008
-#: frontend/php/include/trackers_run/browse.php:1037
+#: frontend/php/include/trackers_run/browse.php:1016
+#: frontend/php/include/trackers_run/browse.php:1045
 #, php-format
 msgid "Use logical %1$s between '%2$s' and '%3$s' searches."
 msgstr "Применить логическое %1$s между поисками по '%2$s' и '%3$s'."
 
-#: frontend/php/include/trackers_run/browse.php:1009
+#: frontend/php/include/trackers_run/browse.php:1017
 msgid "logical operation to apply"
 msgstr "логический оператор"
 
 #. TRANSLATORS: this is a logical operator, used in string
 #. "Use logical %s between '%s' and '%s' searches.
-#: frontend/php/include/trackers_run/browse.php:1014
-#: frontend/php/include/trackers_run/browse.php:1044
+#: frontend/php/include/trackers_run/browse.php:1022
+#: frontend/php/include/trackers_run/browse.php:1052
 msgid "AND"
 msgstr "И"
 
 #. TRANSLATORS: this is a logical operator, used in string
 #. "Use logical %s between '%s' and '%s' searches.
-#: frontend/php/include/trackers_run/browse.php:1019
-#: frontend/php/include/trackers_run/browse.php:1041
+#: frontend/php/include/trackers_run/browse.php:1027
+#: frontend/php/include/trackers_run/browse.php:1049
 msgid "OR"
 msgstr "ИЛИ"
 
 #. TRANSLATORS: the string is used like "<field-name> %s since <date>"
-#: frontend/php/include/trackers_run/browse.php:1090
+#: frontend/php/include/trackers_run/browse.php:1098
 msgid "modified"
 msgstr "изменено"
 
 #. TRANSLATORS: the string is used like "<field-name> %s since <date>"
-#: frontend/php/include/trackers_run/browse.php:1092
+#: frontend/php/include/trackers_run/browse.php:1100
 msgid "not modified"
 msgstr "не изменено"
 
-#: frontend/php/include/trackers_run/browse.php:1105
+#: frontend/php/include/trackers_run/browse.php:1113
 msgid "whether additional constraint is activated"
 msgstr "действует ли дополнительное условие"
 
 #. TRANSLATORS: this string is used as the argument in
 #. 'Additional constraint %s'.
-#: frontend/php/include/trackers_run/browse.php:1110
+#: frontend/php/include/trackers_run/browse.php:1118
 msgid "deactivated"
 msgstr "не действует"
 
 #. TRANSLATORS: this string is used as the argument in
 #. 'Additional constraint %s'.
-#: frontend/php/include/trackers_run/browse.php:1114
-#: frontend/php/include/trackers_run/browse.php:1149
+#: frontend/php/include/trackers_run/browse.php:1122
+#: frontend/php/include/trackers_run/browse.php:1157
 msgid "activated"
 msgstr "действует"
 
-#: frontend/php/include/trackers_run/browse.php:1125
+#: frontend/php/include/trackers_run/browse.php:1133
 msgid "Field for criteria"
 msgstr "поле для этого критерия"
 
-#: frontend/php/include/trackers_run/browse.php:1135
+#: frontend/php/include/trackers_run/browse.php:1143
 msgid "modified or not"
 msgstr "изменено или нет"
 
 #. TRANSLATORS: the argument is 'activated' or 'deactivated'.
-#: frontend/php/include/trackers_run/browse.php:1169
+#: frontend/php/include/trackers_run/browse.php:1177
 #, php-format
 msgid "Additional constraint %1$s:"
 msgstr "Дополнительное условие %1$s:"
 
 #. TRANSLATORS: the first argument is field name, the second argument is
 #. either 'modified' or 'not modified', the third argument is date.
-#: frontend/php/include/trackers_run/browse.php:1173
+#: frontend/php/include/trackers_run/browse.php:1181
 #, php-format
 msgid "%1$s %2$s since %3$s"
 msgstr "Поле %1$s %2$s с %3$s"
 
-#: frontend/php/include/trackers_run/browse.php:1194
+#: frontend/php/include/trackers_run/browse.php:1202
 #, php-format
 msgid "Items to show at once: %s."
 msgstr "Показать заявок на странице: %s."
 
-#: frontend/php/include/trackers_run/browse.php:1199
+#: frontend/php/include/trackers_run/browse.php:1207
 #, php-format
 msgid "Show items with a spam score lower than %s."
 msgstr "Показывать заявки со счетчиком спама ниже %s."
 
-#: frontend/php/include/trackers_run/browse.php:1202
+#: frontend/php/include/trackers_run/browse.php:1210
 msgid "Spam level of items to hide"
 msgstr "Уровень спама скрытых заявок"
 
-#: frontend/php/include/trackers_run/browse.php:1210
+#: frontend/php/include/trackers_run/browse.php:1218
 #, php-format
 msgid ""
 "Warning: only %s item can be shown at once, unless using Printer Version."
@@ -6873,7 +6854,7 @@ msgstr[2] ""
 "Внимание: одновременно может быть показано только %s заявок, если не "
 "используется версия для печати."
 
-#: frontend/php/include/trackers_run/browse.php:1218
+#: frontend/php/include/trackers_run/browse.php:1226
 #, php-format
 msgid "Show %1$s item at once with a spam score lower than %2$s."
 msgid_plural "Show %1$s items at once with a spam score lower than %2$s."
@@ -6881,8 +6862,8 @@ msgstr[0] "Показывать %1$s заявку на странице со с�
 msgstr[1] "Показывать %1$s заявки на странице со счетчиком спама ниже %2$s."
 msgstr[2] "Показывать %1$s заявок на странице со счетчиком спама ниже %2$s."
 
-#: frontend/php/include/trackers_run/browse.php:1233
-#: frontend/php/include/trackers_run/browse.php:1246
+#: frontend/php/include/trackers_run/browse.php:1241
+#: frontend/php/include/trackers_run/browse.php:1254
 #, php-format
 msgid ""
 "Column heading links sort results (up or\n"
@@ -6894,29 +6875,29 @@ msgstr ""
 "убывающем порядке), можно также <a href=\"%1$s\">сортировать по приоритету</"
 "a> или <a href=\"%2$s\">сбросить сортировку</a>."
 
-#: frontend/php/include/trackers_run/browse.php:1239
+#: frontend/php/include/trackers_run/browse.php:1247
 #, php-format
 msgid "You can also <a href=\"%s\">deactivate multicolumn sort</a>."
 msgstr ""
 "Можно также <a href=\"%s\">отключить сортировку по нескольким столбцам</a>."
 
-#: frontend/php/include/trackers_run/browse.php:1252
+#: frontend/php/include/trackers_run/browse.php:1260
 #, php-format
 msgid "You can also <a href=\"%s\">activate multicolumn sort</a>."
 msgstr ""
 "Можно также <a href=\"%s\">включить сортировку по нескольким столбцам</a>."
 
 #. TRANSLATORS: the argument is comma-separated list of field labels.
-#: frontend/php/include/trackers_run/browse.php:1257
+#: frontend/php/include/trackers_run/browse.php:1265
 #, php-format
 msgid "Currently, results are sorted by %s."
 msgstr "Сейчас результаты отсортированны по %s."
 
-#: frontend/php/include/trackers_run/browse.php:1282
+#: frontend/php/include/trackers_run/browse.php:1290
 msgid "Proceed to Digest next step"
 msgstr "Перейти к следующему этапу"
 
-#: frontend/php/include/trackers_run/browse.php:1295
+#: frontend/php/include/trackers_run/browse.php:1303
 msgid "No matching items found. The display criteria may be too restrictive."
 msgstr "Ничего не найдено. Возможно, заданы слишком жесткие критерии поиска."
 
@@ -8256,15 +8237,15 @@ msgstr "основан на старом"
 msgid "based on the username"
 msgstr "основан на имени пользователя"
 
-#: frontend/php/include/account.php:186
+#: frontend/php/include/account.php:191
 msgid "There cannot be any spaces in the name"
 msgstr "В имени не должно быть пробелов"
 
-#: frontend/php/include/account.php:193
+#: frontend/php/include/account.php:198
 msgid "The name is too short"
 msgstr "Имя слишком коротко"
 
-#: frontend/php/include/account.php:194
+#: frontend/php/include/account.php:199
 #, php-format
 msgid "It must be at least %s character."
 msgid_plural "It must be at least %s characters."
@@ -8272,11 +8253,11 @@ msgstr[0] "Длина должна быть не менее %s символа."
 msgstr[1] "Длина должна быть не менее %s символов."
 msgstr[2] "Длина должна быть не менее %s символов."
 
-#: frontend/php/include/account.php:202
+#: frontend/php/include/account.php:207
 msgid "The name is too long"
 msgstr "Имя слишком длинно"
 
-#: frontend/php/include/account.php:203
+#: frontend/php/include/account.php:208
 #, php-format
 msgid "It must be at most %s character."
 msgid_plural "It must be at most %s characters."
@@ -8284,38 +8265,38 @@ msgstr[0] "Длина должна быть не более %s символа."
 msgstr[1] "Длина должна быть не более %s символов."
 msgstr[2] "Длина должна быть не более %s символов."
 
-#: frontend/php/include/account.php:211
+#: frontend/php/include/account.php:216
 msgid "The name must begin with an alphabetical character."
 msgstr "Имя должно начинаться с латинской буквы."
 
 #. TRANSLATORS: the argument is comma-separated list of additional characters
 #. (possibly single character).
-#: frontend/php/include/account.php:233
+#: frontend/php/include/account.php:238
 #, php-format
 msgid "The name must only contain alphanumerics and %s."
 msgstr "Имя может содержать только латинские буквы, цифры и %s."
 
-#: frontend/php/include/account.php:237
+#: frontend/php/include/account.php:242
 msgid "The name must only contain alphanumerics."
 msgstr "Имя может содержать только латинские буквы и цифры."
 
-#: frontend/php/include/account.php:249
+#: frontend/php/include/account.php:254
 msgid "That name is reserved."
 msgstr "Это имя недопустимо."
 
-#: frontend/php/include/account.php:263
+#: frontend/php/include/account.php:268
 msgid "An account associated with that email address has already been created."
 msgstr "Учетная запись с таким адресом электронной почты уже существует."
 
-#: frontend/php/include/account.php:272
+#: frontend/php/include/account.php:277
 msgid "It is not allowed to associate an account with this email address."
 msgstr "С этим адресом электронной почты связывать учетную запись нельзя."
 
-#: frontend/php/include/account.php:348 frontend/php/include/account.php:360
+#: frontend/php/include/account.php:353 frontend/php/include/account.php:365
 msgid "This group name is not allowed."
 msgstr "Это название группы недопустимо."
 
-#: frontend/php/include/account.php:367
+#: frontend/php/include/account.php:372
 msgid "Group name cannot contain underscore for DNS reasons."
 msgstr "Название группы не должно содержать подчеркивания по соображениям DNS."
 
@@ -9031,7 +9012,7 @@ msgstr "%1$s/%2$s"
 msgid "The total number of results is zero."
 msgstr "Общее число результатов равно нулю."
 
-#: frontend/php/include/init.php:336
+#: frontend/php/include/init.php:337
 msgid ""
 "Your $sys_unix_group_name configuration variable refers to a\n"
 "non-existing project. Please update the configuration."
@@ -9039,52 +9020,52 @@ msgstr ""
 "Ваша переменная конфигурации $sys_unix_group_name указывает на "
 "несуществующий проект. Исправьте настройки."
 
-#: frontend/php/include/init.php:387
+#: frontend/php/include/init.php:388
 msgid "Invalid item ID."
 msgstr "Неправильный идентификатор заявки."
 
-#: frontend/php/include/init.php:390
+#: frontend/php/include/init.php:391
 msgid "Invalid forum ID."
 msgstr "Неправильный идентификатор форума."
 
-#: frontend/php/include/init.php:482
+#: frontend/php/include/init.php:483
 msgid "Project not found"
 msgstr "Проект не найден"
 
-#: frontend/php/include/init.php:492
+#: frontend/php/include/init.php:493
 msgid "This project is in maintenance mode"
 msgstr "Проект на регламентных работах"
 
-#: frontend/php/include/init.php:494
+#: frontend/php/include/init.php:495
 msgid "Note: this project is in maintenance mode"
 msgstr "Замечание: этот проект на регламентных работах"
 
-#: frontend/php/include/init.php:497
+#: frontend/php/include/init.php:498
 msgid "This project is not in active state"
 msgstr "Этот проект не в активном состоянии"
 
 #. TRANSLATORS: this is a placeholder for the name of a deleted group;
 #. the argument is group id (a number).
-#: frontend/php/include/Group.class:303
+#: frontend/php/include/Group.class:299
 #, php-format
 msgid "[Deleted group #%s]"
 msgstr "[Группа №%s (удалена)]"
 
 #. TRANSLATORS: the first argument is the full name, the second is the login.
-#: frontend/php/include/Group.class:345
+#: frontend/php/include/Group.class:341
 #, php-format
 msgid "GPG keys of %s <%s>"
 msgstr "Ключи GPG пользователя %s <%s>"
 
-#: frontend/php/include/Group.class:618
+#: frontend/php/include/Group.class:614
 msgid "It is possible to post anonymously on this tracker."
 msgstr "В этом журнале анонимные комментарии не допускаются."
 
-#: frontend/php/include/Group.class:621
+#: frontend/php/include/Group.class:617
 msgid "Project Membership is required to post on this tracker."
 msgstr "В этом журнале могут переписываться только члены проекта."
 
-#: frontend/php/include/Group.class:624
+#: frontend/php/include/Group.class:620
 msgid "Being logged-in is required to post on this tracker."
 msgstr "Чтобы писать в этом журнале, нужно представиться системе."
 
@@ -9329,17 +9310,17 @@ msgstr "Не удалось узнать, кто прислал предполо
 msgid "Flagged (+%s, total spamscore: %s)"
 msgstr "Помечено (+%s, итого: %s)"
 
-#: frontend/php/include/spam.php:193
+#: frontend/php/include/spam.php:189
 #, php-format
 msgid "Tracker &ldquo;%s&rdquo; is not valid (not alnum)."
 msgstr "Неверный журнал &ldquo;%s&rdquo; (не буквенно-цифровое обозначение)"
 
-#: frontend/php/include/spam.php:289
+#: frontend/php/include/spam.php:285
 #, php-format
 msgid "Spam score of your post is set to %s"
 msgstr "Счетчик спама вашего комментария устанавливается в %s"
 
-#: frontend/php/include/spam.php:355
+#: frontend/php/include/spam.php:351
 #, php-format
 msgid ""
 "Spam score of your post is set temporarily to %s, until it is checked by "
@@ -9348,18 +9329,6 @@ msgid ""
 msgstr ""
 "Счетчик спама для вашего комментария временно устанавливается в %s до "
 "проверки фильтрами спама"
-
-#: frontend/php/include/spam.php:433
-msgid ""
-"Your IP address was banned for several hours due to spam\n"
-"reports incriminating it. In the meantime, if you log in, you can work "
-"around\n"
-"this ban. You should investigate about probable cause of spam reports\n"
-"incriminating your IP."
-msgstr ""
-"Ваш адрес IP был на несколько часов запрещен из-за жалоб на спам из него. До "
-"окончания этого срока запрет можно обойти, представившись системе. Вы можете "
-"задуматься о том, почему на ваш адрес IP поступили жалобы."
 
 #. TRANSLATORS: the argument is site name (like Savannah).
 #: frontend/php/include/sendmail.php:147
@@ -9607,7 +9576,7 @@ msgstr "Единственный результат поиска"
 msgid "Search string was: %s."
 msgstr "Поиск проведен по строке: %s."
 
-#: frontend/php/include/database.php:81
+#: frontend/php/include/database.php:114
 msgid "db_query_escape: Missing parameter"
 msgstr "db_query_escape: Недостающий параметр"
 
@@ -9770,7 +9739,7 @@ msgstr "%1$s %2$s %3$s"
 msgid "year"
 msgstr "год"
 
-#: frontend/php/include/utils.php:56
+#: frontend/php/include/utils.php:59
 #, php-format
 msgid ""
 "Warning: Savane was not able to read site-specific\n"
@@ -9780,219 +9749,219 @@ msgstr ""
 "'%s', обратитесь к администраторам"
 
 #. TRANSLATORS: the argument is file path.
-#: frontend/php/include/utils.php:68
+#: frontend/php/include/utils.php:71
 #, php-format
 msgid "Malformed file path %s"
 msgstr "Неверный синтаксис пути до файла %s"
 
-#: frontend/php/include/utils.php:129 frontend/php/include/utils.php:155
-#: frontend/php/include/utils.php:165
+#: frontend/php/include/utils.php:140 frontend/php/include/utils.php:166
+#: frontend/php/include/utils.php:176
 msgid "(address seems invalid and will probably be ignored)"
 msgstr "(адрес выглядит неправильно, скорее всего, будет проигнорирован)"
 
 #. TRANSLATORS: the argument is mail domain (like localhost or sv.gnu.org).
-#: frontend/php/include/utils.php:136
+#: frontend/php/include/utils.php:147
 #, php-format
 msgid "(address is unknown to Savane, will fail if not valid at %s)"
 msgstr "(адрес неизвестен в Savane, будет сбой, если его нет на %s)"
 
-#: frontend/php/include/utils.php:168 frontend/php/include/utils.php:169
-#: frontend/php/include/utils.php:188 frontend/php/include/utils.php:189
+#: frontend/php/include/utils.php:179 frontend/php/include/utils.php:180
+#: frontend/php/include/utils.php:199 frontend/php/include/utils.php:200
 msgid "-email is unavailable-"
 msgstr "-адрес недоступен-"
 
-#: frontend/php/include/utils.php:170 frontend/php/include/utils.php:190
+#: frontend/php/include/utils.php:181 frontend/php/include/utils.php:201
 msgid "This information is not provided to anonymous users"
 msgstr "Эти сведения анонимным пользователям не предоставляются"
 
 #. TRANSLATORS: this expresses file size.
-#: frontend/php/include/utils.php:329
+#: frontend/php/include/utils.php:340
 #, php-format
 msgid "%sMiB"
 msgstr "%sМиБ"
 
 #. TRANSLATORS: this expresses file size.
-#: frontend/php/include/utils.php:334
+#: frontend/php/include/utils.php:345
 #, php-format
 msgid "%sKiB"
 msgstr "%sКиБ"
 
 #. TRANSLATORS: this expresses file size.
-#: frontend/php/include/utils.php:339
+#: frontend/php/include/utils.php:350
 #, php-format
 msgid "%sB"
 msgstr "%sБ"
 
 #. TRANSLATORS: this is file size unit (no prefix).
-#: frontend/php/include/utils.php:360 frontend/php/include/utils.php:377
+#: frontend/php/include/utils.php:371 frontend/php/include/utils.php:388
 msgid "B"
 msgstr "Б"
 
 #. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:362
+#: frontend/php/include/utils.php:373
 msgid "kB"
 msgstr "кБ"
 
 #. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:364
+#: frontend/php/include/utils.php:375
 msgid "MB"
 msgstr "МБ"
 
 #. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:366
+#: frontend/php/include/utils.php:377
 msgid "GB"
 msgstr "ГБ"
 
 #. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:368
+#: frontend/php/include/utils.php:379
 msgid "TB"
 msgstr "ТБ"
 
 #. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:370
+#: frontend/php/include/utils.php:381
 msgid "PB"
 msgstr "ПБ"
 
 #. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:379
+#: frontend/php/include/utils.php:390
 msgid "KiB"
 msgstr "КиБ"
 
 #. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:381
+#: frontend/php/include/utils.php:392
 msgid "MiB"
 msgstr "МиБ"
 
 #. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:383
+#: frontend/php/include/utils.php:394
 msgid "GiB"
 msgstr "ГиБ"
 
 #. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:385
+#: frontend/php/include/utils.php:396
 msgid "TiB"
 msgstr "ТиБ"
 
 #. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:387
+#: frontend/php/include/utils.php:398
 msgid "PiB"
 msgstr "ПиБ"
 
 #. TRANSLATORS: this is used in contexts like "rpm package for i386 (ix86)"
 #. or "source rpm package".
-#: frontend/php/include/utils.php:423
+#: frontend/php/include/utils.php:434
 msgid "rpm package"
 msgstr "пакет rpm"
 
 #. TRANSLATORS: this is used in contexts like "debian package for i386 (ix86)"
 #. or "source debian package".
-#: frontend/php/include/utils.php:429
+#: frontend/php/include/utils.php:440
 msgid "debian package"
 msgstr "пакет Debian"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:438
+#: frontend/php/include/utils.php:449
 #, php-format
 msgid "source %s"
 msgstr "%s с исходным текстом"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:444
+#: frontend/php/include/utils.php:455
 #, php-format
 msgid "arch independent %s"
 msgstr "архитектурно-независимый %s"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:450
+#: frontend/php/include/utils.php:461
 #, php-format
 msgid "%s for i386 (ix86)"
 msgstr "%s для i386 (ix86)"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:456
+#: frontend/php/include/utils.php:467
 #, php-format
 msgid "%s for i586"
 msgstr "%s для i586"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:462
+#: frontend/php/include/utils.php:473
 #, php-format
 msgid "%s for i686"
 msgstr "%s для i686"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:468
+#: frontend/php/include/utils.php:479
 #, php-format
 msgid "%s for Itanium 64"
 msgstr "%s для Itanium 64"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:474
+#: frontend/php/include/utils.php:485
 #, php-format
 msgid "%s for Sparc"
 msgstr "%s для Sparc"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:480
+#: frontend/php/include/utils.php:491
 #, php-format
 msgid "%s for Alpha"
 msgstr "%s для Alpha"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:486
+#: frontend/php/include/utils.php:497
 #, php-format
 msgid "%s for PowerPC"
 msgstr "%s для PowerPC"
 
 #. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
 #. package'.
-#: frontend/php/include/utils.php:492
+#: frontend/php/include/utils.php:503
 #, php-format
 msgid "%s for s390"
 msgstr "%s для s390"
 
-#: frontend/php/include/utils.php:679
+#: frontend/php/include/utils.php:690
 msgid "Open Items Priority Colors:"
 msgstr "Цвета приоритета открытых заявок:"
 
-#: frontend/php/include/utils.php:688
+#: frontend/php/include/utils.php:699
 msgid "Closed Items Priority Colors:"
 msgstr "Цвета приоритета закрытых заявок:"
 
-#: frontend/php/include/utils.php:732
+#: frontend/php/include/utils.php:743
 msgid "bugs"
 msgstr "ошибки"
 
-#: frontend/php/include/utils.php:735
+#: frontend/php/include/utils.php:746
 msgid "recipes"
 msgstr "рецепты"
 
-#: frontend/php/include/utils.php:738
+#: frontend/php/include/utils.php:749
 msgid "patches"
 msgstr "Заплатки (патчи)"
 
-#: frontend/php/include/utils.php:741
+#: frontend/php/include/utils.php:752
 msgid "support requests"
 msgstr "запросы на поддержку"
 
-#: frontend/php/include/utils.php:744
+#: frontend/php/include/utils.php:755
 msgid "tasks"
 msgstr "задачи"
 
-#: frontend/php/include/utils.php:774
+#: frontend/php/include/utils.php:785
 msgid "Untitled"
 msgstr "Без заголовка"
 
-#: frontend/php/include/utils.php:1075
+#: frontend/php/include/utils.php:1086
 msgid "Error updating database"
 msgstr "Ошибка при обновлении базы данных"
 
@@ -11195,119 +11164,119 @@ msgstr "Дополнительные сведения см. в %s."
 
 #: frontend/site-specific/gnu-content/hashes.php:39
 #: frontend/site-specific/nongnu-content/hashes.php:39
-msgid "GNU General Public License v2 or later"
-msgstr "Стандартная общественная лицензия GNU версии 2 или более поздней"
+msgid "GNU General Public License v3 or later"
+msgstr "Стандартная общественная лицензия GNU версии 3 или более поздней"
 
 #: frontend/site-specific/gnu-content/hashes.php:41
 #: frontend/site-specific/nongnu-content/hashes.php:41
-msgid "GNU Lesser General Public License"
-msgstr "Меньшая стандартная общественная лицензия GNU"
+msgid "GNU General Public License v2 or later"
+msgstr "Стандартная общественная лицензия GNU версии 2 или более поздней"
 
 #: frontend/site-specific/gnu-content/hashes.php:43
 #: frontend/site-specific/nongnu-content/hashes.php:43
-msgid "GNU Free Documentation License"
-msgstr "Лицензия свободной документации GNU"
+msgid "GNU Lesser General Public License"
+msgstr "Меньшая стандартная общественная лицензия GNU"
 
 #: frontend/site-specific/gnu-content/hashes.php:45
 #: frontend/site-specific/nongnu-content/hashes.php:45
-msgid "Modified BSD License"
-msgstr "Измененная лицензия BSD"
+msgid "GNU Free Documentation License"
+msgstr "Лицензия свободной документации GNU"
 
 #: frontend/site-specific/gnu-content/hashes.php:47
 #: frontend/site-specific/nongnu-content/hashes.php:47
-msgid "X11 license"
-msgstr "Лицензия X11"
+msgid "Modified BSD License"
+msgstr "Измененная лицензия BSD"
 
 #: frontend/site-specific/gnu-content/hashes.php:49
 #: frontend/site-specific/nongnu-content/hashes.php:49
-msgid "Cryptix General License"
-msgstr "Стандартная лицензия Cryptix"
+msgid "X11 license"
+msgstr "Лицензия X11"
 
 #: frontend/site-specific/gnu-content/hashes.php:51
 #: frontend/site-specific/nongnu-content/hashes.php:51
-msgid "The license of ZLib"
-msgstr "Лицензия ZLib"
+msgid "Cryptix General License"
+msgstr "Стандартная лицензия Cryptix"
 
 #: frontend/site-specific/gnu-content/hashes.php:53
 #: frontend/site-specific/nongnu-content/hashes.php:53
-msgid "The license of the iMatix Standard Function Library"
-msgstr "Лицензия Библиотеки стандартных функциф iMatix"
+msgid "The license of ZLib"
+msgstr "Лицензия ZLib"
 
 #: frontend/site-specific/gnu-content/hashes.php:55
 #: frontend/site-specific/nongnu-content/hashes.php:55
-msgid "The W3C Software Notice and License"
-msgstr "Уведомление и лицензия программ W3C"
+msgid "The license of the iMatix Standard Function Library"
+msgstr "Лицензия Библиотеки стандартных функциф iMatix"
 
 #: frontend/site-specific/gnu-content/hashes.php:57
 #: frontend/site-specific/nongnu-content/hashes.php:57
-msgid "The Berkeley Database License"
-msgstr "Лицензия базы данных Беркли"
+msgid "The W3C Software Notice and License"
+msgstr "Уведомление и лицензия программ W3C"
 
 #: frontend/site-specific/gnu-content/hashes.php:59
 #: frontend/site-specific/nongnu-content/hashes.php:59
-msgid "The License of Python 1.6a2 and earlier versions"
-msgstr "Лицензия Python 1.6a2 и более ранних версий"
+msgid "The Berkeley Database License"
+msgstr "Лицензия базы данных Беркли"
 
 #: frontend/site-specific/gnu-content/hashes.php:61
 #: frontend/site-specific/nongnu-content/hashes.php:61
-msgid "The License of Python 2.0.1, 2.1.1, and newer versions"
-msgstr "Лицензия Python 2.0.1, 2.1.1 и более поздних версий"
+msgid "The License of Python 1.6a2 and earlier versions"
+msgstr "Лицензия Python 1.6a2 и более ранних версий"
 
 #: frontend/site-specific/gnu-content/hashes.php:63
 #: frontend/site-specific/nongnu-content/hashes.php:63
+msgid "The License of Python 2.0.1, 2.1.1, and newer versions"
+msgstr "Лицензия Python 2.0.1, 2.1.1 и более поздних версий"
+
+#: frontend/site-specific/gnu-content/hashes.php:65
+#: frontend/site-specific/nongnu-content/hashes.php:65
 msgid "The Clarified Artistic License"
 msgstr "Разъясненная художественная лицензия"
 
-#: frontend/site-specific/gnu-content/hashes.php:67
-#: frontend/site-specific/nongnu-content/hashes.php:67
+#: frontend/site-specific/gnu-content/hashes.php:69
+#: frontend/site-specific/nongnu-content/hashes.php:69
 msgid ""
 "The license of Perl (disjunction of the Artistic License and the GNU GPL)"
 msgstr "Лицензия Perl (дизъюнкция Артистической лицензии и GNU GPL)"
 
-#: frontend/site-specific/gnu-content/hashes.php:69
-#: frontend/site-specific/nongnu-content/hashes.php:69
+#: frontend/site-specific/gnu-content/hashes.php:71
+#: frontend/site-specific/nongnu-content/hashes.php:71
 msgid "Expat License (sometime refered to as MIT License)"
 msgstr "Лицензия expat (иногда называемая лицензией MIT)"
 
-#: frontend/site-specific/gnu-content/hashes.php:71
-#: frontend/site-specific/nongnu-content/hashes.php:71
+#: frontend/site-specific/gnu-content/hashes.php:73
+#: frontend/site-specific/nongnu-content/hashes.php:73
 msgid "Affero General Public License v1 or later"
 msgstr "Стандартная общественная лицензия Афферо версии 1 или более поздней"
 
-#: frontend/site-specific/gnu-content/hashes.php:75
-#: frontend/site-specific/nongnu-content/hashes.php:75
+#: frontend/site-specific/gnu-content/hashes.php:77
+#: frontend/site-specific/nongnu-content/hashes.php:77
 msgid ""
 "GNU General Public License v2 or later with GNU Classpath special exception"
 msgstr ""
 "Стандатная общественная лицензия GNU версии 2 или более поздней с особым "
 "исключением для GNU Classpath"
 
-#: frontend/site-specific/gnu-content/hashes.php:77
-#: frontend/site-specific/nongnu-content/hashes.php:77
+#: frontend/site-specific/gnu-content/hashes.php:79
+#: frontend/site-specific/nongnu-content/hashes.php:79
 msgid "Public domain"
 msgstr "Общественное достояние"
 
-#: frontend/site-specific/gnu-content/hashes.php:79
-#: frontend/site-specific/nongnu-content/hashes.php:79
+#: frontend/site-specific/gnu-content/hashes.php:81
+#: frontend/site-specific/nongnu-content/hashes.php:81
 msgid "WebSite Only"
 msgstr "Только сайт"
 
-#: frontend/site-specific/gnu-content/hashes.php:81
-#: frontend/site-specific/nongnu-content/hashes.php:81
+#: frontend/site-specific/gnu-content/hashes.php:83
+#: frontend/site-specific/nongnu-content/hashes.php:83
 msgid "Other license"
 msgstr "Другая лицензия"
 
-#: frontend/site-specific/gnu-content/hashes.php:85
-#: frontend/site-specific/nongnu-content/hashes.php:85
+#: frontend/site-specific/gnu-content/hashes.php:87
+#: frontend/site-specific/nongnu-content/hashes.php:87
 msgid "GNU General Public License v2 or later (+ dual licensing)"
 msgstr ""
 "Стандартная общественная лицензия GNU версии 2 или более поздней (+ "
 "двойственное лицензирование)"
-
-#: frontend/site-specific/gnu-content/hashes.php:87
-#: frontend/site-specific/nongnu-content/hashes.php:87
-msgid "GNU General Public License v3 or later"
-msgstr "Стандартная общественная лицензия GNU версии 3 или более поздней"
 
 #: frontend/site-specific/gnu-content/hashes.php:89
 #: frontend/site-specific/nongnu-content/hashes.php:89
@@ -12317,173 +12286,3 @@ msgstr ""
 "Для пользования Саванной это не обязательно, но если вы хотели бы сделать "
 "свой проект частью системы GNU, обратитесь к странице <a href=\"%s\">Оценка "
 "программ для GNU</a>. Проект GNU с радостью принимает новые программы."
-
-#~ msgid ""
-#~ "You have already registered %s export job for this project, which is the\n"
-#~ "current limit."
-#~ msgid_plural ""
-#~ "You have already registered %s export jobs for this project, which is "
-#~ "the\n"
-#~ "current limit."
-#~ msgstr[0] ""
-#~ "Вы уже зарегистрировали %s задание на экспорт для этого проекта, в "
-#~ "настоящее время это предел."
-#~ msgstr[1] ""
-#~ "Вы уже зарегистрировали %s задания на экспорт для этого проекта, в "
-#~ "настоящее время это предел."
-#~ msgstr[2] ""
-#~ "Вы уже зарегистрировали %s заданий на экспорт для этого проекта, в "
-#~ "настоящее время это предел."
-
-#~ msgid "If more exports are needed, ask other project members."
-#~ msgstr ""
-#~ "Если нужны дополнительные задания, обратитесь к другим участникам проекта."
-
-#~ msgid "SQL insert error"
-#~ msgstr "Ошибка вставки SQL"
-
-#~ msgid "Export job #%s successfully removed"
-#~ msgstr "Задание на экспорт №%s успешно удалено"
-
-#~ msgid "Unable to remove export job #%s"
-#~ msgstr "Не удается удалить задание на экспорт №%s"
-
-#~ msgid ""
-#~ "From here, you can select criteria for an XML export of the items\n"
-#~ "of the current tracker of your project. Then your request will be queued "
-#~ "and made\n"
-#~ "available on an HTTP accessible URL. This way you can automate exports, "
-#~ "using\n"
-#~ "scripts, as you know the file URL in advance."
-#~ msgstr ""
-#~ "Здесь можно выбирать критерии экспорта XML заявок текущего журнала вашего "
-#~ "проекта. Затем ваш запрос встанет в очередь и будет доступен по HTTP по "
-#~ "определенному URL. Так можно автоматизировать экспорт с помощью "
-#~ "сценариев, поскольку вы знаете URL заранее."
-
-#~ msgid "Pending Export Jobs"
-#~ msgstr "Очередные задания на экспорт"
-
-#~ msgid "Queued Jobs"
-#~ msgstr "Задания на очереди"
-
-#~ msgid "Remove this job"
-#~ msgstr "Удалить это задание"
-
-#~ msgid "Pending"
-#~ msgstr "на очереди"
-
-#~ msgid "Done"
-#~ msgstr "готово"
-
-#~ msgid "Job #%1$s, bound to task #%2$s, %3$s"
-#~ msgstr "Задание №%1$s, связано с задачей №%2$s: %3$s"
-
-#~ msgid "URL: %s"
-#~ msgstr "URL: %s"
-
-#~ msgid "%1$s at %2$s hours %3$s"
-#~ msgstr "%1$s в %2$s по %3$s"
-
-#~ msgid "every day"
-#~ msgstr "каждый день"
-
-#~ msgid "[GMT]"
-#~ msgstr "[GMT]"
-
-#~ msgid "Exporting %1$s on %2$s"
-#~ msgstr "Экспорт журнала %1$s, дата: %2$s"
-
-#~ msgid ""
-#~ "Note that XML files will be removed after 2 weeks or if you\n"
-#~ "remove the job from this list."
-#~ msgstr ""
-#~ "Обратите внимангие, что файлы XML удаляются через 2 недели или при "
-#~ "удалении задания из этого списка."
-
-#~ msgid "You have no export job pending."
-#~ msgstr "У вас на очереди заданий на экспорт нет."
-
-#~ msgid "Creating a new Export Job"
-#~ msgstr "Создать новое задание на экспорт"
-
-#~ msgid "Use the %1$s Query Form and %2$s selection for export criteria."
-#~ msgstr ""
-#~ "Использовать с %1$s формой запроса и %2$s выбором в качестве критериев "
-#~ "экспорта."
-
-#~ msgid "selection type"
-#~ msgstr "тип выбора"
-
-#~ msgid "Export criteria:"
-#~ msgstr "Критерии эспорта:"
-
-#~ msgid "The export should be generated:"
-#~ msgstr "Экспорт нужно выполнить:"
-
-#~ msgid "as soon as possible"
-#~ msgstr "как можно скорее"
-
-#~ msgid "Today"
-#~ msgstr "сегодня"
-
-#~ msgid "Tomorrow"
-#~ msgstr "завтра"
-
-#~ msgid ""
-#~ "Accounts not confirmed after two days are deleted from the\n"
-#~ "database."
-#~ msgstr ""
-#~ "Если подтверждение не получено за два дня, учетная запись удаляется."
-
-#~ msgid "This account does not exist or has not been activated"
-#~ msgstr "Эта учетная запись не существует или не активирована"
-
-#~ msgid "Field values"
-#~ msgstr "Значения полей"
-
-#~ msgid "Name of the Query Form"
-#~ msgstr "Название формы запроса"
-
-#~ msgid "support"
-#~ msgstr "поддержки"
-
-#~ msgid ""
-#~ "Check the Markup Reminder in Related Recipes for a description of these "
-#~ "tags."
-#~ msgstr "Описание разметки см. в Markup Reminder в рецептах по случаю."
-
-#~ msgid "SSH Public Keys"
-#~ msgstr "Открытые ключи SSH"
-
-#~ msgid ""
-#~ "To generate a public key, see the\n"
-#~ "<a href=\"%s\">Savannah FAQ\n"
-#~ "entry for SSH</a>.  Please use only RSA keys, not DSA keys."
-#~ msgstr ""
-#~ "О том, как получить открытый ключ, см.\n"
-#~ "<a href=\"%s\">пункт о SSH в &ldquo;Вопросах и ответах&rdquo; Саванны</"
-#~ "a>. Пользуйтесь, пожалуйста, только ключами RSA (не DSA)."
-
-#~ msgid "What you need to copy/paste looks like this:"
-#~ msgstr "То, что вам нужно скопировать, выглядит так:"
-
-#~ msgid ""
-#~ "This public key data is commonly located in\n"
-#~ "<code>~/.ssh/id_rsa.pub</code>.  If questions, check the FAQ."
-#~ msgstr ""
-#~ "Эти данные открытого ключа обычно размещаются в <code>~/.ssh/id_rsa.pub</"
-#~ "code>. Если остались вопросы, обращайтесь к &ldquo;Вопросам и "
-#~ "ответам&rdquo;."
-
-#~ msgid ""
-#~ "If your key gets truncated, it is probably because your browser\n"
-#~ "limits the maximum length of the text fields. Try with <a\n"
-#~ "href=\"%s\">IceCat</a> (or Firefox), which is known to work."
-#~ msgstr ""
-#~ "Если ключ обрезается, возможно, это из-за того, что ваш браузер "
-#~ "ограничивает максимальную длину текстовых полей. Побробуйте <a href=\"%s"
-#~ "\">IceCat</a> (или Firefox), они заведомо работают."
-
-#~ msgid "Submitted by"
-#~ msgstr "Автор"
