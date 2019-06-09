@@ -173,48 +173,51 @@ function markup_full($text, $allow_headings=true)
 
       # Decrement the verbatim count if we find a verbatim closing in a
       # verbatim environment.
-      $verb_match = preg_match('/([-]verbatim[-])/', $line);
-      if ($verb_match && $verbatim)
-        $verbatim--;
-
-      if ($verb_match && !$verbatim)
+      if (preg_match ('/([-]verbatim[-])/', $line) && $verbatim)
         {
-          # End of verbatim: process the block.
-          $line = join("\n", $context_stack);
-          array_shift($context_stack);
-
-          # Unify line breaks.
-          $verbatim_buffer = str_replace ("\r\n", "\n", $verbatim_buffer);
-          $verbatim_buffer = str_replace ("\n\r", "\n", $verbatim_buffer);
-          $verbatim_buffer = str_replace ("\r", "\n", $verbatim_buffer);
-          # Hopefully preserve spaces in HTML allowing line breaking.
-          $verbatim_buffer = str_replace ("\t", "        ", $verbatim_buffer);
-          $verb_out = " "; # The first space will be collapsed.
-          $ns = 0;
-          for ($i = 0; $i < strlen ($verbatim_buffer); $i++)
+          $verbatim--;
+          if ($verbatim == 0)
             {
-              $next_char = substr ($verbatim_buffer, $i, 1);
-              if ($next_char === ' ')
-                {
-                  $ns++;
-                  continue;
-                }
-              $verb_out .= markup_verbatim_spaces ($ns);
+              # End of verbatim: process the block.
+              $line = join("\n", $context_stack);
+              array_shift($context_stack);
+
+              # Unify line breaks.
+              $verbatim_buffer = str_replace ("\r\n", "\n", $verbatim_buffer);
+              $verbatim_buffer = str_replace ("\n\r", "\n", $verbatim_buffer);
+              $verbatim_buffer = str_replace ("\r", "\n", $verbatim_buffer);
+              # Hopefully preserve spaces in HTML allowing line breaking.
+              $verbatim_buffer = str_replace ("\t", "        ",
+                                              $verbatim_buffer);
+              $verb_out = " "; # The first space will be collapsed.
               $ns = 0;
-              $verb_out .= $next_char;
-            }
-          $verbatim_buffer = $verb_out . markup_verbatim_spaces ($ns);
+              for ($i = 0; $i < strlen ($verbatim_buffer); $i++)
+                {
+                  $next_char = substr ($verbatim_buffer, $i, 1);
+                  if ($next_char === ' ')
+                    {
+                      $ns++;
+                      continue;
+                    }
+                  $verb_out .= markup_verbatim_spaces ($ns);
+                  $ns = 0;
+                  $verb_out .= $next_char;
+                }
+              $verbatim_buffer = $verb_out . markup_verbatim_spaces ($ns);
 
-          # Preserve line breaks.
-          $verbatim_buffer = str_replace ("\n", "<br />\n", $verbatim_buffer);
-          $result[] = '<blockquote class="verbatim"><p>' . $verbatim_buffer
-                      . "</p></blockquote>\n";
-          $verbatim_buffer = '';
+              # Preserve line breaks.
+              $verbatim_buffer = str_replace ("\n", "<br />\n",
+                                              $verbatim_buffer);
+              $result[] = '<blockquote class="verbatim"><p>' . $verbatim_buffer
+                          . "</p></blockquote>\n";
+              $verbatim_buffer = '';
 
-          # Jump to the next line, assuming that we can ignore the rest of the
-          # line.
-          continue;
-        } # ($verb_match && !$verbatim)
+              # Jump to the next line, assuming that we can ignore the rest of the
+              # line.
+              continue;
+            } # $verbatim == 0
+        } # preg_match ('/([-]verbatim[-])/', $line) && $verbatim
+
 
       # If we're in the verbatim markup, don't apply the markup.
       if ($verbatim)
