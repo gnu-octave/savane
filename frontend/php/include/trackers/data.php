@@ -459,10 +459,12 @@ function cmp_place_result($ar1, $ar2)
 }
 
 # Get all the bug fields involved in the bug report.
+# Return false if no query for given $report_id was defined.
 # WARNING: This function must only be called after bug_init().
-function trackers_data_get_all_report_fields($group_id=false,$report_id=100)
+function trackers_data_get_all_report_fields ($report_id = 100)
 {
   global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  $have_bug_id = false;
 
   # Build the list of fields involved in this report.
   $res = db_execute("SELECT * FROM ".ARTIFACT."_report_field WHERE report_id=?",
@@ -471,6 +473,13 @@ function trackers_data_get_all_report_fields($group_id=false,$report_id=100)
   while ($arr = db_fetch_array($res))
     {
       $field = $arr['field_name'];
+      if ($field === 'bug_id')
+        {
+          $have_bug_id = true;
+          # bug_id should always show up.
+          if (!$arr['show_on_result'])
+            $arr['show_on_result'] = 1;
+        }
       $field_id = trackers_data_get_field_id($field);
       $BF_USAGE_BY_NAME[$field]['show_on_query'] =
          $BF_USAGE_BY_ID[$field_id]['show_on_query'] = $arr['show_on_query'];
@@ -487,6 +496,29 @@ function trackers_data_get_all_report_fields($group_id=false,$report_id=100)
       $BF_USAGE_BY_NAME[$field]['col_width'] =
          $BF_USAGE_BY_ID[$field_id]['col_width'] = $arr['col_width'];
     }
+  # Every query form should have 'bug_id'; if it hasn't, add it.
+  if (!$have_bug_id)
+    {
+      if (db_numrows ($res) > 0)
+        error_log ("No bug it found in query form #" . $report_id);
+      $field = 'bug_id';
+      $field_id = trackers_data_get_field_id($field);
+      $BF_USAGE_BY_NAME[$field]['show_on_query'] =
+         $BF_USAGE_BY_ID[$field_id]['show_on_query'] = 0;
+
+      $BF_USAGE_BY_NAME[$field]['show_on_result'] =
+         $BF_USAGE_BY_ID[$field_id]['show_on_result'] = 1;
+
+      $BF_USAGE_BY_NAME[$field]['place_query'] =
+         $BF_USAGE_BY_ID[$field_id]['place_query'] = NULL;
+
+      $BF_USAGE_BY_NAME[$field]['place_result'] =
+         $BF_USAGE_BY_ID[$field_id]['place_result'] = NULL;
+
+      $BF_USAGE_BY_NAME[$field]['col_width'] =
+         $BF_USAGE_BY_ID[$field_id]['col_width'] = NULL;
+    }
+  return db_numrows ($res) > 0;
 }
 
 # Return all possible values for a select box field.

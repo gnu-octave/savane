@@ -132,10 +132,10 @@ function trackers_init($group_id)
   trackers_data_get_all_fields($group_id, true);
 }
 
-function trackers_report_init($group_id, $report_id)
+function trackers_report_init($report_id)
 {
   # Set the global array with report information for faster processing.
-  trackers_data_get_all_report_fields($group_id, $report_id);
+  return trackers_data_get_all_report_fields($report_id);
 }
 
 function trackers_list_all_fields($sort_func=false,$by_field_id=false)

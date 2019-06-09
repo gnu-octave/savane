@@ -214,7 +214,14 @@ if (!$report_id)
     else
       $report_id = 103;
   }
-trackers_report_init($group_id, $report_id);
+
+if (!trackers_report_init($report_id))
+  {
+    fb(sprintf(_("Query form #%s doesn't exist"), $report_id), 1);
+    # Fall back to 'Basic' report.
+    $report_id = 100;
+    trackers_report_init ($report_id);
+  }
 
 # ==================================================
 #  Now see what type of bug set is requested (set is one of none,
