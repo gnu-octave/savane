@@ -393,7 +393,7 @@ priority and open/close items"))) . "</p>\n";
     # managers and technicians are expected to be serious enough.
 
     print '<p class="noprint"><span class="preinput"> ' . _("Add a New Comment")
-          . markup_info("rich");
+          . ' ' . markup_info("rich");
     print form_submit (_('Preview'), 'preview')
           . "</span><br />&nbsp;&nbsp;&nbsp;\n";
     print trackers_field_textarea('comment', htmlspecialchars($comment),
