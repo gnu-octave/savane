@@ -28,6 +28,7 @@ require_directory("people");
 require_directory("news");
 require_directory("stats");
 require_once(dirname(__FILE__).'/vars.php');
+require_once(dirname(__FILE__).'/vcs.php');
 
 # If we are at wrong url, redirect.
 if (!$sys_debug_nobasehost && strcasecmp($_SERVER['HTTP_HOST'],
@@ -493,6 +494,8 @@ if ($project->Uses("patch")
       if (!($project->Uses($scm) || $project->UsesForHomepage($scm)))
         return;
 
+      $group_id = $project->getGroupId ();
+
       specific_makesep();
       $url = $project->getArtifactUrl($scm);
 
@@ -501,13 +504,28 @@ if ($project->Uses("patch")
       print '&nbsp;<a href="'.$url.'">';
 # TRANSLATORS: the argument is name of VCS (like Git or Bazaar).
       printf (_("%s Repository"), $scm_name);
-      print '</a>';
+      print "</a>\n";
 
       if ($project->Uses($scm) && $project->getUrl($scm."_viewcvs") != 'http://'
           && $project->getUrl($scm."_viewcvs") != '')
         {
-          print '<br /> &nbsp; - <a href="'.$project->getUrl($scm."_viewcvs")
-                .'">'._("Browse Sources Repository").'</a>';
+          $repos = vcs_get_repos ($scm, $group_id);
+          $n = count ($repos);
+          if ($n < 2)
+            print "<br />\n" . '&nbsp; - <a href="'
+                  . $project->getUrl($scm . "_viewcvs")
+                  . '">' . _("Browse Sources Repository") . "</a>\n";
+          else
+            {
+              $url0 = preg_replace(':/[^/]*$:', '/',
+                                   $project->getUrl($scm . "_viewcvs"));
+              print '<p>' . _("Browse Sources Repository") . "</p>\n";
+              print "<ul>\n";
+              for ($k = 0; $k < $n; $k++)
+                print '<li><a href="' . $url0 . $repos[$k]['url']
+                      . '">' . $repos[$k]['desc'] . "</a></li>\n";
+              print "</ul>\n";
+            }
         }
       if ((($scm != 'cvs' && $project->UsesForHomepage($scm))
            || ($scm == 'cvs' && $project->Uses("homepage")))
