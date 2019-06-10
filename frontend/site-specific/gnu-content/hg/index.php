@@ -41,7 +41,7 @@ if ($username == "NA")
    $username = '&lt;<i>'._('membername').'</i>&gt;';
 print '
 <pre>hg clone ssh://'
-  . $username . '@hg' . $project->getTypeBaseHost() . "/"
+  . $username . '@hg.' . $project->getTypeBaseHost() . "/"
   . $project->getUnixName() . '</pre>
 
 <p>'
