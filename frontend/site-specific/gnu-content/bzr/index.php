@@ -80,8 +80,8 @@ printf ('<p>'
 ._('Check the <a href="%s">UsingBzr</a> page at the documentation wiki.')
 ."</p>\n", "//savannah.gnu.org/maintenance/UsingBzr");
 
-print "<p>".
-_('The SSHv2 public key fingerprints for the machine hosting the CVS
-trees are:')."</p>\n". $vcs_fingerprints;
+print "<p>"
+. _('The SSHv2 public key fingerprints for the machine hosting the source
+trees are:') . "</p>\n" . $vcs_fingerprints;
 
 ?>
