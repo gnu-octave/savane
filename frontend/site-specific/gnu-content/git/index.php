@@ -21,6 +21,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+include $GLOBALS['sys_incdir'] . '/php/fingerprints.php';
+
 global $project, $repo_list;
 
 $n = count ($repo_list);
@@ -64,7 +66,11 @@ for ($i = 0; $i < $n; $i++)
   }
 print '</pre>
 
-<h2>'._('More information').'</h2>
+<p>'
+. _('The SSHv2 public key fingerprints for the machine hosting the source
+trees are:') . "</p>\n" . $vcs_fingerprints;
+
+print '<h2>'._('More information').'</h2>
 <a href="//savannah.gnu.org/maintenance/UsingGit">
 https://savannah.gnu.org/maintenance/UsingGit</a>';
 
