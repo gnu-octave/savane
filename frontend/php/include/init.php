@@ -53,6 +53,7 @@ $sys_dbhost = 'localhost';
 $sys_dbname = 'savane';
 $sys_dbuser = 'root';
 
+$sys_etc_dir = '/etc/savane/';
 $sys_incdir = '/etc/savane/content';
 $sys_appdatadir = '/var/lib/savane';
 $sys_trackers_attachments_dir = $sys_appdatadir . '/trackers_attachments';

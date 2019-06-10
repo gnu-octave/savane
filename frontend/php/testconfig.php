@@ -243,6 +243,7 @@ else
                       'sys_dbpasswd',
                       'sys_www_topdir',
                       'sys_url_topdir',
+                      'sys_etc_dir',
                       'sys_incdir',
                       'sys_name',
                       'sys_unix_group_name',

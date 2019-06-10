@@ -3,7 +3,7 @@
 # Instructions about Git usage.
 #
 # Copyright (C) 2007 Sylvain Beucler
-# Copyright (C) 2013, 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2013, 2017, 2019 Ineiev <ineiev@gnu.org>
 # Copyright (C) 2017 Bob Proulx
 #
 # This file is part of Savane.
@@ -21,40 +21,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-global $project;
+global $project, $repo_list;
 
-exec ("grep -A 3 '^repo\.url=" . $project->getUnixName()
-      . "/' /etc/savane/cgitrepos", $output);
-$n = intval((count ($output) + 1) / 5);
-if ($n > 0)
-  {
-    echo "<p>"._('Note: this group has multiple Git repositories.')."</p>";
-    $main_desc = exec ("grep -A 2 '^repo\.url=" . $project->getUnixName()
-                       . "\.git' /etc/savane/cgitrepos");
-    $main_desc = preg_replace(':repo.desc=:', '', $main_desc) . "\n";
-  }
+$n = count ($repo_list);
+if ($n > 1)
+  echo "<p>"._('Note: this group has multiple Git repositories.')."</p>";
 print '
 <h2>'._('Anonymous clone:').'</h2>
 
 <pre>';
 
-if ($n > 0)
-  echo $main_desc;
-
-echo 'git clone https://git.' . $project->getTypeBaseHost() . "/git"
-  . preg_replace(':/srv/git:', '', $project->getTypeDir('git')). "\n";
-
 for ($i = 0; $i < $n; $i++)
   {
-    $url[$i] = preg_replace(':repo.url=:', '', $output[$i * 5]);
-    $repo[$i] = preg_replace(':repo.path=:', '', $output[$i * 5 + 1]);
-    $desc[$i] = preg_replace(':repo.desc=:', '', $output[$i * 5 + 2]);
-  }
-for ($i = 0; $i < $n; $i++)
-  {
-    echo "\n" . $desc[$i] . "\n";
-    echo "git clone https://git."
-         .  $project->getTypeBaseHost() . "/git/" . $url[$i] . "\n";
+    if ($n > 1)
+      print $repo_list[$i]['desc'] . "\n";
+    print "git clone https://git." . $project->getTypeBaseHost()
+           . "/git/" . $repo_list[$i]['url'] . "\n";
+    if ($i < $n - 1)
+      print "\n";
   }
 
 print '</pre>
@@ -67,20 +51,18 @@ $username = user_getname();
 if ($username == "NA")
   # For anonymous user.
   $username = '&lt;<i>'._('membername').'</i>&gt;';
-if ($n > 0)
-  echo $main_desc;
 
-echo "git clone " . $username . "@git."
-     . $project->getTypeBaseHost() . ":"
-     .  $project->getTypeDir('git') . "\n";
 for ($i = 0; $i < $n; $i++)
   {
-    echo "\n" . $desc[$i] . "\n";
-    echo "git clone " . $username . "@git."
-         . $project->getTypeBaseHost() . ":" . $repo[$i] . "\n";
+    if ($n > 1)
+      print $repo_list[$i]['desc'] . "\n";
+    print "git clone " . $username . "@git."
+         . $project->getTypeBaseHost() . ":"
+         . $repo_list[$i]['path'] . "\n";
+    if ($i < $n - 1)
+      print "\n";
   }
-print '
-</pre>
+print '</pre>
 
 <h2>'._('More information').'</h2>
 <a href="//savannah.gnu.org/maintenance/UsingGit">
