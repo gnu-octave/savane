@@ -48,17 +48,6 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:
 30 */2 * * *    root    sv_groups  --cron && sv_users --cron 
 
 
-################################################ DATA EXPORT
-# 
-# Build XML exports requests by users with the frontend.
-
-# XML data export
-#02 * * * *	root	sv_export --xml /var/cache/savane
-
-# Remove old data export
-#30 1 * * *	root	sv_export_cleaner --xml /var/cache/savane
-
-
 ################################################ BACKUPS RELATED
 #
 # This section is highly specific to an installation. We provide here

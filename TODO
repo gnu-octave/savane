@@ -29,10 +29,6 @@
 - Old Makefiles to inspect and migrate to autotools:
   frontend/php/images, db, devel, doc
 
-- 'submitted by' not exported by sv_export - is the following commit
-  necessary, and should it be also applied to table 'support'?
-  http://svn.gna.org/viewcvs/savane?rev=6499&view=rev
-
 - The configure script could check if the necessary perl modules are
   installed; also perl-suid is a dependency for the SVN-tracker
   gateway.

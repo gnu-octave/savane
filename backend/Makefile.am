@@ -3,8 +3,6 @@ bin_SCRIPTS = \
 	accounts/sv_get_authorized_keys \
 	accounts/sv_users \
 	accounts/sv_membersh \
-	export/sv_export \
-	export/sv_export_cleaner \
 	mail/sv_mailman \
 	mail/sv_aliases \
 	mail/sv_mailman_and_mailarchivedotcom \

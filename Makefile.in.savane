@@ -219,14 +219,6 @@ deb-savane-backend-mail:
 	mkdir -p $(debprefix)/bin
 	cd backend && make install-mail SV_BIN=$(debprefix)/bin
 
-deb-savane-backend-export:
-# copy conffile
-	mkdir -p $(debetc)/cron.d
-	install --mode=644  etc/crontab-export $(debetc)/cron.d/savane-export
-# install bin
-	mkdir -p $(debprefix)/bin
-	cd backend && make install-export SV_BIN=$(debprefix)/bin
-
 deb-savane-backend-spamcheck:
 # copy conffile
 	mkdir -p $(debetc)/cron.d $(debetc)/spamassassin
