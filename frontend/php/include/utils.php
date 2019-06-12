@@ -1159,4 +1159,10 @@ function is_broken_msie()
 {
   return utils_is_broken_msie();
 }
+
+function utils_setcookie ($name, $value, $expire, $secure = false)
+{
+  setcookie($name, $value, $expire, $GLOBALS['sys_home'], '',
+            $secure, true);
+}
 ?>

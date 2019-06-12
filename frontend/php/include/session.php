@@ -244,23 +244,7 @@ function session_cookie($name, $value, $cookie_for_a_year=0, $secure=0)
   if ($cookie_for_a_year == 1)
     $expiration = time() + 60*60*24*365; # For a year.
 
-  $path = $GLOBALS['sys_home'];
-
-  # If we're using a real domain name, enable subdomain matching.
-  # $domain needs an embedded dot otherwise the cookie won't be
-  # accepted (eg 'localhost'). See explanation at the top of this
-  # file).
-  $domain = $GLOBALS['sys_default_domain'];
-  if (!preg_match ('/[a-z0-9-]\.[a-z0-9-]/i', $domain))
-    $domain = '';
-
-  # Remove the port from the domain name, this is not supported in
-  # cookies :/
-  $port = strpos($domain, ':');
-  if ($port !== false)
-    $domain = substr($domain, 0, $port);
-
-  setcookie($name, $value, $expiration, $path, $domain, $secure);
+  utils_setcookie($name, $value, $expiration, $secure);
 }
 
 # Remove a cookie. This is an alternative to setting it to an empty
@@ -269,12 +253,7 @@ function session_cookie($name, $value, $cookie_for_a_year=0, $secure=0)
 function session_delete_cookie($n)
 {
   $expiration = time() - 3600; # In the past.
-  $path = $GLOBALS['sys_home'];
-  # Specify domain? - cf. session_cookie ^^^.
-  $domain = $GLOBALS['sys_default_domain'];
-  if (!preg_match ('/[a-z0-9-]\.[a-z0-9-]/i', $domain))
-      $domain = '';
-  setcookie($n, '', $expiration, $path, $domain);
+  utils_setcookie($n, '', $expiration);
 }
 
 function session_redirect($loc)

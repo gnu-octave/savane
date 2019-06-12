@@ -42,12 +42,10 @@ function theme_rotate_jump()
     $num = "0";
 
   # Keep in mind the new number.
-  setcookie('SV_THEME_ROTATE_NUMERIC', $num, time() + 60*60*24*365,
-                    $GLOBALS['sys_home']);
+  utils_setcookie('SV_THEME_ROTATE_NUMERIC', $num, time() + 60*60*24*365);
 
   # Associate this number with a theme.
-  setcookie('SV_THEME_ROTATE', $theme[$num], time() + 60*60*24,
-                    $GLOBALS['sys_home']);
+  utils_setcookie('SV_THEME_ROTATE', $theme[$num], time() + 60*60*24);
 }
 
 # Return an array with all the themes, but not the special case "rotate"
@@ -143,8 +141,7 @@ if (isset($_COOKIE['SV_THEME']))
 	  mt_srand ((double)microtime()*1000000);
 	  $num = mt_rand(0,count($theme)-1);
 	  $random_theme = $theme[$num];
-	  setcookie('SV_THEME_RANDOM', $random_theme, time() + 60*60*24,
-                    $GLOBALS['sys_home']);
+	  utils_setcookie('SV_THEME_RANDOM', $random_theme, time() + 60*60*24);
 	  if (!defined('SV_THEME'))
 	    define('SV_THEME', $random_theme);
 	}
@@ -173,12 +170,11 @@ if (isset($_COOKIE['SV_THEME']))
 	      if ($num == count($theme))
 		$num = '0';
 	    }
-	  setcookie('SV_THEME_ROTATE_NUMERIC', $num, time() + 60*60*24*365,
-                    $GLOBALS['sys_home']);
+	  utils_setcookie('SV_THEME_ROTATE_NUMERIC', $num,
+                          time() + 60*60*24*365);
 	  # We associate this number with a theme.
 	  $rotate_theme = $theme[$num];
-	  setcookie('SV_THEME_ROTATE', $rotate_theme, time() + 60*60*24,
-                    $GLOBALS['sys_home']);
+	  utils_setcookie('SV_THEME_ROTATE', $rotate_theme, time() + 60*60*24);
 	  if (!defined('SV_THEME'))
 	    define('SV_THEME', $rotate_theme);
 	}
@@ -195,8 +191,7 @@ if (isset($_COOKIE['SV_THEME']))
 	{
 	  if (!defined('SV_THEME')) # defined by the /my/admin/ page
 	    define('SV_THEME', $GLOBALS['sys_themedefault']);
-	  setcookie('SV_THEME', SV_THEME, time() + 60*60*24*365,
-                    $GLOBALS['sys_home']);
+	  utils_setcookie('SV_THEME', SV_THEME, time() + 60*60*24*365);
 	}
       else
 	{

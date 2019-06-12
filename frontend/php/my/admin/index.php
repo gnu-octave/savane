@@ -53,8 +53,7 @@ if ($update)
 
     if ($theme_rotate_jump == "1")
       theme_rotate_jump();
-    setcookie("SV_THEME", $user_theme, time() + 60*60*24*365,
-              $GLOBALS['sys_url_topdir']);
+    utils_setcookie("SV_THEME", $user_theme, time() + 60*60*24*365);
 
     # Update the rest.
     if ($form_timezone == 100)

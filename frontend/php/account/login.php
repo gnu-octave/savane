@@ -94,10 +94,7 @@ if (!empty($login))
             $theme_result = user_get_result_set(user_getid());
             $theme = db_result($theme_result, 0, 'theme');
             if (strlen($theme) > 0)
-              {
-                setcookie('SV_THEME', $theme, time() + 60*60*24,
-                  $GLOBALS['sys_home'], $GLOBALS['sys_default_domain']);
-              }
+              utils_setcookie('SV_THEME', $theme, time() + 60*60*24);
           }
       # We return to our brother 'my', where we login originally,
       # unless we are request to go to an uri.
