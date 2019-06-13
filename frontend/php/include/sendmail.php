@@ -2,7 +2,7 @@
 # Every mails sent should be using functions listed here.
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -348,10 +348,10 @@ function sendmail_mail ($from,
   if (isset($GLOBALS['sys_debug_email_override_address']))
     {
       $adr = $GLOBALS['sys_debug_email_override_address'];
-      $message = "Savannah Debug: email override is turned on\n" .
-                 "Original recipient list:\n" .
-                 sendmail_encode_recipients($recipients) .
-                "\n------------\n\n" . $message ;
+      $message = "Savannah Debug: email override is turned on\n"
+                 . "Original recipient list:\n"
+                 . sendmail_encode_recipients($recipients)
+                 . "\n------------\n\n" . $message ;
       $recipients = array($adr);
       $list = array(); # No recipients with custom subject lines.
     }
@@ -452,28 +452,33 @@ function sendmail_encode_recipients ($recipients)
 # it saves us the time of searching for quotes in every words.
 function sendmail_encode_header_content ($header, $charset="UTF-8")
 {
-  $withquotes = FALSE;
   if (strpos ($header, '"') !== FALSE)
     {
       # Quotes found, we each quoted part will be a string to encode.
       $words = explode ('"', $header);
-      $withquotes = 1;
+      $separator = '"';
     }
   else
     {
       # Otherwise, the default behavior is to consider words as strings to
       # encode.
       $words = explode (' ', $header);
+      $separator = ' ';
     }
-  while (list($key,$word) = each($words))
+  while (list($key, $word) = each($words))
+    $encode[$key] = !utils_is_ascii ($word);
+  $last_key = count ($words) - 1;
+  while (list($key, $word) = each($words))
     {
-      # Check word per word if they need encoding.
-      if (!utils_is_ascii($word))
-        $words[$key] = "=?$charset?B?".base64_encode($word)."?=";
+      if (!$encode[$key])
+        continue;
+      # Embed the space in the encoded word (spaces between encoded
+      # words are ignored when rendering).
+      if ($separator === ' ' && $key != $last_key && $encode[$key + 1])
+        $word .= $separator;
+      $words[$key] = "=?$charset?B?" . base64_encode($word) . "?=";
     }
-  if ($withquotes)
-    return join('"', $words);
-  return join(' ', $words);
+  return join ($separator, $words);
 }
 
 # A form for logged in users to send mails to others users.
