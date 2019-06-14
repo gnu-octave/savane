@@ -566,13 +566,36 @@ function _markup_inline($line)
 
   $comingfrom = '';
   if ($group_id)
-    {
-      $comingfrom = "&amp;comingfrom=$group_id";
-    }
+    $comingfrom = "&amp;comingfrom=$group_id";
 
   if (strlen($line) == 0)
+    return;
+  # Replace references to image files with <img>.
+  preg_match_all ('/\(?((files? ))#(?P<file_id>\d+)'
+                  . '(?P<comment>[^),]*)((\)|, )?)/',
+                  $line, $matches);
+  foreach ($matches['file_id'] as $key => $file_id)
     {
-      return;
+      $result = db_execute("SELECT filename FROM trackers_file
+                            WHERE file_id=? LIMIT 1", array ($file_id));
+      if (!$result || db_numrows ($result) < 1)
+        continue;
+      $file_name = db_result ($result, 0, 0);
+      $extension = strtolower (substr ($file_name, strlen ($file_name) - 3));
+      if (substr ($extension, 0, 1) === '.')
+        $extension = substr ($extension, 1);
+      if (!($extension === 'jpg' || $extension === 'png'
+            || $extension === 'jpeg'))
+        continue;
+      $alt = $matches['comment'][$key];
+      if (substr ($alt, 0, 1) === ' ')
+        $alt = substr ($alt, 1);
+      if ($alt !== '')
+        $alt = 'alt="' . htmlspecialchars ($alt) . '" ';
+      $line = preg_replace ('/\(?((files? ))#' . $file_id . '[^),]*((\)|, )?)/',
+                            '<img src="/file/' . htmlspecialchars ($file_name)
+                            . '?file_id=' . $file_id . '" ' . $alt . '/> ',
+                            $line);
     }
 
   # Regexp of protocols supported in hyperlinks (should be protocols that
