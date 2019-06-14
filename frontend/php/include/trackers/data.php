@@ -2739,9 +2739,9 @@ function trackers_data_is_watched ($user_id, $watchee_id, $group_id)
 function trackers_data_delete_file($group_id, $item_id, $file_id)
 {
   global $sys_trackers_attachments_dir;
-  # Make sure the attachment belongs to the group
-  $res = db_execute("SELECT bug_id from ".ARTIFACT
-                    ." WHERE bug_id=? AND group_id=?",
+  # Make sure the attachment belongs to the group.
+  $res = db_execute("SELECT bug_id from " . ARTIFACT
+                    . " WHERE bug_id=? AND group_id=?",
                     array($item_id, $group_id));
   if (db_numrows($res) <= 0)
     {
@@ -2750,13 +2750,11 @@ function trackers_data_delete_file($group_id, $item_id, $file_id)
       return;
     }
 
-  # Now delete the attachment
+  $result = false;
+  # Now delete the attachment.
   if (unlink($sys_trackers_attachments_dir . '/' . $file_id))
-    {
-      $result = db_execute("DELETE FROM trackers_file WHERE item_id=?
-                            AND file_id=?",
-                           array($item_id, $file_id));
-    }
+    $result = db_execute("DELETE FROM trackers_file WHERE item_id=?
+                          AND file_id=?", array($item_id, $file_id));
 
   if (!$result)
     {
