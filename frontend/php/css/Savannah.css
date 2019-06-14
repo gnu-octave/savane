@@ -316,9 +316,6 @@ textarea {
 	background-color: #fff9e0;
 	color: #000000;
 }
-textarea:hover {
-	color: #ff0000;
-}
 
 div.inputfield {
 	margin:	10px 1px 10px 1px;
