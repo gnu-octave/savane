@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -445,7 +445,7 @@ function show_item_list_sober ($result_arr,
 }
 
 # Show the changes of the tracker data we have for this item,
-# excluding details
+# excluding details.
 function show_item_history ($item_id,$group_id, $no_limit=false)
 {
   global $sys_datefmt;
@@ -460,7 +460,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
       if (!$no_limit)
 	{
 	  if ($rows > 25)
-	    { $rows = 25; }
+	    $rows = 25;
 
 	  $title = sprintf(ngettext("Follows %s latest change.",
                                     "Follow %s latest changes.", $rows), $rows);
@@ -486,15 +486,15 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 
           # If the stored label is "realdetails", it means it is the details
           # field (realdetails is used because someone had the nasty idea to
-          # use "details" to mean "comment")
+          # use "details" to mean "comment").
           if ($field == "realdetails")
-            { $field = "details"; }
+            $field = "details";
 
 	  $field_label = trackers_data_get_label($field);
 
           # if field_label is empty, no label was found, return as it is stored
           if (!$field_label)
-            { $field_label = $field; }
+            $field_label = $field;
 
 	  $value_id =  db_result($result, $i, 'old_value');
 	  $new_value_id =  db_result($result, $i, 'new_value');
@@ -530,7 +530,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	    {
 	      # Its a select box look for value in clear
               # (If we hit case of transition automatique update, show it in
-              # specific way)
+              # specific way).
               if ($value_id == "transition-other-field-update")
                 print "-"._("Automatic update due to transitions settings")."-";
               else
@@ -566,7 +566,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 	  else
 	    {
 	      # It's a text zone then display directly.
-	      print markup_basic($new_value_id);
+	      print htmlspecialchars ($new_value_id);
 	    }
 	  print "</td>\n";
 	  print "</tr>\n";
