@@ -669,13 +669,15 @@ File Attachments:\n\n";
 	  $out .= '<a href="'.$href.'">file #'.$item_file_id.(": ").'&nbsp;';
 
 	  if ($sober)
-	      $out .= '<a href="'.$href.'">'.db_result($result, $i, 'filename')
+	      $out .= '<a href="' . $href . '">'
+                      . htmlspecialchars (db_result($result, $i, 'filename'))
                       .'</a>';
 	  else
 	    {
 # TRANSLATORS: the first argument is file name, the second is user's name.
 	      $out .= sprintf(_('<!-- file -->%1$s added by %2$s'),
-                              db_result($result, $i, 'filename').'</a>',
+                              htmlspecialchars (db_result($result, $i, 'filename'))
+                              . '</a>',
                               utils_user_link(db_result($result, $i,
                                                         'user_name')));
 	    }
