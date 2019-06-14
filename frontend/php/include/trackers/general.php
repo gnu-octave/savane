@@ -1222,7 +1222,7 @@ function trackers_attach_file($item_id,
 {
   global $sys_trackers_attachments_dir;
 
-  $input_file_name = preg_replace ('/[<\s"\';?!*]/', '@', $input_file_name);
+  $input_file_name = preg_replace ('/[&<\s"\';?!*]/', '@', $input_file_name);
 
   $user_id = (user_isloggedin() ? user_getid(): 100);
 
