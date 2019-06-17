@@ -1,7 +1,7 @@
 CSS writing/editing guidelines:
 -------------------------------
 
-VERSION: 1.17
+VERSION: 1.18
 
 Please, conform to this document when writing/editing CSS files. Every items
 in CSS files must be documented here.
@@ -11,24 +11,16 @@ apply generally but by purpose. For example, "error" usually apply to a
 <font> tag but it can, someday, be applied to a <table> tag. And CSS does
 not care about which HTML tag is concerned.
 
-When you add new items here, send a mail to savane-dev.
-
 In every CSS file must be added the version number of the guidelines
 followed, to easily find out which CSS file may be severely outdated.
-This number of must change only when an item is added or removed,
-for this reason, we do not rely on CVS versionning.
+This number of must change only when an item is added or removed.
 
 CSS files included into Savane should respect the software normal behavior
-as it works in the default theme Emeraud. If some site want specific 
+as it works in the default theme Savannah. If some site wants specific
 behavior, its theme should not be distributed along with Savane.
 
 Every removed/renamed item must be added in the table at the bottom
 of this file.
-
-WARNING: CSS files that must be edited are the one ending with the suffix
-	.css.in, not with .css! Otherwise, changes will be lost, not kept
-	in the CVS.
-
 
 Very basic (mostly text) items:
 -------------------------------
@@ -52,7 +44,7 @@ Very basic (mostly text) items:
 	  used.
 
 
-Alignement, main tables:
+Alignment, main tables:
 ------------------------
 
 	* "center", 'left", "right", are basic items that do a
@@ -112,6 +104,7 @@ Boxes:
 	  provide additional info (like the part with the users name
 	  in the list of items comments)
 	* "boxoptions" defines how "Display Options" boxes looks like
+	* "tracker_comment" is applied to comments in trackers.
 
 
 Forms:
@@ -203,4 +196,5 @@ Memento, what changed:
 | boxitemaltextra (1.17)            | -new-                             |
 | boxhighlightextra (1.17)          | -new-                             |
 +-----------------------------------+-----------------------------------+
-
+| tracker_comment (1.18)            | -new-                             |
++-----------------------------------+-----------------------------------+

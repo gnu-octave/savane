@@ -50,11 +50,15 @@ em { font-style: italic; }
 .italic { font-style: italic; }
 
 .verbatim
-{ /* useful to put code blocks, should look by default like postit */
+{ /* Useful to put code blocks, should look by default like posted.  */
   border: thin dashed black;
   margin-left: 0.5em;
   background-color: #FFFCA8;
   color: black;
+}
+
+div.tracker_comment
+{
   font-family: monospace;
 }
 

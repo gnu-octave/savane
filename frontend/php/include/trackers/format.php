@@ -139,7 +139,7 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   if (count($data) < 2 && $ascii)
     return;
 
-  # Header first
+  # Header first.
   if ($ascii)
     {
       $out .= "    _______________________________________________________
@@ -415,11 +415,13 @@ to be run.")
 
 	  $out .= "</a><br />\n".$comment_type;
 
+          $out .= '<div class="tracker_comment">';
 	  # Full markup only for original submission.
 	  if ($comment_number < 1)
 	    $out .= markup_full($text_to_markup);
 	  else
 	    $out .= markup_rich($text_to_markup);
+          $out .= "</div>\n";
 
 	  # Add an svn link if relevant (it supports viewcvs syntax).
 	  if ($is_svn && $svn_link)

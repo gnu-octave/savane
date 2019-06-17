@@ -99,26 +99,13 @@ function markup_rich($text)
   return markup_full($text, false);
 }
 
-# Return a sequence of $ns spaces hopefully preserved in HTML.
-function markup_verbatim_spaces ($ns)
+# Transform spaces so that they are hopefully preserved in HTML.
+function markup_preserve_spaces ($buf)
 {
-  if ($ns < 1)
-    return "";
-  $ret = " ";
-  $ns--;
-  $i = 0;
-  while ($ns)
-    {
-      $ns--; $i++;
-      $fill = '&nbsp;';
-      if ($i > 4 && $ns)
-        {
-          $fill = ' ';
-          $i = 0;
-        }
-      $ret = $fill . $ret;
-    }
-  return $ret;
+  $buf = preg_replace ('/ /', '&nbsp;', $buf);
+  $buf = preg_replace ('/(([&]nbsp;)*)[&]nbsp;/', '$1 ', $buf);
+  $buf = preg_replace ('/^((<p>)?) /', '$1&nbsp;', $buf);
+  return $buf;
 }
 
 # Convert special markup characters in the input text to real HTML.
@@ -189,21 +176,8 @@ function markup_full($text, $allow_headings=true)
               # Hopefully preserve spaces in HTML allowing line breaking.
               $verbatim_buffer = str_replace ("\t", "        ",
                                               $verbatim_buffer);
-              $verb_out = " "; # The first space will be collapsed.
-              $ns = 0;
-              for ($i = 0; $i < strlen ($verbatim_buffer); $i++)
-                {
-                  $next_char = substr ($verbatim_buffer, $i, 1);
-                  if ($next_char === ' ')
-                    {
-                      $ns++;
-                      continue;
-                    }
-                  $verb_out .= markup_verbatim_spaces ($ns);
-                  $ns = 0;
-                  $verb_out .= $next_char;
-                }
-              $verbatim_buffer = $verb_out . markup_verbatim_spaces ($ns);
+              # The first space will be collapsed.
+              $verbatim_buffer = ' ' . markup_preserve_spaces ($verbatim_buffer);
 
               # Preserve line breaks.
               $verbatim_buffer = str_replace ("\n", "<br />\n",
@@ -217,7 +191,6 @@ function markup_full($text, $allow_headings=true)
               continue;
             } # $verbatim == 0
         } # preg_match ('/([-]verbatim[-])/', $line) && $verbatim
-
 
       # If we're in the verbatim markup, don't apply the markup.
       if ($verbatim)
@@ -234,8 +207,9 @@ function markup_full($text, $allow_headings=true)
       else
         {
           # Otherwise, normal run, do the markup.
-          $result[] = _full_markup($line, $allow_headings, $context_stack,
-                                   $quoted_text);
+          $line = _full_markup($line, $allow_headings, $context_stack,
+                               $quoted_text);
+          $result[] = markup_preserve_spaces ($line);
         }
     }
 
