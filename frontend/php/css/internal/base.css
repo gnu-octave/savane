@@ -61,6 +61,10 @@ div.tracker_comment
 {
   font-family: monospace;
 }
+div.tracker_comment img
+{
+  max-width: 40em;
+}
 
 code { border: solid thin; }
 

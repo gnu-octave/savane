@@ -581,11 +581,7 @@ function _markup_inline($line)
       if (!$result || db_numrows ($result) < 1)
         continue;
       $file_name = db_result ($result, 0, 0);
-      $extension = strtolower (substr ($file_name, strlen ($file_name) - 3));
-      if (substr ($extension, 0, 1) === '.')
-        $extension = substr ($extension, 1);
-      if (!($extension === 'jpg' || $extension === 'png'
-            || $extension === 'jpeg'))
+      if (!(preg_match ('/\.(jpe?g|png)$/', strtolower($file_name))))
         continue;
       $alt = $matches['comment'][$key];
       if (substr ($alt, 0, 1) === ' ')
