@@ -88,7 +88,7 @@ function markup_basic($text)
 
 # Convert special markup characters in the input text to real HTML.
 #
-# This function does the same markup as utils_basic_markup(), plus
+# This function does the same markup as markup_basic(), plus
 # it supports the following:
 # * paragraphs
 # * lists (<ul> and <ol>)
@@ -110,7 +110,7 @@ function markup_preserve_spaces ($buf)
 
 # Convert special markup characters in the input text to real HTML.
 #
-# This function does the same markup as utils_rich_markup(), plus
+# This function does the same markup as markup_rich(), plus
 # it converts headings to <h2> ... <h5>.
 function markup_full($text, $allow_headings=true)
 {
@@ -182,8 +182,20 @@ function markup_full($text, $allow_headings=true)
               # Preserve line breaks.
               $verbatim_buffer = str_replace ("\n", "<br />\n",
                                               $verbatim_buffer);
-              $result[] = '<blockquote class="verbatim"><p>' . $verbatim_buffer
-                          . "</p></blockquote>\n";
+              # Take into account unclosed paragraphs of surrounding text.
+              $closure = "";
+              $aperture = "";
+              $prev_line = "";
+              if (count($result) > 0)
+                $prev_line = $result[count($result) - 1];
+              $len = strlen ($prev_line);
+              if ($len >= 6 && substr ($prev_line, $len - 6) === '<br />')
+                {
+                  $closure = "</p>\n";
+                  $aperture = "<p>";
+                }
+              $result[] = $closure . '<blockquote class="verbatim"><p>'
+                          . $verbatim_buffer . "</p></blockquote>\n" . $aperture;
               $verbatim_buffer = '';
 
               # Jump to the next line, assuming that we can ignore the rest of the
@@ -320,7 +332,7 @@ function markup_textoutput ($text)
 # Internal function for recognizing and formatting special markup
 # characters in the input line to real HTML.
 #
-# This function is a helper for utils_full_markup() and should
+# This function is a helper for markup_full() and should
 # not be used otherwise.
 function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
 {
