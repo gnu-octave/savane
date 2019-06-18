@@ -202,7 +202,7 @@ function markup_full($text, $allow_headings=true)
           $escaped_line = str_replace('nomarkup',
             'no-1a4f67a7-4eae-4aa1-a2ef-eecd8af6a997-markup', $line);
           $lines[$index] = $escaped_line;
-          $verbatim_buffer .= $escaped_line;
+          $verbatim_buffer .= $escaped_line . "\n";
         }
       else
         {
