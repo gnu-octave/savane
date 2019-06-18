@@ -20,6 +20,138 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Return current markup language documentation in Full Markup format.
+function markup_get_reminder ()
+{
+  return
+"== " . _("Tag Scope") . " ==\n\n"
+. str_replace("\n", ' ',
+_("Every markup element should fit in a single line.  For example,
+this text isn't converted in two lines of italics:")) . "\n\n"
+. "+verbatim+\n"
+. _("_First line
+Second line_")
+. "\n-verbatim-\n\n"
+. _("The only exception is the verbatim blocks of text.") . "\n\n"
+. "== " . _("Basic Markup") . " ==\n\n"
+. _("Basic Markup tags are available almost everywhere.") . ' '
+. str_replace("\n", ' ',
+_("Multiple subsequent spaces and newlines are collapsed in Basic markup
+into single spaces. In Rich and Full markup, they are preserved."))
+. "\n\n"
+. _("*bold* markup is:")
+. "\n+verbatim+\n*"
+. _("bold")
+. "*\n-verbatim-\n\n"
+
+. _("_italic_ markup is:")
+
+. "\n+verbatim+\n_"
+. _("italic")
+. "_\n-verbatim-\n\n"
+
+. _("URLs are transformed to links, additionally you can give them a title:")
+. "\n\n"
+. "\n+verbatim+\n"
+. "www.gnu.org
+http://www.fsf.org
+[http://url " . _('Title') . ']'
+. "\n-verbatim-\n\n"
+
+. str_replace("\n", ' ',
+_("Also, these texts are made links to comments
+(within the same item), tracker items and files:"))
+
+. "\n\n+verbatim+\n"
+. "comment #51\n"
+. "bug #1419857\n"
+. "task #289\n"
+. "sr #4913 support #4913\n"
+. "patch #119\n"
+. "file #83521\n"
+. "-verbatim-\n\n"
+
+. str_replace("\n", ' ',
+_("Links to files whose names end in '.png', '.jpg', '.jpeg' (case insensitive)
+are converted to HTML images, the surrounding parentheses and commas (if any)
+are removed:"))
+. "\n\n+verbatim+
+(file #47102)
+-verbatim-\n\n"
+. _("You can add the 'alt' attribute within the parentheses:")
+. "\n\n+verbatim+
+(file #47102 " . _('Flying GNU') . ")
+-verbatim-\n\n"
+. "== " . _("Rich Markup") . " ==\n\n"
+
+. _('Rich Markup tags are available in comments.') . "\n\n"
+
+. _('Unnumbered list markup is:') . "\n\n"
+
+. "+verbatim+\n"
+. _('* item 1
+* item 2
+** item 2 subitem 1
+** item 2 subitem 2
+* item 3')
+. "\n-verbatim-\n\n"
+
+. _('Numbered list markup is:') . "\n\n"
+
+. "+verbatim+\n"
+._('0 item 1
+00 item 1 subitem 1
+0 item 2')
+. "\n-verbatim-\n\n"
+
+. _('Horizontal ruler markup is:') . "\n\n"
+
+. "+verbatim+
+----
+-verbatim-\n\n"
+
+. _('Verbatim markup (useful for code bits) is:') . "\n\n"
+
+. "+verbatim+\n+verbatim+\n"
+. _("The piece of code
+The piece of code, line 2")
+. "\n-verbatim-\n-verbatim-\n\n"
+. str_replace("\n", ' ',
+_("The starting and ending verbatim marks take whole lines; the rest
+text that may be on the same lines is ignored.")) . "\n\n"
+
+. str_replace("\n", ' ',
+_('The other tag that disables the markup is:')) . "\n\n"
+
+. "+verbatim+\n+nomarkup+ "
+. _('Piece of text that will be printed unformatted.')
+. " -nomarkup-\n-verbatim-\n\n"
+
+. str_replace("\n", ' ',
+_('Unlike the verbatim tag, it produces no text block and can be used
+within a line.')) . "\n\n"
+. "== " . _('Full Markup (Heading Tags)') . " ==\n\n"
+
+. str_replace("\n", ' ',
+_("Heading tags are available in rare places like items original
+submission, news items, project description and users resume."))
+
+. ' ' . _('First level heading markup is:')
+. "\n\n+verbatim+\n= " . _('Title') . " =\n-verbatim-\n\n"
+
+. _('Second level heading markup is:')
+. "\n\n+verbatim+\n== " . _('Subtitle') . " ==\n-verbatim-\n\n"
+
+. _('Third level heading markup is:')
+
+. "\n\n+verbatim+\n=== " . _('Subsubtitle') . " ===\n-verbatim-\n\n"
+
+. _('Fourth level heading markup is:')
+
+. "\n\n+verbatim+\n==== " . _('Subsubsubtitle') . " ====\n-verbatim-\n\n"
+;
+}
+
 # Functions to allow users to format the text in a secure way:
 #    markup_basic() for very light formatting;
 #    markup_rich() for formatting excepting headers;
@@ -31,7 +163,7 @@
 # where it is supposed to be the most useful.
 function markup_info($level)
 {
-  $link_head = '<a target="_blank" href="/cookbook/?func=detailitem&item_id=125">';
+  $link_head = '<a target="_blank" href="/markup-test.php">';
   $link_tail = '</a>';
 
   if ($level == 'basic')
