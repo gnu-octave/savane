@@ -12336,7 +12336,7 @@ msgid ""
 "way is to"
 msgstr ""
 "Чтобы сообщить о проблеме или подать заявку по инфраструктуре Саванны (еще "
-"раз: <b>не</b> конкретного проекта) лучше всего"
+"раз: <b>не</b> конкретного проекта), лучше всего"
 
 #: frontend/site-specific/gnu-content/contact.php:59
 #: frontend/site-specific/nongnu-content/contact.php:59
@@ -12352,7 +12352,7 @@ msgid ""
 "\">searching\n"
 "the archives</a>."
 msgstr ""
-"Как альтернатива журналу, можно послать сообщение в списке <a href=\"%s"
+"Вместо заявки в журнале можно послать сообщение в список <a href=\"%s"
 "\">savannah-help-public</a> после <a href=\"%s\">поиска в архивах</a>."
 
 #: frontend/site-specific/gnu-content/contact.php:72
