@@ -130,11 +130,16 @@ _('The other tag that disables the markup is:')) . "\n\n"
 . str_replace("\n", ' ',
 _('Unlike the verbatim tag, it produces no text block and can be used
 within a line.')) . "\n\n"
+
+. _('Lines starting with ">" are highlighted as quotes:')
+
+. "\n+verbatim+\n> " . _('Quoted line.') . "\n-verbatim-\n\n"
+
 . "== " . _('Full Markup (Heading Tags)') . " ==\n\n"
 
 . str_replace("\n", ' ',
-_("Heading tags are available in rare places like items original
-submission, news items, project description and users resume."))
+_("Heading tags are available in rare places like item original
+submissions, news items, project description and user's resume."))
 
 . ' ' . _('First level heading markup is:')
 . "\n\n+verbatim+\n= " . _('Title') . " =\n-verbatim-\n\n"
