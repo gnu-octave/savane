@@ -40,7 +40,13 @@ function return_bytes($val)
 
 function test_gpg()
 {
-  print "\n<h2>GnuPG</h2>\n\n";
+  print "\n<h3>GnuPG</h3>\n\n";
+
+  if (!isset ($GLOBALS['sys_gpg_name']))
+    {
+      print "<p><strong>GnuPG is not configured.</strong></p>\n";
+      return;
+    }
 
   print "<dl><dt>GPG command</dt>\n<dd><code>" . $GLOBALS['sys_gpg_name']
         . "</code></dd>\n";
