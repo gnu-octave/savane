@@ -22,6 +22,7 @@ require_once('include/markup.php');
 require_once('include/trackers/general.php');
 
 extract(sane_import('post', array('comment', 'basic', 'rich', 'full')));
+$text = htmlspecialchars($comment);
 
 $HTML->header(array('title' => _("Test Markup"), 'notopmenu' => 1));
 html_feedback_top();
@@ -38,8 +39,7 @@ print '<h3 id="test">' . _('Test Markup') . "</h3>\n";
 print form_header($_SERVER['PHP_SELF'] . '#test', false, "post",
                   'enctype="multipart/form-data" name="test_form"');
 
-print trackers_field_textarea('comment', htmlspecialchars($comment),
-                              0, 0, _("Text to test"));
+print trackers_field_textarea('comment', $text, 0, 0, _("Text to test"));
 $GLOBALS['int_trapisset'] = true;
 print '<div class="noprint">'
       . form_submit(_("Basic Markup"), "basic", 'class="bold"')
@@ -53,7 +53,6 @@ if (!$comment)
     exit;
   }
 $comment_number = 0;
-$text = $comment;
 print '<table cellpadding="0" width="100%">' . "\n";
 print '<tr class="boxlight"><td valign="top">';
 print '<a id="comment' . $comment_number . '" href="#comment'
