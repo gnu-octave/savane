@@ -65,6 +65,10 @@ div.tracker_comment img
 {
   max-width: 40em;
 }
+div.tracker_comment blockquote
+{
+  margin-left: 0;
+}
 
 code { border: solid thin; }
 
@@ -308,11 +312,15 @@ h4 a {
         display: block;
 }
 
-.quote {
-        padding-left: 1em;
-        font-style: italic;
+.quote
+{
+  font-style: italic;
 }
 
+.quote em, .quote i
+{
+  font-style: normal;
+}
 
 
 /**********************************************************************

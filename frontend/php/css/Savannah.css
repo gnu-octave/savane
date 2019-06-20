@@ -327,19 +327,12 @@ div.inputfield {
 	font-style: italic;
 }
 
-
-.quote {
-	padding-left: 1em;
-	font-style: italic;
-}
-
-.verbatim {
-	/* useful to put code blocks, should look by default like postit */
-	border: thin solid #E5E297 !important;
-	margin-left: 0.5em;
-	background-color: #FFFCA8 !important;
-	color: black !important;
-	font-family: monospace;
+.verbatim
+{
+  border: thin solid #E5E297;
+  background-color: #FFFCA8;
+  color: black;
+  font-family: monospace;
 }
 
 .boxitemextra {

@@ -513,9 +513,10 @@ function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
       # If the previous line was not quoted, start a new quote paragraph.
       if (!$quoted_text)
         {
-          $line = join("\n", $context_stack)."<p class=\"quote\">$line";
+          $line = join("\n", $context_stack)
+                  . "<blockquote><p class=\"quote\">$line";
           # Empty the stack.
-          $context_stack = array('</p>');
+          $context_stack = array('</p></blockquote>');
           $start_paragraph = false;
         }
       $quoted_text = true;
@@ -532,7 +533,7 @@ function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
       $quoted_text = false;
     }
   # Don't start a new paragraph again, if we already did that.
-  if (isset($context_stack[0]) && $context_stack[0] == '</p>')
+  if (isset ($context_stack[0]) && substr ($context_stack[0], 0, 4) == '</p>')
     {
       $start_paragraph = false;
     }
@@ -556,7 +557,7 @@ function _full_markup($line, $allow_headings, &$context_stack, &$quoted_text)
       $context_stack = array('</p>');
     }
   # Append a linebreak while in paragraph mode.
-  if (isset($context_stack[0]) && $context_stack[0] == '</p>')
+  if (isset ($context_stack[0]) && substr ($context_stack[0], 0, 4) == '</p>')
     {
       $line .= '<br />';
     }
