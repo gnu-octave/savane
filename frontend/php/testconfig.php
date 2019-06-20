@@ -76,6 +76,39 @@ function test_gpg()
   print "</dl>\n";
 }
 
+function test_cgitrepos()
+{
+  if (!isset ($GLOBALS['sys_etc_dir']))
+    {
+      print '<strong>no $sys_etc_dir set</strong>';
+      return;
+    }
+  if (!file_exists ($GLOBALS['sys_etc_dir']))
+    {
+      print '<strong>no $sys_etc_dir directory exists</strong>';
+      return;
+    }
+  $fname = $GLOBALS['sys_etc_dir'] . '/cgitrepos';
+  if (!file_exists ($fname))
+    {
+      print '<strong>no cgitrepos file exists in $sys_etc_dir</strong>';
+      return;
+    }
+  if (!is_readable ($fname))
+    {
+      print '<strong>cgitrepos in $sys_etc_dir is not readable</strong>';
+      return;
+    }
+  $mtime = filemtime ($fname);
+  if (time () - $mtime > 3600)
+    {
+      print '<strong>cgitrepos has not been updated for ' . (time () - $mtmie)
+            . ' seconds</strong>';
+      return;
+    }
+  print 'OK';
+}
+
 print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
     \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\n";
@@ -328,6 +361,13 @@ in the configuration file.</p>\n";
           }
         print "</dl>\n";
       } # db_connect ()
+    print "\n<h2>Other tests</h2>\n\n";
+    print "<table border=\"1\">\n";
+    print "<tr><th>Test</th><th>Result</th></tr>\n";
+    print "<tr id='cgitrepos'><td>cgitrepos</td><td>";
+    test_cgitrepos ();
+    print "</td></tr>";
+    print "</table>\n";
     test_gpg ();
   } # is_readable ($configfile)
 
