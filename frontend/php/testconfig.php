@@ -321,9 +321,9 @@ in the configuration file.</p>\n";
                   $value = str_replace ($v, '<strong>' . $v . '</strong>',
                                         $value);
               }
-            print '<dt>' . $param . "</dt>\n<dd>'" . $value . "'";
+            print '<dt>' . $param . "</dt><dd>'" . $value . "'";
             if ($comment !== NULL)
-              print " $comment";
+              print "\n$comment";
             print "</dd>\n";
           }
         print "</dl>\n";
