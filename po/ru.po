@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.3\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2019-06-18 17:58+0000\n"
-"PO-Revision-Date: 2019-06-18 15:44+0000\n"
+"POT-Creation-Date: 2019-06-21 19:25+0000\n"
+"PO-Revision-Date: 2019-06-21 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
 "Language: ru\n"
@@ -394,9 +394,9 @@ msgstr "Новости"
 #: frontend/php/project/admin/useradmin.php:54
 #: frontend/php/project/admin/useradmin.php:101
 #: frontend/php/project/admin/useradmin.php:155
-#: frontend/php/project/admin/squadadmin.php:169
-#: frontend/php/project/admin/squadadmin.php:364
-#: frontend/php/project/admin/squadadmin.php:407
+#: frontend/php/project/admin/squadadmin.php:157
+#: frontend/php/project/admin/squadadmin.php:341
+#: frontend/php/project/admin/squadadmin.php:380
 #: frontend/php/include/my/general.php:515
 #: frontend/php/include/trackers/show.php:687
 #: frontend/php/include/people/general.php:451
@@ -849,8 +849,8 @@ msgstr "Частота напоминаний:"
 #: frontend/php/my/admin/editsshkeys.php:159
 #: frontend/php/my/admin/change.php:856 frontend/php/my/bookmarks.php:63
 #: frontend/php/project/admin/editgroupnotifications.php:140
-#: frontend/php/project/admin/squadadmin.php:283
-#: frontend/php/project/admin/squadadmin.php:327
+#: frontend/php/project/admin/squadadmin.php:257
+#: frontend/php/project/admin/squadadmin.php:307
 #: frontend/php/news/admin/index.php:65
 #: frontend/php/include/trackers_run/admin/field_values_transition-ofields-update.php:176
 #: frontend/php/include/trackers_run/admin/field_values.php:406
@@ -1845,7 +1845,7 @@ msgid "Do you really want to delete your user account?"
 msgstr "Вы действительно хотите удалить учетную запись?"
 
 #: frontend/php/my/admin/change.php:776
-#: frontend/php/project/admin/squadadmin.php:282
+#: frontend/php/project/admin/squadadmin.php:256
 msgid "Yes, I really do"
 msgstr "Да, хочу"
 
@@ -2414,9 +2414,9 @@ msgid "Add, remove members, approve or reject requests for inclusion."
 msgstr "Добавление, удаление, рассмотренние запросов на включение участников."
 
 #: frontend/php/project/admin/index.php:155
-#: frontend/php/project/admin/squadadmin.php:156
-#: frontend/php/project/admin/squadadmin.php:265
-#: frontend/php/project/admin/squadadmin.php:315
+#: frontend/php/project/admin/squadadmin.php:147
+#: frontend/php/project/admin/squadadmin.php:240
+#: frontend/php/project/admin/squadadmin.php:295
 msgid "Manage Squads"
 msgstr "Управление звеньями"
 
@@ -2430,7 +2430,7 @@ msgstr ""
 
 #: frontend/php/project/admin/index.php:163
 #: frontend/php/project/admin/userperms.php:394
-#: frontend/php/project/admin/squadadmin.php:421
+#: frontend/php/project/admin/squadadmin.php:387
 #: frontend/php/include/trackers_run/admin/index.php:47
 #: frontend/php/include/trackers_run/admin/userperms.php:67
 msgid "Set Permissions"
@@ -2480,7 +2480,7 @@ msgstr ""
 #: frontend/php/project/admin/useradmin.php:43
 #: frontend/php/project/admin/useradmin.php:78
 #: frontend/php/project/admin/useradmin.php:145
-#: frontend/php/project/admin/squadadmin.php:350
+#: frontend/php/project/admin/squadadmin.php:326
 msgid "Users"
 msgstr "Пользователи"
 
@@ -2707,46 +2707,46 @@ msgstr "Вы администратор"
 msgid "Admin"
 msgstr "Администратор"
 
-#: frontend/php/project/admin/squadadmin.php:53
+#: frontend/php/project/admin/squadadmin.php:51
 #: frontend/php/account/register.php:89
 msgid "You must supply a username."
 msgstr "Вы должны ввести имя пользователя."
 
-#: frontend/php/project/admin/squadadmin.php:55
-#: frontend/php/project/admin/squadadmin.php:244
+#: frontend/php/project/admin/squadadmin.php:53
+#: frontend/php/project/admin/squadadmin.php:219
 msgid "You must supply a non-empty real name."
 msgstr "Необходимо ввести непустое полное имя."
 
-#: frontend/php/project/admin/squadadmin.php:73
+#: frontend/php/project/admin/squadadmin.php:71
 #: frontend/php/account/register.php:97
 msgid "That username already exists."
 msgstr "Имя пользователя занято."
 
-#: frontend/php/project/admin/squadadmin.php:84
+#: frontend/php/project/admin/squadadmin.php:82
 #: frontend/php/account/register.php:102
 msgid "That username is blocked to avoid conflict with mailing-list addresses."
 msgstr ""
 "Это имя пользователя заблокировано во избежание наложений на адреса списков "
 "рассылки."
 
-#: frontend/php/project/admin/squadadmin.php:105
+#: frontend/php/project/admin/squadadmin.php:101
 msgid "Squad created"
 msgstr "Звено создано"
 
-#: frontend/php/project/admin/squadadmin.php:118
+#: frontend/php/project/admin/squadadmin.php:114
 msgid "Error during squad creation"
 msgstr "Ошибка при создании звена"
 
-#: frontend/php/project/admin/squadadmin.php:138
-#: frontend/php/project/admin/squadadmin.php:238
+#: frontend/php/project/admin/squadadmin.php:132
+#: frontend/php/project/admin/squadadmin.php:214
 msgid "Squad not found"
 msgstr "Звено не найдено"
 
-#: frontend/php/project/admin/squadadmin.php:140
+#: frontend/php/project/admin/squadadmin.php:134
 msgid "Squad deleted"
 msgstr "Звено удалено"
 
-#: frontend/php/project/admin/squadadmin.php:160
+#: frontend/php/project/admin/squadadmin.php:151
 msgid ""
 "Squads can be assigned items, share permissions. Creating squads is useful\n"
 "if you want to assign some items to several members at once."
@@ -2754,101 +2754,101 @@ msgstr ""
 "Звеньям можно назначать разрешения и поручать заявки. Звенья полезны, если "
 "вы хотите поручать какие-то заявки сразу нескольким людям."
 
-#: frontend/php/project/admin/squadadmin.php:164
+#: frontend/php/project/admin/squadadmin.php:154
 msgid "Squads List"
 msgstr "Список звеньев"
 
-#: frontend/php/project/admin/squadadmin.php:191
+#: frontend/php/project/admin/squadadmin.php:175
 msgid "Create a New Squad"
 msgstr "Создать звено"
 
-#: frontend/php/project/admin/squadadmin.php:201
+#: frontend/php/project/admin/squadadmin.php:185
 msgid "Squad Login Name:"
 msgstr "Название звена:"
 
-#: frontend/php/project/admin/squadadmin.php:208
+#: frontend/php/project/admin/squadadmin.php:190
 msgid "Squad Full Name:"
 msgstr "Полное название звена:"
 
-#: frontend/php/project/admin/squadadmin.php:218
+#: frontend/php/project/admin/squadadmin.php:196
 msgid "You cannot have more squads than members"
 msgstr "Звеньев не может быть больше, чем участников"
 
-#: frontend/php/project/admin/squadadmin.php:251
+#: frontend/php/project/admin/squadadmin.php:227
 msgid "Squad name updated"
 msgstr "Название звена обновлено"
 
-#: frontend/php/project/admin/squadadmin.php:268
+#: frontend/php/project/admin/squadadmin.php:243
 msgid ""
 "This action cannot be undone, the squad login name will no longer be\n"
 "available."
 msgstr "Это действие необратимо, название звена больше не будет доступно."
 
-#: frontend/php/project/admin/squadadmin.php:279
+#: frontend/php/project/admin/squadadmin.php:253
 msgid "Do you really want to delete this squad account?"
 msgstr "Вы действительно хотите удалить это звено?"
 
 #. TRANSLATORS: the argument is user's name.
-#: frontend/php/project/admin/squadadmin.php:294
+#: frontend/php/project/admin/squadadmin.php:269
 #, php-format
 msgid "User %s added to the squad."
 msgstr "Пользователь %s записан в звено."
 
 #. TRANSLATORS: the argument is user's name.
-#: frontend/php/project/admin/squadadmin.php:297
+#: frontend/php/project/admin/squadadmin.php:273
 #, php-format
 msgid "User %s is already part of the squad."
 msgstr "Пользователь %s уже в звене."
 
 #. TRANSLATORS: the argument is user's name.
-#: frontend/php/project/admin/squadadmin.php:308
+#: frontend/php/project/admin/squadadmin.php:285
 #, php-format
 msgid "User %s removed from the squad."
 msgstr "Пользователь %s удален из звена."
 
 #. TRANSLATORS: the argument is user's name.
-#: frontend/php/project/admin/squadadmin.php:311
+#: frontend/php/project/admin/squadadmin.php:290
 #, php-format
 msgid "User %s is not part of the squad."
 msgstr "Пользователь %s не в звене."
 
-#: frontend/php/project/admin/squadadmin.php:322
+#: frontend/php/project/admin/squadadmin.php:303
 #: frontend/php/account/register.php:262 frontend/php/include/user_home.php:149
 msgid "Real Name:"
 msgstr "Полное имя:"
 
-#: frontend/php/project/admin/squadadmin.php:328
+#: frontend/php/project/admin/squadadmin.php:308
 msgid "Delete Squad"
 msgstr "Удалить звено"
 
-#: frontend/php/project/admin/squadadmin.php:333
+#: frontend/php/project/admin/squadadmin.php:310
 msgid "Removing members"
 msgstr "Удаление участников"
 
-#: frontend/php/project/admin/squadadmin.php:345
+#: frontend/php/project/admin/squadadmin.php:321
 msgid ""
 "To remove members from the squad, select their names and push the button\n"
 "below."
 msgstr "Чтобы удалить людей из звена, выберите их имена и нажмите на кнопку."
 
-#: frontend/php/project/admin/squadadmin.php:368
+#: frontend/php/project/admin/squadadmin.php:343
 msgid "Remove Members"
 msgstr "Удалить участников"
 
-#: frontend/php/project/admin/squadadmin.php:372
+#: frontend/php/project/admin/squadadmin.php:346
 msgid "Adding members"
 msgstr "Добавление участников"
 
-#: frontend/php/project/admin/squadadmin.php:385
+#: frontend/php/project/admin/squadadmin.php:358
 msgid ""
 "To add members to the squad, select their name and push the button below."
 msgstr "Чтобы записать людей в звено, выберите их имена и нажмине на кнопку."
 
-#: frontend/php/project/admin/squadadmin.php:413
+#: frontend/php/project/admin/squadadmin.php:382
 msgid "Add Members"
 msgstr "Записать участников"
 
-#: frontend/php/project/admin/squadadmin.php:416
+#: frontend/php/project/admin/squadadmin.php:384
 msgid "Setting permissions"
 msgstr "Установка разрешений"
 
@@ -4675,15 +4675,15 @@ msgstr "Пользователей пока нет."
 msgid "Contact Us"
 msgstr "Связаться с нами"
 
-#: frontend/php/markup-test.php:26 frontend/php/markup-test.php:37
+#: frontend/php/markup-test.php:27 frontend/php/markup-test.php:38
 msgid "Test Markup"
 msgstr "Тест разметки"
 
-#: frontend/php/markup-test.php:29
+#: frontend/php/markup-test.php:30
 msgid "Markup Reminder and Test"
 msgstr "Справка и тест разметки"
 
-#: frontend/php/markup-test.php:31
+#: frontend/php/markup-test.php:32
 msgid ""
 "This page describes Savane markup language for formatting text you post\n"
 "in items or item comments. You can <a href=\"#test\">test it below</a>."
@@ -4697,26 +4697,26 @@ msgid "Text to test"
 msgstr "Текст для теста"
 
 #: frontend/php/markup-test.php:45 frontend/php/include/markup.php:36
-#: frontend/php/include/markup.php:171
+#: frontend/php/include/markup.php:174
 msgid "Basic Markup"
 msgstr "Простая разметка"
 
 #: frontend/php/markup-test.php:46 frontend/php/include/markup.php:85
-#: frontend/php/include/markup.php:176
+#: frontend/php/include/markup.php:179
 msgid "Rich Markup"
 msgstr "Усложненная разметка"
 
-#: frontend/php/markup-test.php:47 frontend/php/include/markup.php:181
+#: frontend/php/markup-test.php:47 frontend/php/include/markup.php:184
 msgid "Full Markup"
 msgstr "Полная разметка"
 
-#: frontend/php/markup-test.php:62 frontend/php/include/trackers/format.php:406
+#: frontend/php/markup-test.php:61 frontend/php/include/trackers/format.php:406
 #, php-format
 msgid "comment #%s:"
 msgstr "комментарий №%s:"
 
 #. TRANSLATORS: anonymous user.
-#: frontend/php/markup-test.php:72
+#: frontend/php/markup-test.php:71
 #: frontend/php/include/trackers_run/digest.php:253
 #: frontend/php/include/html.php:769 frontend/php/include/html.php:778
 #: frontend/php/include/utils.php:642
@@ -5945,7 +5945,7 @@ msgstr "Существующие ответы:"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:770
 #: frontend/php/include/trackers_run/admin/field_values.php:859
-#: frontend/php/include/markup.php:58 frontend/php/include/markup.php:140
+#: frontend/php/include/markup.php:58 frontend/php/include/markup.php:143
 #: frontend/php/include/people/general.php:439
 msgid "Title"
 msgstr "Заголовок"
@@ -9754,11 +9754,11 @@ msgstr "Буквальный блок текста (например, для ч�
 
 #: frontend/php/include/markup.php:116
 msgid ""
-"The piece of code\n"
-"The piece of code, line 2"
+"seconds = 3600 *days * 24;\n"
+"_printf (_(\"Enter something:\"));"
 msgstr ""
-"Участок программы\n"
-"Участок программы, строка 2"
+"секунды = 3600 *дни * 24;\n"
+"_printf (_(\"Введите что-нибудь:\"));"
 
 #: frontend/php/include/markup.php:120
 msgid ""
@@ -9770,77 +9770,81 @@ msgstr ""
 
 #: frontend/php/include/markup.php:124
 msgid "The other tag that disables the markup is:"
-msgstr "Другая метка, отключающая разметку:"
+msgstr "Другая команда, отключающая разметку:"
 
-#: frontend/php/include/markup.php:127
-msgid "Piece of text that will be printed unformatted."
-msgstr "Участок текста, который будет выведен без форматирования."
-
-#: frontend/php/include/markup.php:131
+#: frontend/php/include/markup.php:129
 msgid ""
 "Unlike the verbatim tag, it produces no text block and can be used\n"
 "within a line."
 msgstr ""
 "В отличие от буквального блока, этот элемент используется внутри строки."
 
-#: frontend/php/include/markup.php:133
+#: frontend/php/include/markup.php:132
+msgid "Lines starting with \">\" are highlighted as quotes:"
+msgstr "Строки, начинающиеся с «>», выделяются как цитаты:"
+
+#: frontend/php/include/markup.php:134
+msgid "Quoted line."
+msgstr "Строка цитаты."
+
+#: frontend/php/include/markup.php:136
 msgid "Full Markup (Heading Tags)"
 msgstr "Полная разметка (заголовки разделов)"
 
-#: frontend/php/include/markup.php:136
+#: frontend/php/include/markup.php:139
 msgid ""
-"Heading tags are available in rare places like items original\n"
-"submission, news items, project description and users resume."
+"Heading tags are available in rare places like item original\n"
+"submissions, news items, project description and user's resume."
 msgstr ""
 "Заголовки можно размещать в редких случаях, например, в первоначальных "
 "размещениях заявок, новостях, описаниях проектов и страницах навыков "
 "пользователя."
 
-#: frontend/php/include/markup.php:139
+#: frontend/php/include/markup.php:142
 msgid "First level heading markup is:"
 msgstr "Заголовок первого уровня:"
 
-#: frontend/php/include/markup.php:142
+#: frontend/php/include/markup.php:145
 msgid "Second level heading markup is:"
 msgstr "Заголовок второго уровня:"
 
-#: frontend/php/include/markup.php:143
+#: frontend/php/include/markup.php:146
 msgid "Subtitle"
 msgstr "Подраздел"
 
-#: frontend/php/include/markup.php:145
+#: frontend/php/include/markup.php:148
 msgid "Third level heading markup is:"
 msgstr "Заголовок третьего уровня:"
 
-#: frontend/php/include/markup.php:147
+#: frontend/php/include/markup.php:150
 msgid "Subsubtitle"
 msgstr "Подподраздел"
 
-#: frontend/php/include/markup.php:149
+#: frontend/php/include/markup.php:152
 msgid "Fourth level heading markup is:"
 msgstr "Заголовок четвертого уровня:"
 
-#: frontend/php/include/markup.php:151
+#: frontend/php/include/markup.php:154
 msgid "Subsubsubtitle"
 msgstr "Подподподраздел"
 
-#: frontend/php/include/markup.php:172
+#: frontend/php/include/markup.php:175
 msgid "Only basic text tags are available in this input field."
 msgstr "В этом поле доступны только простые элементы разметки"
 
-#: frontend/php/include/markup.php:177
+#: frontend/php/include/markup.php:180
 msgid "Rich and basic text tags are available in this input field."
 msgstr "В этом поле доступны простые и усложненные элементы разметки."
 
-#: frontend/php/include/markup.php:182
+#: frontend/php/include/markup.php:185
 msgid "Every tags are available in this input field."
 msgstr "В этом поле доступны все элементы разметки."
 
-#: frontend/php/include/markup.php:186
+#: frontend/php/include/markup.php:189
 msgid "No Markup"
 msgstr "Без разметки"
 
-#: frontend/php/include/markup.php:187
+#: frontend/php/include/markup.php:190
 msgid "No tags are available in this input field."
 msgstr "В этом поле не доступна никакая разметка."
 
@@ -11845,8 +11849,8 @@ msgid ""
 "by the Nevrax Design Team."
 msgstr ""
 "Эмблема с изображением <a href=\"%s\">левитирующего\n"
-"медитирующего играющего на флейте гну</a>, распространяемым по GNU GPL, "
-"подготовлено группой Nevrax."
+"медитирующего играющего на флейте гну</a>, распространяемая по GNU GPL, "
+"подготовлена группой Nevrax."
 
 #: frontend/site-specific/gnu-content/page_footer.php:44
 #: frontend/site-specific/nongnu-content/page_footer.php:44
@@ -11903,60 +11907,75 @@ msgstr "Список лицензий"
 msgid "GNU Mirrors"
 msgstr "Зеркала GNU"
 
+#. TRANSLATORS: If Savane has a localized FSF logo in your language, fill its name
+#. as the "translation" of this string; if it hasn't, repeat the original string
+#. in your translation.
+#: frontend/site-specific/gnu-content/menu.php:44
+#: frontend/site-specific/nongnu-content/menu.php:44
+msgid "thin-image.png"
+msgstr "thin-image.png"
+
 #: frontend/site-specific/gnu-content/menu.php:45
 #: frontend/site-specific/nongnu-content/menu.php:45
 msgid "Support freedom"
 msgstr "Поддержи свободу"
 
-#: frontend/site-specific/gnu-content/menu.php:46
-#: frontend/site-specific/nongnu-content/menu.php:46
-msgid "Help protect your freedom, join the Free Software Foundation"
+#: frontend/site-specific/gnu-content/menu.php:47
+#: frontend/site-specific/nongnu-content/menu.php:47
+msgid ""
+"Help us protect your freedom and the rights of computer\n"
+"users everywhere by becoming a member of the FSF."
 msgstr ""
-"Помоги защищать свою свободу, присоединяйся к Фонду свободного программного "
-"обеспечения"
+"Помогите нам повсюду защищать вашу свободу и права пользователей "
+"компьютеров, став членом ФСПО."
 
-#: frontend/site-specific/gnu-content/menu.php:54
-#: frontend/site-specific/nongnu-content/menu.php:54
+#: frontend/site-specific/gnu-content/menu.php:49
+#: frontend/site-specific/nongnu-content/menu.php:49
+msgid "Join Now!"
+msgstr "Вступай!"
+
+#: frontend/site-specific/gnu-content/menu.php:53
+#: frontend/site-specific/nongnu-content/menu.php:53
 msgid "Free Software Foundation"
 msgstr "Фонд свободного программного обеспечения"
 
-#: frontend/site-specific/gnu-content/menu.php:55
-#: frontend/site-specific/nongnu-content/menu.php:55
+#: frontend/site-specific/gnu-content/menu.php:54
+#: frontend/site-specific/nongnu-content/menu.php:54
 msgid "Coming Events"
 msgstr "Календарь событий"
 
-#: frontend/site-specific/gnu-content/menu.php:57
-#: frontend/site-specific/nongnu-content/menu.php:57
+#: frontend/site-specific/gnu-content/menu.php:56
+#: frontend/site-specific/nongnu-content/menu.php:56
 msgid "Free Software Directory"
 msgstr "Каталог свободных программ"
 
-#: frontend/site-specific/gnu-content/menu.php:59
-#: frontend/site-specific/nongnu-content/menu.php:59
+#: frontend/site-specific/gnu-content/menu.php:58
+#: frontend/site-specific/nongnu-content/menu.php:58
 msgid "Cryptographic software legal notice"
 msgstr "Юридическое уведомление о криптографических программах"
 
-#: frontend/site-specific/gnu-content/menu.php:61
-#: frontend/site-specific/nongnu-content/menu.php:61
+#: frontend/site-specific/gnu-content/menu.php:60
+#: frontend/site-specific/nongnu-content/menu.php:60
 msgid "Copyright infringement notification"
 msgstr "Сообщить о нарушении авторских прав"
 
-#: frontend/site-specific/gnu-content/menu.php:64
-#: frontend/site-specific/nongnu-content/menu.php:64
+#: frontend/site-specific/gnu-content/menu.php:63
+#: frontend/site-specific/nongnu-content/menu.php:63
 msgid "Related Forges"
 msgstr "Родственные сайты"
 
-#: frontend/site-specific/gnu-content/menu.php:68
-#: frontend/site-specific/nongnu-content/menu.php:68
+#: frontend/site-specific/gnu-content/menu.php:67
+#: frontend/site-specific/nongnu-content/menu.php:67
 msgid "Savannah Non-GNU"
 msgstr "Саванна не-GNU"
 
-#: frontend/site-specific/gnu-content/menu.php:71
-#: frontend/site-specific/nongnu-content/menu.php:71
+#: frontend/site-specific/gnu-content/menu.php:70
+#: frontend/site-specific/nongnu-content/menu.php:70
 msgid "GNU Savannah"
 msgstr "Саванна GNU"
 
-#: frontend/site-specific/gnu-content/menu.php:73
-#: frontend/site-specific/nongnu-content/menu.php:73
+#: frontend/site-specific/gnu-content/menu.php:72
+#: frontend/site-specific/nongnu-content/menu.php:72
 msgid "Puszcza"
 msgstr "Пуща"
 
@@ -12519,6 +12538,21 @@ msgstr ""
 "Для пользования Саванной это не обязательно, но если вы хотели бы сделать "
 "свой проект частью системы GNU, обратитесь к странице <a href=\"%s\">Оценка "
 "программ для GNU</a>. Проект GNU с радостью принимает новые программы."
+
+#~ msgid ""
+#~ "The piece of code\n"
+#~ "The piece of code, line 2"
+#~ msgstr ""
+#~ "Участок программы\n"
+#~ "Участок программы, строка 2"
+
+#~ msgid "Piece of text that will be printed unformatted."
+#~ msgstr "Участок текста, который будет выведен без форматирования."
+
+#~ msgid "Help protect your freedom, join the Free Software Foundation"
+#~ msgstr ""
+#~ "Помоги защищать свою свободу, присоединяйся к Фонду свободного "
+#~ "программного обеспечения"
 
 #~ msgid "Anonymous checkout:"
 #~ msgstr "Анонимная рабочая копия:"
