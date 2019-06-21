@@ -40,6 +40,31 @@ License for more details.
 
 You may select the license of your choice.
 
+floating.png and its source code meditate.xcf.gz
+come from https://www.gnu.org/graphics/meditate.html;
+icon.png, gnalogo.png and its source gnalogo.xcf are trivially derived
+from meditate.xcf.
+================================================
+
+Copyright (C) 2001 Free Software Foundation, Inc.
+
+This image is available under the GNU General Public License,
+version 3 or any later version, or the GNU Free Documentation
+License, version 1.1 or any later version.
+
+This image is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 logo-fsf.org.svg and exported from it thin-image.png
 ====================================================
 
