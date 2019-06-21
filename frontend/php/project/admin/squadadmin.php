@@ -389,7 +389,7 @@ below.")."</p>\n";
   print form_input("hidden", "squad_id", $squad_id);
   print '&nbsp;&nbsp;<select title="'.("Users")
         .'" name="user_ids[]" size="10" multiple="multiple">';
-  unset($exists);
+  $exists = false;
   while ($thisuser = db_fetch_array($result_addusers)) 
     {
       # Ignore if previously found as member
