@@ -113,8 +113,8 @@ are removed:"))
 . _('Verbatim markup (useful for code bits) is:') . "\n\n"
 
 . "+verbatim+\n+verbatim+\n"
-. _("The piece of code
-The piece of code, line 2")
+. _('seconds = 3600 *days * 24;
+_printf (_("Enter something:"));')
 . "\n-verbatim-\n-verbatim-\n\n"
 . str_replace("\n", ' ',
 _("The starting and ending verbatim marks take whole lines; the rest
@@ -123,9 +123,7 @@ text that may be on the same lines is ignored.")) . "\n\n"
 . str_replace("\n", ' ',
 _('The other tag that disables the markup is:')) . "\n\n"
 
-. "+verbatim+\n+nomarkup+ "
-. _('Piece of text that will be printed unformatted.')
-. " -nomarkup-\n-verbatim-\n\n"
+. "+verbatim+\n+nomarkup++verba-nomarkup-tim+\n-verbatim-\n\n"
 
 . str_replace("\n", ' ',
 _('Unlike the verbatim tag, it produces no text block and can be used
