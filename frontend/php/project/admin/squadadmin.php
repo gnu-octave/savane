@@ -67,8 +67,8 @@ if (!$squad_id)
 
 	      if ($valid && db_numrows(db_execute("SELECT user_id FROM user WHERE "
 						  . "user_name LIKE ?",
-						  array($groupx.'-'
-                                                        .$form_loginname))) > 0)
+                                                  array($group . '-'
+                                                        . $form_loginname))) > 0)
 		{
 		  fb(_("That username already exists."),1);
 		  $valid = false;
