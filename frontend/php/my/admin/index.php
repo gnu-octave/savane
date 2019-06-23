@@ -1,9 +1,9 @@
 <?php
-# Manage user preferences
-# Copyright 1999-2000 (c) The SourceForge Crew
-# Copyright 2002-2006 (c) Mathieu Roy <yeupou--gnu.org>
+# Manage user preferences.
+# Copyright (C) 1999-2000 The SourceForge Crew
+# Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2017, 2019 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -35,10 +35,40 @@ extract(sane_import('post',
                           'form_email_encrypted'
                           )));
 
-if ($update and $user_theme != "random" and $user_theme != "rotate")
+if ($update)
   {
-    define('SV_THEME', $user_theme);
+    # Define actions to do before selecting theme.
+    function update_theme ()
+      {
+        global $user_theme, $theme_rotate_jump, $form_timezone, $form_email_hide;
+
+        # Update theme.
+        if ($user_theme == "Default")
+          $user_theme = "";
+        elseif ($user_theme !== 'rotate' && $user_theme !== 'random')
+          $user_theme = theme_validate ($user_theme);
+
+        if ($theme_rotate_jump == "1")
+          theme_rotate_jump($user_theme);
+
+        if ($form_timezone == 100)
+          $form_timezone = "GMT";
+
+        $success =
+          db_autoexecute('user',
+                         array('email_hide' => ($form_email_hide ? "1" : "0"),
+                              'theme' => $user_theme,
+                              'timezone' => $form_timezone,
+                              ), DB_AUTOQUERY_UPDATE,
+                         "user_id=?", array(user_getid()));
+
+        if ($success)
+          fb(_("Database successfully updated"));
+        else
+          fb(_("Failed to update the database"),1);
+      }
   }
+
 require_once('../../include/init.php');
 require_once('../../include/timezones.php');
 extract(sane_import('request', array('feedback')));
@@ -47,26 +77,6 @@ session_require(array('isloggedin'=>1));
 
 if ($update)
   {
-    # Update theme.
-    if ($user_theme == "Default")
-      $user_theme = "";
-
-    if ($theme_rotate_jump == "1")
-      theme_rotate_jump();
-    utils_setcookie("SV_THEME", $user_theme, time() + 60*60*24*365);
-
-    # Update the rest.
-    if ($form_timezone == 100)
-      $form_timezone = "GMT";
-
-    $success = db_autoexecute('user',
-      array(
-        'email_hide' => ($form_email_hide ? "1" : "0"),
-        'theme' => $user_theme,
-        'timezone' => $form_timezone,
-      ), DB_AUTOQUERY_UPDATE,
-      "user_id=?", array(user_getid()));
-
     # Integrated bookmarks.
     if ($form_use_bookmarks == "1")
       user_set_preference("use_bookmarks", 1);
@@ -107,10 +117,6 @@ loaded"));
       user_set_preference("keep_only_one_session", 1);
     else
       user_unset_preference("keep_only_one_session");
-    if ($success)
-      fb(_("Database successfully updated"));
-    else
-      fb(_("Failed to update the database"),1);
   }
 
 # Print form and links.
@@ -368,17 +374,16 @@ $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
 html_select_theme_box("user_theme", $row_user['theme']);
-print ' '._("Theme");
+print ' ' . _("Theme");
 
-if ("rotate"==$row_user['theme'])
+if ("rotate" === $row_user['theme'] || 'random' === $row_user['theme'])
   print '<br />
 <input type="checkbox" name="theme_rotate_jump"
        id="theme_rotate_jump" value="1" />
 <label for="theme_rotate_jump">'
-        ._("Jump to the next theme")."</label>\n";
+        . _("Jump to the next theme") . "</label>\n";
 print '<p class="smaller">'
-._("Not satisfied with the default color theme of the interface?").'</p>
-';
+. _("Not satisfied with the default color theme of the interface?") . "</p>\n";
 
 if (!theme_guidelines_check(SV_THEME))
   {

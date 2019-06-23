@@ -314,10 +314,6 @@ function get_module_include_dir($script_name, $true_artifact=0, $true_dir=0)
   return $guess;
 }
 
-# HTML layout class, may be overriden by the Theme class.
-require_once(dirname(__FILE__).'/Layout.class');
-
-$HTML = new Layout();
 # Start user session.
 
 # Connect to db.
@@ -340,6 +336,12 @@ non-existing project. Please update the configuration."), FB_ERROR);
 
 # Determine if they're logged in.
 session_set();
+
+# HTML layout class.
+require_once(dirname(__FILE__).'/Layout.class');
+
+$HTML = new Layout();
+theme_select ();
 
 # If logged in, do a few setups.
 if (user_isloggedin())

@@ -25,27 +25,15 @@
 
 require_once(dirname(__FILE__).'/utils.php');
 
-# Jump to the next theme available and set cookie appropriately.
-function theme_rotate_jump()
+# Jump to the next theme available.
+function theme_rotate_jump ($user_theme)
 {
-  extract(sane_import('cookie', array('SV_THEME_ROTATE_NUMERIC')));
-  $num = intval($SV_THEME_ROTATE_NUMERIC);
-
-  utils_get_content("forbidden_theme");
-  $theme = theme_list();
-
-  $num++;
-
-  # If the num is a value superior of the number of themes
-  # we reset to 0.
-  if ($num == count($theme))
-    $num = "0";
-
-  # Keep in mind the new number.
-  utils_setcookie('SV_THEME_ROTATE_NUMERIC', $num, time() + 60*60*24*365);
-
-  # Associate this number with a theme.
-  utils_setcookie('SV_THEME_ROTATE', $theme[$num], time() + 60*60*24);
+  if (!user_isloggedin ())
+    return;
+  if ($user_theme === 'rotate')
+    theme_get_rotated (true);
+  elseif ($user_theme === 'random')
+    theme_get_random (true);
 }
 
 # Return an array with all the themes, but not the special case "rotate"
@@ -61,22 +49,22 @@ function theme_list ()
     {
       # Ignore symlinks.
       if (is_link($GLOBALS['sys_www_topdir']."/css/$file"))
-	continue;
+        continue;
 
       # Take only correct css files.
       if (!preg_match("/^(.*)\.css$/", $file, $matches))
-	continue;
+        continue;
 
       # base.css and printer.css are always ignored
       # (as of nov 2006, there are in the subdirectory internal, so this
       # is only here for backward compat).
       if ($matches[1] == "base" || $matches[1] == "printer"
           || $matches[1] == "msie-dirtyhacks")
-	continue;
+        continue;
 
       # Forbidden themes are also ignored.
       if (preg_match($GLOBALS['forbid_theme_regexp'], strtolower($matches[1])))
-	continue;
+        continue;
 
       $theme[] = $matches[1];
     }
@@ -110,101 +98,204 @@ function theme_guidelines_check ($theme)
   return true;
 }
 
-# TODO: move to init.php
-
-# THEME SELECTION
-# First check if the printer mode is asked. If not, proceed to the usual
-# theme selection.
-extract(sane_import('request', array('printer')));
-if ($printer == 1)
-  {
-    define('SV_THEME', 'printer');
-    define('PRINTER', 1);
-    return true;
-  }
-
-if (isset($_COOKIE['SV_THEME']))
+# If the theme is valid, return $user_theme; else return default theme.
+function theme_validate ($user_theme)
 {
-  # The user selected a theme.
-  if ($_COOKIE['SV_THEME'] == 'random')
+  utils_get_content("forbidden_theme");
+
+  if (isset($GLOBALS['forbid_theme_regexp'])
+      && preg_match($GLOBALS['forbid_theme_regexp'], $user_theme))
+    {
+      error_log ("Forbidden theme '" . $user_theme . "', user "
+                 . user_getname ());
+      return $GLOBALS['sys_themedefault'];
+    }
+
+  if (file_exists($GLOBALS['sys_www_topdir'] . "/css/"
+                  . $user_theme . ".css"))
+    return $user_theme;
+  error_log ("Invalid theme '" . $user_theme . "', user " . user_getname ());
+  return $GLOBALS['sys_themedefault'];
+}
+
+# Get next random theme; set the cookie.
+function theme_next_random ()
+{
+  $theme = theme_list ();
+  mt_srand ((double)microtime () * 1000000);
+  $num = mt_rand (0, count ($theme) - 1);
+  $random_theme = theme_validate ($theme[$num]);
+  $expire = time () + 60 * 60 * 24;
+  return $random_theme;
+}
+
+# Return random theme value once a day, depending on user preferences.
+function theme_get_random ($force_rotation = false)
+{
+  $random_pref = user_get_preference ('random_theme');
+  if ($random_pref !== false)
+    {
+      $pref_array = explode(":", $random_pref);
+      if (time () < $pref_array[1] && !$force_rotation)
+        return theme_validate ($pref_array[0]);
+    }
+
+  # Select next random theme.
+  $random_theme = theme_next_random ();
+  $expire = time () + 60 * 60 * 24;
+  user_set_preference ('random_theme', $random_theme . ":" . $expire);
+  return $random_theme;
+}
+
+# Return theme value rotated once a day.
+function theme_get_rotated ($force_rotation = false)
+{
+  $num = 0;
+  $rot_pref = user_get_preference ('rotated_theme');
+  $theme = theme_list ();
+  if ($rot_pref !== false)
+    {
+      $pref_array = explode (":", $rot_pref);
+      $num = $pref_array[0];
+      if (time () < $pref_array[1] && !$force_rotation)
+        return $theme[$pref_array[0]];
+    }
+  $num++;
+  if ($num >= count ($theme))
+    $num = 0;
+  $rotate_theme = $theme[$num];
+  $expire = time () + 60 * 60 * 24;
+  user_set_preference ('rotated_theme', $num . ":" . $expire);
+  return $rotate_theme;
+}
+
+# Calculate current theme value from its setting.
+function theme_value ($theme_setting)
+{
+  if ($theme_setting === 'random')
+    return theme_get_random ();
+  if ($theme_setting === 'rotate')
+    return theme_get_rotated ();
+  return theme_validate ($theme_setting);
+}
+
+# Set theme cookies consistent with user's account settings.
+function theme_set_cookies ($user_theme)
+{
+  if ($user_theme === 'random')
+    {
+      if (!isset ($_COOKIE['SV_THEME_RANDOM'])
+          || $_COOKIE['SV_THEME_RANDOM'] !== SV_THEME)
+        utils_setcookie ('SV_THEME_RANDOM', SV_THEME, time () + 60 * 60 * 24);
+    }
+
+  if ($user_theme === 'rotate')
+    {
+      if (!isset ($_COOKIE['SV_THEME_ROTATE'])
+          || $_COOKIE['SV_THEME_ROTATE'] !== SV_THEME)
+        utils_setcookie ('SV_THEME_ROTATE', SV_THEME, time () + 60 * 60 * 24);
+      $rot_pref = user_get_preference ('rotated_theme');
+      $num = 0;
+      if ($rot_pref !== false)
+        {
+          $pref_array = explode (":", $rot_pref);
+          $num = $pref_array[0];
+        }
+      if (!isset ($_COOKIE['SV_THEME_ROTATE_NUMERIC'])
+          || $_COOKIE['SV_THEME_ROTATE_NUMERIC'] != $num)
+        utils_setcookie ('SV_THEME_ROTATE_NUMERIC', $num,
+                         time () + 60 * 60 * 24 * 365);
+    }
+
+  if (!isset ($_COOKIE['SV_THEME']) || $_COOKIE['SV_THEME'] !== $user_theme)
+    {
+      $expire = time () + 60 * 60 * 24;
+      if ($user_theme === 'random' || $user_theme === 'rotate')
+        $expire +=  60 * 60 * 24 * 364;
+      utils_setcookie ('SV_THEME', $user_theme, $expire);
+    }
+}
+
+# Guess theme from cookies (for anonymous users).
+function theme_guess ()
+{
+  if (!isset($_COOKIE['SV_THEME']))
+    {
+      # No theme was selected, we use the default one.
+      define('SV_THEME', $GLOBALS['sys_themedefault']);
+      return;
+    }
+
+  if ($_COOKIE['SV_THEME'] === 'random')
     {
       # The user selected random theme.
       # We set randomly a theme and a cookie for a day.
       if (isset($_COOKIE['SV_THEME_RANDOM']))
-	{
-	  if (!defined('SV_THEME'))
-	    define('SV_THEME', $_COOKIE['SV_THEME_RANDOM']);
-	}
-      else
-	{
-	  $theme = theme_list();
-	  mt_srand ((double)microtime()*1000000);
-	  $num = mt_rand(0,count($theme)-1);
-	  $random_theme = $theme[$num];
-	  utils_setcookie('SV_THEME_RANDOM', $random_theme, time() + 60*60*24);
-	  if (!defined('SV_THEME'))
-	    define('SV_THEME', $random_theme);
-	}
-    }
-  elseif ($_COOKIE['SV_THEME'] == 'rotate')
+        {
+          define('SV_THEME',
+                 theme_validate ($_COOKIE['SV_THEME_RANDOM']));
+          return;
+        }
+      $next_theme = theme_next_random ();
+      define('SV_THEME', $next_theme);
+      utils_setcookie('SV_THEME_RANDOM', $next_theme, time() + 60 * 60 * 24);
+      return;
+    } # if ($_COOKIE['SV_THEME'] == 'random')
+
+  if ($_COOKIE['SV_THEME'] === 'rotate')
     {
-      # The user want a rotation between themes.
       if (isset($_COOKIE['SV_THEME_ROTATE']))
-	{
-	  if (!defined('SV_THEME'))
-	    define('SV_THEME', $_COOKIE['SV_THEME_ROTATE']);
-	}
-      else
-	{
-	  $theme = theme_list();
-
-	  # We get a number and set a cookie with this number.
-	  # If this number exist, +1 to its value.
-	  if (!isset($_COOKIE['SV_THEME_ROTATE_NUMERIC']))
-	    $num = '0';
-	  else
-	    {
-	      $num = $_COOKIE['SV_THEME_ROTATE_NUMERIC']+1;
-	      # If the num is a value superior of the number of themes
-	      # we reset to 0.
-	      if ($num == count($theme))
-		$num = '0';
-	    }
-	  utils_setcookie('SV_THEME_ROTATE_NUMERIC', $num,
-                          time() + 60*60*24*365);
-	  # We associate this number with a theme.
-	  $rotate_theme = $theme[$num];
-	  utils_setcookie('SV_THEME_ROTATE', $rotate_theme, time() + 60*60*24);
-	  if (!defined('SV_THEME'))
-	    define('SV_THEME', $rotate_theme);
-	}
-    }
-  else
-    {
-      # The user picked a particular theme.
-      $cookie_theme = $_COOKIE['SV_THEME'];
-
-      # Look for invalid / outdated cookies.
-      # TODO; stop using a constant for SV_THEME.
-      if (!file_exists($GLOBALS['sys_www_topdir'] . "/css/"
-                       . $cookie_theme . ".css"))
-	{
-	  if (!defined('SV_THEME')) # defined by the /my/admin/ page
-	    define('SV_THEME', $GLOBALS['sys_themedefault']);
-	  utils_setcookie('SV_THEME', SV_THEME, time() + 60*60*24*365);
-	}
-      else
-	{
-	  if (!defined('SV_THEME')) # defined by the /my/admin/ page
-	    define('SV_THEME', $cookie_theme);
-	}
-    }
+        {
+          define('SV_THEME', theme_validate($_COOKIE['SV_THEME_ROTATE']));
+          return;
+        }
+      $theme = theme_list ();
+      $num = 0;
+      if (isset($_COOKIE['SV_THEME_ROTATE_NUMERIC']))
+        {
+          $num = $_COOKIE['SV_THEME_ROTATE_NUMERIC'] + 1;
+          if ($num >= count ($theme))
+            $num = 0;
+        }
+      utils_setcookie('SV_THEME_ROTATE_NUMERIC', $num,
+                      time() + 60 * 60 * 24 * 365);
+      # We associate this number with a theme.
+      $rotate_theme = $theme[$num];
+      utils_setcookie('SV_THEME_ROTATE', $rotate_theme, time() + 60 * 60 * 24);
+      define('SV_THEME', $rotate_theme);
+      return;
+    } # if ($_COOKIE['SV_THEME'] == 'rotate')
+  define('SV_THEME', theme_validate($_COOKIE['SV_THEME']));
 }
-else
-  {
-    # No theme was defined, we use the default one, unless already
-    # manual set (i.e. my/admin/index.php).
-    if (!defined('SV_THEME'))
-      define('SV_THEME', $GLOBALS['sys_themedefault']);
-  }
+
+# Select theme.
+function theme_select ()
+{
+  # The user requested updating theme: make the changes
+  # before selecting the theme.
+  if (function_exists ('update_theme'))
+    update_theme ();
+
+  # Check if the printer mode is asked. If not, proceed to the usual
+  # theme selection.
+  extract(sane_import('request', array('printer')));
+  if ($printer == 1)
+    {
+      define('SV_THEME', 'printer');
+      define('PRINTER', 1);
+      return;
+    }
+
+  if (!user_isloggedin ())
+    {
+      # Anonymous user: guess the theme from cookies.
+      theme_guess ();
+       return;
+    }
+
+  # When the user is logged in, the theme comes from user's settings.
+  $user_theme = user_get_field (0, 'theme');
+  define ('SV_THEME', theme_value ($user_theme));
+  theme_set_cookies ($user_theme);
+}
 ?>

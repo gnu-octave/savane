@@ -220,10 +220,8 @@ function user_is_active ($user_id)
 
 function user_fetch_name ($user_id)
 {
-  $result = user_get_result_set ($user_id);
-  if ($result && db_numrows($result) > 0)
-    return db_result ($result, 0, 'user_name');
-  return '';
+  $name = user_get_field ($user_id, 'user_name');
+  return ($name === false)? '': $name;
 }
 
 function user_getrealname($user_id=0, $rfc822_compliant=0)
@@ -238,12 +236,16 @@ function user_getrealname($user_id=0, $rfc822_compliant=0)
 
 function user_getemail($user_id=0)
 {
-  if (!$user_id)
-    $user_id = user_getid();
+  return user_get_field ($user_id, 'email');
+}
 
-  $result = user_get_result_set($user_id);
-  if ($result && db_numrows($result) > 0)
-      return db_result($result,0,"email");
+function user_get_field ($user_id, $field)
+{
+  if (!$user_id)
+    $user_id = user_getid ();
+  $result = user_get_result_set ($user_id);
+  if ($result && db_numrows ($result) > 0)
+    return db_result ($result, 0, $field);
   return false;
 }
 
