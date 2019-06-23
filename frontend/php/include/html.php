@@ -328,13 +328,13 @@ function html_image ($src,$args,$display=1)
   if (empty($args['height']) and empty($args['width']))
     {
      # Check to see if we've already fetched the image data.
-     if(!$img_attr[$src] && is_file($GLOBALS['sys_www_topdir'].'/images/'
-                                    .SV_THEME.'.theme/'.$src))
-       {
+     if(!(isset ($img_attr[$src]) && $img_attr[$src])
+        && is_file($GLOBALS['sys_www_topdir'] . '/images/' . SV_THEME
+                   . '.theme/' . $src))
+        {
           list($width, $height, $type, $img_attr[$src]) =
             @getimagesize($GLOBALS['sys_www_topdir'].'/images/'.SV_THEME
                           .'.theme/'.$src);
-
         }
       else
         {
