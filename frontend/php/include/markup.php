@@ -234,6 +234,7 @@ function markup_rich($text)
 # Transform spaces so that they are hopefully preserved in HTML.
 function markup_preserve_spaces ($buf)
 {
+  $buf = preg_replace ('/  *(\n|$)/', '$1', $buf);
   $buf = preg_replace ('/ /', '&nbsp;', $buf);
   $buf = preg_replace ('/(([&]nbsp;)*)[&]nbsp;/', '$1 ', $buf);
   $buf = preg_replace ('/^((<p>)?) /', '$1&nbsp;', $buf);
