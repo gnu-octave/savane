@@ -242,17 +242,17 @@ effectively *logged as site administrators* (superuser):
 
 ----
 
-==== Description: ====
+== Description: ==
 " . $form_purpose . "\n\n";
 
     if ($form_required_sw)
-      $message_admin .= "\n==== Other Software Required: ====\n"
+      $message_admin .= "\n== Other Software Required: ==\n"
                         . $form_required_sw . "\n\n";
 
     if ($form_comments)
-      $message_admin .= "\n==== Other Comments: ====\n" . $form_comments . "\n\n";
+      $message_admin .= "\n== Other Comments: ==\n" . $form_comments . "\n\n";
 
-    $message_admin .= "\n==== Tarball URL: ====\n" . $form_values['tarball_url']
+    $message_admin .= "\n== Tarball URL: ==\n" . $form_values['tarball_url']
                       . "\n\n";
 
     sendmail_mail($type_admin_email_address, $user_email,
