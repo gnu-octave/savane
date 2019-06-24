@@ -529,6 +529,8 @@ sprintf(no_i18n("Unsubscribe URL (for majordomo at CERN, it is %s"),
 
 function artifact_checkbox($HTML, $title, $description, $label, $artifact)
 {
+  global $row_grp;
+
   print $HTML->box_top($title);
   if ($description != '')
     print '<p>'.$description."</p>\n";
