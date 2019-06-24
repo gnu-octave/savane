@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 print '
-'._('Copyright &copy; 2018 &nbsp;Free Software Foundation, Inc.').'
+'._('Copyright &copy; 2019 &nbsp;Free Software Foundation, Inc.').'
 
 <br />
 
@@ -38,7 +38,7 @@ by the Nevrax Design Team.'), '//www.gnu.org/graphics/meditate.html');
 print '<br />
 <a href="';
 
-echo 'http://git.savannah.gnu.org/cgit/administration/savane.git/plain/'
+echo '//git.savannah.gnu.org/cgit/administration/savane.git/plain/'
   . preg_replace(':/opt/savannah/savane/:', '', realpath($_SERVER['SCRIPT_FILENAME']));
 
 print'">'._('Source Code').'</a>
