@@ -1,3 +1,13 @@
+Copyright (C) 2019 Ineiev
+
+This file is part of Savane.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+
 feed16.png
 ==========
 
@@ -40,10 +50,13 @@ License for more details.
 
 You may select the license of your choice.
 
-floating.png and its source code meditate.xcf.gz
-come from https://www.gnu.org/graphics/meditate.html;
+
+meditate.tar.xz contains sources for various versions of floating.png,
+see the README file in that archive.
+
+floating.png is exported from floating.xcf in meditate.tar.xz
 icon.png, gnalogo.png and its source gnalogo.xcf are trivially derived
-from meditate.xcf.
+from meditate.xcf.  Their license and copyright notices are as follows,
 ================================================
 
 Copyright (C) 2001 Free Software Foundation, Inc.
@@ -65,8 +78,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-logo-fsf.org.svg and exported from it thin-image.png
-====================================================
+
+logo-fsf.org.svg and thin-image.png that is exported from it.
+============================================================
 
 https://www.gnu.org/graphics/fsf-logo.html puts it under
 Creative Commons Zero 1.0 Universal Public Domain Dedication
