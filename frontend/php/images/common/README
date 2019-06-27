@@ -55,8 +55,8 @@ meditate.tar.xz contains sources for various versions of floating.png,
 see the README file in that archive.
 
 floating.png is exported from floating.xcf in meditate.tar.xz
-icon.png, gnalogo.png and its source gnalogo.xcf are trivially derived
-from meditate.xcf.  Their license and copyright notices are as follows,
+icon.png and its source icon.xcf are trivially derived
+from floating.xcf.  Their license and copyright notices are as follows,
 ================================================
 
 Copyright (C) 2001 Free Software Foundation, Inc.
