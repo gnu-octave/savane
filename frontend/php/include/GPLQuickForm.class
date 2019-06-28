@@ -125,8 +125,8 @@ class GPLQuickForm_Element
       $title = $this->title;
     $label = '';
     if ($title)
-      $label = 'title="'.$title.'" ';
-    return htmlspecialchars($label, ENT_QUOTES);
+      $label = 'title="' . htmlspecialchars($title, ENT_QUOTES) . '" ';
+    return $label;
   }
 
   public function display()
