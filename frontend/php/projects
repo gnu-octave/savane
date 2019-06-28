@@ -39,6 +39,7 @@ if (db_numrows($res_grp) < 1)
   }
 
 $group = $pathinfo;
+$extra_script_name = '/' . $pathinfo;
 $group_id = db_result ($res_grp, 0, 'group_id');
 
 $project = new Project ($group_id);

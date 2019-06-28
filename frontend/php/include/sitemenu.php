@@ -237,11 +237,17 @@ function sitemenu_thispage($page_title, $page_toptab=0, $page_group=0)
 
   $extraurl = sitemenu_extraurl();
 
-  $HTML->menu_entry($_SERVER['SCRIPT_NAME']."?reload=1".$extraurl,
+  $extra_name = '';
+  if (isset($GLOBALS['extra_script_name']))
+    $extra_name = $GLOBALS['extra_script_name'];
+
+  $HTML->menu_entry($_SERVER['SCRIPT_NAME'] . $extra_name
+                    . "?reload=1" . $extraurl,
                     _("Clean Reload"),
                     1,
                     _("Reload the page without risk of reposting data"));
-  $HTML->menu_entry($_SERVER['SCRIPT_NAME']."?printer=1".$extraurl,
+  $HTML->menu_entry($_SERVER['SCRIPT_NAME'] . $extra_name
+                    . "?printer=1" . $extraurl,
                     _("Printer Version"),
                     1,
                     _("Show this page with a style adapted to printers"));
