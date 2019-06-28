@@ -71,14 +71,15 @@ $form->addElement('header', 'title_name', _('Project name'));
 $form->addElement('text', 'full_name', _('Full name'));
 $form->addElement('text', 'unix_name', _('Short/system name')
   . "\n<br />" . '<span class="smaller">'
-  . _('(used in URLs, mailing lists names, etc.)') . '</span>');
+  . _('(used in URLs, mailing lists names, etc.)') . '</span>',
+  _('Short/system name'));
 
 $form->addElement('header', 'title_information', _('Project information'));
 $form->addElement('textarea', 'purpose', _('~20-lines technical description')
   . "\n<br />" . '<span class="smaller">'
   . _('What is your project?') . "\n<br />"
   . _('(purpose, topic, programming language...)') . "\n<br />"
-  . _('What is special about it?') . '</span>');
+  . _('What is special about it?') . '</span>',  _('~20-lines technical description'));
 $types = array();
 $result = db_execute("SELECT type_id, name FROM group_type ORDER BY type_id");
 while($line = db_fetch_array($result))
@@ -128,7 +129,7 @@ $form->addElement('text', 'tarball_url', _('Tarball (.tar.gz) URL')
   . sprintf (
 _('(or <a href="%s" target="_blank">upload file</a> to Savannah.)'),
              'upload.php')
-  . '</span>');
+  . '</span>', _('Tarball (.tar.gz) URL'));
 $form->addElement('submit', null, _("Register project"));
 
 $form->addRule('full_name', _("Invalid full name"), 'minlength', 2);
