@@ -22,12 +22,7 @@
 
 @import "internal/base.css";
 
-
-/**********************************************************************
- *
- * Very basic (mostly text) items:
- *
- **********************************************************************/
+/* Very basic (mostly text) items: */
 
 body {
   margin-top: 1%;
@@ -37,10 +32,12 @@ body {
   background-color: #ffe3c4;
   color: #cab79f;
 }
+a { color: black; }
+a:hover { text-decoration: none; }
 
-a { text-decoration: none; color: #ffce96;}
-a:hover {  text-decoration: underline; }
-a:active { color: #ffe6c9; }
+div.realbody a { text-decoration: none; color: #ffce96;}
+div.realbody a:hover { text-decoration: underline; }
+div.realbody a:active { color: #ffe6c9; }
 
 .unavailable, .unavailable:hover
 {
@@ -119,7 +116,7 @@ ul.topmenuitemsubmenu li {
 	border-left: 0.3em solid #A79E8B;
 }
 
-li.topmenuitemsubmenu a:hover {
+div.realbody li.topmenuitemsubmenu a:hover {
 	text-decoration: underline;
 }
 
@@ -175,11 +172,11 @@ li.topmenuitemsubmenu:hover {
 	text-align: left;
 }
 
-.boxtitle a {
+div.realbody .boxtitle a {
         color: #5b564c;
 }
 
-.boxtitle a:hover {
+div.realbody .boxtitle a:hover {
         border-top: thin dotted #5b564c;
 	border-bottom: thin dotted #5b564c;
 }
