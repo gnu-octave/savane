@@ -1,5 +1,4 @@
-/*
- * Savannah theme.
+/* Savannah theme.
  *
  * Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
  * Copyright (C) 2002-2005 St@'ephane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
@@ -22,18 +21,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * For debugging/development of css, setting network.http.use-cache to
- * false was apparently both necessary and sufficient --karl, 23jan15.
-*/
+ * false was apparently both necessary and sufficient --karl, 23jan15.  */
 
-/* GUIDELINES VERSION FOLLOWED: 1.17 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "internal/base.css";
 
-/**********************************************************************
- *
- * Very basic (mostly text) items:
- *
- **********************************************************************/
+/* Very basic (mostly text) items: */
 
 body {
   margin-top: 0;

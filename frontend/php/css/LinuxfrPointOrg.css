@@ -1,5 +1,4 @@
-/*
- * LinuxfrPointOrg style.
+/* LinuxfrPointOrg style.
  *
  * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
  *
@@ -19,20 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *    This theme was inspired by the design of the original
- *    http://linuxfr.org website.
-*/
+ *    http://linuxfr.org website.  */
 
-
-/* GUIDELINES VERSION FOLLOWED: 1.17 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "internal/base.css";
 
 
-/**********************************************************************
- *
- * Very basic (mostly text) items:
- *
- **********************************************************************/
+/* Very basic (mostly text) items: */
 
 body {
   margin-top: 0;

@@ -1,9 +1,6 @@
-/* <one line to give a brief idea of what this does.>
+/* Theme with menu on the right (FIXME it doesn't really work).
  * 
- * Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
- * See the changelog file for a detailed list of changes
- *
- *  http://gna.org/p/savane
+ * Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
  * 
@@ -18,14 +15,9 @@
  * GNU Affero General Public License for more details.
  * 
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
-*/
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-
-/* GUIDELINES VERSION FOLLOWED: 1.15 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "Emeraud.css";
 

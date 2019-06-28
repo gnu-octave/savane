@@ -1,10 +1,7 @@
-/*
+/* Savanedu style (disabled).
  *
  * Part of the GNU Savannah Project
- * Copyright (c) 2003 Stéphane Urbanovski <s.urbanovski@ac-nancy-metz.fr>
- * See the changelog file for a detailed list of changes
- *
- *  http://savannah.gnu.org 
+ * Copyright (C) 2003 Stéphane Urbanovski <s.urbanovski@ac-nancy-metz.fr>
  *
  * This file is part of Savane.
  * 
@@ -19,25 +16,14 @@
  * GNU Affero General Public License for more details.
  * 
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id$
- *
-*/
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* GUIDELINES VERSION FOLLOWED: 1.1 */
 
-
-/* Import the default theme */
+/* Import the default theme.  */
 @import "savannah.css";
 
-
-/**********************************************************************
- *
- * Very basic (mostly text) items:
- *
- **********************************************************************/
-
+/* Very basic (mostly text) items: */
 
 body { 
 	margin:				3px;

@@ -19,20 +19,13 @@
  *
  *    This theme was inspired by the design of the original
  *    SourceForge. To me, it's a sad theme, too much grey, so few
- *    colors. Please, keep it that way.
-*/
+ *    colors. Please, keep it that way.  */
 
-
-/* GUIDELINES VERSION FOLLOWED: 1.12 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "internal/base.css";
 
-
-/**********************************************************************
- *
- * Very basic (mostly text) items:
- *
- **********************************************************************/
+/* Very basic (mostly text) items: */
 
 body {
 	background-color: white;

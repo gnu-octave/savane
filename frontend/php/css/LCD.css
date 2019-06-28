@@ -1,5 +1,4 @@
-/*
- * LCD-oriented style.
+/* LCD-oriented style.
  *
  * Copyright (C) 2004 Mathieu Roy <yeupou--gnu.org>
  * Copyright (C) 2018 Ineiev
@@ -18,11 +17,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
-*/
+ */
 
-
-/* GUIDELINES VERSION FOLLOWED: 1.16 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "internal/base.css";
 

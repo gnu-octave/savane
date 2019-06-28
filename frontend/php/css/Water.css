@@ -15,20 +15,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-
-/* GUIDELINES VERSION FOLLOWED: 1.15 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "internal/base.css";
 
-
-/**********************************************************************
- *
- * Very basic (mostly text) items:
- *
- **********************************************************************/
+/* Very basic (mostly text) items: */
 
 body {
   margin: 1%;

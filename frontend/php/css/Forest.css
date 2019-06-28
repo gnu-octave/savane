@@ -1,6 +1,6 @@
-/* Forest style
+/* Forest style.
  *
- * Copyright 2002-2005 (c) Mathieu Roy <yeupou--gnu.org>
+ * Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
  *
@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-/* GUIDELINES VERSION FOLLOWED: 1.16 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "internal/base.css";
 

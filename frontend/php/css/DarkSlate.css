@@ -1,4 +1,5 @@
-/*
+/* DarkSlate style.
+ *
  * This file is part of the Savane project
  * <http://gna.org/projects/savane/>
  *
@@ -23,7 +24,7 @@
  */
 
 
-/* GUIDELINES VERSION FOLLOWED: 1.16 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 @import "internal/base.css";
 
