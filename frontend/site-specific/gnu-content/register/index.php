@@ -68,7 +68,7 @@ by the GNU Project management.').'</dd>
 printf ('<dd>'
 # TRANSLATORS: the second argument is a link to a mailing list.
 ._('Organizational project for your user group. GUG need to be listed
-at <a href="%1$s">GNU Users Groups page<a>&mdash;contact %2$s for details.').'
+at <a href="%1$s">GNU Users Groups page</a>&mdash;contact %2$s for details.').'
 </dd>
 </dl>
 
