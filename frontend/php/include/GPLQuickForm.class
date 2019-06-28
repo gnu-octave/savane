@@ -137,7 +137,7 @@ class GPLQuickForm_Element
       {
         print "<tr><td colspan=2 class='lightgrey;"
           . " text-align: left; font-weight: bold'>"
-          . "{$this->label}</td></tr>";
+          . "{$this->label}</td></tr>\n";
       }
     else if ($this->type == 'submit')
       {
@@ -145,10 +145,10 @@ class GPLQuickForm_Element
         if ($this->frozen)
           $disabled = 'disabled="disabled"';
 
-        print "<tr><td></td><td class='element'>";
+        print "<tr><td></td>\n<td class='element'>";
         print "<input type='submit'"
           . " name='{$this->name}' value='{$this->label}' $disabled />";
-        print '</td></tr>';
+        print "</td></tr>\n";
       }
     else if ($this->type == 'hidden')
       {
@@ -157,7 +157,7 @@ class GPLQuickForm_Element
     else
       {
         print '<tr>';
-        print "<td class='label'>{$this->label}</td>";
+        print "<td class='label'>{$this->label}</td>\n";
         print "<td class='element'>";
         if (!empty($this->error))
           print "<span class='error'>$this->error</span><br />";
@@ -287,9 +287,7 @@ class GPLQuickForm_Element
                   . "value='$value' $checked $disabled />\n";
             break;
           }
-        print '</td>
-</tr>
-';
+        print "</td>\n</tr>\n";
       }
   }
 }
@@ -513,7 +511,7 @@ class GPLQuickForm
       $element->display();
     $there_is_a_required_field = 1;
     if ($there_is_a_required_field)
-      print "<tr><td /><td class='element'>$this->requiredNote</td></tr>\n";
+      print "<tr><td></td><td class='element'>$this->requiredNote</td></tr>\n";
     print "</table>\n</form>\n";
   }
 }
