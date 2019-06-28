@@ -54,7 +54,7 @@ a:active {
 
 .unavailable, .unavailable:hover
 {
-  color: #D7D7CF !important;
+  color: #4d4d4a;
 }
 
 .error { font-weight: bold; color: #c12424; }

@@ -111,7 +111,7 @@ li.topmenuitemsubmenu a:hover {
 
 
 /* Unavailable actions (usually <span> inside menus) */
-.unavailable, .unavailable:hover { color: #CCC8B4 !important; }
+.unavailable, .unavailable:hover { color: #63665c; }
 
 
 /* Boxes */

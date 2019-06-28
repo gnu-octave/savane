@@ -49,17 +49,17 @@ a:active {
 
 .unavailable
 {
-  color: #c1c1b0;
+  color: #4d4d46;
   text-decoration: none;
 }
 .unavailable:hover
 {
   text-decoration: line-through;
-  color: #c1c1b0;
+  color: #4d4d46;
 }
 
 
-.footer { font-size: x-small; color: #a0a092; }
+.footer { font-size: x-small; color: #d3c5be; }
 
 /* Titles */
 
