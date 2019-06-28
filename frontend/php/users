@@ -28,11 +28,14 @@ require_once('include/init.php');
 require_once('include/sendmail.php');
 
 # Extract user's name.
-$res_user = user_get_result_set_from_unix (
-              preg_replace ("/\?.*/", "", basename($_SERVER['REQUEST_URI'])));
+$pathinfo = preg_replace ("/\?.*/", "", basename($_SERVER['REQUEST_URI']));
+
+$res_user = user_get_result_set_from_unix ($pathinfo);
 
 if (db_numrows($res_user) < 1)
   exit_error (_("Invalid User"), _("That user does not exist."));
+
+$extra_script_name = '/' . $pathinfo;
 
 $user_id = db_result ($res_user, 0, 'user_id');
 include ('include/user_home.php');
