@@ -185,17 +185,20 @@ function show_item_list ($result_arr,
             }
           elseif (trackers_data_is_username_field($field_arr[$j]))
             {
-              if ($nolink)
+              if ($value == 'None')
+                $value = '';
+              if ($nolink || $value === '')
                 print "<td$width>$value</td>\n";
               else
                 print "<td$width>" . utils_user_link($value) . "</td>\n";
             }
           elseif (trackers_data_is_select_box($field_arr[$j]))
             {
-              print "<td$width>"
-                    . trackers_data_get_cached_field_value($field_arr[$j],
-                                                           $group_id, $value)
-                    . "</td>\n";
+              $val = trackers_data_get_cached_field_value($field_arr[$j],
+                                                          $group_id, $value);
+              if ($val == 'None')
+                $val = '';
+              print "<td$width>$val</td>\n";
             }
           else
             {
