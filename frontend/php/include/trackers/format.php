@@ -22,24 +22,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-function format_item_details ($item_id, $group_id, $ascii=false,
-                              $item_assigned_to=false,$quoted=false,
-                              $new_comment=false)
+function format_item_details ($item_id, $group_id, $ascii = false,
+                              $item_assigned_to = false, $quoted = false,
+                              $new_comment = false)
 {
   # ASCII must not be translated.
-  #  Format the details rows from trackers_history.
+  # Format the details rows from trackers_history.
   global $sys_datefmt;
 
   # Obtain data.
   $data = array();
   $i = 0;
 
-  # Get original submission
+  # Get original submission.
   $result = db_execute("SELECT user.user_id,user.user_name,user.realname,"
-                       .ARTIFACT.".date,".ARTIFACT.".details,".ARTIFACT
-                       .".spamscore FROM ".ARTIFACT.",user WHERE  ".ARTIFACT
-                       .".submitted_by=user.user_id AND ".ARTIFACT
-                       .".bug_id=? AND ".ARTIFACT.".group_id=? LIMIT 1",
+                       . ARTIFACT . ".date," . ARTIFACT . ".details," . ARTIFACT
+                       . ".spamscore FROM " . ARTIFACT . ",user WHERE "
+                       . ARTIFACT . ".submitted_by=user.user_id AND " . ARTIFACT
+                       . ".bug_id=? AND " . ARTIFACT . ".group_id=? LIMIT 1",
                        array($item_id, $group_id));
   $entry = db_fetch_array($result);
   $data[$i]['user_id'] = $entry['user_id'];
@@ -60,35 +60,35 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   if (db_numrows($result))
     {
       while ($entry = db_fetch_array($result))
-	{
-	  $i++;
-	  $data[$i]['user_id'] = $entry['user_id'];
-	  $data[$i]['user_name'] = $entry['user_name'];
-	  $data[$i]['realname'] = $entry['realname'];
-	  $data[$i]['date'] = $entry['date'];
-	  $data[$i]['comment_type'] = $entry['comment_type'];
-	  $data[$i]['content'] = $entry['old_value'];
+        {
+          $i++;
+          $data[$i]['user_id'] = $entry['user_id'];
+          $data[$i]['user_name'] = $entry['user_name'];
+          $data[$i]['realname'] = $entry['realname'];
+          $data[$i]['date'] = $entry['date'];
+          $data[$i]['comment_type'] = $entry['comment_type'];
+          $data[$i]['content'] = $entry['old_value'];
           if ($data[$i]['comment_type'] == 'None')
             $data[$i]['content'] = trackers_decode_value ($entry['old_value']);
-	  $data[$i]['comment_internal_id'] = $entry['bug_history_id'];
-	  $hist_id = $entry['bug_history_id'] + 1;
+          $data[$i]['comment_internal_id'] = $entry['bug_history_id'];
+          $hist_id = $entry['bug_history_id'] + 1;
 
-	  $data[$i]['spamscore'] = $entry['spamscore'];
-	  if ($entry['spamscore'] < 5)
-	    {
-	      # Count the entry only if not a spam.
-	      $max_entries++;
-	    }
+          $data[$i]['spamscore'] = $entry['spamscore'];
+          if ($entry['spamscore'] < 5)
+            {
+              # Count the entry only if not a spam.
+              $max_entries++;
+            }
 
-	  # Special case: if the field_name is svncommit, set the comment_type
-	  # to remind that is not an usual comment.
-	  if ($entry['field_name'] == 'svncommit')
-	    {
-	      $data[$i]['comment_type'] = "SVN";
-	      $data[$i]['revision'] = $entry['new_value'];
-	      $svn_entries_exist = true;
-	    }
-	}
+          # Special case: if the field_name is svncommit, set the comment_type
+          # to remind that is not an usual comment.
+          if ($entry['field_name'] == 'svncommit')
+            {
+              $data[$i]['comment_type'] = "SVN";
+              $data[$i]['revision'] = $entry['new_value'];
+              $svn_entries_exist = true;
+            }
+        }
     }
 
   if ($new_comment)
@@ -100,8 +100,8 @@ function format_item_details ($item_id, $group_id, $ascii=false,
       $data[$i]['realname'] = user_getname(user_getid(), 1);
       $data[$i]['date'] = time();
       $data[$i]['comment_type'] = '';
-      $data[$i]['content'] = "*"._("This is a preview")."*\n\n"
-                             .htmlspecialchars($new_comment);
+      $data[$i]['content'] = "*" . _("This is a preview") . "*\n\n"
+                             . htmlspecialchars($new_comment);
       $data[$i]['comment_internal_id'] = $hist_id;
       $data[$i]['spamscore'] = '0';
     }
@@ -113,7 +113,7 @@ function format_item_details ($item_id, $group_id, $ascii=false,
     {
       global $project;
       if ($project->getUrl("svn_viewcvs") != 'http://'
-	  && $project->getUrl("svn_viewcvs") != '')
+          && $project->getUrl("svn_viewcvs") != '')
         $svn_link .= $project->getUrl("svn_viewcvs");
     }
 
@@ -130,7 +130,8 @@ function format_item_details ($item_id, $group_id, $ascii=false,
   if (!count($data))
     {
       if (!$ascii)
-	$out = '<span class="warn">'._("No followups have been posted").'</span>';
+        $out = '<span class="warn">' . _("No followups have been posted")
+               . '</span>';
       return $out;
     }
 
@@ -161,11 +162,11 @@ Follow-up Comments:\n\n";
     {
       $result_assignee_squad = db_execute("SELECT user_id FROM user_squad
                                            WHERE squad_id=? and group_id=?",
-					  array($assignee_id, $group_id));
+                                          array($assignee_id, $group_id));
       while ($row_assignee_squad = db_fetch_array($result_assignee_squad))
-	{
-	  $assignees_id[$row_assignee_squad['user_id']] = true;
-	}
+        {
+          $assignees_id[$row_assignee_squad['user_id']] = true;
+        }
     }
 
   # Provide a shortcut to the original submission, if more than 5 comments
@@ -175,12 +176,12 @@ Follow-up Comments:\n\n";
     {
       $jumpto_text = _("Jump to the original submission");
       if (ARTIFACT == "cookbook")
-	$jumpto_text = _("Jump to the recipe preview");
+        $jumpto_text = _("Jump to the recipe preview");
 
       print '<p class="center"><span class="xsmall">'
-.'(<a href="#comment0"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/arrows/bottom.png" class="icon" alt="'.'" /> '
-.$jumpto_text."</a>)</span></p>\n";
+        . '(<a href="#comment0"><img src="' . $GLOBALS['sys_home'] . 'images/'
+        . SV_THEME . '.theme/arrows/bottom.png" class="icon" alt="" /> '
+        . $jumpto_text . "</a>)</span></p>\n";
     }
 
   # Loop throuh the follow-up comments and format them.
@@ -193,24 +194,24 @@ Follow-up Comments:\n\n";
     {
       # Ignore if found an entry without date (should not happen).
       if ($entry['date'] < 1)
-	continue;
+        continue;
 
       # Determine if it is a spam.
       $is_spam = false;
       if ($entry['spamscore'] > 4)
-	$is_spam = true;
+        $is_spam = true;
 
       # In ascii output, always ignore spam.
       if ($ascii && $is_spam)
-	continue;
+        continue;
 
       $j++; # Counter for background color.
 
       # Find out what would be this comment number.
       if (!$user_pref_fromoldertonewer)
-	$comment_number = ($max_entries-$i);
+        $comment_number = ($max_entries-$i);
       else
-	$comment_number = $i;
+        $comment_number = $i;
 
       extract(sane_import('get', array('func', 'comment_internal_id')));
       # Handle spam special cases here.
@@ -221,271 +222,268 @@ Follow-up Comments:\n\n";
           if ($entry['comment_internal_id'] < 1 && $func != "flagspam")
             fb(_("This item has been reported to be a spam"), 1);
 
-	  if ($entry['user_id'] != 100)
-	    $spammer_user_name = $entry['user_name'];
-	  else
-	    $spammer_user_name = _("anonymous");
+          if ($entry['user_id'] != 100)
+            $spammer_user_name = $entry['user_name'];
+          else
+            $spammer_user_name = _("anonymous");
 
-	  # If we are in printer mode, simply skip if
-	  if (!empty($_REQUEST['printer']))
-	    continue;
+          # If we are in printer mode, simply skip if.
+          if (!empty($_REQUEST['printer']))
+            continue;
 
-	  $class = utils_get_alt_row_color($j);
+          $class = utils_get_alt_row_color($j);
 
-	  # The admin may actually want to see the incriminated item.
-	  # The submitter too.
-	  if (($func == "viewspam"
+          # The admin may actually want to see the incriminated item.
+          # The submitter too.
+          if (($func == "viewspam"
                && $comment_internal_id == $entry['comment_internal_id'])
               || ($entry['user_id'] != 100 && user_getid() == $entry['user_id']))
-	    {
-	      # Should be item content, without making links, with no markup.
-	      # It is only for checks purpose, nothing else.
-	      $out .= "\n".'<tr class="'.$class.'">'.
-		'<td valign="top"><span class="warn">('
-._("Why is this post is considered to be spam? Users may have reported it to be
+            {
+              # Should be item content, without making links, with no markup.
+              # It is only for checks purpose, nothing else.
+              $out .= "\n" . '<tr class="' . $class . '">'
+                . '<td valign="top"><span class="warn">('
+. _("Why is this post is considered to be spam? Users may have reported it to be
 spam or, if it has been recently posted, it may just be waiting for spamchecks
 to be run.")
-.')</span><br />
-<span class="preinput">'._("Spam content:")
-.'</span><br />
-<br />'.nl2br($entry['content'])."</td>\n"
-.'<td class="'.$class.'extra" id="spam'.$entry['comment_internal_id'].'">'."\n";
+. ')</span><br />
+<span class="preinput">' . _("Spam content:") . "</span><br />\n<br />"
+. nl2br($entry['content']) . "</td>\n"
+. '<td class="' . $class . 'extra" id="spam' . $entry['comment_internal_id']
+. '">' . "\n";
 
-	      $out .= utils_user_link($entry['user_name'],
-                                      $entry['realname'], true)
-                ."<br />\n";
+              $out .= utils_user_link($entry['user_name'],
+                                      $entry['realname'], true) . "<br />\n";
 
-	      if ($is_admin)
-		{
-		  $out .= '<br /><br />(<a title="'
-.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'
-.htmlentities ($_SERVER['PHP_SELF']).'?func=unflagspam&amp;item_id='.$item_id
-.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
-.($comment_number+1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/bool/ok.png" class="icon" alt="'.'" />'
-._("Unflag as spam").'</a>)';
-		}
-	      $out .= "</td></tr>\n";
-	    }
-	  else
-	    {
-	      $out .= "\n".'<tr class="'.$class.'extra">'
-."<td class=\"xsmall\">&nbsp;</td>\n"
-.'<td class="xsmall"><a href="'
-.htmlentities ($_SERVER['PHP_SELF']).'?func=viewspam&amp;item_id='.$item_id
-.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#spam'
-.$entry['comment_internal_id'].'" title="'
-.sprintf(_("Current spam score: %s"), $entry['spamscore']).'">'
-.sprintf(_("Spam posted by %s"), $spammer_user_name).'</a>'
-."</td></tr>\n";
-	    }
-	  continue;
-	}
+              if ($is_admin)
+                {
+                  $out .= "\n<br /><br />" . '(<a title="'
+. sprintf(_("Current spam score: %s"), $entry['spamscore']) . '" href="'
+. htmlentities ($_SERVER['PHP_SELF']) . '?func=unflagspam&amp;item_id=' . $item_id
+. '&amp;comment_internal_id=' . $entry['comment_internal_id'] . '#comment'
+. ($comment_number + 1) . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
+. SV_THEME . '.theme/bool/ok.png" class="icon" alt="" />'
+. _("Unflag as spam") . '</a>)';
+                }
+              $out .= "</td></tr>\n";
+            }
+          else
+            {
+              $out .= "\n" . '<tr class="' . $class . 'extra">'
+. "<td class=\"xsmall\">&nbsp;</td>\n"
+. '<td class="xsmall"><a href="'
+. htmlentities ($_SERVER['PHP_SELF']) . '?func=viewspam&amp;item_id=' . $item_id
+. '&amp;comment_internal_id=' . $entry['comment_internal_id'] . '#spam'
+. $entry['comment_internal_id'] . '" title="'
+. sprintf(_("Current spam score: %s"), $entry['spamscore']) . '">'
+. sprintf(_("Spam posted by %s"), $spammer_user_name) . "</a></td></tr>\n";
+            }
+          continue;
+        }
 
       $i++;
       $comment_type = isset($entry['comment_type']) ? $entry['comment_type']
                                                       : null;
       $is_svn = false;
       if ($comment_type == 'SVN')
-	$is_svn = true;
+        $is_svn = true;
       if ($comment_type == 'None' || $comment_type == '')
-	$comment_type = '';
+        $comment_type = '';
       else
-	$comment_type = '['.$comment_type.']';
+        $comment_type = "[$comment_type]";
 
       if ($ascii)
-	{
-	  $fmt = "\n-------------------------------------------------------\n".
-	    "Date: %-30sBy: %s\n";
-	  if ($comment_type)
-	    $fmt .= "%s\n%s";
-	  else
-	    $fmt .= "%s%s";
-	  $fmt .= "\n";
-	}
+        {
+          $fmt = "\n-------------------------------------------------------\n"
+            . "Date: %-30sBy: %s\n";
+          if ($comment_type)
+            $fmt .= "%s\n%s";
+          else
+            $fmt .= "%s%s";
+          $fmt .= "\n";
+        }
 
       if ($ascii)
-	{
+        {
           if ($entry['realname'])
-            $name = $entry['realname']." <".$entry['user_name'].">";
+            $name = $entry['realname'] . " <" . $entry['user_name'] . ">";
           else
             $name = "Anonymous";
 
-	  $out .= sprintf($fmt,
-			  utils_format_date($entry['date']),
-			  $name,
-			  $comment_type,
-			  utils_unconvert_htmlspecialchars($entry['content'])
-			  );
-	}
+          $out .= sprintf($fmt,
+                          utils_format_date($entry['date']),
+                          $name,
+                          $comment_type,
+                          utils_unconvert_htmlspecialchars($entry['content'])
+                          );
+        }
       else
-	{
-	  # If comment type is special commit thing, unset it so it does
-	  # not appear in text.
-	  if ($is_svn)
-	    unset($comment_type);
-	  if ($comment_type)
-	    {
-	      # Put the comment type in strong.
-	      $comment_type = '<strong>'.$comment_type."</strong><br />\n";
-	    }
+        {
+          # If comment type is special commit thing, unset it so it does
+          # not appear in text.
+          if ($is_svn)
+            unset($comment_type);
+          if ($comment_type)
+            {
+              # Put the comment type in strong.
+              $comment_type = "<strong>$comment_type</strong><br />\n";
+            }
 
-	  $icon = '';
-	  $icon_alt = '';
-	  $class = utils_get_alt_row_color($j);
+          $icon = '';
+          $icon_alt = '';
+          $class = utils_get_alt_row_color($j);
 
-	  # Find out the user id of the comment author.
-	  $poster_id = $entry['user_id'];
+          # Find out the user id of the comment author.
+          $poster_id = $entry['user_id'];
 
-	  # Ignore user 100 (anonymous).
-	  if ($poster_id != 100)
-	    {
-	      # Cosmetics if the user is assignee.
-	      if (array_key_exists($poster_id, $assignees_id))
-		{
-		  # Highlight the latest comment of the assignee.
-		  if ($previous != 1)
-		    {
-		      $class = "boxhighlight";
-		      $previous = 1;
-		    }
-		}
+          # Ignore user 100 (anonymous).
+          if ($poster_id != 100)
+            {
+              # Cosmetics if the user is assignee.
+              if (array_key_exists($poster_id, $assignees_id))
+                {
+                  # Highlight the latest comment of the assignee.
+                  if ($previous != 1)
+                    {
+                      $class = "boxhighlight";
+                      $previous = 1;
+                    }
+                }
 
-	      # Cosmetics if the user is project member (we wont go as far
+              # Cosmetics if the user is project member (we shan't go as far
               # as presenting a different icon for specific roles, like
-	      # manager etc..)
+              # manager).
 
-	      if (member_check($poster_id, $group_id, 'A'))
-		{
-		  # Project admin case: if the group is the admin group,
-		  # show the specific site admin icon.
-		  if ($group_id == $GLOBALS['sys_group_id'])
-		    {
-		      $icon = "site-admin";
-		      $icon_alt = _("Site Administrator");
-		    }
-		  else
-		    {
-		      $icon = "project-admin";
-		      $icon_alt = _("Project Administrator");
-		    }
-		}
-	      elseif (member_check($poster_id, $group_id))
-		{
-		  # Simple project member.
-		  $icon = "project-member";
-		  $icon_alt = _("Project Member");
-		}
-	    }
+              if (member_check($poster_id, $group_id, 'A'))
+                {
+                  # Project admin case: if the group is the admin group,
+                  # show the specific site admin icon.
+                  if ($group_id == $GLOBALS['sys_group_id'])
+                    {
+                      $icon = "site-admin";
+                      $icon_alt = _("Site Administrator");
+                    }
+                  else
+                    {
+                      $icon = "project-admin";
+                      $icon_alt = _("Project Administrator");
+                    }
+                }
+              elseif (member_check($poster_id, $group_id))
+                {
+                  # Simple project member.
+                  $icon = "project-member";
+                  $icon_alt = _("Project Member");
+                }
+            }
 
-	  if (!$quoted)
-	    $text_to_markup = $entry['content'];
-	  else
-	    {
-	      $text_to_markup = str_replace("\n", "&gt; ",
-					    wordwrap("\n".$entry['content'],
+          if (!$quoted)
+            $text_to_markup = $entry['content'];
+          else
+            {
+              $text_to_markup = str_replace("\n", "&gt; ",
+                                            wordwrap("\n" . $entry['content'],
                                             78, "\r\n"));
-	    }
+            }
 
-	  $out .= "\n".'<tr class="'.$class.'"><td valign="top">';
-	  $out .= '<a id="comment'.$comment_number.'" href="#comment'
-                  .$comment_number.'" class="preinput">';
-	  $out .= utils_format_date($entry['date']);
-	  $out .= ', ';
+          $out .= "\n" . '<tr class="' . $class . '"><td valign="top">';
+          $out .= '<a id="comment' . $comment_number . '" href="#comment'
+                  . $comment_number . '" class="preinput">';
+          $out .= utils_format_date($entry['date']);
+          $out .= ', ';
 
-	  if (!$is_svn)
-	    {
-	      if ($comment_number < 1)
-		{
-		  if (ARTIFACT != "cookbook")
-		    $out .= '<strong>'._("original submission:")."</strong>\n";
-		  else
-		    $out .= '<strong>'._("recipe preview:")."</strong>\n";
-		}
-	      else
-		$out .= sprintf(_("comment #%s:"), $comment_number);
-	    }
-	  else
-	    {
-	      # No # in front of the revision number so users don't get
-	      # confused and do use it as a ref that will be made link
-	      # (in the future, we could imagine doing such links).
-	      $out .= sprintf(_("SVN revision %s:"), $entry['revision']);
-	    }
+          if (!$is_svn)
+            {
+              if ($comment_number < 1)
+                {
+                  if (ARTIFACT != "cookbook")
+                    $out .= '<strong>' . _("original submission:") . "</strong>\n";
+                  else
+                    $out .= '<strong>' . _("recipe preview:") . "</strong>\n";
+                }
+              else
+                $out .= sprintf(_("comment #%s:"), $comment_number);
+            }
+          else
+            {
+              # No # in front of the revision number so users don't get
+              # confused and do use it as a ref that will be made link
+              # (in the future, we could imagine doing such links).
+              $out .= sprintf(_("SVN revision %s:"), $entry['revision']);
+            }
 
-	  $out .= "</a><br />\n".$comment_type;
+          $out .= "</a><br />\n$comment_type";
 
           $out .= '<div class="tracker_comment">';
-	  # Full markup only for original submission.
-	  if ($comment_number < 1)
-	    $out .= markup_full($text_to_markup);
-	  else
-	    $out .= markup_rich($text_to_markup);
+          # Full markup only for original submission.
+          if ($comment_number < 1)
+            $out .= markup_full($text_to_markup);
+          else
+            $out .= markup_rich($text_to_markup);
           $out .= "</div>\n";
 
-	  # Add an svn link if relevant (it supports viewcvs syntax).
-	  if ($is_svn && $svn_link)
-	    {
-	      $out .= '<p>(<a href="'.$svn_link.'?rev='.$entry['revision']
-                      .'&amp;view=rev">'
-                      .sprintf(_("Browse SVN revision %s"), $entry['revision'])
-                      ."</a>)</p>\n";
-	    }
+          # Add an svn link if relevant (it supports viewcvs syntax).
+          if ($is_svn && $svn_link)
+            {
+              $out .= '<p>(<a href="' . $svn_link . '?rev=' . $entry['revision']
+                      . '&amp;view=rev">'
+                      . sprintf(_("Browse SVN revision %s"), $entry['revision'])
+                      . "</a>)</p>\n";
+            }
 
-	  $out .="</td>\n";
-	  $out .= '<td class="'.$class.'extra">'
-                  .utils_user_link($entry['user_name'],
+          $out .="</td>\n";
+          $out .= '<td class="' . $class . 'extra">'
+                  . utils_user_link($entry['user_name'],
                                    $entry['realname'], true);
 
-	  if ($icon)
-	    {
-	      $out .= '<br /><span class="help" title="'.$icon_alt
-                      .'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-                      .'.theme/roles/'.$icon.'.png" alt="'.$icon_alt
-                      .'" /></span>';
-	    }
+          if ($icon)
+            {
+              $out .= '<br /><span class="help" title="' . $icon_alt
+                      . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
+                      . SV_THEME . '.theme/roles/' . $icon . '.png" alt="'
+                      . $icon_alt . '" /></span>';
+            }
 
-	  if ($poster_id != 100 && array_key_exists($poster_id, $assignees_id))
-	    {
-	      $out .= '<span class="help" title="'._("In charge of this item.")
-                      .'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-                      .'.theme/roles/assignee.png" alt="'
-                      ._("In charge of this item.").'" /></span>';
-	    }
+          if ($poster_id != 100 && array_key_exists($poster_id, $assignees_id))
+            {
+              $out .= '<span class="help" title="' . _("In charge of this item.")
+                      . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
+                      . SV_THEME . '.theme/roles/assignee.png" alt="'
+                      . _("In charge of this item.") . '" /></span>';
+            }
 
-	  # If not a member of the project, allow to mark as spam.
-	  # For performance reason, do not check here if the user already
-	  # flagged the comment as spam, it will be done only if he tries to
-	  # to it twice.
-	  if (!$is_svn && user_isloggedin() && !$icon
+          # If not a member of the project, allow to mark as spam.
+          # For performance reason, do not check here if the user already
+          # flagged the comment as spam, it will be done only if he tries to
+          # to it twice.
+          if (!$is_svn && user_isloggedin() && !$icon
               && $poster_id != user_getid() && empty($_REQUEST['printer']))
-	    {
+            {
               # Surround by two line breaks, to keep that link clearly
-	      # separated from anything else, to avoid clicks by error.
-	      $out .= '<br /><br />(<a title="'
-.sprintf(_("Current spam score: %s"), $entry['spamscore']).'" href="'
-.htmlentities ($_SERVER['PHP_SELF']).'?func=flagspam&amp;item_id='.$item_id
-.'&amp;comment_internal_id='.$entry['comment_internal_id'].'#comment'
-.($comment_number-1).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/misc/trash.png" class="icon" alt="'.'" />'
-._("Flag as spam")."</a>)<br /><br />\n";
-	    }
-	  $out .= "</td></tr>\n";
-	}
+              # separated from anything else, to avoid clicks by error.
+              $out .= '<br /><br />(<a title="'
+. sprintf(_("Current spam score: %s"), $entry['spamscore']) . '" href="'
+. htmlentities ($_SERVER['PHP_SELF']) . '?func=flagspam&amp;item_id=' . $item_id
+. '&amp;comment_internal_id=' . $entry['comment_internal_id'] . '#comment'
+. ($comment_number - 1) . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
+. SV_THEME . '.theme/misc/trash.png" class="icon" alt="" />'
+. _("Flag as spam") . "</a>)<br /><br />\n";
+            }
+          $out .= "</td></tr>\n";
+        }
     }
-
   $out .= ($ascii ? "\n\n\n" : "</table>\n");
 
   return $out;
 }
 
-function format_item_changes ($changes,$item_id,$group_id)
+function format_item_changes ($changes, $item_id, $group_id)
 {
   # ASCII must not be translated.
   global $sys_datefmt;
 
   # FIXME: strange, with %25s it does not behave exactly like
-  # trackers_field_label_display
+  # trackers_field_label_display.
   $fmt = "%24s: %23s => %-23s\n";
 
   $separator = "\n    _______________________________________________________\n\n";
@@ -497,7 +495,7 @@ function format_item_changes ($changes,$item_id,$group_id)
     {
       # If both removed and added items are empty skip - Sanity check.
       if (empty($h['del']) && empty($h['add']))
-	continue;
+        continue;
 
       if ($field == "details" || $field == "attach")
         continue;
@@ -509,16 +507,16 @@ function format_item_changes ($changes,$item_id,$group_id)
 
       $label = trackers_data_get_label($field);
       if (!$label)
-	$label = $field;
+        $label = $field;
       $out .= sprintf($fmt, $label,
-		      isset($h['del']) ? $h['del'] : null,
-		      isset($h['add']) ? $h['add'] : null);
+                      isset($h['del']) ? $h['del'] : null,
+                      isset($h['add']) ? $h['add'] : null);
     }
 
   if ($out)
     {
-      $out = "Update of ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
-             ." (project ".group_getunixname($group_id)."):\n\n".$out;
+      $out = "Update of " . utils_get_tracker_prefix(ARTIFACT) . " #" . $item_id
+             ." (project " . group_getunixname($group_id) . "):\n\n" . $out;
     }
 
   # Process special cases: follow-up comments.
@@ -528,17 +526,17 @@ function format_item_changes ($changes,$item_id,$group_id)
         $out .= $separator;
 
       $out_com = "Follow-up Comment #"
-                 .db_numrows(trackers_data_get_followups($item_id));
+                 . db_numrows(trackers_data_get_followups($item_id));
       if (!$out)
         {
-          $out_com .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
-                      ." (project ".group_getunixname($group_id).")";
+          $out_com .= ", " . utils_get_tracker_prefix(ARTIFACT) . " #" . $item_id
+                      . " (project " . group_getunixname($group_id) . ")";
         }
 
       $out_com .= ":\n\n";
       if ($changes['details']['type'] != 'None'
           && $changes['details']['type'] != '(Error - Not Found)')
-	$out_com .= '['.$changes['details']['type']."]\n";
+        $out_com .= '[' . $changes['details']['type'] . "]\n";
       $out_com .= utils_unconvert_htmlspecialchars($changes['details']['add']);
       unset($changes['details']);
 
@@ -554,21 +552,20 @@ function format_item_changes ($changes,$item_id,$group_id)
       $out_att = "Additional Item Attachment";
       if (!$out)
         {
-          $out_att .= ", ".utils_get_tracker_prefix(ARTIFACT)." #".$item_id
-                      ." (project ".group_getunixname($group_id).")";
+          $out_att .= ", " . utils_get_tracker_prefix(ARTIFACT) . " #" . $item_id
+                      . " (project " . group_getunixname($group_id) . ")";
         }
       $out_att .= ":\n\n";
 
       foreach ($changes['attach'] as $file)
-	{
-	  $out_att .= sprintf("File name: %-30s Size:%d KB\n"
-                             ."    <%s>\n\n",
-			      $file['name'],
-			      intval($file['size']/1024),
-                              "https://".$GLOBALS['sys_default_domain']
-                              .'/file/'.$file['name'].'?file_id='.$file['id']);
+        {
+          $out_att .= sprintf("File name: %-30s Size:%d KB\n    <%s>\n\n",
+                              $file['name'], intval($file['size']/1024),
+                              "https://" . $GLOBALS['sys_default_domain']
+                              . '/file/' . $file['name'] . '?file_id='
+                              . $file['id']);
 
-	}
+        }
       unset($changes['attach']);
       $out .= $out_att;
     }
@@ -576,13 +573,13 @@ function format_item_changes ($changes,$item_id,$group_id)
   return $out;
 }
 
-function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=false)
+function format_item_attached_files ($item_id, $group_id, $ascii = false,
+                                     $sober = false)
 {
   global $sys_datefmt, $HTML;
   $out = '';
 
-  # ASCII must not be translated
-
+  # ASCII must not be translated.
   if (!$sober)
     {
       $result = trackers_data_get_attached_files($item_id);
@@ -603,9 +600,9 @@ function format_item_attached_files ($item_id,$group_id,$ascii=false,$sober=fals
   if ($rows <= 0)
     {
       if ($ascii)
-	$out = "";
+        $out = "";
       else
-	$out = '<span class="warn">'._("No files currently attached").'</span>';
+        $out = '<span class="warn">' . _("No files currently attached") . '</span>';
       return $out;
     }
 
@@ -618,14 +615,14 @@ File Attachments:\n\n";
   else
     {
       if (!$sober)
-	$out .= $HTML->box_top(_("Attached Files"),'',1);
+        $out .= $HTML->box_top(_("Attached Files"),'',1);
     }
 
   # Determine what the print out format is based on output type (Ascii, HTML).
   if ($ascii)
     {
       $fmt = "\n-------------------------------------------------------\n".
-	 "Date: %s  Name: %s  Size: %s   By: %s\n%s\n%s";
+         "Date: %s  Name: %s  Size: %s   By: %s\n%s\n%s";
     }
 
   # Loop throuh the attached files and format them.
@@ -633,70 +630,72 @@ File Attachments:\n\n";
     {
       $item_file_id = db_result($result, $i, 'file_id');
       $href = $GLOBALS['sys_home'].ARTIFACT
-              ."/download.php?file_id=$item_file_id";
+              . "/download.php?file_id=$item_file_id";
 
       if ($ascii)
-	{
-	  $out .= sprintf($fmt,
-			  utils_format_date(db_result($result, $i, 'date')),
-			  db_result($result, $i, 'filename'),
-			  utils_filesize(0, intval(db_result($result, $i,
+        {
+          $out .= sprintf($fmt,
+                          utils_format_date(db_result($result, $i, 'date')),
+                          db_result($result, $i, 'filename'),
+                          utils_filesize(0, intval(db_result($result, $i,
                                                              'filesize'))),
-			  db_result($result, $i, 'user_name'),
-			  db_result($result, $i, 'description'),
-			  '<http://'.$GLOBALS['sys_default_domain']
-                          .utils_unconvert_htmlspecialchars($href).'>');
-	}
+                          db_result($result, $i, 'user_name'),
+                          db_result($result, $i, 'description'),
+                          '<http://' . $GLOBALS['sys_default_domain']
+                          . utils_unconvert_htmlspecialchars($href) . '>');
+        }
       else
-	{
-	  $html_delete = '';
-	  if (member_check(0,$group_id,
-              member_create_tracker_flag(ARTIFACT).'2') && !$sober)
-	    {
-	      $html_delete = '<span class="trash"><a href="'
-.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_file&amp;item_id='.$item_id
-.'&amp;item_file_id='.$item_file_id.'">'
-.'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
-	    }
+        {
+          $html_delete = '';
+          if (member_check(0, $group_id,
+                           member_create_tracker_flag(ARTIFACT) . '2')
+              && !$sober)
+            {
+              $html_delete = '<span class="trash"><a href="'
+. htmlentities ($_SERVER['PHP_SELF']) . '?func=delete_file&amp;item_id='
+. $item_id . '&amp;item_file_id=' . $item_file_id . '">'
+. '<img src="' . $GLOBALS['sys_home'] . 'images/' . SV_THEME
+. '.theme/misc/trash.png" class="icon" alt="' . _("Delete") . '" /></a></span>';
+            }
 
-	  if ($sober)
-	    $out .= '<div>&nbsp;&nbsp;&nbsp;- ';
-	  else
-	    {
-	      $out .= '<div class="'.utils_get_alt_row_color($i).'">'
-                      .$html_delete;
-	    }
+          if ($sober)
+            $out .= '<div>&nbsp;&nbsp;&nbsp;- ';
+          else
+            {
+              $out .= '<div class="' . utils_get_alt_row_color($i) . '">'
+                      . $html_delete;
+            }
 
-	  $out .= '<a href="'.$href.'">file #'.$item_file_id.(": ").'&nbsp;';
+          $out .= '<a href="' . $href . '">file #' . $item_file_id . (": ")
+                  . '&nbsp;';
 
-	  if ($sober)
-	      $out .= '<a href="' . $href . '">'
+          if ($sober)
+              $out .= '<a href="' . $href . '">'
                       . htmlspecialchars (db_result($result, $i, 'filename'))
                       .'</a>';
-	  else
-	    {
+          else
+            {
 # TRANSLATORS: the first argument is file name, the second is user's name.
-	      $out .= sprintf(_('<!-- file -->%1$s added by %2$s'),
+              $out .= sprintf(_('<!-- file -->%1$s added by %2$s'),
                               htmlspecialchars (db_result($result, $i, 'filename'))
                               . '</a>',
                               utils_user_link(db_result($result, $i,
                                                         'user_name')));
-	    }
+            }
 
-	  $out .= ' <span class="smaller">('
-                  .utils_filesize(0, db_result($result, $i, 'filesize'));
+          $out .= ' <span class="smaller">('
+                  . utils_filesize(0, db_result($result, $i, 'filesize'));
 
-	  if (db_result($result, $i, 'filetype'))
-	    $out .= ' - '.db_result($result, $i, 'filetype');
+          if (db_result($result, $i, 'filetype'))
+            $out .= ' - ' . db_result($result, $i, 'filetype');
 
-	  if (db_result($result, $i, 'description'))
-	    {
-	      $out .= ' - '
-                .markup_basic(db_result($result, $i, 'description'));
-	    }
-	  $out .= ")</span></div>\n";
-	}
+          if (db_result($result, $i, 'description'))
+            {
+              $out .= ' - '
+                . markup_basic(db_result($result, $i, 'description'));
+            }
+          $out .= ")</span></div>\n";
+        }
     }
 
   if ($ascii || $sober)
@@ -708,7 +707,7 @@ File Attachments:\n\n";
 }
 
 # Show the files attached to this bug.
-function format_item_cc_list ($item_id,$group_id, $ascii=false)
+function format_item_cc_list ($item_id, $group_id, $ascii = false)
 {
 # ASCII must not be translated.
   global $sys_datefmt, $HTML;
@@ -727,7 +726,7 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
     }
 
   # Header first an determine what the print out format is
-  # based on output type (Ascii, HTML).
+  # based on output type (ASCII, HTML).
   if ($ascii)
     {
       $out .= "    _______________________________________________________\n\n"
@@ -745,23 +744,23 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
     {
 
       if ($ascii)
-	{
-	  # We wont provide the CC address in the mail, we keep that
-	  # information only on the web interface.
-	  $email = "Available only on the item webpage";
-	}
+        {
+          # We shan't provide the CC address in the mail, we keep that
+          # information only on the web interface.
+          $email = "Available only on the item webpage";
+        }
       else
-	{
-	  $email = db_result($result, $i, 'email');
+        {
+          $email = db_result($result, $i, 'email');
 
-	  # If email is numeric, it must be an user id. Try to convert it
-	  # to the username.
-	  if (ctype_digit($email) && user_exists($email))
-	    { $email =  user_getname($email); }
+          # If email is numeric, it must be an user id. Try to convert it
+          # to the username.
+          if (ctype_digit($email) && user_exists($email))
+            $email =  user_getname($email);
 
-	  # HTML preformat the address.
-	  $email = utils_email($email);
-	}
+          # HTML preformat the address.
+          $email = utils_email($email);
+        }
       $item_cc_id = db_result($result, $i, 'bug_cc_id');
       $href_cc = $email;
 
@@ -772,74 +771,76 @@ function format_item_cc_list ($item_id,$group_id, $ascii=false)
       # one of the page viewer, not the one of that made the CC to be added.
       $comment = db_result($result, $i, 'comment');
       if ($comment == '-SUB-')
-	{
-	  if ($ascii)
-	    $comment = 'Submitted the item';
-	  else
-	    $comment = _('Submitted the item');
-	}
+        {
+          if ($ascii)
+            $comment = 'Submitted the item';
+          else
+            $comment = _('Submitted the item');
+        }
 
       if ($comment == '-COM-')
-	{
-	  if ($ascii)
-	    $comment = 'Posted a comment';
-	  else
-	    $comment = _('Posted a comment');
-	}
+        {
+          if ($ascii)
+            $comment = 'Posted a comment';
+          else
+            $comment = _('Posted a comment');
+        }
 
       if ($comment == '-UPD-')
-	{
-	  if ($ascii)
-	    $comment = 'Updated the item';
-	  else
-	    $comment = _('Updated the item');
-	}
+        {
+          if ($ascii)
+            $comment = 'Updated the item';
+          else
+            $comment = _('Updated the item');
+        }
 
       if ($comment == '-VOT-'
         # Older procedure in votes.php used this comment with trackers_add_cc ().
           || $comment == 'Voted in favor of this item')
-	{
-	  if ($ascii)
-	    $comment = 'Voted in favor of this item';
-	  else
-	    $comment = _('Voted in favor of this item');
-	}
+        {
+          if ($ascii)
+            $comment = 'Voted in favor of this item';
+          else
+            $comment = _('Voted in favor of this item');
+        }
 
       if ($ascii)
-	$out .= sprintf($fmt, $email, $comment);
+        $out .= sprintf($fmt, $email, $comment);
       else
-	{
-	  # Show CC delete icon if one of the condition is met:
-	  # a) current user is a tracker manager;
-	  # b) then CC name is the current user;
-	  # c) the CC email address matches the one of the current user;
-	  # d) the current user is the person who added a given name in CC list.
-	  if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2')
+        {
+          # Show CC delete icon if one of the condition is met:
+          # a) current user is a tracker manager;
+          # b) then CC name is the current user;
+          # c) the CC email address matches the one of the current user;
+          # d) the current user is the person who added a given name in CC list.
+          if (member_check(0, $group_id,
+                           member_create_tracker_flag(ARTIFACT) . '2')
               || (user_getname(user_getid()) == $email)
               || (user_getemail(user_getid()) == $email)
               || (user_getname(user_getid()) == db_result($result, $i,
                                                           'user_name')))
             {
               $html_delete = '<span class="trash"><a href="'
-.htmlentities ($_SERVER['PHP_SELF']).'?func=delete_cc&amp;item_id='.$item_id
-.'&amp;item_cc_id='.$item_cc_id.'">'
-.'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-.'.theme/misc/trash.png" class="icon" alt="'._("Delete").'" /></a></span>';
-	    }
-	  else
-	    $html_delete = '';
+. htmlentities ($_SERVER['PHP_SELF']) . '?func=delete_cc&amp;item_id='
+. $item_id . '&amp;item_cc_id=' . $item_cc_id . '">'
+. '<img src="' . $GLOBALS['sys_home'] . 'images/' . SV_THEME
+. '.theme/misc/trash.png" class="icon" alt="' . _("Delete") . '" /></a></span>';
+            }
+          else
+            $html_delete = '';
 
-          $out .= '<li class="'.utils_get_alt_row_color($i).'">'.$html_delete
+          $out .= '<li class="' . utils_get_alt_row_color($i) . '">'
+            . $html_delete
+            . sprintf(
 # TRANSLATORS: the first argument is email, the second is user's name.
-	  .sprintf(_('<!-- email --> %1$s added by %2$s'), $email,
-                   utils_user_link(db_result($result, $i, 'user_name')));
+                      _('<!-- email --> %1$s added by %2$s'), $email,
+                      utils_user_link(db_result($result, $i, 'user_name')));
           if ($comment)
-	    $out .= ' <span class="smaller">('.markup_basic($comment).')</span>';
+            $out .= ' <span class="smaller">(' . markup_basic($comment)
+                    . ')</span>';
         }
     }
-
   $out .= ($ascii ? "\n" : $HTML->box_bottom(1));
-
   return($out);
 }
 ?>

@@ -451,8 +451,6 @@ priority and open/close items"))) . "</p>\n";
     print html_hidsubpart_footer();
     print '</span>';
 
-# Read Comments.
-
     print html_hidsubpart_header("discussion", _("Discussion"));
 
     # FIXME: quoted is broken with the new markup feature.
@@ -463,9 +461,6 @@ priority and open/close items"))) . "</p>\n";
     print "<p>&nbsp;</p>\n";
     print html_hidsubpart_footer();
 
-# Attached Files.
-
-    # Deployed by default, important item info.
     print html_hidsubpart_header("attached", _("Attached Files"));
 
     print '<p class="noprint">';
