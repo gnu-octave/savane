@@ -219,20 +219,18 @@ li.topmenuitemsubmenu a:hover {
 	border: thin dotted #e2c4f2;
 }
 
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
- background-color: #e8f0ff;
- border: thin solid #004cd1;
- color: #004cd1;
+/* Forms */
+button,input
+{
+  background-color: #e8f0ff;
+  border: thin solid #004cd1;
+  color: #004cd1;
 }
 
-input:hover { background-color: #d6e9ff; }
+button:hover,input:hover
+{
+  background-color: #d6e9ff;
+}
 
 select {
  background-color: #e8f0ff;
@@ -250,13 +248,7 @@ textarea {
 
 textarea:hover { background-color: #d6e9ff; }
 
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora { background-color: #fff2f2; border: thin solid #ef6e6e; }
 .priorb { background-color: #ffe8e8; border: thin solid #ef6e6e; }
 .priorc { background-color: #ffe0e0; border: thin solid #ef6e6e; }
@@ -266,4 +258,3 @@ textarea:hover { background-color: #d6e9ff; }
 .priorg { background-color: #ffbfbf; border: thin solid #ef6e6e; }
 .priorh { background-color: #ffb7b7; border: thin solid #ef6e6e; }
 .priori { background-color: #ffadad; border: thin solid #ef6e6e; }
-

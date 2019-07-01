@@ -24,7 +24,7 @@
 
 /* THIS CSS DEFINES THE PRINTER MODE, IT IS NOT SUPPOSED TO BE USE OTHERWISE */
 
-/* GUIDELINES VERSION FOLLOWED: 1.17 */
+/* GUIDELINES VERSION FOLLOWED: 1.18 */
 
 
 /**********************************************************************
@@ -191,9 +191,10 @@ h4 a {
 }
 
 
-input {
-	background-color: white;
-  	border: thin solid black;
+button,input
+{
+  background-color: white;
+  border: thin solid black;
 }
 
 hr { 

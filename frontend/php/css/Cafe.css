@@ -190,22 +190,22 @@ ul.topmenuitemsubmenu li {
 	text-align: left;
 }
 
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
-	background-color: #f2e6ab;
-	font-weight: bold;
-	border: 0;
-	border-bottom: thin dashed #167c3a;
-	color: #086629;
+/* Forms */
+button,input
+{
+  background-color: #f2e6ab;
+  font-weight: bold;
+  border: 0;
+  border-bottom: thin dashed #167c3a;
+  color: #086629;
 }
 
-input:hover { background-color: #9ae2b1; text-decoration: none; color: #034418; }
+button:hover,input:hover
+{
+  background-color: #9ae2b1;
+  text-decoration: none;
+  color: #034418;
+}
 
 select {
  background-color: #f2e6ab;
@@ -226,4 +226,3 @@ textarea {
 }
 
 textarea:hover { background-color: #9ae2b1; text-decoration: none; color: #034418;}
-

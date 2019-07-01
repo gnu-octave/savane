@@ -197,30 +197,23 @@ td.topmenuitem {
 	color:				#333333;
 }
 
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input,textarea {
+/* Forms */
+button,input,textarea {
 	background-color:	#fff9e0;
 	color:				#741212;
 }
-input:hover,textarea:hover {
+button:hover,input:hover,textarea:hover {
 	background-color:	#fff9e0;
 	color:				#741212;
 }
-input:focus,textarea:focus {
-	background-color:	#fff9f5;
-	color:				#741212;
+button:focus,input:focus,textarea:focus
+{
+  background-color: #fff9f5;
+  color: #741212;
 }
 select {
 	background-color:	#fff9e0;
 	color:				#841212;
 }
 
-div.inputfield {
-	margin-left:		5px;
-/*	border: 			thin solid #e0c080;*/
-}
+div.inputfield { margin-left: 5px; }

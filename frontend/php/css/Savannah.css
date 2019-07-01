@@ -288,23 +288,20 @@ li.topmenuitemsubmenu:hover {
 }
 
 
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
-	background-color: #fff9e0;
-	color: #841212;
+/* Forms */
+button,input
+{
+  background-color: #fff9e0;
+  color: #841212;
 }
-input:hover { color: #ff0000; }
+button:hover,input:hover
+{
+  color: #ff0000;
+}
 select {
 	background-color: #fff9e0;
 	color: #841212;
 }
-
-/* select:hover { color: #ff0000; } */
 
 textarea {
 	background-color: #fff9e0;

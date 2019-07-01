@@ -110,8 +110,9 @@ Boxes:
 Forms:
 ------
 
-The following forms items can be used:
+The following form items can be used:
 	* "input".
+	* "button".
 	* "select".
 	* "textarea".
 	* "preinput" defines the text before an input field.

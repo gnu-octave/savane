@@ -24,7 +24,6 @@
 
 @import "internal/base.css";
 
-
 /* Very basic (mostly text) items: */
 
 body {
@@ -132,14 +131,7 @@ li.topmenuitemsubmenu a:hover {
 	color: white;
 }
 
-
-
-/**********************************************************************
- *
- * Boxes
- *
- **********************************************************************/
-
+/* Boxes */
 .box { background-color: #bababa; border-spacing: 0; border: thin solid #736298; }
 .boxleft { background-color: #bababa; border-spacing: 0; border: thin solid #736298; }
 .boxtitle {
@@ -158,30 +150,19 @@ li.topmenuitemsubmenu a:hover {
 .boxhighlight { background-color: #ffffff; text-align: left; color: #333333; }
 .boxoptions { background-color: #c9c9c9; text-align: left; color: #333333; }
 
-
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-
-input { background-color: white; color: black; }
+/* Forms */
+button,input
+{
+  background-color: white;
+  color: black;
+}
 select { background-color: white; color: black; }
 textarea { background-color: white; color: black; }
 
 /* text before inputs */
-.preinput {
-	font-style: italic;
-}
+.preinput { font-style: italic; }
 
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora { background-color: #f2ffff; border: thin solid #c9c9c9; }
 .priorb { background-color: #edf9f9; border: thin solid #c9c9c9; }
 .priorc { background-color: #e8f4f4; border: thin solid #c9c9c9; }
@@ -191,4 +172,3 @@ textarea { background-color: white; color: black; }
 .priorg { background-color: #cbd6d6; border: thin solid #c9c9c9; }
 .priorh { background-color: #bfc9c9; border: thin solid #c9c9c9; }
 .priori { background-color: #b5bfbf; border: thin solid #c9c9c9; }
-

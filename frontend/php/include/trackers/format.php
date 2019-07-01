@@ -23,7 +23,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function format_item_details ($item_id, $group_id, $ascii = false,
-                              $item_assigned_to = false, $new_comment = false)
+                              $item_assigned_to = false, $new_comment = false,
+                              $allow_quote = true)
 {
   # ASCII must not be translated.
   # Format the details rows from trackers_history.
@@ -366,7 +367,11 @@ to be run.")
           else
             $out .= sprintf(_("comment #%s:"), $comment_number);
 
-          $out .= "</a><br />\n$comment_type";
+          $out .= "</a>&nbsp;";
+          if ($allow_quote)
+            $out .=  '<button name="quote_no" value="' . $comment_number
+                     . '">' . _('Quote') . "</button>";
+          $out .= "<br />\n$comment_type";
 
           $out .= '<div class="tracker_comment">';
           # Full markup only for original submission.

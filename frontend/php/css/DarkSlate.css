@@ -254,27 +254,24 @@ li.topmenuitemsubmenu:hover {
 }
 
 
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
-input:hover { background: #526929; color: #f5deb3; }
+/* Forms */
+button,input
+{
+  background-color: #40656b;
+  border: thin solid #526929;
+  color: #f5deb3;
+}
+button:hover,input:hover
+{
+  background: #526929;
+  color: #f5deb3;
+}
 select { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
 select:hover { background: #526929;  color: #f5deb3; }
 textarea { background-color: #40656b; border: thin solid #526929; color: #f5deb3; }
 textarea:hover { background: #526929; color: #f5deb3; }
 
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
-
+/* Priorities */
 .priora { background-color: #31513b; border: thin dotted #243924; }
 
 .priorb { background-color: #426f51; border: thin dotted #243924; } /* 140,41,43 */
@@ -286,7 +283,6 @@ textarea:hover { background: #526929; color: #f5deb3; }
 .priorh { background-color: #6f5142; border: thin dotted #243924; } /* 20,41,43 */
 .priori { background-color: #6f4242; border: thin dotted #243924; } /* 0,41,43 */
 .priora { background-color: #31513b; border: thin dotted #243924; }
-
 
 .prioraclosed { color: black }
 .priorbclosed { color: black }

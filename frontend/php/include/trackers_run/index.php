@@ -5,7 +5,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2002-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -53,6 +53,8 @@ extract(sane_import('post',
         'submitreturn',
         # Button to preview comment.
         'preview',
+        # Comment to quote.
+        'quote_no'
         )));
 
 # Spam-related
@@ -84,7 +86,11 @@ $sober = false;
 $address = '';
 
 $func = $func or 'browse';
-if ($preview)
+
+$process_comment = false;
+if ($preview || isset($quote_no))
+  $process_comment = true;
+if ($process_comment)
   $submitreturn = 1;
 switch ($func)
 {
@@ -367,7 +373,7 @@ to select the one you want to use to compose your answer."));
      # Attach new file if there is one Do that first so it can update
      # the comment (attach_several_files will use sane_() functions
      # to get the the necessary info).
-     if (!$preview)
+     if (!$process_comment)
        {
          list($changed, $additional_comment) =
            trackers_attach_several_files($item_id, $group_id, $changes);
@@ -440,7 +446,7 @@ to select the one you want to use to compose your answer."));
                                    $group_id,
                                    $new_vote);
            }
-       } # !$preview
+       } # !$process_comment
 
      # Now handle notification, after all necessary actions has been.
      if ($changed)
@@ -491,7 +497,7 @@ to select the one you want to use to compose your answer."));
        {
          include '../include/trackers_run/browse.php';
        }
-     elseif (!$preview)
+     elseif (!$process_comment)
        { # Ends up including tracker item number in url, if present.
          if (isset ($item_id))
            header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $item_id);
@@ -524,7 +530,7 @@ to select the one you want to use to compose your answer."));
                           'check_value' => $fields['check'],
                           'details' => $fields['comment']));
  if (!user_isloggedin() && (!isset($_POST['check'])
-     || ($_POST['check'] != 1984 && !$preview)))
+     || ($_POST['check'] != 1984 && !$process_comment)))
    exit_error(_("You're not logged in and you didn't enter the magic
 anti-spam number, please go back!"));
 
@@ -575,7 +581,8 @@ anti-spam number, please go back!"));
      # Attach new file if there is one.
      # Do that first so it can update the comment.
      $additional_comment = '';
-     if (!$preview && group_restrictions_check($group_id, ARTIFACT, 2))
+     if (!$process_comment
+         && group_restrictions_check($group_id, ARTIFACT, 2))
        {
          list($changed, $additional_comment) =
            trackers_attach_several_files($item_id,
@@ -591,7 +598,7 @@ anti-spam number, please go back!"));
          $comment .= $additional_comment;
          # For none project members force the comment type to None (100).
          # The delay for spamcheck will be called from this function:
-         if (!$preview)
+         if (!$process_comment)
            {
              $comment = htmlspecialchars($comment);
              trackers_data_add_history('details',$comment,'',$item_id,100);
@@ -621,7 +628,7 @@ anti-spam number, please go back!"));
        }
 
      # Add new cc if any, only accepted from logged in users.
-     if (!$preview && $add_cc && user_isloggedin())
+     if (!$process_comment && $add_cc && user_isloggedin())
        {
          # No notification needs to be sent when a cc is added,
          # it is irrelevant to the item itself.
@@ -634,7 +641,7 @@ anti-spam number, please go back!"));
 
      # Add vote, if configured to be accepted from non members or if
      # the user is member.
-     if (!$preview && trackers_data_is_used("vote"))
+     if (!$process_comment && trackers_data_is_used("vote"))
        {
          if (trackers_data_is_showed_on_add("vote") && user_isloggedin()
              || member_check(user_getid(), $group_id))
@@ -656,7 +663,7 @@ anti-spam number, please go back!"));
          $address .= $additional_address;
          trackers_mail_followup($item_id, $address, $changes);
        }
-     if ($preview)
+     if ($process_comment)
        include '../include/trackers_run/detail.php';
      else
        include '../include/trackers_run/browse.php';

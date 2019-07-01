@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2002-2006  Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -282,6 +282,12 @@ authentication level.");
 
       if (!$item_discussion_lock)
         {
+          if (isset($quote_no))
+            {
+              $quote = trackers_data_quote_comment ($item_id, $quote_no);
+              if ($quote !== false)
+                $comment .= $quote;
+            }
           print '<p class="noprint"><span class="preinput"> '
                 . _("Add a New Comment") . ' ' . markup_info("rich");
           print form_submit (_('Preview'), 'preview')
@@ -312,7 +318,7 @@ _("Please <a href=\"%s\">log in</a>, so followups can be emailed to you."),
   $new_comment = $preview? $comment: false;
 
   print show_item_details($item_id, $group_id, 0, $item_assigned_to,
-                          $new_comment);
+                          $new_comment, !$item_discussion_lock);
 
   print "<p>&nbsp;</p>\n";
   print html_hidsubpart_footer();

@@ -302,15 +302,9 @@ li.topmenuitemsubmenuseparator {
   border-bottom: thin solid #d3c99c;
 }
 
-
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
+/* Forms */
+button,input
+{
   background-color: #ffffff;
   color: #000000;
 }
@@ -328,13 +322,7 @@ textarea {
   color: #000000;
 }
 
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 /* base.css CSS provides almost the same but small priority are lighter,
    so the contrast is more important
 

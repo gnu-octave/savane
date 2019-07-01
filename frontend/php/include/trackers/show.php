@@ -571,10 +571,11 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
 }
 
 function show_item_details ($item_id, $group_id, $ascii = false,
-                            $item_assigned_to = false, $new_comment = false)
+                            $item_assigned_to = false, $new_comment = false,
+                            $allow_quote = true)
 {
   return format_item_details($item_id, $group_id, $ascii, $item_assigned_to,
-                             $new_comment);
+                             $new_comment, $allow_quote);
 }
 
 function show_item_attached_files ($item_id,$group_id, $ascii=false, $sober=false)

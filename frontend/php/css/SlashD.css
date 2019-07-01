@@ -3,17 +3,17 @@
  * Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
  *
  * This file is part of Savane.
- * 
+ *
  * Savane is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * Savane is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -26,7 +26,7 @@
 
 /* Very basic (mostly text) items: */
 
-body { 
+body {
   margin-top: 1%;
   margin-left: 1%;
   margin-right: 1%;
@@ -60,7 +60,7 @@ h4 {
   color: #006666
 }
 
-.highlight { 
+.highlight {
   background-color: #ffe2e6;
 }
 
@@ -80,7 +80,7 @@ h4 {
   color: black;
 }
 
-.main { 
+.main {
   background-color: white;
   vertical-align: top;
   border-spacing: 0;
@@ -94,7 +94,7 @@ h4 {
  *
  **********************************************************************/
 
-.menu { 
+.menu {
   background: white;
   vertical-align: top;
   border-spacing: 0;
@@ -103,20 +103,20 @@ h4 {
   color: black;
 }
 
-.menutitle { 
+.menutitle {
   background-color: #cccccc;
   vertical-align: top;
   font-weight: bold;
   text-align: left;
 }
-.menuitem { 
+.menuitem {
   vertical-align: top;
   text-align: right;
 }
 
-.menusearch { 
+.menusearch {
   font-size: xx-small;
-} 
+}
 
 .menuitem a:hover {
   background-color: #eaeaea;
@@ -124,7 +124,7 @@ h4 {
   color: #000000;
 }
 
-.topmenutitle { 
+.topmenutitle {
   font-weight: bold;
 }
 
@@ -146,7 +146,7 @@ li.topmenuitemsubmenu a:hover {
 	color: black;
 }
 
-.tabs { 
+.tabs {
   color: #006d68;
 }
 
@@ -174,16 +174,16 @@ li.topmenuitemsubmenu a:hover {
  *
  **********************************************************************/
 
-.box { 
+.box {
   color: #000000;
 }
 
-.boxleft { 
+.boxleft {
   color: #000000;
 }
 
 
-.boxtitle { 
+.boxtitle {
   background: #006666;
   font-weight: bold;
   text-align: center;
@@ -192,40 +192,35 @@ li.topmenuitemsubmenu a:hover {
 
 .boxtitle a { color: #ffffff; }
 
-.boxitem { 
+.boxitem {
   text-align: left;
 }
 
-.boxitemalt { 
+.boxitemalt {
   background-color: #E5FFF9;
   text-align: left;
 }
 
-.boxhighlight { 
+.boxhighlight {
   background-color: #ffe2e6;
   text-align: left;
 }
 
-.boxoptions { 
+.boxoptions {
   background-color: #e2f9ff;
   text-align: left;
 }
 
-
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input { 
+/* Forms */
+button,input
+{
   background-color: #ffffff;
   border: thin solid #006666;
   color: #006666
 }
 
-input:hover { 
+button:hover,input:hover
+{
   color: #009391;
 }
 
@@ -239,13 +234,13 @@ select:hover {
   color: #009391;
 }
 
-textarea { 
+textarea {
   background-color: #ffffff;
   border: thin solid #006666;
   color: #006666
 }
 
-textarea:hover { 
+textarea:hover {
   color: #009391;
 }
 
@@ -253,12 +248,7 @@ textarea:hover {
   color: #006666
 }
 
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .prioraclosed { background-color: #d8ffeb; border-top: 0; border-left: 0; }
 .priorbclosed  { background-color: #cbffe4; border-top: 0; border-left: 0; }
 .priorcclosed  { background-color: #bcffdc; border-top: 0; border-left: 0; }
@@ -269,7 +259,6 @@ textarea:hover {
 .priorhclosed  { background-color: #77ffb9; border-top: 0; border-left: 0; }
 .prioriclosed  { background-color: #6bffb2; border-top: 0; border-left: 0; }
 
-
 .priora { border-top: 0; border-left: 0; }
 .priorb  { border-top: 0; border-left: 0; }
 .priorc  { border-top: 0; border-left: 0; }
@@ -279,8 +268,3 @@ textarea:hover {
 .priorg  { border-top: 0; border-left: 0; }
 .priorh  { border-top: 0; border-left: 0; }
 .priori  { border-top: 0; border-left: 0; }
-
-
-
-
-

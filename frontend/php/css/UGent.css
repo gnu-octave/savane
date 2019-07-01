@@ -270,14 +270,8 @@ li.topmenuitemsubmenuseparator {
 	color: black;
 }
 
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-
-input {
+/* Forms */
+button,input {
 	background-color: white;
 	color: black;
 }
@@ -295,12 +289,7 @@ textarea {
 	font-style: italic;
 }
 
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora {
 	background-color: #fff2f2;
 	border: 0;
@@ -392,4 +381,3 @@ textarea {
 	border: 0;
 	border-bottom: thin solid #51DA96;
 }
-

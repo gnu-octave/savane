@@ -181,18 +181,13 @@ div.realbody .boxtitle a:hover {
 	border-bottom: thin dotted #5b564c;
 }
 
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
-	background-color: #5b564c;
-	color: #ffce96;
-        border: thin solid #ffce96;
-        padding: 2px;
+/* Forms */
+button,input
+{
+  background-color: #5b564c;
+  color: #ffce96;
+  border: thin solid #ffce96;
+  padding: 2px;
 }
 
 select {
@@ -205,13 +200,7 @@ textarea {
 	color: #ffce96;
 }
 
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora { background-color: #2b2923; border-top: 0; border-left: 0; border-top: 0; border-left: 0; }
 .priorb { background-color: #3a3730; border-top: 0; border-left: 0; }
 .priorc { background-color: #444139; border-top: 0; border-left: 0; }

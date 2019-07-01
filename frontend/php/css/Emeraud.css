@@ -331,21 +331,15 @@ li.topmenuitemsubmenu a:hover {
 	border: thin solid #C1C5AB;
 }
 
-
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
- background-color: #F8FAE8;
- color: black;
- border: thin solid #C1C5AB;
+/* Forms */
+button,input
+{
+  background-color: #F8FAE8;
+  color: black;
+  border: thin solid #C1C5AB;
 }
 
-input:hover { background-color: #FCFDF3; }
+button:hover,input:hover { background-color: #FCFDF3; }
 
 select {
  background-color: #F8FAE8;
@@ -368,12 +362,3 @@ textarea:hover { background-color: #FCFDF3; }
 	color: #5b5b5b;
 	font-style: italic;
 }
-
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
-/* nothing specific */

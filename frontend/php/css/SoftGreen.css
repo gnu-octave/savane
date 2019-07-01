@@ -260,16 +260,11 @@ li.topmenuitemsubmenu a:hover {
 	color: black;
 }
 
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-
-input {
-	background-color: #E6FFE8;
-	color: black;
+/* Forms */
+button,input
+{
+  background-color: #E6FFE8;
+  color: black;
 }
 select {
 	background-color: #E6FFE8;
@@ -285,12 +280,7 @@ textarea {
 	font-style: italic;
 }
 
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora {
 	background-color: #fff2f2;
 	border: 0;

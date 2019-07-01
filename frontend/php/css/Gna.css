@@ -331,21 +331,18 @@ li.topmenuitemsubmenuseparator {
 	border: thin solid #b0b0b0;
 }
 
-
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
- background-color: #e7f5fc;
- color: black;
- border: thin solid #b1cccc;
+/* Forms */
+button,input
+{
+  background-color: #e7f5fc;
+  color: black;
+  border: thin solid #b1cccc;
 }
 
-input:hover { background-color: #f8fdff; }
+button:hover,input:hover
+{
+  background-color: #f8fdff;
+}
 
 select {
  color: black;
@@ -367,13 +364,3 @@ textarea:hover { background-color: #f8fdff; }
 .preinput {
 	color: #5b5b5b;
 }
-
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
-
-/* nothing specific */

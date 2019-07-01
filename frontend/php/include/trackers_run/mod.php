@@ -392,6 +392,12 @@ priority and open/close items"))) . "</p>\n";
     # The point is too filter spams and to allow to stop flamewars, but
     # managers and technicians are expected to be serious enough.
 
+    if (isset($quote_no))
+      {
+        $quote = trackers_data_quote_comment ($item_id, $quote_no);
+        if ($quote !== false)
+          $comment .= $quote;
+      }
     print '<p class="noprint"><span class="preinput"> ' . _("Add a New Comment")
           . ' ' . markup_info("rich");
     print form_submit (_('Preview'), 'preview')

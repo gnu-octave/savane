@@ -217,13 +217,9 @@ ul.topmenuitemsubmenu li {
 .boxhighlight { background-color: #def4b2; text-align: left; color: #333333; }
 
 
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
+/* Forms */
+button,input
+{
   background-color: #ffffff;
   color: #000000;
 }
@@ -241,13 +237,7 @@ textarea {
   color: #000000;
 }
 
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora { background-color: #fffdf7; }
 .priorb { background-color: #fffbf2; }
 .priorc { background-color: #fffaed; }
@@ -257,4 +247,3 @@ textarea {
 .priorg { background-color: #fff4d6; }
 .priorh { background-color: #fff2ce; }
 .priori { background-color: #fff0c6; }
-

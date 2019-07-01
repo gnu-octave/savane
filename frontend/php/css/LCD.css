@@ -238,20 +238,18 @@ li.topmenuitemsubmenu:hover {
 	color: white;
 }
 
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
- background-color: #494949;
- border: thin solid #a5a5a5;
- color: #a5a5a5;
+/* Forms */
+button,input
+{
+  background-color: #494949;
+  border: thin solid #a5a5a5;
+  color: #a5a5a5;
 }
 
-input:hover { background-color: #282828; }
+button:hover,input:hover
+{
+  background-color: #282828;
+}
 
 select {
  background-color: #494949;
@@ -275,12 +273,7 @@ textarea:hover { background-color: #282828; }
 	font-style: italic;
 }
 
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora { background-color: #777777; border: 0; }
 .priorb { background-color: #777777; border: 0; }
 .priorc { background-color: #777777; border: 0; }

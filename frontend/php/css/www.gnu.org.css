@@ -171,16 +171,11 @@ ul.topmenuitemsubmenu {
 	color: #333333;
 }
 
-
-/**********************************************************************
- *
- * Forms
- *
- **********************************************************************/
-
-input {
- background-color:#ffffff;
- color: #000000;
+/* Forms */
+button,input
+{
+  background-color:#ffffff;
+  color: #000000;
 }
 
 select {
@@ -198,17 +193,7 @@ textarea {
  color: #000000;
 }
 
-
-/* text before inputs */
-.preinput {
-}
-
-/**********************************************************************
- *
- * Priorities
- *
- **********************************************************************/
-
+/* Priorities */
 .priora { background-color: white; border: 0; }
 .priorb { background-color: #f7f7ff; border: 0; }
 .priorc { background-color: #edeeff; border: 0; }
@@ -219,7 +204,6 @@ textarea {
 .priorh { background-color: #c1c6ff; border: 0; }
 .priori { background-color: #b7bdff; border: 0; }
 
-
 .prioraclosed { border: 0; }
 .priorbclosed { border: 0; }
 .priorcclosed { border: 0; }
@@ -229,7 +213,3 @@ textarea {
 .priorgclosed { border: 0; }
 .priorhclosed { border: 0; }
 .prioriclosed { border: 0; }
-
-
-
-

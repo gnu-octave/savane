@@ -131,14 +131,18 @@ li.topmenuitemsubmenu a:hover {
 }
 
 /* Forms */
-
-input { background: #EEEAD2; color: black; border: thin solid #E2DEC7; }
+button,input
+{
+  background: #EEEAD2;
+  color: black;
+  border: thin solid #E2DEC7;
+}
 select { background: #EEEAD2; color: black; border: thin solid #E2DEC7; }
 textarea { background: #EEEAD2; color: black; border: thin solid #E2DEC7; }
 
-input:hover { background: #F9F9F2; }
+button:hover,input:hover
+{
+  background: #F9F9F2;
+}
 select:hover { background: #F9F9F2; }
 textarea:hover { background: #F9F9F2; }
-
-
-/* EOF */

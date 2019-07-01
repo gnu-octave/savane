@@ -7,7 +7,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2018 Ineiev
+# Copyright (C) 2018, 2019 Ineiev
 #
 # This file is part of Savane.
 #
@@ -2782,5 +2782,34 @@ function trackers_data_count_field_value_usage ($group_id, $field,
                               ." WHERE $field=? AND group_id=?",
                               array($field_value_value_id, $group_id)),
                               0, 'count');
+}
+
+function trackers_data_quote_comment ($item_id, $quote_no)
+{
+  $entry = false;
+  if ($quote_no == 0)
+    {
+      $result = db_execute("SELECT user.user_id,user.user_name,user.realname,"
+                           . ARTIFACT . ".date," . ARTIFACT . ".details,"
+                           . ARTIFACT . ".spamscore FROM "
+                           . ARTIFACT . ",user WHERE "
+                           . ARTIFACT . ".submitted_by=user.user_id AND "
+                           . ARTIFACT . ".bug_id=? LIMIT 1", array($item_id));
+      $entry = db_fetch_array($result)['details'];
+      $label = _("original submission:");
+    }
+  else
+    {
+      $result = trackers_data_get_followups ($item_id);
+      if ($quote_no <= db_numrows ($result))
+        $entry = db_result ($result, $quote_no - 1, 'old_value');
+      $label = sprintf(_("comment #%s:"), $quote_no);
+    }
+  if ($entry === false)
+    return $entry;
+  $entry = html_entity_decode (trackers_decode_value ($entry));
+  $quote = preg_replace ("/(^|\n)/", "$1> ", $entry);
+  $quote = "\n\n[comment #" . $quote_no . " " . $label . "]\n" . $quote;
+  return $quote;
 }
 ?>
