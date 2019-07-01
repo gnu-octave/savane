@@ -124,7 +124,7 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
   </h2>
 ';
   $ret .= '
-<span id="hidsubpartcontent'.$uniqueid.'">
+<div id="hidsubpartcontent'.$uniqueid.'">
 ';
   if (!$deployed)
     {
@@ -139,7 +139,7 @@ function html_hidsubpart_header ($uniqueid, $title, $deployed=false)
 function html_hidsubpart_footer ()
 {
   return '
-</span><!-- closing hidsubpart -->
+</div><!-- closing hidsubpart -->
 ';
 
 }

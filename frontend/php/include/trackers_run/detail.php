@@ -355,11 +355,8 @@ escape characters.)"), $GLOBALS['sys_upload_max']);
   print html_hidsubpart_header("dependencies", _("Dependencies"), 1);
 
   print show_item_dependency($item_id);
-
-  print "<p></p>\n";
   print show_dependent_item($item_id);
-
-  print "</p>\n<p>&nbsp;</p>\n";
+  print "\n<p>&nbsp;</p>\n";
   print html_hidsubpart_footer();
   print html_hidsubpart_header("cc", _("Mail Notification Carbon-Copy List"));
 

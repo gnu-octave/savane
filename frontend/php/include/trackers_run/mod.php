@@ -644,11 +644,10 @@ three characters are valid.");
           }
       } # if ($depends_search)
 
-    print "</p>\n<p>";
+    print "</p>\n";
     print show_item_dependency($item_id);
-    print "</p>\n<p>";
     print show_dependent_item($item_id);
-    print "</p>\n<p>&nbsp;</p>\n";
+    print "\n<p>&nbsp;</p>\n";
     print html_hidsubpart_footer();
 
 # Mail notification.
