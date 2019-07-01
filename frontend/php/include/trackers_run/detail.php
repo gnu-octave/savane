@@ -311,7 +311,7 @@ _("Please <a href=\"%s\">log in</a>, so followups can be emailed to you."),
   print html_hidsubpart_header("discussion", _("Discussion"), 1);
   $new_comment = $preview? $comment: false;
 
-  print show_item_details($item_id,$group_id,0,$item_assigned_to, false,
+  print show_item_details($item_id, $group_id, 0, $item_assigned_to,
                           $new_comment);
 
   print "<p>&nbsp;</p>\n";

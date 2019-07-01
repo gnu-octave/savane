@@ -453,11 +453,9 @@ priority and open/close items"))) . "</p>\n";
 
     print html_hidsubpart_header("discussion", _("Discussion"));
 
-    # FIXME: quoted is broken with the new markup feature.
-    $quotation_style = false;
     $new_comment = $preview? $comment: false;
     print show_item_details($item_id, $group_id, 0, $item_assigned_to,
-                            $quotation_style, $new_comment);
+                            $new_comment);
     print "<p>&nbsp;</p>\n";
     print html_hidsubpart_footer();
 

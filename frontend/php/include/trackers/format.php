@@ -23,8 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function format_item_details ($item_id, $group_id, $ascii = false,
-                              $item_assigned_to = false, $quoted = false,
-                              $new_comment = false)
+                              $item_assigned_to = false, $new_comment = false)
 {
   # ASCII must not be translated.
   # Format the details rows from trackers_history.
@@ -178,10 +177,10 @@ Follow-up Comments:\n\n";
       if (ARTIFACT == "cookbook")
         $jumpto_text = _("Jump to the recipe preview");
 
-      print '<p class="center"><span class="xsmall">'
+      $out = '<p class="center"><span class="xsmall">'
         . '(<a href="#comment0"><img src="' . $GLOBALS['sys_home'] . 'images/'
         . SV_THEME . '.theme/arrows/bottom.png" class="icon" alt="" /> '
-        . $jumpto_text . "</a>)</span></p>\n";
+        . $jumpto_text . "</a>)</span></p>\n" . $out;
     }
 
   # Loop throuh the follow-up comments and format them.
@@ -377,14 +376,7 @@ to be run.")
                 }
             }
 
-          if (!$quoted)
-            $text_to_markup = $entry['content'];
-          else
-            {
-              $text_to_markup = str_replace("\n", "&gt; ",
-                                            wordwrap("\n" . $entry['content'],
-                                            78, "\r\n"));
-            }
+          $text_to_markup = $entry['content'];
 
           $out .= "\n" . '<tr class="' . $class . '"><td valign="top">';
           $out .= '<a id="comment' . $comment_number . '" href="#comment'
