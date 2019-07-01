@@ -55,7 +55,7 @@ function spam_flag ($item_id, $comment_id, $score, $group_id, $reporter_user_id=
   if ($comment_id)
     {
       # It is important to mention the field_name, to avoid malicious attempt
-      # to mess with any other part of history, like svncommit entries.
+      # to mess with any other part of history.
       $affected_user_id = db_result(db_execute("SELECT mod_by FROM ".ARTIFACT
       ."_history WHERE bug_history_id=? AND field_name='details' AND bug_id=?",
                                                array($comment_id, $item_id)),

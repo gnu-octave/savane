@@ -53,7 +53,6 @@ function format_item_details ($item_id, $group_id, $ascii = false,
   # (the spam is included to avoid the comment #nnn refs to change, that
   # could be puzzling to users).
   $result = trackers_data_get_followups($item_id);
-  $svn_entries_exist = false;
   $max_entries = 0;
   $hist_id = 0;
   if (db_numrows($result))
@@ -78,15 +77,6 @@ function format_item_details ($item_id, $group_id, $ascii = false,
               # Count the entry only if not a spam.
               $max_entries++;
             }
-
-          # Special case: if the field_name is svncommit, set the comment_type
-          # to remind that is not an usual comment.
-          if ($entry['field_name'] == 'svncommit')
-            {
-              $data[$i]['comment_type'] = "SVN";
-              $data[$i]['revision'] = $entry['new_value'];
-              $svn_entries_exist = true;
-            }
         }
     }
 
@@ -103,17 +93,6 @@ function format_item_details ($item_id, $group_id, $ascii = false,
                              . htmlspecialchars($new_comment);
       $data[$i]['comment_internal_id'] = $hist_id;
       $data[$i]['spamscore'] = '0';
-    }
-
-  # Not in text output (mail notif) and if there are svn commits,
-  # find out if there is a relevant link to add.
-  unset($svn_link);
-  if (!$ascii && $svn_entries_exist)
-    {
-      global $project;
-      if ($project->getUrl("svn_viewcvs") != 'http://'
-          && $project->getUrl("svn_viewcvs") != '')
-        $svn_link .= $project->getUrl("svn_viewcvs");
     }
 
   # Sort entries according to user config.
@@ -283,9 +262,6 @@ to be run.")
       $i++;
       $comment_type = isset($entry['comment_type']) ? $entry['comment_type']
                                                       : null;
-      $is_svn = false;
-      if ($comment_type == 'SVN')
-        $is_svn = true;
       if ($comment_type == 'None' || $comment_type == '')
         $comment_type = '';
       else
@@ -318,10 +294,6 @@ to be run.")
         }
       else
         {
-          # If comment type is special commit thing, unset it so it does
-          # not appear in text.
-          if ($is_svn)
-            unset($comment_type);
           if ($comment_type)
             {
               # Put the comment type in strong.
@@ -384,25 +356,15 @@ to be run.")
           $out .= utils_format_date($entry['date']);
           $out .= ', ';
 
-          if (!$is_svn)
+          if ($comment_number < 1)
             {
-              if ($comment_number < 1)
-                {
-                  if (ARTIFACT != "cookbook")
-                    $out .= '<strong>' . _("original submission:") . "</strong>\n";
-                  else
-                    $out .= '<strong>' . _("recipe preview:") . "</strong>\n";
-                }
+              if (ARTIFACT != "cookbook")
+                $out .= '<strong>' . _("original submission:") . "</strong>\n";
               else
-                $out .= sprintf(_("comment #%s:"), $comment_number);
+                $out .= '<strong>' . _("recipe preview:") . "</strong>\n";
             }
           else
-            {
-              # No # in front of the revision number so users don't get
-              # confused and do use it as a ref that will be made link
-              # (in the future, we could imagine doing such links).
-              $out .= sprintf(_("SVN revision %s:"), $entry['revision']);
-            }
+            $out .= sprintf(_("comment #%s:"), $comment_number);
 
           $out .= "</a><br />\n$comment_type";
 
@@ -413,15 +375,6 @@ to be run.")
           else
             $out .= markup_rich($text_to_markup);
           $out .= "</div>\n";
-
-          # Add an svn link if relevant (it supports viewcvs syntax).
-          if ($is_svn && $svn_link)
-            {
-              $out .= '<p>(<a href="' . $svn_link . '?rev=' . $entry['revision']
-                      . '&amp;view=rev">'
-                      . sprintf(_("Browse SVN revision %s"), $entry['revision'])
-                      . "</a>)</p>\n";
-            }
 
           $out .="</td>\n";
           $out .= '<td class="' . $class . 'extra">'
@@ -448,7 +401,7 @@ to be run.")
           # For performance reason, do not check here if the user already
           # flagged the comment as spam, it will be done only if he tries to
           # to it twice.
-          if (!$is_svn && user_isloggedin() && !$icon
+          if (user_isloggedin() && !$icon
               && $poster_id != user_getid() && empty($_REQUEST['printer']))
             {
               # Surround by two line breaks, to keep that link clearly

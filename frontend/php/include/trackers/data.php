@@ -1430,8 +1430,7 @@ function trackers_data_get_followups ($item_id=false, $rorder=false)
      ."FROM ".ARTIFACT."_history,".ARTIFACT."_field_value,".ARTIFACT."_field,"
      .ARTIFACT.",user "
      ."WHERE ".ARTIFACT."_history.bug_id = ? "
-     ."AND (".ARTIFACT."_history.field_name = 'details' OR "
-     .ARTIFACT."_history.field_name = 'svncommit') "
+     ."AND ".ARTIFACT."_history.field_name = 'details' "
      ."AND ".ARTIFACT."_history.mod_by=user.user_id "
      ."AND ".ARTIFACT."_history.bug_id=".ARTIFACT.".bug_id "
      ."AND ".ARTIFACT."_history.type = ".ARTIFACT."_field_value.value_id "
@@ -1459,7 +1458,6 @@ function trackers_data_get_history ($item_id=false)
      ."FROM ".ARTIFACT."_history,user "
      ."WHERE ".ARTIFACT."_history.mod_by=user.user_id "
      ."AND ".ARTIFACT."_history.field_name <> 'details' "
-     ."AND ".ARTIFACT."_history.field_name <> 'svncommit' "
      ."AND bug_id = ? ORDER BY ".ARTIFACT."_history.date DESC",
                     array($item_id));
 }
