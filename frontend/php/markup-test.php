@@ -53,23 +53,30 @@ if (!$comment)
     exit;
   }
 $comment_number = 0;
-print '<table cellpadding="0" width="100%">' . "\n";
-print '<tr class="boxlight"><td valign="top">';
-print '<a id="comment' . $comment_number . '" href="#comment'
-       . $comment_number . '" class="preinput">';
-print utils_format_date(time ()) . ', '
-      . sprintf(_("comment #%s:"), $comment_number)
-      . "</a><br />\n";
-print '<div class="tracker_comment">' . "\n";
+if ($rich)
+  {
+    print '<table cellpadding="0" width="100%">' . "\n";
+    print '<tr class="boxlight"><td valign="top">';
+    print '<a id="comment' . $comment_number . '" href="#comment'
+           . $comment_number . '" class="preinput">';
+    print utils_format_date(time ()) . ', '
+          . sprintf(_("comment #%s:"), $comment_number)
+          . "</a><br />\n";
+    print '<div class="tracker_comment">' . "\n";
+  }
 if ($full)
   print markup_full ($text);
 elseif ($rich)
   print markup_rich ($text);
 else
   print markup_basic ($text);
-print "</div>\n</td>\n";
-print '<td class="boxlightextra">' . utils_user_link (_('Anonymous'));
-print "</td>\n</tr>\n";
-print "</table>\n";
+if ($rich)
+  {
+    print "</div>\n</td>\n";
+    print '<td class="boxlightextra">' . utils_user_link (user_getname (),
+                                                          user_getname (0, 1));
+    print "</td>\n</tr>\n";
+    print "</table>\n";
+  }
 $HTML->footer(array());
 ?>
