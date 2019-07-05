@@ -1,55 +1,57 @@
-Savane is a Web-based Libre Software hosting system. It currently
-includes issue tracking, project member management by roles and
-individual account maintenance. The issue tracking handles bugs,
-tasks, and support. The issue tracker's fields are configurable in
-many ways: mandatory of not, shown to users according to their role in
-a project, and with transition management. It is internationalised and
-themable. It depends on Apache (>= 1.3.x) , Perl (>= 5.6), PHP (>=
-4.1.0) and MySQL (>= 3.x).
+Copyright (C) 2019 Ineiev
 
-				 ---------
+This file is part of Savane.
 
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+Savane is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
-The project homepage is <http://gna.org/projects/savane>
+Savane is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
 
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Savane is free software hosting system.  As of 2019, it runs
+on GNU Savannah and on Puszcza: each site runs its own version
+of Savane; this tarball distributes the version of GNU Savannah.
 
-				 ---------
+Getting Savane
+==============
 
-Note: this package is a modified version of Savane, with among others
-cleaner PHP code, autoconf-based build system, Git support.
+The code of Savane is maintaned in the Savane Git repository of
+the 'administration' group of GNU Savannah,
 
-http://svn.sv.gnu.org/viewvc/trunk/?root=administration
+https://savannah.nongnu.org/git/?group=administration
 
+GNU Savannah runs the master branch of that repository.
 
-				 ---------
+Tarballs of Savane are released periodically, mainly for the reference
+for the Translation Project, in the download area of Savannah
+administration:
 
+https://savannah.nongnu.org/files/?group=administration
 
-Need some help/documentation to install Savane on another site? 
-Take a look at the docs in http://download.gna.org/savane-doc/
+Dependencies
+============
 
-(they may has well has been included with your Savane package,
-depending on the packager)
+Current version of Savane depends on:
 
-If it is not helpful enough to you, if you'd like to request new
-features, use our support tracker to get assistance:
-<https://gna.org/support/?group=savane>
- 
+* PHP (5.4, 5.5, 5.6 or 7.0)
+* Apache
+* MySQL
+* Perl
 
-				 --------
+Documentation
+=============
 
-
-Savane is composed of a database, a web frontend and a system backend.
-
-The web frontend is the user interface, run by a webserver with
-PHP. All users modifications in the database are made via this
-frontend. It permits them to submit items (bugs, task...), modify
-items, change their preferences, etc.
-
-The system backend is mainly used by cronjob, or by site
-administrators in a console shell. It is written in Perl, composed of
-Perl Scripts and Perl Modules. It's purpose is to update the system(s)
-with the database information. For instance if you give to project a
-download area, the backend will, on the system that host the area,
-create a unix group, create unix users account associated with the
-group for any member of the group, create a download area at the
-configured location, associate that area with the group.
+For more info, see Savannah User Docs,
+https://savannah.gnu.org/maintenance/FrontPage/
