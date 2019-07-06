@@ -38,57 +38,54 @@ function trackers_data_get_all_fields ($group_id=false,$reload=false)
   if (!ctype_alnum(ARTIFACT))
     die("Invalid ARTIFACT name: " . htmlspecialchars(ARTIFACT));
 
-# Do nothing if already set and reload not forced
+# Do nothing if already set and reload not forced.
   if (isset($BF_USAGE_BY_ID) && !$reload)
-    {
-      return;
-    }
+    return;
 
-# Clean up the array
+# Clean up the array.
   $BF_USAGE_BY_ID=array();
   $BF_USAGE_BY_NAME=array();
 
 # First get the all the defaults.
-  $sql='SELECT '.ARTIFACT.'_field.bug_field_id, field_name, display_type, '
-    .'display_size,label, description,scope,required,empty_ok,keep_history,'
-    .'special, custom, '
-    .'group_id, use_it,show_on_add,show_on_add_members, place, custom_label,'
-    .'custom_description,custom_display_size,custom_empty_ok,'
-    .'custom_keep_history '
-    .'FROM '.ARTIFACT.'_field, '.ARTIFACT.'_field_usage '
-    .'WHERE group_id=100 '
-    .'AND '.ARTIFACT.'_field.bug_field_id='.ARTIFACT.'_field_usage.bug_field_id';
+  $sql='SELECT ' . ARTIFACT . '_field.bug_field_id, field_name, display_type, '
+    . 'display_size,label, description,scope,required,empty_ok,keep_history,'
+    . 'special, custom, '
+    . 'group_id, use_it,show_on_add,show_on_add_members, place, custom_label,'
+    . 'custom_description,custom_display_size,custom_empty_ok,'
+    . 'custom_keep_history '
+    . 'FROM ' . ARTIFACT . '_field, ' . ARTIFACT . '_field_usage '
+    . 'WHERE group_id=100 ' . 'AND ' . ARTIFACT . '_field.bug_field_id='
+    . ARTIFACT . '_field_usage.bug_field_id';
 
   $res_defaults = db_query($sql);
 
-# Now put all used fields in a global array for faster access
-# Index both by field_name and bug_field_id
+# Now put all used fields in a global array for faster access.
+# Index both by field_name and bug_field_id.
   while ($field_array = db_fetch_array($res_defaults))
     {
       $BF_USAGE_BY_ID[$field_array['bug_field_id'] ] = $field_array;
       $BF_USAGE_BY_NAME[$field_array['field_name'] ] = $field_array;
     }
 
-# Then select  all project specific entries
-  $res_project = db_execute('SELECT  '.ARTIFACT.'_field.bug_field_id, '
-    .'field_name, display_type, '
-    .'display_size,label, description,scope,required,empty_ok,keep_history,'
-    .'special, custom, '
-    .'group_id, use_it, show_on_add, show_on_add_members, place, custom_label,'
-    .'custom_description,custom_display_size,custom_empty_ok,custom_keep_history '
-    .'FROM '.ARTIFACT.'_field,  '.ARTIFACT.'_field_usage '
-    .'WHERE group_id=? '
-    .'AND '.ARTIFACT.'_field.bug_field_id= '.ARTIFACT.'_field_usage.bug_field_id',
+# Then select  all project specific entries.
+  $res_project = db_execute('SELECT  ' . ARTIFACT . '_field.bug_field_id, '
+    . 'field_name, display_type, '
+    . 'display_size,label, description,scope,required,empty_ok,keep_history,'
+    . 'special, custom, group_id, use_it, show_on_add, show_on_add_members, '
+    . 'place, custom_label, custom_description,custom_display_size,'
+    . 'custom_empty_ok,custom_keep_history '
+    . 'FROM ' . ARTIFACT . '_field,  ' . ARTIFACT . '_field_usage '
+    . 'WHERE group_id=? ' . 'AND ' . ARTIFACT . '_field.bug_field_id= '
+    . ARTIFACT . '_field_usage.bug_field_id',
                             array($group_id));
-
-# And override entries in the default array
+# And override entries in the default array.
   while ($field_array = db_fetch_array($res_project))
     {
       $BF_USAGE_BY_ID[$field_array['bug_field_id'] ] = $field_array;
       $BF_USAGE_BY_NAME[$field_array['field_name'] ] = $field_array;
     }
 
-# rewind internal pointer of global arrays
+# Rewind internal pointer of global arrays.
   reset($BF_USAGE_BY_ID);
   reset($BF_USAGE_BY_NAME);
   $AT_START = true;
@@ -96,8 +93,8 @@ function trackers_data_get_all_fields ($group_id=false,$reload=false)
 
 function trackers_data_get_item_group($item_id)
 {
-  return  db_result(db_execute("SELECT group_id FROM ".ARTIFACT
-                               ." WHERE bug_id=?", array($item_id)),
+  return  db_result(db_execute("SELECT group_id FROM " . ARTIFACT
+                               . " WHERE bug_id=?", array($item_id)),
                     0,
                     'group_id');
 }
@@ -123,17 +120,17 @@ function &trackers_data_get_notification_settings($group_id, $tracker_name)
 #          one day to generic names since they apply to bugs but also to suuports,tasks,
 #          and patch related tables. For now these fileds are called bug_xxx whatever
 #          the service related tables. Too much work to make all the changes in the code.
-  $result=db_execute("SELECT ".$tracker_name."_field_value.bug_fv_id,"
-    .$tracker_name."_field_value.value,".$tracker_name
-    ."_field_value.email_ad,".$tracker_name."_field_value.send_all_flag "
-    ."FROM ".$tracker_name."_field, ".$tracker_name."_field_value "
-    ."WHERE ".$tracker_name."_field_value.group_id=? "
-    ."AND ".$tracker_name."_field.field_name=? "
-    ."AND ".$tracker_name."_field_value.bug_field_id=".$tracker_name
-    ."_field.bug_field_id "
-    ."AND ".$tracker_name."_field_value.status!='H'",
+  $result=db_execute("SELECT " . $tracker_name . "_field_value.bug_fv_id,"
+    . $tracker_name . "_field_value.value," . $tracker_name
+    . "_field_value.email_ad," . $tracker_name . "_field_value.send_all_flag "
+    . "FROM " . $tracker_name . "_field, " . $tracker_name . "_field_value "
+    . "WHERE " . $tracker_name . "_field_value.group_id=? "
+    . "AND " . $tracker_name . "_field.field_name=? "
+    . "AND " . $tracker_name . "_field_value.bug_field_id=" . $tracker_name
+    . "_field.bug_field_id "
+    . "AND " . $tracker_name . "_field_value.status!='H'",
                      array($group_id, $cat_field_name));
-  $settings['nb_categories']=db_numrows($result);
+  $settings['nb_categories'] = db_numrows($result);
   $settings['category'] = array();
   for ($i=0; $i < $settings['nb_categories'] ; $i++)
     {
@@ -145,7 +142,7 @@ function &trackers_data_get_notification_settings($group_id, $tracker_name)
         $email = "";
       $settings['category'][$i]['email'] = $email;
       $settings['category'][$i]['send_all_flag'] = db_result($result, $i,
-                                                           'send_all_flag');
+                                                             'send_all_flag');
     }
   return $settings;
 }
@@ -155,7 +152,7 @@ function trackers_data_show_notification_settings($group_id, $tracker_name,
 {
   $grtrsettings = &trackers_data_get_notification_settings($group_id,
                                                            $tracker_name);
-  if (!(user_ismember($group_id,'A')))
+  if (!(user_ismember($group_id, 'A')))
     return;
   if ($grtrsettings['glnotif'] == 0)
     {
@@ -179,95 +176,97 @@ function trackers_data_show_notification_settings($group_id, $tracker_name,
     {
       if ($show_intro_msg != 0)
           print '<p>'
-.sprintf(
+. sprintf(
 # TRANSLATORS: the argument is tracker name (like bugs, support requests, tasks).
          _("As a project administrator you must decide if the list of persons
 to be systematically notified on new %s submissions (and possibly updates)
 depend on the categories or not and you must provide the corresponding email
 addresses (comma separated list)."),
-utils_get_tracker_name($tracker_name))."</p>\n";
+           utils_get_tracker_name($tracker_name))
+. "</p>\n";
       print '
-           <input type="radio" name="'.$tracker_name
-.'_notif_scope" value="global" '.$globalradio
-.' />&nbsp;&nbsp;<span class="preinput">'
-._("Notify persons in the global list only").'</span><br />
-          <input type="radio" name="'.$tracker_name
-.'_notif_scope" value="category" '.$categoryradio
-.' />&nbsp;&nbsp;<span class="preinput">'
-._("Notify persons in the category related list instead of the global list")
-.'</span><br />
-          <input type="radio" name="'.$tracker_name
-.'_notif_scope" value="both" '.$bothradio
-.' />&nbsp;&nbsp;<span class="preinput">'
-._("Notify persons in the category related list in addition to the global list")
-.'</span><br />
+           <input type="radio" name="' . $tracker_name
+. '_notif_scope" value="global" ' . $globalradio
+. ' />&nbsp;&nbsp;<span class="preinput">'
+. _("Notify persons in the global list only") . '</span><br />
+          <input type="radio" name="' . $tracker_name
+. '_notif_scope" value="category" ' . $categoryradio
+. ' />&nbsp;&nbsp;<span class="preinput">'
+. _("Notify persons in the category related list instead of the global list")
+. '</span><br />
+          <input type="radio" name="' . $tracker_name
+. '_notif_scope" value="both" ' . $bothradio
+. ' />&nbsp;&nbsp;<span class="preinput">'
+. _("Notify persons in the category related list in addition to the global list")
+. '</span><br />
 
-          <h2>'._("Category related lists")."</h2>\n";
-      print '<input type="hidden" name="'.$tracker_name
-.'_nb_categories" value="'.$grtrsettings['nb_categories'].'" />';
+          <h2>' . _("Category related lists") . "</h2>\n";
+      print '<input type="hidden" name="' . $tracker_name
+. '_nb_categories" value="' . $grtrsettings['nb_categories'] . '" />';
 
       for ($i=0; $i < $grtrsettings['nb_categories'] ; $i++)
         {
-          print '<input type="hidden" name="'.$tracker_name.'_cat_'.$i
-.'_bug_fv_id" value="'.$grtrsettings['category'][$i]['fv_id'].'" />';
+          print '<input type="hidden" name="' . $tracker_name . '_cat_' . $i
+. '_bug_fv_id" value="' . $grtrsettings['category'][$i]['fv_id'] . '" />';
           print '<span class="preinput"><label
-for="'.$tracker_name.'_cat_'.$i.'_email">'.$grtrsettings['category'][$i]['name']
-.'</span><br />
-&nbsp;&nbsp;<input type="text" id="'.$tracker_name.'_cat_'.$i
-.'_email" name="'.$tracker_name.'_cat_'.$i
-.'_email" value="'.$grtrsettings['category'][$i]['email']
-.'" size="50" maxlength="255" />
+for="' . $tracker_name . '_cat_' . $i . '_email">'
+. $grtrsettings['category'][$i]['name']
+. '</span><br />
+&nbsp;&nbsp;<input type="text" id="' . $tracker_name . '_cat_' . $i
+. '_email" name="' . $tracker_name . '_cat_' . $i
+. '_email" value="' . $grtrsettings['category'][$i]['email']
+. '" size="50" maxlength="255" />
           &nbsp;&nbsp;<span class="preinput">(
-          <input type="checkbox" id="'.$tracker_name.'_cat_'.$i
-.'_send_all_flag" name="'.$tracker_name.'_cat_'.$i
-.'_send_all_flag" value="1" '
-. (($grtrsettings['category'][$i]['send_all_flag'])?'checked="checked"':'')
-.' /><label for="'.$tracker_name.'_cat_'.$i
-.'_send_all_flag"'._("Send on all updates").')</label></span><br />
+          <input type="checkbox" id="' . $tracker_name . '_cat_' . $i
+. '_send_all_flag" name="' . $tracker_name . '_cat_'.$i
+. '_send_all_flag" value="1" '
+.  (($grtrsettings['category'][$i]['send_all_flag'])? 'checked="checked"': '')
+. ' /><label for="' . $tracker_name . '_cat_' . $i
+. '_send_all_flag"' . _("Send on all updates") . ')</label></span><br />
 ';
         }
-      print '<h2>'._("Global list")."</h2>\n";
+      print '<h2>' . _("Global list") . "</h2>\n";
     }
   else
     {
       if ($show_intro_msg != 0)
         print '<p>'
-.sprintf(
+. sprintf(
 # TRANSLATORS: the argument is tracker name (like bugs, support requests, tasks).
          _("As a project administrator you must decide if the list of persons
 to be systematically notified on new %s submissions (and possibly updates)
 depend on the categories or not and you must provide the corresponding email
 addresses (comma separated list)."), utils_get_tracker_name($tracker_name))
-."</p>\n";
+. "</p>\n";
     }
   print '<span class="preinput"><label
-for="'.$tracker_name.'_new_item_address"'._("Global List:")
-.'</label></span><br />
-&nbsp;&nbsp;<input type="text" id="'.$tracker_name
-.'_new_item_address" name="'.$tracker_name
-.'_new_item_address" value="'.$grtrsettings['glnewad']
-.'" size="50" maxlength="255" />
+for="' . $tracker_name . '_new_item_address"' . _("Global List:")
+. '</label></span><br />
+&nbsp;&nbsp;<input type="text" id="' . $tracker_name
+. '_new_item_address" name="' . $tracker_name
+. '_new_item_address" value="' . $grtrsettings['glnewad']
+. '" size="50" maxlength="255" />
       &nbsp;&nbsp;<span class="preinput">(<input type="checkbox" id="'
-.$tracker_name.'_send_all_changes" name="'
-.$tracker_name.'_send_all_changes" value="1" '
+. $tracker_name . '_send_all_changes" name="'
+. $tracker_name . '_send_all_changes" value="1" '
 . (($grtrsettings['glsendall'])?'checked':'')
-.'><label for="'.$tracker_name.'_send_all_changes"'._("Send on all updates")
-.'</label>)</span>';
+. '><label for="' . $tracker_name . '_send_all_changes"'
+. _("Send on all updates") . '</label>)</span>';
 
-  print '<h2>'._("Private items exclude list")."</h2>\n";
+  print '<h2>' . _("Private items exclude list") . "</h2>\n";
   if ($show_intro_msg != 0)
     print '<p>'
-._("Addresses registered in this list will be excluded from default mail
+. _("Addresses registered in this list will be excluded from default mail
 notification for private items.")
-."</p>\n";
+. "</p>\n";
 
   print '<span class="preinput"><label
-for="'.$tracker_name.'_private_exclude_address"'._("Exclude List:")
-.'</label></span><br />
-&nbsp;&nbsp;<input type="text" id="'.$tracker_name
-.'_private_exclude_address" name="'.$tracker_name
-.'_private_exclude_address" value="'.$grtrsettings['private_exclude']
-.'" size="50" maxlength="255" />'."<br />\n";
+for="' . $tracker_name . '_private_exclude_address"' . _("Exclude List:")
+. '</label></span><br />
+&nbsp;&nbsp;<input type="text" id="' . $tracker_name
+. '_private_exclude_address" name="' . $tracker_name
+. '_private_exclude_address" value="' . $grtrsettings['private_exclude']
+. '" size="50" maxlength="255" />' . "<br />\n";
 }
 
 function trackers_data_post_notification_settings($group_id, $tracker_name)
@@ -275,14 +274,14 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
   global $feedback;
 
   $local_feedback = "";
-# build the variable names related to elements always present in the form
-# and get their values
+# Build the variable names related to elements always present in the form
+# and get their values.
 
-  $notif_scope_name = $tracker_name."_notif_scope";
-  $new_item_address_name = $tracker_name."_new_item_address";
-  $send_all_changes_name = $tracker_name."_send_all_changes";
-  $nb_categories_name = $tracker_name."_nb_categories";
-  $private_exclude_address_name = $tracker_name."_private_exclude_address";
+  $notif_scope_name = $tracker_name . "_notif_scope";
+  $new_item_address_name = $tracker_name . "_new_item_address";
+  $send_all_changes_name = $tracker_name . "_send_all_changes";
+  $nb_categories_name = $tracker_name . "_nb_categories";
+  $private_exclude_address_name = $tracker_name . "_private_exclude_address";
 
   $in = sane_import('post', array($notif_scope_name,
                                   $new_item_address_name,
@@ -311,30 +310,32 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
   else
     $notif_value = 1; # global only (scope not proposed = no categories)
 
-# set global notification info for this group
+# Set global notification info for this group.
   $res_gl = db_autoexecute('groups',
-    array($tracker_name."_glnotif" => $notif_value,
-          "send_all_".$tracker_name => $send_all_changes,
-          "new_".$tracker_name."_address" => ($new_item_address ?
-                                              $new_item_address : ''),
+    array($tracker_name . "_glnotif" => $notif_value,
+          "send_all_" . $tracker_name => $send_all_changes,
+          "new_" . $tracker_name . "_address" => ($new_item_address ?
+                                                  $new_item_address : ''),
           $private_exclude_address_name => ($private_exclude_address ?
                                             $private_exclude_address : '')
          ), DB_AUTOQUERY_UPDATE,
     "group_id=?", array($group_id));
   if (!$res_gl)
+    $local_feedback .= sprintf(
 # TRANSLATORS: the argument is table name (like groups);
 # the string shall be followed by database error message.
-    $local_feedback .= sprintf(_("%s table Update failed:"), 'groups')
+                               _("%s table Update failed:"), 'groups')
                        .' '.db_error();
 
   $ok = 0;
   if ($nb_categories > 0)
     {
-      for ($i=0; $i<$nb_categories; $i++)
+      for ($i = 0; $i < $nb_categories; $i++)
         {
-          $current_fv_name = $tracker_name."_cat_".$i."_bug_fv_id";
-          $current_email_name = $tracker_name."_cat_".$i."_email";
-          $current_send_all_name = $tracker_name."_cat_".$i."_send_all_flag";
+          $current_fv_name = $tracker_name . "_cat_" . $i . "_bug_fv_id";
+          $current_email_name = $tracker_name . "_cat_" . $i . "_email";
+          $current_send_all_name = $tracker_name . "_cat_" . $i
+                                   . "_send_all_flag";
           $in = sane_import('post', array($current_fv_name,
                                           $current_email_name,
                                           $current_send_all_name));
@@ -351,11 +352,12 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
           if ($res_cat)
             $ok++;
           else
+            $local_feedback .= sprintf(
 # TRANSLATORS: the argument is table name (like groups);
 # the string shall be followed by database error message.
-            $local_feedback .= sprintf(_("%s table Update failed:"),
+                                       _("%s table Update failed:"),
                                        $tracker_name)
-                               .' '.db_error();
+                               . ' ' . db_error();
         }
     }
   if (($res_gl) && ($ok == $nb_categories) && ($local_feedback == ""))
@@ -372,28 +374,28 @@ function trackers_data_get_item_notification_info($item_id, $artifact, $updated)
 # Get group information bur new entity notification settings.
   $result = db_execute(
     "SELECT groups.{$artifact}_glnotif, groups.send_all_{$artifact},
-     groups.new_{$artifact}_address ".
-    "FROM {$artifact}, groups ".
-    "WHERE {$artifact}.bug_id=? ".
-    "AND groups.group_id={$artifact}.group_id",
+     groups.new_{$artifact}_address "
+  . "FROM {$artifact}, groups "
+  . "WHERE {$artifact}.bug_id=? "
+  .  "AND groups.group_id={$artifact}.group_id",
     array($item_id));
 
-  $glnotif = db_result($result,0,$artifact."_glnotif");
-  $glsendall = db_result($result,0,"send_all_".$artifact);
-  $glnewad = db_result($result,0,"new_".$artifact."_address");
+  $glnotif = db_result($result, 0, $artifact . "_glnotif");
+  $glsendall = db_result($result, 0, "send_all_" . $artifact);
+  $glnewad = db_result($result, 0, "new_" . $artifact . "_address");
   if ($glnotif != 1)
     {   # not 'global only'
       $cat_field_name = "category_id";
 
       $result = db_execute("SELECT $artifact"
-        ."_field_value.email_ad, $artifact"."_field_value.send_all_flag "
-        ."FROM $artifact"."_field_value, $artifact"."_field, $artifact "
-        ."WHERE $artifact.bug_id = ? "
-        ."AND $artifact"."_field.field_name = ? "
-        ."AND $artifact"."_field_value.bug_field_id=$artifact"
-        ."_field.bug_field_id "
-        ."AND $artifact"."_field_value.group_id=$artifact.group_id "
-        ."AND $artifact"."_field_value.value_id=$artifact.category_id",
+        . "_field_value.email_ad, $artifact" . "_field_value.send_all_flag "
+        . "FROM $artifact" . "_field_value, $artifact" . "_field, $artifact "
+        . "WHERE $artifact.bug_id = ? "
+        . "AND $artifact" . "_field.field_name = ? "
+        . "AND $artifact" . "_field_value.bug_field_id=$artifact"
+        . "_field.bug_field_id "
+        . "AND $artifact" . "_field_value.group_id=$artifact.group_id "
+        . "AND $artifact" . "_field_value.value_id=$artifact.category_id",
                      array($item_id, $cat_field_name));
       $rows=db_numrows($result);
       if ($rows > 0)
@@ -463,11 +465,12 @@ function cmp_place_result($ar1, $ar2)
 # WARNING: This function must only be called after bug_init().
 function trackers_data_get_all_report_fields ($report_id = 100)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   $have_bug_id = false;
 
   # Build the list of fields involved in this report.
-  $res = db_execute("SELECT * FROM ".ARTIFACT."_report_field WHERE report_id=?",
+  $res = db_execute("SELECT * FROM " . ARTIFACT
+                    . "_report_field WHERE report_id=?",
                     array($report_id));
 
   while ($arr = db_fetch_array($res))
@@ -524,13 +527,13 @@ function trackers_data_get_all_report_fields ($report_id = 100)
 # Return all possible values for a select box field.
 # Rk: if the checked value is given then it means that we want this value
 # in the list in any case (even if it is hidden and active_only is requested).
-function trackers_data_get_field_predefined_values ($field, $group_id=false,
-  $checked=false,$by_field_id=false,$active_only=true)
+function trackers_data_get_field_predefined_values ($field, $group_id  = false,
+  $checked  = false, $by_field_id  = false, $active_only  = true)
 {
   $field_id = ($by_field_id ? $field : trackers_data_get_field_id($field));
   $field_name = ($by_field_id ? trackers_data_get_field_name($field) : $field);
 
-  # The "Assigned_to" box requires some special processing
+  # The "Assigned_to" box requires some special processing,
   # because possible values  are project members) and they are
   # not stored in the trackers_field_value table but in the user_group table.
   if ($field_name == 'assigned_to')
@@ -542,11 +545,8 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false,
   $status_cond = '';
   $status_cond_params = array();
 
-  # If only active field
   if ($active_only)
     {
-# FIXME: does not handle the case where $checked has multiple values
-# Check eg export.php:586. It's not clear what $checked exactly means...
       if ($checked and !is_array($checked))
         {
           $status_cond = "AND  (status IN ('A','P') OR value_id=?) ";
@@ -559,58 +559,42 @@ function trackers_data_get_field_predefined_values ($field, $group_id=false,
         }
     }
 
-# CAUTION !! the fields value_id and value must be first in the
-# select statement because the output is used in the html_build_select_box
-# function
+# The fields value_id and value must be first in the select statement,
+# because the output is used in the html_build_select_box function.
 
-# yeupou@gnu.org 2003-11-24
-# FIXME!!!!! WHAT IS THIS CRAP!
-# It _on purpose_ ignores the permanent values for the
-# system when a group have his own values.
-# And  when creating group specific values, it insert the permanent
-# system values in the group specific values.
-#
-# Can someone bring a reasonnable explanation for such a behavior?
-#   - permanent field must by nature be permanent, in any case!
-#   - database must never duplicates information without good reason
-#
-# When improving this code, please change that so it uses the permanent
-# values in any case, whatever the group specific values may be.
-
-# Look for project specific values first
+# Look for project specific values first.
   $res_value = db_execute("SELECT value_id,value,bug_fv_id,bug_field_id,
                            group_id,description,order_id,status "
-                          ."FROM ".ARTIFACT."_field_value "
-                          ."WHERE group_id=? AND bug_field_id=? "
-                          .$status_cond." ORDER BY order_id,value ASC",
+                          . "FROM " . ARTIFACT . "_field_value "
+                          . "WHERE group_id=? AND bug_field_id=? "
+                          . $status_cond . " ORDER BY order_id,value ASC",
                           array_merge(array($group_id, $field_id),
                                       $status_cond_params));
   $rows=db_numrows($res_value);
 
-  # If no specific value for this group then look for default values
+  # If no specific value for this group, then look for default values.
   if ($rows == 0)
     {
       $res_value = db_execute("SELECT value_id,value,bug_fv_id,bug_field_id,
                                group_id,description,order_id,status "
-                              ."FROM ".ARTIFACT."_field_value "
-                              ."WHERE group_id=100 AND bug_field_id=? "
-                              .$status_cond." ORDER BY order_id,value ASC",
+                              . "FROM " . ARTIFACT . "_field_value "
+                              . "WHERE group_id=100 AND bug_field_id=? "
+                              . $status_cond . " ORDER BY order_id,value ASC",
                               array_merge(array($field_id),
                                           $status_cond_params));
-      $rows=db_numrows($res_value);
     }
-  return($res_value);
+  return $res_value;
 }
 
 function trackers_data_use_field_predefined_values ($field, $group_id)
 {
   # Check whether a group field values are the default one or not.
   # If no entry in the database for the relevant field value belong to the
-  # group, then it uses default values (fallback)
+  # group, then it uses default values (fallback).
   $field_id = trackers_data_get_field_id($field);
 
-  $result = db_execute("SELECT bug_fv_id FROM ".ARTIFACT."_field_value "
-    ."WHERE group_id=? AND bug_field_id=?", array($group_id, $field_id));
+  $result = db_execute("SELECT bug_fv_id FROM " . ARTIFACT . "_field_value "
+    . "WHERE group_id=? AND bug_field_id=?", array($group_id, $field_id));
   return db_numrows($result);
 }
 
@@ -629,18 +613,12 @@ function trackers_data_is_special($field, $by_field_id=false)
          : !empty($BF_USAGE_BY_NAME[$field]['special']));
 }
 
-# deprecated
-function trackers_data_is_empty_ok ($field, $by_field_id=false)
-{
-  return trackers_data_mandatory_flag($field, $by_field_id);
-}
-
 function trackers_data_mandatory_flag ($field, $by_field_id=false)
 {
   # 1 = not mandatory
   # 0 = relaxed mandatory (mandatory if it was to the submitter)
   # 3 = mandatory whenever possible
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
       $val = $BF_USAGE_BY_ID[$field]['custom_empty_ok'];
@@ -661,7 +639,7 @@ function trackers_data_mandatory_flag ($field, $by_field_id=false)
 
 function trackers_data_do_keep_history($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
       $val = $BF_USAGE_BY_ID[$field]['custom_keep_history'];
@@ -679,7 +657,7 @@ function trackers_data_do_keep_history($field, $by_field_id=false)
 
 function trackers_data_is_required($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
       return isset($BF_USAGE_BY_ID[$field]['required'])
@@ -696,7 +674,7 @@ function trackers_data_is_required($field, $by_field_id=false)
 
 function trackers_data_is_used($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   return($by_field_id ? $BF_USAGE_BY_ID[$field]['use_it']
                         : $BF_USAGE_BY_NAME[$field]['use_it']);
 }
@@ -719,7 +697,7 @@ function trackers_data_is_showed_on_result($field)
 # (first bit of show_on_add set).
 function trackers_data_is_showed_on_add($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   $by_id = isset($BF_USAGE_BY_ID[$field]['show_on_add'])
     ? $BF_USAGE_BY_ID[$field]['show_on_add']
     : null;
@@ -793,7 +771,7 @@ function trackers_data_is_username_field($field, $by_field_id=false)
 
 function trackers_data_is_project_scope($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
 
   if ($by_field_id)
     return($BF_USAGE_BY_ID[$field]['scope'] == 'P');
@@ -831,7 +809,7 @@ function trackers_data_get_group_id($field, $by_field_id=false)
 
 function trackers_data_get_label($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   $lbl = null;
   if ($by_field_id)
     {
@@ -852,7 +830,7 @@ function trackers_data_get_label($field, $by_field_id=false)
 
 function trackers_data_get_description($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
       $desc = $BF_USAGE_BY_ID[$field]['custom_description'];
@@ -895,7 +873,7 @@ function trackers_data_get_display_type_in_clear($field, $by_field_id=false)
 
 function trackers_data_get_keep_history($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
       $val = null;
@@ -917,14 +895,14 @@ function trackers_data_get_keep_history($field, $by_field_id=false)
 
 function trackers_data_get_place($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   return($by_field_id ? $BF_USAGE_BY_ID[$field]['place']
                         : $BF_USAGE_BY_NAME[$field]['place']);
 }
 
 function trackers_data_get_scope($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   return($by_field_id ? $BF_USAGE_BY_ID[$field]['scope']
                         : $BF_USAGE_BY_NAME[$field]['scope']);
 }
@@ -938,7 +916,7 @@ function trackers_data_get_col_width($field, $by_field_id=false)
 
 function trackers_data_get_display_size($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
       $val = $BF_USAGE_BY_ID[$field]['custom_display_size'];
@@ -961,19 +939,18 @@ function trackers_data_get_display_size($field, $by_field_id=false)
 # bug table (SQL definition).
 function trackers_data_get_default_value($field, $by_field_id=false)
 {
-  global $BF_USAGE_BY_ID,$BF_USAGE_BY_NAME;
+  global $BF_USAGE_BY_ID, $BF_USAGE_BY_NAME;
   if ($by_field_id)
     {
       $field = trackers_data_get_field_name($field);
     }
 
-  $result = db_query('DESCRIBE '.ARTIFACT.' `'.$field.'`');
-  // eg: DESCRIBE bugs originator_name
-  return (db_result($result,0,'Default'));
+  $result = db_query('DESCRIBE ' . ARTIFACT . ' `' . $field . '`');
+  return (db_result($result, 0, 'Default'));
 }
 
-# Find the maximum value for the value_id of a field for a given group
-# Return -1 if  no value exist yet
+# Find the maximum value for the value_id of a field for a given group.
+# Return -1, if no value exist yet.
 function trackers_data_get_max_value_id($field, $group_id, $by_field_id=false)
 {
   if (!$by_field_id)
@@ -981,16 +958,17 @@ function trackers_data_get_max_value_id($field, $group_id, $by_field_id=false)
       $field_id = trackers_data_get_field_id($field);
     }
 
-  $res = db_execute("SELECT max(value_id) as max FROM ".ARTIFACT."_field_value "
-                    ."WHERE bug_field_id=? AND group_id=?",
+  $res = db_execute("SELECT max(value_id) as max FROM " . ARTIFACT
+                    . "_field_value "
+                    . "WHERE bug_field_id=? AND group_id=?",
                     array($field_id, $group_id));
   $rows = db_numrows($res);
 
-  # If no max value found then it means it's the first value for this field
-  # in this group. Return -1 in this case
+  # If no max value found, then it means it's the first value for this field
+  # in this group. Return -1 in this case.
   if ($rows == 0)
-    return(-1);
-  return(db_result($res,0,'max'));
+    return -1;
+  return db_result ($res, 0, 'max');
 }
 
 # Return true if there is an existing set of values for given field for a
@@ -1001,12 +979,12 @@ function trackers_data_is_value_set_empty($field, $group_id, $by_field_id=false)
     {
       $field_id = trackers_data_get_field_id($field);
     }
-  $res = db_execute("SELECT value_id FROM ".ARTIFACT."_field_value ".
-                    "WHERE bug_field_id=? AND group_id=?",
+  $res = db_execute("SELECT value_id FROM " . ARTIFACT . "_field_value "
+                    . "WHERE bug_field_id=? AND group_id=?",
                     array($field_id, $group_id));
-  $rows=db_numrows($res);
+  $rows = db_numrows ($res);
 
-  return (($rows<=0));
+  return ($rows <= 0);
 }
 
 # Initialize the set of values for a given field for a given group by using
@@ -1018,23 +996,23 @@ function trackers_data_copy_default_values($field, $group_id, $by_field_id=false
       $field_id = trackers_data_get_field_id($field);
     }
 
-  # If group_id is 100 (None), it is a null operation
+  # If group_id is 100 (None), it is a null operation,
   # because default values belong to group_id 100 by definition.
   if ($group_id == 100)
     return;
   # First delete the exisiting value if any.
-  $res = db_execute("DELETE FROM ".ARTIFACT."_field_value "
-                    ."WHERE bug_field_id=? AND group_id=?",
+  $res = db_execute("DELETE FROM " . ARTIFACT . "_field_value "
+                    . "WHERE bug_field_id=? AND group_id=?",
                     array($field_id, $group_id));
 
-  # Second insert default values (if any) from group 'None'
+  # Second insert default values (if any) from group 'None'.
   # Rk: The target table of the INSERT statement cannot appear in
-  # the FROM clause of the SELECT part of the query because it's forbidden
-  # in ANSI SQL to SELECT . So do it by hand !
+  # the FROM clause of the SELECT part of the query, because it's forbidden
+  # in ANSI SQL to SELECT. So do it by hand !
 
   $res = db_execute("SELECT value_id,value,description,order_id,status "
-                    ."FROM ".ARTIFACT."_field_value "
-                    ."WHERE bug_field_id=? AND group_id=100",
+                    . "FROM " . ARTIFACT . "_field_value "
+                    . "WHERE bug_field_id=? AND group_id=100",
                     array($field_id));
   $rows = db_numrows($res);
 
@@ -1046,9 +1024,7 @@ function trackers_data_copy_default_values($field, $group_id, $by_field_id=false
       $order_id = db_result($res,$i,'order_id');
       $status  = db_result($res,$i,'status');
 
-
-      // print "<BR>DBG - $sql";
-      $res_insert = db_autoexecute(ARTIFACT."_field_value",
+      $res_insert = db_autoexecute(ARTIFACT . "_field_value",
         array(
           'bug_field_id' => $field_id,
           'group_id' => $group_id,
@@ -1074,7 +1050,7 @@ function trackers_data_get_cached_field_value($field,$group_id,$value_id)
   if (!isset($BF_VALUE_BY_NAME[$field][$value_id]))
     {
       $res = trackers_data_get_field_predefined_values ($field, $group_id,
-                                                        false,false,false);
+                                                        false, false, false);
       while ($fv_array = db_fetch_array($res))
         {
           # $fv_array[0] has the value_id and [1] is the value
@@ -1087,17 +1063,16 @@ function trackers_data_get_cached_field_value($field,$group_id,$value_id)
 # Get all the columns associated to a given field value.
 function trackers_data_get_field_value ($item_fv_id)
 {
-  $res = db_execute("SELECT * FROM ".ARTIFACT
-                    ."_field_value WHERE bug_fv_id=?", array($item_fv_id));
-  return($res);
+  return db_execute("SELECT * FROM " . ARTIFACT
+                    . "_field_value WHERE bug_fv_id=?", array($item_fv_id));
 }
 
 # See if this field value belongs to group None (100). In this case
 # it is a so called default value.
 function trackers_data_is_default_value ($item_fv_id)
 {
-  $res = db_execute("SELECT bug_field_id,value_id FROM ".ARTIFACT."_field_value
-                     WHERE bug_fv_id = ? AND group_id=100",
+  $res = db_execute("SELECT bug_field_id,value_id FROM " . ARTIFACT
+                    . "_field_value WHERE bug_fv_id = ? AND group_id=100",
                     array($item_fv_id));
 
   return ((db_numrows($res) >= 1) ? $res : false);
@@ -1105,9 +1080,10 @@ function trackers_data_is_default_value ($item_fv_id)
 
 # Insert a new value for a given field for a given group.
 function trackers_data_create_value ($field, $group_id, $value, $description,
-                                     $order_id,$status='A',$by_field_id=false)
+                                     $order_id, $status = 'A',
+                                     $by_field_id = false)
 {
-  global $feedback,$ffeedback;
+  global $feedback, $ffeedback;
 
   if (preg_match ("/^\s*$/", $value))
     {
@@ -1120,7 +1096,7 @@ function trackers_data_create_value ($field, $group_id, $value, $description,
       $field_id = trackers_data_get_field_id($field);
     }
 
-  # If group_id=100 (None) then do nothing
+  # If group_id=100 (None), then do nothing,
   # because no real project should have the group number '100'.
   if ($group_id == 100)
     return;
@@ -1141,7 +1117,7 @@ function trackers_data_create_value ($field, $group_id, $value, $description,
   else
     $value_id = $max_value_id + 1;
 
-  $result = db_autoexecute(ARTIFACT."_field_value",
+  $result = db_autoexecute(ARTIFACT . "_field_value",
     array(
       'bug_field_id' => $field_id,
       'group_id' => $group_id,
@@ -1153,20 +1129,16 @@ function trackers_data_create_value ($field, $group_id, $value, $description,
     ), DB_AUTOQUERY_INSERT);
 
   if (db_affected_rows($result) < 1)
-    {
-      fb(_("Insert failed."), 0);
-      ' - '.db_error();
-    }
+    fb(_("Insert failed."), 0);
   else
     fb(_("New field value inserted."));
 }
 
 # Insert a new value for a given field for a given group.
-function trackers_data_update_value ($item_fv_id,$field,$group_id,$value,
-                                     $description,$order_id,$status='A')
+function trackers_data_update_value ($item_fv_id, $field, $group_id, $value,
+                                     $description, $order_id, $status = 'A')
 {
-
-  global $feedback,$ffeedback;
+  global $feedback, $ffeedback;
 
   if (preg_match ("/^\s*$/", $value))
     {
@@ -1175,8 +1147,8 @@ function trackers_data_update_value ($item_fv_id,$field,$group_id,$value,
     }
 
   # Updating a bug field value that belong to group 100 (None) is
-  # forbidden. These are default values that cannot be changed so
-  # make sure to copy the default values first in the project context first
+  # forbidden. These are default values that cannot be changed, so
+  # make sure to copy the default values first in the project context first.
 
   if ($res = trackers_data_is_default_value($item_fv_id))
     {
@@ -1193,8 +1165,8 @@ function trackers_data_update_value ($item_fv_id,$field,$group_id,$value,
       $where_cond_params = array($item_fv_id);
     }
 
-  # Now perform the value update
-  $result = db_autoexecute(ARTIFACT."_field_value",
+  # Now perform the value update.
+  $result = db_autoexecute(ARTIFACT . "_field_value",
     array(
      'value' => $value,
      'description' => $description,
@@ -1203,33 +1175,25 @@ function trackers_data_update_value ($item_fv_id,$field,$group_id,$value,
     ), DB_AUTOQUERY_UPDATE,
     "$where_cond", $where_cond_params);
 
-  #print "<BR>DBG - $sql";
-
   if (db_affected_rows($result) < 1)
-    {
-      fb(_("Update of field value failed."));
-    }
+    fb(_("Update of field value failed."));
   else
-    {
-      fb(_("New field value updated."));
-    }
+    fb(_("New field value updated."));
 }
 
 # Reset a field settings to its defaults usage (values are untouched). The defaults
-# always belong to group_id 100 (None) so make sure we don;t delete entries for
+# always belong to group_id 100 (None) so make sure we don't delete entries for
 # group 100.
-function trackers_data_reset_usage($field_name,$group_id)
+function trackers_data_reset_usage($field_name, $group_id)
 {
-  global $feedback;
-  $field_id = trackers_data_get_field_id($field_name);
-  if ($group_id != 100)
-    {
-      db_execute("DELETE FROM ".ARTIFACT."_field_usage ".
-         "WHERE group_id=? AND bug_field_id=?",
-                 array($group_id, $field_id));
-      fb(_("Field value successfully reset to defaults."));
+  if ($group_id == 100)
+    return;
 
-    }
+  $field_id = trackers_data_get_field_id($field_name);
+  db_execute("DELETE FROM " . ARTIFACT . "_field_usage "
+             . "WHERE group_id=? AND bug_field_id=?",
+             array($group_id, $field_id));
+  fb(_("Field value successfully reset to defaults."));
 }
 
 # Update a field settings in the trackers_usage_table.
@@ -1256,8 +1220,6 @@ function trackers_data_update_usage($field_name,
 
   $field_id = trackers_data_get_field_id($field_name);
 
-  # If it's a custom field then take label into account else store NULL.
-  #    if (trackers_data_is_custom($field_name))  {
   $lbl = isset($label) ? $label : null;
   $desc = isset($description) ? $description : null;
   $disp_size = isset($display_size) ? $display_size : null;
@@ -1272,15 +1234,16 @@ function trackers_data_update_usage($field_name,
     $transition_default_auth = '';
 
   # See if this field usage exists in the table for this project.
-  $result = db_execute("SELECT bug_field_id FROM ".ARTIFACT."_field_usage ".
-                       "WHERE bug_field_id=? AND group_id=?",
+  $result = db_execute("SELECT bug_field_id FROM " . ARTIFACT . "_field_usage "
+                       .  "WHERE bug_field_id=? AND group_id=?",
                        array($field_id, $group_id));
   $rows = db_numrows($result);
 
-  # If it does exist then update it else insert a new usage entry for this field.
+  # If it does exist, then update it, else insert a new usage entry
+  # for this field.
   if ($rows)
     {
-      $result = db_autoexecute(ARTIFACT.'_field_usage',
+      $result = db_autoexecute(ARTIFACT . '_field_usage',
         array(
          'use_it' => $use_it,
          'show_on_add' => $show_on_add,
@@ -1298,7 +1261,7 @@ function trackers_data_update_usage($field_name,
     }
   else
     {
-      $result = db_autoexecute(ARTIFACT.'_field_usage',
+      $result = db_autoexecute(ARTIFACT . '_field_usage',
         array(
           'bug_field_id' => $field_id,
           'group_id' => $group_id,
@@ -1330,10 +1293,9 @@ function trackers_data_get_technicians ($group_id)
 
   # In fact, this is terrible, we cannot return something else than
   # a mysql result if we do not want to rewrite 25 functions.
-  # So we get the appropriate list of users... and finally issue a
-  # mysql command only to be able to return a mysql result.
-  # Please, propose something better at savannah-dev@gnu.org
-
+  # So we get the appropriate list of users... and finally issue
+  # a mysql command only to be able to return a mysql result.
+  # Please, propose something better at savannah-dev@gnu.org.
 
   # Get list of members.
   $members_res = db_execute("SELECT user.user_id FROM user,user_group
@@ -1346,7 +1308,7 @@ function trackers_data_get_technicians ($group_id)
   while ($member = db_fetch_array($members_res))
     {
       if (member_check($member['user_id'], $group_id,
-                       member_create_tracker_flag(ARTIFACT).'1'))
+                       member_create_tracker_flag(ARTIFACT) . '1'))
         {
           if ($notfirst)
             $sql .= " OR ";
@@ -1372,119 +1334,120 @@ function trackers_data_get_transition ($group_id)
 function trackers_data_get_submitters ($group_id=false)
 {
   return db_execute("SELECT DISTINCT user.user_id,user.user_name "
-     ."FROM user,".ARTIFACT." "
-     ."WHERE user.user_id=".ARTIFACT.".submitted_by "
-     ."AND ".ARTIFACT.".group_id=? "
-     ."ORDER BY user.user_name", array($group_id));
+     . "FROM user," . ARTIFACT . " "
+     . "WHERE user.user_id=" . ARTIFACT . ".submitted_by "
+     . "AND " . ARTIFACT . ".group_id=? "
+     . "ORDER BY user.user_name", array($group_id));
 }
 
 # Get the items for this project.
 function trackers_data_get_items ($group_id=false, $artifact)
 {
   return db_execute("SELECT bug_id,summary "
-     ."FROM ".$artifact." "
-     ."WHERE group_id=? "
-     ."AND status_id <> 3 "
-     ."ORDER BY bug_id DESC LIMIT 100", array($group_id));
+     . "FROM " . $artifact . " "
+     . "WHERE group_id=? "
+     . "AND status_id <> 3 "
+     . "ORDER BY bug_id DESC LIMIT 100", array($group_id));
 }
 
-# Get the list of ids this is dependent on
-function trackers_data_get_dependent_items ($item_id=false, $artifact,
-                                            $notin=false)
+# Get the list of ids this is dependent on.
+function trackers_data_get_dependent_items ($item_id = false, $artifact,
+                                            $notin = false)
 {
-  $sql="SELECT is_dependent_on_item_id FROM ".ARTIFACT
-    ."_dependencies WHERE item_id=? AND is_dependent_on_item_id_artifact=?";
+  $sql="SELECT is_dependent_on_item_id FROM " . ARTIFACT
+    . "_dependencies WHERE item_id=? AND is_dependent_on_item_id_artifact=?";
   $sql_params = array($item_id, $artifact);
   if ($notin)
     {
       $sql .= ' AND is_dependent_on_item_id NOT IN ('
         . implode(',', array_fill(0, count($dict), '?'))
-        . ')'; # ?,?,?,...
+        . ')';
       $sql_params = array_merge($sql_params, $notin);
     }
   return db_execute($sql, $sql_params);
 }
 
-function trackers_data_get_valid_bugs ($group_id=false,$item_id='')
+function trackers_data_get_valid_bugs ($group_id = false, $item_id = '')
 {
   return db_execute("SELECT bug_id,summary "
-     ."FROM ".ARTIFACT." "
-     ."WHERE group_id=? "
-     ."AND bug_id <> ? AND ".ARTIFACT
-     .".resolution_id <> 2 ORDER BY bug_id DESC LIMIT 200",
+     . "FROM " . ARTIFACT . " "
+     . "WHERE group_id=? "
+     . "AND bug_id <> ? AND " . ARTIFACT
+     . ".resolution_id <> 2 ORDER BY bug_id DESC LIMIT 200",
     array($group_id, $item_id));
 }
 
-function trackers_data_get_followups ($item_id=false, $rorder=false)
+function trackers_data_get_followups ($item_id = false, $rorder = false)
 {
   if ($rorder == true)
     $rorder = "DESC";
   else
     $rorder = "ASC";
 
-  return db_execute("SELECT DISTINCT ".ARTIFACT."_history.bug_history_id,"
-     .ARTIFACT."_history.field_name,".ARTIFACT."_history.old_value,".ARTIFACT
-     ."_history.spamscore,".ARTIFACT."_history.new_value,".ARTIFACT
-     ."_history.date,user.user_name,user.realname,user.user_id,".ARTIFACT
-     ."_field_value.value AS comment_type "
-     ."FROM ".ARTIFACT."_history,".ARTIFACT."_field_value,".ARTIFACT."_field,"
-     .ARTIFACT.",user "
-     ."WHERE ".ARTIFACT."_history.bug_id = ? "
-     ."AND ".ARTIFACT."_history.field_name = 'details' "
-     ."AND ".ARTIFACT."_history.mod_by=user.user_id "
-     ."AND ".ARTIFACT."_history.bug_id=".ARTIFACT.".bug_id "
-     ."AND ".ARTIFACT."_history.type = ".ARTIFACT."_field_value.value_id "
-     ."AND ".ARTIFACT."_field_value.bug_field_id = ".ARTIFACT."_field.bug_field_id "
-     ."AND (".ARTIFACT."_field_value.group_id = ".ARTIFACT.".group_id OR "
-     .ARTIFACT."_field_value.group_id = '100') "
-     ."AND  ".ARTIFACT."_field.field_name = 'comment_type_id' "
-     ."ORDER BY ".ARTIFACT."_history.date $rorder",
+  return db_execute("SELECT DISTINCT " . ARTIFACT . "_history.bug_history_id,"
+    . ARTIFACT . "_history.field_name," . ARTIFACT . "_history.old_value,"
+    . ARTIFACT . "_history.spamscore," . ARTIFACT . "_history.new_value,"
+    . ARTIFACT . "_history.date,user.user_name,user.realname,user.user_id,"
+    . ARTIFACT . "_field_value.value AS comment_type "
+    . "FROM " . ARTIFACT . "_history," . ARTIFACT . "_field_value,"
+    . ARTIFACT . "_field," . ARTIFACT . ",user "
+    . "WHERE " . ARTIFACT . "_history.bug_id = ? "
+    . "AND " . ARTIFACT . "_history.field_name = 'details' "
+    . "AND " . ARTIFACT . "_history.mod_by=user.user_id "
+    . "AND " . ARTIFACT . "_history.bug_id=" . ARTIFACT . ".bug_id "
+    . "AND " . ARTIFACT . "_history.type = " . ARTIFACT . "_field_value.value_id "
+    . "AND " . ARTIFACT . "_field_value.bug_field_id = "
+    . ARTIFACT . "_field.bug_field_id "
+    . "AND (" . ARTIFACT . "_field_value.group_id = "
+    . ARTIFACT . ".group_id OR " . ARTIFACT . "_field_value.group_id = '100') "
+    . "AND  " . ARTIFACT . "_field.field_name = 'comment_type_id' "
+    . "ORDER BY " . ARTIFACT . "_history.date $rorder",
                     array($item_id));
 }
 
 function trackers_data_get_commenters($item_id)
 {
-  return db_execute("SELECT DISTINCT mod_by FROM ".ARTIFACT."_history ".
-     "WHERE ".ARTIFACT."_history.bug_id = ? ".
-     "AND ".ARTIFACT."_history.field_name = 'details'",
+  return db_execute("SELECT DISTINCT mod_by FROM " . ARTIFACT . "_history "
+     . "WHERE " . ARTIFACT . "_history.bug_id = ? "
+     . "AND " . ARTIFACT . "_history.field_name = 'details'",
                     array($item_id));
 }
 
-function trackers_data_get_history ($item_id=false)
+function trackers_data_get_history ($item_id = false)
 {
-  return db_execute("SELECT ".ARTIFACT."_history.field_name,".ARTIFACT
-     ."_history.old_value,".ARTIFACT."_history.date,".ARTIFACT
-     ."_history.type,user.user_name,".ARTIFACT."_history.new_value "
-     ."FROM ".ARTIFACT."_history,user "
-     ."WHERE ".ARTIFACT."_history.mod_by=user.user_id "
-     ."AND ".ARTIFACT."_history.field_name <> 'details' "
-     ."AND bug_id = ? ORDER BY ".ARTIFACT."_history.date DESC",
+  return db_execute("SELECT " . ARTIFACT . "_history.field_name," . ARTIFACT
+     . "_history.old_value," . ARTIFACT . "_history.date," . ARTIFACT
+     . "_history.type,user.user_name," . ARTIFACT . "_history.new_value "
+     . "FROM " . ARTIFACT . "_history,user "
+     . "WHERE " . ARTIFACT . "_history.mod_by=user.user_id "
+     . "AND " . ARTIFACT . "_history.field_name <> 'details' "
+     . "AND bug_id = ? ORDER BY " . ARTIFACT . "_history.date DESC",
                     array($item_id));
 }
 
-function trackers_data_get_attached_files ($item_id=false, $order='DESC')
+function trackers_data_get_attached_files ($item_id = false, $order = 'DESC')
 {
   if ($order != 'DESC' and $order != 'ASC')
     die("trackers_data_get_attached_files: invalid \$order '"
-        .htmlescape($order)."')");
+        . htmlescape($order) . "')");
 
   return db_execute("SELECT file_id,filename,filesize,filetype,
                      description,date,user.user_name "
-     ."FROM trackers_file,user "
-     ."WHERE submitted_by=user.user_id "
-     ."AND artifact = ? "
-     ."AND item_id = ? ORDER BY date $order",
+     . "FROM trackers_file,user "
+     . "WHERE submitted_by=user.user_id "
+     . "AND artifact = ? "
+     . "AND item_id = ? ORDER BY date $order",
                     array(ARTIFACT, $item_id));
 }
 
 function trackers_data_get_cc_list ($item_id=false)
 {
-  return db_execute("SELECT bug_cc_id,".ARTIFACT."_cc.email,".ARTIFACT
-     ."_cc.added_by,".ARTIFACT."_cc.comment,".ARTIFACT
-     ."_cc.date,user.user_name "
-     ."FROM ".ARTIFACT."_cc,user "
-     ."WHERE added_by=user.user_id "
-     ."AND bug_id = ? ORDER BY date DESC",
+  return db_execute("SELECT bug_cc_id," . ARTIFACT . "_cc.email," . ARTIFACT
+     . "_cc.added_by," . ARTIFACT . "_cc.comment," . ARTIFACT
+     . "_cc.date,user.user_name "
+     . "FROM " . ARTIFACT . "_cc,user "
+     . "WHERE added_by=user.user_id "
+     . "AND bug_id = ? ORDER BY date DESC",
                     array($item_id));
 }
 
@@ -1512,10 +1475,9 @@ function trackers_data_add_history ($field_name,
                                     $old_value,
                                     $new_value,
                                     $item_id,
-                                    $type=false,
-                                    $artifact=0,
-                                    $force=0)
-
+                                    $type = false,
+                                    $artifact = 0,
+                                    $force = 0)
 {
   # If no artifact is defined, get the default one.
   if (!$artifact)
@@ -1526,18 +1488,17 @@ function trackers_data_add_history ($field_name,
     return;
 
   if (!user_isloggedin())
-    $user=100;
+    $user = 100;
   else
-    $user=user_getid();
+    $user = user_getid();
 
-  # If spamscore is relevant (if it is a comment), set it, otherwise go with
-  # 0.
+  # If spamscore is relevant (if it is a comment), set it, otherwise go with 0.
   $spamscore = 0;
   if ($field_name == 'details')
     $spamscore = spam_get_user_score($user);
 
-  # If type has a value add it into the sql statement (this is only for
-  # the follow up comments (details field)).
+  # If type has a value, add it into the sql statement (this is only
+  # for the follow up comments (details field)).
   $val_type = 'NULL';
   if ($type)
     {
@@ -1545,13 +1506,13 @@ function trackers_data_add_history ($field_name,
     }
   else
     {
-        # No comment type specified for a followup comment
+        # No comment type specified for a followup comment,
         # so force it to None (100).
       if ($field_name == 'details')
         $val_type = 100;
     }
 
-  $result = db_autoexecute($artifact."_history",
+  $result = db_autoexecute($artifact . "_history",
     array(
       'bug_id' => $item_id,
       'field_name' => $field_name,
@@ -1570,11 +1531,11 @@ function trackers_data_add_history ($field_name,
       # see Savannah sr #109423.
 
       $read_result = db_execute("SELECT "
-                                .$artifact."_history.old_value,"
-                                .$artifact."_history.new_value "
-                                ."FROM ".$artifact."_history "
-                                ."WHERE "
-                                .$artifact."_history.bug_history_id=?",
+                                . $artifact . "_history.old_value,"
+                                . $artifact . "_history.new_value "
+                                . "FROM " . $artifact . "_history "
+                                . "WHERE "
+                                . $artifact . "_history.bug_history_id=?",
                                 array($insert_id));
 
       $prev_old_value = $old_value;
@@ -1596,7 +1557,7 @@ function trackers_data_add_history ($field_name,
             $new_value = trackers_encode_value ($new_value);
           if ($prev_old_value != $old_value
               || $prev_new_value != $new_value)
-          $res = db_autoexecute($artifact."_history", 
+          $res = db_autoexecute($artifact."_history",
                                 array('new_value' => $new_value,
                                       'old_value' => $old_value),
                                 DB_AUTOQUERY_UPDATE,
@@ -1611,7 +1572,7 @@ function trackers_data_add_history ($field_name,
                               $user);
 
   # Add to spamcheck queue if necessary (will temporary set the spamscore to
-  # 5, if necessary)
+  # 5, if necessary).
   # Useless if already considered to be spam.
   if ($spamscore < 5)
     {
@@ -1627,7 +1588,7 @@ function trackers_data_add_history ($field_name,
   return $result;
 }
 
-#  Handles update of most usual fields.
+#  Handle update of most usual fields.
 function trackers_data_handle_update ($group_id,
                                       $item_id,
                                       $dependent_on_task,
@@ -1639,7 +1600,7 @@ function trackers_data_handle_update ($group_id,
                                       &$changes,
                                       &$extra_addresses)
 {
-  # variable to track changes made inside the function
+  # Variable to track changes made inside the function.
   $change_exists = false;
 
   # Update an item. Rk: vfl is an variable list of fields, Vary from one
@@ -1652,7 +1613,7 @@ function trackers_data_handle_update ($group_id,
   if (!$group_id || !$item_id || !$canned_response)
     {
       dbg("params were group_id:$group_id item_id:$item_id "
-          ."canned_response:$canned_response");
+          . "canned_response:$canned_response");
       exit_missing_param();
     }
 
@@ -1668,9 +1629,8 @@ function trackers_data_handle_update ($group_id,
     }
 
   # Get this bug from the DB.
-
-  $result=db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id=?",
-                     array($item_id));
+  $result = db_execute("SELECT * FROM " . ARTIFACT . " WHERE bug_id=?",
+                       array($item_id));
 
   if (!((db_numrows($result) > 0)
         && (member_check(0,db_result($result,0,'group_id'),
@@ -1748,7 +1708,7 @@ function trackers_data_handle_update ($group_id,
                 $field_transition[$field_id][$old_value][$value]['notification_list'];
 
               # Register the transition, but only if the field it is about
-              # was not filled in the form
+              # was not filled in the form.
               if (!is_array($changes[$field]) ||
                   (!array_key_exists('del', $changes[$field])
                    && !array_key_exists('add', $changes[$field])))
@@ -1765,13 +1725,12 @@ function trackers_data_handle_update ($group_id,
         }
       else if (trackers_data_is_date_field($field))
         {
-          # if it is a date we must convert the format to unix time
           $date_value = $value;
           list($value,$ok) = utils_date_to_unixtime($value);
 
           # Users can be on different timezone ; The form
-          # save only the day, month, year.
-          # We cannot compare the timestamp (affected by timezone changes)
+          # saves only the day, month, year.
+          # We cannot compare the timestamp (affected by timezone changes).
           $date_old_value = date("Y-n-j", $old_value);
 
           $differ = ($date_old_value != $date_value);
@@ -1798,20 +1757,20 @@ function trackers_data_handle_update ($group_id,
           else
             {
               $upd_list[$field] = $value;
-              trackers_data_add_history($field,$old_value,$value,$item_id);
+              trackers_data_add_history($field, $old_value, $value, $item_id);
             }
 
           # Keep track of the change.
-          $changes[$field]['del']=
-            trackers_field_display($field,$group_id,$old_value,false,false,
-                                   true,true);
-          $changes[$field]['add']=
-            trackers_field_display($field,$group_id,$value,false,false,
-                                   true,true);
+          $changes[$field]['del'] =
+            trackers_field_display($field, $group_id, $old_value, false, false,
+                                   true, true);
+          $changes[$field]['add'] =
+            trackers_field_display($field, $group_id, $value, false, false,
+                                   true, true);
 
           # Keep track of the change real numeric values.
-          $changes[$field]['del-val']= $old_value;
-          $changes[$field]['add-val']= $value;
+          $changes[$field]['del-val'] = $old_value;
+          $changes[$field]['add-val'] = $value;
 
           # Register transition id, if not empty.
           if ($field_transition_id != '')
@@ -1850,8 +1809,8 @@ function trackers_data_handle_update ($group_id,
       # Browse the canned responses.
       while (list(,$thiscanned) = each($canned_response))
         {
-          $res3 = db_execute("SELECT * FROM ".ARTIFACT
-                             ."_canned_responses WHERE bug_canned_id=?",
+          $res3 = db_execute("SELECT * FROM " . ARTIFACT
+                             . "_canned_responses WHERE bug_canned_id=?",
                              array($thiscanned));
 
           if ($res3 && db_numrows($res3) > 0)
@@ -1887,23 +1846,21 @@ function trackers_data_handle_update ($group_id,
         trackers_data_get_value('comment_type_id',$group_id,
                                 $vfl['comment_type_id']);
 
-      # Add poster in CC
+      # Add poster in CC.
       if (!user_get_preference("skipcc_postcomment"))
         {
           trackers_add_cc($item_id,
                           $group_id,
                           user_getid(),
+          # Use a flag as comment, because if we translate the string now,
+          # people will get the translation of the submitter when they
+          # read the item, not necessarily the one they want.
                           "-COM-",
                           $changes);
-                               # use a flag as comment, because if we
-                               # translate the string now, people will get
-                                # the translation of the submitter when they
-                               # read the item, not necessarily the one they
-                               # want
         }
     }
 
-  # If we are on the cookbook, the original submission have been details
+  # If we are on the cookbook, the original submission have been details.
   if (ARTIFACT == 'cookbook')
     {
       $details = htmlspecialchars($vfl['details']);
@@ -1943,10 +1900,10 @@ function trackers_data_handle_update ($group_id,
       && trackers_data_is_status_closed($vfl['status_id'])
       && $vfl['status_id'] != db_result($result,0,'status_id'))
     {
-      $now=time();
+      $now = time();
       $upd_list['close_date'] = $now;
       trackers_data_add_history ('close_date',
-                                 db_result($result,0,'close_date'),
+                                 db_result($result, 0, 'close_date'),
                                  $now,
                                  $item_id);
     }
@@ -1957,14 +1914,14 @@ function trackers_data_handle_update ($group_id,
   while (list(, $dependent_on) = each($artifacts))
     {
       $art = $dependent_on;
-      $dependent_on = "dependent_on_".$dependent_on;
+      $dependent_on = "dependent_on_" . $dependent_on;
       if ($$dependent_on)
         {
           while (list(, $dep) = each($$dependent_on))
             {
               trackers_data_update_dependent_items($dep, $item_id, $art);
 
-              $changes['Depends on']['add'] = $art." #".$dep;
+              $changes['Depends on']['add'] = $art . " #" . $dep;
               $change_exists = 1;
 
               # Check if we are
@@ -1990,27 +1947,25 @@ function trackers_data_handle_update ($group_id,
    }
 
   # Finally, build the full SQL query and update the bug itself (if need be).
-  dbg("UPD LIST: ".implode(',', $upd_list));
+  dbg("UPD LIST: " . implode(',', $upd_list));
   if (count($upd_list) > 0)
     {
       $res = db_autoexecute(ARTIFACT, $upd_list, DB_AUTOQUERY_UPDATE,
                      "bug_id=? AND group_id=?",
                      array($item_id, $group_id));
-      $result=db_affected_rows($res);
+      $result = db_affected_rows($res);
 
       # Add CC (CC in case of comment would have been already entered,
-      # if there is only a comment, we should not end up here)
+      # if there is only a comment, we should not end up here).
       if (!user_get_preference("skipcc_updateitem"))
         {
           trackers_add_cc($item_id,
                           $group_id,
                           user_getid(),
+          # Use a flag as comment, because if we translate the string now,
+          # people will get the translation of the submitter when they
+          # read the item, not necessarily the one they want.
                           "-UPD-");
-                               # use a flag as comment, because if we
-                               # translate the string now, people will get
-                               # the translation of the submitter when they
-                               # read the item, not necessarily the one they
-                               # want
         }
     }
   else
@@ -2038,7 +1993,7 @@ function trackers_data_reassign_item ($item_id,
   global $group_id;
 
   # Can only be done by a tracker manager.
-  if (member_check(0,$group_id, member_create_tracker_flag(ARTIFACT).'2'))
+  if (member_check(0, $group_id, member_create_tracker_flag(ARTIFACT) . '2'))
     {
       # If the new group_id is equal to the current one, nothing need
       # to be done, unless the artifact changed.
@@ -2050,7 +2005,6 @@ function trackers_data_reassign_item ($item_id,
         {
           $new_group_id = $group_id;
         }
-
 
       if ($new_group_id == $group_id && ARTIFACT == $reassign_change_artifact)
         {
@@ -2066,17 +2020,17 @@ function trackers_data_reassign_item ($item_id,
       # each others. Simply erase previous information could cause data loss.
 
       # Fetch all the information.
-      $res_data = db_execute("SELECT * FROM ".ARTIFACT." WHERE bug_id = ?",
+      $res_data = db_execute("SELECT * FROM " . ARTIFACT . " WHERE bug_id = ?",
                              array($item_id));
       $row_data = db_fetch_array($res_data);
 
-      # Duplicate the report
+      # Duplicate the report.
       if (!$reassign_change_project)
         $reassign_change_project = $group_id;
 
       if (!$reassign_change_artifact)
         {
-	  fb(_("Unable to find out to which artifact the item is to be
+          fb(_("Unable to find out to which artifact the item is to be
 reassigned, exiting."), 1);
           return false;
         }
@@ -2115,36 +2069,36 @@ reassigned, exiting."), 1);
 
       # Update items history.
       trackers_data_add_history('Reassign Item',
-                                group_getname($group_id).', '
-                                .utils_get_tracker_prefix(ARTIFACT).' #'
-                                .$item_id,
-                                group_getname($new_group_id).', '
-                                .utils_get_tracker_prefix($reassign_change_artifact)
-                                .' #'.$new_item_id,
+                                group_getname($group_id) . ', '
+                                . utils_get_tracker_prefix(ARTIFACT) . ' #'
+                                . $item_id,
+                                group_getname($new_group_id) . ', '
+                                . utils_get_tracker_prefix($reassign_change_artifact)
+                                . ' #' . $new_item_id,
                                 $item_id,
                                 false,
                                 ARTIFACT,
                                 1);
 
       trackers_data_add_history('Reassign item',
-                                group_getname($group_id).', '
-                                .utils_get_tracker_prefix(ARTIFACT)
-                                .' #'.$item_id,
-                                group_getname($new_group_id).', '
-                                .utils_get_tracker_prefix($reassign_change_artifact)
-                                .' #'.$new_item_id,
+                                group_getname($group_id) . ', '
+                                . utils_get_tracker_prefix(ARTIFACT)
+                                . ' #' . $item_id,
+                                group_getname($new_group_id) . ', '
+                                . utils_get_tracker_prefix($reassign_change_artifact)
+                                . ' #' . $new_item_id,
                                 $new_item_id,
                                 false,
                                 $reassign_change_artifact,
                                 1);
 
       # Duplicate the comments.
-      $res_history = db_execute("SELECT * FROM ".ARTIFACT
-                                ."_history WHERE bug_id=? AND type=100",
+      $res_history = db_execute("SELECT * FROM " . ARTIFACT
+                                ." _history WHERE bug_id=? AND type=100",
                                 array($item_id));
       while ($row_history = db_fetch_array($res_history))
         {
-          $result = db_autoexecute($reassign_change_artifact."_history",
+          $result = db_autoexecute($reassign_change_artifact . "_history",
             array(
               'bug_id' => $new_item_id,
               'field_name' => $row_history['field_name'],
@@ -2155,24 +2109,24 @@ reassigned, exiting."), 1);
             ), DB_AUTOQUERY_INSERT);
           if (!$result)
             {
-	      fb(_("Unable to duplicate a comment from the original item
+              fb(_("Unable to duplicate a comment from the original item
 report information."), 1);
             }
         }
 
       # Add a comment giving every original information.
       $comment = "This item has been reassigned from the project "
-.group_getname($row_data['group_id'])." ".ARTIFACT
-." tracker to your tracker.\n\nThe original report is still available at "
-.ARTIFACT." #$item_id
+. group_getname($row_data['group_id']) . " " . ARTIFACT
+. " tracker to your tracker.\n\nThe original report is still available at "
+. ARTIFACT . " #$item_id
 
 Following are the information included in the original report:\n\n";
 
-      $res_show = db_query("SHOW COLUMNS FROM ".ARTIFACT);
+      $res_show = db_query("SHOW COLUMNS FROM " . ARTIFACT);
       $list = array();
       while ($row_show = db_fetch_array($res_show))
         {
-          # Build a list of any possible field
+          # Build a list of any possible field.
           $list[] = $row_show['Field'];
         }
 
@@ -2180,7 +2134,7 @@ Following are the information included in the original report:\n\n";
         {
           if ($row_data[$l])
             {
-              $comment .= "[field #".$l."] ";
+              $comment .= "[field #" . $l . "] ";
               $comment .= trackers_field_display($v,
                                                  $group_id,
                                                  $row_data[$l],
@@ -2192,7 +2146,7 @@ Following are the information included in the original report:\n\n";
             }
         }
 
-      $result = db_autoexecute($reassign_change_artifact."_history",
+      $result = db_autoexecute($reassign_change_artifact . "_history",
         array(
           'bug_id' => $new_item_id,
           'field_name' => 'details',
@@ -2204,7 +2158,7 @@ Following are the information included in the original report:\n\n";
 
       if (!$result)
         {
-	  fb(_("Unable to add a comment with the original item report
+          fb(_("Unable to add a comment with the original item report
 information."), 0);
         }
 
@@ -2222,7 +2176,7 @@ information."), 0);
 
       if (!$result)
         {
-	  fb(sprintf(_("Unable to duplicate an attached file (%s) from the
+          fb(sprintf(_("Unable to duplicate an attached file (%s) from the
 original item report information."), $row_attachment['filename']), 1);
           dbg("sql: $sql");
         }
@@ -2243,7 +2197,7 @@ original item report information."), $row_attachment['filename']), 1);
 
           if (!$result)
             {
-	      fb(sprintf(_("Unable to duplicate a CC address (%s) from the
+              fb(sprintf(_("Unable to duplicate a CC address (%s) from the
 original item report information."), $row_cc['email']), 1);
             }
         }
@@ -2257,9 +2211,9 @@ original item report information."), $row_cc['email']), 1);
           'summary' =>
             "Reassigned to another tracker [was: {$row_data['summary']}]",
           'details' => 'THIS ITEM WAS REASSIGNED TO '
-            .strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
-            .' #'.$new_item_id
-            ."\n".$row_data['details']
+            . strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
+            . ' #' . $new_item_id
+            . "\n" . $row_data['details']
         ), DB_AUTOQUERY_UPDATE,
         "bug_id=?", array($item_id));
       trackers_data_add_history('close_date',$now,$now,$item_id);
@@ -2275,14 +2229,14 @@ original item report information."), $row_cc['email']), 1);
 
       # Finally put an extra comment so people dont get confused
       # (it is not important, so run the sql without checks).
-      db_autoexecute(ARTIFACT."_history",
+      db_autoexecute(ARTIFACT . "_history",
         array(
           'bug_id' => $item_id,
           'field_name' => 'details',
           'old_value' => 'THIS ITEM WAS REASSIGNED TO '
-            .strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
-            .' #'.$new_item_id.'</p>'
-            ."\n" . 'Please, do not post any new comments to this item.',
+            . strtoupper(utils_get_tracker_prefix($reassign_change_artifact))
+            . ' #' . $new_item_id . '</p>'
+            . "\n" . 'Please, do not post any new comments to this item.',
           'mod_by' => user_getid(),
           'date' => $now,
           'type' => 100
@@ -2304,10 +2258,10 @@ original item report information."), $row_cc['email']), 1);
 
 function trackers_data_update_dependent_items ($depends_on, $item_id, $artifact)
 {
-  global $feedback,$ffeedback;
+  global $feedback, $ffeedback;
 
   # Check if the dependency does not already exists.
-  $result = db_execute("SELECT item_id FROM ".ARTIFACT."_dependencies
+  $result = db_execute("SELECT item_id FROM " . ARTIFACT . "_dependencies
      WHERE item_id=?
      AND is_dependent_on_item_id=?
      AND is_dependent_on_item_id_artifact=?",
@@ -2330,32 +2284,30 @@ function trackers_data_update_dependent_items ($depends_on, $item_id, $artifact)
       fb(_("Dependency added"));
       trackers_data_add_history("Dependencies",
                                 "-",
-                                "Depends on ".$artifact." #".$depends_on,
-                                $item_id,
-                                0,0,1);
+                                "Depends on " . $artifact . " #" . $depends_on,
+                                $item_id, 0, 0, 1);
       trackers_data_add_history("Dependencies",
                                 "-",
-                                ARTIFACT." #".$item_id." is dependent",
-                                $depends_on,
-                                0,0,1);
+                                ARTIFACT . " #" . $item_id . " is dependent",
+                                $depends_on, 0, 0, 1);
     }
 }
 
 # yeupou--gnu.org 2004-11-10: this function should probably removed
 # and handle_update be used instead.
-function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
+function trackers_data_create_item($group_id, $vfl, &$extra_addresses)
 {
   # We don't force them to be logged in to submit a bug.
   unset($ip);
   if (!user_isloggedin())
     $user = 100;
   else
-    $user=user_getid();
+    $user = user_getid();
 
-  # make sure required fields are not empty
+  # Make sure required fields are not empty.
   if (trackers_check_empty_fields($vfl) == false)
     {
-      # In such circonstances, we reprint the form
+      # In such circumstances, we reprint the form
       # highligthing missing fields.
       # (It is important that trackers_check_empty_fields set the global var
       # previous_form_bad_fields.)
@@ -2367,7 +2319,7 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
   # this project. For other unused fields we assume that the DB will set
   # up an appropriate default value (see bug table definition).
 
-  # Extract field transitions possibilities:
+  # Extract field transition possibilities:
   $field_transition = trackers_data_get_transition($group_id);
   # We shall store in an array the transition_id accepted, to check
   # other field updates.
@@ -2410,7 +2362,7 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
                  $field_transition[$field_id]["any"][$value]['notification_list'];
 
                # Register the transition, but only if the field it is about
-               # was not filled in the form
+               # was not filled in the form.
                if (!is_array($changes[$field]) ||
                    (!array_key_exists('del', $changes[$field]) &&
                    !array_key_exists('add', $changes[$field])))
@@ -2441,17 +2393,17 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
         }
       else if (trackers_data_is_date_field($field))
         {
-          # if it is a date we must convert the format to unix time
-          list($value,$ok) = utils_date_to_unixtime($value);
+          list($value, $ok) = utils_date_to_unixtime($value);
         }
 
       $insert_fields[$field] = $value;
 
       # Keep track of the change:
-      $changes[$field]['del']=
-        trackers_field_display($field,$group_id,'',false,false,true,true);
-      $changes[$field]['add']=
-        trackers_field_display($field,$group_id,$value,false,false,true,true);
+      $changes[$field]['del'] =
+        trackers_field_display($field, $group_id, '', false, false, true, true);
+      $changes[$field]['add'] =
+        trackers_field_display($field, $group_id, $value, false, false, true,
+                               true);
 
       $changes[$field]['del-val']= '';
       $changes[$field]['add-val']= $value;
@@ -2481,8 +2433,8 @@ function trackers_data_create_item($group_id,$vfl,&$extra_addresses)
   $insert_fields['ip'] = '127.0.0.1';
 
   # Actually insert the entry.
-  $result=db_autoexecute(ARTIFACT, $insert_fields, DB_AUTOQUERY_INSERT);
-  $item_id=db_insertid($result);
+  $result = db_autoexecute(ARTIFACT, $insert_fields, DB_AUTOQUERY_INSERT);
+  $item_id = db_insertid($result);
 
   if (!$item_id)
     {
@@ -2491,9 +2443,10 @@ administrator"), 1);
       return false;
     }
 
+  fb(sprintf(
 # TANSLATORS: the first argument is tracker type (like sr, bug or recipe)
 # the second argument is item id (number).
-  fb(sprintf(_('New item posted (%1$s #%2$s)'),
+             _('New item posted (%1$s #%2$s)'),
              utils_get_tracker_prefix(ARTIFACT), $item_id));
 
   # Register the spam score.
@@ -2503,9 +2456,9 @@ administrator"), 1);
                               $spamscore,
                               $user);
 
-  # Add to spamcheck queue if necessary (will temporary set the spamscore to
+  # Add to spamcheck queue, if necessary (will temporary set the spamscore to
   # 5, if necessary).
-  # Useless if already considered to be spam.
+  # Useless, if already considered to be spam.
   if ($spamscore < 5)
     spam_add_to_spamcheck_queue($item_id, 0, ARTIFACT, $group_id, $spamscore);
 
@@ -2526,11 +2479,7 @@ administrator"), 1);
       trackers_add_cc($item_id,
                       $group_id,
                       user_getid(),
-                      "-SUB-"); # use a flag as comment, because if we
-                               # translate the string now, people will get
-                               # the translation of the submitter when they
-                               # read the item, not necessarily the one they
-                               # want
+                      "-SUB-");
   return $item_id;
 }
 
@@ -2539,7 +2488,8 @@ administrator"), 1);
 # found then return value_id itself.
 # By doing so if this function is called by mistake on a field with type
 # text area or text field then it returns the text itself.
-function trackers_data_get_value($field,$group_id,$value_id,$by_field_id=false)
+function trackers_data_get_value($field, $group_id, $value_id,
+                                 $by_field_id = false)
 {
   # close_date and assigned_to fields are special select box fields.
   if (($field == 'assigned_to') || ($field == 'submitted_by'))
@@ -2554,9 +2504,8 @@ function trackers_data_get_value($field,$group_id,$value_id,$by_field_id=false)
     $field_id = trackers_data_get_field_id($field);
 
   # Look for project specific values first...
-  $result=db_execute("SELECT * FROM ".ARTIFACT."_field_value ".
-     "WHERE  bug_field_id=? AND group_id=? ".
-     "AND value_id=?",
+  $result = db_execute("SELECT * FROM " . ARTIFACT . "_field_value "
+     . "WHERE  bug_field_id=? AND group_id=? AND value_id=?",
      array($field_id, $group_id,
            $value_id));
   if ($result && db_numrows($result) > 0)
@@ -2573,8 +2522,8 @@ function trackers_data_get_value($field,$group_id,$value_id,$by_field_id=false)
       return db_result($result,0,'value');
     }
 
-  # No value found for this value id !!!
-  return $value_id.'(Error - Not Found)';
+  # No value found for this value id.
+  return $value_id . '(Error - Not Found)';
 }
 
 # Show defined and site-wide responses.
@@ -2588,7 +2537,7 @@ function trackers_data_get_canned_responses ($group_id)
                     array($group_id));
 }
 
-function trackers_data_get_reports($group_id, $user_id=100, $sober=false)
+function trackers_data_get_reports($group_id, $user_id = 100, $sober = false)
 {
   # Currently, reports are group based.
   # Print first system reports.
@@ -2604,7 +2553,7 @@ function trackers_data_get_reports($group_id, $user_id=100, $sober=false)
       $system_scope = 'SSB';
     }
 
-  $sql = 'SELECT report_id,name FROM '.ARTIFACT.'_report WHERE ';
+  $sql = 'SELECT report_id,name FROM ' . ARTIFACT . '_report WHERE ';
 
   $sql .= "(group_id=? AND scope='P') OR scope=? ORDER BY scope DESC ,
            report_id ASC ";
@@ -2625,7 +2574,7 @@ function trackers_data_get_notification_with_labels($user_id)
   return db_execute('SELECT role_label,event_label,notify
                      FROM trackers_notification_role,
                      trackers_notification_event, trackers_notification '
-     ."WHERE trackers_notification.role_id=trackers_notification_role.role_id
+    . "WHERE trackers_notification.role_id=trackers_notification_role.role_id
        AND trackers_notification.event_id=trackers_notification_event.event_id
        AND user_id=?", array($user_id));
 }
@@ -2655,10 +2604,10 @@ function trackers_data_insert_notification($user_id, $arr_roles, $arr_events,
 
   $num_roles = count($arr_roles);
   $num_events = count($arr_events);
-  for ($i=0; $i<$num_roles; $i++)
+  for ($i = 0; $i < $num_roles; $i++)
     {
       $role_id = $arr_roles[$i]['role_id'];
-      for ($j=0; $j<$num_events; $j++)
+      for ($j=0; $j < $num_events; $j++)
         {
           $sql .= "(?,?,?,?),";
           $sql_params[] = $user_id;
@@ -2667,7 +2616,7 @@ function trackers_data_insert_notification($user_id, $arr_roles, $arr_events,
           $sql_params[] = $arr_notification[$role_id][$event_id];
         }
     }
-  $sql = substr($sql,0,-1); # remove extra comma at the end
+  $sql = substr($sql, 0, -1); # Remove extra comma at the end.
   return db_execute($sql, $sql_params);
 }
 
@@ -2683,13 +2632,13 @@ function trackers_data_get_watchees($user_id)
                      WHERE user_id=?", array($user_id));
 }
 
+# This function is no longer used.
 function trackers_data_insert_watchees($user_id, $arr_watchees)
 {
-  # No longer really used
   $sql = 'INSERT INTO trackers_watcher (user_id,watchee_id) VALUES ';
   $sql_params = array();
   $num_watchees = count($arr_watchees);
-  for ($i=0; $i<$num_watchees; $i++)
+  for ($i = 0; $i < $num_watchees; $i++)
     {
       $sql .= "(?,?),";
       $sql_params[] = $user_id;
@@ -2701,7 +2650,7 @@ function trackers_data_insert_watchees($user_id, $arr_watchees)
 
 function trackers_data_add_watchees ($user_id, $watchee_id, $group_id)
 {
-  if (member_check(0,$group_id)
+  if (member_check(0, $group_id)
       && !trackers_data_is_watched($user_id,$watchee_id,$group_id))
     {
       # Only accept the request from a member of the project
@@ -2743,8 +2692,9 @@ function trackers_data_delete_file($group_id, $item_id, $file_id)
                     array($item_id, $group_id));
   if (db_numrows($res) <= 0)
     {
+      fb(sprintf(
 # TRANSLATORS: the argument is item id (a number).
-      fb(sprintf(_("Item #%s doesn't belong to project"), $item_id), 1);
+                 _("Item #%s doesn't belong to project"), $item_id), 1);
       return;
     }
 
@@ -2759,16 +2709,15 @@ function trackers_data_delete_file($group_id, $item_id, $file_id)
 # TRANSLATORS: the argument is file id (a number); the string
 # shall be followed by database error message.
       fb(sprintf(_("Can't delete attachment #%s:"), $file_id)
-         ." ".db_error($res), 1);
+         . " " . db_error($res), 1);
     }
   else
     {
       fb(_("File successfully deleted"));
       trackers_data_add_history("Attached File",
-                                "#".$file_id,
+                                "#" . $file_id,
                                 "Removed",
-                                $item_id,
-                                0,0,1);
+                                $item_id, 0, 0, 1);
     }
 }
 
@@ -2778,8 +2727,8 @@ function trackers_data_count_field_value_usage ($group_id, $field,
   if (!preg_match('/^[a-z0-9_]+$/', $field))
     util_die('trackers_data_count_field_value_usage: invalid $field <em>'
              . htmlspecialchars($field) . '</em>');
-  return db_result(db_execute("SELECT COUNT(*) AS count FROM ".ARTIFACT
-                              ." WHERE $field=? AND group_id=?",
+  return db_result(db_execute("SELECT COUNT(*) AS count FROM " . ARTIFACT
+                              . " WHERE $field=? AND group_id=?",
                               array($field_value_value_id, $group_id)),
                               0, 'count');
 }
