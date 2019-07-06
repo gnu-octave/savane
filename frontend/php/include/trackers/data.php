@@ -2289,7 +2289,7 @@ function trackers_data_update_dependent_items ($depends_on, $item_id, $artifact)
       trackers_data_add_history("Dependencies",
                                 "-",
                                 ARTIFACT . " #" . $item_id . " is dependent",
-                                $depends_on, 0, 0, 1);
+                                $depends_on, 0, $artifact, 1);
     }
 }
 
