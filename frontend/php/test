@@ -30,7 +30,8 @@ This should be used as a test for savannah's few scripts
 that require a working PATH_INFO configuration (projects/users/file).
 */
 
-$foo = $_SERVER['PATH_INFO'];
+if (isset ($_SERVER['PATH_INFO']))
+  $foo = $_SERVER['PATH_INFO'];
 
 if (!isset($foo) || empty($foo)) {
     http_response_code(400);
