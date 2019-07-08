@@ -178,8 +178,11 @@ function user_getname($user_id=0, $getrealname=0)
       return $USER_NAMES[$prefix."_$user_id"];
     }
   # Invalid user - store and return.
-  $USER_NAMES[$prefix."_$user_id"]="<strong>"._("Invalid User ID")
-                                   ."</strong>";
+  if ($getrealname)
+    $USER_NAMES[$prefix."_$user_id"]="<strong>"._("Invalid User ID")
+                                     ."</strong>";
+  else
+    $USER_NAMES[$prefix."_$user_id"]="<strong>#$user_id</strong>";
   return $USER_NAMES[$prefix."_$user_id"];
 }
 
