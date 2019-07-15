@@ -203,9 +203,15 @@ sub clean_idle_accounts
                               "old_value = '$name'", "field_name"))
         {
           chomp ($line);
-          $active = 2;
-          $active = 1 if $line eq 'User Requested Membership' and $active < 1;
-          last if $active > 1;
+          if ($line eq 'User Requested Membership' and $active < 1)
+            {
+              $active = 1;
+            }
+           else
+            {
+              $active = 2;
+              last;
+            }
         }
       next if $active > 1;
       foreach my $line (GetDB("user_group",
