@@ -135,9 +135,24 @@ my $result =
 
 add_to_log ("---- deleted $result lost password request") if $result > 0;
 
+sub send_notification
+{
+  my ($name, $email) = @_;
+  my $input;
+  open($input, '|-', 'sendmail -t');
+  print $input "From: <INVALID.NOREPLY\@gnu.org>\n";
+  print $input "To: <$email>\n";
+  print $input "Subject: Your Savannah account <$name>\n\n";
+  print $input "Your Savannah account <$name> is automatically\n";
+  print $input "removed due to inactivity.\n\n";
+  print $input "For criteria of removing idle accounts, please check\n";
+  print $input "https://savannah.gnu.org/maintenance/IdleAccounts/ .\n";
+  close($input);
+}
+
 sub remove_account
 {
-  my ($id, $name, $purge) = @_;
+  my ($id, $name, $email, $purge) = @_;
 
   if ($purge)
     {
@@ -170,6 +185,7 @@ sub remove_account
       add_to_log ("----- suspended account #$id <$name>"
                   . ($sys_dry_remove_idle_accounts? " (dry run)": ""));
     }
+  send_notification ($name, $email) unless ($sys_dry_remove_idle_accounts);
 }
 
 sub clean_idle_accounts
@@ -221,7 +237,7 @@ sub clean_idle_accounts
         }
       next if $active > 1;
       add_to_log ("---- removing $user: $active");
-      remove_account ($id, $name, $active < 1);
+      remove_account ($id, $name, $email, $active < 1);
     }
 }
 
