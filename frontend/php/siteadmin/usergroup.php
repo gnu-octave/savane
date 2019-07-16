@@ -186,44 +186,43 @@ $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array($user_id));
 $row_user = db_fetch_array($res_user);
 
 print '
-<p>'.no_i18n('Savannah User Group Edit for user:').' <strong>'
-.$user_id. ' ' .user_getname($user_id)."</strong></p>\n";
+<p>' . no_i18n('Savannah User Group Edit for user:') . ' <strong>'
+. $user_id .  ' ' . user_getname($user_id) . "</strong></p>\n";
 if ($row_user['status'] == 'SQD')
-  print '<p>'.no_i18n('Account info: this is a squad.').'</p>';
+  print '<p>' . no_i18n('Account info: this is a squad.') . '</p>';
 else
   {
    print
 '<p>
-'.no_i18n('Account Info:').'
-<form method="post" action="'.htmlentities ($_SERVER['PHP_SELF']).'">
+' . no_i18n('Account Info:') . '
+<form method="post" action="' . htmlentities ($_SERVER['PHP_SELF']) . '">
 <input type="hidden" name="action" value="update_user">
-<input type="hidden" name="user_id" value="'.htmlspecialchars($user_id).'">
+<input type="hidden" name="user_id" value="' . htmlspecialchars($user_id) . '">
 </p>
 <p>Email:
-<input type="text" title="'.no_i18n("Email").'" name="email" value="'
-.htmlspecialchars($row_user['email']).'" size="25" maxlength="55">
+<input type="text" title="' . no_i18n("Email") . '" name="email" value="'
+. htmlspecialchars($row_user['email']) . '" size="25" maxlength="55">
 </p>
 <p>
-<input type="submit" name="Update_Unix" value="'.no_i18n('Update').'">
+<input type="submit" name="Update_Unix" value="' . no_i18n('Update') . '">
 </p>
 </form>
-<form method="post" action="'.htmlentities ($_SERVER['PHP_SELF']).'">
+<form method="post" action="' . htmlentities ($_SERVER['PHP_SELF']) . '">
 <input type="hidden" name="action" value="rename">
-<input type="hidden" name="user_id" value="'.htmlspecialchars($user_id).'">
+<input type="hidden" name="user_id" value="' . htmlspecialchars($user_id) . '">
 <p>Account name:
-<input type="text" title="'.no_i18n("New name").'" name="new_name" value="'
+<input type="text" title="' . no_i18n("New name") . '" name="new_name" value="'
 . htmlspecialchars ($row_user['user_name']) . '" size="25" maxlength="55">
 </p>
 <p>
-<input type="submit" name="'.no_i18n('Update_Name').'" value="'
- .no_i18n('Rename').'">
+<input type="submit" name="' . no_i18n('Update_Name') . '" value="'
+ . no_i18n('Rename') . '">
 </p>
 </form>
 <hr />';
   } #  $row_user['status'] != 'SQD'
 print '
-<h2>'.no_i18n('Current Groups').'</h2>
-';
+<h2>' . no_i18n('Current Groups') . "</h2>\n";
 
 # Iterate and show groups this user is in.
 $res_cat = db_execute("SELECT groups.group_name AS group_name, "
@@ -246,21 +245,21 @@ while ($row_cat = db_fetch_array($res_cat))
          . group_getname($row_cat['group_id']) . "</strong> "
          . "<a href=\"usergroup.php?user_id="
          . htmlspecialchars($user_id)."&action=remove_user_from_group&group_id="
-         . htmlspecialchars($row_cat['group_id'])."\">"
-         . "[".no_i18n('Remove User from Group')."]</a>");
+         . htmlspecialchars($row_cat['group_id']) . "\">"
+         . "[" . no_i18n('Remove User from Group') . "]</a>");
     print '
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
+<form action="' . htmlentities ($_SERVER['PHP_SELF']) . '" method="post">
 <input type="hidden" name="action" value="update_user_group">
-<input name="user_id" type="hidden" value="'.htmlspecialchars($user_id).'">
+<input name="user_id" type="hidden" value="' . htmlspecialchars($user_id) . '">
 <input name="group_id" type="hidden" value="'
        .htmlspecialchars($row_cat['group_id']).'">
 <br /><label for="admin_flags">
 '.no_i18n('Admin Flags:').'</label>
 <br />
 <input type="text" name="admin_flags" id="admin_flags" value="'
-.htmlspecialchars($row_cat['admin_flags'], ENT_QUOTES).'">
+. htmlspecialchars($row_cat['admin_flags'], ENT_QUOTES) . '">
 <br />
-<input type="submit" name="Update_Group" value="'.no_i18n('Update').'" />
+<input type="submit" name="Update_Group" value="' . no_i18n('Update') . '" />
 </form>
 ';
   }
@@ -279,7 +278,7 @@ if ($row_user['status'] != 'SQD')
 <input type="text" name="group_id" id="group_id" length="4" maxlength="5" />
 </p>
 <p>
-<input type="submit" name="Submit" value="' . no_i18n('Submit').'" />
+<input type="submit" name="Submit" value="' . no_i18n('Submit') . '" />
 </form>
 
 <p><a href="user_changepw.php?user_id='
