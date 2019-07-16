@@ -68,12 +68,13 @@ SELECT CONCAT("<a href=\"/' . $tracker. '/?", bug_id, "\">New Item in ",
   FROM ' . $tracker . '
   WHERE submitted_by=' . $user_id . '
 UNION
-SELECT CONCAT("<a href=\"/' . $tracker. '/?", bug_id, "\">Comment in ",
-              "' . $tracker . ' #", bug_id, "</a>") as summary,
+SELECT CONCAT("<a href=\"/' . $tracker. '/?", bug_id, "\">Comment #",
+              bug_history_id, " in ", "' . $tracker . ' #", bug_id,
+              " (", field_name ,")</a>") as summary,
        old_value as details, spamscore as spamscore,
        bug_history_id as comment_id, date as date
   FROM ' . $tracker . '_history
-  WHERE mod_by=' . $user_id . ' AND field_name="details"
+  WHERE mod_by=' . $user_id . '
 UNION';
     }
   $query .= '
@@ -112,8 +113,14 @@ ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
         $spam = '';
       print "  <dt><b>" . ($i + $offset) . "</b>: " . $spam
              . $date . " " . $entry['summary'] . "</dt>\n";
-      print "    <dd>"
-            . markup_rich (trackers_decode_value ($entry['details'])) . "</dd>\n";
+      if (preg_match ('/">New Item in/', $entry['summary']))
+        $entry['details'] = markup_full (trackers_decode_value ($entry['details']));
+      elseif ($entry['spamscore'] < 0
+          || preg_match ('/ \(details\)<\/a>$/', $entry['summary']))
+        $entry['details'] = markup_rich (trackers_decode_value ($entry['details']));
+      else
+        $entry['details'] = htmlentities ($entry['details']);
+      print "    <dd>" . $entry['details'] . "</dd>\n";
     }
   print "</dl>\n";
   html_nextprev (htmlentities ($_SERVER['PHP_SELF']) . '?user_id='
