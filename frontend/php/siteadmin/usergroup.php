@@ -119,10 +119,19 @@ ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
       print "  <dt><b>" . ($i + $offset) . "</b>: " . $spam
              . $date . " " . $entry['summary'] . "</dt>\n";
       if (preg_match ('/">New Item in/', $entry['summary']))
-        $entry['details'] = markup_full (trackers_decode_value ($entry['details']));
-      elseif ($entry['spamscore'] < 0
-          || preg_match ('/ \(details\)<\/a>$/', $entry['summary']))
-        $entry['details'] = markup_rich (trackers_decode_value ($entry['details']));
+        {
+          $entry['details'] = trackers_decode_value ($entry['details']);
+          $entry['details'] = '<div class="tracker_comment">'
+                              . markup_full ($entry['details']) . "</div>\n";
+        }
+      elseif (preg_match ('/ \(details\)<\/a>$/', $entry['summary']))
+        {
+          $entry['details'] = trackers_decode_value ($entry['details']);
+          $entry['details'] = '<div class="tracker_comment">'
+                              . markup_rich ($entry['details']) . "</div>\n";
+        }
+      elseif ($entry['spamscore'] < 0)
+          $entry['details'] = markup_rich (trackers_decode_value ($entry['details']));
       else
         $entry['details'] = htmlentities ($entry['details']);
       print "    <dd>" . $entry['details'] . "</dd>\n";
