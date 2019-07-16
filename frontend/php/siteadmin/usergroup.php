@@ -221,6 +221,8 @@ else
 </form>
 <hr />';
   } #  $row_user['status'] != 'SQD'
+print '<p><a href="/siteadmin/userlist.php?action=delete&user_id=' . $user_id
+      . '">'. no_i18n ('[Delete User]') . "</a></p>\n";
 print '
 <h2>' . no_i18n('Current Groups') . "</h2>\n";
 
