@@ -55,7 +55,12 @@ function list_user_contributions ($user_id, $user_name)
 {
   global $offset, $max_rows;
 
-  print "\n<h2>" . no_i18n ("Contributions") . "</h2>\n";
+  print "\n<h2>";
+  if ($user_id != 100)
+    print no_i18n ("Contributions");
+  else
+    print no_i18n ("Anonymous Posts");
+  print "</h2>\n";
 
   $trackers = array ('cookbook', 'bugs', 'task', 'support', 'patch');
   $query = '';
@@ -127,6 +132,14 @@ ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
                  . urlencode ($user_id), $max_rows, db_numrows ($result),
                  'comment');
 }
+
+if ($user_id == 100)
+  {
+    list_user_contributions ($user_id, '_');
+    html_feedback_bottom($feedback);
+    $HTML->footer(array());
+    exit;
+  }
 
 if ($action=='remove_user_from_group')
   {

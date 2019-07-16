@@ -3,7 +3,7 @@
 # 
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2019 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -40,137 +40,118 @@ print '<p class="warn">';
 print no_i18n("Administrators functions currently have minimal error checking, if
 any. They are fine to play with but may not act as expected if you leave fields
 blank, etc. Also, navigating the admin functions with the &ldquo;back&rdquo;
-button is highly unadvised.");
-print '</p>
-';
+button is highly unadvised.") . "</p>\n";
 
 if (!$func)
-{
-  print "\n\n".html_splitpage(1);
-}
+  print "\n\n" . html_splitpage(1);
 
 if (!$func || $func == "configure")
-{
-  print $HTML->box_top(no_i18n("Configuration"));
+  {
+    print $HTML->box_top(no_i18n("Configuration"));
 
 # Check savane.conf.pl
-  print '<a href="retestconfig.php">'.no_i18n("Test System Configuration").'</a>';
-  print '<p class="smaller">'
-.no_i18n("Check whether your configuration (PHP, MySQL, Savane) is in a good shape.")
-.'</p>
-';
+    print '<p><a href="retestconfig.php">'
+          . no_i18n("Test System Configuration") . "</a></p>\n";
+    print '<p class="smaller">' . no_i18n(
+"Check whether your configuration (PHP, MySQL, Savane) is in a good shape.")
+         . "</p>\n";
+    print $HTML->box_nextitem(utils_get_alt_row_color($even));
   
-  print $HTML->box_nextitem(utils_get_alt_row_color($even));
-  
-  print '<a href="group_type.php">'.no_i18n("Configure Group Types").'</a>';
-  print '<p class="smaller">'
-.no_i18n("The Group Types define which features are provided to groups that belongs
+    print '<p><a href="group_type.php">' . no_i18n("Configure Group Types")
+          . "</a></p>\n";
+    print '<p class="smaller">' . no_i18n(
+"The Group Types define which features are provided to groups that belongs
 to the related type, what are the default values for these. There must be at
-least one Group Type.").'</p>
-';
+least one Group Type.") . "</p>\n";
   
-  print $HTML->box_nextitem(utils_get_alt_row_color($odd));
-  print '<a href="../people/admin/">'.no_i18n("Configure People Area").'</a>';
-  print '<p class="smaller">'
-.no_i18n("Here you can define skills for users to select in their Resume and type of
-jobs for Contribution Requests. ").'</p>
-';
+    print $HTML->box_nextitem(utils_get_alt_row_color($odd));
+    print '<p><a href="../people/admin/">' . no_i18n("Configure People Area")
+          . "</a></p>\n";
+    print '<p class="smaller">' . no_i18n(
+"Here you can define skills for users to select in their Resume and type of
+jobs for Contribution Requests. ") . "</p>\n";
   
-  print $HTML->box_bottom();
-  print "<br />\n";
-
-}
+    print $HTML->box_bottom();
+    print "<br />\n";
+  }
 
 if (!$func)
-{
   print html_splitpage(2);
-}
 
 unset($i);
 if (!$func || $func == "manage")
-{
-  if ($func == "manage")
-    {
-      print "\n\n".html_splitpage(1);
-    }
+  {
+    if ($func == "manage")
+      print "\n\n" . html_splitpage(1);
 
-  print $HTML->box_top(no_i18n("Management: Recent Events"));
+    print $HTML->box_top(no_i18n("Management: Recent Events"));
 
-  print '<a href="'.$GLOBALS['sys_home'].'task/?group='
-  .$GLOBALS['sys_unix_group_name']
-  .'&amp;category_id=1&amp;status_id=1&amp;set=custom#results">'
-  .no_i18n("Browse Pending Project Registrations").'</a>';
-  print '<p class="smaller">'
-  .no_i18n("This will show the list of open task related to pending registrations.");
-  print '</p>';
+    print '<a href="' . $GLOBALS['sys_home'] . 'task/?group='
+    . $GLOBALS['sys_unix_group_name']
+    . '&amp;category_id=1&amp;status_id=1&amp;set=custom#results">'
+    . no_i18n("Browse Pending Project Registrations") . '</a>';
+    print '<p class="smaller">' . no_i18n(
+"This will show the list of open task related to pending registrations.");
+    print "</p>\n";
   
-  print $HTML->box_nextitem(utils_get_alt_row_color($even));
-  print '<a href="'.$GLOBALS['sys_home'].'news/approve.php?group='
-  .$GLOBALS['sys_unix_group_name'].'">'.no_i18n("Approve News").'</a>';
+    print $HTML->box_nextitem(utils_get_alt_row_color($even));
+    print '<a href="' . $GLOBALS['sys_home'] . 'news/approve.php?group='
+    . $GLOBALS['sys_unix_group_name'] . '">' . no_i18n("Approve News") . '</a>';
+    print '<p class="smaller">'
+    . sprintf(no_i18n(
 # TRANSLATORS: the argument is site name (like Savannah).
-  print '<p class="smaller">'
-.sprintf(no_i18n("You can browse the list of recent news posted on the whole site.
+"You can browse the list of recent news posted on the whole site.
 You can select some news and make them show up on the %s front page."),
-$GLOBALS['sys_name']).'</p>';
-  
-  print $HTML->box_bottom();
-  print '<br />';
+              $GLOBALS['sys_name']) . "</p>\n";
+    print $HTML->box_bottom();
+    print "<br />\n";
 
-  if ($func == "manage")
-    {
-      print "\n\n".html_splitpage(2);
-    }
+    if ($func == "manage")
+      print "\n\n" . html_splitpage(2);
 
-  unset($i);
-  print $HTML->box_top(no_i18n("Management"));
+    unset($i);
+    print $HTML->box_top(no_i18n("Management"));
  
-  print '<a href="grouplist.php">'.no_i18n("Browse Groups List").'</a>';
-  print '<p class="smaller">'
-.no_i18n("From there, you can see the complete list of groups and reset them (change
-status, etc).");
-  print '</p>';
+    print '<a href="grouplist.php">' . no_i18n("Browse Groups List") . '</a>';
+    print '<p class="smaller">' . no_i18n(
+"From there, you can see the complete list of groups and reset them (change
+status, etc).") . "</p>\n";
   
-  print $HTML->box_nextitem(utils_get_alt_row_color($even));
-  print '<a href="userlist.php">'.no_i18n("Browse Users List").'</a>';
-  print '<p class="smaller">'
-.no_i18n("From there, you can see the complete list of user and reset them (change
+    print $HTML->box_nextitem(utils_get_alt_row_color($even));
+    print '<a href="userlist.php">' . no_i18n("Browse Users List") . '</a>';
+    print '<p class="smaller">' . no_i18n(
+"From there, you can see the complete list of user and reset them (change
 status, email, etc).");
-  print $HTML->box_bottom();
-  
+    print $HTML->box_bottom();
+    print "<br />\n";
 
-  print '<br />';
-
-  if ($func)
-    {
-      print "\n\n".html_splitpage(3);
-    }
-}
+    if ($func)
+      print "\n\n" . html_splitpage(3);
+  }
 
 unset($i);
 if (!$func || $func == "monitor")
-{
-  print $HTML->box_top(no_i18n('Monitoring'));
+  {
+    print $HTML->box_top(no_i18n('Monitoring'));
   
-  print '<a href="spamlist.php">'.no_i18n("Monitor Spam").'</a>';
-  print '<p class="smaller">'
-.no_i18n("Find out items flagged as spam, find out users suspected to be
-spammers.").'</p>
-';
+    print '<a href="spamlist.php">' . no_i18n("Monitor Spam") . '</a>';
+    print '<p class="smaller">' . no_i18n(
+"Find out items flagged as spam, find out users suspected to be
+spammers.") . "</p>\n";
   
-  print $HTML->box_nextitem(utils_get_alt_row_color($even));
+    print $HTML->box_nextitem(utils_get_alt_row_color($even));
   
-  print '<a href="lastlogins.php">'.no_i18n("Check Last Logins").'</a>';
-  print '<p class="smaller">'.no_i18n("Get a list of recent logins.").'</p>';
-  
-  print $HTML->box_bottom();
-  
-}
+    print '<p><a href="lastlogins.php">'. no_i18n("Check Last Logins")
+          . "</a></p>\n";
+    print '<p class="smaller">'. no_i18n("Get a list of recent logins.");
+    print "</p>\n" . '<p><a href="/siteadmin/usergroup.php?user_id=100">'
+           . no_i18n ('Check Anonymous Edits') . "</a></p>\n";
+    print $HTML->box_bottom();
+  }
 
 
 if (!$func)
-{
   print html_splitpage(3);
-}
 
 site_admin_footer(array());
 ?>
