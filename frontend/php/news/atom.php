@@ -92,7 +92,7 @@ while ($row = db_fetch_array($result))
     $title = $row['summary'];
     $updated = date('c', $row['date']);
     $author = $row['realname'];
-    $content = markup_full(trim($row['details']));
+    $content = str_replace ('&nbsp;', ' ', markup_full(trim($row['details'])));
 
     print "
   <entry>
@@ -104,8 +104,7 @@ while ($row = db_fetch_array($result))
       <name>$author</name>
     </author>
     <content type='xhtml' xml:base='$id'>
-      <div xmlns='http://www.w3.org/1999/xhtml'>"
-       . html_entity_decode ($content) . "</div>
+      <div xmlns='http://www.w3.org/1999/xhtml'>$content</div>
     </content>
   </entry>
 ";
