@@ -83,7 +83,8 @@ SELECT CONCAT("<a href=\"/' . $tracker. '/?", bug_id, "\">Comment #",
 UNION';
     }
   $query .= '
-SELECT CONCAT("<a href=\"/project/admin/history.php?group=", groups.group_name,
+SELECT CONCAT("<a href=\"/project/admin/history.php?group=",
+              groups.unix_group_name,
               "\">Request for inclusion in ", groups.group_name, "</a>")
          as summary, " " as details, -1 as spamscore,
          group_history_id as comment_id, group_history.date as date
