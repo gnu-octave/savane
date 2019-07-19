@@ -102,7 +102,6 @@ ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
   html_nextprev (htmlentities ($_SERVER['PHP_SELF']) . '?user_id='
                  . urlencode ($user_id), $max_rows, db_numrows ($result),
                  'comment');
-  print "</p>\n";
   print "<dl id=\"comment_results\">\n";
   $i = 0;
   while ($entry = db_fetch_array ($result))
