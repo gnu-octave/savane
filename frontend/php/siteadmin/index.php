@@ -112,13 +112,13 @@ You can select some news and make them show up on the %s front page."),
     unset($i);
     print $HTML->box_top(no_i18n("Management"));
  
-    print '<a href="grouplist.php">' . no_i18n("Browse Groups List") . '</a>';
+    print '<a href="grouplist.php">' . no_i18n("Browse Group List") . '</a>';
     print '<p class="smaller">' . no_i18n(
 "From there, you can see the complete list of groups and reset them (change
 status, etc).") . "</p>\n";
   
     print $HTML->box_nextitem(utils_get_alt_row_color($even));
-    print '<a href="userlist.php">' . no_i18n("Browse Users List") . '</a>';
+    print '<a href="userlist.php">' . no_i18n("Browse User List") . '</a>';
     print '<p class="smaller">' . no_i18n(
 "From there, you can see the complete list of user and reset them (change
 status, email, etc).");
@@ -144,8 +144,9 @@ spammers.") . "</p>\n";
     print '<p><a href="lastlogins.php">'. no_i18n("Check Last Logins")
           . "</a></p>\n";
     print '<p class="smaller">'. no_i18n("Get a list of recent logins.");
+    print $HTML->box_nextitem(utils_get_alt_row_color($odd));
     print "</p>\n" . '<p><a href="/siteadmin/usergroup.php?user_id=100">'
-           . no_i18n ('Check Anonymous Edits') . "</a></p>\n";
+          . no_i18n ('Check Anonymous Posts') . "</a></p>\n";
     print $HTML->box_bottom();
   }
 
