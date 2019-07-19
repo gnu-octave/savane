@@ -223,7 +223,7 @@ else
   {
    print
 '<p>
-' . no_i18n('Account Info:') . '
+' . no_i18n('Account Info:') . '</p>
 <form method="post" action="' . htmlentities ($_SERVER['PHP_SELF']) . '">
 <input type="hidden" name="action" value="update_user">
 <input type="hidden" name="user_id" value="' . htmlspecialchars($user_id) . '">
@@ -250,7 +250,7 @@ else
 </form>
 <hr />';
   } #  $row_user['status'] != 'SQD'
-print '<p><a href="/siteadmin/userlist.php?action=delete&user_id=' . $user_id
+print '<p><a href="/siteadmin/userlist.php?action=delete&amp;user_id=' . $user_id
       . '">'. no_i18n ('[Delete User]') . "</a></p>\n";
 print '
 <h2>' . no_i18n('Current Groups') . "</h2>\n";
@@ -268,14 +268,14 @@ while ($row_cat = db_fetch_array($res_cat))
       {
         print "<br />\n"
          . '<a href="/project/admin/squadadmin.php?squad_id='
-         . htmlspecialchars($user_id) . '&group_id=' . $row_cat['group_id']
+         . htmlspecialchars($user_id) . '&amp;group_id=' . $row_cat['group_id']
          . '">' . group_getname($row_cat['group_id']) . "</a>\n";
         continue;
       }
     print ("<br /><hr /><strong>"
          . group_getname($row_cat['group_id']) . "</strong> "
          . "<a href=\"usergroup.php?user_id="
-         . htmlspecialchars($user_id)."&action=remove_user_from_group&group_id="
+         . htmlspecialchars($user_id)."&amp;action=remove_user_from_group&amp;group_id="
          . htmlspecialchars($row_cat['group_id']) . "\">"
          . "[" . no_i18n('Remove User from Group') . "]</a>");
     print '
