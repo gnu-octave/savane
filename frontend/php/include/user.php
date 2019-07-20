@@ -478,6 +478,11 @@ function user_has_history ($user_id)
  LIMIT 1", array ($user_id, $name));
   if ($result && db_numrows ($result) > 0)
     return true;
+  $result = db_execute (
+"SELECT group_forum_id FROM forum WHERE posted_by=? LIMIT 1",
+                        array ($user_id));
+  if ($result && db_numrows ($result) > 0)
+    return true;
   return false;
 }
 
