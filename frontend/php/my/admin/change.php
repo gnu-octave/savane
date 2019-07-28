@@ -371,9 +371,10 @@ _("-- the %s team."),
                     $warning_message = sprintf(
 # TRANSLATORS: the argument is site name (like Savannah).
 _('Someone, presumably you, has requested a change of email address on %s.
-If it wasn\'t you, maybe someone is trying to steal your account...')."\n\n"
-._('Your current address is %1$s, the supposedly new address is %2$s.'),
-$GLOBALS['sys_name'], $row_user['email'], $newvalue).'
+If it wasn\'t you, maybe someone is trying to steal your account...') . "\n\n",
+$GLOBALS['sys_name']) . sprintf (
+_('Your current address is %1$s, the supposedly new address is %2$s.'),
+         $row_user['email'], $newvalue) . '
 
 ' . _('If you did not request that change, please visit the following URL
 to discard the email change and report the problem to us:')
