@@ -2094,7 +2094,7 @@ reassigned, exiting."), 1);
 
       # Duplicate the comments.
       $res_history = db_execute("SELECT * FROM " . ARTIFACT
-                                ." _history WHERE bug_id=? AND type=100",
+                                . "_history WHERE bug_id=? AND type=100",
                                 array($item_id));
       while ($row_history = db_fetch_array($res_history))
         {
