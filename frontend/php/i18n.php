@@ -33,6 +33,11 @@ extract(sane_import('request',
                     array('language', 'lang_uri', 'cookie_test',
                           'cookie_for_a_year')));
 
+# Only allow redirections to the same website.
+if (strlen ($lang_uri) < 2
+    || substr ($lang_uri, 0, 1) !== '/' || substr ($lang_uri, 1, 1) === '/')
+  $lang_uri = "/";
+
 # Check cookie support.
 if (!isset($_COOKIE["cookie_probe"]))
   {

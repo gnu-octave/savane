@@ -30,6 +30,11 @@ register_globals_off();
 # :P
 extract(sane_import('get', array('action', 'uri', 'from_brother')));
 
+# Disallow redirections to other sites.
+if (strlen ($uri) < 2
+    || substr ($uri, 0, 1) !== '/' || substr ($uri, 1, 1) === '/')
+  $uri = "/";
+
 if ($action == "login" && user_can_be_super_user())
   {
     session_cookie("session_su", "wannabe");

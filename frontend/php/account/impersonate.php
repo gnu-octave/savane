@@ -34,5 +34,10 @@ $result = db_execute("UPDATE session SET user_id=? WHERE session_hash=?",
                      array($new_uid, $session_hash));
 session_cookie('session_uid', $new_uid);
 
+# Only allow redirections to the same website.
+if (strlen ($uri) < 2
+    || substr ($uri, 0, 1) !== '/' || substr ($uri, 1, 1) === '/')
+  $uri = "/";
+
 header("Location: $uri");
 ?>

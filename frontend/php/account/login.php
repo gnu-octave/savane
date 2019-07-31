@@ -40,6 +40,11 @@ extract(sane_import('request',
         'stay_in_ssl', 'brotherhood',
         'uri', 'login', 'cookie_test')));
 
+# Disallow redirections to other sites.
+if (strlen ($uri) < 2
+    || substr ($uri, 0, 1) !== '/' || substr ($uri, 1, 1) === '/')
+  $uri = "/";
+
 # Check cookie support.
 if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
   {
