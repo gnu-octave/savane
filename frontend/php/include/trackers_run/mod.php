@@ -37,6 +37,9 @@ $result = db_execute("SELECT * FROM " . ARTIFACT
                      . " WHERE bug_id=? AND group_id=?",
                      array($item_id, $group_id));
 
+if ($preview)
+  $field_list = trackers_extract_field_list ();
+
 if (db_numrows($result) > 0)
   {
 # Defines the item name, converting bugs to bug.
@@ -211,8 +214,15 @@ priority and open/close items"))) . "</p>\n";
           $field_value = db_result($result, 0, $field_name);
         else
           {
-            if ($preview)
-              extract(sane_import('post', array ($field_name)));
+            if ($preview && isset ($field_list[$field_name]))
+              {
+                $$field_name = $field_list[$field_name];
+                if (trackers_data_is_date_field ($field_name))
+                  {
+                    list ($yr, $mn, $dy) = preg_split ("/-/", $$field_name);
+                    $$field_name = mktime (0, 0, 0, $mn, $dy, $yr);
+                  }
+              }
             $field_value = htmlspecialchars($$field_name);
           }
         list($sz,) = trackers_data_get_display_size($field_name);
