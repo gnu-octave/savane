@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extract(sane_import('request', array('form_id')));
+extract(sane_import('request', array('form_id', 'prefill')));
 
 if (!group_restrictions_check($group_id, ARTIFACT))
   {
@@ -89,10 +89,12 @@ while ($field_name = trackers_list_all_fields())
 
     # We allow people to make urls with predefined values,
     # if the values are in the url, we override the default value.
-    if (empty($$field_name))
-      $field_value = trackers_data_get_default_value($field_name);
-    else
+    if (!empty($$field_name))
       $field_value = htmlspecialchars($$field_name);
+    elseif (isset($prefill[$field_name]))
+      $field_value = htmlspecialchars($prefill[$field_name]);
+    else
+      $field_value = trackers_data_get_default_value($field_name);
     list($sz,) = trackers_data_get_display_size($field_name);
     $label = trackers_field_label_display($field_name,
                                           $group_id,
