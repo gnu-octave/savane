@@ -167,7 +167,7 @@ switch ($func)
                           'details' => $fields['details']));
      $stat_id = db_insertid (NULL);
 
- if (!user_isloggedin() && ($_POST['check'] != 1984))
+ if (!user_isloggedin() && !(isset($_POST['check']) && $_POST['check'] == 1984))
    exit_error(_("You're not logged in and you didn't enter the magic
 anti-spam number, please go back!"));
 
