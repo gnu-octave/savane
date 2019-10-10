@@ -219,7 +219,7 @@ if ($update)
   # Update the database and redirect to account conf page.
     if ($item == "realname")
       {
-        if (!$newvalue)
+        if (!account_realname_valid ($newvalue))
           fb(_("You must supply a new real name."), 1);
         else
           {

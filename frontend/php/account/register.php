@@ -40,7 +40,6 @@ extract(sane_import('post',
         'form_usepam')));
 
 $form_email = preg_replace ('/\s/', '', $form_email);
-$form_realname = account_sanitize_realname ($form_realname);
 
 if (isset($GLOBALS['sys_https_host']) && !session_issecure())
   # Force use of TLS for login.
@@ -126,10 +125,11 @@ _("That username is blocked to avoid conflict with mailing-list addresses."),1);
     else
       $email_is_valid = true;
 
-    if ($form_realname == '')
-      fb(_("You must supply a real name."),1);
+    if (!account_realname_valid ($form_realname))
+      fb(_("You must supply a real name."), 1);
     else
       $realname_is_valid = true;
+    $form_realname = account_sanitize_realname ($form_realname);
 
     $krb5ret = '';
     if ($GLOBALS['sys_use_krb5'] == "yes")
