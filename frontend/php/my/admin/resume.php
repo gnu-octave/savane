@@ -46,8 +46,10 @@ if ($result && db_numrows ($result) > 0)
 # Let members of any group edit their resume.
 if (!$allow_resume)
   {
-    $result = db_execute ("SELECT group_id FROM user_group
-                           WHERE user_id=? AND admin_flags != 'P' LIMIT 1",
+    $result = db_execute ("SELECT groups.group_id FROM user_group,groups
+                           WHERE groups.group_id = user_group.group_id
+                                 AND groups.status = 'A'
+                                 AND user_id=? AND admin_flags != 'P' LIMIT 1",
                           array(user_getid()));
     if ($result && db_numrows ($result) > 0)
       $allow_resume = true;
