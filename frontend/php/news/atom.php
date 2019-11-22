@@ -2,7 +2,7 @@
 # Atom feed generator for news items.
 #
 # Copyright (C) 2008  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2019  Ineiev
 #
 # This file is part of Savane.
 #
@@ -70,7 +70,7 @@ $myself = ($is_https ? 'https://' : 'http://')
   . (((!$is_https && $_SERVER['SERVER_PORT'] == 80)
       || ($is_https && $_SERVER['SERVER_PORT'] == 443))
      ? '' : $_SERVER['SERVER_PORT'])
-  . $_SERVER['REQUEST_URI'];
+  . urlencode($_SERVER['REQUEST_URI']);
 
 
 # Feed header.
@@ -79,7 +79,7 @@ header('Content-type: application/atom+xml;charset=UTF-8');
 print '<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>'.$id.'</id>
-  <link rel="self" href="'.$myself.'"/>
+  <link rel="self" href="' . $myself . '"/>
   <title>'.$title.'</title>
   <updated>'.$last_updated.'</updated>
 

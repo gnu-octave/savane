@@ -3,7 +3,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2019  Ineiev
 #
 # This file is part of Savane.
 # 
@@ -35,7 +35,7 @@ repaired, <a href=\"%s\">file a support request</a>, mentioning the URL you
 tried to access (%s)."),
   $GLOBALS['sys_name'],
   $GLOBALS['sys_home'].'support/?group='.$GLOBALS['sys_unix_group_name'],
-  $_SERVER['REQUEST_URI']).'</p>';
+  htmlspecialchars($_SERVER['REQUEST_URI'])).'</p>';
 
 # TRANSLATORS: the second argument is system name (like Savannah).
 print '<p>'

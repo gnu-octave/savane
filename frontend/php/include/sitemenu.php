@@ -483,7 +483,7 @@ _("Superuser rights are required to perform site admin tasks"));
         . $GLOBALS['sys_home'] . 'account/impersonate.php' . '">'
         . '<label for="user_name">'._("Become this user:")."</label><br/>\n";
       print '<input type="hidden" name="uri" value="'
-        . $_SERVER['REQUEST_URI'] . '" />';
+        . urlencode($_SERVER['REQUEST_URI']) . '" />';
       print '<input type="text" id="user_name" name="user_name" size=10 />&nbsp;';
       print '<input type="submit" name="impersonate" value="'._("Impersonate").'" />';
       print "</form>\n";
