@@ -798,8 +798,8 @@ function _markup_inline($line)
   # surrounding them with braces []
   # (& = begin of html entities, it means a end of string unless
   # it is &amp; which itself is the entity for &)
-  $line = preg_replace('/(^|\s|[^;\[])(('.$protocols
-                       .'):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
+  $line = preg_replace('/(^|[^;\[\/])((' . $protocols
+                       . '):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
     '$1[$2]', $line);
   # Remove spaces added with preg_replace_callback
   # and process links with preceding ';'.
