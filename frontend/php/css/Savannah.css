@@ -114,7 +114,7 @@ h4 {
 
 /* Our users and I don't like fixed feedback:
 	yeupou, 2006-09-20:
-	But we wont deliver a theme upstream that breaks savane behavior
+	But we shan't deliver a theme upstream that breaks savane behavior
 	It is now possible to configure savane to have a non-fixed menu.
 	However, if a site-specific CSS still want to have a non-standard
 	behavior, I think this CSS should no longer be distributed along

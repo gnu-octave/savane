@@ -330,7 +330,7 @@ function sendmail_mail ($from,
       # Always record the full string. We may have already saved such info
       # before, but we maybe saved strictly the email address, while the
       # full string may show up once more. If the full string reappears, we
-      # wont have to parse it to find the correct email.
+      # shan't have to parse it to find the correct email.
       $seen_before[$v] = true;
     }
 

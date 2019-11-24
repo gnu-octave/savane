@@ -427,7 +427,7 @@ function markup_full($text, $allow_headings=true)
 }
 
 # Convert whatever content that can contain markup to a valid text output
-# It wont touch what seems to be valid in text already, or what cannot
+# It won't touch what seems to be valid in text already, or what cannot
 # be converted in a very satisfactory way.
 # This function should be minimal, just to avoid weird things, not to do
 # very fancy things.

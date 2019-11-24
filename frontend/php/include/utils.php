@@ -1118,7 +1118,7 @@ function help ($text, $explanation_array, $noarray=0)
 }
 
 # Analyse if we do need MSIE dirtyhacks.
-# Put the result in cache so we wont over and over analyse user agent.
+# Put the result in cache so we shan't over and over analyse user agent.
 # (This function will indeed think a browser that claims to be MSIE that it is
 # MSIE. Users of browsers like Opera that pretend to be MSIE should configure
 # properly their User Agent. There is nothing else to do about it).

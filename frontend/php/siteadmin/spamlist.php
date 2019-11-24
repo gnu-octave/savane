@@ -53,7 +53,7 @@ if ($wash_user_id)
                    array($wash_user_id));
 
         # Previous comment flagged as spam will stay as such.
-        # We just changed the affected user id that it wont affect this guy
+        # We just changed the affected user id that it won't affect this guy
         # any more.
         # We assume that message flagged as spam really were.
         # (we may change that in the future, depending on user experience).
@@ -108,7 +108,7 @@ else
 
         # The sql was artificially asked to search more result than the number
         # we print. If $i > $max, it means that there were more results than
-        # the max, we wont print these more, but below we will add next/prev
+        # the max, we shan't print these more, but below we will add next/prev
         # links.
         if ($i > $max_rows)
           break;

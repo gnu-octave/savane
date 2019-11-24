@@ -85,7 +85,7 @@ while ($field_name = trackers_list_all_fields())
 
     # Display the bug field with its default value.
     # If field size is greatest than max_size chars, then force it to
-    # appear alone on a new line or it wont fit in the page.
+    # appear alone on a new line or it won't fit in the page.
 
     # We allow people to make urls with predefined values,
     # if the values are in the url, we override the default value.

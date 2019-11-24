@@ -1781,7 +1781,7 @@ function trackers_data_handle_update ($group_id,
     }
 
   # Now we run transitions other fields update. This function does check
-  # what already changed and that we wont automatically update.
+  # what already changed and that we shan't automatically update.
   trackers_transition_update_item($item_id, $field_transition_accepted, $changes);
 
   # Comments field history is handled a little differently. Followup comments
@@ -2469,7 +2469,7 @@ administrator"), 1);
    }
 
   # Now we run transitions other fields update. This function does check
-  # what already changed and that we wont automatically update.
+  # what already changed and that we shan't automatically update.
   trackers_transition_update_item($item_id, $field_transition_accepted, $changes);
 
   # Add the submitter in CC

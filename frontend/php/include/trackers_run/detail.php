@@ -140,8 +140,8 @@ authentication level.");
   $j=0;
   while ($field_name = trackers_list_all_fields())
     {
-      # if the field is a special field (not even summary, as the user
-      # wont have the right to modify it)
+      # If the field is a special field (not even summary, as the user
+      # won't have the right to modify it)
       # or if not used by this project  then skip it.
       if (trackers_data_is_special($field_name)
           || !trackers_data_is_used($field_name))
@@ -162,7 +162,7 @@ authentication level.");
 
       # Display the bug field.
       # If field size is greatest than max_size chars then force it to
-      # appear alone on a new line or it wont fit in the page.
+      # appear alone on a new line or it won't fit in the page.
       $field_value = db_result($result, 0, $field_name);
       list($sz,) = trackers_data_get_display_size($field_name);
 

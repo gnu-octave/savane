@@ -85,7 +85,7 @@ function form_submit($text=false, $submit_name="update", $extra=false)
     $text = _("Submit");
 
   # Add a trap for spammers: a text input that will have to be kept empty.
-  # This wont prevent tailored bots to spam, but that should prevent
+  # This won't prevent tailored bots to spam, but that should prevent
   # the rest of them, which is good enough (task #4151).
   # Sure, some bots will someday implement CSS support, but the ones that does
   # not will not disappear as soon as this happen.

@@ -272,9 +272,9 @@ if (!$set)
                     $history_event = $hist_pref[2];
                     $history_date = $hist_pref[3];
 
-                    # if not args in url (means not after post) ...
+                    # If not args in URL (means not after post) ...
                     # set $url_params['history'] explicitly since 'history'
-                    # is not a tracker field and thus wont have been set.
+                    # is not a tracker field and thus won't be set.
                     $url_params['history'][] = $history_search.'>'
                       .$history_field.'>'.$history_event.'>'.$history_date;
                   }

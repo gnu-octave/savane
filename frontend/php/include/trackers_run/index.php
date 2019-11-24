@@ -187,7 +187,7 @@ anti-spam number, please go back!"));
        {
          # Attach new file if there is one.
          # As we need to create the item first to have an item id so this
-         # function can work properly, we wont be able to update the
+         # function can work properly, we shan't be able to update the
          # comment on-the-fly to mention in the comment the attached files.
          # However, this is unlikely to be a problem because the attached
          # files is the section next to comments, and the original

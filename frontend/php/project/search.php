@@ -28,7 +28,7 @@ site_project_header(array('group'=>$group_id,
 # Ideally, we would like to do a real site wide search, which mean being able
 # to do a search without selecting a given tracker.
 # To do that, we must run a SQL command per tracker, put everything in an
-# array. Fine, but the current function returns SQL results, and we wont
+# array. Fine, but the current function returns SQL results, and we shan't
 # change that right now. So we ask the user to provide input.
 # But it has to be kept in mind that we want this page to allow a search
 # over all trackers, in the end.

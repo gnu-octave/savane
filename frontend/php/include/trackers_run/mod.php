@@ -200,7 +200,7 @@ priority and open/close items"))) . "</p>\n";
 
         # Display the bug field.
         # If field size is greatest than max_size chars then force it to
-        # appear alone on a new line or it wont fit in the page.
+        # appear alone on a new line or it won't fit in the page.
 
         # Look for the field value in the database only if we missing
         # its values. If we already have a value, we are probably in
