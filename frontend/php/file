@@ -64,7 +64,9 @@ $result = db_execute("SELECT description,filename,filesize,filetype,date "
                      . "FROM trackers_file WHERE file_id=? LIMIT 1",
                      array($file_id));
 
-if ($result && db_numrows($result) > 0)
+$vex = $result && db_numrows($result) > 0;
+
+if ($vex && db_result($result, 0, 'filesize') >= 0)
   {
     $mtime = db_result ($result, 0, 'date');
     http_exit_if_not_modified($mtime);
@@ -102,8 +104,16 @@ _("The filename in the URL does not match the filename registered in the databas
   }
 else
   {
-    header('HTTP/1.0 404 Not Found');
-    echo _("Couldn't find attached file")
-           . " (file #" . htmlspecialchars($file_id) . ")";
+    if (!$vex)
+      exit_error(sprintf(_("Couldn't find attached file #%s."),
+                         htmlspecialchars ($file_id)));
+
+    exit_error(sprintf(_("Attached file #%s was lost."),
+                         htmlspecialchars ($file_id)) . " "
+               . sprintf(_("File attributes: name '%s', size %s, type '%s', date %s."),
+                         htmlspecialchars(db_result ($result, 0, 'filename')),
+                         htmlspecialchars(db_result ($result, 0, 'filesize')),
+                         htmlspecialchars(db_result ($result, 0, 'filetype')),
+                         utils_format_date(db_result ($result, 0, 'date'))));
   }
 ?>
