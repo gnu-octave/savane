@@ -107,7 +107,8 @@ issue, we will discuss it with you.').'</p>
 your project.  For hosting on Savannah, you must use one of these
 licenses, which give the freedom to anyone to use, study, copy, and
 distribute the source code and distribute modified versions of it, and
-which are compatible with the GNU GPL.  We recommend GPLv3-or-later; in
+which are compatible with the GNU GPL version 3 and any later versions.
+We recommend GPLv3-or-later; in
 any case, we require the &ldquo;or any later version&rdquo; formulation
 for the GNU GPL, GNU AGPL, and GNU LGPL.  You will remain the copyright
 holder of whatever you create for your project.').'</p>
