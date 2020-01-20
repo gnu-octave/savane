@@ -26,7 +26,7 @@ header('Content-Type: text/html; charset=utf-8');
 /* Disallow embedding in any frames.  */
 header('X-Frame-Options: DENY');
 /* Declare more restrictions on how browsers may assemble pages.  */
-// allow fundraising banner header("Content-Security-Policy: default-src 'self'; frame-ancestors 'none'");
+header("Content-Security-Policy: default-src 'self'; frame-ancestors 'none'");
 # Database abstraction.
 require_once(dirname(__FILE__).'/database.php');
 # Security library.
