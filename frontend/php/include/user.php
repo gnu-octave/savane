@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2019 Ineiev
+# Copyright (C) 2017, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -435,10 +435,23 @@ function user_guess ()
   return true;
 }
 
+$user_history_field_names = "(field_name='Added User'
+      OR field_name='User Requested Membership'
+      OR field_name='Removed User'
+      OR field_name='Approved User'
+      OR field_name='Changed User Permissions'
+      OR field_name='Set Active Features to the default for the Group Type'
+      OR field_name='Set Mail Notification to a sensible default'
+      OR field_name='Set Active Features to the default for the Group Type'
+      OR field_name='Set Mail Notification to a sensible default'
+      OR field_name LIKE 'Added User to Squad %'
+      OR field_name LIKE 'Removed User from Squad %')";
+
 # Return true when account has any traces in the trackers and group_history,
 # so it should not be removed from the database.
 function user_has_history ($user_id)
 {
+  global $user_history_field_names;
   $trackers = array ('bugs', 'support', 'task', 'patch', 'cookbook');
   $name = user_fetch_name ($user_id);
   if ($name == '')
@@ -461,14 +474,7 @@ function user_has_history ($user_id)
    mod_by=?
    OR
     (old_value=?
-     AND
-     (field_name='Added User'
-      OR field_name='User Requested Membership'
-      OR field_name='Removed User'
-      OR field_name='Changed User Permissions'
-      OR field_name LIKE 'Added User to Squad %'
-      OR field_name LIKE 'Removed User from Squad %'
-      OR field_name='Approved User'))
+     AND " . $user_history_field_names . ")
  LIMIT 1", array ($user_id, $name));
   if ($result && db_numrows ($result) > 0)
     return true;
@@ -487,6 +493,7 @@ function user_purge ($user_id)
 # that would raise any concerns).
 function user_rename ($user_id, $new_name)
 {
+  global $user_history_field_names;
   $old_name = user_fetch_name ($user_id);
   if ($old_name == '')
     return sprintf ('No user #%i in the database', $user_id);
@@ -495,16 +502,9 @@ function user_rename ($user_id, $new_name)
     return sprintf ('User <%s> alredy exists', $new_name);
   db_execute ("UPDATE user SET user_name=? WHERE user_id=?",
               array($new_name, $user_id));
-  # In fact, only the first two field_name values may occur, because the user
-  # has never been added to any group.
   db_execute ("UPDATE group_history set old_value=?
                       WHERE old_value=?
-                        AND (field_name='User Requested Membership'
-                             OR field_name='Removed User'
-                             OR field_name='Added User'
-                             OR field_name LIKE 'Added User to Squad %'
-                             OR field_name LIKE 'Removed User from Squad %'
-                             OR field_name='Approved User')",
+                        AND " . $user_history_field_names,
               array ($new_name, $old_name));
   return '';
 }
