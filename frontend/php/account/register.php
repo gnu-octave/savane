@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gna.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2019 Ineiev
+# Copyright (C) 2017, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -171,8 +171,9 @@ if ($form_is_valid)
       $passwd = account_encryptpw($form_pw);
 
     $confirm_hash = substr(md5(rand(0, 32768) . $passwd . time()), 0, 16);
+    $new_name = strtolower($form_loginname);
     $result=db_autoexecute('user',
-                           array('user_name' => strtolower($form_loginname),
+                           array('user_name' => $new_name,
                                  'user_pw'   => $passwd,
                                  'realname'  => $form_realname,
                                  'email'     => $form_email,
@@ -186,6 +187,13 @@ if ($form_is_valid)
     else
       {
         $newuserid = db_insertid($result);
+        if (db_numrows(db_execute("SELECT user_id FROM user WHERE user_name = ?",
+                                  array($new_name))) > 1)
+
+          {
+            user_purge ($newuserid);
+            fb(_("That username already exists."),1);
+          }
         form_clean($form_id);
 
 # TRANSLATORS: the argument is the name of the system (like "Savannah").

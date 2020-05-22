@@ -497,11 +497,15 @@ function user_rename ($user_id, $new_name)
   $old_name = user_fetch_name ($user_id);
   if ($old_name == '')
     return sprintf ('No user #%i in the database', $user_id);
-  if (db_numrows(db_execute("SELECT user_id FROM user WHERE user_name = ?",
-                            array($new_name))) > 0)
-    return sprintf ('User <%s> alredy exists', $new_name);
   db_execute ("UPDATE user SET user_name=? WHERE user_id=?",
               array($new_name, $user_id));
+  if (db_numrows(db_execute("SELECT user_id FROM user WHERE user_name = ?",
+                            array($new_name))) > 1)
+    {
+      db_execute ("UPDATE user SET user_name=? WHERE user_id=?",
+                  array($old_name, $user_id));
+      return sprintf ('User <%s> alredy exists', $new_name);
+    }
   db_execute ("UPDATE group_history set old_value=?
                       WHERE old_value=?
                         AND " . $user_history_field_names,
