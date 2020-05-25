@@ -6,7 +6,7 @@
 # Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010 Sylvain Beucler
 # Copyright (C) 2006 Michael J. Flickinger
 # Copyright (C) 2008, 2011 Karl Berry
-# Copyright (C) 2013, 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2013, 2017, 2020 Ineiev <ineiev@gnu.org>
 #
 # This file is part of Savane.
 #
@@ -30,7 +30,9 @@ committed to <a href="%s">free software</a>:').'</p>
 
 print '<p><ul>
 <li>'._('We host free projects that run on free operating systems and without
-    any proprietary software dependencies.').'</li>
+    any proprietary software dependencies.')
+ . '<br /> <a href="/register/requirements.php">'
+ . _("Hosting requirements") . '</a></li>
 <li>'.sprintf(
 _('Our service runs with 100%% free software, including <a href="%s">itself</a>.'),
  '/projects/administration/').'</li>

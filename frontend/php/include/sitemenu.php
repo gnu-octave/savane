@@ -189,6 +189,8 @@ function sitemenu_projects()
 {
   global $HTML;
   $HTML->menuhtml_top(_("Hosted Projects"));
+  $HTML->menu_entry($GLOBALS['sys_home'].'register/requirements.php',
+                    _("Hosting requirements"));
   $HTML->menu_entry($GLOBALS['sys_home'].'register/',
                     _("Register New Project"),
                     1,
