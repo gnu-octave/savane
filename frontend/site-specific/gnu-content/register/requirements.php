@@ -5,9 +5,19 @@ we will not accept your project; if we don't have enough information
 determine whether your project follows these terms, we will
 have to ask you for more details.
 Once your project is accepted, you are expected to continue following
-these terms.").'</p>
+these terms.") . '</p>';
+if (substr ($GLOBALS['sys_default_domain'], -8) == ".gnu.org")
+  print '<p>'
+. sprintf(_('All packages registered in savannah.gnu.org are GNU packages,
+  so they should follow the <a href="%s">GNU Coding Standards</a>.'),
+  'https://www.gnu.org/prep/standards/')
+. "</p>\n<p>"
+. _("Note that some parts of the GNU Coding standards are firm
+  requirements, while some are just preferences/suggestions.")
+. "</p>";
 
-<p>'._('Our intent is to provide a permanent home for all versions of your project.
+print "<p>"
+. _('Our intent is to provide a permanent home for all versions of your project.
 We do reserve the right, however, to discontinue hosting a project.').'</p>
 
 <h3>'._('Use of project account').'</h3>
