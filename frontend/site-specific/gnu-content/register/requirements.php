@@ -33,7 +33,7 @@ if (substr ($GLOBALS['sys_default_domain'], -8) == ".gnu.org")
   print '<p>'
 . sprintf(_('All packages registered in savannah.gnu.org are GNU packages,
   so they should follow the <a href="%s">GNU Coding Standards</a>.'),
-  'https://www.gnu.org/prep/standards/')
+  '//www.gnu.org/prep/standards/')
 . "</p>\n<p>"
 . _("Note that some parts of the GNU Coding standards are firm
   requirements, while some are just preferences/suggestions.")
@@ -70,7 +70,7 @@ lead or steer users towards any nonfree software.  In particular,
 it must not automatically download or install any nonfree software.
 For more info, see <a href=\"%s\">References to Non-Free Software and
 Documentation</a> in the GNU Coding Standards.'),
-"https://www.gnu.org/prep/standards/html_node/References.html")
+"//www.gnu.org/prep/standards/html_node/References.html")
 . '</p>
 
 <p>'._('The program should deliver its full functionality and convenience on a
