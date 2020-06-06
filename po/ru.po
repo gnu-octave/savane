@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.5\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2020-05-28 19:26+0000\n"
-"PO-Revision-Date: 2020-05-28 15:44+0000\n"
+"POT-Creation-Date: 2020-06-06 17:10+0000\n"
+"PO-Revision-Date: 2020-06-06 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
 "Language: ru\n"
@@ -946,7 +946,7 @@ msgstr "Запись о личности"
 msgid "Account #%s"
 msgstr "Учетная запись №%s"
 
-#: frontend/php/my/admin/index.php:209 frontend/php/account/register.php:228
+#: frontend/php/my/admin/index.php:209 frontend/php/account/register.php:236
 #, php-format
 msgid "Your login is %s."
 msgstr "Ваша учетная запись&nbsp;&mdash; %s."
@@ -1428,7 +1428,7 @@ msgstr ""
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
 #: frontend/php/my/admin/editsshkeys.php:106
 #: frontend/php/my/admin/change.php:368 frontend/php/my/admin/change.php:387
-#: frontend/php/my/admin/change.php:528 frontend/php/account/register.php:203
+#: frontend/php/my/admin/change.php:528 frontend/php/account/register.php:211
 #: frontend/php/account/pending-resend.php:48
 #: frontend/php/account/lostpw-confirm.php:136
 #, php-format
@@ -1558,7 +1558,7 @@ msgstr "Полное имя обновлено."
 #: frontend/php/my/admin/change.php:233 frontend/php/my/admin/change.php:246
 #: frontend/php/my/admin/change.php:311 frontend/php/my/admin/change.php:323
 #: frontend/php/my/admin/change.php:349 frontend/php/my/admin/change.php:463
-#: frontend/php/my/admin/change.php:501 frontend/php/include/user.php:566
+#: frontend/php/my/admin/change.php:501 frontend/php/include/user.php:575
 msgid "Failed to update the database."
 msgstr "Не удалось обновить базу данных."
 
@@ -2721,7 +2721,7 @@ msgid "You must supply a non-empty real name."
 msgstr "Необходимо ввести непустое полное имя."
 
 #: frontend/php/project/admin/squadadmin.php:71
-#: frontend/php/account/register.php:96
+#: frontend/php/account/register.php:96 frontend/php/account/register.php:195
 msgid "That username already exists."
 msgstr "Имя пользователя занято."
 
@@ -2816,7 +2816,7 @@ msgid "User %s is not part of the squad."
 msgstr "Пользователь %s не в звене."
 
 #: frontend/php/project/admin/squadadmin.php:303
-#: frontend/php/account/register.php:262 frontend/php/include/user_home.php:149
+#: frontend/php/account/register.php:270 frontend/php/include/user_home.php:149
 msgid "Real Name:"
 msgstr "Полное имя:"
 
@@ -3867,7 +3867,7 @@ msgstr ""
 "и активирована. Обратите внимание, что учетные записи, не активированные в "
 "течение трех дней после регистрации, автоматически удаляются."
 
-#: frontend/php/account/lostpw.php:46 frontend/php/account/register.php:250
+#: frontend/php/account/lostpw.php:46 frontend/php/account/register.php:258
 #: frontend/php/account/login.php:212 frontend/php/include/user_home.php:153
 msgid "Login Name:"
 msgstr "Имя учетной записи:"
@@ -3916,7 +3916,7 @@ msgstr ""
 "учетной записи."
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:192
+#: frontend/php/account/register.php:200
 #, php-format
 msgid ""
 "Thank you for registering on the %s web site.\n"
@@ -3929,13 +3929,13 @@ msgstr ""
 "сообщении не упоминается, чтобы предотвратить создание учетных записей\n"
 "автоматами.)"
 
-#: frontend/php/account/register.php:201
+#: frontend/php/account/register.php:209
 #: frontend/php/account/pending-resend.php:46 frontend/php/account/first.php:45
 msgid "Enjoy the site."
 msgstr "Приятного пользования!"
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:209
+#: frontend/php/account/register.php:217
 #, php-format
 msgid ""
 "P.S. Your password is now stored in hashed form\n"
@@ -3944,7 +3944,7 @@ msgstr ""
 "Ваш пароль теперь хранится в виде контрольной суммы\n"
 "в базе данных %s."
 
-#: frontend/php/account/register.php:211
+#: frontend/php/account/register.php:219
 msgid ""
 "For better security we advise you to register\n"
 "an encryption-capable GPG key and enable encryption when sending password "
@@ -3958,26 +3958,26 @@ msgstr ""
 "чтобы убедиться, что вы действительно можете прочесть зашифрованные\n"
 "сообщения)."
 
-#: frontend/php/account/register.php:219
+#: frontend/php/account/register.php:227
 #: frontend/php/account/pending-resend.php:51
 msgid "Account Registration"
 msgstr "Регистрация учетной записи"
 
-#: frontend/php/account/register.php:222
+#: frontend/php/account/register.php:230
 msgid "Register Confirmation"
 msgstr "Подтверждение регистрации"
 
-#: frontend/php/account/register.php:224
+#: frontend/php/account/register.php:232
 msgid "New Account Registration Confirmation"
 msgstr "Подтверждение регистрации новой учетной записи"
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:226
+#: frontend/php/account/register.php:234
 #, php-format
 msgid "Congratulations. You have registered on %s."
 msgstr "Поздравляем! Вы зарегистрированы на %s "
 
-#: frontend/php/account/register.php:231
+#: frontend/php/account/register.php:239
 #, php-format
 msgid ""
 "You are now being sent a confirmation email to verify your\n"
@@ -3990,30 +3990,30 @@ msgstr ""
 "Чтобы активировать учетную запись, перейдите по ссылке из письма. Сообщение "
 "отправлено с адреса &lt;%s&gt;, оно содержит такой текст:"
 
-#: frontend/php/account/register.php:239
+#: frontend/php/account/register.php:247
 msgid ""
 "If you don't receive it within a reasonable time, contact website\n"
 "administration."
 msgstr ""
 "Если вы не получите его в ближайшее время, обратитесь к администрации сайта."
 
-#: frontend/php/account/register.php:246
+#: frontend/php/account/register.php:254
 msgid "User account registration"
 msgstr "Регистрация новой учетной записи"
 
-#: frontend/php/account/register.php:254
+#: frontend/php/account/register.php:262
 msgid "Password / passphrase:"
 msgstr "Фраза-пароль:"
 
-#: frontend/php/account/register.php:258
+#: frontend/php/account/register.php:266
 msgid "Re-type Password:"
 msgstr "Пароль (повтор):"
 
-#: frontend/php/account/register.php:265 frontend/php/include/user_home.php:167
+#: frontend/php/account/register.php:273 frontend/php/include/user_home.php:167
 msgid "Email Address:"
 msgstr "Адрес электронной почты"
 
-#: frontend/php/account/register.php:270
+#: frontend/php/account/register.php:278
 msgid ""
 "This email address will be verified before account activation. Check your\n"
 "spam filters. Do not use a hotmail or comcast address here."
@@ -4023,21 +4023,21 @@ msgstr ""
 "Проверьте свои фильтры спама. Не пользуйтесь здесь адресами hotmail и "
 "comcast."
 
-#: frontend/php/account/register.php:276 frontend/php/account/register.php:295
+#: frontend/php/account/register.php:284 frontend/php/account/register.php:303
 msgid "Antispam test:"
 msgstr "Проверка против спама:"
 
-#: frontend/php/account/register.php:282
+#: frontend/php/account/register.php:290
 #, php-format
 msgid "In what year was the GNU project announced? [<a href='%s'>hint</a>]"
 msgstr ""
 "В каком году было объявлено о проекте GNU? [<a href='%s'>подсказка</a>]"
 
-#: frontend/php/account/register.php:294
+#: frontend/php/account/register.php:302
 msgid "Play Captcha"
 msgstr "Воспроизвести вопрос"
 
-#: frontend/php/account/register.php:305
+#: frontend/php/account/register.php:313
 msgid ""
 "Instead of providing a new password you\n"
 "        may choose to authenticate via an <strong>AFS</strong> account you "
@@ -4050,7 +4050,7 @@ msgstr ""
 "сайте (имя вашей новой учетной записи должно совпадать с именем учетной "
 "записи AFS):"
 
-#: frontend/php/account/register.php:311
+#: frontend/php/account/register.php:319
 msgid "use AFS based authentication"
 msgstr "удостоверять личность по AFS"
 
@@ -9867,7 +9867,7 @@ msgstr "-"
 msgid "Invalid User ID"
 msgstr "Неправильный идентификатор пользователя"
 
-#: frontend/php/include/user.php:541 frontend/php/include/user.php:584
+#: frontend/php/include/user.php:550 frontend/php/include/user.php:593
 msgid "Account deleted."
 msgstr "Учетная запись удалена."
 
@@ -11007,7 +11007,7 @@ msgstr ""
 "Саванны. Первоначальная оценка может занять от одного дня до недели в "
 "зависимости от текущего числа проектов на очереди."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:3
+#: frontend/site-specific/gnu-content/register/requirements.php:26
 msgid ""
 "Please read these usage terms carefully.  If you don't follow them,\n"
 "we will not accept your project; if we don't have enough information\n"
@@ -11022,7 +11022,7 @@ msgstr ""
 "придется выяснять подробности у вас. Мы предполагаем, что после того как "
 "проект будет принят, вы продолжите соблюдать эти условия."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:11
+#: frontend/site-specific/gnu-content/register/requirements.php:34
 #, php-format
 msgid ""
 "All packages registered in savannah.gnu.org are GNU packages,\n"
@@ -11032,7 +11032,7 @@ msgstr ""
 "пакеты GNU, так что они должны следовать <a href=\"%s\">Стандартам "
 "программирования GNU</a>."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:15
+#: frontend/site-specific/gnu-content/register/requirements.php:38
 msgid ""
 "Note that some parts of the GNU Coding standards are firm\n"
 "  requirements, while some are just preferences/suggestions."
@@ -11041,7 +11041,7 @@ msgstr ""
 "являются требованиями, в то время как другие&nbsp;&mdash; только\n"
 "предпочтениями и предложениями."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:20
+#: frontend/site-specific/gnu-content/register/requirements.php:43
 msgid ""
 "Our intent is to provide a permanent home for all versions of your project.\n"
 "We do reserve the right, however, to discontinue hosting a project."
@@ -11049,11 +11049,11 @@ msgstr ""
 "Мы намерены предоставить постоянный дом для всех версий вашего проекта. "
 "Однако мы все же оставляем за собой право прекратить размещение проекта."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:23
+#: frontend/site-specific/gnu-content/register/requirements.php:46
 msgid "Use of project account"
 msgstr "Пользование учетной записью проекта"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:26
+#: frontend/site-specific/gnu-content/register/requirements.php:49
 #, php-format
 msgid ""
 "The space given to you on this server is given for the expressed\n"
@@ -11071,7 +11071,7 @@ msgstr ""
 "Дополнительные сведения на страницах <a href=\"%s\">философии проекта GNU</"
 "a>."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:36
+#: frontend/site-specific/gnu-content/register/requirements.php:59
 msgid ""
 "In order to preserve history and complete transparency, we will not\n"
 "remove projects with substantive content."
@@ -11079,24 +11079,38 @@ msgstr ""
 "В целях сохранения истории, а также полной прозрачности мы не удаляем "
 "проекты со сколько-нибудь значительным содержимым."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:39
+#: frontend/site-specific/gnu-content/register/requirements.php:62
 msgid "No dependencies on nonfree software"
 msgstr "Независимость от несвободных программ"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:41
+#: frontend/site-specific/gnu-content/register/requirements.php:65
+#, php-format
+#| msgid ""
+#| "To be hosted on Savannah, your project must be free software, and it\n"
+#| "must be kept independent of any nonfree software.  The package must\n"
+#| "not refer the user to any nonfree software; in particular, it must\n"
+#| "not automatically download or install any nonfree software."
 msgid ""
 "To be hosted on Savannah, your project must be free software, and it\n"
 "must be kept independent of any nonfree software.  The package must\n"
-"not refer the user to any nonfree software; in particular, it must\n"
-"not automatically download or install any nonfree software."
+"not refer the user to any nonfree software; in other words,\n"
+"it must not say anything that in our judgment is likely to\n"
+"lead or steer users towards any nonfree software.  In particular,\n"
+"it must not automatically download or install any nonfree software.\n"
+"For more info, see <a href=\\\"%s\\\">References to Non-Free Software and\n"
+"Documentation</a> in the GNU Coding Standards."
 msgstr ""
 "Для размещения в Саванне ваш проект должен быть свободной программой и он "
 "должен сохранять независимость от любых несвободных программ. Пакет не "
-"должен указывать пользователю ни на какие несвободные программы; в "
-"частности, он не должен автоматически подгружать или устнавливать никакие "
-"несвободные программы."
+"должен отсылать пользователя к каким несвободным программам; другими словами, "
+"в нем не должно говориться ничего, что в наших глазах, вероятно, будет "
+"приводить или направлять пользователей к любым несвободным программам. "
+"В частности, пакет не должен автоматически получать по сети или устанавливать "
+"какие бы то ни было несвободные программы. "
+"Подробнее см. в разделе <a href=\\\"%s\\\">Ссылки на несвободные программы и "
+"документацию</a> в Стандартах программирования GNU."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:46
+#: frontend/site-specific/gnu-content/register/requirements.php:76
 msgid ""
 "The program should deliver its full functionality and convenience on a\n"
 "completely free platform based on a free operating system, such as\n"
@@ -11110,7 +11124,7 @@ msgstr ""
 "противном случае это было бы соблазном устанавливать несвободные "
 "операционные системы либо другие несвободные программы."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:52
+#: frontend/site-specific/gnu-content/register/requirements.php:82
 msgid ""
 "It is ok for the program to run on nonfree platforms or nonfree\n"
 "operating systems, and to work with well-known nonfree applications,\n"
@@ -11129,11 +11143,11 @@ msgstr ""
 "выгодное положение по сравнению с теми, кто согласен пользоваться "
 "несвободными рпограммами."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:60
+#: frontend/site-specific/gnu-content/register/requirements.php:90
 msgid "Regarding Android phones"
 msgstr "Относительно телефонов на Android"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:62
+#: frontend/site-specific/gnu-content/register/requirements.php:92
 msgid ""
 "Projects running on\n"
 "Replicant may be hosted on Savannah.  Projects having dependencies on\n"
@@ -11144,11 +11158,11 @@ msgstr ""
 "которые зависят от несвободных программ, такие как несвободные драйверы "
 "AndroidOS, недопустимы."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:67
+#: frontend/site-specific/gnu-content/register/requirements.php:97
 msgid "No nonfree formats"
 msgstr "Только свободные форматы"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:69
+#: frontend/site-specific/gnu-content/register/requirements.php:99
 msgid ""
 "Using a format such as Flash, RealPlayer and QuickTime, that can in\n"
 "practice only be created or played using nonfree software is, in\n"
@@ -11167,11 +11181,11 @@ msgstr ""
 "Следовательно, ваш пакет не должен содержать или рекомендовать материалы в "
 "этих несвободных форматах."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:77
+#: frontend/site-specific/gnu-content/register/requirements.php:107
 msgid "Advertisements"
 msgstr "Реклама"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:79
+#: frontend/site-specific/gnu-content/register/requirements.php:109
 msgid ""
 "In general, you may not advertise anything commercial on a site hosted\n"
 "here.  However, as exceptions, you can point people to commercial\n"
@@ -11185,11 +11199,11 @@ msgstr ""
 "программ и разного рода атрибутки своего проекта, которые вы продаете "
 "пользователям напрямую."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:85
+#: frontend/site-specific/gnu-content/register/requirements.php:115
 msgid "Speaking about free software"
 msgstr "Говорите о свободных программах"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:87
+#: frontend/site-specific/gnu-content/register/requirements.php:117
 msgid ""
 "Savannah is a free software hosting site: we host projects such as\n"
 "yours for the sake of the ideals of freedom and community that the\n"
@@ -11206,7 +11220,7 @@ msgstr ""
 "пакет как пакет свободных программ. Называйте его &ldquo;свободными "
 "программами&rdquo;, а не &ldquo;открытым исходным текстом&rdquo;."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:95
+#: frontend/site-specific/gnu-content/register/requirements.php:125
 msgid ""
 "Savannah is part of the GNU Project, developer of the free software\n"
 "operating system GNU.  The GNU/Linux system (GNU with Linux as the\n"
@@ -11223,7 +11237,7 @@ msgstr ""
 "GNU/Linux&rdquo;, а не просто &ldquo;Linux&rdquo;, когда вы упоминаете ее в "
 "связи с вашим пакетом."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:103
+#: frontend/site-specific/gnu-content/register/requirements.php:133
 #, php-format
 msgid ""
 "If you'd like to help correct other confusions, you can find some\n"
@@ -11233,11 +11247,11 @@ msgstr ""
 "предложения на странице <a href=\"%s\">Слов, которые следует употреблять "
 "аккуратно</a>."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:108
+#: frontend/site-specific/gnu-content/register/requirements.php:138
 msgid "Project naming"
 msgstr "Название проекта"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:110
+#: frontend/site-specific/gnu-content/register/requirements.php:140
 msgid ""
 "Project identifiers should be reasonably descriptive, rather than\n"
 "terse abbreviations or confusingly general.  If we believe this to be an\n"
@@ -11247,11 +11261,11 @@ msgstr ""
 "сокращениями или чересчур общими. Если мы сочтем, что такая проблема есть, "
 "мы обсудим это с вами."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:114
+#: frontend/site-specific/gnu-content/register/requirements.php:144
 msgid "Free software licenses"
 msgstr "Лицензии свободных программ"
 
-#: frontend/site-specific/gnu-content/register/requirements.php:116
+#: frontend/site-specific/gnu-content/register/requirements.php:146
 msgid ""
 "You will be presented with a choice of free software licenses for\n"
 "your project.  For hosting on Savannah, you must use one of these\n"
@@ -11272,7 +11286,7 @@ msgstr ""
 "поздней версии&rdquo; для GNU GPL, GNU AGPL и GNU LGPL. Вы останетесь "
 "правообладателем всего, что вы создаете в вашем проекте."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:127
+#: frontend/site-specific/gnu-content/register/requirements.php:157
 #, php-format
 msgid ""
 "For manuals, we recommend GNU FDL version X-or-later, where X is the\n"
@@ -11283,7 +11297,7 @@ msgstr ""
 "&mdash; последняя выпущенная версия <a href=\"%s\">FDL</a>; другое "
 "лицензирование, совместимое с этим, допустимо."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:133
+#: frontend/site-specific/gnu-content/register/requirements.php:163
 #, php-format
 msgid ""
 "Proper license notices should be applied to, at least, each source\n"
@@ -11304,7 +11318,7 @@ msgstr ""
 "уведомления. Копия полного текста всех применяемых лицензий также должна "
 "включаться в проект."
 
-#: frontend/site-specific/gnu-content/register/requirements.php:144
+#: frontend/site-specific/gnu-content/register/requirements.php:174
 msgid ""
 "If you need to use another license that is not listed, let us know\n"
 "and we, or most likely the FSF licensing group, will review these\n"
