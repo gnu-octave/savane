@@ -1,5 +1,28 @@
 <?php
-
+# Savannah hosting requirements.
+#
+# Copyright (C) 2002, 2003 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2003 Jaime E. Villate
+# Copyright (C) 2005, 2006  Sylvain Beucler
+# Copyright (C) 2011 Michael J. Flickinger
+# Copyright (C) 2011, 2014, 2015, 2016 Karl Berry
+# Copyright (C) 2017, 2019, 2020 Ineiev
+# Copyright (C) 2005, 2020 Richard Stallman
+#
+# This file is part of Savane.
+#
+# Savane is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# Savane is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 print '<p>'._("Please read these usage terms carefully.  If you don't follow them,
 we will not accept your project; if we don't have enough information
 determine whether your project follows these terms, we will
@@ -38,10 +61,17 @@ remove projects with substantive content.').'</p>
 
 <h3>'._('No dependencies on nonfree software').'</h3>
 
-<p>'._('To be hosted on Savannah, your project must be free software, and it
+<p>'
+. sprintf(_('To be hosted on Savannah, your project must be free software, and it
 must be kept independent of any nonfree software.  The package must
-not refer the user to any nonfree software; in particular, it must
-not automatically download or install any nonfree software.').'</p>
+not refer the user to any nonfree software; in other words,
+it must not say anything that in our judgment is likely to
+lead or steer users towards any nonfree software.  In particular,
+it must not automatically download or install any nonfree software.
+For more info, see <a href=\"%s\">References to Non-Free Software and
+Documentation</a> in the GNU Coding Standards.'),
+"https://www.gnu.org/prep/standards/html_node/References.html")
+. '</p>
 
 <p>'._('The program should deliver its full functionality and convenience on a
 completely free platform based on a free operating system, such as
