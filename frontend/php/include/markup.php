@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2005-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018, 2019 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -900,7 +900,13 @@ function _markup_inline($line)
     # match the ending underscore and either end of line or
     # a non-word character
     .'_(\W|$)/', '$1<em>$2</em>$3', $line);
-
+  if ($GLOBALS['sys_default_domain'] != $GLOBALS['sys_file_domain'])
+    {
+      $http = session_issecure()? 'https': 'http';
+      $line = preg_replace('/<img src="\/file/',
+                           '<img src="' . $http . "://"
+                           . $GLOBALS['sys_file_domain'] . '/file', $line);
+    }
   return $line;
 }
 ?>

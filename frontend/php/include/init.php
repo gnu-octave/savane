@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gna.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -20,13 +20,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-/* Set up proper use of UTF-8, even if the webserver does
-   not serve it by default.  */
-header('Content-Type: text/html; charset=utf-8');
-/* Disallow embedding in any frames.  */
-header('X-Frame-Options: DENY');
-/* Declare more restrictions on how browsers may assemble pages.  */
-header("Content-Security-Policy: default-src 'self'; frame-ancestors 'none'");
 # Database abstraction.
 require_once(dirname(__FILE__).'/database.php');
 # Security library.
@@ -122,6 +115,9 @@ else
       include('/etc/savane/.savane.conf.php');
   }
 
+if (empty($sys_file_domain))
+  $sys_file_domain = $sys_default_domain;
+
 // Detect where we are, unless it's explicitely specified in the
 // configuration file:
 if (empty($sys_www_topdir))
@@ -150,6 +146,10 @@ if (isset($GLOBALS['sys_https_host']))
   $sys_https_url = 'https://'.$GLOBALS['sys_https_host'];
 else
   $sys_https_url = 'http://'.$GLOBALS['sys_default_domain'];
+
+# Security issues apply even during fundrasing periods.  Please don't disable
+# this, make the banner work with the headers instead.
+utils_set_csp_headers();
 
 # Debug initialization.
 if ($sys_debug_on == true)

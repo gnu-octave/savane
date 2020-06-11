@@ -99,11 +99,16 @@ function test_cgitrepos()
       print '<strong>cgitrepos in $sys_etc_dir is not readable</strong>';
       return;
     }
-  $mtime = filemtime ($fname);
-  if (time () - $mtime > 3600)
+  $mtime = time () - filemtime ($fname);
+  if ($mtime > 3600)
     {
-      print '<strong>cgitrepos has not been updated for ' . (time () - $mtmie)
-            . ' seconds</strong>';
+      print ('<strong>cgitrepos has not been updated for ');
+      if ($mtime < 100)
+        printf ('%.0f minutes</strong>', $mtime / 60);
+      else if ($mtime < 24 * 3600)
+        printf ('%.0f hours</strong>',  $mtime / 3600);
+      else
+        printf ('%.1f days</strong>',  $mtime / 24. / 3600);
       return;
     }
   print 'OK';
@@ -242,16 +247,16 @@ print "<p>";
 if (getenv('SAVANE_CONF'))
   {
     $configfile = getenv('SAVANE_CONF');
-    print "SAVANE_CONF configured to ".$configfile."<br />\n";
+    print "SAVANE_CONF configured to " . $configfile . "<br />\n";
   }
 elseif (getenv('SV_LOCAL_INC_PREFIX'))
   {
     $configfile = getenv('SV_LOCAL_INC_PREFIX');
-    print "SV_LOCAL_INC_PREFIX configured to ".$configfile."<br />\n";
+    print "SV_LOCAL_INC_PREFIX configured to " . $configfile . "<br />\n";
   }
 else
   print "SAVANE_CONF or SV_LOCAL_INC_PREFIX are not set, "
-        . "falling back to default <strong>".$configfile."</strong>) <br />\n";
+        . "falling back to default <strong>" . $configfile . "</strong>) <br />\n";
 
 # Add a trailing slash.
 if (!preg_match ('#/$#', $configfile))
@@ -276,6 +281,7 @@ else
     $variables = array (# Name  / required
                       'sys_default_domain',
                       'sys_https_host',
+                      'sys_file_domain',
                       'sys_dbhost',
                       'sys_dbname',
                       'sys_dbuser',
@@ -313,10 +319,12 @@ else
     print "</table>\n";
     print "<p>Savane uses safe defaults values when variables are not set
 in the configuration file.</p>\n";
+    print "<p><img src='/file?file_id=test.png' alt='Test image'/></p>\n";
 
     print "\n<h2>MySQL configuration</h2>\n\n";
     require_once ("include/utils.php");
     require_once ("include/database.php");
+    utils_set_csp_headers ();
     if (!db_connect ())
       print "<blockquote>Can't connect to database.</blockquote>\n";
     else

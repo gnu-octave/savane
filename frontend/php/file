@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2018  Ineiev
+# Copyright (C) 2017, 2018, 2020  Ineiev
 #
 # This file is part of Savane.
 #
@@ -21,10 +21,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+$GLOBALS['skip_csp_headers'] = 1;
+
 require_once('include/init.php');
 require_once('include/http.php');
 
 extract(sane_import('request', array('file_id')));
+
+if ($file_id == 'test.png')
+  {
+    header('Content-Type: image/png');
+    $fname = $GLOBALS['sys_www_topdir'] . '/images/common/floating.png';
+    header('Content-Length: ' . stat($fname)['size']);
+    readfile ($fname);
+    exit (0);
+  }
 
 # Check if the provided file_id is a valid numerical id.
 if (!$file_id || !ctype_digit($file_id))

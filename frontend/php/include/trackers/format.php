@@ -511,7 +511,7 @@ function format_item_changes ($changes, $item_id, $group_id)
         {
           $out_att .= sprintf("File name: %-30s Size:%d KB\n    <%s>\n\n",
                               $file['name'], intval($file['size']/1024),
-                              "https://" . $GLOBALS['sys_default_domain']
+                              "https://" . $GLOBALS['sys_file_domain']
                               . '/file/' . $file['name'] . '?file_id='
                               . $file['id']);
 

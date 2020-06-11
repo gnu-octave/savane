@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
 # Copyright (C) 2006, 2007, 2008, 2010 Sylvain Beucler
-# Copyright (C) 2017, 2018, 2019 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -1164,5 +1164,23 @@ function utils_setcookie ($name, $value, $expire, $secure = false)
 {
   setcookie($name, $value, $expire, $GLOBALS['sys_home'], '',
             $secure, true);
+}
+
+function utils_set_csp_headers ()
+{
+  if (empty ($GLOBALS['skip_csp_headers']))
+    return;
+  # Set up proper use of UTF-8, even if the webserver doesn't serve it by default.
+  header('Content-Type: text/html; charset=utf-8');
+  # Disallow embedding in any frames.
+  header('X-Frame-Options: DENY');
+  # Declare more restrictions on how browsers may assemble pages.
+  # Security issues apply even during fundrasing periods.  Please don't disable
+  # this; instead, add some domain to img-src (or (better?) copy necessary
+  # images to images/ or to submissions_uploads/).
+  $policy = "Content-Security-Policy: default-src 'self'; frame-ancestors 'none'";
+  if ($GLOBALS['sys_file_domain'] != $GLOBALS['sys_default_domain'])
+    $policy .= "; img-src 'self' " . $GLOBALS['sys_file_domain'];
+  header($policy);
 }
 ?>

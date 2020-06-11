@@ -6,7 +6,7 @@
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -2115,8 +2115,8 @@ File Attachments:\n\n";
           for ($i=0; $i < $rows; $i++)
             {
               $item_file_id = db_result($result, $i, 'file_id');
-              $href = $GLOBALS['sys_home'].ARTIFACT
-                  ."/download.php?file_id=$item_file_id";
+              $href = $GLOBALS['sys_home'] . ARTIFACT
+                      . "/download.php?file_id=$item_file_id";
 
               $out .= sprintf($fmt,
                               utils_format_date(db_result($result, $i, 'date')),
@@ -2125,8 +2125,8 @@ File Attachments:\n\n";
                                                              'filesize'))),
                               db_result($result, $i, 'user_name'),
                               db_result($result, $i, 'description'),
-                              '<http://'.$GLOBALS['sys_default_domain']
-                              .utils_unconvert_htmlspecialchars($href).'>');
+                              '<https://' . $GLOBALS['sys_default_domain']
+                              . utils_unconvert_htmlspecialchars($href) . '>');
             }
           $out .= "\n";
           $body .= $out;
