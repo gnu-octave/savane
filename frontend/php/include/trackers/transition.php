@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou---gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Get an array of fields that should be updated on field transitions
+# Get an array of fields that should be updated on field transitions.
 function trackers_transition_get_update($group_id)
 {
   $field_transition = array();
@@ -61,7 +61,7 @@ function trackers_transition_get_update($group_id)
 }
 
 # Return an array the other field update pair field/value for a given transition.
-# No such transition, no update planned? Return false
+# No such transition, no update planned? Return false.
 function trackers_transition_get_other_field_update ($transition_id)
 {
   $result = db_execute("SELECT update_field_name,update_value_id
@@ -101,7 +101,7 @@ function trackers_transition_update_other_field ($transition_id, $field_name,
 
       fb("other $transition_id, $field_name, $value_id", 1);
   # Otherwise, we first check if there is such "other field update configured"
-  # and do INSERT or UPDATE accordingly
+  # and do INSERT or UPDATE accordingly.
   $result = db_execute(
       "SELECT other_field_update_id
        FROM trackers_field_transition_other_field_update
@@ -144,30 +144,30 @@ function trackers_transition_update_other_field ($transition_id, $field_name,
 function trackers_transition_update_item ($item_id, $transition_id_array,
                                           $changes)
 {
-  # Array in which we ll store field to updates
+  # Array in which we ll store field to updates.
   $toupdate = array();
 
   # Extract transitions updates
   if (is_array($transition_id_array))
     {
-      while (list(,$transition_id) = each($transition_id_array))
+      foreach ($transition_id_array as $transition_id)
 	{
-	  # Make sure we have a valid entry
+	  # Make sure we have a valid entry.
 	  if (!$transition_id)
 	    { continue; }
 
-	  # Get list of register updated for this transition
+	  # Get list of register updated for this transition.
 	  $registered = trackers_transition_get_other_field_update($transition_id);
 
-          # No result? skip it
+          # No result? Skip it.
 	  if (!$registered)
 	    { continue; }
 	  else
 	    {
-	      # Run the list of registered updates for this transition
+	      # Run the list of registered updates for this transition.
 	      while ($update = db_fetch_array($registered))
 		{
-                  # Skip it if it already on the list to be changed
+                  # Skip it if it already on the list to be changed.
 		  if ((is_array($changes)
                       && !array_key_exists($update['update_field_name'],
                                            $changes))
@@ -188,10 +188,10 @@ function trackers_transition_update_item ($item_id, $transition_id_array,
 	    }
 	}
 
-      # Now update fields
+      # Now update fields.
       $upd_list = array();
       $exists = false;
-      while (list($field,$value) = each($toupdate))
+      foreach ($toupdate as $field => $value)
 	{
 	  if ($value)
 	    {
@@ -200,7 +200,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array,
 					$value,
 					$item_id);
 	      # Put some feedback: do not mention internal fields like
-	      # 'closed on'
+	      # 'closed on'.
 	      if ($field != 'close_date')
 		{
 		  fb(
@@ -215,7 +215,7 @@ function trackers_transition_update_item ($item_id, $transition_id_array,
 
       if ($exists)
 	{
-	  # Update database silently, we may have no rows to update
+	  # Update database silently, we may have no rows to update.
 	  db_autoexecute(ARTIFACT, $upd_list, DB_AUTOQUERY_UPDATE,
 			 "bug_id=?", array($item_id));
 	}

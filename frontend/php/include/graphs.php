@@ -3,7 +3,7 @@
 # and w3c-compliant.
 #
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -48,17 +48,12 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0, $id0 = 0)
   if (!$total)
     {
       $totalvar = 0;
-      while(list($k, $v)=each($content))
-        {
-          $totalvar += $v;
-        }
+      foreach ($content as $k => $v)
+        $totalvar += $v;
 
       $total = array();
-      reset($content);
-      while(list($k, $v)=each($content))
-        {
-          $total[$k] = $totalvar;
-        }
+      foreach ($content as $k => $v)
+        $total[$k] = $totalvar;
     }
   else
     {
@@ -74,8 +69,7 @@ function graphs_build ($result, $field=0, $dbdirect=1, $total=0, $id0 = 0)
   if ($totalvar)
     {
       $output .= "\n\n".'<table class="graphs">'."\n";
-      reset($content);
-      while(list($k, $v)=each($content))
+      foreach ($content as $k => $v)
         {
           if ($total[$k] > 0)
             {

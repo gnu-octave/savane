@@ -2,7 +2,7 @@
 # Trigger group creation.
 # 
 # Copyright (C) 2004 Mathieu Roy <yeupou--at--gnu.org>
-# Copyright 2017 Ineiev
+# Copyright 2017, 2020 Ineiev
 # 
 # This file is part of Savane.
 # 
@@ -29,14 +29,13 @@ function no_i18n($string)
 require_once('../include/init.php');
 require_once('../include/proj_email.php');
 
-# Skip admin rights check if we are dealing with the sys group
+# Skip admin rights check if we are dealing with the sys group.
 if ($GLOBALS['sys_group_id'] != $group_id)
 { session_require(array('group'=>'1','admin_flags'=>'A')); }
 
-################
 # Configure the project according to group type settings:
 #   If a project can use a feature for its group type, assume he would
-#   use it by default
+#   use it by default.
 #   Exception: the patch tracker is deprecated, so it is ignored.
 $group_type = db_result(db_execute("SELECT type FROM groups WHERE group_id=?",
                                    array($group_id)),0,'type');
@@ -47,7 +46,8 @@ $user_id = user_getid();
 $to_update = array("homepage", "download", "cvs", "forum","mailing_list",
                    "task","news","support","bug");
 $upd_list = array();
-while (list(,$field) = each($to_update))
+
+foreach ($to_update as $field)
 {
   # bug = bugs, mailing_list = mail
   $value = db_result($res_type, 0, 'can_use_'.$field);
@@ -80,7 +80,6 @@ if ($upd_list)
     }
 }
 
-################
 # Now set a default notification setup for the trackers. 
 # We do not even check whether the trackers are used, because we want this
 # configuration to be already done if at some point the tracker gets activated,
@@ -102,7 +101,8 @@ if (db_numrows($res_admins) > 0)
     }
   
   $to_update = array("news", "support", "task", "bugs", "patch", "cookbook");
-  while (list(,$field) = each($to_update))
+
+  foreach ($to_update as $field)
     {
       $upd_list["new_".$field."_address"] = $admin_list;
       if ($field != "news")
@@ -113,7 +113,7 @@ if (db_numrows($res_admins) > 0)
 }
 if ($upd_list)
 {
-  # strip the excess comma at the end of the update field list
+  # Strip the excess comma at the end of the update field list.
   $result=db_affected_rows(db_autoexecute('groups', $upd_list,
                                           DB_AUTOQUERY_UPDATE, "group_id=?", 
                                           array($group_id)));
@@ -130,8 +130,7 @@ if ($upd_list)
     }
 }
 
-################
-# Send email and do site specific triggered stuff that comes along
+# Send email and do site specific triggered stuff that comes along.
 send_new_project_email($group_id);
 fb(no_i18n("Mail sent, site-specific triggers executed"));
 

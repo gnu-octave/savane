@@ -2,7 +2,7 @@
 # Cookbook functions
 #
 # Copyright (C) 2005 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -68,7 +68,8 @@ function cookbook_context_project_impossiblevalues()
   # Impossible values are values of unactivated features for the project.
   $array_possible = cookbook_context_project_possiblevalues();
   $project = project_get_object($group_id);
-  while(list($feature,) = each($array_possible))
+
+  foreach ($array_possible as $feature => $value)
     {
       # Cookbook cannot be deactivated.
       if ($feature == 'cookbook')
@@ -97,13 +98,11 @@ function cookbook_context_possiblevalues()
   if ($group_id != $sys_group_id)
     {
       # If we are in a normal group, remove impossible values.
-      # For instance, remove all unused features
+      # For instance, remove all unused features.
       $array_impossible = cookbook_context_project_impossiblevalues();
 
-      while(list($feature,) = each($array_impossible))
-        {
-          unset($array_possible[$feature]);
-        }
+      foreach ($array_impossible as $key => $value)
+        unset($array_possible[$key]);
     }
   else
     {
@@ -155,7 +154,8 @@ function cookbook_build_form ($which="audience")
     }
 
   $content = '';
-  while(list($field,$label) = each($possiblevalues))
+
+  foreach ($possiblevalues as $field => $label)
     {
       $checked = '';
 
@@ -322,7 +322,8 @@ function cookbook_handle_update($item_id, $group_id)
   # Find out the targetted audience.
   $audience_cases = array();
   $possiblevalues = cookbook_audience_possiblevalues();
-  while(list($field,) = each($possiblevalues))
+
+  foreach ($possiblevalues as $field => $val)
     {
       $value = 0;
       if ($in["recipe_audience_".$field])
@@ -333,7 +334,8 @@ function cookbook_handle_update($item_id, $group_id)
   # Find out the targetted context (feature).
   $context_cases = array();
   $possiblevalues = cookbook_context_possiblevalues();
-  while(list($field,) = each($possiblevalues))
+
+  foreach ($possiblevalues as $field => $val)
     {
       $value = 0;
       if ($in["recipe_context_".$field])
@@ -344,7 +346,8 @@ function cookbook_handle_update($item_id, $group_id)
   # Find out the targetted subcontext (action).
   $subcontext_cases = array();
   $possiblevalues = cookbook_subcontext_possiblevalues();
-  while(list($field,) = each($possiblevalues))
+
+  foreach ($possiblevalues as $field => $val)
     {
       $value = 0;
       if ($in["recipe_subcontext_".$field])

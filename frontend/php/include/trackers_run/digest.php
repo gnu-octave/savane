@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -39,7 +39,7 @@ step&rdquo; at the bottom of this page.")
   }
 elseif ($func == "digestselectfield")
   {
-  # Determines items to digest, if we are supposed to digest dependencies
+  # Determines items to digest, if we are supposed to digest dependencies.
     if ($dependencies_of_item && $dependencies_of_tracker)
       {
         if (!ctype_alnum($dependencies_of_tracker))
@@ -71,9 +71,9 @@ elseif ($func == "digestselectfield")
 <input type="hidden" name="func" value="digestget" />
 ';
 
-  # Keep track of the selected items
+  # Keep track of the selected items.
     $count = 0;
-    while (list(,$item) = each($items_for_digest))
+    foreach ($items_for_digest as $item)
       {
         print form_input("hidden", "items_for_digest[]", $item);
         $count++;
@@ -87,18 +87,18 @@ elseif ($func == "digestselectfield")
 ."</p>\n";
 
     $i = 0;
-  # Select fields
+  # Select fields.
     while ($field_name = trackers_list_all_fields())
       {
         if (trackers_data_is_used($field_name))
           {
           # Open/Close and Group id are meaningless in this context:
-          # they ll be on the output page in any cases
+          # they'll be on the output page in any cases.
             if ($field_name == 'group_id'
                 || $field_name == 'status_id')
               continue;
 
-          # Item id is mandatory
+          # Item ID is mandatory.
             if ($field_name == "bug_id")
                 {
                   print form_input("hidden", "field_used[".$field_name."]", "1").
@@ -117,7 +117,7 @@ elseif ($func == "digestselectfield")
           }
       }
   # Comments is not an authentic field but could be useful. We allow
-  # addition of the latest comment
+  # addition of the latest comment.
     print '<div class="'. utils_get_alt_row_color($i) .'">'
       .'<input type="checkbox" name="field_used[latestcomment]" '
       .'value="1" checked="checked" />&nbsp;&nbsp;'._("Latest Comment")
@@ -137,9 +137,9 @@ elseif ($func == "digestget")
 
     trackers_header(array('title'=>_("Digest").' - '.utils_format_date(time())));
 
-  # Browse the list of selected item
+  # Browse the list of selected item.
     $i = 0;
-    while (list(,$item) = each($items_for_digest))
+    foreach ($items_for_digest as $item)
       {
         $i++;
         $result = db_execute("SELECT * FROM ".ARTIFACT
@@ -154,12 +154,12 @@ elseif ($func == "digestget")
             && !member_check_private(0, db_result($result, 0, 'group_id')))
           continue;
 
-      # Show summary if requested
+      # Show summary if requested.
         $summary = '';
         if (isset($field_used['summary']) && $field_used['summary'] == 1)
           $summary = db_result($result,0,'summary');
 
-      # Show if the item is closed with an icon
+      # Show if the item is closed with an icon.
         unset($icon);
         if (db_result($result, 0, 'status_id') != 1)
           $icon = '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
@@ -181,7 +181,7 @@ elseif ($func == "digestget")
         $field_count = 0;
         while ($field_name = trackers_list_all_fields())
           {
-          # Some field can be ignored in any cases
+          # Some field can be ignored in any cases.
             if ($field_name == "status_id"
                 || $field_name == "summary"
                 || $field_name == "bug_id"
@@ -189,7 +189,7 @@ elseif ($func == "digestget")
                 || $field_name == "comment_type_id" )
               continue;
 
-# Check the fields
+# Check the fields.
             if (!isset($field_used[$field_name])
                 || $field_used[$field_name] != 1)
               continue;
@@ -203,12 +203,12 @@ elseif ($func == "digestget")
             else
                print '<span class="splitleft">';
 
-          # Extract value
+          # Extract value.
             $value = trackers_field_display($field_name,
                                             db_result($result, 0, 'group_id'),
                                             db_result($result,0,$field_name),
                                             false,false,true);
-          # If it is an user name field, show full user info
+          # If it is an user name field, show full user info.
             if ($field_name == "assigned_to"
                 || $field_name == "submitted_by")
               $value = utils_user_link($value,
@@ -221,7 +221,7 @@ elseif ($func == "digestget")
               print '<br />';
           }
 
-      # finally include details + last comment, if asked
+      # Finally include details + last comment, if asked.
         if ($field_used["details"] == 1)
           print '<hr class="clearr" /><div class="smaller">'
             . trackers_field_display("details",

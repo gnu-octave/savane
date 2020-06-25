@@ -2,7 +2,7 @@
 # Every mails sent should be using functions listed here.
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018, 2019 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -162,11 +162,10 @@ function sendmail_mail ($from,
       $exclude = array_unique(explode(",", str_replace (" ", "",
                                                         $exclude_list)));
     }
-
-  while (list(,$v) = each($exclude))
+  foreach ($exclude as $v)
     {
-       if ($v)
-         $exclude[$v] = 1;
+      if ($v)
+        $exclude[$v] = 1;
     }
 
   # Forge the real to list, by parsing every item of the $to list.
@@ -175,7 +174,7 @@ function sendmail_mail ($from,
   # Do a first run to convert squads by users.
   $to2 = array();
   $squad_seen_before = array();
-  while (list(,$v) = each($to))
+  foreach ($to as $v)
     {
       if (ctype_digit($v))
         $touid = $v;
@@ -231,7 +230,7 @@ function sendmail_mail ($from,
   $user_name  = array();
   $seen_before = array();
   $i = 0;
-  while (list(,$v) = each($to2))
+  foreach ($to2 as $v)
     {
       if (is_numeric($v))
         $touid = $v;
@@ -403,7 +402,7 @@ function sendmail_mail ($from,
     }
 
   # Send mails with specific subject line.
-  while (list(,$v) = each($list))
+  foreach ($list as $v)
     {
       if (empty($int_delayspamcheck))
         {
@@ -465,10 +464,10 @@ function sendmail_encode_header_content ($header, $charset="UTF-8")
       $words = explode (' ', $header);
       $separator = ' ';
     }
-  while (list($key, $word) = each($words))
+  foreach ($words as $key => $word)
     $encode[$key] = !utils_is_ascii ($word);
   $last_key = count ($words) - 1;
-  while (list($key, $word) = each($words))
+  foreach ($words as $key => $word)
     {
       if (!$encode[$key])
         continue;

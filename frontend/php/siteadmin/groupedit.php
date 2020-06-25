@@ -5,7 +5,7 @@
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -214,12 +214,13 @@ belongs to accepts this information.").'<br />';
 print '<select name="form_license" id="form_license">';
 print '<option value="none">'.no_i18n("N/A").'</option>';
 print '<option value="other">'.no_i18n("Other license").'</option>';
-while (list($k,$v) = each($LICENSE_EN))
-{
-  print "<OPTION value=\"$k\"";
-  if ($k == $row_grp['license']) print " selected";
-  print ">$v</option>\n";
-}
+
+foreach ($LICENSE_EN as $k => $v)
+  {
+    print "<OPTION value=\"$k\"";
+    if ($k == $row_grp['license']) print " selected";
+    print ">$v</option>\n";
+  }
 print '</select>
 <br />
 <label for="form_license_other">';

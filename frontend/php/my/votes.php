@@ -2,7 +2,7 @@
 # Handle votes.
 #
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -57,7 +57,7 @@ if ($submit)
       }
     else
       {
-        while (list($vote_id,$new_vote) = each($new_votes_list))
+        foreach ($new_votes_list as $vote_id => $new_vote)
           {
             trackers_votes_update ($new_votes_list_item_id[$vote_id],
                                    0,

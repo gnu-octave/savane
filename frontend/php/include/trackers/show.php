@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2019 Ineiev
+# Copyright (C) 2017, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -39,10 +39,8 @@ function show_item_list ($result_arr,
   if ($url)
     {
       $links_arr = array();
-      while (list(, $field) = each($field_arr))
-        {
-          $links_arr[] = $url . '&amp;order=' . $field . '#results';
-        }
+      foreach ($field_arr as $field)
+        $links_arr[] = $url . '&amp;order=' . $field . '#results';
     }
   # Show extra rows for <-- Prev / Next -->.
 
@@ -128,7 +126,7 @@ function show_item_list ($result_arr,
   # See if the bugs are too old - so we can highlight them.
   $nb_of_fields = count($field_arr);
 
-  while (list(, $thisitem) = each($result_arr))
+  foreach ($result_arr as $thisitem)
     {
       $thisitem_id = $thisitem['bug_id'];
       print '<tr class="'
@@ -210,7 +208,7 @@ function show_item_list ($result_arr,
             }
         } # for ($j = 0; $j < $nb_of_fields; $j++)
       print "</tr>\n";
-    } # while (list(, $thisitem) = each($result_arr))
+    } # while (current ($result_arr) !== FALSE)
   print "</table>\n";
   # Print prev/next links.
   print "<br />\n<h2 $nav_bar<br />\n";
@@ -240,14 +238,14 @@ function show_item_list_sober ($result_arr,
   $sql_unboundcontext = '';
   $sql_unboundaudience = '';
   $thisarray = array_merge($possible_contexts, $impossible_contexts);
-  while (list($context,) = each($thisarray))
+  foreach ($thisarray as $context => $contval)
     {
       if (!ctype_alnum($context))
         util_die('show_item_list_sober: invalid context <em>'
                  . htmlspecialchars($context) . '</em>');
       $sql_unboundcontext .= "AND context_$context=0 ";
     }
-  while (list($audience,) = each($possible_audiences))
+  foreach ($possible_audiences as $audience => $audval)
     {
       if (!ctype_alnum($audience))
         util_die('show_item_list_sober: invalid audience <em>'
@@ -273,16 +271,14 @@ function show_item_list_sober ($result_arr,
 
   # Go through the list of possible context and then possible actions.
   # Print relevant items.
-  reset($possible_contexts);
-  while (list($context, $context_label) = each($possible_contexts))
+  foreach ($possible_contexts as $context => $context_label)
     {
       if (!ctype_alnum($context))
         util_die('show_item_list_sober: invalid context <em>'
                  . htmlspecialchars($context) . '</em>');
       $seen_before = array();
       $context_content = '';
-      reset($possible_audiences);
-      while (list($audience,$audience_label) = each($possible_audiences))
+      foreach ($possible_audiences as $audience => $audience_label)
         {
           if (!ctype_alnum($audience))
             util_die('show_item_list_sober: invalid audience <em>'
@@ -348,7 +344,7 @@ function show_item_list_sober ($result_arr,
                 }
               asort($thisaudience_results);
               $audience_content = '';
-              while (list($thisitem_id,$summary) = each($thisaudience_results))
+              foreach ($thisaudience_results as $thisitem_id => $summary)
                 {
                   # Ignore if not approved.
                   if ($result_arr[$thisitem_id]["resolution_id"] != '1')
@@ -616,7 +612,7 @@ function show_dependent_item ($item_id, $dependson = 0)
   # Slurps the database.
   $item_exists = false;
   $item_exists_tracker = false;
-  while (list(, $art) = each($artifacts))
+  foreach ($artifacts as $art)
     {
       if (!$dependson)
         {
@@ -697,7 +693,7 @@ function show_dependent_item ($item_id, $dependson = 0)
   ksort($content);
   $i = 0;
 
-  while (list($key,) = each($content))
+  foreach ($content as $key => $val)
     {
       $current_item_id = $content[$key]['item_id'];
       $tracker = $content[$key]['tracker'];
@@ -791,7 +787,7 @@ ORDER BY bug_fv_id DESC LIMIT 1",
   print '<p class="noprint"><span class="preinput">' . _("Digest:")
         . "</span>\n<br />&nbsp;&nbsp;&nbsp;";
   $content = '';
-  while (list(, $tracker) = each($artifacts))
+  foreach ($artifacts as $tracker)
     {
       if (!empty($item_exists_tracker[$tracker]))
         {

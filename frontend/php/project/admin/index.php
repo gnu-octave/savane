@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2000-2003 Free Software Foundation
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -84,7 +84,8 @@ $features = array("cookbook" =>
 # of "Configure Features: %s".
                                _("Mailing Lists"));
 $link = '';
-while (list($case, $name) = each($features))
+
+foreach ($features as $case => $name)
   {
     if ($case == "cookbook" || $project->Uses($case))
       $link .= '<a href="../../'.$case.'/admin/?group='.$group.'">'.$name

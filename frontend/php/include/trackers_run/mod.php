@@ -5,7 +5,7 @@
 # Copyright 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright 2002-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright 2017, 2018 Ineiev
+# Copyright 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -362,11 +362,8 @@ priority and open/close items"))) . "</p>\n";
     # In printer mode, deploy everything by default: assume that people default
     # printout should contain all necessary info (note that history is excluded).
     if (sane_all("printer"))
-      {
-        reset($is_deployed);
-        while (list($entry,) = each($is_deployed))
-          { $is_deployed[$entry] = true; }
-      }
+      foreach ($is_deployed as $key => $value)
+        $is_deployed[$key] = true;
 
     # If at the second step of any two-step activity (add deps, reassign,
     # multiple canned answer), deploy only the relevant:
@@ -375,9 +372,8 @@ priority and open/close items"))) . "</p>\n";
     if ($depends_search || $canned_response == "!multiple!"
         || $reassign_change_project_search)
       {
-        reset($is_deployed);
-        while (list($entry,) = each($is_deployed))
-          $is_deployed[$entry] = false;
+        foreach ($is_deployed as $key => $value)
+          $is_deployed[$key] = false;
 
         if ($depends_search)
           $is_deployed["dependencies"] = true;
@@ -612,7 +608,7 @@ of '%s' in the database:"), $depends_search);
               $artifacts = array($depends_search_only_artifact);
 
 # Actually search on each asked trackers.
-            while (list($num, $tracker) = each($artifacts))
+            foreach ($artifacts as $num => $tracker)
               {
                 if ($depends_search_only_project == "notany")
                   $GLOBALS['only_group_id'] = $group_id;
@@ -649,7 +645,7 @@ of '%s' in the database:"), $depends_search);
                            . group_getname($res_group);
                       }
                     }
-              } # while (list($num, $tracker) = each($artifacts))
+              } # foreach ($artifacts as $num => $tracker)
           } # if (strlen($depends_search) > 3)
         if (!$success)
           {

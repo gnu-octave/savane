@@ -5,7 +5,7 @@
 # Copyright (C) 2000-2003 Free Software Foundation
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -108,7 +108,8 @@ if ($project->CanUse("devel_status"))
       ._("Development Status:")
       .'</label></span><br />&nbsp;&nbsp;&nbsp;<select '
       .'name="form_devel_status" id="form_devel_status">';
-    while (list($k,$v) = each($DEVEL_STATUS))
+
+    foreach ($DEVEL_STATUS as $k => $v)
       {
         print '<option value="'.$k.'"';
         if ($k == $row_grp['devel_status'])

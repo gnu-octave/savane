@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Pogonyshev <pogonyshev--gmx.net>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2013, 2017, 2018 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2013, 2017, 2018, 2020 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -314,11 +314,8 @@ function html_image ($src,$args,$display=1)
   GLOBAL $img_attr;
   $return = ('<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/'
              .$src.'"');
-  reset($args);
-  while(list($k,$v) = each($args))
-    {
-      $return .= ' '.$k.'="'.$v.'"';
-    }
+  foreach ($args as $k => $v)
+    $return .= ' ' . $k . '="' . $v . '"';
 
   # Insert a border tag if there isn't one.
   if (empty($args['border']))

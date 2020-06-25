@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -180,7 +180,7 @@ function show_votes ($limit=10)
   $item_vote = array();
   $item_summary = array();
 
-  while (list(,$tracker) = each($trackers))
+  foreach ($trackers as $tracker)
     {
       $result=db_execute("SELECT bug_id,group_id,summary,vote
 FROM $tracker WHERE vote >=35 AND privacy=1 AND status_id=1

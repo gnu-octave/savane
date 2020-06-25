@@ -4,7 +4,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -134,7 +134,8 @@ if ($update)
                    "url_extralink_documentation");
 
     $upd_list = array();
-    while (list(,$field) = each($cases))
+
+    foreach ($cases as $field)
       {
         $field_name = substr($field, 4, strlen($field));
         $type = substr($field, 0, 3);

@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2002-2006  Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2018, 2019 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -260,13 +260,8 @@ authentication level.");
   # In printer mode, deploy everything by default: assume that people default
   # printout should contain all necessary info (note that history is excluded).
   if ($printer)
-    {
-      reset($is_deployed);
-      while (list($entry,) = each($is_deployed))
-        {
-          $is_deployed[$entry] = true;
-        }
-    }
+    foreach ($is_deployed as $key => $value)
+      $is_deployed[$key] = true;
 
 # Post a comment.
 

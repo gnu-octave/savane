@@ -7,7 +7,7 @@
 # Copyright (C) 2000-2006  John Lim (ADOdb)
 # Copyright (C) 2007  Cliss XXI (GCourrier)
 # Copyright (C) 2006, 2007  Sylvain Beucler
-# Copyright (C) 2017, 2019 Ineiev
+# Copyright (C) 2017, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -140,8 +140,8 @@ function db_variable_binding($sql, $inputarr=null)
 
   $i = 0;
   $sql_expanded = '';
-  # Use each() instead of foreach to reduce memory usage -mikefedyk.
-  while(list(, $v) = each($inputarr))
+
+  foreach($inputarr as $v)
     {
       $sql_expanded .= $sql_exploded[$i];
       # From Ron Baldwin <ron.baldwin#sourceprose.com>.
@@ -245,7 +245,8 @@ function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
     case '2':
       $sql_fields = '';
       $values = array();
-      while (list($field,$value) = each($dict))
+
+      foreach ($dict as $field => $value)
         {
           $sql_fields .= "`$field`=?,";
           $values[] = $value;

@@ -3,7 +3,7 @@
 # 
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 # 
@@ -415,7 +415,8 @@ $popular_themes = array();
 if ($count_users)
   {
     $page .= "<ul>\n";
-    while (list(,$theme) = each($themes_list))
+
+    foreach ($themes_list as $theme)
       {
         # Get the number of users of the theme.
         unset($count);
@@ -433,8 +434,11 @@ if ($count_users)
       }
     arsort($popular_themes);
     $themes = '';
-    while (list($theme,$percent) = each($popular_themes))
-      $page .= ("<li>".$theme." (".round($percent)."%)</li>\n");
+
+    foreach ($popular_themes as $theme => $percent)
+      {
+        $page .= ("<li>".$theme." (".round($percent)."%)</li>\n");
+      }
     $page .= "</ul>\n";
   }
 else

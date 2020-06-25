@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2002-2005 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -26,7 +26,7 @@
 require_once('../include/trackers/cookbook.php');
 
 # If we are a comingfrom=$group_id defined, it means that we want to show a
-# recipe from the system group as if it were from the current group
+# recipe from the system group as if it were from the current group.
 extract(sane_import('get', array('comingfrom')));
 
 if (defined('PRINTER'))
@@ -36,7 +36,7 @@ if (!isset ($comingfrom))
   $comingfrom = false;
 
 # Site doc pretending to be project doc: set the group id to the one of the
-# system group, so its setup will prevail (private right etc)
+# system group, so its setup will prevail (private right etc).
 if ($comingfrom)
   $group_id = $sys_group_id;
 
@@ -53,17 +53,17 @@ if (db_numrows($result) == 0)
     # This kind of "mistakes" happen when we want to pretend an item is
     # project wide while it is likely to be site wide but we cannot test
     # if this item is site wide because it would be requires to many
-    # sql checks.
+    # SQL checks.
     # Typical case:  when recipe #nnn is converted to a link to the recipe
-    #    in a comment of an item
+    #    in a comment of an item.
 
-    # Set the group id to be the comingfrom one
+    # Set the group id to be the comingfrom one.
     $group_id = $comingfrom;
 
     # If it works, we are not in case were comingfrom was appropriate.
     $comingfrom = false;
 
-    # See if it works
+    # See if it works.
     $result = db_execute("SELECT * FROM ".ARTIFACT
                          ." WHERE bug_id=? AND group_id=?",
                          array($item_id, $group_id));
@@ -73,12 +73,11 @@ if (db_numrows($result) == 0)
       }
   }
 
-##
-# Check if the item is "Approved"
+# Check if the item is "Approved".
 if (db_result($result, 0, 'resolution_id') != '1')
   {
-    # If the user is not member of the project, kick him out
-    # Otherwise, provide a link to the edition page
+    # If the user is not member of the project, kick him out.
+    # Otherwise, provide a link to the edition page.
     if (!member_check(0, $group_id))
       exit_error(_("This item was not approved"));
     fb(sprintf(
@@ -88,18 +87,17 @@ _("If you want to edit or comment this recipe, go to [%s this item's edit page]"
     exit_error(_("This item was not approved"));
   }
 
-##
 # Check whether this item is private or not. If it is private, show only to
-# allowed project members
+# allowed project members.
 if (db_result($result,0,'privacy') == "2")
   {
     if (member_check_private(0, $group_id))
       {
-         # Nothing worth being mentioned
+         # Nothing worth being mentioned.
       }
     else
       {
-         # Explain to project member why they cant read
+         # Explain to project member why they cant read.
         if (member_check(0, $group_id))
             exit_error(_("This item is private. You are not listed as member
 allowed to read private items."));
@@ -108,14 +106,14 @@ allowed to read private items."));
   }
 
 ##
-# Defines the item name, converting bugs to bug.
-# (Ideally, the artifact bugs should be named bug)
+# Defines the item name, converting bugs to bug
+# (Ideally, the artifact bugs should be named bug).
 $item_name = utils_get_tracker_prefix(ARTIFACT)." #".$item_id;
 # Defines the item link
 $item_link = utils_link("?".$item_id, $item_name);
 
 # Restablish the current group name, so we get a nice page like it is was
-# not a site wide recipe
+# not a site wide recipe.
 if ($comingfrom)
   $group_id = $comingfrom;
 
@@ -123,12 +121,11 @@ trackers_header(array ('title'=>$item_name.", "
                        .utils_cutstring(db_result($result,0,'summary'))));
 
 # Site doc pretending to be project doc: set the group id to the one of the
-# system group, so its setup will prevail (private right etc)
+# system group, so its setup will prevail (private right etc).
 if ($comingfrom)
   $group_id = $sys_group_id;
 
-##
-# Print the recipe
+# Print the recipe.
 $category = '';
 if (db_result($result,0,'category_id') != '100')
   $category = ", ".trackers_field_display('category_id',
@@ -144,8 +141,8 @@ print '<h1 class="'.utils_get_priority_color(db_result($result,0,'priority'))
   .db_result($result,0,'summary')."</h1>\n";
 print markup_full(db_result($result,0,'details'));
 
-# latest update: when the item was posted or the latest history change
-# (only content changes, other changes are not relevant for the end user)
+# Latest update: when the item was posted or the latest history change
+# (only content changes, other changes are not relevant for the end user).
 $result_history = db_execute("SELECT date FROM ".ARTIFACT
   ."_history WHERE bug_id=? AND (field_name='realdetails' "
   ."OR field_name='summary') ORDER BY date DESC LIMIT 1", array($item_id));
@@ -160,7 +157,7 @@ print '<div align="right" class="smaller">'
   .sprintf(_("Last update: %s"), utils_format_date($last_update))."</div>\n";
 
 if ($comingfrom)
-  # Mention it is documentation from the site
+  # Mention it is documentation from the site.
   print '<div align="right" class="smaller"><p>'
 # TRANSLATORS: the argument is site name (like Savannah).
     .sprintf(_("This recipe comes from %s User Docs"), $sys_name)
@@ -168,8 +165,7 @@ if ($comingfrom)
 
 print "<p>&nbsp;</p>\n";
 
-##
-# Show attached files that may be useful to describe the content
+# Show attached files that may be useful to describe the content.
 $result=trackers_data_get_attached_files($item_id);
 if (db_numrows($result))
   {
@@ -179,13 +175,12 @@ if (db_numrows($result))
     print "<p>&nbsp;</p>\n";
   }
 
-##
-# Give info about the context
+# Give info about the context.
 if (ARTIFACT == 'cookbook')
   {
     print '<h2>'.html_anchor(_("Audience and Context"), "context")."</h2>\n";
 
-  # Obtain selected context
+  # Obtain selected context.
     $context_result = db_execute("SELECT * FROM cookbook_context2recipe
                                   WHERE recipe_id=? AND group_id=? LIMIT 1",
                                  array($item_id, $group_id));
@@ -202,21 +197,21 @@ if (ARTIFACT == 'cookbook')
       # If we are showing site doc, ignore the test of audience:
       # the readers are likely to get confused if we tell them they are not
       # project members while they are member of a one project, even though
-      # they are not members of the site project
+      # they are not members of the site project.
         $is_user_good_audience = true;
       }
 
-    while(list(,$case) = each($cases))
+    foreach ($cases as $case)
       {
         $possiblevalues = array();
         if ($case == "audience")
-          { $possiblevalues = $possiblevalues_audience; }
+          $possiblevalues = $possiblevalues_audience;
         if ($case == "context")
-          { $possiblevalues = $possiblevalues_context; }
+          $possiblevalues = $possiblevalues_context;
         if ($case == "subcontext")
-          { $possiblevalues = $possiblevalues_subcontext; }
+          $possiblevalues = $possiblevalues_subcontext;
 
-        while(list($field,$label) = each($possiblevalues))
+        foreach ($possiblevalues as $field => $label)
           {
             if (db_result($context_result, 0, $case."_".$field) == 1)
               {
@@ -224,7 +219,7 @@ if (ARTIFACT == 'cookbook')
                                        ? $case_result[$case] : '')
                   . $label . ", ";
 
-                # Keep in memory whether the user is the targetted audience
+                # Keep in memory whether the user is the targetted audience.
                 if ($case == 'audience' && $field == AUDIENCE)
                   {
                     $is_user_good_audience = true;
@@ -238,8 +233,7 @@ if (ARTIFACT == 'cookbook')
           $case_result[$case] = null;
       }
 
-  ##
-  # Provide info to the reader
+  # Provide info to the reader.
     if ($case_result['audience'])
       {
         print '<span class="preinput"><span class="help" title="'
@@ -248,7 +242,7 @@ if (ARTIFACT == 'cookbook')
       # If the current user is not in the audience of the item, warn
       # (but only if we are not on the Site Doc, otherwise info may look
       # flawed, as people understand them as "project member" even if they
-      # are not member of the site group)
+      # are not member of the site group).
         if (!$is_user_good_audience)
           { print '<span class="warn">'; }
 
@@ -272,7 +266,7 @@ if (ARTIFACT == 'cookbook')
               .$case_result['subcontext']."<br />\n";
       }
 
-  # Warn if the recipe have no chance to show up in related recipes
+  # Warn if the recipe have no chance to show up in related recipes.
     if (!$case_result['audience'] ||
         !$case_result['context'] ||
         !$case_result['subcontext'])
@@ -281,7 +275,6 @@ context information not set, this recipe will not show up in related recipes
 links)")."</p>\n";
 }
 
-##
 # Provide a link to item edition. Only for project members. It would waste
 # the recipe management if people was posting SR as comments of it, instead of
 # posting a proper SR.

@@ -1,10 +1,10 @@
 <?php
-# Configure locale using browser preferences, via gettext and strftime
+# Configure locale using browser preferences, via gettext and strftime.
 #
 # Copyright (C) 2016 Karl Berry (disable languages)
 # Copyright (C) 2003-2006 Stéphane Urbanovski <s.urbanovski--ac-nancy-metz.fr>
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018, 2019 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -77,7 +77,7 @@ if (isset($GLOBALS['sys_default_locale']))
   $best_lang = $GLOBALS['sys_default_locale'];
 
 # Find the best language available.
-while (list(, $lng) = each ($browser_preferences))
+foreach ($browser_preferences as $lng)
   {
   # Parse language and quality factor.
     $q = 1;
@@ -110,7 +110,7 @@ while (list(, $lng) = each ($browser_preferences))
   # Best item available so far: select.
     $quality = $q;
     $best_lang = $cur_lang;
-  } # while (list(, $lng) = each ($browser_preferences))
+  } # foreach ($browser_preferences as $lng)
 
 if (isset($_COOKIE['LANGUAGE']) && isset($locale_list[$_COOKIE['LANGUAGE']]))
   $best_lang = $_COOKIE['LANGUAGE'];

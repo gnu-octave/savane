@@ -7,7 +7,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2018, 2019 Ineiev
+# Copyright (C) 2018, 2019, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -1654,7 +1654,7 @@ function trackers_data_handle_update ($group_id,
   # ($changes was initialized in index, as it is used by other functions).
   reset($vfl);
   $upd_list = array();
-  while (list($field,$value) = each($vfl))
+  foreach ($vfl as $field => $value)
     {
       # $field_transition_id needed to be reset for every field in the loop
       # and $field_transition_accepted filled only if $field_transition_id
@@ -1807,7 +1807,7 @@ function trackers_data_handle_update ($group_id,
         }
 
       # Browse the canned responses.
-      while (list(,$thiscanned) = each($canned_response))
+      foreach ($canned_response as $thiscanned)
         {
           $res3 = db_execute("SELECT * FROM " . ARTIFACT
                              . "_canned_responses WHERE bug_canned_id=?",
@@ -1911,13 +1911,13 @@ function trackers_data_handle_update ($group_id,
   # Enter new dependencies.
   $artifacts = array("support", "bugs", "task", "patch");
   $address = '';
-  while (list(, $dependent_on) = each($artifacts))
+  foreach ($artifacts as $dependent_on)
     {
       $art = $dependent_on;
       $dependent_on = "dependent_on_" . $dependent_on;
       if ($$dependent_on)
         {
-          while (list(, $dep) = each($$dependent_on))
+          foreach ($$dependent_on as $dep)
             {
               trackers_data_update_dependent_items($dep, $item_id, $art);
 
@@ -2130,7 +2130,7 @@ Following are the information included in the original report:\n\n";
           $list[] = $row_show['Field'];
         }
 
-      while (list($l,$v) = each($list))
+      foreach ($list as $l => $v)
         {
           if ($row_data[$l])
             {
@@ -2334,7 +2334,7 @@ function trackers_data_create_item($group_id, $vfl, &$extra_addresses)
   reset($vfl);
   $insert_fields = array();
   $field_transition_id = '';
-  while (list($field,$value) = each($vfl))
+  foreach ($vfl as $field => $value)
     {
       if (trackers_data_is_special($field))
         continue;

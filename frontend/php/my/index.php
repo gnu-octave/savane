@@ -2,7 +2,7 @@
 # User's start page.
 #
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -104,7 +104,8 @@ $sql = "SELECT group_id,date,id,summary FROM news_bytes ".
   "WHERE date > ? AND is_approved='5' AND (";
 $params = array($new_date_limit);
 $previous = 0;
-while (list($group, $groupname) = each ($usergroups))
+
+foreach ($usergroups as $group => $groupname)
   {
     if (member_check(0, $usergroups_groupid[$group],'N3'))
       {
@@ -157,7 +158,8 @@ reset($usergroups_groupid);
 $sql = "SELECT group_id,date,forum_id,summary FROM news_bytes ".
   "WHERE date > ? AND (is_approved='0' OR is_approved='1') AND (group_id=? ";
 $params = array($new_date_limit, $GLOBALS['sys_group_id']);
-while (list($group, $groupname) = each ($usergroups))
+
+foreach ($usergroups as $group => $groupname)
   {
     $sql .= "OR group_id=? ";
     $params[] = $usergroups_groupid[$group];

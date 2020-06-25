@@ -657,25 +657,20 @@ function utils_user_link ($username, $realname=false, $noneisanonymous=false)
 function utils_double_diff_array($arr1, $arr2)
 {
   # First transform both arrays in hashes.
-  reset($arr1); reset($arr2);
-  while ( list(,$v) = each($arr1))
+  foreach ($arr1 as $v)
     $h2[$v] = $v;
-  while ( list(,$v) = each($arr2))
+  foreach ($arr2 as $v)
     $h2[$v] = $v;
 
   $deleted = array();
-  while ( list($k,) = each($h2))
-    {
-      if (!isset($h2[$k]))
-        $deleted[] = $k;
-    }
+  foreach ($h2 as $k => $v)
+    if (!isset($h2[$k]))
+      $deleted[] = $k;
 
   $added = array();
-  while ( list($k,) = each($h2))
-    {
-      if (!isset($h2[$k]))
-        $added[] = $k;
-    }
+  foreach ($h2 as $k => $v)
+    if (!isset($h2[$k]))
+      $added[] = $k;
   return array($deleted, $added);
 }
 
@@ -897,11 +892,10 @@ function validate_email ($address)
 function validate_emails ($addresses)
 {
   $arr = utils_split_emails($addresses);
-  while (list(, $addr) = each ($arr))
-    {
-      if (!validate_email($addr))
-        return false;
-    }
+
+  foreach ($arr as $addr)
+    if (!validate_email($addr))
+      return false;
   return true;
 }
 
@@ -1105,13 +1099,11 @@ function help ($text, $explanation_array, $noarray=0)
 {
   if (!$noarray)
     {
-      while (list($word,$explanation) = each($explanation_array))
-        {
-          $text = str_replace($word,
-                              '<span class="help" title="'.$explanation.'">'
-                              .$word.'</span>',
-                              $text);
-        }
+      foreach ($explanation_array as $word => $explanation)
+        $text = str_replace($word,
+                            '<span class="help" title="' . $explanation . '">'
+                            . $word . '</span>',
+                            $text);
       return $text;
     }
   return '<span class="help" title="'.$explanation_array.'">'.$text.'</span>';

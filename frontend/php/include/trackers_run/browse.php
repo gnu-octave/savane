@@ -6,7 +6,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2014, 2017-2019  Ineiev
+# Copyright (C) 2014, 2017-2020  Ineiev
 #
 # This file is part of Savane.
 #
@@ -103,13 +103,12 @@ unset($url_params['group_id']);
 # by trackers_extract_field_list.
 unset($url_params['history_date']);
 
-# ==================================================
 #   Make sure all URL arguments are captured as array. For simple
 #   search they'll be arrays with only one element at index 0 (this
 #   will avoid to deal with scalar in simple search and array in
 #   advanced which would greatly complexifies the code).
-# ================================================== */
-while (list($field,$value_id) = each($url_params))
+
+foreach ($url_params as $field => $value_id)
   {
     if (!is_array($value_id))
       {
@@ -245,7 +244,8 @@ if (!$set)
         else
           {
             $pref_arr = explode('&amp;', substr($custom_pref, 5));
-            while (list(,$expr) = each($pref_arr))
+
+            foreach ($pref_arr as $expr)
               {
                 # Extract left and right parts of the assignment
                 # and remove the '[]' array symbol from the left part.
@@ -300,12 +300,11 @@ else if ($set=='custom')
   #     return date arguments (using _dayfd|monthfd|yearfd boxes) whether
   #     or not they were tracker fields used by the project.
 
-    reset($url_params);
     $pref_stg = '';
-    while (list($field,$arr_val) = each($url_params))
+    foreach ($url_params as $field => $arr_val)
       {
-        while (list(,$value_id) = each($arr_val))
-          $pref_stg .= '&amp;'.$field.'[]=' . $value_id;
+        foreach ($arr_val as $value_id)
+          $pref_stg .= '&amp;' . $field . '[]=' . $value_id;
 
       # build part of the HTML title of this page for more friendly bookmarking.
       # Do not add the criteria in the header if value is "Any".
@@ -441,7 +440,7 @@ reset($url_params);
 $summary_search = 0;
 $details_search = 0;
 
-while (list($field,$value_id) = each($url_params))
+foreach ($url_params as $field => $value_id)
   {
   # If the criteria is not in the field showed on query screen then
   # skip it. This is a sanity check to make sure that the SQL
@@ -760,10 +759,10 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
       # Less simple in multicolumn, indeed.
         $morder_icon_is_set = 0;
         $morder_arr = explode(',',$morder);
-        while (list(,$crit) = each($morder_arr))
+
+        foreach ($morder_arr as $crit)
           {
-            if ($crit == "$field<"
-                || $crit == "$field>")
+            if ($crit == "$field<" || $crit == "$field>")
               {
                 $so = trackers_sorting_order ($morder);
                 $lbl_list[] = trackers_data_get_label($field).' '
@@ -1094,7 +1093,7 @@ while ($field = trackers_list_all_fields())
 # Order them by name: in a select box, following the configure output order
 # is not user-friendly.
 asort($fextracted);
-while (list($field,$label) = each($fextracted))
+foreach ($fextracted as $field => $label)
   {
     $fname[] = $field;
     $flabel[] = $label;

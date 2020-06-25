@@ -48,7 +48,7 @@ function trackers_include()
 
 # Does like trackers_include() but load an arbitrary page of the common
 # tracker code. This is useful for trackers that have non-standard behavior
-# needs to present some standard page inside a non standard location
+# needs to present some standard page inside a non standard location.
 function trackers_bastardinclude($page, $is_admin_page='0')
 {
   $pre = '';
@@ -59,20 +59,17 @@ function trackers_bastardinclude($page, $is_admin_page='0')
 }
 
 
-# Generate URL arguments from a variable wether scalar or array
+# Generate URL arguments from a variable wether scalar or array.
 function trackers_convert_to_url_arg($varname, $var)
 {
 
   if (is_array($var))
     {
-      reset($var);
-      while (list(,$v) = each($var))
-        {
-          $ret .= '&'.$varname.'[]='.$v;
-        }
+      foreach ($var as $v)
+        $ret .= '&' . $varname . '[]=' . $v;
     }
   else
-    $ret .= '&'.$varname.'='.$var;
+    $ret .= '&' . $varname . '=' . $var;
   return $ret;
 }
 
@@ -159,8 +156,11 @@ function trackers_list_all_fields($sort_func=false,$by_field_id=false)
   # by_field_id: true return the list of field id, false returns the
   # list of field names.
 
-  if (list($key, $field_array) = each($BF_USAGE_BY_ID))
+  if (current ($BF_USAGE_BY_ID) !== FALSE)
     {
+      $field_array = current ($BF_USAGE_BY_ID);
+      $key = key ($BF_USAGE_BY_ID);
+      next ($BF_USAGE_BY_ID);
       return($by_field_id ? $field_array['bug_field_id']
              : $field_array['field_name']);
     }
@@ -619,8 +619,7 @@ function trackers_extract_field_list($post_method=true)
   else
     $superglobal =& $_GET;
 
-  reset($superglobal);
-  while ( list($key, $val) = each($superglobal))
+  foreach ($superglobal as $key => $val)
     {
       if (preg_match("/^(.*)_(day|month|year)fd$/", $key, $found))
         {
@@ -694,8 +693,7 @@ function trackers_check_empty_fields($field_array, $new_item=true)
   global $previous_form_bad_fields;
   $previous_form_bad_fields = array();
 
-  reset($field_array);
-  while (list($field_name, $val) = each($field_array))
+  foreach ($field_array as $field_name => $val)
     {
       # Only the field percent_complete is allowed to use the special value
       # hundred.
@@ -1386,7 +1384,8 @@ function trackers_add_cc($item_id,$group_id,$email,$comment)
   $date = time();
   $ok = true;
   $changed = false;
-  while (list(,$cc) = each($arr_email))
+
+  foreach ($arr_email as $cc)
     {
       # Add this cc only if not there already.
       if (!trackers_exist_cc($item_id,$cc))
@@ -1546,8 +1545,7 @@ function trackers_isvarany($var)
 {
   if (!is_array($var))
     return ($var == 0);
-  reset($var);
-  while (list(,$v) = each($var))
+  foreach ($var as $v)
     {
       if ($v == 0)
         return true;
@@ -1565,7 +1563,7 @@ function trackers_add_sort_criteria($criteria_list, $order, $msort)
     {
       $arr = explode(',',$criteria_list);
       $i = 0;
-      while (list(,$attr) = each($arr))
+      foreach ($arr as $attr)
         {
           preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
           list(,$mattr,$mdir) = $match;
@@ -1645,7 +1643,8 @@ function trackers_criteria_list_to_text($criteria_list, $url)
     {
       $arr = explode(',',$criteria_list);
       $morder = '';
-      while (list(,$crit) = each($arr))
+
+      foreach ($arr as $crit)
         {
           $morder .= ($morder ? ",".$crit : $crit);
           $attr = str_replace('>','',$crit);
@@ -1683,7 +1682,8 @@ function trackers_build_match_expression($field, &$to_match)
         {
           $words = preg_split('/\s+/', $to_match);
           reset($words);
-          while ( list($i,$w) = each($words))
+
+          foreach ($words as $l => $w)
             {
               $words[$i] = "$field LIKE ?";
               $params[] = "%$w%";
@@ -1873,16 +1873,17 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project "
 
           ### format_item_changes of savane 1.0.6
           # FIXME: strange, with %25s it does not behave exactly like
-          # trackers_field_label_display
+          # trackers_field_label_display.
           $fmt = "%24s: %23s => %-23s\n";
 
           $separator = "\n    _______________________________________________________\n\n";
 
-          # Process most of the fields
+          # Process most of the fields.
           reset($changes);
-          while (list($field,$h) = each($changes))
+
+          foreach ($changes as $field => $h)
             {
-              # If both removed and added items are empty skip - Sanity check
+              # If both removed and added items are empty skip - Sanity check.
               if (!$h['del'] && !$h['add'])
                 continue;
 
@@ -1900,7 +1901,7 @@ It relates to:\n\t\t".ARTIFACT." #".$item_id.", project "
                      .$item_id
                      ." (project ".group_getunixname($group_id)."):\n\n".$out;
             }
-          # Process special cases: follow-up comments
+          # Process special cases: follow-up comments.
           if ($changes['details'])
             {
               if ($out)
@@ -2209,7 +2210,8 @@ This item URL is:";
           if (count($changes))
             {
               $body .= "\n";
-              while ( list($field,$h) = each($changes))
+
+              foreach ($changes as $field => $h)
                 {
                   # If both removed and added items are empty skip - Sanity check.
                   if (!$h['del'] && !$h['add'])
@@ -2309,7 +2311,8 @@ This item URL is:";
   if ($more_addresses != "")
     {
       $more_addr_arr = explode(',',$more_addresses);
-      while (list(,$maddr) = each($more_addr_arr))
+
+      foreach ($more_addr_arr as $maddr)
         {
           $maddr = str_replace (" ", "", $maddr);
           if (validate_email($maddr))
@@ -2322,7 +2325,7 @@ This item URL is:";
               else
                 $repl_addresses .= ($repl_addresses ? ',':'').$maddr;
             }
-        } # while(list(,$maddr) = each($more_addr_arr))
+        } # while (current ($more_addr_arr) !== FALSE)
     }
 
   if ($repl_addresses)

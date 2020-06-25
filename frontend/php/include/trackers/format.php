@@ -5,7 +5,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017-2019 Ineiev
+# Copyright (C) 2017-2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -439,9 +439,8 @@ function format_item_changes ($changes, $item_id, $group_id)
   $separator = "\n    _______________________________________________________\n\n";
 
   # Process most of the fields.
-  reset($changes);
   $out = '';
-  while (list($field,$h) = each($changes))
+  foreach ($changes as $field => $h)
     {
       # If both removed and added items are empty skip - Sanity check.
       if (empty($h['del']) && empty($h['add']))
