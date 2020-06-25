@@ -205,7 +205,7 @@ function utils_email_basic ($address, $nohtml=0)
 # Find out if a string is pure ASCII or not.
 function utils_is_ascii ($string)
 {
-  return preg_match('%^(?: [\x09\x0A\x0D\x20-\x7E] )*$%xs', $string);
+  return preg_match('%^[[:ascii:]]*$%', $string);
 }
 
 # Alias function.
