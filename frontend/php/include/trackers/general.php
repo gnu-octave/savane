@@ -1683,7 +1683,7 @@ function trackers_build_match_expression($field, &$to_match)
           $words = preg_split('/\s+/', $to_match);
           reset($words);
 
-          foreach ($words as $l => $w)
+          foreach ($words as $i => $w)
             {
               $words[$i] = "$field LIKE ?";
               $params[] = "%$w%";
