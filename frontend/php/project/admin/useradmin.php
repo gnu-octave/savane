@@ -144,6 +144,8 @@ function show_all_users_add_list ($result, $group_id)
         <input type=\"hidden\" name=\"action\" value=\"add_to_group\" />
   <select title=\""._("Users")."\" name=\"user_ids[]\" size=\"10\" multiple>\n";
 
+  $exists = 0;
+
   while ($usr = db_fetch_array($result))
     {
       print "<option value=".$usr['user_id'].">".$usr['realname']
