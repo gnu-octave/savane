@@ -296,7 +296,7 @@ class Group extends savane_error
     return sprintf(
 # TRANSLATORS: this is a placeholder for the name of a deleted group;
 # the argument is group id (a number).
-                   _("[Deleted group #%s]"), $this->group_id);
+                   _("[Deleted group #%s]"), htmlspecialchars($this->group_id));
   }
 
   # alias

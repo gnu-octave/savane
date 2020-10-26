@@ -47,6 +47,8 @@ function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 
   if ($boxoptionwanted != 1)
     $boxoptionwanted = 0;
+  else
+    $boxoptionwanted = 1;
 
   $ret .= '
   <script type="text/javascript" src="/js/show-hide.php?'

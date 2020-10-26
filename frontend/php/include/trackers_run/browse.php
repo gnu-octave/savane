@@ -316,12 +316,12 @@ else if ($set=='custom')
                .trackers_data_get_value($field,$group_id,$value_id);
           }
       }
-    $pref_stg .= '&amp;advsrch='.$advsrch;
-    $pref_stg .= '&amp;msort='.$msort;
-    $pref_stg .= '&amp;chunksz='.$chunksz;
-    $pref_stg .= '&amp;spamscore='.$spamscore;
-    $pref_stg .= '&amp;report_id='.$report_id;
-    $pref_stg .= '&amp;sumORdet='.$sumORdet;
+    $pref_stg .= '&amp;advsrch=' . htmlspecialchars ($advsrch);
+    $pref_stg .= '&amp;msort=' . htmlspecialchars ($msort);
+    $pref_stg .= '&amp;chunksz=' . htmlspecialchars ($chunksz);
+    $pref_stg .= '&amp;spamscore=' . htmlspecialchars ($spamscore);
+    $pref_stg .= '&amp;report_id=' . htmlspecialchars ($report_id);
+    $pref_stg .= '&amp;sumORdet=' . htmlspecialchars ($sumORdet);
 
     if ($pref_stg != user_get_preference($preference_prefix.'_brow_cust'
                                          .$group_id))
