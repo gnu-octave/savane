@@ -57,9 +57,9 @@ class Group extends savane_error
   #whether the use is an admin/super user of this project
   var $is_admin;
 
-  function Group($id)
+  function __construct($id)
     {
-      $this->savane_error();
+      parent::__construct();
       $this->group_id=$id;
       $this->db_result=db_execute("SELECT * FROM groups WHERE group_id=?", array($id));
       if (db_numrows($this->db_result) < 1)

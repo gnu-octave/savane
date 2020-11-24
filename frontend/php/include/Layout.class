@@ -46,11 +46,10 @@ class Layout extends savane_error
   var $bgpri = array();
 
 # Constuctor
-  function Layout ()
+  function __construct ()
   {
     GLOBAL $bgpri;
-# Constructor for parent class...
-    $this->savane_error();
+    parent::__construct();
 
 # Setup the priority color array one time only.
     $bgpri[1] = 'priora';
