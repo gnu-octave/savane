@@ -678,37 +678,16 @@ elseif ($item == "gpgkey")
 
 mQENBFr1PisBCAC9xQcWyOZRLa6K2g7NJbvQmm7p89/xifFYXPpMTQAnlSoCtUdZ
 oznXNR4oFYIqTasaXCFpG5uFCTDObPOSg1JqRDZYckijkAvbYlieBY6/ItrQxjyS
-b0VcBN/UNvn3BiGOIUZOuDkAM2dwR0AwCS0blKdIBZ5PMrAm0+NvuZAZzVYRXVas
-7NHflqCKWLhctDR9lg2bf7mpnjiywrV0BuLTp4xFhCue30juqfn+udZpZ+uq7QyV
-arWY3CBRTepXTLcgxpXtmRUU6KfTVMEaFZoJhemnD0PAUQ9ReWIOLVYTZbgdwp98
-wv8QaZTK+aaRMTBlDrLkMZCWlem0370WgL0XABEBAAG0I9CS0LDRgdGPINCf0YPR
-iNC60LjQvSA8dnBAdGVzdC5vcmc+iQFTBBMBCAA9FiEERHdxNm0nSYKP0OaDAjlB
-ZosL8WAFAlr1PisCGwMFCQPCZwAFCwkIBwIGFQoJCAsCAxYCAQIeAQIXgAAKCRAC
-OUFmiwvxYKMHB/9Zs2ptiMtUfh9tTpC/3k9Df8z3kIfxWI7n2Tw6YLKow9lbjgfL
-UfcZIAXHBv9RteU748J/fscmDv2i1a83vJ+JBF9GQJacENAgkoB5ChWNAeI/ifCS
-NpWl+NUv9DKkyG1GXU5icLmBJP+b5ASLtyuqnfgT2bCYlIo3PREkjLs4cfAUAtOY
-c/1FYbth2tQRCXnujRqqzz+6+qYRkTz91WFWc7/GYJ2obwsTrRrPfYQM02Dx77Lm
-9ir8GtWbC6xiOtRwDY2RyBlnYQj53XGaFljxOsqzTzUa0NLGmnBf3JXI6D+gWLK1
-vZaKd2Kp9U6cr5kNP6fUxJPI2LEMBfX1tTMquQENBFr1PisBCACuqpIVoWT9yGzH
-VRO12/hDAxROE1RzngTc7HrsuL2wfY2PDZ0hWOfJpU778TGrmtrTQT5DPBY1ECJM
-Nw1j9WRUtnxPXCE8LLNd5zEdTQm7M1P/XVxrzVyItU3AyJUYjvypTNROrbrkoVhQ
-0AMApawRG6chGLMkRxlhB7TCy/EJnlhNh+8xmsWXWQV3YLPIsfWnutvNSrIjE59q
-4qDdwOWj8GhwtPd83lSBRCA1cGAikCaXvXYJRUUvbJt2PQni9/jQL0FC6fA6OACO
-ab61aegk9JWoPbxUVUigzGTYQ1Xy00U4KLD9Eq0ivHTQTx7huNk7DjvN5PH54FdW
-I01HJSNHABEBAAGJATwEGAEIACYWIQREd3E2bSdJgo/Q5oMCOUFmiwvxYAUCWvU+
-KwIbDAUJA8JnAAAKCRACOUFmiwvxYO4yB/wKYJvIwGBclcX1OcNPmGcR2ckLZCYP
-Ixuo21RtACp2kSV2CqUsi437caV0YrdHiv4IUgT2mKmy2NP6MUhrh6r9zaUpW9kx
-Sj5RZdLZZNhiCRB8Lw/Nis9g/OHksDhKbgM3po8iIq6HC3cC1jSDjxuVQhCt5FAm
-7oCNj7Bmi1bHEZXihOyjyz8wNEVp5xqYTtRrEXIQY6hbxR7VXZb2z++jWlsF0IS3
+... many lines of ASCII data ...
 1rMbVMNua84/W98JMFHvu/RNNpmnHvIQoEw7yjVZYt2aTJN/uuGtugNCZ+wri+xh
 yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
 =hZua
 -----END PGP PUBLIC KEY BLOCK-----
 </pre>
 <p>'
-._("Please don't remove begin and end markers when submitting your GPG key.")
+._("Do not remove the begin and end markers when submitting your GPG key.")
 ."</p>\n"
-.'<h2>'._("Update your key in the input area below")."</h2>\n"
+.'<h2>'._("Update your key in this input area")."</h2>\n"
 .'<p>'
 ._("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):")
 ."</p>\n";
@@ -717,11 +696,18 @@ yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
       $newvalue = $row_user['gpg_key'];
 
     $input_specific .= '<textarea title="'._("New GPG key")
-                      .'" cols="70" rows="10" '
+                      .'" cols="70" rows="20" '
                       .'wrap="virtual" name="newvalue">'.$newvalue
                       ."</textarea>\n";
     $input_specific .= '<p><input type="submit" name="test_gpg_key" value="'
-                       ._("Test GPG key").'" /></p>'."\n<hr />\n";
+                       ._("Test GPG key").'" /> (Testing is recommended before updating.)</p>'
+                       ."\n<hr />\n";
+    $input_specific .=  '<p>For GNU maintainers: '
+                       .'If this key is to be used for GNU uploads,'
+                       .' you must also email it to ftp-upload@gnu.org.'
+                       .' There is no automatic propagation.' ."\n"
+                       .'See the GNU Maintainer Information, node'
+                       .' <a href="https://www.gnu.org/prep/maintain/maintain.html#Automated-Upload-Registration">Automated Upload Registration</a>.' ."\n";
     if ($test_gpg_key)
       $input_specific .= run_gpg_checks ($newvalue);
   }
