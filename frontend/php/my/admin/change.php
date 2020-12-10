@@ -5,8 +5,8 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2013  Sylvain Beucler
-# Copyright (C) 2016 Karl Berry
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2016, 2020 Karl Berry
+# Copyright (C) 2017, 2018, 2020 Ineiev
 #
 # This file is part of Savane.
 #
@@ -700,14 +700,18 @@ yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
                       .'wrap="virtual" name="newvalue">'.$newvalue
                       ."</textarea>\n";
     $input_specific .= '<p><input type="submit" name="test_gpg_key" value="'
-                       ._("Test GPG key").'" /> (Testing is recommended before updating.)</p>'
+                       ._("Test GPG key").'" /> '
+                       ._("(Testing is recommended before updating.)").'</p>'
                        ."\n<hr />\n";
-    $input_specific .=  '<p>For GNU maintainers: '
-                       .'If this key is to be used for GNU uploads,'
-                       .' you must also email it to ftp-upload@gnu.org.'
-                       .' There is no automatic propagation.' ."\n"
-                       .'See the GNU Maintainer Information, node'
-                       .' <a href="https://www.gnu.org/prep/maintain/maintain.html#Automated-Upload-Registration">Automated Upload Registration</a>.' ."\n";
+    $input_specific .=  '<p>'
+. sprintf (_('For GNU maintainers:
+If this key is to be used for GNU uploads,
+you must also email it to ftp-upload@gnu.org.
+There is no automatic propagation.
+See the GNU Maintainer Information, node
+<a href="%s">Automated Upload Registration</a>.'),
+"//www.gnu.org/prep/maintain/maintain.html#Automated-Upload-Registration")
+. "</p>\n";
     if ($test_gpg_key)
       $input_specific .= run_gpg_checks ($newvalue);
   }
