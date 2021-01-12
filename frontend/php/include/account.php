@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017-2019 Ineiev
+# Copyright (C) 2017-2019, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -149,6 +149,9 @@ function account_pwvalid ($newpass, $oldpass = '', $user = '')
 
   if ($check !== 0)
     {
+      $check = sprintf(
+       # TRANSLATORS: the argument explains the reason why the password is bad.
+                       _("Bad password (%s)"), $check);
       fb($check, 1);
       return 0;
     }
