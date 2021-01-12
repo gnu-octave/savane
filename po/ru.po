@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.5\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2020-12-10 16:02+0300\n"
+"POT-Creation-Date: 2021-01-12 07:57+0000\n"
 "PO-Revision-Date: 2020-06-06 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
@@ -1980,15 +1980,21 @@ msgstr "основан на старом"
 msgid "based on the username"
 msgstr "основан на имени пользователя"
 
-#: frontend/php/include/account.php:199
+#. TRANSLATORS: the argument explains the reason why the password is bad.
+#: frontend/php/include/account.php:154
+#, php-format
+msgid "Bad password (%s)"
+msgstr "Неверный пароль (%s)"
+
+#: frontend/php/include/account.php:202
 msgid "There cannot be any spaces in the name"
 msgstr "В имени не должно быть пробелов"
 
-#: frontend/php/include/account.php:206
+#: frontend/php/include/account.php:209
 msgid "The name is too short"
 msgstr "Имя слишком коротко"
 
-#: frontend/php/include/account.php:207
+#: frontend/php/include/account.php:210
 #, php-format
 msgid "It must be at least %s character."
 msgid_plural "It must be at least %s characters."
@@ -1996,11 +2002,11 @@ msgstr[0] "Длина должна быть не менее %s символа."
 msgstr[1] "Длина должна быть не менее %s символов."
 msgstr[2] "Длина должна быть не менее %s символов."
 
-#: frontend/php/include/account.php:215
+#: frontend/php/include/account.php:218
 msgid "The name is too long"
 msgstr "Имя слишком длинно"
 
-#: frontend/php/include/account.php:216
+#: frontend/php/include/account.php:219
 #, php-format
 msgid "It must be at most %s character."
 msgid_plural "It must be at most %s characters."
@@ -2008,38 +2014,38 @@ msgstr[0] "Длина должна быть не более %s символа."
 msgstr[1] "Длина должна быть не более %s символов."
 msgstr[2] "Длина должна быть не более %s символов."
 
-#: frontend/php/include/account.php:224
+#: frontend/php/include/account.php:227
 msgid "The name must begin with an alphabetical character."
 msgstr "Имя должно начинаться с латинской буквы."
 
 #. TRANSLATORS: the argument is comma-separated list of additional characters
 #. (possibly single character).
-#: frontend/php/include/account.php:246
+#: frontend/php/include/account.php:249
 #, php-format
 msgid "The name must only contain alphanumerics and %s."
 msgstr "Имя может содержать только латинские буквы, цифры и %s."
 
-#: frontend/php/include/account.php:250
+#: frontend/php/include/account.php:253
 msgid "The name must only contain alphanumerics."
 msgstr "Имя может содержать только латинские буквы и цифры."
 
-#: frontend/php/include/account.php:262
+#: frontend/php/include/account.php:265
 msgid "That name is reserved."
 msgstr "Это имя недопустимо."
 
-#: frontend/php/include/account.php:276
+#: frontend/php/include/account.php:279
 msgid "An account associated with that email address has already been created."
 msgstr "Учетная запись с таким адресом электронной почты уже существует."
 
-#: frontend/php/include/account.php:285
+#: frontend/php/include/account.php:288
 msgid "It is not allowed to associate an account with this email address."
 msgstr "С этим адресом электронной почты связывать учетную запись нельзя."
 
-#: frontend/php/include/account.php:361 frontend/php/include/account.php:373
+#: frontend/php/include/account.php:364 frontend/php/include/account.php:376
 msgid "This group name is not allowed."
 msgstr "Это название группы недопустимо."
 
-#: frontend/php/include/account.php:380
+#: frontend/php/include/account.php:383
 msgid "Group name cannot contain underscore for DNS reasons."
 msgstr "Название группы не должно содержать подчеркивания по соображениям DNS."
 
@@ -10141,11 +10147,10 @@ msgid ""
 "See the GNU Maintainer Information, node\n"
 "<a href=\"%s\">Automated Upload Registration</a>."
 msgstr ""
-"Для разработчиков GNU: если предполагается применять этот "
-"ключ для размещения выпусков на ftp.gnu.org, его нужно "
-"также выслать по адресу ftp-uploads@gnu.org. "
-"Автоматически пересылка не происходит. См. страницу "
-"<a href=\"%s\">Регистрация в автомате размещения</a>."
+"Для разработчиков GNU: если предполагается применять этот ключ для "
+"размещения выпусков на ftp.gnu.org, его нужно также выслать по адресу ftp-"
+"uploads@gnu.org. Автоматически пересылка не происходит. См. страницу <a href="
+"\"%s\">Регистрация в автомате размещения</a>."
 
 #: frontend/php/my/admin/change.php:723 frontend/php/my/admin/index.php:247
 msgid "Change Email Address"
