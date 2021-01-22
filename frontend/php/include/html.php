@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Pogonyshev <pogonyshev--gmx.net>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2013, 2017, 2018, 2020 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2013, 2017, 2018, 2020, 2021 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -662,8 +662,6 @@ function html_build_multiple_select_box ($result,$name,$checked_array,$size='8',
 
 function html_select_permission_box ($artifact, $row, $level="member")
 {
-  # If $row['user_id'] does not exists, we havent got a row but simple value
-  # and it means that we are about to modify per group default.
   $num = '';
   if ($level == "type")
     {
@@ -724,8 +722,6 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
   # $event = 1 : posting items
   # $event = 2 : posting comments
 
-  # If $row['user_id'] does not exists, we havent got a row but simple value
-  # and it means that we are about to modify per group default.
   if ($level == "type")
     {
       $value = $row;
@@ -757,8 +753,9 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
       print '<option value="NULL"'.((!$value)?" selected=\"selected\"":"").'>'
         .$default."</option>\n";
     }
-  print '
-        <option value="5"'.(($value == 5)?" selected=\"selected\"":"").'>'
+  print '<option value="6"'.(($value == 6)?" selected=\"selected\"":"").'>'
+        ._("Nobody")."</option>\n";
+  print '<option value="5"'.(($value == 5)?" selected=\"selected\"":"").'>'
         ._("Project Member")."</option>\n";
   print '
         <option value="3"'.(($value == 3)?" selected=\"selected\"":"").'>'
@@ -772,6 +769,7 @@ function html_select_restriction_box ($artifact, $row, $level="group", $notd=0,
     {
       $value = group_gettyperestrictions($GLOBALS['group_id'], $artifact);
       print "<br />\n(".
+        (($value == 6)?_("Nobody"):"").
         (($value == 5)?_("Project Member"):"").
         (($value == 3)?_("Logged-in User"):"").
         (($value == 2)?_("Anonymous"):"").

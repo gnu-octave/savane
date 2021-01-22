@@ -566,6 +566,15 @@ function group_getpermissions ($group_id, $flags)
 
 function group_getrestrictions ($group_id, $flags, $event=1)
 {
+  # event = 1 corresponds to posting NEW items
+  # event = 2 corresponds to posting FOLLOWUPS
+
+  # flag = (comment post restrictions)*100 + (newitem post restrictions)
+  #        with post restrictions = 2 ... allow post by ANONYMOUS
+  #                               = 3 ... allow post by LOGGED-IN
+  #                               = 5 ... allow post by MEMBERS
+  #                               = 6 ... allow post by NOBODY
+
   $flag = null;
   if ($flags)
     {
@@ -575,11 +584,6 @@ function group_getrestrictions ($group_id, $flags, $event=1)
                          WHERE group_id=?", array($group_id));
       if (db_numrows($res) > 0)
 	$flag = db_result($res, 0, $flags."_rflags");
-
-       # flag = (comment post restrictions)*100 + (newitem post restrictions)
-       #        with post restrictions = 2 ... allow post by ANONYMOUS
-       #                               = 3 ... allow post by LOGGED-IN
-       #                               = 5 ... allow post by MEMBERS
 
       if ($event == 1)
 	{
@@ -599,15 +603,8 @@ function group_getrestrictions ($group_id, $flags, $event=1)
 
 function group_getrestrictions_explained ($group_id, $artifact, $event=1)
 {
-  # event = 1 corresponds to posting NEW items
-  # event = 2 corresponds to posting FOLLOWUPS
 
   $flag = group_getrestrictions($group_id, $artifact, $event);
-
-  # flag = (comment post restrictions)*100 + (newitem post restrictions)
-  #        with post restrictions = 2 ... allow post by ANONYMOUS
-  #                               = 3 ... allow post by LOGGED-IN
-  #                               = 5 ... allow post by MEMBERS
 
   # If we are looking for item post restriction, Get group type default
   # in case no flag was found.
@@ -628,14 +625,17 @@ function group_getrestrictions_explained ($group_id, $artifact, $event=1)
 
     }
 
-  if ($flag == '2')
-    { return _("It is possible to post anonymously on this tracker."); }
-
-  if ($flag == '5')
-    { return _("Project Membership is required to post on this tracker."); }
-
-  if ($flag == '3')
-    { return _("Being logged-in is required to post on this tracker."); }
+  switch ($flag)
+    {
+    case '2':
+      return _("It is possible to post anonymously on this tracker.");
+    case '5':
+      return _("Project Membership is required to post on this tracker.");
+    case '3':
+      return _("Being logged-in is required to post on this tracker.");
+    default: # Should be '6'.
+      return _("Posting on this tracker is disabled.");
+    }
 }
 
 function group_gettypepermissions ($group_id, $flags)
@@ -654,12 +654,7 @@ function group_restrictions_check ($group_id, $artifact, $event=1)
 {
   # No restriction for the logged in superuser
   if (user_is_super_user())
-    { return true; }
-
-  # flags = (comment post restrictions)*100 + (newitem post restrictions)
-  #         with post restrictions = 2 ... allow post by ANONYMOUS
-  #                                = 3 ... allow post by LOGGED-IN
-  #                                = 5 ... allow post by MEMBERS
+    return true;
 
   $flag = group_getrestrictions($group_id, $artifact, $event);
 
@@ -683,17 +678,17 @@ function group_restrictions_check ($group_id, $artifact, $event=1)
 
   # Anonymous required? always ok
   if ($flag == '2')
-    { return true; }
+    return true;
 
   # Logged in required? ok if logged in
   if ($flag == '3' && user_isloggedin())
-    { return true; }
+    return true;
 
   # Member required?
   if ($flag == '5' && member_check(0, $group_id))
-    { return true; }
+    return true;
 
-  # Normally we should almost never go so far. In doubt, refuse.
+  # $flag should be '6' here.
   return false;
 }
 

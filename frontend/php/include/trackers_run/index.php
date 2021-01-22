@@ -5,7 +5,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2002-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017, 2019 Ineiev
+# Copyright (C) 2017, 2019, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -139,7 +139,7 @@ switch ($func)
  case 'detailitem' :
    {
 # Show a bug already in the database, permitting to add comment or even modify.
-     if (member_check(0,$group_id,member_create_tracker_flag(ARTIFACT).'2'))
+     if (group_restrictions_check ($group_id, ARTIFACT, 2))
        {
          dbg("Management/Technician rights, include mod.php");
          include '../include/trackers_run/mod.php';
