@@ -6,7 +6,7 @@
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2017-2019 Ineiev
+# Copyright (C) 2017-2019, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -359,6 +359,11 @@ class Group extends savane_error
         return $this->getTypeUrl($artifact);
     }
 
+  function fallback_URL ($artifact)
+    {
+        return $GLOBALS['sys_home'] . $artifact . '/?group='
+               . $this->getUnixName();
+    }
   function getArtifactUrl($artifact)
     {
       # There is a drawback here: if the value in the database is filled
@@ -369,9 +374,22 @@ class Group extends savane_error
       # And it can be justified anyway to keep a value entered already.
       # The best would be the software to list conflicting cases to sysadmin.
       if (empty($this->data_array['url_'.$artifact]))
-        return $GLOBALS['sys_home'].$artifact.'/?group='.$this->getUnixName();
-      else
-        return $this->data_array['url_'.$artifact];
+        return $this->fallback_URL ($artifact);
+      return $this->data_array['url_'.$artifact];
+    }
+  function url_is_default ($artifact)
+    {
+      return $this->fallback_URL ($artifact) === $this->getArtifactUrl ($artifact);
+    }
+  function get_artifact_url ($artifact, $func = "", $file = "")
+    {
+      $ret = $this->getArtifactUrl ($artifact);
+      if ($func !== "")
+        $ret .= "&amp;func=" . $func;
+      if ($file === "")
+        return $ret;
+      $pos = strrpos ($ret, "/");
+      return substr ($ret, 0, $pos + 1) . $file . substr ($ret, $pos + 1);
     }
 
   function getDir($artifact)

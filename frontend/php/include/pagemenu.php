@@ -7,7 +7,7 @@
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
 # Copyright (C) 2015, 2016 Karl Berry (tiny reordering, downcasing, #devtools)
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -278,6 +278,19 @@ function pagemenu_my ()
   pagemenu_submenu_end();
 }
 
+function pagemenu_tracker_submenu ($project, $tracker, $title, $help)
+{
+  if (!$project->Uses ($tracker))
+    return;
+
+  pagemenu_submenu_title ($title, $project->getArtifactUrl ($tracker),
+                          CONTEXT == $tracker, 1, $help);
+
+  # Only add submenu list when the URL wasn't customized.
+  if ($project->url_is_default ($tracker))
+    pagemenu_submenu_content (pagemenu_group_trackers ($tracker));
+  pagemenu_submenu_end ();
+}
 # Menu specific to Group pages.
 function pagemenu_group ()
 {
@@ -399,25 +412,12 @@ function pagemenu_group ()
       pagemenu_submenu_end();
     }
 
-  if ($project->Uses("support"))
-    {
-      pagemenu_submenu_title(_("Support"),
-                             $project->getArtifactUrl("support"),
-                             CONTEXT == 'support',
-                             1,
-          _("Tech Support Tracker: post, search and manage support requests"));
-      pagemenu_submenu_content(pagemenu_group_trackers("support"));
-      pagemenu_submenu_end();
-    }
+
+  pagemenu_tracker_submenu ($project, "support", _("Support"),
+    _("Tech Support Tracker: post, search and manage support requests"));
 
   # Fora are normally deprecated on savane.
-  if ($project->Uses("forum"))
-    {
-      pagemenu_submenu_title(_("Forum"),
-                             $project->getArtifactUrl("forum"),
-                             CONTEXT == 'forum');
-      pagemenu_submenu_end();
-    }
+  pagemenu_tracker_submenu ($project, "forum", _("Forum"), "");
 
   if ($project->usesMail())
     {
@@ -583,38 +583,14 @@ function pagemenu_group ()
       pagemenu_submenu_end();
     }
 
-  if ($project->Uses("bugs"))
-    {
-      pagemenu_submenu_title(_("Bugs"),
-                             $project->getArtifactUrl("bugs"),
-                             CONTEXT == 'bugs',
-                             1,
-                             _("Bug Tracker: report, search and track bugs"));
-      pagemenu_submenu_content(pagemenu_group_trackers("bugs"));
-      pagemenu_submenu_end();
-    }
+  pagemenu_tracker_submenu ($project, "bugs", _("Bugs"),
+                    _("Bug Tracker: report, search and track bugs"));
 
-  if ($project->Uses("task"))
-    {
-      pagemenu_submenu_title(_("Tasks"),
-                             $project->getArtifactUrl("task"),
-                             CONTEXT == 'task',
-                             1,
-                             _("Task Manager: post, search and manage tasks"));
-      pagemenu_submenu_content(pagemenu_group_trackers("task"));
-      pagemenu_submenu_end();
-    }
+  pagemenu_tracker_submenu ($project, "task", _("Tasks"),
+                    _("Task Manager: post, search and manage tasks"));
 
-  if ($project->Uses("patch"))
-    {
-      pagemenu_submenu_title(_("Patches"),
-                             $project->getArtifactUrl("patch"),
-                             CONTEXT == 'patch',
-                             1,
-                             _("Patch Manager: post, search and manage patches"));
-      pagemenu_submenu_content(pagemenu_group_trackers("patch"));
-      pagemenu_submenu_end();
-    }
+  pagemenu_tracker_submenu ($project, "patch", _("Patches"),
+                    _("Patch Manager: post, search and manage patches"));
 
   if ($project->Uses("news"))
     {
@@ -653,7 +629,7 @@ function pagemenu_group ()
     }
 }
 
-# Menu-specific to the trackers pages.
+# Menu specific to tracker pages.
 function pagemenu_group_trackers ($tracker)
 {
   global $project, $group_id, $sys_group_id;
@@ -662,7 +638,6 @@ function pagemenu_group_trackers ($tracker)
   if (member_check(0, $group_id, 'A'))
     $is_admin = TRUE;
 
-  # FIXME: this should first check if the standard savane tool is used
   $ret = '';
   if ($tracker == "bugs"
       || $tracker == "support"
@@ -670,42 +645,35 @@ function pagemenu_group_trackers ($tracker)
       || $tracker == "task")
     {
       $ret .= pagemenu_submenu_entry(_("Submit new"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/?func=additem&amp;group='
-                                     .$project->getUnixName(),
+                                     $project->get_artifact_url($tracker,
+                                                                'additem'),
                                      group_restrictions_check($group_id, $tracker));
 
       $ret .= pagemenu_submenu_entry(_("Browse"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/?group='.$project->getUnixName());
+                                     $project->get_artifact_url($tracker));
 
       $ret .= pagemenu_submenu_entry(_("Reset to open"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/?func=browse&amp;set=open&amp;group='
-                                     .$project->getUnixName());
+                                     $project->get_artifact_url ($tracker,
+                                                    'browse&amp;set=open'));
 
       $ret .= pagemenu_submenu_entry(_("Digest"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/?func=digest&amp;group='
-                                     .$project->getUnixName());
+                                     $project->get_artifact_url ($tracker,
+                                                                 'digest'));
 
       $ret .= pagemenu_submenu_entry(_("Export"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/export.php?group='
-                                     .$project->getUnixName(),
+                                     $project->get_artifact_url ($tracker, '',
+                                                                 'export.php'),
                                      member_check(0, $group_id));
 
       $ret .= pagemenu_submenu_entry(_("Get statistics"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/reporting.php?group='
-                                     .$project->getUnixName());
+                                     $project->get_artifact_url ($tracker, '',
+                                                                 'reporting.php'));
 
       # At the end of the submenu, for cohesion with the "search" in the
       # menu that is also at the end.
       $ret .= pagemenu_submenu_entry(_("Search"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/?func=search&amp;group='
-                                     .$project->getUnixName());
+                                     $project->get_artifact_url ($tracker,
+                                                                 'search'));
     }
   elseif ($tracker == "cookbook")
     {
@@ -728,40 +696,34 @@ function pagemenu_group_trackers ($tracker)
         }
 
       $ret .= pagemenu_submenu_entry(_("Browse"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/?group='.$project->getUnixName());
+                                     $project->get_artifact_url($tracker));
 
       $ret .= pagemenu_submenu_entry(_("Submit"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/edit.php?func=additem&amp;group='
-                                     .$project->getUnixName(),
+                                     $project->get_artifact_url ($tracker,
+                                                     'additem', 'edit.php'),
                                      group_restrictions_check($group_id,
                                                               $tracker));
 
       $ret .= pagemenu_submenu_entry(_("Edit"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/edit.php?func=browse&amp;group='
-                                     .$project->getUnixName(),
+                                     $project->get_artifact_url ($tracker,
+                                                      'browse', 'edit.php'),
                                      group_restrictions_check($group_id,
                                                               $tracker));
 
       $ret .= pagemenu_submenu_entry(_("Digest"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/edit.php?func=digest&amp;group='
-                                     .$project->getUnixName(),
+                                     $project->get_artifact_url ($tracker,
+                                                      'digest', 'edit.php'),
                                      _("Digest recipes"));
 
       $ret .= pagemenu_submenu_entry(_("Export"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/export.php?group='
-                                     .$project->getUnixName(),
+                                     $project->get_artifact_url ($tracker,
+                                                          '', 'export.php'),
                                      member_check(0, $group_id));
       # At the end of the submenu, for cohesion with the "search" in the
       # menu that is also at the end.
       $ret .= pagemenu_submenu_entry(_("Search"),
-                                     $GLOBALS['sys_home'].$tracker
-                                     .'/?func=search&amp;group='
-                                     .$project->getUnixName());
+                                     $project->get_artifact_url ($tracker,
+                                                                 'search'));
       # If it is the site admin project, link to savane-doc.
       if ($group_id == $sys_group_id)
         {
@@ -772,55 +734,55 @@ function pagemenu_group_trackers ($tracker)
         }
     }
 
-  if ($is_admin)
-    {
-      $ret .= pagemenu_submenu_entry_separator()
-        .pagemenu_submenu_entry('<strong>'._("Configure:").'</strong>',
-                               $GLOBALS['sys_home'].$tracker.'/admin/?group='
-                               .$project->getUnixName())
-        .pagemenu_submenu_entry(_("Select fields"),
-                               $GLOBALS['sys_home'].$tracker
-                               .'/admin/field_usage.php?group='
-                               .$project->getUnixName(),
-                               1,
-       _("Define what fields you want to use in this tracker"))
-        .pagemenu_submenu_entry(_("Edit field values"),
-                               $GLOBALS['sys_home'].$tracker
-                               .'/admin/field_values.php?group='
-                               .$project->getUnixName(),
-                               1,
+  if (!$is_admin)
+    return $ret;
+
+  $ret .= pagemenu_submenu_entry_separator()
+    .pagemenu_submenu_entry('<strong>'._("Configure:").'</strong>',
+                           $GLOBALS['sys_home'].$tracker.'/admin/?group='
+                           .$project->getUnixName())
+    .pagemenu_submenu_entry(_("Select fields"),
+                           $GLOBALS['sys_home'].$tracker
+                           .'/admin/field_usage.php?group='
+                           .$project->getUnixName(),
+                           1,
+   _("Define what fields you want to use in this tracker"))
+    .pagemenu_submenu_entry(_("Edit field values"),
+                           $GLOBALS['sys_home'].$tracker
+                           .'/admin/field_values.php?group='
+                           .$project->getUnixName(),
+                           1,
 _("Define the set of possible values for the fields you have decided to use in
 this tracker"))
-        .pagemenu_submenu_entry(_("Edit query forms"),
-                               $GLOBALS['sys_home'].$tracker
-                               .'/admin/editqueryforms.php?group='
-                               .$project->getUnixName(),
-                               1,
+    .pagemenu_submenu_entry(_("Edit query forms"),
+                           $GLOBALS['sys_home'].$tracker
+                           .'/admin/editqueryforms.php?group='
+                           .$project->getUnixName(),
+                           1,
 _("Define project-wide query form: what search criteria to use and what item
 fields to show in the query form table"))
-        .pagemenu_submenu_entry(_("Set&nbsp;permissions"),
-                               $GLOBALS['sys_home'].$tracker
-                               .'/admin/userperms.php?group='
-                               .$project->getUnixName(),
-                               1,
-                               _("Define posting restrictions"))
-        .pagemenu_submenu_entry(_("Set&nbsp;notifications"),
-                               $GLOBALS['sys_home'].$tracker
-                               .'/admin/notification_settings.php?group='
-                               .$project->getUnixName())
-        .pagemenu_submenu_entry(_("Copy&nbsp;configuration"),
-                               $GLOBALS['sys_home'].$tracker
-                               .'/admin/conf-copy.php?group='
-                               .$project->getUnixName(),
-                               1,
-                               _("Copy the configuration of another tracker"))
-        .pagemenu_submenu_entry(_("Other settings"),
-                               $GLOBALS['sys_home'].$tracker
-                               .'/admin/other_settings.php?group='
-                               .$project->getUnixName(),
-                               1,
+    .pagemenu_submenu_entry(_("Set&nbsp;permissions"),
+                           $GLOBALS['sys_home'].$tracker
+                           .'/admin/userperms.php?group='
+                           .$project->getUnixName(),
+                           1,
+                           _("Define posting restrictions"))
+    .pagemenu_submenu_entry(_("Set&nbsp;notifications"),
+                           $GLOBALS['sys_home'].$tracker
+                           .'/admin/notification_settings.php?group='
+                           .$project->getUnixName())
+    .pagemenu_submenu_entry(_("Copy&nbsp;configuration"),
+                           $GLOBALS['sys_home'].$tracker
+                           .'/admin/conf-copy.php?group='
+                           .$project->getUnixName(),
+                           1,
+                           _("Copy the configuration of another tracker"))
+    .pagemenu_submenu_entry(_("Other settings"),
+                           $GLOBALS['sys_home'].$tracker
+                           .'/admin/other_settings.php?group='
+                           .$project->getUnixName(),
+                           1,
        _("Modify the preamble shown on the item submission form"));
-    }
 
   return $ret;
 }
