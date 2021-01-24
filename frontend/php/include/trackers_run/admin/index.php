@@ -86,7 +86,7 @@ be used.")."</p>\n";
 
   $i = 0;
   print $HTML->box_nextitem(utils_get_alt_row_color($i));
-  print '<a href="field_values.php?group='.$group.'">'._("Edit Fields Values")
+  print '<a href="field_values.php?group='.$group.'">'._("Edit Field Values")
     .'</a>';
   print '<p class="smaller">'
 ._("Define the set of possible values for the fields you have decided to use in

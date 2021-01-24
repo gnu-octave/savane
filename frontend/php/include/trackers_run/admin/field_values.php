@@ -522,7 +522,7 @@ allowed to customize it"),$field));
             $title_arr[]=_("From");
             $title_arr[]=_("To");
             $title_arr[]=_("Is Allowed");
-            $title_arr[]=_("Other Fields Update");
+            $title_arr[]=_("Other Field Update");
             $title_arr[]=_("Carbon-Copy List");
             $title_arr[]=_("Delete");
 
@@ -693,7 +693,7 @@ elseif ($update_value)
 # Show the form to update an existing field_value.
 # Display the List of values for a given bug field.
 
-    trackers_header_admin(array ('title'=>_("Edit Fields Values")));
+    trackers_header_admin(array ('title'=>_("Edit Field Values")));
 
 # Get all attributes of this value.
     $res = trackers_data_get_field_value($fv_id);
@@ -877,7 +877,7 @@ common responses.").'</p>
 else
   {
 # Complete list of fields.
-    trackers_header_admin(array ('title'=>_("Edit Fields Values")));
+    trackers_header_admin(array ('title'=>_("Edit Field Values")));
 
     # Add space to avoid overlaps.
     print "<br />\n";

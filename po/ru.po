@@ -5868,7 +5868,7 @@ msgid "Is Allowed"
 msgstr "Допустимо"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:525
-msgid "Other Fields Update"
+msgid "Other Field Update"
 msgstr "Обновление других полей"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:526
@@ -5949,7 +5949,7 @@ msgstr ""
 #: frontend/php/include/trackers_run/admin/field_values.php:696
 #: frontend/php/include/trackers_run/admin/field_values.php:880
 #: frontend/php/include/trackers_run/admin/index.php:89
-msgid "Edit Fields Values"
+msgid "Edit Field Values"
 msgstr "Править значения полей"
 
 #: frontend/php/include/trackers_run/admin/field_values.php:743
