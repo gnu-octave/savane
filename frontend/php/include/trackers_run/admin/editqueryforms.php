@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -23,7 +23,7 @@
 extract(sane_import('request', array('report_id')));
 extract(sane_import('get', array('show_report', 'new_report', 'delete_report')));
 extract(sane_import('post', array(
-'post_changes',
+'post_changes', 'set_default',
 'create_report', 'update_report',
 'rep_name', 'rep_scope', 'rep_desc',
 'TFSRCH_bug_id', 'TFREP_bug_id', 'TFCW_bug_id',   'CBSRCH_bug_id',
@@ -145,6 +145,19 @@ if (!user_ismember($group_id,'A'))
 
 # Initialize global bug structures.
 trackers_init($group_id);
+
+$def_query = group_get_preference ($group_id, ARTIFACT . "_default_query");
+if ($def_query === false)
+  $def_query = 100;
+
+if ($set_default)
+{
+  if (!is_int ($report_id))
+    $repor_id = $def_query;
+  if ($def_query != $report_id)
+    group_set_preference ($group_id, ARTIFACT . "_default_query", $report_id);
+  $def_query = $report_id;
+}
 
 if ($post_changes)
   {
@@ -497,10 +510,31 @@ else if ($show_report)
   } # if ($show_report)
 else
   {
-# Front page.
     trackers_header_admin(array ('title'=>_("Edit Query Forms")));
-    $res = db_execute("SELECT * FROM ".ARTIFACT."_report WHERE group_id=? "
-                      .' AND (user_id=? OR scope=\'P\')',
+
+    print '
+<form action="' . htmlentities ($_SERVER['PHP_SELF'])
+                . '" method="post" name="default_query">
+<input type="hidden" name="group_id" value="'
+         . htmlspecialchars ($group_id) . '" />
+
+<input type="hidden" name="set_default" value="y" />
+';
+
+    $res_report = trackers_data_get_reports ($group_id, user_getid());
+    $form_query_type = html_build_select_box($res_report, 'report_id',
+                                             $def_query, true,
+                                             _('Basic'), false, 'Any', false,
+                                             _('query form'));
+
+    printf (_("Browse with the %s query form by default.") . "\n",
+                     $form_query_type);
+    print '<input class="bold" value="' . _("Apply")
+          . '" name="go_report" type="submit" />'
+          . "\n</form>\n";
+
+    $res = db_execute("SELECT * FROM " . ARTIFACT . "_report WHERE group_id=? "
+                      . ' AND (user_id=? OR scope=\'P\')',
                       array($group_id, user_getid()));
     $rows = db_numrows($res);
 
@@ -514,7 +548,7 @@ else
         $title_arr[]=_("Scope");
         $title_arr[]=_("Delete");
 
-        print "\n<h2>"._("Existing Query Forms").'</h2>';
+        print "<h2>" . _("Existing Query Forms") . "</h2>\n";
         print html_build_list_table_top ($title_arr);
         $i=0;
         while ($arr = db_fetch_array($res))

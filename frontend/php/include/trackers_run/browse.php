@@ -186,11 +186,9 @@ if ($morder != '')
                             $morder);
   }
 
-# ==================================================
 #  If the report type is not defined then get it from the user preferences.
 #  If it is set then update the user preference.  Also initialize the
 #  bug report structures.
-#  ==================================================
 if (user_isloggedin())
   {
     if (!isset($report_id))
@@ -201,6 +199,10 @@ if (user_isloggedin())
       user_set_preference($preference_prefix.'_browse_report'.$group_id,
                           $report_id);
   }
+
+# If the report type is not defined then get it from group preferences.
+if (!$report_id)
+  $report_id = group_get_preference ($group_id, ARTIFACT . "_default_query");
 
 # If still not defined then force it to system 'Basic' report
 # of to 'Sober Basic' in sober mode, 103. This is hardcoded, if at some point
