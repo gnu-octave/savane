@@ -6,7 +6,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2014, 2017-2020  Ineiev
+# Copyright (C) 2014, 2017-2021  Ineiev
 #
 # This file is part of Savane.
 #
@@ -130,7 +130,7 @@ foreach ($url_params as $field => $value_id)
             $in = sane_import('post', array($field_op));
             $url_params[$field_op] = $in[$field_op];
             if (!$url_params[$field_op])
-              $url_params[$field_op] = '=';
+              $url_params[$field_op] = array ('=');
           }
       }
   }
@@ -222,7 +222,6 @@ if (!trackers_report_init($report_id))
     trackers_report_init ($report_id);
   }
 
-# ==================================================
 #  Now see what type of bug set is requested (set is one of none,
 #  'my', 'open', 'custom').
 #    - if no set is passed in, see if a preference was set ('custom' set).
@@ -230,7 +229,6 @@ if (!trackers_report_init($report_id))
 #    - if no preference and not logged in the use 'open' set
 #     (Prefs is a string of the form
 #     &amp;field1[]=value_id1&amp;field2[]=value_id2&amp;.... )
-#  ==================================================
 if (!$set)
   {
     if (!user_isloggedin())
@@ -306,14 +304,22 @@ else if ($set=='custom')
         foreach ($arr_val as $value_id)
           $pref_stg .= '&amp;' . $field . '[]=' . $value_id;
 
-      # build part of the HTML title of this page for more friendly bookmarking.
+      # Build part of the HTML title of this page for more friendly bookmarking.
       # Do not add the criteria in the header if value is "Any".
         if ($value_id != 0)
           {
+            $field_value = $value_id;
+            if (trackers_data_is_date_field ($field))
+              {
+                list ($field_value, $ok) = utils_date_to_unixtime ($value_id);
+                if (!$ok)
+                  $field_value = $value_id;
+              }
+            $hdr = sprintf(
 # TRANSLATORS: the argument is field name.
-            $hdr = sprintf(_("Browse Items By %s: "),
+                           _("Browse Items By %s: "),
                             trackers_data_get_label($field))
-               .trackers_data_get_value($field,$group_id,$value_id);
+               . trackers_data_get_value ($field, $group_id, $field_value);
           }
       }
     $pref_stg .= '&amp;advsrch=' . htmlspecialchars ($advsrch);
@@ -624,17 +630,30 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
       }
     elseif (trackers_data_is_date_field($field))
       {
+        $end_value = '';
+        if (isset ($url_params[$field . '_end'])
+            && isset ($url_params[$field . '_end'][0]))
+          $end_value = $url_params[$field . '_end'][0];
+
+        $op_value = '';
+        if (isset ($url_params[$field . '_op'])
+            && isset ($url_params[$field . '_op'][0]))
+          $op_value = $url_params[$field . '_op'][0];
+
+        $value = '';
+        if (isset ($url_params[$field])
+            && isset($url_params[$field][0]))
+          $value = $url_params[$field][0];
+
         if ($advsrch)
           {
-            $boxes .= trackers_multiple_field_date($field,$url_params[$field][0],
-                                                   $url_params[$field.'_end'][0],
-                                                   0,0,$printer);
+            $boxes .= trackers_multiple_field_date ($field, $value, $end_value,
+                                                    0, 0, $printer);
           }
         else
           {
-            $boxes .= trackers_field_date_operator($field,
-              $url_params[$field.'_op'][0],$printer)
-              .trackers_field_date($field,$url_params[$field][0],0,0,$printer);
+            $boxes .= trackers_field_date_operator($field, $op_value, $printer)
+              . trackers_field_date($field, $value, 0, 0, $printer);
           }
       }
     elseif (trackers_data_is_text_field($field)
@@ -897,7 +916,7 @@ while ($thisarray = db_fetch_array($result))
 $form_submit = '';
 if ($printer)
   trackers_header(array('title'=>_("Browse Items").' - '
-                                 .utils_format_date(time())));
+                                 . utils_format_date(time())));
 else
   trackers_header(array('title'=>$hdr));
 
