@@ -5332,7 +5332,7 @@ msgstr "форма запроса"
 #: frontend/php/include/trackers_run/admin/editqueryforms.php:530
 #, php-format
 msgid "Browse with the %s query form by default."
-msgstr "По умолчанию просматривать с %1$s формой запроса и %2$s выбором."
+msgstr "По умолчанию просматривать с формой запроса: %s."
 
 #: frontend/php/include/trackers_run/admin/editqueryforms.php:546
 msgid "Query form name"
