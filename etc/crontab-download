@@ -1,14 +1,3 @@
-# Check GPG files in download areas
-# (you must define --dir !)
+# Empty.
 
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
-
-# 04 */5 * * *	root    sv_gpgcheckfiles --dir UNDEFINED  2>/dev/null
-
-# Idem but revalidating the cache 
-# 25 2 * * 7	root    sv_gpgcheckfiles --dir UNDEFINED --validate-cache 2>/dev/null
-
-
-# (2>/dev/null as been added because gnupg generate a lot of garbage on STDERR)
-
-# END

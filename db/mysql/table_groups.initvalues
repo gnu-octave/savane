@@ -15,7 +15,6 @@ INSERT INTO `groups` SET
 `license_other` = NULL,
 `register_time` = 0,
 `rand_hash` = NULL,
-`registered_gpg_keys` = NULL,
 
 `use_homepage` = 0,
 `use_mail` = 0,

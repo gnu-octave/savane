@@ -16,7 +16,6 @@ bin_SCRIPTS = \
 	extra/siteadmin/sv_extra_dead_projects \
 	extra/siteadmin/sv_extra_merge_projects \
 	install/sv_update_conf \
-	download/sv_gpgcheckfiles \
 	misc/sv_spamcheck_peon \
 	misc/sv_reminder \
 	misc/sv_spamcheck_monitor \

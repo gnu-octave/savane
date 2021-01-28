@@ -27,7 +27,6 @@ CREATE TABLE `groups` (
   `license_other` text,
   `register_time` int(11) NOT NULL default '0',
   `rand_hash` text,
-  `registered_gpg_keys` text,
   `use_homepage` char(1) default '0',
   `use_mail` char(1) default '0',
   `use_patch` char(1) default '0',
