@@ -4,9 +4,9 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2007, 2013  Sylvain Beucler
-# Copyright (C) 2016, 2020 Karl Berry
-# Copyright (C) 2017, 2018, 2020 Ineiev
+# Copyright (C) 2007, 2013 Sylvain Beucler
+# Copyright (C) 2016 Karl Berry
+# Copyright (C) 2017, 2018, 2020, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -23,14 +23,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 require_once('../../include/init.php');
 require_once('../../include/sendmail.php');
-register_globals_off();
-# should be mysql-safe, needs various input validation + !!tests!!
+require_once('../../include/gpg.php');
 
-########################################################################
-# Preliminary checks
+require(utils_get_content_filename ("gpg-sample"));
+register_globals_off();
+# Should be mysql-safe, needs various input validation + !!tests!!
+
+# Preliminary checks.
 # Check if the user is logged in.
 session_require(array('isloggedin'=>'1'));
 
@@ -40,148 +41,6 @@ extract(sane_import('request',
 
 if (!$item)
   exit_missing_param();
-
-function test_gpg_listing ($gpg_name, $temp_dir, &$ret)
-{
-  $ret .= "<h2>"._("Listing key")."</h2>\n"
-                     ."<p>". _("Output:")."</p>";
-  $cmd = $gpg_name . " --home " . $temp_dir
-                   . " --list-keys --fingerprint ";
-  $d_spec = array (0 => array("pipe", "r"), 1 => array("pipe", "w"),
-                   2 => array("pipe", "w"));
-  $my_env = $_ENV;
-  # Let non-ASCII user IDs show up in a readable way.
-  $my_env['LC_ALL'] = "C.UTF-8";
-  $gpg_proc = proc_open ($cmd, $d_spec, $pipes, NULL, $my_env);
-  fclose ($pipes[0]);
-  $gpg_output = stream_get_contents ($pipes[1]);
-  $gpg_errors = stream_get_contents ($pipes[2]);
-  fclose ($pipes[1]); fclose ($pipes[2]);
-  $gpg_result = proc_close($gpg_proc);
-  $ret .= "<pre>\n";
-  $ret .= htmlentities($gpg_output);
-  $ret .= "</pre>\n";
-  $ret .= "<p>". _("Errors:")."</p>\n";
-  $ret .= "<pre>\n";
-  $ret .= htmlentities($gpg_errors);
-  $ret .= "</pre>\n";
-  $ret .= "<p>"._("Exit status:")." ";
-  $ret .= $gpg_result . "</p>\n";
-  return $gpg_result;
-}
-
-function test_gpg_import ($gpg_name, $key, $temp_dir, &$output)
-{
-  $output .= "<h2>"._("Importing key")."</h2>\n";
-  $cmd = $gpg_name . " --home '".$temp_dir."' --batch --import";
-  $d_spec = array (0 => array("pipe", "r"), 1 => array("pipe", "w"),
-                   2 => array("pipe", "w"));
-  $my_env = $_ENV;
-  $my_env['LC_ALL'] = "C.UTF-8";
-  $gpg_proc = proc_open ($cmd, $d_spec, $pipes, NULL, $my_env);
-  fwrite ($pipes[0], $key);
-  fclose ($pipes[0]);
-  $gpg_errors = stream_get_contents ($pipes[2]);
-  fclose ($pipes[1]); fclose ($pipes[2]);
-  $gpg_result = proc_close($gpg_proc);
-  $output .= "<pre>\n";
-  $output .= htmlentities($gpg_errors);
-  $output .= "</pre>\n";
-  $output .= "<p>"._("Exit status:")." ";
-  $output .= $gpg_result . "</p>\n";
-  return $gpg_result;
-}
-
-function test_gpg_encryption ($gpg_name, $temp_dir, &$output)
-{
-# The message is a slightly modified ASCII art
-# from https://www.gnu.org/graphics/gnu-ascii2.html .
-  $message = "
-  ,' ,-_-. '.
- ((_/)o o(\\_))
-  `-'(. .)`-'
-      \\_/\n";
-  $cmd = 'perl ../../../perl/encrypt-to-user/index.pl '
-         .'--home="'.$temp_dir.'" --gpg=' . $gpg_name;
-
-  $d_spec = array(
-      0 => array("pipe", "r"), 1 => array("pipe", "w"),
-      2 => array("pipe", "w"));
-
-  $gpg_proc = proc_open($cmd, $d_spec, $pipes, NULL, $_ENV);
-
-  fwrite($pipes[0], $message);
-  fclose($pipes[0]);
-  $encrypted_message = stream_get_contents($pipes[1]);
-  $gpg_stderr = stream_get_contents($pipes[2]);
-  fclose($pipes[1]); fclose($pipes[2]);
-  $gpg_result = proc_close($gpg_proc);
-  $gpg_error = "";
-  if($gpg_result != 0 or $encrypted_message === FALSE or $encrypted_message === "")
-    {
-      $encrypted_message = "";
-      if($gpg_result == 1)
-        $gpg_error = _("Encryption failed.");
-      else if($gpg_result == 2)
-        $gpg_error = _("No key for encryption found.");
-      else if($gpg_result == 3)
-        $gpg_error = _("Can't extract user_id from database.");
-      else if($gpg_result == 4)
-        $gpg_error = _("Can't create temporary files.");
-      else if($gpg_result == 5)
-        $gpg_error = _("Extracted GPG key ID is invalid.");
-      $encrypted_message = "";
-    }
-  $output .= "<h2>"._("Test Encryption")."</h2>\n";
-  if ($gpg_result)
-    $output .= "<p>"._("Errors:")." ".$gpg_error."</p>\n";
-  else
-    {
-      $output .= "<p>"
-._("Encryption succeeded; you should be able to decrypt this with
-<em>gpg --decrypt</em>:")."</p>\n";
-      $output .= "<pre>". $encrypted_message ."</pre>\n";
-    }
-  return $gpg_result;
-}
-
-function run_gpg_tests ($gpg_name, $key, $temp_dir, &$output)
-{
-  if (test_gpg_import ($gpg_name, $key, $temp_dir, $output))
-    return;
-  if (test_gpg_listing ($gpg_name, $temp_dir, $output))
-    return;
-  test_gpg_encryption ($gpg_name, $temp_dir, $output);
-}
-function run_gpg_checks ($key)
-{
-  $ret = "";
-  $ret .= "<h2>"._("GnuPG version")."</h2>\n";
-  $gpg_name = "'" . $GLOBALS['sys_gpg_name'] . "'";
-  $cmd = $gpg_name . ' --version';
-  $d_spec = array (0 => array("pipe", "r"), 1 => array("pipe", "w"),
-                   2 => array("file", "/dev/null", "a"));
-
-  $gpg_proc = proc_open ($cmd, $d_spec, $pipes, NULL, $_ENV);
-  fclose ($pipes[0]);
-  $gpg_output = stream_get_contents ($pipes[1]);
-  fclose ($pipes[1]);
-  proc_close($gpg_proc);
-  $ret .= "<pre>\n";
-  $ret .= htmlentities($gpg_output);
-  $ret .= "</pre>\n";
-
-  $temp_dir = exec ("mktemp -d");
-  if (is_dir ($temp_dir))
-    {
-      run_gpg_tests ($gpg_name, $key, $temp_dir, $ret);
-      system ("rm -r '". $temp_dir ."'");
-    }
-  else
-    $ret .= "<p>"._("Can't create temporary directory.")."</p>\n";
-  $ret .= "\n<hr />\n";
-  return $ret;
-}
 
 $success = FALSE;
 
@@ -591,7 +450,6 @@ _("Unable to understand what to do, parameters are probably missing"),
                        .rawurlencode($feedback));
   } # if ($update).
 
-########################################################################
 # If we reach this point, it means that not sucessful update has been
 # already made.
 
@@ -667,30 +525,9 @@ elseif ($item == "gpgkey")
     $res_user = db_execute("SELECT gpg_key FROM user WHERE user_id=?",
                            array(user_getid()));
     $row_user = db_fetch_array($res_user);
-    $title = _("Change GPG Key");
+    $title = _("Change GPG Keys");
     $input_title = "";
-    $input_specific =
-"<h2>"._("Sample GPG key")."</h2>\n"
-.'<p>'._('The exported public GPG key should look like this:')
-.'</p>
-<pre>
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQENBFr1PisBCAC9xQcWyOZRLa6K2g7NJbvQmm7p89/xifFYXPpMTQAnlSoCtUdZ
-oznXNR4oFYIqTasaXCFpG5uFCTDObPOSg1JqRDZYckijkAvbYlieBY6/ItrQxjyS
-... many lines of ASCII data ...
-1rMbVMNua84/W98JMFHvu/RNNpmnHvIQoEw7yjVZYt2aTJN/uuGtugNCZ+wri+xh
-yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
-=hZua
------END PGP PUBLIC KEY BLOCK-----
-</pre>
-<p>'
-._("Do not remove the begin and end markers when submitting your GPG key.")
-."</p>\n"
-.'<h2>'._("Update your key in this input area")."</h2>\n"
-.'<p>'
-._("Insert your (ASCII) public key here (made with gpg --export --armor KEYID):")
-."</p>\n";
+    $input_specific = $gpg_sample_text;
 
     if (!$newvalue)
       $newvalue = $row_user['gpg_key'];
@@ -700,18 +537,10 @@ yl1VWoHhHrHs1zAWDiJSmB4k0zV9Yyw/OMMlPrmMX3SfFEjMDqnC1SNi
                       .'wrap="virtual" name="newvalue">'.$newvalue
                       ."</textarea>\n";
     $input_specific .= '<p><input type="submit" name="test_gpg_key" value="'
-                       ._("Test GPG key").'" /> '
+                       ._("Test GPG keys").'" /> '
                        ._("(Testing is recommended before updating.)").'</p>'
                        ."\n<hr />\n";
-    $input_specific .=  '<p>'
-. sprintf (_('For GNU maintainers:
-If this key is to be used for GNU uploads,
-you must also email it to ftp-upload@gnu.org.
-There is no automatic propagation.
-See the GNU Maintainer Information, node
-<a href="%s">Automated Upload Registration</a>.'),
-"//www.gnu.org/prep/maintain/maintain.html#Automated-Upload-Registration")
-. "</p>\n";
+    $input_specific .= $gpg_gnu_maintainers_note;
     if ($test_gpg_key)
       $input_specific .= run_gpg_checks ($newvalue);
   }
@@ -783,7 +612,6 @@ elseif ($item == "delete")
 if (!$title)
   $title = sprintf (_("Unknown user settings item (%s)"), $item);
 
-########################################################################
 # Actually print the HTML page.
 site_user_header(array('title'=>$title,
                        'context'=>'account'));

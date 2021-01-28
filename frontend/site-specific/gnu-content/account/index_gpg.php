@@ -2,7 +2,7 @@
 
 # Note about GPG key.
 #
-# Copyright (C) 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2017, 2021 Ineiev <ineiev@gnu.org>
 #
 # This file is part of Savane.
 #
@@ -19,7 +19,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-printf(_('Your GPG key is used for signing your releases and
-optionally encrypting sensitive messages sent to you. It also
-can be used to check your identity when you lose your password.'));
+print _("Your GPG key is used for encrypting sensitive messages sent to you.
+Savannah admins also may use it to confirm your identity when you lose your
+password.  Keys for signing releases are registered
+in the \"Public Information\" area of your group.");
 ?>

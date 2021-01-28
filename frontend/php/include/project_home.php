@@ -341,14 +341,14 @@ printf(' '.ngettext("(%s member)", "(%s members)", $membersnum['count']),
        "<strong>{$membersnum['count']}</strong>");
 $i++;
 
-if ($project->getGPGKeyring())
+if (group_get_preference ($group_id, 'gpg_keyring'))
   {
     specific_makesep();
-    print utils_link($GLOBALS['sys_home'].'project/memberlist-gpgkeys.php?group='
-                     .$group,
+    print utils_link ($GLOBALS['sys_home']
+                       . 'project/release-gpgkeys.php?group=' . $group,
                      html_image("contexts/keys.png",
                                 array('width'=>'24', 'height'=>'24', 'alt'=>''))
-                     .'&nbsp;'._("Project Member GPG Keyring"));
+                     . '&nbsp;' . _("Project Release GPG Keyring"));
     $i++;
   }
 
