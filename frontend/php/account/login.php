@@ -159,8 +159,9 @@ if (isset($session_hash))
   {
     # Nuke their old session securely.
     session_delete_cookie('session_hash');
-    db_execute("DELETE FROM session WHERE session_hash=? AND user=?",
-               array($session_hash, $user_id));
+    if (isset ($user_id))
+      db_execute ("DELETE FROM session WHERE session_hash=? AND user=?",
+                  array($session_hash, $user_id));
   }
 
 site_header(array('title'=>_("Login")));
