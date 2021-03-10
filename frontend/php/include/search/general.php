@@ -5,7 +5,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Nicodemo Alvaro
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -532,15 +532,17 @@ function search_run ($keywords, $type_of_search="soft", $return_error_messages=1
           || $type_of_search == 'cookbook'
           || $type_of_search == 'task')
     {
-      $sql = "SELECT ".$type_of_search.".bug_id,"
-        .$type_of_search.".summary,"
-        .$type_of_search.".date,"
-        .$type_of_search.".privacy,"
-        .$type_of_search.".submitted_by,"
-        ."user.user_name,"
-        .$type_of_search.".group_id "
-        . "FROM ".$type_of_search.",user "
-        . "WHERE user.user_id=".$type_of_search.".submitted_by ";
+      $sql = "SELECT " . $type_of_search . ".bug_id,"
+        . $type_of_search . ".summary,"
+        . $type_of_search . ".date,"
+        . $type_of_search . ".privacy,"
+        . $type_of_search . ".submitted_by,"
+        . "user.user_name, groups.use_" . $type_of_search . ","
+        . $type_of_search . ".group_id "
+        . "FROM " . $type_of_search . ",user,groups "
+        . "WHERE user.user_id=" . $type_of_search . ".submitted_by "
+        . "AND groups.group_id=" . $type_of_search . ".group_id "
+        . "AND groups.use_" . $type_of_search . "=1";
 
       list($kw_sql, $kw_sql_params) = search_keywords_in_fields(
         $arr_keywords,
