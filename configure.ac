@@ -22,7 +22,7 @@
 # (public domain)
 
 AC_INIT([GNU Savannah],
-        [3.5],
+        [3.6],
 	[savannah-hackers-public@gnu.org], [savane],
 	[https://savannah.gnu.org/projects/administration])
 
@@ -172,7 +172,6 @@ AC_CONFIG_FILES(backend/extra/siteadmin/sv_extra_dead_projects,
 AC_CONFIG_FILES(backend/extra/siteadmin/sv_extra_merge_projects,
 	[chmod +x backend/extra/siteadmin/sv_extra_merge_projects])
 AC_CONFIG_FILES(backend/install/sv_update_conf, [chmod +x backend/install/sv_update_conf])
-AC_CONFIG_FILES(backend/download/sv_gpgcheckfiles, [chmod +x backend/download/sv_gpgcheckfiles])
 AC_CONFIG_FILES(backend/misc/sv_spamcheck_peon, [chmod +x backend/misc/sv_spamcheck_peon])
 AC_CONFIG_FILES(backend/misc/sv_reminder, [chmod +x backend/misc/sv_reminder])
 AC_CONFIG_FILES(backend/misc/sv_spamcheck_monitor, [chmod +x backend/misc/sv_spamcheck_monitor])

@@ -1,3 +1,67 @@
+2021-03-23 3.6
+
+[FRONTEND]
+
+* Fix search, Savannah sr #110244.
+
+* Add release keyring to group preferences, display it instead of concatenated
+  personal keys.
+
+* Add selectable default query for trackers, Savannah sr #109504.
+
+* Add new tracker restriction level to make them read-only.
+
+* Fix tracker submenu for the case when an alternative URL is used.
+
+* Various PHP-related fixes.
+
+* Minor documentation fixes and updates.
+
+* Add a distinct domain for user-supplied files to improve security.
+
+* Make sure that user_name is unique when renaming accounts.
+
+* Show diagnostics when lost user-supplied files are requested.
+
+* Fix markdown link processing, Savannah sr #110128.
+
+* Fix a few vulnerabilities.
+
+* Fix restrictions on having resume.
+
+* Account "real" names are checked against forbidden templates.
+
+* Add a means to pre-fill new item submissions, Savannah sr #109904.
+
+* Fix handling date fields in tracker comment previews.
+
+* Avoid login redirections to external websites.
+
+* Decode HTML entities in fields, Savannah sr #109857.
+
+* Add a list of recent anonymous posts to the siteadmin area.
+
+* Add a list of account activities to user account page in the siteadmin area.
+
+* Notify users when removing idle accounts, Savannah sr #109838.
+
+* Improve output of invalid user IDs on user pages.
+
+* Fix reverse dependency history, Savannah sr #109698.
+
+[I18N]
+
+* Enable Portuguese.
+
+[BACKEND]
+
+* Drop group GPG keyring-related dead code.
+
+[DATABASE]
+
+* Convert group_preferences.preference_value to mediumtext to hold group
+  GPG release keys.
+
 2019-07-05 3.5
 
 [FRONTEND]
@@ -278,7 +342,7 @@
 * Full UTF-8 database (including declarations and ordering)
 
 ================================================================
-Copyright (C) 2017, 2018, 2019 Ineiev
+Copyright (C) 2017, 2018, 2019, 2021 Ineiev
 Copyright (C) 2007, 2009, 2010 Sylvain Beucler
 
 This file is part of Savane.
