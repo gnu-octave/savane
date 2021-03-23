@@ -248,9 +248,9 @@ which are not attributed by default when joining this project.").'</p>
     print "\t</table>\n";
   }
 
-if ($project->group_get_preference ($group_id, 'gpg_keyring'))
+if (if ($project->getGPGKeyring()))
   print '<p>'
-. sprintf(_('You may also be interested in the <a href="%s">GPG Keyring of
-this project</a>'), 'release-gpgkeys.php?group=' . $group) . "</p>\n";
+. sprintf(_('You may also be interested in the <a href="%s">GPG Keys of
+all members</a>'), 'memberlist-gpgkeys.php?group=' . $group) . "</p>\n";
 site_project_footer(array());
 ?>
