@@ -248,7 +248,7 @@ which are not attributed by default when joining this project.").'</p>
     print "\t</table>\n";
   }
 
-if (if ($project->getGPGKeyring()))
+if ($project->getGPGKeyring())
   print '<p>'
 . sprintf(_('You may also be interested in the <a href="%s">GPG Keys of
 all members</a>'), 'memberlist-gpgkeys.php?group=' . $group) . "</p>\n";
