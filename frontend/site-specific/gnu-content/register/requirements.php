@@ -68,7 +68,7 @@ not refer the user to any nonfree software; in other words,
 it must not say anything that in our judgment is likely to
 lead or steer users towards any nonfree software.  In particular,
 it must not automatically download or install any nonfree software.
-For more info, see <a href=\"%s\">References to Non-Free Software and
+For more info, see <a href="%s">References to Non-Free Software and
 Documentation</a> in the GNU Coding Standards.'),
 "//www.gnu.org/prep/standards/html_node/References.html")
 . '</p>
