@@ -304,7 +304,8 @@ else if ($set=='custom')
     foreach ($url_params as $field => $arr_val)
       {
         foreach ($arr_val as $value_id)
-          $pref_stg .= '&amp;' . $field . '[]=' . $value_id;
+          $pref_stg .= '&amp;' . htmlspecialchars($field)
+                       . '[]=' . htmlspecialchars($value_id);
 
       # Build part of the HTML title of this page for more friendly bookmarking.
       # Do not add the criteria in the header if value is "Any".
