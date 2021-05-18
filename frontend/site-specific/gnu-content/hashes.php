@@ -127,3 +127,4 @@ $DEVEL_STATUS[6] = _('6 - Mature');
 # for 'N/A'
 # $DEVEL_STATUS[7] = 'N/A';
 $DEVEL_STATUS[8] = _('? - Orphaned/Unmaintained');
+$DEVEL_STATUS[9] = _('9 - Decommissioned');
