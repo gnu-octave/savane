@@ -54,7 +54,7 @@ way is to");
 
 print ' <a href="'
   . $GLOBALS['sys_home']
-  . 'support/?func=addsupport&amp;group='
+  . 'support/?func=additem&amp;group='
   . $GLOBALS['sys_unix_group_name']
   . '">'._('submit a request to the Savannah administration tracker').'</a>.'.'
 </li>
