@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2019  Ineiev
+# Copyright (C) 2017, 2019, 2021  Ineiev
 #
 # This file is part of Savane.
 #
@@ -71,7 +71,11 @@ $form->addElement('header', 'title_name', _('Project name'));
 $form->addElement('text', 'full_name', _('Full name'));
 $form->addElement('text', 'unix_name', _('Short/system name')
   . "\n<br />" . '<span class="smaller">'
-  . _('(used in URLs, mailing lists names, etc.)') . '</span>',
+  . _("(used in URLs, mailing lists names, etc&mdash;4&ndash;16 characters,
+starting with a letter and only containing ASCII letters, digits and dashes;
+system names should be reasonably descriptive, rather than terse abbreviations
+or confusingly general.)")
+  . '</span>',
   _('Short/system name'));
 
 $form->addElement('header', 'title_information', _('Project information'));
