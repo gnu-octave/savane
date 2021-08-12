@@ -1160,7 +1160,7 @@ function utils_setcookie ($name, $value, $expire, $secure = false)
 
 function utils_set_csp_headers ()
 {
-  if (empty ($GLOBALS['skip_csp_headers']))
+  if (!empty ($GLOBALS['skip_csp_headers']) && $GLOBALS['skip_csp_headers'])
     return;
   # Set up proper use of UTF-8, even if the webserver doesn't serve it by default.
   header('Content-Type: text/html; charset=utf-8');
