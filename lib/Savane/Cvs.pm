@@ -38,8 +38,9 @@ our $version = 1;
 # Make a cvs area.
 sub CvsMakeArea {
     my ($name,$dir_cvs,$is_public) = @_;
-    my $warning = "";
+    my $warning = " (This sub is bit-rotten; it is disabled)";
 
+    return " " . $dir_cvs . $warning;
     # %PROJECT is not mandatory, but if it is missing, it may well be
     # a major misconfiguration.
     # It should only happen if a directory has been set for a specific
