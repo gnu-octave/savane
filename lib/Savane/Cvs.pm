@@ -367,7 +367,7 @@ sub UpdateCvsNotifications {
 	    }
 	}
 	if ($diff ne '') {
-	    print "updating $file:\n" . $diff;
+	    $w .= "updating $file:\n" . $diff;
 	} else {
 	    return $w;
 	}
