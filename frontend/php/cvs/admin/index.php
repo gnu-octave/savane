@@ -175,18 +175,6 @@ _("Invalid list of diff notification emails"));
   } # if (isset($log_accum))
 site_project_header(array('group'=>$group_id,'context'=>'ahome'));
 
-$available_hooks = array();
-echo "<p>";
-echo "Available hooks:<br />";
-echo "</p>";
-echo "<ul>";
-foreach (glob(dirname(__FILE__).'/hooks/*.php') as $filename)
-  array_push($available_hooks, preg_replace(':.*/([0-9a-zA-Z_]+).php$:', '\1',
-                                            $filename));
-foreach ($available_hooks as $hook)
-  echo "<li>$hook</li>";
-echo "</ul>";
-
 $hook = 'log_accum';
 # Show the project's log_accum hooks.
 $result =  db_execute("
@@ -196,8 +184,8 @@ FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
 WHERE group_id = ?", array($group_id));
 
-echo "<h1>log_accum</h1>\n";
-echo "<h2>Current notifications</h2>\n";
+echo "<h2>log_accum</h2>\n";
+echo "<h3>Current notifications</h3>\n";
 echo "<form action='";
 print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>\n";
 echo "<table>\n";
@@ -242,7 +230,7 @@ $caption=_("Modify");
 echo "<input name='log_accum' type='submit' value='$caption' />\n";
 echo "</form>\n";
 
-echo "<h2>New notification</h2>\n";
+echo "<h3>New notification</h3>\n";
 echo "<form action='";
 print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>\n";
 echo "<ol>\n";
@@ -292,42 +280,5 @@ $caption = _('Add');
 echo "<input type='submit' name='log_accum' value='$caption' /\n>
 </form>\n";
 
-$hook = 'cia';
-# Show the project's log_accum hooks.
-$result =  db_execute("
-SELECT repo_name, match_type, dir_list, hook_name, needs_refresh,
-        project_account
-FROM cvs_hooks
-JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
-WHERE group_id = ?", array($group_id));
-
-echo "<h1>cia (in progress)</h1>\n";
-echo "<h2>Current CIA notifications</h2>\n";
-echo "<form action='";
-print htmlentities ($_SERVER['PHP_SELF'])."'>";
-echo "<table>\n";
-echo html_build_list_table_top(array('X', 'Repository', 'Match type',
-                                     'Module list', 'CIA Project', 'Updated?'));
-while ($row = db_fetch_array ($result))
-  {
-    echo "<tr>";
-    echo "<td>";
-    echo html_build_checkbox("remove[$cur]", 0);
-    echo "</td>\n";
-    echo "<td>";
-    echo html_build_select_box_from_array(array('sources', 'web'), 'repo_name',
-                                          $row['repo_name'], 1);
-    echo "</td>\n";
-    echo "<td>";
-    echo match_type_box ('match_type', $row['match_type']);
-    echo "</td>\n";
-    echo "<td><input type='text' name='dir_list[$cur]' "
-         ."value='{$row['dir_list']}' /></td>\n";
-    echo "<td><input type='text' value='{$row['project_account']}' /></td>\n";
-    echo "<td>" . ($row['needs_refresh'] ? 0 : 1) . "</td>\n";
-    echo "</tr>";
-  }
-echo "</table>\n";
-echo "</form>\n";
 site_project_footer(array());
 ?>
