@@ -172,10 +172,8 @@ sub CvsMakeAreaAttic {
 }
 
 # Compute the type argument for new-savannah-project/new.py.
-# Historically, web type was (more) hardcoded, and its
-# range included 'translations'; as of 2021-09, it's defined
-# by the dir_type_homepage of the group_type table with the exception
-# of 'www'.
+# It is derived from the dir_type_homepage of the group_type table
+# with the exception of 'www'.
 sub CvsSavannahWebType {
     my ($name) = @_;
     my $dir_type = GetGroupTypeSettings(GetGroupType($name), 'dir_type_homepage');
