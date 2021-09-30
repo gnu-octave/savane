@@ -367,12 +367,10 @@ sub UpdateCvsNotifications {
 	    }
 	}
 	if ($diff ne '') {
-	    print "updating $file:\n$prev_text\n= vs =\n$text";
-	    print "=== difference:\n" . $diff;
+	    print "updating $file:\n" . $diff;
 	} else {
 	    return $w;
 	}
-	return $w;
 
 	open(OUT, "> $file") || ($w .= " Cannot open $file: $! for writing.");
 	print OUT $text;
