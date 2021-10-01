@@ -133,8 +133,7 @@ _("Invalid list of diff notification emails"));
                                          'match_type' => $match_type,
                                          'dir_list' => (!isset($dir_list)
                                                         ? null : $dir_list),
-                                         'hook_name' => 'log_accum',
-                                         'needs_refresh' => 1),
+                                         'hook_name' => 'log_accum'),
                                    DB_AUTOQUERY_INSERT) or die(db_error());
                     $new_hook_id = db_insertid (NULL);
                     db_autoexecute('cvs_hooks_log_accum',
@@ -157,7 +156,6 @@ _("Invalid list of diff notification emails"));
                                          'dir_list' => (!isset($dir_list)
                                                         ? null : $dir_list),
                                          'hook_name' => 'log_accum',
-                                         'needs_refresh' => 1,
                                          'branches' => (!isset($branches)
                                                         ? null : $branches),
                                          'emails_notif' => $emails_notif,
@@ -178,7 +176,7 @@ site_project_header(array('group'=>$group_id,'context'=>'ahome'));
 $hook = 'log_accum';
 # Show the project's log_accum hooks.
 $result =  db_execute("
-SELECT hook_id, repo_name, match_type, dir_list, hook_name, needs_refresh,
+SELECT hook_id, repo_name, match_type, dir_list, hook_name,
         branches, emails_notif, enable_diff, emails_diff
 FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
@@ -221,7 +219,6 @@ while ($row = db_fetch_array ($result))
     echo "</td>\n";
     echo "<td><input type='text' name='arr_emails_diff[$cur]' "
          ."value='{$row['emails_diff']}' /></td>\n";
-    echo "<td>" . ($row['needs_refresh'] ? 'Scheduled' : 'Yes') . "</td>\n";
     echo "</tr>\n";
   }
 
