@@ -1,7 +1,7 @@
 <?php
 # Manage commit hooks/triggers.
 # Copyright (C) 2006  Sylvain Beucler
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2021 Ineiev
 #
 # This file is part of the Savane project
 #
@@ -24,18 +24,12 @@ require_once('../../include/init.php');
 require_once('../../include/sane.php');
 require_once('../../include/account.php');
 
-# Many error messages in this file make little sense for the users,
-# so they'd better left untranslated.
-function no_i18n($string)
-{
-  return $string;
-}
-
 function match_type_box ($arr_match_type, $row_match_type)
 {
   return
     html_build_select_box_from_arrays (array('ALL', 'dir_list', 'DEFAULT'),
-                                       array('Always', 'Module list', 'Fallback'),
+                                       array(_('Always'), _('Module list'),
+                                             _('Fallback')),
                                        $arr_match_type,
                                        $row_match_type, false, 'None',
                                        false, 'Any', false, 'match type');
@@ -63,7 +57,7 @@ if (isset($log_accum))
         foreach ($arr_remove as $hook_id => $ignored)
           {
             if (!ctype_digit($hook_id.''))
-              exit_error(no_i18n("Non-numeric hook id:") . " ["
+              exit_error(_("Non-numeric hook_id:") . " ["
                          . htmlspecialchars($hook_id) . "]");
             db_execute("DELETE cvs_hooks, cvs_hooks_log_accum
                   FROM cvs_hooks, cvs_hooks_log_accum
@@ -78,7 +72,7 @@ if (isset($log_accum))
           {
             # Input validation.
             if (!ctype_digit($hook_id.'') and ($hook_id != "new"))
-              exit_error(no_i18n("Non-numeric hook_id:") . " ["
+              exit_error(_("Non-numeric hook_id:") . " ["
                            . htmlspecialchars($hook_id) . "]");
 
             if (!isset($arr_remove[$hook_id]))
@@ -90,7 +84,7 @@ if (isset($log_accum))
                 $match_type = $arr_match_type[$hook_id];
                 if ($match_type != 'ALL' and $match_type != 'dir_list'
                     and $match_type != 'DEFAULT')
-                  exit_error(no_i18n("Invalid matching type"));
+                  exit_error(_("Invalid matching type"));
                 $dir_list = $arr_dir_list[$hook_id];
                 if ($match_type != 'dir_list')
                   unset($dir_list);
@@ -98,7 +92,7 @@ if (isset($log_accum))
                                                       $dir_list)
                         or !preg_match("/^(([a-zA-Z0-9_.+-\/]+)(,|$))+/",
                                        $dir_list))
-                  exit_error(_("Invalid directories list"));
+                  exit_error(_("Invalid list of directories"));
                 $branches = $arr_branches[$hook_id];
                 if ($branches == '')
                   unset($branches);
@@ -106,7 +100,7 @@ if (isset($log_accum))
                 if (isset($arr_enable_diff[$hook_id]))
                   $enable_diff = $arr_enable_diff[$hook_id];
                 if ($enable_diff != '0' and $enable_diff != '1')
-                  exit_error(no_i18n("Invalid value for enable_diff"));
+                  exit_error(_("Invalid value for enable_diff"));
                 $emails_notif = $arr_emails_notif[$hook_id];
                 if (!preg_match(
                  '/^(([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+.)+[a-zA-Z0-9]+)(,|$))+/',
@@ -182,15 +176,17 @@ FROM cvs_hooks
 JOIN cvs_hooks_$hook ON cvs_hooks.id = hook_id
 WHERE group_id = ?", array($group_id));
 
-echo "<h2>log_accum</h2>\n";
-echo "<h3>Current notifications</h3>\n";
+echo "<h2>" . _("Current notifications") . "</h2>\n";
 echo "<form action='";
 print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>\n";
 echo "<table>\n";
-echo html_build_list_table_top(array('X', 'Repository', 'Match type',
-                                     'Module list', 'Branch filter',
-                                     'Notification to', 'Diff?',
-                                     'Separate diffs to', 'Updated?'));
+echo html_build_list_table_top(array(
+'<img src="' . $GLOBALS['sys_home'] . 'images/' . SV_THEME
+. '.theme/misc/trash.png" class="icon" alt="' . _("Delete") . '" />',
+   _('Repository'), _('Match type'),
+   _('Module list'), _('Branch filter'),
+   _('Notification to'), _('Diff?'),
+   _('Separate diffs to')));
 
 while ($row = db_fetch_array ($result))
   {
@@ -227,55 +223,65 @@ $caption=_("Modify");
 echo "<input name='log_accum' type='submit' value='$caption' />\n";
 echo "</form>\n";
 
-echo "<h3>New notification</h3>\n";
+echo "<h2>" . _("New notification") . "</h2>\n";
 echo "<form action='";
 print htmlentities ($_SERVER['PHP_SELF'])."?group=$group' method='post'>\n";
 echo "<ol>\n";
-echo "<li>Repository: ";
-echo html_build_select_box_from_array(array('sources', 'web'),
+echo "<li>" . _("Repository:") . " ";
+echo html_build_select_box_from_array(array(
+# TRANSLATORS: this is the type of repository (sources  or web).
+                                            _('sources'),
+# TRANSLATORS: this is the type of repository (sources  or web).
+                                            _('web')),
                                       "arr_repo_name[new]", $row['repo_name'], 1);
 echo "</li>\n<li>";
-echo "Matching type: ";
+echo _("Matching type:") . " ";
 echo match_type_box ("arr_match_type[new]", $row['match_type']);
 echo "<ul>
-  <li><i>Always</i> is always performed (even in addition to Fallback)</li>
-  <li><i>Module list</i> if you specify a list of directories (see below)</li>
-  <li><i>Fallback</i> is used when nothing matches</li>
+  <li>" . _("<i>Always</i> is always performed (even in addition to Fallback)")
+  . "</li>
+  <li>"
+  . _("<i>Module list</i> if you specify a list of directories (see below)")
+  . "</li>
+  <li>" . _("<i>Fallback</i> is used when nothing matches") . "</li>
 </ul>\n";
 echo "</li>\n<li>";
-echo "Filter by directory: if match is <i>Module list</i>, enter a list of
-  directories separated by commas
-  (eg: <code>emacs,emacs/lisp,manual</code>)<br />
+echo _("Filter by directory: if match is <i>Module list</i>, enter a list of
+  directories separated by commas,
+  e.g. <code>emacs,emacs/lisp,manual</code><br />
   You'll only get notifications if the commit is performed in one of these
   directories.<br />
-  Leave blank if you want to get notifications for all the repository
-  (default):<br />";
+  Leave blank if you want to get notifications for all the repository:") . "<br />";
 echo "<input type='text' name='arr_dir_list[new]' value='{$row['dir_list']}' />";
 echo "</li>\n<li>";
-echo "List of comma-separated e-mails to send notifications to (eg:
-     him@domain.org, her@domain.org):<br />";
+echo _("List of comma-separated emails to send notifications to, e.g.
+     him@domain.org, her@domain.org):") . "<br />";
 echo "<input type='text' name='arr_emails_notif[new]' "
      ."value='{$row['emails_notif']}' />";
 echo "</li>\n<li>";
-echo "Send diffs? ";
+echo _("Send diffs?") . " ";
 echo html_build_checkbox("arr_enable_diff[new]", $row['enable_diff']);
 echo "</li>\n<li>";
-echo "Optional alternate list of mails to send diffs separately to (eg:
-      him@domain.org, her@domain.org).<br />
-  If empty, the diffs will be included with the commit notifications:<br />";
+echo _("Optional alternate list of emails to send diffs separately to, e.g.
+      him@domain.org, her@domain.org.<br />
+  If empty, the diffs will be included in commit notifications:")
+  . "<br />";
 echo "<input type='text' name='arr_emails_diff[new]' "
      ."value='{$row['emails_diff']}' />\n";
 echo "</li>\n<li>";
-echo "Filter by branch: you will be notified only of these branches' commits,
+echo _("Filter by branch: you will be notified only commits in these branches,
   separated by commas.<br />
-  Enter <i>HEAD</i> if you only want trunk (non-branch) commits.<br />
-  Leave blank if you want to get notifications for all commits (default):<br />";
+  Enter <i>HEAD</i> if you only want trunk commits.<br />
+  Leave blank to get notifications for all commits:")
+  . "<br />";
 echo "<input type='text' name='arr_branches[new]' value='{$row['branches']}' />";
 echo "</li>\n</ol>\n";
 echo "<input type='hidden' name='arr_id[new]' value='new' />\n";
 $caption = _('Add');
 echo "<input type='submit' name='log_accum' value='$caption' /\n>
 </form>\n";
+
+print "<p>" . _("The changes come into effect within an hour.") . "</p>\n";
 
 site_project_footer(array());
 ?>
