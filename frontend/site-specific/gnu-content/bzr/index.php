@@ -25,7 +25,7 @@ include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
 
 global $project;
 
-print '<h2>'._('Anonymous read-only access').'</h2>
+print '<h3>'._('Anonymous read-only access').'</h3>
 
 <p>'._('The Bazaar repositories for projects use separate directories for
 each branch. You can see the branch names in the repository by pointing
@@ -58,7 +58,7 @@ a web browser to:').' <br />
 </li>
 </ul>
 
-<h2>'._('Developer write access (SSH)').'</h2>
+<h3>'._('Developer write access (SSH)').'</h3>
 
 ';
 
@@ -72,7 +72,7 @@ print '
   .$project->getUnixName()
   .'/<i>branch</i></pre>
 
-<h2>'._('More introductory documentation').'</h2>
+<h3>'._('More introductory documentation').'</h3>
 
 ';
 

@@ -24,14 +24,14 @@ include $GLOBALS['sys_incdir'] . '/php/fingerprints.php';
 
 global $project;
 
-print '<h2>' . _('Anonymous read-only access') . '</h2>
+print '<h3>' . _('Anonymous read-only access') . '</h3>
 
 <pre>hg clone https://hg.'
   . $project->getTypeBaseHost() . '/hgweb'
   . preg_replace(':/srv/hg:', '', $project->getTypeDir('hg')) . '
 </pre>
 
-<h2>' . _('Developer write access (SSH)') . '</h2>
+<h3>' . _('Developer write access (SSH)') . '</h3>
 
 ';
 
@@ -49,7 +49,7 @@ print '
 trees are:') . "</p>\n" . $vcs_fingerprints;
 
 print '
-<h2>'._('More information').'</h2>
+<h3>'._('More information').'</h3>
 
 <p><a href="//savannah.gnu.org/maintenance/UsingHg">
 https://savannah.gnu.org/maintenance/UsingHg</a></p>

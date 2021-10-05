@@ -29,7 +29,7 @@ $n = count ($repo_list);
 if ($n > 1)
   echo "<p>"._('Note: this group has multiple Git repositories.')."</p>";
 print '
-<h2>'._('Anonymous clone:').'</h2>
+<h3>'._('Anonymous clone:').'</h3>
 
 <pre>';
 
@@ -45,7 +45,7 @@ for ($i = 0; $i < $n; $i++)
 
 print '</pre>
 
-<h2>'._('Member clone:').'</h2>
+<h3>'._('Member clone:').'</h3>
 
 <pre>';
 
@@ -70,7 +70,7 @@ print '</pre>
 . _('The SSHv2 public key fingerprints for the machine hosting the source
 trees are:') . "</p>\n" . $vcs_fingerprints;
 
-print '<h2>'._('More information').'</h2>
+print '<h3>'._('More information').'</h3>
 <a href="//savannah.gnu.org/maintenance/UsingGit">
 https://savannah.gnu.org/maintenance/UsingGit</a>';
 

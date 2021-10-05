@@ -27,7 +27,7 @@ include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
 
 global $project;
 
-print '<h2>'._('Anonymous CVS Access').'</h2>
+print '<h3>'._('Anonymous CVS Access').'</h3>
 
 <p>'
 ._("This project's CVS repository can be checked out through anonymous
@@ -38,14 +38,14 @@ to check out must be specified as the &lt;<i>modulename</i>&gt;.").'</p>
 
 if ($project->Uses("cvs"))
   {
-    print "<h3>"._('Software repository:')."</h3>\n";
+    print "<h4>"._('Software repository:')."</h4>\n";
     print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
           . $project->getTypeBaseHost()
           . ":" . $project->getTypeDir('cvs')
           . " co "
           . $project->getUnixName()
           . "</pre>\n";
-    print "<h4>"._('With other project modules:')."</h4>\n";
+    print "<p>"._('With other project modules:')."</p>\n";
     print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
           . $project->getTypeBaseHost()
           . ":"
@@ -54,7 +54,7 @@ if ($project->Uses("cvs"))
   }
 if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
   {
-    print "<h3>"._('Webpage repository:')."</h3>\n";
+    print "<h4>"._('Webpage repository:')."</h4>\n";
     print "<pre>cvs -z3 -d:pserver:anonymous@cvs."
     . $project->getTypeBaseHost()
     . ":"
@@ -78,7 +78,7 @@ cvs -qn update
 
 <p>'._('to preview and status check.').'</p>
 
-<h2>'._('Project Member CVS Access via SSH').'</h2>
+<h3>'._('Project Member CVS Access via SSH').'</h3>
 
 <p>'._('Member access is performed using the CVS over SSH method. The
 pserver method can only be used for anonymous access.').'</p>
@@ -93,7 +93,7 @@ if ($username == "NA")
   $username = '&lt;<i>'._('membername').'</i>&gt;';
 if ($project->Uses("cvs"))
   {
-    print "<h3>"._('Software repository:').'</h3>'."\n";
+    print "<h4>"._('Software repository:').'</h4>'."\n";
     print "<pre>cvs -z3 -d:ext:"
            . $username
            . "@cvs."
@@ -103,7 +103,7 @@ if ($project->Uses("cvs"))
            . " co "
            . $project->getUnixName()
            . "</pre></p>\n";
-    print "<h4>"._('With other project modules:')."</h4>\n";
+    print "<p>"._('With other project modules:')."</p>\n";
     print "<pre>cvs -z3 -d:ext:"
           . $username
           . "@cvs."
@@ -114,7 +114,7 @@ if ($project->Uses("cvs"))
   }
 if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
   {
-    print "<h3>"._('Webpage repository:')."</h3>\n";
+    print "<h4>"._('Webpage repository:')."</h4>\n";
     print "<pre>cvs -z3 -d:ext:"
           . $username
           . "@cvs."

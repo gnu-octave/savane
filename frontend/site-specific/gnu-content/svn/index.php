@@ -25,7 +25,7 @@ include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
 
 global $project;
 
-print '<h2>'._('Anonymous / read-only Subversion access').'</h2>
+print '<h3>'._('Anonymous / read-only Subversion access').'</h3>
 
 <p>'._("This project's Subversion repository can be checked out anonymously
 as follows.  The module you wish to check out must be specified as the
@@ -51,7 +51,7 @@ print '<p>'._("Typically, you'll want to use <tt>trunk</tt> for
 you're unsure, or browse the repository with ViewVC.").'</p>
 
 
-<h2>'._('Project member Subversion access via SSH').'</h2>
+<h3>'._('Project member Subversion access via SSH').'</h3>
 
 <p>'
 ._('Member access is performed using the Subversion over SSH method.')
@@ -77,7 +77,7 @@ print '<h3>'._('Software repository (over SSH):').'</h3>
               . "/&lt;<i>"._('modulename')."</i>&gt;</code>";
 print '
 
-<h2>'._('Importing into Subversion on Savannah').'</h2>
+<h3>'._('Importing into Subversion on Savannah').'</h3>
 
 ';
 
@@ -91,7 +91,7 @@ migration in the <a href="%s">Savannah Administration</a> project.').'</p>
    '//savannah.gnu.org/projects/administration');
 
 
-print '<h2>'._('Exporting Subversion tree from Savannah').'</h2>
+print '<h3>'._('Exporting Subversion tree from Savannah').'</h3>
 
 <p>'
 ._('You can access your subversion raw repository using read-only access via
