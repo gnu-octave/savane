@@ -1,3 +1,21 @@
+2021-10-05 3.7
+
+[FRONTEND]
+
+* Make CVS admin page usable and accessible from group pages.
+
+* New DEVEL_STATUS, Decommissioned.
+
+[BACKEND]
+
+* Fully maintain Savane CVS hooks in sv_groups.
+
+[I18N]
+
+* Update French and "Simplified" Chinese from TP.
+
+* Update Russian.
+
 2021-03-23 3.6
 
 [FRONTEND]
