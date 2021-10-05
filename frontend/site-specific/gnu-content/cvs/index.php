@@ -6,7 +6,7 @@
 # Copyright (C) 2009 Karl Berry
 # Copyright (C) 2012 Michael J. Flickinger
 # Copyright (C) 2017 Bob Proulx
-# Copyright (C) 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2017, 2021 Ineiev <ineiev@gnu.org>
 #
 # This file is part of Savane.
 #
@@ -126,6 +126,15 @@ if ($project->CanUse("homepage") || $project->UsesForHomepage("cvs"))
           . "</pre></p>\n";
   }
 
+if (member_check(0, $project->getGroupId(), 'A'))
+  {
+    print "<h2>" . _('Email Notifications') . "</h2>\n";
+    print "<p>";
+    printf(_('You can <a href="%s">configure commit notifications</a>.'),
+           '/cvs/admin/?group=' . $project->getUnixName());
+    print "</p>\n";
+  }
+
 print '<h2>'._('CVS Newbies').'</h2>
 
 ';
@@ -182,8 +191,6 @@ links.  Each line of the file lists a real file name followed by the name of the
 symbolic link. The symbolic links are built twice an hour.  More information in
 <a href="%s">GNU Webmastering Guidelines</a>.').'</p>',
 "//www.gnu.org/server/standards/README.webmastering.html#symlinks");
-
-global $project;
 
 if ($project->getTypeBaseHost() == "savannah.gnu.org")
   {
