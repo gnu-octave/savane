@@ -15,6 +15,7 @@ stamp-icons:
 # Keep those separate for AM1.9 to recognize them
 # (ie not the "all-local distdir-local: stamp-icons" one-liner)
 all-local: stamp-icons
+DISTCLEANFILES = stamp-icons
 
 maintainer-clean-local:
 	-find -name "*.orig.png" | while read file; do \
