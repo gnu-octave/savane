@@ -528,10 +528,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
               print utils_format_date($value_id, 'natural');
             }
           else
-            {
-              # It's a text zone then display directly.
-               print markup_basic($value_id);
-            }
+            print markup_basic ($value_id);
 
            print '</td>
 <td class="smaller" align="center"><img src="'
