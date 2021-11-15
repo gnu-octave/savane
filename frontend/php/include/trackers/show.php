@@ -547,10 +547,7 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
               print utils_format_date($new_value_id, 'natural');
             }
           else
-            {
-              # It's a text zone then display directly.
-              print htmlspecialchars ($new_value_id);
-            }
+            print markup_basic ($value_id);
           print "</td>\n";
           print "</tr>\n";
         }
