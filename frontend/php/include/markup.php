@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2005-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018, 2019, 2020 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020, 2021 Ineiev
 #
 # This file is part of Savane.
 #
@@ -748,6 +748,16 @@ function _markup_inline($line)
   # we can expect web browsers to support).
   $protocols = "https?|ftp|sftp|file|afs|nfs";
 
+  # Artificial protocol for protocol-relative links.
+  $protocol_relative = "p-r";
+  # Make sure $line doesn't contain $protocol_relative.
+  $pr_esc = "p-&#83521;-r";
+  $line = str_replace ($protocol_relative, $pr_esc, $line);
+
+  # Reword "//" as artificial "protocol".
+  $line = preg_replace('#(^|\s|\[)//#', '$1' . $protocol_relative . '://', $line);
+  $protocols .= '|' . $protocol_relative;
+
   # Links between items.
   # FIXME: It should be i18n, but in a clever way, meaning that everytime
   # a form is submitted with such string, the string get converted in
@@ -769,7 +779,7 @@ function _markup_inline($line)
   # Modify link texts to disable interpreting them as nested links.
   $line = preg_replace_callback ('/(\[(('
         .$protocols.'|www\.)[^\s]+'
-        .'|(('.$artifact_regex.')\s{0,2}#[0-9]+))\s+)(.*?)\]/',
+        . '|((' . $artifact_regex . ')\s{0,2}#[0-9]+))\s+)(.*?)\]/',
         function ($matches)
           {
         # Replace '#' in link texts with HTML references;
@@ -784,16 +794,11 @@ function _markup_inline($line)
             return $matches[1].$tail.']';
           }, $line);
 
-  # Prepare usual links: prefix "www." with "http://"
-  # if it is preceded by [ or whitespace or at the beginning of line.
-  # (don't want to prefix in cases like "//www.." or "ngwww...")
-  $line = preg_replace('/(^|\s|\[)(www\.)/i', '$1http://$2', $line);
-
-  # Replace the @ sign with an HTML entity, if it is used within
-  # an url (e.g. for pointers to mailing lists). This way, the
-  # @ sign doesn't get mangled in the e-mail markup code
-  # below. See bug #2689 on http://gna.org/ for reference.
-  $line = preg_replace ("#([a-z]+://[^<>[:space:]]+)@#i", "\\1&#64;", $line);
+  # Prepare usual links: prefix "www." with $protocol_relative . "://"
+  # if it is preceded by [ or whitespace or at the beginning of line
+  # (don't want to prefix in cases like "//www.." or "ngwww...").
+  $line = preg_replace('/(^|\s|\[)(www\.)/i',
+                       '$1' . $protocol_relative . '://$2', $line);
 
   # Prepare the markup for normal links, e.g. http://test.org, by
   # surrounding them with braces []
@@ -805,9 +810,16 @@ function _markup_inline($line)
   # Remove spaces added with preg_replace_callback
   # and process links with preceding ';'.
   $line = preg_replace ('/&#32;/', '', $line);
-  $line = preg_replace('/(;)(('.$protocols
-                       .'):\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
+  $line = preg_replace('/(;)(((' . $protocols
+                       . '):)?\/\/(&amp;|[^\s&]+[a-z0-9\/^])+)/i',
     '$1[$2]', $line);
+
+  # Replace the @ sign with an HTML entity, if it is used within
+  # an URL (e.g. for pointers to mailing lists).  This way, the
+  # @ sign doesn't get mangled in the e-mail markup code
+  # below.
+  $line = preg_replace ("#((" . $protocols . ")://[^<>[:space:]]+)@#i",
+                        "$1&#64;", $line);
 
   # Do a markup for mail links, e.g. info@support.org
   # (do not use utils_emails, this does extensive database
@@ -817,6 +829,10 @@ function _markup_inline($line)
   # is NOT replaced.
   $line = preg_replace("/(^|\s)([a-z0-9_+-.]+@([a-z0-9_+-]+\.)+[a-z]+)(\s|$)/i",
                        '\1' . utils_email_basic('\2') . '\4', $line);
+
+  # Unreplace the @ sign.
+  $line = preg_replace ("%((" . $protocols . ")://[^<>[:space:]]+)[&]#64;%i",
+                        "$1@", $line);
 
   foreach ($trackers as $regexp => $link)
     {
@@ -845,8 +861,8 @@ function _markup_inline($line)
   $line = preg_replace(
     # Find the opening brace '['
     '/\['
-    # followed by the protocol, either http:// or https://
-    .'(('.$protocols.'):\/\/'
+    # followed by the protocol
+    . '(((' . $protocols . '):)?\/\/'
     # match any character except whitespace or the closing
     # brace ']' for the actual link
     .'[^\s\]]+)'
@@ -854,7 +870,7 @@ function _markup_inline($line)
     .'\s+'
     # followed by any character (non-greedy) and the
     # next closing brace ']'.
-    .'(.+?)\]/', '<a href="$1">$3</a>', $line);
+    .'(.+?)\]/', '<a href="$1">$4</a>', $line);
 
   # Add support for unnamed hyperlinks, e.g.
   # [http://gna.org/] -> <a href="http://gna.org/">http://gna.org/</a>
@@ -863,16 +879,21 @@ function _markup_inline($line)
   $line = preg_replace_callback(
     # Find the opening brace '['
     '/\['
-    # followed by the protocol, either http:// or https://
-    # (FIXME: which protocol does it makes sense to support, which one
-    # should we ignore?)
-    .'(('.$protocols.'):\/\/'
+    # followed by the protocol
+    . '(((' . $protocols . '):)?\/\/'
     # match any character except whitespace (non-greedy) for
     # the actual link, followed by the closing brace ']'.
-    .'[^\s]+?)\]/', function ($match)
+    . '([^\s]+?))\]/', function ($match) use ($protocol_relative)
                       {
-                        return utils_cutlink($match[1]);
+                        $url = $match[1];
+                        $string = $url;
+                        if ($match[3] == $protocol_relative)
+                          $string = $match[4];
+                        return '<a href="' . $url . '">' . $string . '</a>';
                       }, $line);
+
+  $line = str_replace ($protocol_relative . "://", "//", $line);
+  $line = str_replace ($pr_esc, $protocol_relative, $line);
 
   # *word* -> <strong>word</strong>
   $line = preg_replace(

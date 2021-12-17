@@ -226,17 +226,6 @@ function utils_cutstring ($string, $length=35)
   return $string;
 }
 
-# Same as the previous but is used for links and does not try to cut
-# because it annoys users who can't safely.
-# copy/paste a complete paragraph with the links intact (check
-# 105807@sv).
-function utils_cutlink ($string, $length=35)
-{
-  $url = $string;
-  unset($help);
-  return '<a href="'.$url.'">'.$string.'</a>';
-}
-
 # Return a formatted date for a unix timestamp.
 #
 # The given unix timestamp will be formatted according to
