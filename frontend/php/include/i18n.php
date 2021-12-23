@@ -23,9 +23,6 @@
 
 # Table of supported languages :
 # "language variant" => "associated preferred locale"
-# 11jun2016 karl disabled all languages since translations are incomplete
-# (and the only way to select them is with the inconvenient
-# Accept-Language: browser header). https://savannah.gnu.org/support/?108827
 $locale_list = array();
 
 # Locale names offered for selection in /i18n.php.
@@ -56,6 +53,7 @@ register_language ("fr", "fr_FR", "français");
 #register_language ("ja-jp", "ja_JP");
 #register_language ("ko", "ko_KR", "한국어");
 #register_language ("ko-kr", "ko_KR");
+register_language ("he", "he_IL", "עברית");
 register_language ("pt", "pt_BR", "português do Brasil");
 register_language ("pt-br", "pt_BR");
 register_language ("ru", "ru_RU", "русский");
