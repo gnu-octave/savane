@@ -536,13 +536,14 @@ function search_run ($keywords, $type_of_search="soft", $return_error_messages=1
         . $type_of_search . ".summary,"
         . $type_of_search . ".date,"
         . $type_of_search . ".privacy,"
-        . $type_of_search . ".submitted_by,"
-        . "user.user_name, groups.use_" . $type_of_search . ","
+        . $type_of_search . ".submitted_by, user.user_name,"
         . $type_of_search . ".group_id "
         . "FROM " . $type_of_search . ",user,groups "
         . "WHERE user.user_id=" . $type_of_search . ".submitted_by "
-        . "AND groups.group_id=" . $type_of_search . ".group_id "
-        . "AND groups.use_" . $type_of_search . "=1";
+        . "AND groups.group_id=" . $type_of_search . ".group_id ";
+     if ($type_of_search != 'cookbook')
+       # As of 2021, we have no use_cookbook in the groups table.
+       $sql .= "AND groups.use_" . $type_of_search . "=1";
 
       list($kw_sql, $kw_sql_params) = search_keywords_in_fields(
         $arr_keywords,
