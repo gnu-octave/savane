@@ -114,25 +114,6 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
         $project = project_get_object($group_id);
 
       $text = '';
-      if (empty($group_id) || $is_small)
-        $text =
-# TRANSLATORS: this string is used in the context of "Search [...] in Cookbook"
-                _("<!-- Search... in -->Cookbook");
-      else
-        {
-          $text = sprintf(
-# TRANSLATORS: this string is used in the context of "Search [...] in %s Cookbook"
-# the argument is group name (like GNU Coreutils).
-                          _("%s Cookbook"), $group_realname);
-        }
-      if ($text)
-        {
-          $sel .= '<option value="cookbook"'
-                  .(($type_of_search == "cookbook") ? ' selected="selected"' : "")
-                  .'>'.$text."</option>\n";
-        }
-
-      $text = '';
       if (empty($group_id)
           || ($is_small && $project->Uses("support")))
         $text =
@@ -231,7 +212,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
       $ret .= ' '.sprintf(
       # TRANSLATORS: this word is used in the phrase "Search [...] in
-      # [Projects|People|Cookbook|Support|Bugs|Tasks|Patches]"
+      # [Projects|People|Support|Bugs|Tasks|Patches]"
       # in the main menu on the left side.
       # Make sure to put this piece in agreement with the following strings.
            _("in %s"), $sel);
@@ -364,11 +345,6 @@ function print_search_heading()
 # argument in 'Search results for %1$s (in %2$s)'.
 # The HTML comment is used to differentiate the usages of the same English string.
     $type_of_search_real = _("<!-- Search... in -->Patches");
-  elseif ($type_of_search == "cookbook")
-# TRANSLATORS: this string is the section to look in; it is used as the second
-# argument in 'Search results for %1$s (in %2$s)'.
-# The HTML comment is used to differentiate the usages of the same English string.
-    $type_of_search_real = _("<!-- Search... in -->Cookbook");
   elseif ($type_of_search == "people")
 # TRANSLATORS: this string is the section to look in; it is used as the second
 # argument in 'Search results for %1$s (in %2$s)'.
@@ -379,7 +355,7 @@ function print_search_heading()
     {
 # TRANSLATORS: the first argument is string to look for,
 # the second argument is section (Project/Group|Support|Bugs|Task
-#   |Patch|Cookbook|People).
+#   |Patch|People).
       printf(_('Search results for %1$s in %2$s:'),
              '<strong>'.htmlspecialchars($words).'</strong>',
              $type_of_search_real);
@@ -388,7 +364,7 @@ function print_search_heading()
     {
 # TRANSLATORS: the first argument is string to look for,
 # the second argument is section (Support|Bugs|Task
-#   |Patch|Cookbook|People), the third argument is
+#   |Patch|People), the third argument is
 # group name (like GNU Coreutils).
       printf(_('Search results for %1$s in %2$s, for the Group %3$s:'),
              '<strong>'.htmlspecialchars($words).'</strong>',

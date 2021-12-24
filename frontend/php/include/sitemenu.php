@@ -422,11 +422,6 @@ function sitemenu_help()
   global $HTML;
   $HTML->menuhtml_top(_("Site Help"));
 
-  $HTML->menu_entry($GLOBALS['sys_home'].'cookbook/?group='
-                    .$GLOBALS['sys_unix_group_name'],
-                    _("User Docs: Cookbook"),
-                    1,
-                    _("Recipes dedicated to any users, including Project Admins"));
   $HTML->menu_entry($GLOBALS['sys_home'].'userguide/',
                     _("User Docs: In Depth Guide"),
                     1,
