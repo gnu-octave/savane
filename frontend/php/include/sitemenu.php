@@ -422,6 +422,7 @@ function sitemenu_help()
   global $HTML;
   $HTML->menuhtml_top(_("Site Help"));
 
+  $HTML->menu_entry('/maintenance/FrontPage/', _('User Docs: FAQ'));
   $HTML->menu_entry($GLOBALS['sys_home'].'userguide/',
                     _("User Docs: In Depth Guide"),
                     1,

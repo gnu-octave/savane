@@ -25,7 +25,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 global $HTML;
-$HTML->menu_entry('/maintenance/FrontPage/', _('User Docs: FAQ'));
 $HTML->menuhtml_top(_('GNU Project'));
 $HTML->menu_entry('//www.gnu.org/help/help.html',_('Help GNU'));
 $HTML->menu_entry("//www.gnu.org/software/software.html",_('All GNU Packages'));
