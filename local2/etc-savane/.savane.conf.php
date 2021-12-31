@@ -42,11 +42,7 @@ Hello Savannah Developer!
 
 It seems this is the first time you run the savane PHP code.
 
-The code need to access a savane mock-up database.
-
-To request access to such database, please write to
-  savannah-hackers-public@gnu.org
-and ask for username/password.
+Savane need to access a mock-up database.
 
 Once you receive them, please edit the following file
 (locally on your computer):
@@ -68,9 +64,6 @@ if (!file_exists($db_file)) {
 /*
    this file contains DB/USER/PASSWORD to access the GNU savannah
    development database.
-
-   To get access to such database, please contant GNU savannah
-   developers by writing to savannah-hackers-public@gnu.org .
 
    Once you have the DB/USER/PASSWORDS, please update
    the PHP variables below.
@@ -141,7 +134,7 @@ $use_pwqcheck = FALSE;
 #    called 'siteadmin'.
 #  In this template file, use a variable - it will be replaced by running
 #   'make' (see Makefile.am for details).
-$sys_unix_group_name="siteadmin";
+$sys_unix_group_name="administration";
 
 
 ##
