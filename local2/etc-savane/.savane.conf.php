@@ -135,6 +135,7 @@ $use_pwqcheck = FALSE;
 #  In this template file, use a variable - it will be replaced by running
 #   'make' (see Makefile.am for details).
 $sys_unix_group_name="administration";
+$sys_gpg_name="/usr/bin/gpg";
 
 
 ##
