@@ -44,7 +44,7 @@ It seems this is the first time you run the savane PHP code.
 
 Savane need to access a mock-up database.
 
-Once you receive them, please edit the following file
+Once you receive it, please edit the following file
 (locally on your computer):
 
    $db_file
