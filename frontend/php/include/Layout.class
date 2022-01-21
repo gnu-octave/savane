@@ -289,7 +289,6 @@ class Layout extends savane_error
     print '
 <body>
 <div class="realbody">
-<iframe src="//static.gnu.org/nosvn/banners/202111fundraiser/" scrolling="no" style="width: 100%; height: 150px; display: block; margin: 0; border: 0 none; overflow: hidden;"></iframe>
 ';
     sitemenu($params);
 
