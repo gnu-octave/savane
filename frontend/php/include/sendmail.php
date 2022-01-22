@@ -107,23 +107,13 @@ function sendmail_mail ($from,
   if ($additional_headers)
     $more_headers .= $additional_headers."\n";
 
-  # User details.
-  # Tell what is the user agent, tell which authenticated user made
-  # the mail to be sent.
-  if (empty($int_delayspamcheck))
-    {
-      $more_headers .= "User-Agent: ".$_SERVER['HTTP_USER_AGENT']."\n";
-    }
+  # User details: user agent and REMOTE_ADDR are not included
+  # per Savannah sr #110592.
 
   if (user_isloggedin())
     {
-      $more_headers .= "X-Apparently-From: ".$_SERVER['REMOTE_ADDR']
-                    ." (Savane authenticated user ".user_getname(user_getid())
-                    .")\n";
-    }
-  else
-    {
-      $more_headers .= "X-Apparently-From: ".$_SERVER['REMOTE_ADDR']."\n";
+      $more_headers .= "X-Apparently-From: "
+        . "Savane authenticated user ". user_getname(user_getid()) . "\n";
     }
 
   $msg_id = sendmail_create_msgid();
