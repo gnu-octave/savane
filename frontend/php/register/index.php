@@ -115,7 +115,7 @@ $form->addElement('checkbox', 'cl5',
 $form->addElement('checkbox', 'cl6',
  _('Origin and license of media files is specified'));
 $form->addElement('checkbox', 'cl7',
- _('My tarball includes a copy of the license'));
+ _('My tar file includes a copy of the license'));
 # </savannah-specific>
 $form->addElement('checkbox', 'cl_foolproof',
  _("I read carefully and don't check this one"));

@@ -46,7 +46,7 @@ else
     exit_error(_("Cannot move file to the download area."));
 
   $HTML->header(array('title' => _("Temporary upload")));
-  echo "<p>" . _("Here's your temporary tarball URL:")
+  echo "<p>" . _("Here's your temporary tar file URL:")
     . " "
     . "https://" . $GLOBALS['sys_default_domain'] . "/submissions_uploads/"
     .rawurlencode($tarball['name'])
