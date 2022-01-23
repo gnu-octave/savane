@@ -4,6 +4,7 @@
 # Copyright (C) 2005, 2006, 2007, 2008, 2009 Sylvain Beucler
 # Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 Karl Berry
 # Copyright (C) 2013, 2017, 2018 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2022 Bob Proulx
 #
 # This file is part of Savane.
 #
@@ -21,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 print '
-'._('Copyright &copy; 2019 &nbsp;Free Software Foundation, Inc.').'
+'._('Copyright &copy; 2022 &nbsp;Free Software Foundation, Inc.').'
 
 <br />
 
