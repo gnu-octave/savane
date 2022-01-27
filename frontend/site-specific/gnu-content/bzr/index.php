@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2008, 2010 Sylvain Beucler
 # Copyright (C) 2010, 2011, 2013 Karl Berry
-# Copyright (C) 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2017, 2022 Ineiev <ineiev@gnu.org>
 #
 # This file is part of Savane.
 #
@@ -25,21 +25,23 @@ include $GLOBALS['sys_incdir'].'/php/fingerprints.php';
 
 global $project;
 
+$http_base_url = 'bzr.' . $project->getTypeBaseHost() . "/r/"
+  . $project->getUnixName();
+$bzr_base_url = 'bzr://bzr.'
+  . $project->getTypeBaseHost() . "/" . $project->getUnixName();
+
 print '<h3>'._('Anonymous read-only access').'</h3>
 
 <p>'._('The Bazaar repositories for projects use separate directories for
 each branch. You can see the branch names in the repository by pointing
 a web browser to:').' <br />
-<code>http://bzr.'
-  .$project->getTypeBaseHost(). "/r/" . $project->getUnixName().'</code></p>
+<code>http://' . $http_base_url . '</code></p>
 
 <ul>
 <li><p>'._('For a repository with separate branch directories (<tt>trunk</tt>,
 <tt>devel</tt>, &hellip;), use:').'</p>
 
-<pre>bzr branch bzr://bzr.'
-  .$project->getTypeBaseHost(). "/" . $project->getUnixName().'/'
-._('<i>branch</i>').'</pre>
+<pre>bzr branch ' . $bzr_base_url . '/' . _('<i>branch</i>') . '</pre>
 
 <p>'._('where <i>branch</i> is the name of the branch you want.').'</p>
 </li>
@@ -47,14 +49,15 @@ a web browser to:').' <br />
 <li><p>'
 ._('For a repository with only a top-level <tt>.bzr</tt> directory, use:').'</p>
 
-<pre>bzr branch bzr://bzr.'
-  .$project->getTypeBaseHost(). "/" . $project->getUnixName().'</pre>
+<pre>bzr branch ' . $bzr_base_url . '</pre>
 </li>
 
 <li><p>'
-._('If you need the low-performance HTTP access, this is the URL:').'</p>
-<pre>http://bzr.'
-  .$project->getTypeBaseHost(). "/r/" . $project->getUnixName().'</pre>
+. _('If you need the low-performance HTTP or HTTPS access, these are the URLs:')
+. '</p>
+<pre>http://' . $http_base_url . '/'  . _('<i>branch</i>') . '
+https://' . $http_base_url . '/'  . _('<i>branch</i>') . '
+</pre>
 </li>
 </ul>
 
