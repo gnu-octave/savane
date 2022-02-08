@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.5\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2022-01-27 07:44+0000\n"
-"PO-Revision-Date: 2022-01-27 15:44+0000\n"
+"POT-Creation-Date: 2022-02-08 09:10+0000\n"
+"PO-Revision-Date: 2022-02-08 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
 "Language: ru\n"
@@ -466,7 +466,7 @@ msgstr "Далее представлены навыки пользовател�
 msgid "Resume"
 msgstr "Справка"
 
-#: frontend/php/people/resume.php:60 frontend/php/my/admin/resume.php:157
+#: frontend/php/people/resume.php:60 frontend/php/my/admin/resume.php:158
 msgid "Skills"
 msgstr "Навыки"
 
@@ -2568,45 +2568,45 @@ msgstr "Новые и непорученные заявки"
 msgid "New and Assigned Items"
 msgstr "Новые порученные заявки"
 
-#: frontend/php/my/admin/resume.php:71 frontend/php/my/admin/resume.php:76
+#: frontend/php/my/admin/resume.php:75
+msgid "Updated successfully"
+msgstr "Обновлено успешно"
+
+#: frontend/php/my/admin/resume.php:77
 #: frontend/php/include/trackers_run/admin/other_settings.php:45
 #: frontend/php/include/trackers_run/admin/notification_settings.php:90
 msgid "Update failed"
 msgstr "Не удалось обновить"
 
-#: frontend/php/my/admin/resume.php:73
-msgid "Updated successfully"
-msgstr "Обновлено успешно"
-
-#: frontend/php/my/admin/resume.php:81 frontend/php/my/admin/resume.php:89
+#: frontend/php/my/admin/resume.php:82 frontend/php/my/admin/resume.php:90
 msgid "Missing info: fill in all required fields"
 msgstr "Не хватает сведений: заполните все обязательные поля"
 
-#: frontend/php/my/admin/resume.php:99
+#: frontend/php/my/admin/resume.php:100
 msgid "User Skill update failed"
 msgstr "Не удалось обновить навыки"
 
-#: frontend/php/my/admin/resume.php:101
+#: frontend/php/my/admin/resume.php:102
 msgid "User Skills updated successfully"
 msgstr "Навыки обновлены успешно"
 
-#: frontend/php/my/admin/resume.php:107
+#: frontend/php/my/admin/resume.php:108
 msgid "Missing information: fill in all required fields"
 msgstr "Не хватает сведений: заполните все обязательные поля"
 
-#: frontend/php/my/admin/resume.php:113
+#: frontend/php/my/admin/resume.php:114
 msgid "User Skill Delete failed"
 msgstr "Сбой при удалении навыка"
 
-#: frontend/php/my/admin/resume.php:115
+#: frontend/php/my/admin/resume.php:116
 msgid "User Skill Deleted successfully"
 msgstr "Навык успешно удален"
 
-#: frontend/php/my/admin/resume.php:119
+#: frontend/php/my/admin/resume.php:120
 msgid "Edit Your Resume & Skills"
 msgstr "Редактировать страницу навыков"
 
-#: frontend/php/my/admin/resume.php:122 frontend/php/my/admin/index.php:232
+#: frontend/php/my/admin/resume.php:123 frontend/php/my/admin/index.php:232
 msgid ""
 "Details about your experience and skills may be of interest to other users\n"
 "or visitors."
@@ -2614,37 +2614,37 @@ msgstr ""
 "Подробности о вашем опыте и навыках, которые могут интересовать других "
 "пользователей или посетителей."
 
-#: frontend/php/my/admin/resume.php:128
+#: frontend/php/my/admin/resume.php:129
 msgid "No such user"
 msgstr "Такого пользователя нет"
 
-#: frontend/php/my/admin/resume.php:131 frontend/php/my/admin/resume.php:139
+#: frontend/php/my/admin/resume.php:132 frontend/php/my/admin/resume.php:140
 #: frontend/php/include/trackers_run/admin/field_values.php:540
 msgid "No"
 msgstr "Нет"
 
-#: frontend/php/my/admin/resume.php:132 frontend/php/my/admin/resume.php:139
+#: frontend/php/my/admin/resume.php:133 frontend/php/my/admin/resume.php:140
 #: frontend/php/include/trackers_run/admin/field_values.php:538
 msgid "Yes"
 msgstr "Да"
 
-#: frontend/php/my/admin/resume.php:135
+#: frontend/php/my/admin/resume.php:136
 msgid "Publicly Viewable"
 msgstr "Общедоступно"
 
-#: frontend/php/my/admin/resume.php:137
+#: frontend/php/my/admin/resume.php:138
 msgid "Do you want your resume to be activated?"
 msgstr "Вы хотите включить свою страницу навыков?"
 
-#: frontend/php/my/admin/resume.php:142
+#: frontend/php/my/admin/resume.php:143
 msgid "Activate resume"
 msgstr "Включить страницу навыков"
 
-#: frontend/php/my/admin/resume.php:147
+#: frontend/php/my/admin/resume.php:148
 msgid "Resume - Description of Experience"
 msgstr "Описание опыта"
 
-#: frontend/php/my/admin/resume.php:154
+#: frontend/php/my/admin/resume.php:156
 msgid "Update Profile"
 msgstr "Обновить профиль"
 
@@ -11750,7 +11750,7 @@ msgid ""
 "To suggest new job categories, visit the\n"
 "<a href=\"%s\"> support manager</a>."
 msgstr ""
-"Новые категории вакансий можно предлагать в<a href=\"%s\"> журнале "
+"Новые категории вакансий можно предлагать в <a href=\"%s\">журнале "
 "поддержки</a>."
 
 #: frontend/site-specific/gnu-content/people/editresume.php:24
@@ -11765,6 +11765,15 @@ msgid ""
 msgstr ""
 "Здесь можно изменять список своих навыков. Список навыков можно сопоставлять "
 "в нашей системе со списком вакансий."
+
+#: frontend/site-specific/gnu-content/people/editresume.php:31
+msgid ""
+"Note that only members of Savannah groups can post their resumes;\n"
+"other users can only list their skills."
+msgstr ""
+"Внимание! Произвольные описания своих навыков могут оставлять только "
+"члены групп Саванны; остальные пользователи могут только перечислять "
+"навыки из списка."
 
 #. TRANSLATORS: the argument is project name (like "GNU coreutils").
 #: frontend/site-specific/gnu-content/people/index_group.php:26
@@ -12800,7 +12809,8 @@ msgstr ""
 #: frontend/site-specific/gnu-content/bzr/index.php:56
 msgid ""
 "If you need the low-performance HTTP or HTTPS access, these are the URLs:"
-msgstr "Если вам нужен низкопроизводительный доступ по HTTP или HTTPS, вот URL:"
+msgstr ""
+"Если вам нужен низкопроизводительный доступ по HTTP или HTTPS, вот URL:"
 
 #: frontend/site-specific/gnu-content/bzr/index.php:78
 msgid "More introductory documentation"
