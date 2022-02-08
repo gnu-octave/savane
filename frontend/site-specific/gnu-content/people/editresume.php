@@ -27,6 +27,9 @@ print '<h2>'._('Edit Your Profile').'</h2>
 ._('Now you can edit/change the list of your skills and your resume.
 The list of skills can then be matched with the list of jobs in
 our system.').'</p>
-';
+<p><em>'
+. _('Note that only members of Savannah groups can post their resumes;
+other users can only list their skills.')
+. "</em></p>\n";
 
 ?>

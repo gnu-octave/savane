@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2019 Ineiev
+# Copyright (C) 2017, 2019, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -57,21 +57,22 @@ if (!$allow_resume)
 
 if ($update_profile)
   {
+    $arg_arr = array ($people_view_skills, user_getid());
+    $sql_str = "people_view_skills=?";
     if ($allow_resume)
       {
         if (!$people_resume)
           $people_resume = '';
         else
           $people_resume = utils_unconvert_htmlspecialchars ($people_resume);
-        $result = db_execute ("UPDATE user SET people_view_skills=?, "
-                              ."people_resume=? WHERE user_id=?",
-                              array($people_view_skills,
-                                    $people_resume, user_getid()));
-        if (!$result || db_affected_rows ($result) < 1)
-          fb(_("Update failed"), 1);
-        else
-          fb(_("Updated successfully"));
+        $arg_arr = array ($people_view_skills, $people_resume, user_getid());
+        $sql_str = $sql_str . ", people_resume=?";
       }
+    $result = db_execute (
+      "UPDATE user SET " . $sql_str . " WHERE user_id=?", $arg_arr
+    );
+    if ($result)
+      fb(_("Updated successfully"));
     else
       fb(_("Update failed"), 1);
   }
@@ -149,10 +150,10 @@ if ($allow_resume)
           .'<textarea id="people_resume" name="people_resume" rows="15" '
           .'cols="60" wrap="soft">'.db_result($result, 0, 'people_resume')
           ."</textarea>\n<br /><br />\n";
-
-    print '<div class="center"><input type="submit" name="update_profile" '
-          .'value="'._("Update Profile").'" /></div></form>';
   }
+
+print '<div class="center"><input type="submit" name="update_profile" '
+  . 'value="' . _("Update Profile") . '" /></div></form>' . "\n";
 
 print '<h2>'._("Skills").'</h2>';
 # Now show the list of desired skills.
