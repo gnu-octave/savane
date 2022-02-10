@@ -33,19 +33,10 @@ define('FB_ERROR', 1);
 # Get path for site-specific content.
 function utils_get_content_filename ($file)
 {
-  if (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.php'))
-    return $GLOBALS['sys_incdir'].'/php/'.$file.'.php';
-  if (is_file($GLOBALS['sys_incdir'].'/php/'.$file.'.txt'))
-    return $GLOBALS['sys_incdir'].'/php/'.$file.'.txt';
-# Fallback to legacy location.
-  if (isset ($GLOBALS['locale']))
-    {
-      if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale']))
-        # There is a localized version of the file:
-        return $GLOBALS['sys_incdir'].'/'.$file.'.'.$GLOBALS['locale'];
-    }
-  if (is_file($GLOBALS['sys_incdir'].'/'.$file.'.txt'))
-    return $GLOBALS['sys_incdir'].'/'.$file.'.txt';
+  $f = $GLOBALS['sys_incdir'] . '/php/' . $file . '.php';
+
+  if (is_file($f))
+    return $f;
   return null;
 }
 
@@ -55,10 +46,6 @@ function utils_get_content ($filename)
   $file = utils_get_content_filename($filename);
   if ($file != null)
     include($file);
-  else
-    fb(sprintf(_("Warning: Savane was not able to read site-specific
-information from file '%s', please contact administrators"),
-       $filename), 1);
 }
 
 # Make sure that to avoid malicious file paths.
