@@ -57,7 +57,7 @@ if ($send_mail)
         # Let sendmail_mail() figure out real email addresses.
         sendmail_mail($fromuser, $touser, $subject, $body);
         $HTML->header(array('title'=>_('Message Sent')));
-        print html_feedback_top($GLOBALS['feedback']);
+        print html_feedback_top();
         $HTML->footer(array());
         exit;
       }

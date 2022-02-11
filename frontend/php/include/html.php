@@ -881,13 +881,13 @@ function html_header($params)
 {
   global $HTML, $feedback;
   print $HTML->header($params);
-  print html_feedback_top($feedback);
+  print html_feedback_top();
 }
 
 function html_footer($params)
 {
   global $HTML, $feedback;
-  print html_feedback_bottom($feedback);
+  print html_feedback_bottom();
   $HTML->footer($params);
 }
 

@@ -145,7 +145,7 @@ ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
 if ($user_id == 100)
   {
     list_user_contributions ($user_id, '_');
-    html_feedback_bottom($feedback);
+    html_feedback_bottom();
     $HTML->footer(array());
     exit;
   }
@@ -318,6 +318,6 @@ if ($row_user['status'] != 'SQD')
     list_user_contributions ($user_id, $row_user['user_name']);
   }
 
-html_feedback_bottom($feedback);
+html_feedback_bottom();
 $HTML->footer(array());
 ?>
