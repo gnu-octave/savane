@@ -34,10 +34,14 @@ require_once('../include/sendmail.php');
 register_globals_off();
 
 extract(sane_import('post',
-  array('update', 'form_id',
-        'form_loginname', 'form_pw', 'form_pw2', 'form_realname', 'form_email',
-        'form_year',
-        'form_usepam')));
+  [
+    'hash' => 'form_id',
+    'name' => 'form_loginname',
+    'pass' => ['form_pw', 'form_pw2', 'form_realname', 'form_email'],
+    'digits' => 'form_year',
+    'true' => ['update', 'form_usepam']
+  ]
+));
 
 $form_email = preg_replace ('/\s/', '', $form_email);
 

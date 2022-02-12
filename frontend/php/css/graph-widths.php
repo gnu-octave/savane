@@ -22,10 +22,7 @@ require_once('../include/init.php');
 require_once('../include/http.php');
 require_once('../include/sane.php');
 header('Content-Type: text/css');
-extract(sane_import('request', array('widths')));
-
-if (preg_match ('/[^.,0123456789]/', $widths))
-  $widths = "";
+extract(sane_import('request', ['preg' => [['widths', '/^[.,\d]+$/']]]));
 
 $w = explode (',', $widths);
 $count = count ($w);

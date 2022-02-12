@@ -30,8 +30,13 @@ require_once('../include/exit.php');
 register_globals_off();
 
 extract(sane_import('post',
-  array('update', 'form_id',
-    'form_loginname', 'form_pw', 'confirm_hash')));
+  [
+    'true' => 'update',
+    'hash' => ['form_id', 'confirm_hash'],
+    'name' => 'form_loginname',
+    'pass' => 'form_pw'
+  ]
+));
 
 # Block here potential robots.
 dnsbl_check();

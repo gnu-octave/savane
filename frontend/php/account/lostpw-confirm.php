@@ -29,7 +29,7 @@ require_once('../include/database.php');
 
 register_globals_off();
 
-extract(sane_import('post', array('form_loginname')));
+extract(sane_import('post', ['name' => 'form_loginname']));
 
 # Logged users have no business here.
 if (user_isloggedin())

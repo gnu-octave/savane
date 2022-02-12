@@ -27,11 +27,17 @@ require_once('../include/http.php');
 require_once('../include/sane.php');
 header('Content-Type: text/javascript');
 
-extract(sane_import('request', array('deploy','legend', 'box_id', 'suffix')));
+extract(sane_import('request',
+  [
+    'true' => 'deploy',
+    'preg' => [['box_id', 'suffix', '/^\w*$/']],
+    'specialchars' => 'legend'
+  ]
+));
 
-if (preg_match('/\W/', $box_id))
+if ($box_id === null)
   $box_id = "";
-if (preg_match('/\W/', $suffix))
+if ($suffix === null)
   $suffix = "";
 
 if ($deploy != 1)

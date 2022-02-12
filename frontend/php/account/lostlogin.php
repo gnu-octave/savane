@@ -26,8 +26,14 @@ require_once('../include/database.php');
 require_once('../include/account.php');
 require_once('../include/form.php');
 
-extract(sane_import('request', array('confirm_hash')));
-extract(sane_import('post', array('form_id', 'update', 'form_pw', 'form_pw2')));
+extract(sane_import('request', ['hash' => 'confirm_hash']));
+extract(sane_import('post',
+  [
+    'hash' => 'form_id',
+    'true' => 'update',
+    'pass' => ['form_pw', 'form_pw2']
+  ]
+));
 
 $res_lostuser = db_execute("SELECT * FROM user WHERE confirm_hash=?",
                            array($confirm_hash));

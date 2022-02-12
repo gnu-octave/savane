@@ -22,9 +22,9 @@ require_once('../include/init.php');
 require_once('../include/http.php');
 require_once('../include/sane.php');
 header('Content-Type: text/javascript');
-extract(sane_import('request', array('suffix')));
+extract(sane_import('request', ['preg' => [['suffix', '/^\w*$/']]]));
 
-if (preg_match('/\W/', $suffix))
+if ($suffix === null)
   $suffix = "";
 
 print

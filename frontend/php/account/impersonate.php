@@ -22,22 +22,17 @@ require_once('../include/init.php');
 if (!user_is_super_user())
   exit_error(_("You need to be site administrator to use this feature."));
 
-extract(sane_import('post', array('user_name', 'uri')));
+extract(sane_import('post', ['name' => 'user_name', 'internal_uri' => 'uri']));
 
 $new_uid = user_getid($user_name);
 if ($new_uid == 0)
   exit_error(_("This user doesn't exist."));
 
 # Modify session information to become the target user.
-extract(sane_import('cookie', array('session_hash')));
+extract(sane_import('cookie', ['hash' => 'session_hash']));
 $result = db_execute("UPDATE session SET user_id=? WHERE session_hash=?",
                      array($new_uid, $session_hash));
 session_cookie('session_uid', $new_uid);
-
-# Only allow redirections to the same website.
-if (strlen ($uri) < 2
-    || substr ($uri, 0, 1) !== '/' || substr ($uri, 1, 1) === '/')
-  $uri = "/";
 
 header("Location: $uri");
 ?>

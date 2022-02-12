@@ -111,6 +111,281 @@ function test_sane_import ($in, $names, $out)
     print "strlen (123) != 3 ($tmp)\n";
 }
 
+$reference = 'account/impersonate.php';
+{
+  $names = [
+    'name' => 'user_name',
+    'internal_uri' => 'uri',
+    'hash' => 'session_hash'
+  ];
+  $in =  [
+    'user_name' => 'agn',
+    'uri' => '/account/login.php',
+    'session_hash' => '/account/login.php'
+  ];
+  $out = $in;
+  $out['session_hash'] = null;
+
+  test_sane_import ($in, $names, $out);
+
+  $in['session_hash'] = '9ad59d2d0703e7f015d54e725ce099fc1fd1433c';
+  $out['session_hash'] = $in['session_hash'];
+
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'account/login.php';
+{
+  $names = [
+    'true' => [
+      'stay_in_ssl', 'brotherhood', 'cookie_for_a_year', 'login',
+      'cookie_test'
+    ],
+    'name' => 'form_loginname',
+    'pass' => 'form_pw',
+    'internal_uri' => 'uri'
+  ];
+  $in = [
+    'stay_in_ssl' => true,
+    'brotherhood' => true,
+    'login' => 'Login',
+    'form_loginname' => 'agn',
+    'form_pw' => '12345',
+    'uri' => '/account/login.php'
+  ];
+  $out = $in;
+  $out['login'] = true;
+  $out['cookie_for_a_year'] = null;
+  $out['cookie_test'] = null;
+
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'account/lostlogin.php';
+{
+  $names = [
+    'hash' => 'form_id',
+    'true' => 'update',
+    'pass' => ['form_pw', 'form_pw2']
+  ];
+  $in = [
+    'form_id' => md5 (83521),
+    'form_pw' => '123;"45',
+    'form_pw2' => '123 45',
+  ];
+  $out = $in;
+  $out['update'] = null;
+  test_sane_import ($in, $names, $out);
+
+  $in['form_id'] = $in['form_id'] . 'A';
+  $out['form_id'] = null;
+  $in['update'] = 'x';
+  $out['update'] = true;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'account/lostpw-confirm.php';
+{
+  $names = ['name' => 'form_loginname'];
+  $in = ['form_loginname' => 'agn', 'user_id' => 83521];
+  $out = ['form_loginname' => 'agn'];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'account/pending-resend.php';
+{
+  $names = ['name' => 'form_user'];
+  $in = ['form_user' => 'agn', 'user_id' => 83521];
+  $out = ['form_user' => 'agn'];
+  test_sane_import ($in, $names, $out);
+  $in['form_user'] = 'a;gn';
+  $out['form_user'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'account/register.php';
+{
+  $names = [
+    'hash' => 'form_id',
+    'name' => 'form_loginname',
+    'pass' => ['form_pw', 'form_pw2', 'form_realname', 'form_email'],
+    'digits' => 'form_year',
+    'true' => ['update', 'form_usepam']
+  ];
+  $in = [
+    'form_id' => md5 (289),
+    'form_loginname' => 'agn',
+    'update' => 'Update',
+    'form_pw' => '%',
+    'form_pw2' => '^',
+    'form_year' => '1983',
+    'form_realname' => 'A. B. C.',
+    'form_email' => 'agn@test.org'
+  ];
+  $out = $in;
+  $out['update'] = true;
+  $out['form_usepam'] = null;
+  test_sane_import ($in, $names, $out);
+
+  if (empty ($out['update']))
+    print "empty (true)\n";
+  $in['form_usepam'] = 1;
+  $out['form_usepam'] = true;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'account/su.php';
+{
+  $names = [
+    'true' => 'from_brother',
+    'internal_uri' => 'uri',
+    'strings' => [['action', ['login', 'logout']]]
+  ];
+  $in = [
+    'uri' => 'https://www.gnu.org',
+    'action' => 'login'
+  ];
+  $out = $in;
+  $out['uri'] = '/';
+  $out['from_brother'] = null;
+  test_sane_import ($in, $names, $out);
+
+  $in['action'] = 'add';
+  $out['action'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'account/verify.php';
+{
+  $names = [
+    'true' => 'update',
+    'hash' => ['form_id', 'confirm_hash'],
+    'name' => 'form_loginname',
+    'pass' => 'form_pw'
+  ];
+  $in = [
+    'form_id' => md5 (4913),
+    'confirm_hash' => md5 ('agn'),
+    'form_loginname' => 'agn',
+    'form_pw' => 0
+  ];
+  $out = $in;
+  $out['update'] = null;
+  test_sane_import ($in, $names, $out);
+
+  $in['update'] = 1;
+  $out['update'] = true;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'cookbook/index.php';
+{
+  $names = [
+    'strings' => [['func', ['default' => 'default', 'search', 'detailitem']]],
+    'digits' => 'item_id'
+  ];
+  $in = [
+    'func' => 'search',
+    'item_id' => 'a234b'
+  ];
+  $out = $in;
+  $out['item_id'] = 234;
+  test_sane_import ($in, $names, $out);
+  $in['func'] = 'browse';
+  $out['func'] = 'default';
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'css/graph-widths.php';
+{
+  $names = ['preg' => [['widths', '/^[.,\d]+$/']]];
+  $in['widths'] = '1,2,3,a';
+  $out = ['widths' => null];
+  test_sane_import ($in, $names, $out);
+  $w = explode (',', $out['widths']);
+  $count = count ($w);
+  if ($count > 1)
+    {
+      print_reference ();
+      print "count $count > 1\n";
+      print '$' . "w\n";
+      print_r ($w);
+    }
+  $in['widths'] = '1,2,3,';
+  $out['widths'] = $in['widths'];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'cvs/admin/index.php';
+{
+  $key_func = ['preg', '/^(([\d]+)|(new))$/'];
+  $names = [
+    'true' => 'log_accum',
+    'array' => [
+      [
+        'arr_branches',
+        [$key_func, ['preg', '/^[-~!@#$%^&*()+=:.,_\da-zA-Z]+$/']]
+      ],
+      ['arr_id', [$key_func, 'true']],
+      ['arr_remove', [['preg', '/^[\d]+$/'], 'true']],
+      ['arr_repo_name', [$key_func, ['strings', ['sources', 'web']]]],
+      [
+        'arr_match_type',
+        [$key_func, ['strings', ['ALL', 'dir_list', 'DEFAULT']]]
+      ],
+      [
+        'arr_dir_list',
+        [
+          $key_func,
+          ['preg', '/^(([a-zA-Z0-9_.+\/-]+,)*([a-zA-Z0-9_.+\/-]+))$/']
+        ]
+      ],
+      ['arr_emails_notif', 'arr_emails_diff',
+        [
+          $key_func,
+          [
+            'preg',
+            '/^([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+\.)+[a-zA-Z0-9]+,)*'
+            . '([a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+\.)+[a-zA-Z0-9]+)$/'
+          ]
+        ]
+      ],
+      ['arr_enable_diff', [$key_func, ['digits', [1, 1]]]]
+    ]
+  ];
+  $in = [
+    'log_accum' => 1,
+    'arr_branches' => ['11' => 'br11', '22' => '_br12', '33' => 'br-33'],
+    'arr_id' => ['11' => '1', '22' => '1', '33' => '1'],
+    'arr_remove' => ['44' => '0', '99' => 'sources'],
+    'arr_repo_name' => ['11' => 'sources', '22' => 'web', '33' => 'sources'],
+    'arr_match_type' => ['11' => 'ALL', '22' => 'dir_list', '33' => 'DEFAULT'],
+    'arr_dir_list' => ['11' => 'abc/def,ghi', '22' => 'def', '33' => 'ghi'],
+    'arr_emails_notif' =>
+      ['11' => 'a@b.c', '22' => 'c@d.e,f@g.h', '33' => 'x@y.zyx'],
+    'arr_emails_diff' =>
+      ['11' => 'A@B.C', '22' => 'C@D.Eacd,F@G.iHi', '33' => 'X@Y.Z'],
+    'arr_enable_diff' => ['11' => 1, '33' => 1]
+  ];
+  $out = $in;
+  $out['arr_remove'][44] = true;
+  $out['arr_remove'][99] = true;
+  $in['arr_branches']['44'] = 'b"r';
+  $in['arr_branches']['55'] = '<>';
+  $in['arr_enable_diff']['22'] = 'a';
+  $in['arr_enable_diff']['44'] = "0";
+  $in['arr_emails_notif']['44'] = 'x@y.z,a';
+  $in['arr_emails_notif']['55'] = 'a@b';
+  $in['arr_emails_notif']['66'] = 'a@b.c@d.e';
+  $in['arr_dir_list']['44'] = 'a@b,c/d';
+  test_sane_import ($in, $names, $out);
+  $in['arr_remove']['aa'] = 0;
+  $in['arr_remove']['a4a'] = 5;
+  $in['arr_emails_notif'][88] = 'agn';
+  $in['arr_enable_diff'][77] = 2;
+  test_sane_import ($in, $names, $out);
+}
+
 $reference = 'i18n.php';
 {
   $names = [
@@ -360,6 +635,59 @@ $reference = 'include/trackers/data.php';
   $out[$fv_name] = 4913;
   $out[$send_all_name] = null;
 
+  test_sane_import ($in, $names, $out);
+}
+
+# The test for the following files is the same.
+$reference = 'js/hide-feedback.php';
+$reference = 'js/show-feedback.php';
+{
+  $names = [
+    'preg' => [['suffix', '/^\w*$/']]
+  ];
+  $in = ['suffix' => 'a-b'];
+  $out = ['suffix' => null];
+  test_sane_import ($in, $names, $out);
+  $in['suffix'] = 'abcd';
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
+# The test for the following files is the same.
+$reference = 'js/hide-span.php';
+{
+  $names = [
+    'preg' => [['box_id', '/^\w*$/']]
+  ];
+  $in = ['box_id' => 'a-b'];
+  $out = ['box_id' => null];
+  test_sane_import ($in, $names, $out);
+  $in['box_id'] = 'abcd';
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'js/show-hide.php';
+{
+  $names = [
+    'true' => 'deploy',
+    'preg' => [['box_id', 'suffix', '/^\w*$/']],
+    'specialchars' => 'legend'
+  ];
+  $in = [
+    'box_id' => 'a-b',
+    'suffix' => 'ext',
+    'legend' => '<email>',
+  ];
+  $out = $in;
+  $out['box_id'] = null;
+  $out['legend'] = '&lt;email&gt;';
+  $out['deploy'] = null;
+  test_sane_import ($in, $names, $out);
+  $in['box_id'] = 'abcd';
+  $out['box_id'] = 'abcd';
+  $in['deploy'] = 1;
+  $out['deploy'] = true;
   test_sane_import ($in, $names, $out);
 }
 

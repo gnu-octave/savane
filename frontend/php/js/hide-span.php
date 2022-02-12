@@ -23,9 +23,9 @@ require_once('../include/http.php');
 require_once('../include/sane.php');
 header('Content-Type: text/javascript');
 
-extract(sane_import('request', array('box_id')));
+extract(sane_import('request', ['preg' => [['box_id', '/^\w*$/']]]));
 
-if (preg_match('/\W/', $box_id))
+if ($box_id === null))
   $box_id = "";
 
 print "document.getElementById('".$box_id."').style.display='none';\n";

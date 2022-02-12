@@ -28,12 +28,13 @@ register_globals_off();
 # Login was asked and user can be super user? Set a cookie and that's done.
 # For now, set a cookie that does not stay long, we'll see if admin complains
 # :P
-extract(sane_import('get', array('action', 'uri', 'from_brother')));
-
-# Disallow redirections to other sites.
-if (strlen ($uri) < 2
-    || substr ($uri, 0, 1) !== '/' || substr ($uri, 1, 1) === '/')
-  $uri = "/";
+extract(sane_import('get',
+  [
+    'true' => 'from_brother',
+    'internal_uri' => 'uri',
+    'strings' => [['action', ['login', 'logout']]]
+  ]
+));
 
 if ($action == "login" && user_can_be_super_user())
   {

@@ -3,7 +3,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2006, 2007  Sylvain Beucler
-# Copyright (C) 2017  Ineiev
+# Copyright (C) 2017, 2022  Ineiev
 #
 # This file is part of Savane.
 #
@@ -28,7 +28,7 @@ Header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 Header("Cache-Control: no-cache");
 Header("Cache-Control: must-revalidate");
 
-extract(sane_import('request', array('from_brother')));
+extract(sane_import('request', ['true' => 'from_brother']));
 
 # Logged users have no business here.
 if (user_isloggedin() && !$from_brother)
@@ -36,14 +36,18 @@ if (user_isloggedin() && !$from_brother)
 
 # Input checks.
 extract(sane_import('request',
-  array('form_loginname', 'form_pw', 'cookie_for_a_year',
-        'stay_in_ssl', 'brotherhood',
-        'uri', 'login', 'cookie_test')));
+  [
+    'true' => [
+      'stay_in_ssl', 'brotherhood', 'cookie_for_a_year', 'login',
+      'cookie_test'
+    ],
+    'name' => 'form_loginname',
+    'pass' => 'form_pw',
+    'internal_uri' => 'uri'
+  ]
+));
 
-# Disallow redirections to other sites.
-if (strlen ($uri) < 2
-    || substr ($uri, 0, 1) !== '/' || substr ($uri, 1, 1) === '/')
-  $uri = "/";
+$uri_enc = urlencode ($uri);
 
 # Check cookie support.
 if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
@@ -55,7 +59,7 @@ if (!$from_brother and !isset($_COOKIE["cookie_probe"]))
         session_cookie('cookie_probe', 1);
         # $uri used to be not url-encoded, it caused login problems,
         # see sr#108277 (https://savannah.gnu.org/support/?108277).
-        header('Location: login.php?uri='.urlencode($uri).'&cookie_test=1');
+        header('Location: login.php?uri=' . $uri_enc . '&cookie_test=1');
       }
     else
       {
@@ -74,7 +78,9 @@ if (!empty($login))
   {
     if ($from_brother)
       {
-        extract(sane_import('get', array('session_uid', 'session_hash')));
+        extract(sane_import('get',
+          ['digits' => 'session_uid', 'xdigits' => 'session_hash']
+        ));
         if (!ctype_digit($session_uid))
           exit("Invalid session_uid");
         if (!ctype_alnum($session_hash))
@@ -104,7 +110,10 @@ if (!empty($login))
       # We return to our brother 'my', where we login originally,
       # unless we are request to go to an uri.
         if (!$uri)
-          $uri = $GLOBALS['sys_home'] . 'my/';
+          {
+            $uri = $GLOBALS['sys_home'] . 'my/';
+            $uri_enc = urlencode ($uri);
+          }
       # If a brother server exists, login there too, if we are not
       # already coming from there.
         if (!empty($GLOBALS['sys_brother_domain']) && $brotherhood)
@@ -122,7 +131,7 @@ if (!empty($login))
                         .user_getid()."&session_hash=".$GLOBALS['session_hash']
                         ."&cookie_for_a_year=$cookie_for_a_year&from_brother=1"
                         ."&login=1&stay_in_ssl=$stay_in_ssl&brotherhood=1&uri="
-                        .urlencode($uri));
+                        . $uri_enc);
                 exit;
               }
             else
