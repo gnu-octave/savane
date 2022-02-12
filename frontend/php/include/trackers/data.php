@@ -206,24 +206,22 @@ addresses (comma separated list)."),
 
       for ($i=0; $i < $grtrsettings['nb_categories'] ; $i++)
         {
-          print '<input type="hidden" name="' . $tracker_name . '_cat_' . $i
-. '_bug_fv_id" value="' . $grtrsettings['category'][$i]['fv_id'] . '" />';
-          print '<span class="preinput"><label
-for="' . $tracker_name . '_cat_' . $i . '_email">'
-. $grtrsettings['category'][$i]['name']
-. '</span><br />
-&nbsp;&nbsp;<input type="text" id="' . $tracker_name . '_cat_' . $i
-. '_email" name="' . $tracker_name . '_cat_' . $i
-. '_email" value="' . $grtrsettings['category'][$i]['email']
-. '" size="50" maxlength="255" />
-          &nbsp;&nbsp;<span class="preinput">(
-          <input type="checkbox" id="' . $tracker_name . '_cat_' . $i
-. '_send_all_flag" name="' . $tracker_name . '_cat_'.$i
-. '_send_all_flag" value="1" '
-.  (($grtrsettings['category'][$i]['send_all_flag'])? 'checked="checked"': '')
-. ' /><label for="' . $tracker_name . '_cat_' . $i
-. '_send_all_flag">' . _("Send on all updates") . ')</label></span><br />
-';
+          $tr_cat = $tracker_name . '_cat_' . $i;
+          print '<input type="hidden" name="' . $tr_cat . '_bug_fv_id" value="'
+            . $grtrsettings['category'][$i]['fv_id'] . '" />';
+          print '<span class="preinput"><label for="' . $tr_cat . '_email">'
+            . $grtrsettings['category'][$i]['name']
+            . "</span><br />\n" . '&nbsp;&nbsp;<input type="text" id="'
+            . $tr_cat . '_email" name="' . $tr_cat . '_email" value="'
+            . htmlspecialchars ($grtrsettings['category'][$i]['email'])
+            . '" size="50" maxlength="255" />' . "\n"
+            . '&nbsp;&nbsp;<span class="preinput">(' . "\n    "
+            . '<input type="checkbox" id="' . $tr_cat
+            . '_send_all_flag" name="' . $tr_cat . '_send_all_flag" value="1" '
+            .  (($grtrsettings['category'][$i]['send_all_flag'])?
+                 'checked="checked"': '')
+            . ' /><label for="' . $tr_cat . '_send_all_flag">'
+            . _("Send on all updates") . ")</label></span><br />\n";
         }
       print '<h2>' . _("Global list") . "</h2>\n";
     }
@@ -244,7 +242,7 @@ for="' . $tracker_name . '_new_item_address">' . _("Global List:")
 . '</label></span><br />
 &nbsp;&nbsp;<input type="text" id="' . $tracker_name
 . '_new_item_address" name="' . $tracker_name
-. '_new_item_address" value="' . $grtrsettings['glnewad']
+. '_new_item_address" value="' . htmlspecialchars ($grtrsettings['glnewad'])
 . '" size="50" maxlength="255" />
       &nbsp;&nbsp;<span class="preinput">(<input type="checkbox" id="'
 . $tracker_name . '_send_all_changes" name="'
@@ -260,12 +258,12 @@ for="' . $tracker_name . '_new_item_address">' . _("Global List:")
 notification for private items.")
 . "</p>\n";
 
-  print '<span class="preinput"><label
-for="' . $tracker_name . '_private_exclude_address">' . _("Exclude List:")
-. '</label></span><br />
+  print '<span class="preinput"><label for="' . $tracker_name
+. '_private_exclude_address">' . _("Exclude List:") . '</label></span><br />
 &nbsp;&nbsp;<input type="text" id="' . $tracker_name
 . '_private_exclude_address" name="' . $tracker_name
-. '_private_exclude_address" value="' . $grtrsettings['private_exclude']
+. '_private_exclude_address" value="'
+. htmlspecialchars ($grtrsettings['private_exclude'])
 . '" size="50" maxlength="255" />' . "<br />\n";
 }
 
@@ -283,11 +281,15 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
   $nb_categories_name = $tracker_name . "_nb_categories";
   $private_exclude_address_name = $tracker_name . "_private_exclude_address";
 
-  $in = sane_import('post', array($notif_scope_name,
-                                  $new_item_address_name,
-                                  $send_all_changes_name,
-                                  $nb_categories_name,
-                                  $private_exclude_address_name));
+  $in = sane_import ('post',
+    [
+      "strings" =>
+        [[$notif_scope_name, ['default' => 'global', 'category', 'both']]],
+      'pass' => [$new_item_address_name, $private_exclude_address_name],
+      'true' => $send_all_changes_name,
+      'digits' => $nb_categories_name
+    ]
+  );
 
   $notif_scope = $in[$notif_scope_name];
   $new_item_address = $in[$new_item_address_name];
@@ -295,20 +297,14 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
   $nb_categories = $in[$nb_categories_name];
   $private_exclude_address = $in[$private_exclude_address_name];
 
+  $notif_value = 1; # global by default.
   if (isset($notif_scope))
     {
-      if ($notif_scope != "global")
-        {
-          if ($notif_scope == "category")
-            $notif_value = 0;
-          if ($notif_scope == "both")
-            $notif_value = 2;
-        }
-      else
-        $notif_value = 1; # global only
+      if ($notif_scope == "category")
+        $notif_value = 0;
+      if ($notif_scope == "both")
+        $notif_value = 2;
     }
-  else
-    $notif_value = 1; # global only (scope not proposed = no categories)
 
 # Set global notification info for this group.
   $res_gl = db_autoexecute('groups',
@@ -332,13 +328,17 @@ function trackers_data_post_notification_settings($group_id, $tracker_name)
     {
       for ($i = 0; $i < $nb_categories; $i++)
         {
-          $current_fv_name = $tracker_name . "_cat_" . $i . "_bug_fv_id";
-          $current_email_name = $tracker_name . "_cat_" . $i . "_email";
-          $current_send_all_name = $tracker_name . "_cat_" . $i
-                                   . "_send_all_flag";
-          $in = sane_import('post', array($current_fv_name,
-                                          $current_email_name,
-                                          $current_send_all_name));
+          $tr_cat = $tracker_name . "_cat_" . $i;
+          $current_fv_name = $tr_cat . "_bug_fv_id";
+          $current_email_name = $tr_cat . "_email";
+          $current_send_all_name = $tr_cat . "_send_all_flag";
+          $in = sane_import('post',
+            [
+              'digits' => $current_fv_name,
+              'pass' => $current_email_name,
+              'true' => $current_send_all_name
+            ]
+          );
 
           $current_fv_id = $in[$current_fv_name];
           $current_email = $in[$current_email_name];

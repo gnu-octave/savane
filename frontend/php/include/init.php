@@ -364,8 +364,12 @@ if (!session_issecure() && isset($_COOKIE['redirect_to_https'])
 
 # Define every information useful
 # in case of a project page.
-extract(sane_import('get', array('comingfrom'))); #cookbook
-extract(sane_import('request', array('group', 'group_id', 'item_id', 'forum_id')));
+extract(sane_import('get', ['digits' => 'comingfrom']));
+extract(sane_import('request',
+  [
+    'name' => 'group',
+    'digits' => ['group_id', 'item_id', 'forum_id']
+  ]));
 
 # Define the artifact we are using.
 if (!defined('ARTIFACT'))

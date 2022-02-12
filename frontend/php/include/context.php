@@ -105,7 +105,7 @@ function context_guess_from_url ($page, $dontset=false)
           return context_set($context, $subcontext, $dontset);
         }
     }
-  extract(sane_import('request', array('func')));
+  extract(sane_import('request', ['funcs' => 'func']));
   # Same with site administration part.
   if ($context == "siteadmin")
   {

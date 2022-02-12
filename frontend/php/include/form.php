@@ -171,7 +171,7 @@ function form_clean ($form_id)
 # dumbuser-compliant.
 function form_check_nobot ()
 {
-  extract(sane_import('request', array('website')));
+  extract(sane_import('request', ['pass' => 'website']));
   if ($website != "" && $website != "http://")
     {
       # Not much explanation on the reject, since we are hunting spammers.

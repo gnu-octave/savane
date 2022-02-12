@@ -285,7 +285,7 @@ function theme_select ()
 
   # Check if the printer mode is asked. If not, proceed to the usual
   # theme selection.
-  extract(sane_import('request', array('printer')));
+  extract(sane_import('request', ['true' => 'printer']));
   if ($printer == 1)
     {
       define('SV_THEME', 'printer');

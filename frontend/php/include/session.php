@@ -441,7 +441,8 @@ function session_set()
   $id_is_good = 0;
 
   # Here also check for good hash, set if new session is needed.
-  extract(sane_import('cookie', array('session_hash', 'session_uid')));
+  extract(sane_import('cookie',
+    ['hash' =>'session_hash', 'digits' => 'session_uid']));
   if ($session_hash && $session_uid)
     {
       $result=db_execute("SELECT * FROM session WHERE session_hash=? AND user_id=?",
@@ -483,7 +484,7 @@ function session_logout()
 {
   # If the session was validated, we can assume that the cookie session_hash
   # is reliable.
-  extract(sane_import('cookie', array('session_hash')));
+  extract(sane_import('cookie', ['xdigits' => 'session_hash']));
   db_execute("DELETE FROM session WHERE session_hash=?",
              array($session_hash));
   session_delete_cookie('redirect_to_https');

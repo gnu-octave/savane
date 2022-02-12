@@ -25,7 +25,12 @@ require_once('include/init.php');
 require_once('include/sendmail.php');
 
 extract(sane_import('request',
-  array('touser', 'fromuser', 'send_mail', 'subject', 'body', 'feedback')));
+  [
+    'true' => 'send_mail',
+    'digits' => 'touser',
+    'name' => 'fromuser',
+    'pass' => ['subject', 'body', 'feedback']
+  ]));
 
 if (!user_isloggedin())
   exit_not_logged_in();

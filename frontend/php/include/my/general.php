@@ -88,7 +88,10 @@ function my_is_hidden ($role, $group_id)
     { $old_hide = 0; }
 
   # Extract url arguments.
-  $args = sane_import('get', array("hide_group_id", "hide_$role"));
+  $args = sane_import('get',
+    [
+      "digits" => ["hide_group_id", ["hide_$role", [0, 1]]]
+    ]);
   $asked_to_hide_group = $args["hide_group_id"];
   $asked_to_hide_role = isset($args["hide_$role"]);
 

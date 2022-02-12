@@ -260,7 +260,7 @@ function markup_full($text, $allow_headings=true)
 
   $quoted_text = false;
   $verbatim = 0;
-  extract(sane_import('request', array('printer')));
+  extract(sane_import('request', [true => 'printer']));
   foreach ($lines as $index => $line)
     {
       # The verbatim tags are not allowed to be nested, because

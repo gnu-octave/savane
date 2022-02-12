@@ -32,8 +32,13 @@ $group_data = array();
 if (!user_isloggedin())
   exit_not_logged_in();
 
-extract(sane_import('get', array('form_threshold', 'form_open',
-                    'boxoptionwanted')));
+extract(sane_import('get',
+  [
+    'digits' => [['form_threshold', [1, 9]]],
+    'strings' => [['form_open', ['open', 'closed']]],
+    'true' => 'boxoptionwanted'
+  ]
+));
 
 # Get the list of projects the user is member of.
 $result = db_execute("SELECT groups.group_name,"
@@ -77,28 +82,14 @@ if ($result && $rows > 0)
   }
 else
   $nosquads = 1;
-$threshold = NULL;
-$open = NULL;
 
-# Extract arguments.
-if ($form_threshold)
-  {
-    # Check if the argument is valid: numeric > 0 and < 10.
-    if (preg_match('/^[1-9]*$/i', $form_threshold))
-        {
-          $threshold = $form_threshold;
-          user_set_preference("my_items_threshold", $threshold);
-        }
-  }
-if ($form_open)
-  {
-    # Check if the argument is valid: open or closed.
-    if ($form_open == 'open' || $form_open == 'closed')
-        {
-          $open = $form_open;
-          user_set_preference("my_items_open", $open);
-        }
-  }
+$threshold = $form_threshold;
+if ($threshold)
+  user_set_preference ("my_items_threshold", $threshold);
+
+$open = $form_open;
+if ($open)
+  user_set_preference ("my_items_open", $open);
 
 # Extract configuration if needed.
 if (!$threshold)

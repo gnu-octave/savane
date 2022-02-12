@@ -43,7 +43,7 @@ function html_show_boxoptions ($legend, $content, $form_opening=0, $submit=0)
 <fieldset id="options" class="boxoptions">
 <legend>';
 
-  extract(sane_import('request', array('boxoptionwanted')));
+  extract(sane_import('request', ['true' => 'boxoptionwanted']));
 
   if ($boxoptionwanted != 1)
     $boxoptionwanted = 0;

@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once('../include/init.php');
-extract(sane_import('files', array('tarball')));
+extract(sane_import('files', ['pass' => 'tarball']));
 
 session_require(array('isloggedin'=>'1'));
 

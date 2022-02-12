@@ -21,8 +21,11 @@ require_once('include/init.php');
 require_once('include/markup.php');
 require_once('include/trackers/general.php');
 
-extract(sane_import('post', array('comment', 'basic', 'rich', 'full')));
-$text = htmlspecialchars($comment);
+extract(sane_import('post',
+  ['specialchars' => 'comment',
+   'true' => ['basic', 'rich', 'full']
+  ]));
+$text = $comment;
 
 $HTML->header(array('title' => _("Test Markup"), 'notopmenu' => 1));
 html_feedback_top();
