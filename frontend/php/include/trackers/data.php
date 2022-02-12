@@ -222,7 +222,7 @@ for="' . $tracker_name . '_cat_' . $i . '_email">'
 . '_send_all_flag" value="1" '
 .  (($grtrsettings['category'][$i]['send_all_flag'])? 'checked="checked"': '')
 . ' /><label for="' . $tracker_name . '_cat_' . $i
-. '_send_all_flag"' . _("Send on all updates") . ')</label></span><br />
+. '_send_all_flag">' . _("Send on all updates") . ')</label></span><br />
 ';
         }
       print '<h2>' . _("Global list") . "</h2>\n";
@@ -240,7 +240,7 @@ addresses (comma separated list)."), utils_get_tracker_name($tracker_name))
 . "</p>\n";
     }
   print '<span class="preinput"><label
-for="' . $tracker_name . '_new_item_address"' . _("Global List:")
+for="' . $tracker_name . '_new_item_address">' . _("Global List:")
 . '</label></span><br />
 &nbsp;&nbsp;<input type="text" id="' . $tracker_name
 . '_new_item_address" name="' . $tracker_name
@@ -250,7 +250,7 @@ for="' . $tracker_name . '_new_item_address"' . _("Global List:")
 . $tracker_name . '_send_all_changes" name="'
 . $tracker_name . '_send_all_changes" value="1" '
 . (($grtrsettings['glsendall'])?'checked':'')
-. '><label for="' . $tracker_name . '_send_all_changes"'
+. '><label for="' . $tracker_name . '_send_all_changes">'
 . _("Send on all updates") . '</label>)</span>';
 
   print '<h2>' . _("Private items exclude list") . "</h2>\n";
@@ -261,7 +261,7 @@ notification for private items.")
 . "</p>\n";
 
   print '<span class="preinput"><label
-for="' . $tracker_name . '_private_exclude_address"' . _("Exclude List:")
+for="' . $tracker_name . '_private_exclude_address">' . _("Exclude List:")
 . '</label></span><br />
 &nbsp;&nbsp;<input type="text" id="' . $tracker_name
 . '_private_exclude_address" name="' . $tracker_name
