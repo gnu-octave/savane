@@ -124,7 +124,7 @@ function form_check ($form_id)
   form_check_nobot();
 
   if (user_getid() == 0
-      && (!preg_match('/^[a-z0-9]*$/', $form_id)))
+      && (!preg_match('/^[a-f0-9]*$/', $form_id)))
     {
       fb(_("Unrecognized unique form_id"), 1);
       return 0;
