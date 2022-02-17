@@ -287,34 +287,37 @@ function cookbook_handle_update($item_id, $group_id)
   global $change_exists;
 
   $in = sane_import('post',
-    array(
-      'recipe_audience_technicians',
-      'recipe_audience_managers',
-      'recipe_audience_anonymous',
-      'recipe_audience_loggedin',
-      'recipe_audience_members',
-      'recipe_context_stats',
-      'recipe_context_siteadmin',
-      'recipe_context_my',
-      'recipe_context_project',
-      'recipe_context_homepage',
-      'recipe_context_download',
-      'recipe_context_mail',
-      'recipe_context_cvs',
-      'recipe_context_arch',
-      'recipe_context_svn',
-      'recipe_context_support',
-      'recipe_context_bugs',
-      'recipe_context_task',
-      'recipe_context_patch',
-      'recipe_context_cookbook',
-      'recipe_context_news',
-      'recipe_subcontext_browsing',
-      'recipe_subcontext_search',
-      'recipe_subcontext_postitem',
-      'recipe_subcontext_edititem',
-      'recipe_subcontext_configure',
-  ));
+    [
+      'true' => [
+        'recipe_audience_technicians',
+        'recipe_audience_managers',
+        'recipe_audience_anonymous',
+        'recipe_audience_loggedin',
+        'recipe_audience_members',
+        'recipe_context_stats',
+        'recipe_context_siteadmin',
+        'recipe_context_my',
+        'recipe_context_project',
+        'recipe_context_homepage',
+        'recipe_context_download',
+        'recipe_context_mail',
+        'recipe_context_cvs',
+        'recipe_context_arch',
+        'recipe_context_svn',
+        'recipe_context_support',
+        'recipe_context_bugs',
+        'recipe_context_task',
+        'recipe_context_patch',
+        'recipe_context_cookbook',
+        'recipe_context_news',
+        'recipe_subcontext_browsing',
+        'recipe_subcontext_search',
+        'recipe_subcontext_postitem',
+        'recipe_subcontext_edititem',
+        'recipe_subcontext_configure',
+      ]
+    ]
+  );
 
   # Pass through all the available/configurable fields.
   $cookbook_upd_list = array();

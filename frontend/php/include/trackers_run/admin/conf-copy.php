@@ -22,22 +22,21 @@
 require_directory("project");
 require_once('../../include/trackers/conf.php');
 
-extract(sane_import('post', array('update', 'from_group_id')));
+extract(sane_import('post',
+  ['true' => 'update', 'digits' => 'from_group_id']
+));
 
-if (!($group_id && user_ismember($group_id,'A')))
-  {
-    if (!$group_id)
-      exit_no_group();
-    exit_permission_denied();
-  }
+if (!$group_id)
+  exit_no_group();
+
+if (!user_ismember ($group_id, 'A'))
+  exit_permission_denied();
 
 # Initialize global bug structures
 trackers_init($group_id);
 
 if ($update && $from_group_id != 100)
-  {
-    trackers_conf_copy($group_id, ARTIFACT, $from_group_id);
-  }
+  trackers_conf_copy ($group_id, ARTIFACT, $from_group_id);
 
 trackers_header_admin(array ('title'=>_("Copy Configuration")));
 conf_form($group_id, ARTIFACT);

@@ -26,21 +26,30 @@ require_once('../include/news/forum.php');
 require_once('../include/news/general.php');
 require_directory("trackers");
 
-extract(sane_import('request', array('forum_id')));
-extract(sane_import('get', array('offset', 'style', 'max_rows', 'set')));
+extract(sane_import('request', ['digits' => 'forum_id']));
+extract(sane_import('get',
+  [
+    'digits' => ['offset', 'max_rows'],
+    'strings' =>
+      [
+        ['style', ['default' => 'nested', 'flat', 'threaded', 'nocomments']],
+        ['set', ['custom']]
+      ]
+  ]
+));
 extract(sane_import('post',
-  array(
-    'post_message', // flag
-    'subject', 'body', // content
-    'is_followup_to', // reply to which msg?
-    'thread_id', // new or existing thread (ie call from message.php)?
-    )));
+  [
+    'true' => 'post_message',
+    'specialchars' => ['subject', 'body'],
+    'digits' => ['is_followup_to', 'thread_id']
+  ]
+));
 
 if ($forum_id)
   {
     $ret_val = '';
     # If necessary, insert a new message into the forum.
-    if ($post_message == 'y')
+    if ($post_message)
       post_message($thread_id, $is_followup_to, $subject, $body, $forum_id);
 
     # Set up some defaults if they aren't provided.
@@ -314,7 +323,7 @@ if it was a custom set just posted && logged in, set pref if it's changed.  */
         show_post_form($forum_id);
       }
     forum_footer(array());
-  }
+  } # $forum_id
 else
   {
     forum_header(array('title'=>_('Error')));

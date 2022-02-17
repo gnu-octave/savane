@@ -1174,8 +1174,8 @@ function trackers_attach_several_files($item_id, $group_id, &$changes)
   $filenames = array();
   for ($i = 1; $i < 5; $i++)
     $filenames[] = "input_file$i";
-  $files = sane_import('files', $filenames);
-  extract(sane_import('post', array('file_description')));
+  $files = sane_import('files', ['pass' => $filenames]);
+  extract(sane_import('post', ['specialchars' => 'file_description']));
   foreach ($files as $file)
     {
       if ($file['error'] != UPLOAD_ERR_OK)
@@ -1296,7 +1296,7 @@ after escaping characters as required.",
       'artifact' => ARTIFACT,
       'submitted_by' => $user_id,
       'date' => time(),
-      'description' => htmlspecialchars($file_description),
+      'description' => $file_description,
       'filename' => $input_file_name,
       'filesize' => $input_file_size,
       'filetype' => $input_file_type

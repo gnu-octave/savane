@@ -22,13 +22,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extract(sane_import('request', array('form_id', 'prefill')));
+extract(sane_import('request',
+  ['hash' => 'form_id', 'array' => [['prefill', [null, 'specialchars']]]]
+));
 
 if (!group_restrictions_check($group_id, ARTIFACT))
   {
     exit_error(sprintf(
 # TRANSLATORS: the argument is a string that explains why the action is
-# unavilable.
+# unavailable.
                        _("Action Unavailable: %s"),
                group_getrestrictions_explained($group_id, ARTIFACT)));
   }
@@ -92,7 +94,7 @@ while ($field_name = trackers_list_all_fields())
     if (!empty($$field_name))
       $field_value = htmlspecialchars($$field_name);
     elseif (isset($prefill[$field_name]))
-      $field_value = htmlspecialchars($prefill[$field_name]);
+      $field_value = $prefill[$field_name];
     else
       $field_value = trackers_data_get_default_value($field_name);
     list($sz,) = trackers_data_get_display_size($field_name);

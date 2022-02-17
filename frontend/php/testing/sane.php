@@ -386,6 +386,63 @@ $reference = 'cvs/admin/index.php';
   test_sane_import ($in, $names, $out);
 }
 
+$reference = 'forum/forum.php';
+{
+  $names = ['digits' => 'forum_id'];
+  $in = ['forum_id' => 'a;34.b'];
+  $out = ['forum_id' => '34'];
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'digits' => ['offset', 'max_rows'],
+    'strings' =>
+      [
+        ['style', ['default' => 'nested', 'flat', 'threaded', 'nocomments']],
+        ['set', ['custom']]
+      ]
+  ];
+  $in = [
+   'offset' => '1',
+   'style' => 'no',
+   'max_rows' => '100',
+   'set' => 'custom'
+  ];
+  $out = $in;
+  $out['style'] = 'nested';
+  test_sane_import ($in, $names, $out);
+  $in['set'] = 1;
+  $out['set'] = null;
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'true' => 'post_message',
+    'specialchars' => ['subject', 'body'],
+    'digits' => ['is_followup_to', 'thread_id']
+  ];
+  $in = [
+    'subject' => '<subject>',
+    'body' => '"test body"',
+    'thread_id' => '4913'
+  ];
+  $out = $in;
+  $out['post_message'] = null;
+  $out['is_followup_to'] = null;
+  $out['subject'] = htmlspec ($out['subject']);
+  $out['body'] = htmlspec ($out['body']);
+  test_sane_import ($in, $names, $out);
+  $in['post_message'] = 'n';
+  $out['post_message'] = true;
+  $in['is_followup_to'] = '#76*98';
+  $out['is_followup_to'] = '76';
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'forum/message.php';
+{
+  $names =['digits' => 'msg_id'];
+  $in = ['msg_id' => '1'];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
 $reference = 'i18n.php';
 {
   $names = [
@@ -499,7 +556,8 @@ $reference = 'include/init.php';
   test_sane_import ($in, $names, $out);
 }
 
-$reference = 'include/markup.php'; # The test is the same as for the next file.
+# The test is the same the next two files.
+$reference = 'include/markup.php';
 $reference = 'include/theme.php';
 {
   $names = ['true' => 'printer'];
@@ -578,6 +636,82 @@ $reference = 'include/session.php';
   test_sane_import ($in, $names, $out);
 }
 
+$reference = 'include/trackers/cookbook.php';
+{
+  $names = [
+    'true' => [
+      'recipe_audience_technicians',
+      'recipe_audience_managers',
+      'recipe_audience_anonymous',
+      'recipe_audience_loggedin',
+      'recipe_audience_members',
+      'recipe_context_stats',
+      'recipe_context_siteadmin',
+      'recipe_context_my',
+      'recipe_context_project',
+      'recipe_context_homepage',
+      'recipe_context_download',
+      'recipe_context_mail',
+      'recipe_context_cvs',
+      'recipe_context_arch',
+      'recipe_context_svn',
+      'recipe_context_support',
+      'recipe_context_bugs',
+      'recipe_context_task',
+      'recipe_context_patch',
+      'recipe_context_cookbook',
+      'recipe_context_news',
+      'recipe_subcontext_browsing',
+      'recipe_subcontext_search',
+      'recipe_subcontext_postitem',
+      'recipe_subcontext_edititem',
+      'recipe_subcontext_configure',
+    ]
+  ];
+  $in = [
+    'recipe_audience_technicians' => 1,
+    'recipe_audience_managers' => 0,
+    'recipe_audience_anonymous' => 1,
+    'recipe_audience_loggedin' => 20,
+    'recipe_audience_members' => 1,
+    'recipe_context_stats' => 'a',
+    'recipe_context_siteadmin' => 1,
+    'recipe_context_my' => 'b',
+    'recipe_context_project' => 1,
+    'recipe_context_homepage' => 1,
+    'recipe_context_download' => '0x121'
+  ];
+  $out = [
+    'recipe_audience_technicians' => true,
+    'recipe_audience_managers' => true,
+    'recipe_audience_anonymous' => true,
+    'recipe_audience_loggedin' => true,
+    'recipe_audience_members' => true,
+    'recipe_context_stats' => true,
+    'recipe_context_siteadmin' => true,
+    'recipe_context_my' => true,
+    'recipe_context_project' => true,
+    'recipe_context_homepage' => true,
+    'recipe_context_download' => true,
+    'recipe_context_mail' => null,
+    'recipe_context_cvs' => null,
+    'recipe_context_arch' => null,
+    'recipe_context_svn' => null,
+    'recipe_context_support' => null,
+    'recipe_context_bugs' => null,
+    'recipe_context_task' => null,
+    'recipe_context_patch' => null,
+    'recipe_context_cookbook' => null,
+    'recipe_context_news' => null,
+    'recipe_subcontext_browsing' => null,
+    'recipe_subcontext_search' => null,
+    'recipe_subcontext_postitem' => null,
+    'recipe_subcontext_edititem' => null,
+    'recipe_subcontext_configure' => null
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
 $reference = 'include/trackers/data.php';
 {
   $tracker_name = 'support';
@@ -636,6 +770,243 @@ $reference = 'include/trackers/data.php';
   $out[$send_all_name] = null;
 
   test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers/format.php';
+{
+  $names = [
+    'strings' => [
+      [
+        'func',
+        [
+         'flagspam', 'unflagspam', 'viewspam', 'delete_file',
+         'delete_cc'
+        ]
+      ]
+    ],
+    'digits' => 'comment_internal_id'
+  ];
+  $in = [
+    'func' => 'viewspam',
+    'comment_internal_id' => 23
+  ];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers/general.php';
+{
+  $in = [];
+  for ($i = 1; $i < 5; $i++)
+    {
+      $n = "input_file$i";
+      $filenames[] = $n;
+      $in[$n] = "<a href $i\n" . '?*';
+    }
+  $names = ['pass' => $filenames];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+
+  $names = ['specialchars' => 'file_description'];
+  $in = [
+    'file_description' => '&a<>@'
+  ];
+  $out = [
+    'file_description' => htmlspec ($in['file_description'])
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/add.php';
+{
+  $names = [
+    'hash' => 'form_id', 'array' => [['prefill', [null, 'specialchars']]]
+  ];
+  $in = [
+    'form_id' => md5 ('a'),
+    'prefill' => ['"prefill"', 'prefill', 'p<r>efill']
+  ];
+  $out = $in;
+  foreach ($in['prefill'] as $key => $val)
+    $out['prefill'][$key] = htmlspec ($val);
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/conf-copy.php';
+{
+  $names = ['true' => 'update', 'digits' => 'from_group_id'];
+  $in = ['from_group_id' => 289];
+  $out = $in;
+  $out['update'] = null;
+  test_sane_import ($in, $names, $out);
+  $in['update'] = 0;
+  $out['update'] = true;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/editqueryforms.php';
+{
+  $names = [];
+  $names['true'] = [
+    'post_changes', 'set_default', 'create_report', 'update_report'
+  ];
+  $names['specialchars'] = ['rep_name', 'rep_desc'];
+  $names['strings'] = [['rep_scope', 'P']];
+
+  $prefices = ['TFSRCH', 'TFREP', 'TFCW', 'CBSRCH', 'CBREP'];
+  $suffices = [
+    'bug_id', 'submitted_by', 'date', 'close_date', 'planned_starting_date',
+    'planned_close_date', 'category_id', 'priority', 'resolution_id',
+    'privacy', 'vote', 'percent_complete', 'assigned_to', 'status_id',
+    'discussion_lock', 'hours', 'summary', 'details', 'severity',
+    'bug_group_id', 'originator_name', 'originator_email', 'originator_phone',
+    'release', 'release_id', 'category_version_id', 'platform_version_id',
+    'reproducibility_id', 'size_id', 'fix_release_id', 'comment_type_id',
+    'plan_release_id', 'component_version', 'fix_release', 'plan_release',
+    'keywords',
+  ];
+
+  $custom_suff = ['tf' => 10, 'ta' => 10, 'sb' => 10, 'df' => 5];
+
+  foreach ($custom_suff as $suf => $num)
+    for ($i = 1; $i <= $num; $i++)
+      $suffices[] = 'custom_' . $suf . $i;
+
+  $names['digits'] = [];
+  foreach ($prefices as $pref)
+    foreach ($suffices as $suf)
+      $names['digits'][] = $pref . '_' . $suf;
+
+  $in = [
+    'post_changes' => 0,
+    'rep_name' => '"name<">',
+    'rep_desc' => "'description'",
+    'rep_scope' => "W",
+    'TFCW_date' => 40,
+    'CBSRCH_custom_sb3' => 4,
+    'CBREP_custom_tf8' => 3,
+    'CBREP_custom_ta1' => 17,
+    'CBREP_custom_df2' => 2,
+    'CBREP_custom_df10' => 0,
+  ];
+
+  $out = $in;
+  $out['post_changes'] = true;
+  $out['set_default'] = null;
+  $out['create_report'] = null;
+  $out['update_report'] = null;
+  $out['rep_scope'] = null;
+  $out['rep_name'] = htmlspec ($out['rep_name']);
+  $out['rep_desc'] = htmlspec ($out['rep_desc']);
+  unset ($out['CBREP_custom_df10']);
+
+  foreach ($names['digits'] as $n)
+    if (!isset ($in[$n]))
+      $out[$n] = null;
+
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/field_usage.php';
+{
+  $names = ['name' => 'field', 'true' => 'update_field'];
+  $in = ['field' => 'custom_tf9'];
+  $out = $in;
+  $out['update_field'] = null;
+  test_sane_import ($in, $names, $out);
+
+  $names = [
+    'true' =>
+      [
+        'post_changes', 'submit', 'reset'
+      ],
+    'specialchars' => ['label', 'description'],
+    'digits' =>
+       [
+         ['status', 'keep_history', [0, 1]],
+         ['mandatory_flag', [0, 3]],
+         'place', 'n1', 'n2'
+       ],
+     'strings' =>
+       [
+         ['form_transition_default_auth', ['A', 'F']],
+         ['show_on_add', 'show_on_add_members', ['1']],
+         ['show_on_add_logged', ['2']]
+       ]
+  ];
+  $in = [
+    'label' => "'<label>'",
+    'description' => 'de&sc',
+    'status' => 1,
+    'keep_history' => 0,
+    'mandatory_flag' => 2,
+    'place' => 10,
+    'n1' => '80', 'n2' => '25',
+    'form_transition_default_auth' => 'A',
+    'show_on_add' => '1',
+    'show_on_add_logged' => '2',
+  ];
+  $out = $in;
+  $out['label'] = htmlspec ($out['label']);
+  $out['description'] = htmlspec ($out['description']);
+  $out['post_changes'] = null;
+  $out['submit'] = null;
+  $out['reset'] = null;
+  $out['show_on_add_members'] = null;
+  $out['show_on_add'] = true;
+
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/field_values.php';
+{
+  $names = [
+    'strings' => [['func', ['deltransition']]],
+    'true' => ['update_value', 'create_canned', 'update_canned'],
+    'digits' => ['fv_id', 'item_canned_id'],
+    'name' => 'field'
+  ];
+  $in = [
+    'func' => 'deltransition',
+    'field' => 'category_id',
+    'update_canned' => 1,
+    'fv_id' => 289,
+    'item_canned_id' => 4913
+  ];
+  $out = $in;
+  $out['update_canned'] = true;
+  $out['update_value'] = null;
+  $out['create_canned'] = null;
+  test_sane_import ($in, $names, $out);
+
+  $names = [
+    'true' => ['list_value'],
+    'strings' => [['delete_canned', [1]]],
+    'digits' => 'transition_id'
+  ];
+  $in = [
+    'delete_canned' => 1,
+    'transition_id' => 'x54y'
+  ];
+  $out = [
+    'list_value' => null,
+    'delete_canned' => '1',
+    'transition_id' => 54
+  ];
+  test_sane_import ($in, $names, $out);
+
+  $names = [
+    'true' => ['post_changes', 'create_value', 'by_field_id'],
+    'specialchars' => ['title', 'description', 'body'],
+    'digits' => ['order_id', 'from', 'to'],
+    'strings' =>
+      [
+        ['allowed', ['A', 'F']],
+        ['status', ['A', 'P', 'H']]
+      ],
+    'pass' => 'mail_list'
+  ];
+#  test_sane_import ($in, $names, $out);
 }
 
 # The test for the following files is the same.

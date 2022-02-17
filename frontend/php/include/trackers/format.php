@@ -190,7 +190,20 @@ Follow-up Comments:\n\n";
       else
         $comment_number = $i;
 
-      extract(sane_import('get', array('func', 'comment_internal_id')));
+      extract(sane_import('get',
+        [
+          'strings' => [
+            [
+              'func',
+              [
+               'flagspam', 'unflagspam', 'viewspam', 'delete_file',
+               'delete_cc'
+              ]
+            ]
+          ],
+          'digits' => 'comment_internal_id'
+        ]
+      ));
       # Handle spam special cases here.
       if ($is_spam)
         {

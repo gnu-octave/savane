@@ -432,7 +432,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body,
                    "AND subject=? ".
                    "AND group_forum_id=? ".
                    "AND posted_by=?",
-                   array($is_followup_to, htmlspecialchars($subject),
+                   array($is_followup_to, $subject,
                          $group_forum_id, user_getid()));
 
   if (db_numrows($res3) > 0)
@@ -493,8 +493,8 @@ and followup information as a prior post."));
     array(
       'group_forum_id' => $group_forum_id,
       'posted_by' => user_getid(),
-      'subject' => htmlspecialchars($subject),
-      'body' => htmlspecialchars($body),
+      'subject' => $subject,
+      'body' => $body,
       'date' => time(),
       'is_followup_to' => $is_followup_to,
       'thread_id' => $thread_id
@@ -526,23 +526,22 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
             $subject ='RE: ' . $subject;
         }
       print '<center>
-<form action="'.$GLOBALS['sys_home'].'forum/forum.php" method="POST">
+<form action="' . $GLOBALS['sys_home'] . 'forum/forum.php" method="POST">
 <input type="hidden" name="post_message" value="y" />
-<input type="hidden" name="forum_id" value="'.htmlspecialchars($forum_id).'" />
-<input type="hidden" name="thread_id" value="'.htmlspecialchars($thread_id).'" />
-<input type="hidden" name="is_followup_to" value="'
-       .htmlspecialchars($is_followup_to).'" />
+<input type="hidden" name="forum_id" value="' . $forum_id . '" />
+<input type="hidden" name="thread_id" value="'. $thread_id . '" />
+<input type="hidden" name="is_followup_to" value="' . $is_followup_to . '" />
 <table><tr><td><strong>'._("Subject").':</td><td>
-<input type="text" name="subject" value="'.htmlspecialchars($subject)
-.'" size="60" maxlength="45" />
+<input type="text" name="subject" value="' . $subject
+. '" size="60" maxlength="45" />
 </td></tr>
-<tr><td><strong>'._("Message:").'</td><td>
+<tr><td><strong>' . _("Message:") . '</td><td>
 <textarea name="body" value="" rows="25" cols="60" wrap="SOFT"></textarea>
 </td></tr>
 <tr><td colspan="2" align="middle">
 <span class="warn">HTML tags will display in your post as text</span>
 <br />
-<input type="submit" name="submit" value="'._("Post Comment").'" />
+<input type="submit" name="submit" value="' . _("Post Comment") . '" />
 </td></tr></table>
 </form>
 </center>

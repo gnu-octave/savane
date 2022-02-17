@@ -26,12 +26,11 @@ require_once('../include/news/forum.php');
 require_once('../include/news/general.php');
 register_globals_off();
 
-extract(sane_import('request', array('msg_id')));
+extract(sane_import('request', ['digits' => 'msg_id']));
 
 
 if ($msg_id)
   {
-    $msg_id = intval($msg_id);
 # Figure out which group this message is in, for the sake of the admin links.
     $result=db_execute("SELECT forum_group_list.group_id,forum_group_list"
                        .".forum_name,forum.group_forum_id,forum.thread_id "

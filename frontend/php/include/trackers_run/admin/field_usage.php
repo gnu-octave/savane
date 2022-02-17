@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -22,22 +22,33 @@
 
 $is_admin_page='y';
 
-extract(sane_import('request', array('field', 'update_field')));
-extract(sane_import('post', array(
-  'post_changes', 'submit', 'reset',
-  'label', 'description',
-  'status', 'keep_history', 'mandatory_flag', 'place',
-  'form_transition_default_auth',
-  'show_on_add_members', 'show_on_add', 'show_on_add_nologin',
-  'n1', 'n2',
-)));
+extract(sane_import('request', ['name' => 'field', 'true' => 'update_field']));
+extract(sane_import('post',
+  [
+    'true' =>
+      [
+        'post_changes', 'submit', 'reset'
+      ],
+    'specialchars' => ['label', 'description'],
+    'digits' =>
+      [
+        ['status', 'keep_history', [0, 1]],
+        ['mandatory_flag', [0, 3]],
+        'place', 'n1', 'n2'
+      ],
+     'strings' =>
+       [
+         ['form_transition_default_auth', ['A', 'F']],
+         ['show_on_add','show_on_add_members',  ['1']],
+         ['show_on_add_logged', ['2']]
+       ]
+  ]
+));
 
-if (!($group_id && user_ismember($group_id,'A')))
-  {
-    if (!$group_id)
-      exit_no_group();
-    exit_permission_denied();
-  }
+if (!$group_id)
+  exit_no_group ();
+if (!user_ismember ($group_id, 'A'))
+  exit_permission_denied ();
 
 # Initialize global bug structures.
 trackers_init($group_id);
@@ -58,7 +69,7 @@ if ($post_changes)
              # Vote cannot be possible for non-logged in.
             if ($field == "vote")
               {
-                $show_on_add_nologin = 0;
+                $show_on_add_logged = 0;
                 $show_on_add_members = 1;
               }
           }
@@ -68,7 +79,7 @@ if ($post_changes)
             # if the field is required.
             $show_on_add_members = trackers_data_is_showed_on_add_members($field);
             $show_on_add = trackers_data_is_showed_on_add($field);
-            $show_on_add_nologin = trackers_data_is_showed_on_add_nologin($field);
+            $show_on_add_logged = trackers_data_is_showed_on_add_nologin($field);
           }
 
         # The additional possibility of differently treating non project
@@ -77,7 +88,7 @@ if ($post_changes)
         # the show_on_add field:
         # bit 1 set: show for logged in non project members
         # bit 2 set: show for non logged in users.
-        $show_on_add = $show_on_add | $show_on_add_nologin;
+        $show_on_add = $show_on_add | $show_on_add_logged;
 
         trackers_data_update_usage($field,
                                    $group_id,
@@ -113,8 +124,8 @@ if ($update_field)
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
           .'" method="post">';
     print '<input type="hidden" name="post_changes" value="y" />
-    <input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
-    <input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
+    <input type="hidden" name="field" value="' . $field . '" />
+    <input type="hidden" name="group_id" value="' . $group_id . '" />
     <h1>'
       ._("Field Label:").' ';
 
@@ -124,8 +135,8 @@ if ($update_field)
         # Only selectboxes can have values configured.
         $closetag .= '<p><span class="smaller">'
                     .utils_link($GLOBALS['sys_home'].ARTIFACT
-                                .'/admin/field_values.php?group='.$group
-                                .'&amp;list_value=1&amp;field='.$field,
+                                .'/admin/field_values.php?group=' . $group
+                                .'&amp;list_value=1&amp;field=' . $field,
                                 _("Jump to this field values"))."</span></p>\n";
       }
     # If it is a custom field let the user change the label and description.
@@ -225,7 +236,7 @@ if ($update_field)
             $checkbox_anonymous =
               '<input type="checkbox" title="'
               ._("Show field to logged-in users")
-              .'" name="show_on_add_nologin" value="2"'
+              .'" name="show_on_add_logged" value="2"'
               .(trackers_data_is_showed_on_add_nologin($field)?
                 ' checked="checked"':'')
               .' />';
@@ -256,7 +267,7 @@ if ($update_field)
                 $checkbox_members = 0;
                 $checkbox_loggedin = 0;
                 $checkbox_anonymous =
-                  '<input type="checkbox" name="show_on_add_nologin" value="2"'
+                  '<input type="checkbox" name="show_on_add_logged" value="2"'
                   .(trackers_data_is_showed_on_add_nologin($field)?
                     ' checked="checked"':'').' />';
               }
@@ -437,7 +448,7 @@ name="form_transition_default_auth" value="F" '
 
           $html = '<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
              .'?group_id='.$group_id
-             .'&update_field=1&field='.$field_name.'">'
+             .'&update_field=1&field=' . urlencode ($field_name) . '">'
              .trackers_data_get_label($field_name)."</a></td>\n"
              ."\n<td>".trackers_data_get_display_type_in_clear($field_name)
              .'</td>'."\n<td>".trackers_data_get_description($field_name)

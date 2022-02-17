@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018, 2021 Ineiev
+# Copyright (C) 2017, 2018, 2021, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -20,117 +20,42 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extract(sane_import('request', array('report_id')));
-extract(sane_import('get', array('show_report', 'new_report', 'delete_report')));
-extract(sane_import('post', array(
-'post_changes', 'set_default',
-'create_report', 'update_report',
-'rep_name', 'rep_scope', 'rep_desc',
-'TFSRCH_bug_id', 'TFREP_bug_id', 'TFCW_bug_id',   'CBSRCH_bug_id',
-'CBREP_bug_id',
-'TFSRCH_submitted_by', 'TFREP_submitted_by', 'TFCW_submitted_by',
-'CBSRCH_submitted_by', 'CBREP_submitted_by',
-'TFSRCH_date', 'TFREP_date', 'TFCW_date', 'CBSRCH_date', 'CBREP_date',
-'TFSRCH_close_date', 'TFREP_close_date', 'TFCW_close_date', 'CBSRCH_close_date',
-'CBREP_close_date',
-'TFSRCH_planned_starting_date', 'TFREP_planned_starting_date',
-'TFCW_planned_starting_date', 'CBSRCH_planned_starting_date',
-'CBREP_planned_starting_date',
-'TFSRCH_planned_close_date', 'TFREP_planned_close_date',
-'TFCW_planned_close_date', 'CBSRCH_planned_close_date',
-'CBREP_planned_close_date',
-'TFSRCH_category_id', 'TFREP_category_id', 'TFCW_category_id',
-'CBSRCH_category_id', 'CBREP_category_id',
-'TFSRCH_priority', 'TFREP_priority', 'TFCW_priority',
-'CBSRCH_priority', 'CBREP_priority',
-'TFSRCH_resolution_id', 'TFREP_resolution_id', 'TFCW_resolution_id',
-'CBSRCH_resolution_id', 'CBREP_resolution_id',
-'TFSRCH_privacy', 'TFREP_privacy', 'TFCW_privacy',
-'CBSRCH_privacy', 'CBREP_privacy',
-'TFSRCH_vote', 'TFREP_vote', 'TFCW_vote', 'CBSRCH_vote', 'CBREP_vote',
-'TFSRCH_percent_complete', 'TFREP_percent_complete', 'TFCW_percent_complete',
-'CBSRCH_percent_complete', 'CBREP_percent_complete',
-'TFSRCH_assigned_to', 'TFREP_assigned_to', 'TFCW_assigned_to',
-'CBSRCH_assigned_to', 'CBREP_assigned_to',
-'TFSRCH_status_id', 'TFREP_status_id', 'TFCW_status_id',
-'CBSRCH_status_id', 'CBREP_status_id',
-'TFSRCH_discussion_lock', 'TFREP_discussion_lock', 'TFCW_discussion_lock',
-'CBSRCH_discussion_lock', 'CBREP_discussion_lock',
-'TFSRCH_hours', 'TFREP_hours', 'TFCW_hours', 'CBSRCH_hours', 'CBREP_hours',
-'TFSRCH_summary', 'TFREP_summary', 'TFCW_summary', 'CBSRCH_summary',
-'CBREP_summary',
-'TFSRCH_details', 'TFREP_details', 'TFCW_details', 'CBSRCH_details',
-'CBREP_details',
-'CBSRCH_severity', 'CBREP_severity', 'TFSRCH_severity', 'TFREP_severity',
-'CBSRCH_bug_group_id', 'CBREP_bug_group_id', 'TFSRCH_bug_group_id',
-'TFREP_bug_group_id',
-'CBSRCH_originator_name', 'CBREP_originator_name', 'TFSRCH_originator_name',
-'TFREP_originator_name',
-'CBSRCH_originator_email', 'CBREP_originator_email', 'TFSRCH_originator_email',
-'TFREP_originator_email',
-'CBSRCH_originator_phone', 'CBREP_originator_phone', 'TFSRCH_originator_phone',
-'TFREP_originator_phone',
-'CBSRCH_release', 'CBREP_release', 'TFSRCH_release', 'TFREP_release',
-'CBSRCH_release_id', 'CBREP_release_id', 'TFSRCH_release_id', 'TFREP_release_id',
-'CBSRCH_category_version_id', 'CBREP_category_version_id',
-'TFSRCH_category_version_id', 'TFREP_category_version_id',
-'CBSRCH_platform_version_id', 'CBREP_platform_version_id',
-'TFSRCH_platform_version_id', 'TFREP_platform_version_id',
-'CBSRCH_reproducibility_id', 'CBREP_reproducibility_id',
-'TFSRCH_reproducibility_id', 'TFREP_reproducibility_id',
-'CBSRCH_size_id', 'CBREP_size_id', 'TFSRCH_size_id', 'TFREP_size_id',
-'CBSRCH_fix_release_id', 'CBREP_fix_release_id',
-'TFSRCH_fix_release_id', 'TFREP_fix_release_id',
-'CBSRCH_comment_type_id', 'CBREP_comment_type_id',
-'TFSRCH_comment_type_id', 'TFREP_comment_type_id',
-'CBSRCH_plan_release_id', 'CBREP_plan_release_id',
-'TFSRCH_plan_release_id', 'TFREP_plan_release_id',
-'CBSRCH_component_version', 'CBREP_component_version',
-'TFSRCH_component_version', 'TFREP_component_version',
-'CBSRCH_fix_release', 'CBREP_fix_release',
-'TFSRCH_fix_release', 'TFREP_fix_release',
-'CBSRCH_plan_release', 'CBREP_plan_release',
-'TFSRCH_plan_release', 'TFREP_plan_release',
-'CBSRCH_keywords', 'CBREP_keywords', 'TFSRCH_keywords', 'TFREP_keywords',
-'CBSRCH_custom_tf1', 'CBREP_custom_tf1', 'TFSRCH_custom_tf1', 'TFREP_custom_tf1',
-'CBSRCH_custom_tf2', 'CBREP_custom_tf2', 'TFSRCH_custom_tf2', 'TFREP_custom_tf2',
-'CBSRCH_custom_tf3', 'CBREP_custom_tf3', 'TFSRCH_custom_tf3', 'TFREP_custom_tf3',
-'CBSRCH_custom_tf4', 'CBREP_custom_tf4', 'TFSRCH_custom_tf4', 'TFREP_custom_tf4',
-'CBSRCH_custom_tf5', 'CBREP_custom_tf5', 'TFSRCH_custom_tf5', 'TFREP_custom_tf5',
-'CBSRCH_custom_tf6', 'CBREP_custom_tf6', 'TFSRCH_custom_tf6', 'TFREP_custom_tf6',
-'CBSRCH_custom_tf7', 'CBREP_custom_tf7', 'TFSRCH_custom_tf7', 'TFREP_custom_tf7',
-'CBSRCH_custom_tf8', 'CBREP_custom_tf8', 'TFSRCH_custom_tf8', 'TFREP_custom_tf8',
-'CBSRCH_custom_tf9', 'CBREP_custom_tf9', 'TFSRCH_custom_tf9', 'TFREP_custom_tf9',
-'CBSRCH_custom_tf10', 'CBREP_custom_tf10',
-'TFSRCH_custom_tf10', 'TFREP_custom_tf10',
-'CBSRCH_custom_ta1', 'CBREP_custom_ta1', 'TFSRCH_custom_ta1', 'TFREP_custom_ta1',
-'CBSRCH_custom_ta2', 'CBREP_custom_ta2', 'TFSRCH_custom_ta2', 'TFREP_custom_ta2',
-'CBSRCH_custom_ta3', 'CBREP_custom_ta3', 'TFSRCH_custom_ta3', 'TFREP_custom_ta3',
-'CBSRCH_custom_ta4', 'CBREP_custom_ta4', 'TFSRCH_custom_ta4', 'TFREP_custom_ta4',
-'CBSRCH_custom_ta5', 'CBREP_custom_ta5', 'TFSRCH_custom_ta5', 'TFREP_custom_ta5',
-'CBSRCH_custom_ta6', 'CBREP_custom_ta6', 'TFSRCH_custom_ta6', 'TFREP_custom_ta6',
-'CBSRCH_custom_ta7', 'CBREP_custom_ta7', 'TFSRCH_custom_ta7', 'TFREP_custom_ta7',
-'CBSRCH_custom_ta8', 'CBREP_custom_ta8', 'TFSRCH_custom_ta8', 'TFREP_custom_ta8',
-'CBSRCH_custom_ta9', 'CBREP_custom_ta9', 'TFSRCH_custom_ta9', 'TFREP_custom_ta9',
-'CBSRCH_custom_ta10', 'CBREP_custom_ta10',
-'TFSRCH_custom_ta10', 'TFREP_custom_ta10',
-'CBSRCH_custom_sb1', 'CBREP_custom_sb1', 'TFSRCH_custom_sb1', 'TFREP_custom_sb1',
-'CBSRCH_custom_sb2', 'CBREP_custom_sb2', 'TFSRCH_custom_sb2', 'TFREP_custom_sb2',
-'CBSRCH_custom_sb3', 'CBREP_custom_sb3',  'TFSRCH_custom_sb3', 'TFREP_custom_sb3',
-'CBSRCH_custom_sb4', 'CBREP_custom_sb4', 'TFSRCH_custom_sb4', 'TFREP_custom_sb4',
-'CBSRCH_custom_sb5', 'CBREP_custom_sb5', 'TFSRCH_custom_sb5', 'TFREP_custom_sb5',
-'CBSRCH_custom_sb6', 'CBREP_custom_sb6', 'TFSRCH_custom_sb6', 'TFREP_custom_sb6',
-'CBSRCH_custom_sb7', 'CBREP_custom_sb7', 'TFSRCH_custom_sb7', 'TFREP_custom_sb7',
-'CBSRCH_custom_sb8', 'CBREP_custom_sb8', 'TFSRCH_custom_sb8', 'TFREP_custom_sb8',
-'CBSRCH_custom_sb9', 'CBREP_custom_sb9', 'TFSRCH_custom_sb9', 'TFREP_custom_sb9',
-'CBSRCH_custom_sb10', 'CBREP_custom_sb10',
-'TFSRCH_custom_sb10', 'TFREP_custom_sb10',
-'CBSRCH_custom_df1', 'CBREP_custom_df1', 'TFSRCH_custom_df1', 'TFREP_custom_df1',
-'CBSRCH_custom_df2', 'CBREP_custom_df2', 'TFSRCH_custom_df2', 'TFREP_custom_df2',
-'CBSRCH_custom_df3', 'CBREP_custom_df3', 'TFSRCH_custom_df3', 'TFREP_custom_df3',
-'CBSRCH_custom_df4', 'CBREP_custom_df4', 'TFSRCH_custom_df4', 'TFREP_custom_df4',
-'CBSRCH_custom_df5', 'CBREP_custom_df5', 'TFSRCH_custom_df5', 'TFREP_custom_df5',
-)));
+extract(sane_import('request', ['digits' => 'report_id']));
+extract(sane_import('get',
+  ['true' => ['show_report', 'new_report', 'delete_report']]
+));
+$names = [];
+$names['true'] = [
+  'post_changes', 'set_default', 'create_report', 'update_report'
+];
+$names['specialchars'] = ['rep_name', 'rep_desc'];
+$names['strings'] = [['rep_scope', 'P']];
+
+$prefices = ['TFSRCH', 'TFREP', 'TFCW', 'CBSRCH', 'CBREP'];
+$suffices = [
+  'bug_id', 'submitted_by', 'date', 'close_date', 'planned_starting_date',
+  'planned_close_date', 'category_id', 'priority', 'resolution_id',
+  'privacy', 'vote', 'percent_complete', 'assigned_to', 'status_id',
+  'discussion_lock', 'hours', 'summary', 'details', 'severity',
+  'bug_group_id', 'originator_name', 'originator_email', 'originator_phone',
+  'release', 'release_id', 'category_version_id', 'platform_version_id',
+  'reproducibility_id', 'size_id', 'fix_release_id', 'comment_type_id',
+  'plan_release_id', 'component_version', 'fix_release', 'plan_release',
+  'keywords',
+];
+
+$custom_suff = ['tf' => 10, 'ta' => 10, 'sb' => 10, 'df' => 5];
+
+foreach ($custom_suff as $suf => $num)
+  for ($i = 1; $i <= $num; $i++)
+    $suffices[] = 'custom_' . $suf . $i;
+
+$names['digits'] = [];
+foreach ($prefices as $pref)
+  foreach ($suffices as $suf)
+    $names['digits'][] = $pref . '_' . $suf;
+
+extract(sane_import('post', $names));
 
 # HELP: what we call now "query form" was previously called "report",
 # that name is still in the database.
@@ -153,7 +78,7 @@ if ($def_query === false)
 if ($set_default)
 {
   if (!is_int ($report_id))
-    $repor_id = $def_query;
+    $report_id = $def_query;
   if ($def_query != $report_id)
     group_set_preference ($group_id, ARTIFACT . "_default_query", $report_id);
   $def_query = $report_id;
@@ -271,8 +196,7 @@ if ($new_report)
     print'
       <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
          <input type="hidden" name="create_report" value="y" />
-         <input type="hidden" name="group_id" value="'
-         .htmlspecialchars($group_id).'" />
+         <input type="hidden" name="group_id" value="' . $group_id . '" />
          <input type="hidden" name="post_changes" value="y" />
          <p>
          <span class="preinput"><label for="rep_name"'
@@ -417,21 +341,22 @@ else if ($show_report)
 
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
              <input type="hidden" name="update_report" value="y" />
-             <input type="hidden" name="group_id" value="'
-                    .htmlspecialchars($group_id).'" />
+             <input type="hidden" name="group_id" value="' . $group_id . '" />
              <input type="hidden" name="report_id" value="'
-                    .htmlspecialchars($report_id).'" />
+               . $report_id . '" />
              <input type="hidden" name="post_changes" value="y" />
              <span class="preinput"><label for="rep_name">'._("Name:")
              .'</label> </span><br />&nbsp;&nbsp;&nbsp;
              <input type="text" name="rep_name" id="rep_name" value="'
-             .db_result($res,0,'name').'" size="20" maxlength="20" />';
+             . db_result ($res, 0, 'name')
+             . '" size="20" maxlength="20" />';
     print '
 <p>
 <span class="preinput"><label for="rep_desc">'._("Description:")
             .'</label></span><br />&nbsp;&nbsp;&nbsp;
 <input type="text" name="rep_desc" id="rep_desc" value="'
-            .db_result($res,0,'description').'" size="50" maxlength="120" /></p>
+            . db_result ($res, 0, 'description')
+            . '" size="50" maxlength="120" /></p>
 <p>';
 
     print html_build_list_table_top ($title_arr);
@@ -515,8 +440,7 @@ else
     print '
 <form action="' . htmlentities ($_SERVER['PHP_SELF'])
                 . '" method="post" name="default_query">
-<input type="hidden" name="group_id" value="'
-         . htmlspecialchars ($group_id) . '" />
+<input type="hidden" name="group_id" value="' . $group_id . '" />
 
 <input type="hidden" name="set_default" value="y" />
 ';
@@ -558,7 +482,8 @@ else
             if ( ($arr['scope']=='P') && !user_ismember($group_id,'A') )
               {
                 print $arr['report_id'];
-                print "</td>\n<td>".$arr['name']."</td>\n";
+                print "</td>\n<td>" . htmlspecialchars ($arr['name'])
+                  . "</td>\n";
               }
             else
               {
@@ -569,10 +494,10 @@ else
                 print '<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
                   .'?group='.$group
                   .'&show_report=1&report_id='.$arr['report_id'].'">'
-                  .$arr['name']."</a></td>\n";
+                  . $arr['name'] . "</a></td>\n";
               }
 
-            print "\n<td>".$arr['description']."</td>\n"
+            print "\n<td>" . $arr['description'] . "</td>\n"
               ."\n<td align=\"center\">"
               .(($arr['scope']=='P') ? _("Project"):_("Personal")).'</td>'
               ."\n<td align=\"center\">";
@@ -586,7 +511,7 @@ else
                 print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
                   .'?group='.$group
                   .'&amp;delete_report=1&amp;report_id='.$arr['report_id']
-                  .'&amp;rep_name='.$arr['name'].'">'
+                  .'&amp;rep_name=' . urlencode ($arr['name']) . '">'
                   .'<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
                   .'.theme/misc/trash.png" border="0" alt="'._("Delete").'" /></a>';
               }

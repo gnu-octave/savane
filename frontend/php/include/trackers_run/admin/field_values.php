@@ -580,9 +580,9 @@ allowed to customize it"),$field));
                     print utils_link($GLOBALS['sys_home'].ARTIFACT
   ."/admin/field_values_transition-ofields-update.php?group=".$group
   ."&amp;transition_id=".$transition['transition_id'], $content);
-                    print '</td>
-<td align="center">'
-                      .$transition['notification_list']."</td>\n";
+                    print "</td>\n" . '<td align="center">'
+                      . htmlspecialchars ($transition['notification_list'])
+                      . "</td>\n";
                   }
                 else
                   {
@@ -852,9 +852,8 @@ common responses.").'</p>
 <p>
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
 <input type="hidden" name="update_canned" value="y" />
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
-<input type="hidden" name="item_canned_id" value="'
-       .htmlspecialchars($item_canned_id).'" />
+<input type="hidden" name="group_id" value="' . $group_id . '" />
+<input type="hidden" name="item_canned_id" value="' . $item_canned_id . '" />
 <input type="hidden" name="post_changes" value="y" />
 <span class="preinput">'._("Title").':</span><br />
 &nbsp;&nbsp;<input type="text" name="title" value="'
