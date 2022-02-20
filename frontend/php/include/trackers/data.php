@@ -1384,25 +1384,36 @@ function trackers_data_get_followups ($item_id = false, $rorder = false)
   else
     $rorder = "ASC";
 
-  return db_execute("SELECT DISTINCT " . ARTIFACT . "_history.bug_history_id,"
-    . ARTIFACT . "_history.field_name," . ARTIFACT . "_history.old_value,"
-    . ARTIFACT . "_history.spamscore," . ARTIFACT . "_history.new_value,"
-    . ARTIFACT . "_history.date,user.user_name,user.realname,user.user_id,"
-    . ARTIFACT . "_field_value.value AS comment_type "
-    . "FROM " . ARTIFACT . "_history," . ARTIFACT . "_field_value,"
-    . ARTIFACT . "_field," . ARTIFACT . ",user "
-    . "WHERE " . ARTIFACT . "_history.bug_id = ? "
-    . "AND " . ARTIFACT . "_history.field_name = 'details' "
-    . "AND " . ARTIFACT . "_history.mod_by=user.user_id "
-    . "AND " . ARTIFACT . "_history.bug_id=" . ARTIFACT . ".bug_id "
-    . "AND " . ARTIFACT . "_history.type = " . ARTIFACT . "_field_value.value_id "
-    . "AND " . ARTIFACT . "_field_value.bug_field_id = "
-    . ARTIFACT . "_field.bug_field_id "
-    . "AND (" . ARTIFACT . "_field_value.group_id = "
-    . ARTIFACT . ".group_id OR " . ARTIFACT . "_field_value.group_id = '100') "
-    . "AND  " . ARTIFACT . "_field.field_name = 'comment_type_id' "
-    . "ORDER BY " . ARTIFACT . "_history.date $rorder",
-                    array($item_id));
+  $tracker = ARTIFACT;
+
+  return
+    db_execute ("
+      SELECT DISTINCT
+        bug_history_id, field_name, old_value, spamscore, new_value, date,
+        user_name, realname, user_id, value AS comment_type
+      FROM
+        (
+          SELECT
+            b.bug_history_id, b.field_name, b.old_value, b.spamscore,
+            b.new_value, b.date, b.mod_by, b.type, t.group_id AS grp,
+            u.user_name, u.realname, u.user_id
+          FROM ${tracker}_history b, ${tracker} t, user u
+          WHERE
+            t.bug_id = ? AND b.bug_id = t.bug_id
+            AND b.field_name = 'details' AND b.mod_by = u.user_id
+        ) bhi
+        LEFT JOIN
+        (
+          SELECT DISTINCT v.value, v.value_id, v.group_id
+          FROM ${tracker}_field_value v, ${tracker}_field f
+          WHERE
+            v.bug_field_id = f.bug_field_id
+            AND f.field_name = 'comment_type_id'
+        ) fv
+        ON bhi.type = fv.value_id AND bhi.grp = fv.group_id
+      ORDER BY date $rorder",
+      [$item_id]
+    );
 }
 
 function trackers_data_get_commenters($item_id)
