@@ -53,12 +53,25 @@ define('LIST_STATUS_CREATED', 5);
 require_once('../../include/init.php');
 require_once('../../include/account.php');
 
-extract(sane_import('post',
-  array(
-    'post_changes',
-    'list_name', 'description', 'is_public', 'reset_password',
-    'newlist_format_index',
-)));
+$key_func = ['preg', '/^(\d+|new)$/'];
+extract (sane_import ('post',
+  [
+    'true' => 'post_changes',
+    'array' =>
+      [
+        [
+          'list_name',
+          [
+            $key_func,
+            ['name', ['max_len' => 80, 'allow_dots' => true]]
+          ]
+        ],
+        ['description', [$key_func, 'specialchars']],
+        ['reset_password', [$key_func, 'true']],
+        ['is_public', 'newlist_format_index', [$key_func, 'digits']],
+      ],
+  ]
+));
 
 if (!$group_id)
   exit_no_group();
@@ -88,28 +101,35 @@ if ($post_changes)
         if ($id == 'new')
           {
             # Add a new list.
-            # Need account-related functions.
-            if (!isset($newlist_format_index) && !isset($list_name['new']))
-              # User didn't fill the form.
-              continue;
-            if (!isset($newlist_format_index) && isset($list_name['new']))
-              # When there's only a single choice, there's no format index.
-              $newlist_format_index = 0;
-
-            # Generates a password.
-            $new_list_password = substr(md5(time() . rand(0,40000)),0,16);
+            if (!isset ($newlist_format_index))
+             {
+                if (!isset ($list_name['new']) || strlen ($list_name['new']) < 1)
+                  # User didn't fill the form.
+                  continue;
+                # When there's only a single choice, there's no format index.
+                $newlist_format_index = 0;
+             }
+            $new_list_password = substr (md5 (time () . rand (0,40000)), 0, 16);
 
             # Name shorter than two characters are not acceptable (only
             # check if the chosen format requires %NAME substitution).
-            if (strpos($grp->getTypeMailingListFormat("%NAME", $newlist_format_index),
-                       "%NAME") !== false
-                && (!$list_name['new'] || strlen($list_name['new']) < 2))
+            if (
+              strpos (
+                $grp->getTypeMailingListFormat ("%NAME", $newlist_format_index),
+                "%NAME"
+              ) !== false
+              && (strlen ($list_name['new']) < 2)
+            )
               {
-                if (strlen($list_name['new']) > 0)
-                  fb(sprintf(
-# TRANSLATORS: the argument is the new mailing list name entered by the user.
+                fb (
+                  sprintf (
+                    # TRANSLATORS: the argument is the new mailing list
+                    # name entered by the user.
 _("You must provide list name that is two or more characters long: %s"),
-                             $list_name['new']), 1);
+                    $list_name['new']
+                  ),
+                  1
+                );
                 continue;
               }
             # Site may have a strict policy on list names: checks now.
@@ -119,9 +139,14 @@ _("You must provide list name that is two or more characters long: %s"),
             # Check if it is a valid name.
             if (!account_namevalid($new_list_name, 1, 1, 1, 80))
               {
-                fb(sprintf(
-# TRANSLATORS: the argument is the new mailing list name entered by the user.
-                           _("Invalid list name: %s"), $new_list_name), 1);
+                fb (
+                  sprintf (
+                    # TRANSLATORS: the argument is the new mailing list name
+                    # entered by the user.
+                    _("Invalid list name: %s"), $new_list_name
+                  ),
+                  1
+                );
                 continue;
               }
             # Check on the list_name: must not be equal to a user account,
@@ -142,23 +167,23 @@ _("List name %s is reserved to avoid conflicts with user accounts."),
             if (db_numrows($result) > 0)
               {
                 $row = db_fetch_array($result);
-                if ($row['group_id'] != $group_id)
-                  {
-                    # If the list exists already, we create an alias
-                    # (same name but attached to a different project),
-                    # assuming that group type configuration is well-done
-                    # and disallow list name to persons not supposed to
-                    # use some names.
-                    fb(sprintf(
-_("List %s is already in the database. We will create an alias."),
-                               $new_list_name));
-                    $status = LIST_STATUS_CREATED;
-                  }
-                else
+                if ($row['group_id'] == $group_id)
                   {
                     fb(sprintf(_("The list %s already exists."), $new_list_name), 1);
                     continue;
                   }
+                # If the list exists already, we create an alias
+                # (same name but attached to a different project),
+                # assuming that group type configuration is well-done
+                # and disallow list name to persons not supposed to
+                # use some names.
+                fb (
+                  sprintf (
+_("List %s is already in the database. We will create an alias."),
+                    $new_list_name
+                 )
+                );
+                $status = LIST_STATUS_CREATED;
               }
             else # !(db_numrows($result) > 0)
               $status = LIST_STATUS_NEED_CREATION;
@@ -170,8 +195,7 @@ _("List %s is already in the database. We will create an alias."),
                                            'password' => $new_list_password,
                                            'list_admin' => user_getid(),
                                            'status' => $status,
-                                           'description'
-                                       => htmlspecialchars($description['new']),
+                                           'description' => $description['new'],
                                            ), DB_AUTOQUERY_INSERT);
 
             if (!$result)
@@ -180,11 +204,6 @@ _("List %s is already in the database. We will create an alias."),
               fb(_("List Added"));
             continue;
           } # if ($id == 'new')
-
-        # Update.
-        # Not a valid list id? Skip it, it was obviously not on the form.
-        if (!is_numeric($id))
-          continue;
 
         # Now get the current database data for this list
         # (yes, it means one SQL SELECT per list, but we dont expect to
@@ -290,8 +309,11 @@ while ($row = db_fetch_array($result))
     print '<span class="preinput"><label for="'."description[$id]".'">'
           ._("Description:").'</label></span>';
     print '<br />&nbsp;&nbsp;&nbsp;'
-          .form_input("text", "description[$id]", $row['description'],
-                      'maxlenght="120" size="50"');
+     . form_input (
+         "text", "description[$id]",
+          htmlspecialchars_decode ($row['description']),
+          'maxlenght="120" size="50"'
+      );
 
 # Status: private or public list, or planned for deletion.
 # It may be weird to have the last one here, but that is how things
@@ -354,12 +376,7 @@ Mailman via Savane</em>");
 # New list form.
 utils_get_content("mail/about_list_creation");
 
-print '
-<p>
-<input type="hidden" name="post_changes" value="y" />
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
-</p>
-<h2>'._('Create a new mailing list:').'</h2> ';
+print "</p>\n<h2>" . _('Create a new mailing list:') . "</h2>\n";
 
 $project_list_format  = $grp->getTypeMailingListFormat();
 $project_list_formats = explode (',', $project_list_format);

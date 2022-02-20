@@ -25,15 +25,18 @@
 # otherwise the page needs to be reloaded for the change to take effect.
 # see bug #1987
 require_once('../../include/sane.php');
-extract(sane_import('post',
-                    array('update',
-                          'form_keep_only_one_session',
-                          'form_timezone', 'user_theme', 'theme_rotate_jump',
-                          'form_reverse_comments_order', 'form_stone_age_menu',
-                          'form_nonfixed_feedback',
-                          'form_use_bookmarks', 'form_email_hide',
-                          'form_email_encrypted'
-                          )));
+extract (sane_import ('post',
+  [
+    'true' =>
+      [
+        'update', 'form_keep_only_one_session', 'theme_rotate_jump',
+        'form_reverse_comments_order', 'form_stone_age_menu',
+        'form_nonfixed_feedback', 'form_use_bookmarks', 'form_email_hide',
+        'form_email_encrypted'
+      ],
+    'no_quotes' => ['form_timezone', 'user_theme']
+  ]
+));
 
 if ($update)
   {
@@ -71,7 +74,7 @@ if ($update)
 
 require_once('../../include/init.php');
 require_once('../../include/timezones.php');
-extract(sane_import('request', array('feedback')));
+extract (sane_import ('request', ['pass' => 'feedback']));
 
 session_require(array('isloggedin'=>1));
 

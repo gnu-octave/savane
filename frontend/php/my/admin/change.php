@@ -6,7 +6,7 @@
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007, 2013 Sylvain Beucler
 # Copyright (C) 2016 Karl Berry
-# Copyright (C) 2017, 2018, 2020, 2021 Ineiev
+# Copyright (C) 2017, 2018, 2020, 2021, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -35,9 +35,20 @@ register_globals_off();
 # Check if the user is logged in.
 session_require(array('isloggedin'=>'1'));
 
-extract(sane_import('request',
-  array('item', 'update', 'newvalue', 'newvaluecheck', 'oldvalue', 'step',
-        'session_hash', 'confirm_hash', 'form_id', 'test_gpg_key')));
+extract (sane_import ('request',
+  [
+    'strings' =>
+      [
+        [
+          'item',
+          ['delete', 'realname', 'timezone', 'password', 'gpgkey', 'email']
+        ],
+        ['step', ['confirm', 'confirm2', 'discard']],
+      ],
+    'true' => ['update', 'test_gpg_key'],
+    'hash' => ['session_hash', 'confirm_hash', 'form_id'],
+  ]
+));
 
 if (!$item)
   exit_missing_param();
@@ -78,6 +89,7 @@ if ($update)
   # Update the database and redirect to account conf page.
     if ($item == "realname")
       {
+        extract (sane_import ('request', ['pass' => 'newvalue']));
         if (!account_realname_valid ($newvalue))
           fb(_("You must supply a new real name."), 1);
         else
@@ -94,6 +106,7 @@ if ($update)
       }
     elseif ($item == "timezone")
       {
+        extract (sane_import ('request', ['digits' => 'newvalue']));
         if ($newvalue == 100)
           $newvalue = "GMT";
         $success = db_autoexecute('user', array('timezone' => $newvalue),
@@ -106,6 +119,9 @@ if ($update)
       }
     elseif ($item == "password")
       {
+        extract (sane_import ('request',
+          ['pass' => ['oldvalue', 'newvalue', 'newvaluecheck']]
+        ));
         require_once('../../include/account.php');
         $success = 1;
         # Check against old pw.
@@ -173,6 +189,7 @@ if ($update)
       }
     elseif ($item == "gpgkey")
       {
+        extract (sane_import ('request', ['pass' => ['newvalue']]));
         $success = db_autoexecute('user', array('gpg_key' => $newvalue),
                                   DB_AUTOQUERY_UPDATE,
                                   "user_id=?", array(user_getid()));
@@ -183,6 +200,17 @@ if ($update)
       }
     elseif ($item == "email")
       {
+        extract (sane_import ('request',
+          [
+            'preg' =>
+              [
+                [
+                  'newvalue',
+                  '/^[a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+\.)+[a-zA-Z0-9]+$/'
+                ]
+              ]
+          ]
+        ));
         # First step.
         if (!$step)
           {
@@ -343,6 +371,9 @@ _("Unable to understand what to do, parameters are probably missing"), 1);
       }
     elseif ($item == "delete")
       {
+        extract (sane_import ('request',
+          ['strings' => [['newvalue', ['deletionconfirmed']]]]
+        ));
       # First step
         if (!$step && $newvalue == 'deletionconfirmed')
           {
@@ -522,6 +553,7 @@ two &ldquo;New Password&rdquo; fields. Instead, check the following box:";
   }
 elseif ($item == "gpgkey")
   {
+    extract (sane_import ('request', ['pass' => ['newvalue']]));
     $res_user = db_execute("SELECT gpg_key FROM user WHERE user_id=?",
                            array(user_getid()));
     $row_user = db_fetch_array($res_user);
@@ -532,10 +564,9 @@ elseif ($item == "gpgkey")
     if (!$newvalue)
       $newvalue = $row_user['gpg_key'];
 
-    $input_specific .= '<textarea title="'._("New GPG key")
-                      .'" cols="70" rows="20" '
-                      .'wrap="virtual" name="newvalue">'.$newvalue
-                      ."</textarea>\n";
+    $input_specific .= '<textarea title="' . _("New GPG key")
+      .'" cols="70" rows="20" wrap="virtual" name="newvalue">'
+      . htmlspecialchars ($newvalue) . "</textarea>\n";
     $input_specific .= '<p><input type="submit" name="test_gpg_key" value="'
                        ._("Test GPG keys").'" /> '
                        ._("(Testing is recommended before updating.)").'</p>'
@@ -572,8 +603,7 @@ request.").'</p>
         $preamble = _('Push &ldquo;Update&rdquo; to confirm your email change');
         $input_title = _('Confirmation hash:');
         $input_specific = "<input type='text' readonly='readonly' "
-          ."name='confirm_hash' value='"
-          . htmlentities($confirm_hash, ENT_QUOTES) . "' />";
+          . "name='confirm_hash' value='$confirm_hash' />";
         $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
       }
     elseif ($step == "discard")
@@ -581,6 +611,8 @@ request.").'</p>
       # Avoid php warning about title not defined,
       # <http://savannah.gnu.org/support/?108964>.
         $title = _("Discard Email Change");
+        $input_specific = "<input type='text' readonly='readonly' "
+          . "name='confirm_hash' value='$confirm_hash' />";
       }
   }
 elseif ($item == "delete")
@@ -603,13 +635,20 @@ elseif ($item == "delete")
         $input_title = _('Confirmation hash:');
         $input_specific = "<input type='text' readonly='readonly' "
                           .'name="confirm_hash" value="'
-                          .htmlentities($confirm_hash).'" />';
+                          . $confirm_hash . '" />';
         $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
+      }
+    elseif ($step == 'discard')
+      {
+        $title = _("Discard account deletion");
+        $input_title = _('Discard hash:');
+        $input_specific = "<input type='text' readonly='readonly' "
+                          . "name='confirm_hash' value='$confirm_hash' />";
+        $input_specific .= "<input type='hidden' name='step' value='discard' />";
       }
   }
 
-# fallback
-if (!$title)
+if (empty($title))
   $title = sprintf (_("Unknown user settings item (%s)"), $item);
 
 # Actually print the HTML page.

@@ -27,9 +27,8 @@ require_once('../include/sendmail.php');
 
 session_require(array('isloggedin'=>'1'));
 
-
-extract(sane_import('request', array('quitting_group_id')));
-extract(sane_import('post', array('confirm', 'cancel')));
+extract (sane_import ('request', ['digits' => 'quitting_group_id']));
+extract (sane_import ('post', ['true' => ['confirm', 'cancel']]));
 
 $pending = member_check_pending(user_getid(), $quitting_group_id);
 

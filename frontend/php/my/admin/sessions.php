@@ -24,10 +24,22 @@ register_globals_off();
 # Check if the user is logged in.
 session_require(array('isloggedin'=>'1'));
 
-extract(sane_import('get',
-                    array('func', 'dsession_hash', 'dip_addr', 'dtime',
-                          'dkeep_one')));
-extract(sane_import('cookie', array('session_hash')));
+extract (sane_import ('get',
+  [
+    'strings' =>
+      [
+        ['func', 'del'],
+      ],
+    'true' => 'dkeep_one',
+    'digits' => 'dtime',
+    'preg' =>
+      [
+        ['dip_addr', ',^[\d./:]+$,'],
+        ['dsession_hash', '/^[a-f\d]+[.]{3}$/']
+      ],
+  ]
+));
+extract (sane_import ('cookie', ['hash' => 'session_hash']));
 
 # Update the database.
 if ($func == 'del')

@@ -25,32 +25,38 @@ require_once('../include/news/general.php');
 if (!$group_id)
   $group_id = $GLOBALS['sys_group_id'];
 
-extract(sane_import('request', array('feedback', 'limit')));
+extract(sane_import('request', ['pass' => 'feedback', 'digits' => 'limit']));
 
-if (isset($limit))
-  $limit = intval($limit);
-else
+if (empty ($limit))
   $limit = 10;
+else
+  $limit = intval ($limit);
 
 $project=project_get_object($group_id);
 if (!$project->Uses("news"))
   exit_error(_("This project doesn't use this tool."));
 
-site_project_header(array('group'=>$group_id,
-                          'context'=>'news'));
+site_project_header (['group' => $group_id, 'context' => 'news']);
 
-# Permit the user to specify something.
-$form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
-                .'#options" method="get">';
-$form = sprintf(
-ngettext("Show summaries for the %s latest news.",
-         "Show summaries for the %s latest news.", $limit),
- '<input type="text" title="'._("Number of news to show")
-.'" name="limit" size="4" value="'.$limit.'" />');
+$form_opening = "<form action='" . htmlentities ($_SERVER['PHP_SELF'])
+  . "#options' method='get'>\n";
+
+$format_string =
+  ngettext (
+    "Show summaries for the %s latest news.",
+    "Show summaries for the %s latest news.",
+    $limit
+  );
+$news_no_input =
+  '<input type="text" title=\'' . _("Number of news to show")
+  . "' name='limit' size='4' value='$limit' />\n";
+
+$form = sprintf ($format_string, $news_no_input);
 if (isset($group))
-  $form .= '<input type="hidden" name="group" value="'
-        .htmlspecialchars($group).'" />';
-$form_submit = '<input class="bold" type="submit" value="'._("Apply").'"  />';
+  $form .= '<input type="hidden" name="group" value=\'' . "$group' />\n";
+
+$form_submit = '<input class="bold" type="submit" value="'
+  . _("Apply") . "\"  />\n";
 
 print html_show_displayoptions($form, $form_opening, $form_submit);
 print "<br />\n";

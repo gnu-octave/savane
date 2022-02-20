@@ -37,7 +37,12 @@ utils_get_content("my/request_for_inclusion");
 
 # Updates.
 # Watchee add.
-extract(sane_import('request', array('func', 'watchee_id', 'group_id')));
+extract (sane_import ('request',
+  [
+    'strings' => [['func', ['addwatchee', 'delwatchee']]],
+    'digits' => ['watchee_id', 'group_id'],
+  ]
+));
 if ($func)
   {
     if ($func == "delwatchee")
@@ -110,9 +115,15 @@ function send_pending_user_email($group_id, $user_id, $user_message)
 }
 
 # Request for inclusion.
-extract(sane_import('post', array('update', 'form_id', 'form_message',
-                                  'form_groups')));
-# ($form_groups is an array)
+extract (sane_import ('post',
+  [
+    'true' => 'update',
+    'hash' => 'form_id',
+    'pass' => 'form_message',
+    'array' => [['form_groups', ['digits', 'true']]],
+  ]
+));
+
 if ($update)
 {
   $result_upd = db_query("SELECT group_id FROM groups WHERE status='A' "
@@ -311,11 +322,11 @@ formal inclusion using this form.")."\n";
 print "</p>\n";
 
 print '
-        <form action="'.htmlentities ($_SERVER["PHP_SELF"])
-                       .'#searchgroup" method="post">
+        <form action="' . htmlentities ($_SERVER["PHP_SELF"])
+          . '#searchgroup" method="post">
         <input type="hidden" name="action" value="searchgroup" />
         <input type="text" title="'._("Group to look for").'" size="35"
-               name="words" value="'.htmlspecialchars($words).'" /><br />
+               name="words" value="' . htmlspecialchars ($words) . '" /><br />
         <br /><br />
         <input type="submit" name="Submit" value="'
         ._("Search Groups").'" />
@@ -324,7 +335,7 @@ print '
 </div><!-- end boxitem -->
 ';
 
-extract(sane_import('request', array('words')));
+extract (sane_import ('request', ['pass' => 'words']));
 if ($words)
   {
   # Avoid to big search by asking for more than 1 characters.

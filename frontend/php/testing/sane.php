@@ -386,6 +386,22 @@ $reference = 'cvs/admin/index.php';
   test_sane_import ($in, $names, $out);
 }
 
+$reference = 'file';
+{
+  $names = ['preg' => [['file_id', '/^(\d+|test[.]png)$/']]];
+  $in = $out = ['file_id' => 'test.png'];
+  test_sane_import ($in, $names, $out);
+  $in = $out = ['file_id' => '12345'];
+  test_sane_import ($in, $names, $out);
+  $in['file_id'] = '124a';
+  $out['file_id'] = null;
+  test_sane_import ($in, $names, $out);
+  $in = [0 => 'task'];
+  $out = [];
+  if ($sane_sanitizers['artifact'] ($in, $out, 0, null) || $out[0] != 'task')
+    print "\$sane_sanitizers['artifact'] () doesn't work\n";
+}
+
 $reference = 'forum/forum.php';
 {
   $names = ['digits' => 'forum_id'];
@@ -1419,6 +1435,48 @@ $reference = 'js/show-hide.php';
   test_sane_import ($in, $names, $out);
 }
 
+$reference = 'mail/admin/index.php';
+{
+  $key_func = ['preg', '/^(\d+|new)$/'];
+  $names = [
+    'true' => 'post_changes',
+    'array' =>
+      [
+        [
+          'list_name',
+          [
+            $key_func,
+            ['name', ['max_len' => 80, 'allow_dots' => true]]
+          ]
+        ],
+        ['description', [$key_func, 'specialchars']],
+        ['reset_password', [$key_func, 'true']],
+        ['is_public', 'newlist_format_index', [$key_func, 'digits']],
+      ],
+  ];
+  $in = $out = [
+    'post_changes' => true,
+    'list_name' =>
+      [
+        'new' => 'list.test',
+        '123' => 'tes9-t.list',
+      ],
+    'description' =>
+      [
+        'new' => 'new description',
+        '12' => '3',
+      ],
+    'is_public' => ['1' => 289],
+    'reset_password' => ['new' => true],
+    'newlist_format_index' => ['1' => '34'],
+  ];
+  $in['description']['wen'] = '1';
+  $in['description']['45'] = '<b id="';
+  $out['description']['45'] = htmlspec ($in['description']['45']);
+  $in['is_public']['abc'] = 'e';
+  test_sane_import ($in, $names, $out);
+}
+
 $reference = 'markup-test.php';
 {
   $names = [
@@ -1440,6 +1498,202 @@ $reference = 'markup-test.php';
 
   test_sane_import ($in, $names, $out);
 }
+
+$reference = 'my/admin/cc.php';
+{
+  $names = ['preg' => [['cancel', '/^(\d+|any)$/']]];
+  $in = $out = ['cancel' => '1'];
+  test_sane_import ($in, $names, $out);
+  $in = $out = ['cancel' => 'any'];
+  test_sane_import ($in, $names, $out);
+  $in['cancel'] = 'a';
+  $out['cancel'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/admin/change_notifications.php';
+{
+  $names = [
+    'true' =>
+      [
+        'update', 'form_notifset_unless_im_author',
+        'form_notifset_item_closed',
+        'form_notifset_item_statuschanged',
+        'form_skipcc_postcomment',
+        'form_skipcc_updateitem',
+        'form_removecc_notassignee',
+      ],
+     'digits' => [['form_frequency', [0, 3]]],
+     'pass' => 'form_subject_line', # Validated later.
+  ];
+  $in = $out = [
+    'update' => true,
+    'form_notifset_unless_im_author' => true,
+    'form_notifset_item_closed' => true,
+    'form_notifset_item_statuschanged' => true,
+    'form_skipcc_postcomment' => true,
+    'form_skipcc_updateitem' => true,
+    'form_frequency' => 2,
+    'form_subject_line' => 'subject'
+  ];
+  $out['form_removecc_notassignee'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/admin/change.php';
+{
+  $names = [
+    'strings' =>
+      [
+        [
+          'item',
+          ['delete', 'realname', 'timezone', 'password', 'gpgkey', 'email']
+        ],
+        ['step', ['confirm', 'confirm2', 'discard']],
+      ],
+    'true' => ['update', 'test_gpg_key'],
+    'hash' => ['session_hash', 'confirm_hash', 'form_id'],
+  ];
+  $in = $out = [
+   'item' => 'realname',
+   'update' => true,
+   'step' => 'discard',
+   'test_gpg_key' => true,
+   'session_hash' => md5 (5),
+   'confirm_hash' => md5 (6),
+   'form_id' => md5 (7),
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/admin/editsshkeys.php';
+{
+  $names = [
+    'true' => 'update',
+    'hash' => 'form_id',
+    'array' =>
+      [
+        ['form_authorized_keys', ['digits', 'no_quotes']]
+      ]
+  ];
+  $in = $out = [
+    'form_id' => md5 (8),
+    'form_authorized_keys' => ['a', 'b', 'c', 3 => '"']
+  ];
+  $out['update'] = null;
+  unset ($out['form_authorized_keys'][3]);
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/admin/index.php';
+{
+  $names = [
+    'true' =>
+      [
+        'update', 'form_keep_only_one_session', 'theme_rotate_jump',
+        'form_reverse_comments_order', 'form_stone_age_menu',
+        'form_nonfixed_feedback', 'form_use_bookmarks', 'form_email_hide',
+        'form_email_encrypted'
+      ],
+    'no_quotes' => ['form_timezone', 'user_theme']
+  ];
+  $in = $out = [
+    'update' => true,
+    'form_keep_only_one_session' => true,
+    'form_timezone' => 'Africa/Ouagadougou',
+    'user_theme' => 'www.gnu.org'
+  ];
+  $out['theme_rotate_jump'] = $out['form_reverse_comments_order']
+    = $out['form_stone_age_menu'] = $out['form_nonfixed_feedback']
+    = $out['form_use_bookmarks'] = $out['form_email_hide']
+    = $out['form_email_encrypted'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/admin/resume.php';
+{
+  $names = [
+    'true' =>
+      [
+        'update_profile', 'add_to_skill_inventory', 'update_skill_inventory',
+        'delete_from_skill_inventory'
+      ],
+    'digits' =>
+      [
+        'skill_id', 'skill_level_id', 'skill_year_id', 'skill_inventory_id',
+        ['people_view_skills', [0, 1]],
+      ],
+    'pass' => 'people_resume'
+  ];
+  $in = $out = [
+    'update_profile' => true,
+    'add_to_skill_inventory' => true,
+    'update_skill_inventory' => true,
+    'delete_from_skill_inventory' => true,
+    'skill_id' => 4,
+    'people_view_skills' => 0,
+    'people_resume' => 'a\'&b"',
+  ];
+  $out['skill_level_id'] = $out['skill_year_id'] = $out['skill_inventory_id']
+    = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/admin/sessions.php';
+{
+  $names = [
+    'strings' =>
+      [
+        ['func', 'del'],
+      ],
+    'true' => 'dkeep_one',
+    'digits' => 'dtime',
+    'preg' =>
+      [
+        ['dip_addr', ',^[\d./:]+$,'],
+        ['dsession_hash', '/^[a-f\d]+[.]{3}$/']
+      ],
+  ];
+  $in = $out = [
+    'dip_addr' => '127.0.0.1/24:5',
+    'func' => 'del',
+    'dkeep_one' => true,
+    'dtime' => 1,
+    'dsession_hash' => substr (md5 (0), 0, 6) . "..."
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/groups.php';
+{
+  $names = [
+    'true' => 'update',
+    'hash' => 'form_id',
+    'pass' => 'form_message',
+    'array' => [['form_groups', ['digits', 'true']]],
+  ];
+  $in = $out = [
+    'update' => true,
+    'form_id' => 'x',
+    'form_message' => '<b id=\'',
+    'form_groups' => ['on', 'on', 'on', 'on'],
+  ];
+  $out['form_id'] = null;
+  foreach ($out['form_groups'] as $k => $v)
+    $out['form_groups'][$k] = true;
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'strings' => [['func', ['addwatchee', 'delwatchee']]],
+    'digits' => ['watchee_id', 'group_id'],
+  ];
+  $in = $out = [
+    'func' => 'delwatchee',
+    'watchee_id' => 1,
+    'group_id' => 2,
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
 
 $reference = 'my/bookmarks.php';
 {
@@ -1498,6 +1752,93 @@ $reference = 'my/items.php';
 
   if (!$in['form_open'])
     print "!form_open\n";
+}
+
+$reference = 'my/quitproject.php';
+{
+  $names = ['digits' => 'quitting_group_id'];
+  $in = [
+    'confirm' => 'y',
+    'quitting_group_id' => '#19',
+  ];
+  $out = ['quitting_group_id' => 19];
+  test_sane_import ($in, $names, $out);
+  $names = ['true' => ['confirm', 'cancel']];
+  $out = ['confirm' => true, 'cancel' => null];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'my/votes.php';
+{
+  $names = [
+    'true' => 'submit',
+    'array' => [['new_votes', ['digits', 'digits']]],
+  ];
+  $in = $out = [
+    'new_votes' => [1, 2, 3]
+  ];
+  $out['submit'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'news/admin/index.php';
+{
+  $names = [
+    'true' => 'update',
+    'preg' => [['form_news_address', '/^[-+_@.,;\s\da-zA-Z]*$/']],
+  ];
+  $in = $out = [
+    'update' => true,
+    'form_news_address' => 'news@test.org',
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'news/index.php';
+{
+  $names = ['pass' => 'feedback', 'digits' => 'limit'];
+  $in = $out = [
+    'feedback' => 'a',
+    'limit' => 10
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'news/submit.php';
+{
+  $names = [
+    'hash' => 'form_id',
+    'true' => 'update',
+    'specialchars' => ['summary', 'details'],
+  ];
+  $in = $out = [
+    'form_id' => md5 ('form_id'),
+    'update' => true,
+    'summary' => 'symmary',
+    'details' => 'details',
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'news/approve.php';
+{
+  $names = [
+    'digits' => ['id', 'status', 'for_group_id'],
+    'hash' => 'form_id',
+    'true' => ['update', 'post_changes', 'approve'],
+    'specialchars' => ['summary', 'details'],
+  ];
+  $in = $out = [
+    'id' => 1,
+    'status' => 4,
+    'for_group_id' => 83521,
+    'form_id' => md5 ('md5'),
+    'update' => true,
+    'summary' => 'sum',
+    'details' => 'det'
+  ];
+  $out['post_changes'] = $out['approve'] = null;
+  test_sane_import ($in, $names, $out);
 }
 
 $reference = 'register/upload.php';

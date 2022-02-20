@@ -186,7 +186,7 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,
   global $feedback;
   $fields = array();
   $fields['group_id'] = $group_id;
-  $fields['forum_name'] = htmlspecialchars($forum_name);
+  $fields['forum_name'] = $forum_name;
   $fields['is_public'] = $is_public;
   $fields['description'] = htmlspecialchars($description);
 

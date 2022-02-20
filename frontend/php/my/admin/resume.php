@@ -28,10 +28,20 @@ if (!user_isloggedin())
   exit_not_logged_in();
 
 extract(sane_import('post',
-  array('update_profile', 'people_resume', 'people_view_skills',
-        'add_to_skill_inventory', 'update_skill_inventory',
-        'delete_from_skill_inventory', 'skill_id', 'skill_level_id',
-        'skill_year_id', 'skill_inventory_id')));
+  [
+    'true' =>
+      [
+        'update_profile', 'add_to_skill_inventory', 'update_skill_inventory',
+        'delete_from_skill_inventory'
+      ],
+    'digits' =>
+      [
+        'skill_id', 'skill_level_id', 'skill_year_id', 'skill_inventory_id',
+        ['people_view_skills', [0, 1]],
+      ],
+    'pass' => 'people_resume'
+  ]
+));
 
 # Check if resume should be editable at all.
 $allow_resume = false;
@@ -63,8 +73,6 @@ if ($update_profile)
       {
         if (!$people_resume)
           $people_resume = '';
-        else
-          $people_resume = utils_unconvert_htmlspecialchars ($people_resume);
         $arg_arr = array ($people_view_skills, $people_resume, user_getid());
         $sql_str = $sql_str . ", people_resume=?";
       }

@@ -23,12 +23,14 @@
 require_once('../include/init.php');
 require_once('../include/sendmail.php');
 
-
-extract(sane_import('all',
-  array('id',
-        'update', 'form_id',
-        'post_changes', 'summary', 'details',
-        'status', 'approve', 'for_group_id')));
+extract (sane_import ('all',
+  [
+    'digits' => ['id', 'status', 'for_group_id'],
+    'hash' => 'form_id',
+    'true' => ['update', 'post_changes', 'approve'],
+    'specialchars' => ['summary', 'details'],
+  ]
+));
 
 // This page can be used to manage the whole news system for a server
 // or news for a project.
@@ -54,8 +56,8 @@ if ($post_changes && $approve)
         $fields = array('is_approved' => $status,
                         'date' => time(),
                         'date_last_edit' => time(),
-                        'summary' => htmlspecialchars($summary),
-                        'details' => htmlspecialchars($details));
+                        'summary' => $summary,
+                        'details' => $details);
         $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
                                  "id=? AND group_id=?",
                                  array($id, $for_group_id));
@@ -65,8 +67,8 @@ if ($post_changes && $approve)
       {
         $fields = array('is_approved' => $status,
                         'date_last_edit' => time(),
-                        'summary' => htmlspecialchars($summary),
-                        'details' => htmlspecialchars($details));
+                        'summary' => $summary,
+                        'details' => $details);
         $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_UPDATE,
                                  "id=? AND group_id=?", array($id, $group_id));
       }
@@ -108,33 +110,37 @@ if ($post_changes && $approve)
     $list_queue='y';
   }
 
-# Begin HTML.
-site_project_header(array('title'=>_("Manage"),
-                          'group'=>$group_id,
-                          'context'=>'news'));
+site_project_header (
+  ['title' => _("Manage"), 'group' => $group_id, 'context' => 'news']
+);
 
 # Form to make modifications to an existing item, to submit one.
 if ($approve)
   {
     if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
       {
-        $result = db_execute("SELECT groups.unix_group_name,"
-           ."news_bytes.*,news_bytes.submitted_by AS submitted_by
-           FROM news_bytes,groups WHERE id=?
-             AND news_bytes.group_id=groups.group_id",
-           array($id));
+        $result = db_execute ("
+          SELECT
+            groups.unix_group_name, news_bytes.*,
+            news_bytes.submitted_by AS submitted_by
+          FROM news_bytes,groups
+          WHERE id=?  AND news_bytes.group_id=groups.group_id",
+          [$id]
+        );
       }
     else
       {
-        $result = db_execute("SELECT *,news_bytes.submitted_by "
-          ."AS submitted_by FROM news_bytes
+        $result = db_execute ("
+          SELECT *,news_bytes.submitted_by AS submitted_by
+          FROM news_bytes
           WHERE id=? AND group_id=?",
-          array($id, $group_id));
+          [$id, $group_id]
+        );
       }
 
     if (db_numrows($result) < 1)
       {
-        print '<h1 class="error">'._("No pending news").'</h1>';
+        print '<h1 class="error">' . _("No pending news") . "</h1>\n";
         site_project_footer(array());
         exit;
       }
@@ -142,9 +148,8 @@ if ($approve)
     if ($group_id == $GLOBALS['sys_group_id'] && !user_is_super_user())
       {
         print '<p class="warn">'
-._("If you want to approve/edit site news (shown on the front page), you must
-be logged as superuser.").'</p>
-';
+. _("If you want to approve/edit site news (shown on the front page), you must
+be logged as superuser.") . "</p>\n";
       }
     elseif ($group_id == $GLOBALS['sys_group_id'] && user_is_super_user())
       {
@@ -154,81 +159,82 @@ shown on the front page), you must end the superuser session.").'</p>
 ';
       }
 
-    # Found out who is the submitter:
-    if (db_result($result,0,'submitted_by') == 0)
-      { $submitted_by = "None"; }
-    else
-      { $submitted_by = user_getname(db_result($result,0,'submitted_by')); }
+    $s_by_res = db_result ($result, 0, 'submitted_by');
+    $submitted_by = "None";
+    if (db_result ($result, 0, 'submitted_by'))
+      $submitted_by = user_getname ($s_by_res);
 
 
-    print '<p>'._("Submitted by:").' '
-          .utils_user_link($submitted_by,
-                           user_getrealname(db_result($result,0,
-                                            'submitted_by'))).'</p>
-';
-    print '
-              <form action="'.htmlentities ($_SERVER['PHP_SELF'])
-              .'" method="post">
-              <input type="hidden" name="id" value="'
-              .db_result($result,0,'id').'" />';
+    print '<p>' . _("Submitted by:") . ' '
+     . utils_user_link ($submitted_by, user_getrealname ($s_by_res))
+     . "</p>\n";
+    print '<form action="' . htmlentities ($_SERVER['PHP_SELF'])
+      . "\" method=\"post\">\n"
+      . '<input type="hidden" name="id" value="'
+      . db_result ($result, 0, 'id') . "\" />\n";
 
-    print '
-              <input type="hidden" name="approve" value="y" />
-              <input type="hidden" name="post_changes" value="y" />
-';
+    print "<input type='hidden' name='approve' value='y' />\n";
+    print "<input type='hidden' name='post_changes' value='y' />\n";
+
     if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
       {
-        print '<input type="radio" name="status" id="status_admin" value="1" />&nbsp;&nbsp;';
-        print '<span class="preinput"><label for="status_admin">'
-.sprintf(
+        print "<input type='radio' name='status' id='status_admin' "
+          . "value='1'\n/>&nbsp;&nbsp;";
+        print '<span class="preinput"><label for="status_admin">';
+        printf (
 # TRANSLATORS: the argument is site name (like Savannah).
-_("Approve For %s' Front Page"),$GLOBALS['sys_name'])
-.'</label></span><br />
-<input type="radio" id="status_do_nothing" name="status" value="0" '
-.'checked="checked" />&nbsp;&nbsp;<span class="preinput"><label for="status_do_nothing">'
-._("Do Nothing").'</label></span><br />
-<input type="radio" name="status" id="status_refuse" value="2" />&nbsp;&nbsp;'
-.'<span class="preinput"><label for="status_refuse">'._("Refuse")
-.'</label></span><br />
-<input type="hidden" name="for_group_id" value="'
-.db_result($result,0,'group_id').'" />
-<input type="hidden" name="group_id" value="'.$GLOBALS['sys_group_id'].'" />
-';
+          _("Approve For %s' Front Page"), $GLOBALS['sys_name']
+        );
+        print "</label></span><br />\n";
+        print "<input type='radio' id='status_do_nothing' name='status' "
+          . "value='0' checked='checked'\n"
+          . "/>&nbsp;&nbsp;<span class='preinput'><label "
+          . "for='status_do_nothing'>" . _("Do Nothing") . "</label></span>"
+          . "<br />\n"
+          . "<input type='radio' name='status' id='status_refuse' value='2'\n"
+          . "/>&nbsp;&nbsp;<span class='preinput'><label for='status_refuse'>"
+          . _("Refuse") . "</label></span><br />\n"
+          . "<input type='hidden' name='for_group_id' value='"
+          . db_result ($result, 0, 'group_id') . "' />\n"
+          . "<input type='hidden' name='group_id' "
+          . "value='{$GLOBALS['sys_group_id']}' />\n";
       }
     else
       {
         print '<input type="radio" name="status" id="status_display" '
-.'value="0" checked="checked" />
-&nbsp;&nbsp;<span class="preinput"><label for="status_display">'
-._("Display").'</label></span><br />
-<input type="radio" name="status" id="status_delete" value="4" />
-&nbsp;&nbsp;<span class="preinput"><label for="status_delete">'
-._("Delete").'</label></span><br />
-<input type="hidden" name="group_id" value="'.db_result($result,0,'group_id').'" />
-';
+          . "value='0' checked='checked' />\n"
+          . '&nbsp;&nbsp;<span class="preinput"><label for="status_display">'
+          . _("Display") . "</label></span><br />\n"
+          . "<input type='radio' name='status' id='status_delete' "
+          . "value='4' />\n"
+          . '&nbsp;&nbsp;<span class="preinput"><label for="status_delete">'
+          . _("Delete") . "</label></span><br />\n"
+          . '<input type="hidden" name="group_id" value="'
+          . db_result ($result, 0, 'group_id') . "\" />\n";
       }
 
-    print '<br /><span class="preinput"><label for="summary">'
-._("Subject:").'</label></span><br />
-&nbsp;&nbsp;
-<input type="text" name="summary" id="summary" value="'
-.db_result($result,0,'summary').'" size="65" maxlength="80" /><br />
-<span class="preinput"><label for="details">'
-._("Details").'</label> '.markup_info("full").'</span><br />
-&nbsp;&nbsp;
-<textarea name="details" id="details" rows="20" cols="65" wrap="soft">'
-.db_result($result,0,'details').'</textarea><p>';
-    print '<p>'.sprintf (
+    print "<br />\n<span class='preinput'><label for='summary'>"
+      . _("Subject:") . "</label></span><br />\n&nbsp;&nbsp;\n"
+      . '<input type="text" name="summary" id="summary" value="'
+      . db_result ($result, 0, 'summary') . '" size="65" maxlength="80" />'
+      . "<br />\n"
+      . '<span class="preinput"><label for="details">'
+      . _("Details"). '</label> '. markup_info ("full")
+      . "</span><br />\n&nbsp;&nbsp;\n"
+      . '<textarea name="details" id="details" rows="20" cols="65" wrap="soft">'
+      . db_result($result, 0, 'details') . "</textarea>\n";
+    print '<p>';
+    printf (
 # TRANSLATORS: the argument is site name (like Savannah).
-_("Note: If this item is on the %s home page and you edit it, it will be
-removed from the home page."),$GLOBALS['sys_name']).'</p>
-';
-    print '<div class="center">
-<input type="submit" name="submit" value="'._("Submit").'" /></div>
-</form>
-';
-    print '<h2>'._("Preview:").'</h2>
-'.markup_full(db_result($result,0,'details'));
+      _("Note: If this item is on the %s home page and you edit it, it will be
+removed from the home page."),
+      $GLOBALS['sys_name']
+    );
+    print "</p>\n<div class='center'>"
+      . '<input type="submit" name="submit" value="'
+      . _("Submit") . "\" /></div>\n</form>\n";
+    print '<h2>' . _("Preview:") . "</h2>\n"
+      . markup_full (db_result ($result, 0, 'details'));
   }
 else # ! $approve
   {
@@ -236,16 +242,14 @@ else # ! $approve
     if ($group_id == $GLOBALS['sys_group_id'] && !user_is_super_user())
       {
         print '<p class="warn">'
-._("If you want to approve/edit site news (shown on the front page), you must
-be logged as superuser.").'</p>
-';
+. _("If you want to approve/edit site news (shown on the front page), you must
+be logged as superuser.") . "</p>\n";
       }
     elseif ($group_id == $GLOBALS['sys_group_id'] && user_is_super_user())
       {
         print '<p class="warn">'
-._("If you want to approve/edit news for the local administration project (not
-shown on the front page), you must end the superuser session.").'</p>
-';
+. _("If you want to approve/edit news for the local administration project (not
+shown on the front page), you must end the superuser session.") . "</p>\n";
       }
 
     $old_date=(time()-(86400*15));
@@ -270,14 +274,13 @@ shown on the front page), you must end the superuser session.").'</p>
     $rows=db_numrows($result);
     if ($rows < 1)
       {
-        print '<h2>'._("No queued items found").'</h2>';
+        print '<h2>' . _("No queued items found") . "</h2>\n";
       }
     else
       {
-        print '<h2>'._("These news items were submitted and need approval")
-                    .'</h2>
-<ul>
-';
+        print '<h2>' . _("These news items were submitted and need approval")
+          . "</h2>\n<ul>\n";
+
         for ($i=0; $i<$rows; $i++)
           {
             print '<li';
@@ -298,11 +301,9 @@ shown on the front page), you must end the superuser session.").'</p>
             print '">';
             if ($group_id == $GLOBALS['sys_group_id'])
               print group_getname(db_result($result,$i,'group_id')).' - ';
-            print db_result($result,$i,'summary').'</a></li>
-';
-            }
-          print '</ul>
-';
+            print db_result ($result, $i, 'summary') . "</a></li>\n";
+          }
+          print "</ul>\n";
       }
     # Secondly, we show deleted items for this week.
     if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
@@ -321,42 +322,36 @@ shown on the front page), you must end the superuser session.").'</p>
     if ($rows < 1)
       {
         print '<h2>'
-          ._("No deleted items during these past two weeks").'</h2>
-';
+          . _("No deleted items during these past two weeks") . "</h2>\n";
       }
     else
       {
         if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
           {
             print '<h2>'
-              ._("These items were refused these past two weeks:").'</h2>
-';
+              ._("These items were refused these past two weeks:") . "</h2\n";
           }
         else
           {
             print '<h2>'
-              ._("These items were deleted these past two weeks:").'</h2>
-';
+              ._("These items were deleted these past two weeks:") . "</h2>\n";
           }
-        print '<ul>
-';
-        for ($i=0; $i<$rows; $i++)
+        print "<ul>\n";
+        for ($i = 0; $i < $rows; $i++)
           {
             print '<li';
-          if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id'])
-            print ' class="boxhighlight"';
-          print '><a href="'.htmlentities ($_SERVER['PHP_SELF'])
-                .'?approve=1&amp;group='
-                .$group.'&amp;id='.db_result($result,$i,'id').'">';
+            if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id'])
+              print ' class="boxhighlight"';
+            print '><a href="' . htmlentities ($_SERVER['PHP_SELF'])
+              . "?approve=1&amp;group=$group&amp;id="
+              . db_result($result,$i,'id') . '">';
 
             if ($group_id == $GLOBALS['sys_group_id'])
-              { print group_getname(db_result($result,$i,'group_id')).' - '; }
-            print db_result($result,$i,'summary').'</a></li>
-';
+              print group_getname(db_result($result,$i,'group_id')).' - ';
+            print db_result ($result, $i, 'summary') . "</a></li>\n";
           }
-        print '</ul>
-';
-      }
+        print "</ul>\n";
+      } # $rows >= 1
 
     # We show all approved items.
     if (user_is_super_user() && $group_id == $GLOBALS['sys_group_id'])
@@ -375,33 +370,27 @@ shown on the front page), you must end the superuser session.").'</p>
     $rows=db_numrows($result);
     if ($rows < 1)
       {
-        print '<h2>'
-          ._("No news items approved").'</h2>
-';
+        print '<h2>' . _("No news items approved"). "</h2>\n";
       }
     else
       {
-        print '<h2>'
-          ._("These items were approved:").'</h2>
-<ul>
-';
-        for ($i=0; $i<$rows; $i++)
+        print '<h2>' . _("These items were approved:") . "</h2>\n<ul>\n";
+
+        for ($i = 0; $i < $rows; $i++)
           {
             print '<li';
             if (db_result($result,$i,'group_id') == $GLOBALS['sys_group_id'])
               print ' class="boxhighlight"';
-            print '><a href="'.htmlentities ($_SERVER['PHP_SELF'])
-                  .'?approve=1&amp;group='
-                  .$group.'&amp;id='.db_result($result,$i,'id').'">';
+            print '><a href="' . htmlentities ($_SERVER['PHP_SELF'])
+              . "?approve=1&amp;group=$group&amp;id="
+              . db_result ($result, $i, 'id') . '">';
 
               if ($group_id == $GLOBALS['sys_group_id'])
                 print group_getname(db_result($result,$i,'group_id')).' - ';
-              print db_result($result,$i,'summary').'</a></li>
-';
+              print db_result ($result, $i, 'summary') . "</a></li>\n";
           }
-        print '</ul>
-';
-      }
+        print "</ul>\n";
+      } # $rows >= 1
   }
 site_project_footer(array());
 ?>

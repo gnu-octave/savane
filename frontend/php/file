@@ -26,7 +26,9 @@ $GLOBALS['skip_csp_headers'] = 1;
 require_once('include/init.php');
 require_once('include/http.php');
 
-extract(sane_import('request', array('file_id')));
+extract (sane_import ('request',
+  ['preg' => [['file_id', '/^(\d+|test[.]png)$/']]]
+));
 
 if ($file_id == 'test.png')
   {
@@ -37,8 +39,7 @@ if ($file_id == 'test.png')
     exit (0);
   }
 
-# Check if the provided file_id is a valid numerical id.
-if (!$file_id || !ctype_digit($file_id))
+if (!$file_id)
   exit_missing_param();
 
 # Check privacy of the item this file is attached to and reject access by
@@ -54,12 +55,20 @@ if ($result && db_numrows($result) > 0)
   }
 else
 # TRANSLATORS: the argument is file id (a number).
-  util_die (sprintf(_("File #%s not found"), htmlspecialchars($file_id)));
+  util_die (sprintf(_("File #%s not found"), $file_id));
 
-# TRANSLATORS: the argument is artifact ID.
-if (!ctype_alnum($artifact))
-  util_die(sprintf(_('Invalid artifact %s'),
-                   '<em>' . htmlspecialchars($artifact) . '</em>'));
+$in = [0 => $artifact];
+$out = [];
+
+if ($sane_sanitizers['artifact'] ($in, $out, 0, null))
+  util_die (
+    sprintf (
+      # TRANSLATORS: the argument is artifact name ('bugs', 'task' etc.)
+      _('Invalid artifact %s'),
+      "<em>" . htmlspecialchars ($artifact) . "</em>"
+    )
+  );
+
 $result = db_execute("SELECT group_id, privacy FROM $artifact WHERE bug_id=?",
                      array($item_id));
 
@@ -116,15 +125,17 @@ _("The filename in the URL does not match the filename registered in the databas
 else
   {
     if (!$vex)
-      exit_error(sprintf(_("Couldn't find attached file #%s."),
-                         htmlspecialchars ($file_id)));
+      exit_error(sprintf(_("Couldn't find attached file #%s."), $file_id));
 
-    exit_error(sprintf(_("Attached file #%s was lost."),
-                         htmlspecialchars ($file_id)) . " "
-               . sprintf(_("File attributes: name '%s', size %s, type '%s', date %s."),
-                         htmlspecialchars(db_result ($result, 0, 'filename')),
-                         htmlspecialchars(db_result ($result, 0, 'filesize')),
-                         htmlspecialchars(db_result ($result, 0, 'filetype')),
-                         utils_format_date(db_result ($result, 0, 'date'))));
+    exit_error (
+      sprintf (_("Attached file #%s was lost."), $file_id) . " "
+      . sprintf (
+          _("File attributes: name '%s', size %s, type '%s', date %s."),
+          htmlspecialchars(db_result ($result, 0, 'filename')),
+          htmlspecialchars(db_result ($result, 0, 'filesize')),
+          htmlspecialchars(db_result ($result, 0, 'filetype')),
+          utils_format_date(db_result ($result, 0, 'date'))
+        )
+    );
   }
 ?>

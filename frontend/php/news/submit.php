@@ -23,10 +23,13 @@
 require_once('../include/init.php');
 require_once('../include/news/forum.php');
 
-extract(sane_import('post',
-  array('form_id',
-        'update',
-        'summary', 'details')));
+extract (sane_import ('post',
+  [
+    'hash' => 'form_id',
+    'true' => 'update',
+    'specialchars' => ['summary', 'details'],
+  ]
+));
 
 if (!group_restrictions_check($group_id, "news"))
   exit_error(sprintf(_("Action Unavailable: %s"),
@@ -38,20 +41,19 @@ if (!group_restrictions_check($group_id, "news"))
 
 if ($update)
   {
-    $valid = form_check($form_id);
+    $valid = form_check ($form_id);
     if (!$summary)
       {
-        fb(_("Title is missing"),1);
+        fb(_("Title is missing"), 1);
         $valid = 0;
       }
     $result = false;
     if ($valid)
       {
-      // Insert the new item, with 5 as status: project admin
-      // must moderate it.
-      // There must be a title.
+        # Insert the new item, with 5 as status: project admin
+        # must moderate it. There must be a title.
 
-        $new_id = forum_create_forum($group_id,$summary,1,0);
+        $new_id = forum_create_forum ($group_id, $summary, 1, 0);
 
         $fields = array();
         $fields['group_id'] = $group_id;
@@ -60,8 +62,8 @@ if ($update)
         $fields['date'] = time();
         $fields['date_last_edit'] = $fields['date'];
         $fields['forum_id'] = $new_id;
-        $fields['summary'] = htmlspecialchars($summary);
-        $fields['details'] = htmlspecialchars($details);
+        $fields['summary'] = $summary;
+        $fields['details'] = $details;
 
         $result = db_autoexecute('news_bytes', $fields, DB_AUTOQUERY_INSERT);
       }
@@ -95,7 +97,7 @@ print '<p class="warn">'
 <span class="preinput"><label for="summary">'._("Subject:")
 .'</label></span><br/>&nbsp;&nbsp;
 <input type="text" id="summary" name="summary" value="'
-.htmlspecialchars($summary)
+.$summary
 .'" size="65" maxlenght="80" />
 <br />
 <span class="preinput"><label for="details">'._("Details")

@@ -28,7 +28,9 @@ $user_id = user_getid();
 $user_email = user_getemail();
 $user_name = user_getname();
 
-extract(sane_import('request', array('cancel')));
+extract (sane_import ('request',
+  ['preg' => [['cancel', '/^(\d+|any)$/']]]
+));
 
 ########################################################################
 # Update the database.

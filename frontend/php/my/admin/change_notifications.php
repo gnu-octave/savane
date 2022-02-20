@@ -29,16 +29,20 @@ require_directory("trackers");
 register_globals_off();
 
 extract(sane_import('post',
-  array('update',
-        'form_notifset_unless_im_author',
+  [
+    'true' =>
+      [
+        'update', 'form_notifset_unless_im_author',
         'form_notifset_item_closed',
         'form_notifset_item_statuschanged',
         'form_skipcc_postcomment',
         'form_skipcc_updateitem',
         'form_removecc_notassignee',
-        'form_frequency',
-        'form_subject_line',
-        )));
+      ],
+     'digits' => [['form_frequency', [0, 3]]],
+     'pass' => 'form_subject_line', # Validated later.
+  ]
+));
 
 # The form has been submitted - update the database.
 if ($update)
@@ -96,7 +100,6 @@ if ($update)
   # First test content: to avoid people entering white space and being in
   # trouble at a later point, first check if we can find something else than
   # white space.
-    $form_subject_line = $form_subject_line;
     if (preg_replace("/ /", "", $form_subject_line))
       {
         # Some characters cannot be allowed
