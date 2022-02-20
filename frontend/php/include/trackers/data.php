@@ -2514,27 +2514,28 @@ function trackers_data_get_value($field, $group_id, $value_id,
   else
     $field_id = trackers_data_get_field_id($field);
 
-  # Look for project specific values first...
-  $result = db_execute("SELECT * FROM " . ARTIFACT . "_field_value "
-     . "WHERE  bug_field_id=? AND group_id=? AND value_id=?",
-     array($field_id, $group_id,
-           $value_id));
-  if ($result && db_numrows($result) > 0)
+  $sql = "SELECT * FROM " . ARTIFACT . "_field_value "
+    . "WHERE group_id=? AND value_id=?";
+  $args = [ $group_id, $value_id];
+  if ($field_id !== null)
     {
-      return db_result($result,0,'value');
+      $sql .= ' AND bug_field_id=?';
+      $args[] = $field_id;
     }
+
+  # Look for project specific values first...
+  $result = db_execute ($sql, $args);
+  if ($result && db_numrows($result) > 0)
+    return db_result ($result, 0, 'value');
 
   # ... if it fails, look for system wide default values (group_id=100)...
-  $result=db_execute("SELECT * FROM ".ARTIFACT."_field_value ".
-     "WHERE  bug_field_id=? AND group_id=100 ".
-     "AND value_id=?", array($field_id, $value_id));
-  if ($result && db_numrows($result) > 0)
-    {
-      return db_result($result,0,'value');
-    }
+  $args[0] = 100;
+  $result = db_execute ($sql, $args);
+  if ($result && db_numrows ($result) > 0)
+    return db_result ($result, 0, 'value');
 
   # No value found for this value id.
-  return $value_id . '(Error - Not Found)';
+  return $value_id . _('(Error - Not Found)');
 }
 
 # Show defined and site-wide responses.
@@ -2735,6 +2736,8 @@ function trackers_data_delete_file($group_id, $item_id, $file_id)
 function trackers_data_count_field_value_usage ($group_id, $field,
                                                 $field_value_value_id)
 {
+  if ($field == 'comment_type_id')
+    return 0;
   if (!preg_match('/^[a-z0-9_]+$/', $field))
     util_die('trackers_data_count_field_value_usage: invalid $field <em>'
              . htmlspecialchars($field) . '</em>');

@@ -1355,7 +1355,7 @@ function trackers_insert_cc($item_id,$cc,$added_by,$comment,$date)
       'bug_id' => $item_id,
       'email' => $cc,
       'added_by' => $added_by,
-      'comment' => htmlspecialchars($comment),
+      'comment' => $comment,
       'date' => $date
     ), DB_AUTOQUERY_INSERT);
 
@@ -1644,18 +1644,17 @@ function trackers_criteria_list_to_text($criteria_list, $url)
 
       foreach ($arr as $crit)
         {
-          $morder .= ($morder ? ",".$crit : $crit);
-          $attr = str_replace('>','',$crit);
-          $attr = str_replace('<','',$attr);
-          $morder = htmlspecialchars($morder);
+          $morder .= ($morder? ",$crit": $crit);
+          $attr = str_replace('>', '', $crit);
+          $attr = str_replace('<', '', $attr);
           $so = trackers_sorting_order ($crit);
-          $arr_text[] = '<a href="'.$url.'&amp;morder='.$morder.'#results">'
+          $arr_text[] = '<a href="' . "$url&amp;morder=$morder" . '#results">'
              .trackers_data_get_label($attr).'</a><img class="icon" src="'
              .$GLOBALS['sys_home'].'images/'.SV_THEME.'.theme/arrows/'
              .$so['image'].'.png" border="0" alt="'.$so['text'].'" />';
         }
     }
-  return join(' &gt; ',$arr_text);
+  return join(' &gt; ', $arr_text);
 }
 
 function trackers_build_match_expression($field, &$to_match)

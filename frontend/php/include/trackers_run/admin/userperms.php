@@ -27,8 +27,16 @@ $is_admin_page='y';
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-extract(sane_import('post', array('update',
-  ARTIFACT.'_restrict_event1', ARTIFACT.'_restrict_event2')));
+extract (sane_import ('post',
+  [
+    'true' => 'update',
+    'digits' =>
+      [
+        ARTIFACT . '_restrict_event2',
+        [ARTIFACT . '_restrict_event1', [0, 99]]
+      ]
+  ]
+));
 
 if ($update)
   {
@@ -68,7 +76,7 @@ trackers_header_admin(array ('title'=>_("Set Permissions")));
 
 print '<h2>'._("Posting Restrictions")."</h2>\n";
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />';
+<input type="hidden" name="group" value="' . $group . '" />';
 
 print '<span class="preinput">'
 ._("Authentication level required to be able to post new items on this tracker:")

@@ -27,7 +27,7 @@ require_once('../include/trackers/cookbook.php');
 
 # If we are a comingfrom=$group_id defined, it means that we want to show a
 # recipe from the system group as if it were from the current group.
-extract(sane_import('get', array('comingfrom')));
+extract(sane_import('get', ['digits' => 'comingfrom']));
 
 if (defined('PRINTER'))
   $printer = 1;

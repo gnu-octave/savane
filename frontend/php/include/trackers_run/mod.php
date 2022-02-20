@@ -592,7 +592,7 @@ fill a dependency against):");
         print '</p>
 <p><span class="preinput">';
       printf (_("Please select a dependency to add in the result of your search
-of '%s' in the database:"), $depends_search);
+of '%s' in the database:"), htmlspecialchars ($depends_search));
         print '</span>';
 
         $success = false;
@@ -794,11 +794,11 @@ managers.") . '</p>
 # Search results, if we are already at step 2 of filling.
         if ($reassign_change_project_search)
           {
-            print '</p>
+            print '
 <p><span class="preinput">';
             printf (_("To which project this bug should be reassigned to? This is
 the result of your search of '%s' in the database:"),
-                    $reassign_change_project_search);
+                    htmlspecialchars ($reassign_change_project_search));
             print '</span>';
 
 # Print a null-option, someone may change his mine without having
@@ -847,7 +847,7 @@ than three characters are valid.");
       . form_submit(_("Submit Changes and Browse Items"), "submit", 'class="bold"')
       . ' '
       . form_submit(_("Submit Changes and Return to this Item"), "submitreturn")
-      . "</form></div>\n";
+      . "</div>\n</form>\n";
 
     print "<p>&nbsp;</p><p>&nbsp;</p>\n";
     print html_hidsubpart_header("history", _("History"));

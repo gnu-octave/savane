@@ -6,7 +6,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2014, 2017-2021  Ineiev
+# Copyright (C) 2014, 2017-2022  Ineiev
 #
 # This file is part of Savane.
 #
@@ -32,15 +32,33 @@ $preference_prefix = ARTIFACT;
 if ($sober)
   $preference_prefix .= "-sober";
 
-extract(sane_import('get', array(
-  'func',
-  'chunksz', 'offset', 'msort', 'sumORdet', 'order', 'morder',
-  'report_id', 'set',
-  'advsrch',
-  'spamscore',
-  'history_search', 'history_field', 'history_event', 'history_date',
-  'history_date_yearfd', 'history_date_monthfd', 'history_date_dayfd',
-  'printer', )));
+extract (sane_import ('get',
+  [
+    'digits' =>
+      [
+        'chunksz', 'offset', 'report_id',
+        ['msort', 'sumORdet', 'advsrch', 'history_search', [0, 1]],
+        ['spamscore', [1, null]],
+        ['history_date_yearfd', [1900, null]],
+        ['history_date_monthfd', [1, 12]],
+        ['history_date_dayfd', [1, 31]],
+      ],
+    'name' => 'history_field',
+    'strings' =>
+      [
+        ['func', ['default' => 'browse', 'digest']],
+        ['set', ['custom', 'my', 'open']],
+        ['history_event', ['modified', 'not modified']]
+      ],
+    'preg' =>
+      [
+        ['history_date', '/^\d{4}-\d{1,2}-\d{1,2}$/'],
+        ['order', '/^([_a-zA-Z-][_[:alnum:]-]*)?$/'],
+        ['morder', '/^[,<>_[:alnum:]-]*$/']
+      ],
+    'true' => 'printer'
+  ]
+));
 
 # Number of search criteria (boxes) displayed in one row.
 $fields_per_line=5;
@@ -52,37 +70,28 @@ $browse_preamble = '';
 # Default 50.
 if (!$chunksz)
   $chunksz = 50;
-else
-  $chunksz = intval($chunksz);
+$chunksz = intval ($chunksz);
 
 # Digest mode? Set the digest variable to one.
-if ($func == "digest")
-  $digest = 1;
-else
-  {
-    $digest = 0;
-    $func = "browse";
-  }
+$digest = $func == 'digest';
 
 # Make sure offset is defined and has a correct value.
-if (!$offset || $offset < 0)
-  $offset = 0;
-else
-  $offset = intval($offset);
+$offset = intval ($offset);
+
+if ($history_field === null)
+  $history_field = '0';
 
 $hdr = _('Browse Items');
 
-# Make sure spamscore has a numeric value between 1 and
-# 20.
-# (we will search for items that have score inferior to $spamscore)
+# Make sure spamscore has a numeric value between 1 and 20
+# (we will search for items that have score inferior to $spamscore).
 # Default is five. Under 5, an item is not considered to be spam by the
 # system. But users can however decide to use a tougher limit.
-if (!ctype_digit($spamscore) || $spamscore < 1)
+if ($spamscore === null)
   $spamscore = 5;
-else
-  $spamscore = intval($spamscore);
 if ($spamscore > 20)
   $spamscore = 20;
+$spamscore = intval ($spamscore);
 
 # ==================================================
 #    Get the list of bug fields used in the form (they are in the URL - GET method)
@@ -103,35 +112,44 @@ unset($url_params['group_id']);
 # by trackers_extract_field_list.
 unset($url_params['history_date']);
 
-#   Make sure all URL arguments are captured as array. For simple
-#   search they'll be arrays with only one element at index 0 (this
-#   will avoid to deal with scalar in simple search and array in
-#   advanced which would greatly complexifies the code).
+# Make safe for inclusion in an URL (replace quotes with dots).
+function sanitize_field (&$x)
+{
+  $x = strtr ($x, '"' . '"', '..');
+  return $x;
+}
+
+function sanitize_value_id ($value_id)
+{
+  if (!is_array ($value_id))
+    return [sanitize_field ($value_id)];
+  $ret = [];
+  foreach ($value_id as $key => $val)
+    $ret[sanitize_field ($key)] = sanitize_field ($val);
+  return $ret;
+}
+
+#  Make sure all URL arguments are captured as array. For simple
+#  search they'll be arrays with only one element at index 0 (this
+#  will avoid to deal with scalar in simple search and array in
+#  advanced which would greatly complexifies the code).
 
 foreach ($url_params as $field => $value_id)
   {
-    if (!is_array($value_id))
-      {
-        unset($url_params[$field]);
-        $url_params[$field][] = $value_id;
-      }
+    unset ($url_params[$field]);
+    sanitize_field ($field);
+    $url_params[$field] = sanitize_value_id ($value_id);
 
     if (trackers_data_is_date_field($field))
       {
+        $co_field = $field . ($advsrch? '_end': '_op');
+        $names = ['strings' => [[$co_field, ['>', '=', '<']]]];
         if ($advsrch)
-          {
-            $field_end = $field.'_end';
-            $in = sane_import('post', array($field_end));
-            $url_params[$field_end] = $in[$field_end];
-          }
-        else
-          {
-            $field_op = $field.'_op';
-            $in = sane_import('post', array($field_op));
-            $url_params[$field_op] = $in[$field_op];
-            if (!$url_params[$field_op])
-              $url_params[$field_op] = array ('=');
-          }
+          $names = ['preg' => [[$co_field, '/^\d{4}-\d{1,2}-\d{1,2}$/']]];
+        $in = sane_import ('post', $names);
+        $url_params[$co_field] = $in[$co_field]; 
+        if (!$advsrch && !$url_params[$co_field])
+          $url_params[$co_field] = ['='];
       }
   }
 
@@ -139,9 +157,9 @@ foreach ($url_params as $field => $value_id)
 if ($history_search)
   # Dates must numeric date, even can be only modified or unmodified
   # If there is crap in there, ignore silently
-  if (ctype_digit($history_date_yearfd)
-      && ctype_digit($history_date_monthfd)
-      && ctype_digit($history_date_dayfd))
+  if ($history_date_yearfd !== null
+      && $history_date_monthfd !== null
+      && $history_date_dayfd !== null)
     {
       $history_date = "$history_date_yearfd-"
                       ."$history_date_monthfd-$history_date_dayfd";
@@ -161,7 +179,7 @@ if ($history_search)
 if (user_isloggedin() && !isset($morder))
   $morder = user_get_preference($preference_prefix.'_browse_order'.$group_id);
 
-if (isset($order))
+if ($order !== null)
   {
     if (($order != '') && ($order != 'digest'))
       {
@@ -194,7 +212,7 @@ if (user_isloggedin())
     if (!isset($report_id))
       $report_id = user_get_preference($preference_prefix.'_browse_report'
                                        .$group_id);
-    else if ($report_id != user_get_preference($preference_prefix
+    elseif ($report_id != user_get_preference ($preference_prefix
                                                .'_browse_report'.$group_id))
       user_set_preference($preference_prefix.'_browse_report'.$group_id,
                           $report_id);
@@ -210,10 +228,10 @@ if (!$report_id)
 # be used, we will have to think of an other way to put it.
 if (!$report_id)
   {
-    if (!$sober)
-      $report_id = 100;
-    else
+    if ($sober)
       $report_id = 103;
+    else
+      $report_id = 100;
   }
 
 if (!trackers_report_init($report_id))
@@ -233,37 +251,29 @@ if (!trackers_report_init($report_id))
 #     &amp;field1[]=value_id1&amp;field2[]=value_id2&amp;.... )
 if (!$set)
   {
-    if (!user_isloggedin())
-      $set='open';
-    else
+    $set = 'open';
+    if (user_isloggedin())
       {
-        $custom_pref = user_get_preference($preference_prefix.'_brow_cust'
-                                           .$group_id);
-        if (!$custom_pref)
-          $set='open';
-        else
+        $custom_pref =
+          user_get_preference ($preference_prefix . '_brow_cust' . $group_id);
+        if ($custom_pref)
           {
+            $set = 'custom';
             $pref_arr = explode('&amp;', substr($custom_pref, 5));
-
             foreach ($pref_arr as $expr)
               {
                 # Extract left and right parts of the assignment
                 # and remove the '[]' array symbol from the left part.
                 list($field,$value_id) = explode('=',$expr);
                 $field = str_replace('[]','',$field);
-                if ($field == 'advsrch')
-                  $advsrch = $value_id;
-                else if ($field == 'msort')
-                  $msort = $value_id;
-                else if ($field == 'chunksz')
+                if ($field == 'advsrch' || $field == 'msort'
+                    || $field == 'spamscore' || $field == 'report_id'
+                    || $field == 'sumORdet'
+                )
+                  $$field = $value_id;
+                elseif ($field == 'chunksz')
                   $chunksz = intval($value_id);
-                else if ($field == 'spamscore')
-                  $spamscore = $value_id;
-                else if ($field == 'report_id')
-                  $report_id = $value_id;
-                else if ($field == 'sumORdet')
-                  $sumORdet = $value_id;
-                else if ($field == 'history')
+                elseif ($field == 'history')
                   {
                     $history = $value_id;
                     $hist_pref = explode('>', $history);
@@ -281,18 +291,17 @@ if (!$set)
                 else
                   $url_params[$field][] = $value_id;
               }
-            $set='custom';
           } # $custom_pref
       } # user_isloggedin ()
   } # !$set
 
-if ($set=='my')
+if ($set == 'my')
   {
     #  My bugs - backwards compat can be removed 9/10.
     $url_params['status_id'][]=1;
     $url_params['assigned_to'][]=user_getid();
   }
-else if ($set=='custom')
+elseif ($set == 'custom')
   {
   # Use the list of fields built from the arguments and used by the project
   # (the group_id parameter has been excluded).
@@ -304,33 +313,14 @@ else if ($set=='custom')
     foreach ($url_params as $field => $arr_val)
       {
         foreach ($arr_val as $value_id)
-          $pref_stg .= '&amp;' . htmlspecialchars($field)
-                       . '[]=' . htmlspecialchars($value_id);
-
-      # Build part of the HTML title of this page for more friendly bookmarking.
-      # Do not add the criteria in the header if value is "Any".
-        if ($value_id != 0)
-          {
-            $field_value = $value_id;
-            if (trackers_data_is_date_field ($field))
-              {
-                list ($field_value, $ok) = utils_date_to_unixtime ($value_id);
-                if (!$ok)
-                  $field_value = $value_id;
-              }
-            $hdr = sprintf(
-# TRANSLATORS: the argument is field name.
-                           _("Browse Items By %s: "),
-                            trackers_data_get_label($field))
-               . trackers_data_get_value ($field, $group_id, $field_value);
-          }
+          $pref_stg .= "&amp;$field" . "[]=$value_id";
       }
-    $pref_stg .= '&amp;advsrch=' . htmlspecialchars ($advsrch);
-    $pref_stg .= '&amp;msort=' . htmlspecialchars ($msort);
-    $pref_stg .= '&amp;chunksz=' . htmlspecialchars ($chunksz);
-    $pref_stg .= '&amp;spamscore=' . htmlspecialchars ($spamscore);
-    $pref_stg .= '&amp;report_id=' . htmlspecialchars ($report_id);
-    $pref_stg .= '&amp;sumORdet=' . htmlspecialchars ($sumORdet);
+    $pref_stg .= '&amp;advsrch=' . $advsrch;
+    $pref_stg .= '&amp;msort=' . $msort;
+    $pref_stg .= '&amp;chunksz=' . $chunksz;
+    $pref_stg .= '&amp;spamscore=' . $spamscore;
+    $pref_stg .= '&amp;report_id=' . $report_id;
+    $pref_stg .= '&amp;sumORdet=' . $sumORdet;
 
     if ($pref_stg != user_get_preference($preference_prefix.'_brow_cust'
                                          .$group_id))
@@ -350,9 +340,9 @@ else
 # At this point make sure that all paramaters are defined
 # as well as all the arguments that serves as selection criteria
 # If not defined then defaults to ANY (0).
-if (!isset($advsrch))
+if ($advsrch === null)
   $advsrch = 0;
-if (!isset($msort))
+if ($msort === null)
   $msort = 0;
 
 # Will be used later to find out if it make sense to look for items of the
@@ -362,26 +352,24 @@ $not_group_specific = 1;
 while ($field = trackers_list_all_fields())
   {
   # The select boxes for the bug DB search first.
-    if (trackers_data_is_showed_on_query($field)
-        && trackers_data_is_select_box($field))
-      {
-        if (!isset($url_params[$field]))
-          $url_params[$field][] = 0;
+    if (!(trackers_data_is_showed_on_query($field)
+        && trackers_data_is_select_box($field)))
+      continue;
+    if (!isset($url_params[$field]))
+      $url_params[$field][] = 0;
 
-      # If we are about to generate the sober output, find out if we can
-      # look for items of the site admin project or not.
-      # All fields that have preconfigured values that can be changed by
-      # projects could end up in flawed results, because the value id and the
-      # actual value label (and so, meaning) are likely to be out of sync.
-      # The most obvious case if the category field case.
-        if (ARTIFACT == 'cookbook' && $sober)
-          {
-            if (trackers_data_is_project_scope($field)
-                && $url_params[$field][0] != '0'
-                && $url_params[$field][0] != '100')
-              $not_group_specific = 0;
-          }
-      }
+    # If we are about to generate the sober output, find out if we can
+    # look for items of the site admin project or not.
+    # All fields that have preconfigured values that can be changed by
+    # projects could end up in flawed results, because the value id and the
+    # actual value label (and so, meaning) are likely to be out of sync.
+    # The most obvious case if the category field case.
+    if (!(ARTIFACT == 'cookbook' && $sober))
+      continue;
+    if (trackers_data_is_project_scope($field)
+        && $url_params[$field][0] != '0'
+        && $url_params[$field][0] != '100')
+      $not_group_specific = 0;
   }
 
 # Start building the SQL query (select and where clauses).
@@ -465,7 +453,7 @@ foreach ($url_params as $field => $value_id)
           .implode(',', array_fill(0, count($url_params[$field]), '?')).') ';
         $where_params = array_merge($where_params, $url_params[$field]);
       }
-    else if (trackers_data_is_date_field($field) && $url_params[$field][0])
+    elseif (trackers_data_is_date_field ($field) && $url_params[$field][0])
       {
       # Transform a date field into a unix time and use <, > or =.
         list($time,$ok) = utils_date_to_unixtime($url_params[$field][0]);
@@ -521,9 +509,9 @@ foreach ($url_params as $field => $value_id)
             ($field == 'summary' || $field == 'details'))
           {
             if ($field == 'summary')
-              { $summary_search = 1; }
+              $summary_search = 1;
             if ($field == 'details')
-              { $details_search = 1; }
+              $details_search = 1;
           }
         else
           {
@@ -679,7 +667,7 @@ while ($field = trackers_list_all_fields('cmp_place_query'))
     $boxes .= "</span></td>\n";
     $ib++;
 
-# end of this row
+  # End of this row.
   if ($ib % $fields_per_line == 0)
     {
       $html_select .= $labels."</tr>\n".$boxes."</tr>\n";
@@ -751,16 +739,42 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
     $col_list[] = $field;
     $width_list[] = trackers_data_get_col_width($field);
 
-  # If we have the field that defines the order, add an icon.
-  # Quite simple in monolcolumn.
-    if (!$msort)
+    if ($msort)
       {
+        # Less simple in multicolumn, indeed.
+        $morder_icon_is_set = 0;
+        $morder_arr = explode(',', $morder);
+
+        foreach ($morder_arr as $crit)
+          {
+            if (!($crit == "$field<" || $crit == "$field>"))
+              continue;
+            $so = trackers_sorting_order ($crit);
+            $lbl_list[] = trackers_data_get_label ($field) . ' '
+              . '<img class="icon" src="' . $GLOBALS['sys_home'] . 'images/'
+              . SV_THEME . '.theme/arrows/' . $so['image']
+              . '.png" alt="' . $so['text'] . '" border="0" />';
+
+            # If we found a criteria, go deal with the next column.
+            $morder_icon_is_set = 1;
+          }
+
+        # If this field is not a sort criteria, we still have to create
+        # the column.
+        if (!$morder_icon_is_set)
+          {
+            $lbl_list[] = trackers_data_get_label($field);
+          }
+      }
+    else
+      {
+        # If we have the field that defines the order, add an icon.
+        # Quite simple in monolcolumn.
         if ($morder_icon_is_set)
           $lbl_list[] = trackers_data_get_label($field);
         else
           {
-            if ($morder == "$field<"
-                || $morder == "$field>")
+            if ($morder == "$field<" || $morder == "$field>")
               {
                 $so = trackers_sorting_order ($morder);
                 $lbl_list[] = trackers_data_get_label($field).' '
@@ -774,36 +788,6 @@ while ($field = trackers_list_all_fields('cmp_place_result'))
               {
                 $lbl_list[] = trackers_data_get_label($field);
               }
-          }
-      }
-    else
-      {
-      # Less simple in multicolumn, indeed.
-        $morder_icon_is_set = 0;
-        $morder_arr = explode(',',$morder);
-
-        foreach ($morder_arr as $crit)
-          {
-            if ($crit == "$field<" || $crit == "$field>")
-              {
-                $so = trackers_sorting_order ($morder);
-                $lbl_list[] = trackers_data_get_label($field).' '
-                  .'<img class="icon" src="'.$GLOBALS['sys_home'].'images/'
-                  .SV_THEME.'.theme/arrows/'
-                  .$so['image'].'.png" alt="'.$so['text']
-                  .'" border="0" />';
-
-              # If we found a criteria, go deal with the next column.
-                $morder_icon_is_set = 1;
-                continue;
-              }
-          }
-
-      # If this field is not a sort criteria, we still have to create
-      # the column.
-        if (!$morder_icon_is_set)
-          {
-            $lbl_list[] = trackers_data_get_label($field);
           }
       }
 
@@ -854,12 +838,12 @@ if ($history_search)
       }
   }
 
-/*  Run 2 queries : one to count the total number of results, and the second
-    one with the LIMIT argument. It is faster than selecting all
-    rows (without LIMIT) because when the number of bugs is large it takes
-    time to transfer all the results from the server to the client.
-    It is also faster than using the SQL_CALC_FOUND_ROWS/FOUND_ROWS()
-    capabilities of MySQL. */
+# Run 2 queries : one to count the total number of results, and the second
+# one with the LIMIT argument. It is faster than selecting all
+# rows (without LIMIT) because when the number of bugs is large it takes
+# time to transfer all the results from the server to the client.
+# It is also faster than using the SQL_CALC_FOUND_ROWS/FOUND_ROWS()
+# capabilities of MySQL.
 $sql_count = "$select_count $from $where";
 $result_count = db_execute($sql_count, array_merge($from_params, $where_params));
 $totalrows = db_result($result_count,0,'count');
@@ -918,10 +902,8 @@ while ($thisarray = db_fetch_array($result))
 
 $form_submit = '';
 if ($printer)
-  trackers_header(array('title'=>_("Browse Items").' - '
-                                 . utils_format_date(time())));
-else
-  trackers_header(array('title'=>$hdr));
+  $hdr = _("Browse Items") . ' - ' . utils_format_date (time ());
+trackers_header(array('title' => $hdr));
 
 if ($browse_preamble)
   print $browse_preamble;
@@ -929,14 +911,25 @@ if ($browse_preamble)
 $form_opening = '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
                 .'#options" method="get" name="bug_form">';
 $form = '
-          <input type="hidden" name="group" value="'.htmlspecialchars ($group).'" />
-          <input type="hidden" name="func" value="'.htmlspecialchars ($func).'" />
+          <input type="hidden" name="group" value="'. $group . '" />
+          <input type="hidden" name="func" value="'. $func . '" />
           <input type="hidden" name="set" value="custom" />
-          <input type="hidden" name="msort" value="'.htmlspecialchars ($msort).'" />';
+          <input type="hidden" name="msort" value="'. $msort . '" />';
 
 # Show the list of available bug reports kind.
 $res_report = trackers_data_get_reports($group_id,user_getid(),$sober);
-if (!$printer)
+if ($printer)
+  {
+    while (list ($f, $v) = db_fetch_array ($res_report))
+      {
+        if ($f != $report_id)
+          continue;
+        $report_name = $v;
+        break;
+      }
+    $form_query_type = $report_name;
+  }
+else
   {
   # In sober mode, there is no relevant query form that have reportid = 100.
     $show_100 = true;
@@ -949,32 +942,17 @@ if (!$printer)
                                              _('Basic'), false, 'Any', false,
                                              _('query form'));
   }
-else
-  {
-    while (list($f,$v) = db_fetch_array($res_report))
-      {
-        if ($f != $report_id)
-          continue;
-        $report_name = $v;
-        break;
-      }
-    $form_query_type = $report_name;
-  }
 
 # Start building the URL that we use to for hyperlink in the form.
 $url = $GLOBALS['sys_home'].ARTIFACT."/?group="
-       .htmlspecialchars ($group)."&amp;func=".htmlspecialchars ($func)
-       ."&amp;set=".htmlspecialchars ($set)."&amp;msort="
-       .htmlspecialchars ($msort);
+       . "$group&amp;func=$func&amp;set=$set&amp;msort=$msort";
 if ($set == 'custom')
   $url .= $pref_stg;
 else
-  $url .= '&amp;advsrch='.htmlspecialchars ($advsrch);
+  $url .= '&amp;advsrch=' . $advsrch;
 
 $url_nomorder = $url;
-# the htmlspecialchars() is necessary, because $morder
-# contains < and > for the sorting order.
-$url .= '&amp;morder='.htmlspecialchars($morder);
+$url .= "&amp;morder=$morder";
 
 # Build the URL for alternate Search.
 if ($advsrch)
@@ -989,7 +967,18 @@ else
   }
 
 # Select 'list form' or 'select' form.
-if (!$printer)
+if ($printer)
+  {
+    if ($advsrch)
+      # TRANSLATORS: this string is used to specify kind of selection.
+      $advsrch_x = _("Multiple");
+    else
+      # TRANSLATORS: this string is used to specify kind of selection.
+      $advsrch_x =  _("Simple");
+
+    $form_sel_type = $advsrch_x;
+  }
+else
   {
     $advsrch_0 = '';
     $advsrch_1 = '';
@@ -1002,25 +991,13 @@ if (!$printer)
         $advsrch_0 = ' selected="selected"';
       }
     $form_sel_type = '<select title="'._("type of search")
-         .'" name="advsrch"><option value="0"'
-         .$advsrch_0.'>'
-# TRANSLATORS: this string is used to specify kind of selection.
-         ._("Simple").'</option><option value="1"'.$advsrch_1.'>'
-# TRANSLATORS: this string is used to specify kind of selection.
-         ._("Multiple").'</option></select>';
-    $form_submit = '<input class="bold" value="'._("Apply")
-         .'" name="go_report" type="submit" />';
-  }
-else
-  {
-    if ($advsrch)
-# TRANSLATORS: this string is used to specify kind of selection.
-      $advsrch_x = _("Multiple");
-    else
-# TRANSLATORS: this string is used to specify kind of selection.
-      $advsrch_x =  _("Simple");
-
-    $form_sel_type = $advsrch_x;
+      . '" name="advsrch"><option value="0"' . $advsrch_0 . '>'
+      # TRANSLATORS: this string is used to specify kind of selection.
+      . _("Simple") . '</option><option value="1"' . $advsrch_1 . '>'
+      # TRANSLATORS: this string is used to specify kind of selection.
+     . _("Multiple") . "</option></select>\n";
+    $form_submit = '<input class="bold" value="' . _("Apply")
+      .'" name="go_report" type="submit" />' . "\n";
   }
 # TRANSLATORS: the first argument is kind of query form (like Basic),
 # the second argument is kind of selection (Simple or Multiple).
@@ -1032,63 +1009,56 @@ $form .= '<table cellpadding="0" cellspacing="5">
 $form .= $html_select;
 $form .= "</table>\n";
 
-# If both 'summary' and 'original submission' are searched, propose an OR instead of AND.
+# If both 'summary' and 'original submission' are searched,
+# propose an OR instead of AND.
 if (($details_search == 1) && ($summary_search == 1))
   {
-    if (!$printer)
+    $sum = rtrim (
+      trackers_field_label_display ("summary", $group_id, false, true),
+      ': '
+    );
+    $det = rtrim (
+      trackers_field_label_display ("details", $group_id, false, true),
+       ': '
+    );
+    if ($printer)
       {
-        $form .= '<p class="smaller">'
-# TRANSLATORS: the first argument is operator (AND or OR),
-# the second argument is label for 'summary' field,
-# the third argument is label for 'details' field.
-        .sprintf(_('Use logical %1$s between \'%2$s\' and \'%3$s\' searches.'),
-                   '<select title="'._("logical operation to apply")
-                   .'" name="sumORdet"><option value="0" '
-                   .(!$sumORdet ? 'selected="selected"':'').'>'
-# TRANSLATORS: this is a logical operator, used in string
-# "Use logical %s between '%s' and '%s' searches.
-                   ._("AND")
-                   .'</option>
-<option value="1" '.($sumORdet ? 'selected="selected"':'').'>'
-# TRANSLATORS: this is a logical operator, used in string
-# "Use logical %s between '%s' and '%s' searches.
-                   ._("OR")
-                   .'</option>
-</select>
-',
-                  rtrim(trackers_field_label_display("summary",
-                                                     $group_id, false,true),
-                        ': '),
-                  rtrim(trackers_field_label_display("details",
-                                                     $group_id, false,true),
-                        ': '))
-          ."</p>\n";
+        $conj =
+          $sumORdet?
+            # TRANSLATORS: this is a logical operator, used in string
+            # "Use logical %s between '%s' and '%s' searches.
+            _("OR"):
+            # TRANSLATORS: this is a logical operator, used in string
+            # "Use logical %s between '%s' and '%s' searches.
+            _("AND");
       }
     else
       {
-        $form .= '<p class="smaller">'
-# TRANSLATORS: the first argument is operator (AND or OR),
-# the second argument is label for 'summary' field,
-# the third argument is label for 'details field.
-        .sprintf(_('Use logical %1$s between \'%2$s\' and \'%3$s\' searches.'),
-                  ($sumORdet ?
-# TRANSLATORS: this is a logical operator, used in string
-# "Use logical %s between '%s' and '%s' searches.
-                   _("OR"):
-# TRANSLATORS: this is a logical operator, used in string
-# "Use logical %s between '%s' and '%s' searches.
-                   _("AND")),
-                  rtrim(trackers_field_label_display("summary", $group_id,
-                                                     false,true),
-                        ': '),
-                  rtrim(trackers_field_label_display("details", $group_id,
-                                                     false,true),
-                        ': '))
-          ."</p>\n";
+        $conj =
+            '<select title="' . _("logical operation to apply")
+            . '" name="sumORdet">' . "\n" . '<option value="0" '
+            . ($sumORdet? '': 'selected="selected"') . '>'
+            # TRANSLATORS: this is a logical operator, used in string
+            # "Use logical %s between '%s' and '%s' searches.
+            . _("AND") . "</option>\n<option " . 'value="1" '
+            . ($sumORdet? 'selected="selected"': '') . '>'
+            # TRANSLATORS: this is a logical operator, used in string
+            # "Use logical %s between '%s' and '%s' searches.
+            . _("OR") . "</option>\n</select>\n";
       }
+    $form .= '<p class="smaller">';
+    $form .=
+      # TRANSLATORS: the first argument is operator (AND or OR),
+      # the second argument is label for 'summary' field,
+      # the third argument is label for 'details field.
+      sprintf(
+        _('Use logical %1$s between \'%2$s\' and \'%3$s\' searches.'),
+        $conj, $sum, $det
+      );
+    $form .= "</p>\n";
 
     # Update the URL.
-    $url .= "&amp;sumOrdet=".htmlspecialchars ($sumORdet);
+    $url .= "&amp;sumOrdet=$sumORdet";
   }
 
 # Propose to search for field updated since a certain date.
@@ -1175,15 +1145,19 @@ if (!$sober)
                                           0,
                                           false);
       }
-    else if ($history_search)
+    elseif ($history_search)
       # In printer mode, if the additional constraint is off,
       # no need to print it.
       {
         $form_activated =
-# TRANSLATORS: this string is used as the argument in
-# 'Additional constraint %s'.
-                          _("activated");
-        $form_fieldname = $flabel[$history_field];
+          # TRANSLATORS: this string is used as the argument in
+          # 'Additional constraint %s'.
+          _("activated");
+        # TRANSLATORS: this is the argument in a string like
+        #  "%s [modified/not modified] since [date]"
+        $form_fieldname = _('Any field');
+        if ($history_field !== '0')
+          $form_fieldname = $fextracted[$history_field];
         $form_modified = $hist_ev_text[0];
         $rows = count($hist_ev_text);
         for ($i = 0; $i < $rows; $i++)
@@ -1214,47 +1188,58 @@ if (!$sober)
 
 if ($history_search)
   # Update the url
-  $url .= "&amp;history_search="
-          .htmlspecialchars ($history_search)."&amp;history_field="
-          .htmlspecialchars ($history_field)."&amp;history_event="
-          .htmlspecialchars ($history_event)."&amp;history_date="
-          .htmlspecialchars ($history_date);
+  $url .= "&amp;history_search=$history_search"
+    . "&amp;history_field=$history_field&amp;history_event=$history_event"
+    . "&amp;history_date=$history_date";
 
 # Number of items printed at once.
 # In sober mode, they are all printed.
 if (!$sober)
   {
-    if (!$printer)
+    $form .= '<p class="smaller">';
+    if ($printer)
       {
-        $form .= '<p class="smaller">'
-                 .sprintf(_("Items to show at once: %s."),
-                          form_input("text", "chunksz", $wanted_chunksz,
-                                     'size="3" maxlength="5" title="'
-                                     .("Number of items to show at once").'"'))
-                 .' '
-                 .sprintf(_("Show items with a spam score lower than %s."),
-                          form_input("text", "spamscore", $spamscore,
-                                     'size="3" maxlength="2" title="'
-                                     ._("Spam level of items to hide").'"'));
+        $form .=
+         sprintf (
+           ngettext(
+             'Show %1$s item at once with a spam score lower than %2$s.',
+             'Show %1$s items at once with a spam score lower than %2$s.',
+             $chunksz
+           ),
+           $chunksz, $spamscore
+         );
+      }
+    else
+      {
+        $form .=
+          sprintf (
+            _("Items to show at once: %s."),
+            form_input ("text", "chunksz", $wanted_chunksz,
+              'size="3" maxlength="5" title="'
+              . _("Number of items to show at once") . '"')
+          )
+          . ' '
+          . sprintf(
+              _("Show items with a spam score lower than %s."),
+              form_input ("text", "spamscore", $spamscore,
+                'size="3" maxlength="2" title="'
+                . _("Spam level of items to hide") . '"')
+            );
         if ($wanted_chunksz != $chunksz)
           {
             # No use of ngettext as $chunksz will never be below 10, otherwise
             # it would mean that Savane would be modified to never list more
             # than 10 items at once, which is almost nothing.
             $form .= ' <span class="warn">'
-.sprintf(ngettext(
+              . sprintf (ngettext (
 "Warning: only %s item can be shown at once, unless using Printer Version.",
 "Warning: only %s items can be shown at once, unless using Printer Version.",
-                 $chunksz), $chunksz).'</span>';
+                   $chunksz), $chunksz
+                )
+              . '</span>';
           }
-        $form .= "</p>\n";
       }
-    else
-      $form .= '<p class="smaller">'
-.sprintf(ngettext('Show %1$s item at once with a spam score lower than %2$s.',
-                  'Show %1$s items at once with a spam score lower than %2$s.',
-                  $chunksz),
-         $chunksz, $spamscore)."</p>\n";
+    $form .= "</p>\n";
   }
 
 # In sober mode, do not talk about sorting order, we will anyway not use
@@ -1290,9 +1275,10 @@ _("You can also <a href=\"%s\">activate multicolumn sort</a>."),
       }
     if ($morder)
 # TRANSLATORS: the argument is comma-separated list of field labels.
-      $form .= " ".sprintf(_("Currently, results are sorted by %s."),
-                           trackers_criteria_list_to_text($morder,
-                                                          $url_nomorder));
+      $form .= " "
+        . sprintf(_("Currently, results are sorted by %s."),
+            trackers_criteria_list_to_text($morder, $url_nomorder)
+          );
     $form .= "</p>\n";
   }
 
@@ -1303,34 +1289,34 @@ print html_show_displayoptions($form,$form_opening,$form_submit);
 
 if ($digest)
   print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="get">
-<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />
+<input type="hidden" name="group" value="' . $group . '" />
 <input type="hidden" name="func" value="digestselectfield" />
 ';
 
 if ($totalrows > 0)
   {
-    if (!$sober)
+    if ($sober)
       {
-        show_item_list($result_array,$offset,$totalrows,$col_list,$lbl_list,
-                       $width_list,$url,false);
-        if ($digest)
-          {
-            print form_footer(_("Proceed to Digest next step"));
-          }
-        show_priority_colors_key();
+        # Sober got it is own list design.
+        show_item_list_sober($result_array, $totalrows, $width_list, $url,
+          false);
       }
     else
       {
-        # Sober got it is own list design
-        show_item_list_sober($result_array,$totalrows,$width_list,$url,false);
+        show_item_list($result_array, $offset, $totalrows, $col_list,
+          $lbl_list, $width_list, $url, false);
+        if ($digest)
+          print form_footer (_("Proceed to Digest next step"));
+        show_priority_colors_key ();
       }
   }
 else
   {
-    fb(
-_("No matching items found. The display criteria may be too restrictive.").
-' '.db_error(),
-       1);
+    fb (
+      _("No matching items found. The display criteria may be too restrictive.")
+      . ' ' . db_error(),
+      1
+    );
   }
 
 trackers_footer(array());

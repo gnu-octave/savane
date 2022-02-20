@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 register_globals_off();
-extract(sane_import('request', array('download')));
+extract (sane_import ('request', ['true' => 'download']));
 
 if (!$group_id)
   print exit_no_group();
@@ -35,28 +35,26 @@ if (!$download)
   {
     trackers_header(array('title'=>_("Data Export")));
      print "<p>" . _("Here you can export data from this tracker.") . "</p>\n";
-     print "<p><a href=\"export.php?group=" . htmlentities ($group)
-           . "&amp;download=1\">" . _("Download tracker data") . "</a></p>\n";
+     print "<p><a href=\"export.php?group=$group&amp;download=1\">"
+       . _("Download tracker data") . "</a></p>\n";
 
     trackers_footer(array());
     exit (0);
   }
 header('Content-Type: text/html');
-header('Content-Disposition: attachment; filename=' . $group . '-'
-                                                    . ARTIFACT . '.html');
-header('Content-Description: ' . ARTIFACT . ' tracker data export of '
-                               . $group);
+header("Content-Disposition: attachment; filename=$group-"
+  . ARTIFACT . '.html');
+header('Content-Description: ' . ARTIFACT . " tracker data export of $group");
 print "<html>\n";
 print "<head>\n";
 print
 "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n";
-print "<title>" . htmlentities (ARTIFACT) . " tracker data export of "
-                . htmlentities ($group) . "</title>\n";
+print "<title>" . ARTIFACT . " tracker data export of $group</title>\n";
 print "</head>\n";
 print "<body>\n";
-print "<h1>" . htmlentities ($group) . " " . htmlentities (ARTIFACT)
-             . " tracker data: " . date ("Y-m-d H:i:s e") . "</h1>\n";
-$result = db_execute("SELECT * FROM " . htmlentities (ARTIFACT)
+print "<h1>$group " . ARTIFACT
+  . " tracker data: " . date ("Y-m-d H:i:s e") . "</h1>\n";
+$result = db_execute("SELECT * FROM " . ARTIFACT
                      . " WHERE group_id=?  ORDER BY bug_id", array($group_id));
 if ($result)
   {
@@ -87,7 +85,7 @@ if ($result)
         if ($bug_id === "")
           continue;
         $res = db_execute("SELECT * FROM "
-                          . htmlentities (ARTIFACT) . "_history"
+                          . ARTIFACT . "_history"
                           . " WHERE bug_id=?  ORDER BY bug_history_id",
                           array($bug_id));
         if (!$res)

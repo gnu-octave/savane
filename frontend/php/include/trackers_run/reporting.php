@@ -28,7 +28,7 @@ require_directory("trackers");
 if (!$group_id)
   exit_no_group();
 
-extract(sane_import('get', array('field')));
+extract (sane_import ('get', ['name' => 'field']));
 
 # Give access to this page to anybody: people can already collect such
 # information since they are able to browse the trackers.

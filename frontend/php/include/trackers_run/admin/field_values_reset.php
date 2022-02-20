@@ -19,14 +19,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extract(sane_import('post', array('field', 'cancel', 'confirm')));
+extract (sane_import ('post',
+  [
+    'name' => 'field',
+    'true' => ['confirm', 'cancel']
+  ]
+));
 
-if (!($group_id && user_ismember($group_id,'A')))
-  {
-    if (!$group_id)
-      exit_no_group();
-    exit_permission_denied();
-  }
+if (!$group_id)
+  exit_no_group ();
+if (!user_ismember ($group_id, 'A'))
+  exit_permission_denied ();
 
 trackers_init($group_id);
 
@@ -44,10 +47,10 @@ if (!$confirm)
 
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF'])
           .'" method="post">'."\n";
-    print '<input type="hidden" name="group_id" value="'
-                  .htmlspecialchars($group_id).'" />'."\n";
-    print '<input type="hidden" name="field" value="'.htmlspecialchars($field)
-                  .'" />'."\n";
+    print '<input type="hidden" name="group_id" value="' . $group_id
+      . '" />' . "\n";
+    print '<input type="hidden" name="field" value="' . $field
+      . '" />' . "\n";
     print '<span class="preinput">'
 .sprintf(_("You are about to reset values of the field %s.
 This action will not be undoable, please confirm:"),

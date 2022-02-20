@@ -22,30 +22,34 @@
 
 $is_admin_page='y';
 
-extract(sane_import('request', array('transition_id')));
-extract(sane_import('post', array('update',
-'form_category_id',
-'form_resolution_id',
-'form_privacy',
-'form_percent_complete',
-'form_assigned_to',
-'form_status_id',
-'form_discussion_lock',
-'form_comment_type_id',
-)));
+extract(sane_import('request', ['digits' => 'transition_id']));
 
-if (!($group_id && member_check(0,$group_id,'A')))
-  {
-    if (!$group_id)
-      exit_no_group();
-    exit_permission_denied();
-  }
+if (!$group_id)
+  exit_no_group ();
+if (!member_check (0, $group_id, 'A'))
+  exit_permission_denied();
 
-# Initialize global bug structures.
-trackers_init($group_id);
+trackers_init ($group_id);
 
 if (!$transition_id)
   exit_missing_param();
+
+function ofu_field_name ($x)
+{
+  return "form_$x";
+}
+
+$name_digits = [];
+while ($field_name = trackers_list_all_fields ())
+  $name_digits[] = ofu_field_name ($field_name);
+
+extract(sane_import('post',
+  [
+    'true' => 'update',
+    'digits' => $name_digits
+  ]
+));
+
 $result = db_execute("SELECT field_id,from_value_id,to_value_id "
                      ."FROM trackers_field_transition "
                      ."WHERE group_id=? AND artifact='"
@@ -62,7 +66,6 @@ $result2 = trackers_transition_get_other_field_update($transition_id);
 while ($entry = db_fetch_array($result2))
   $registered[$entry['update_field_name']] = $entry['update_value_id'];
 
-# Update the database.
 if ($update)
   {
     while ($field_name = trackers_list_all_fields())
@@ -72,7 +75,7 @@ if ($update)
             && trackers_data_is_used($field_name)
             && ($field_name != $field))
           {
-            $form_field="form_$field_name";
+            $form_field = ofu_field_name ($field_name);
             if ($form_field && isset($$form_field))
               {
                 # If there is no entry in the database, set the registered array
@@ -130,9 +133,9 @@ his role in the project) to modify a specific field value, any automatic
 update supposed to apply to this field will be disregarded.")."</p>\n";
 
 print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />
+<input type="hidden" name="group" value="' . $group . '" />
 <input type="hidden" name="transition_id" value="'
-       .htmlspecialchars($transition_id).'" />
+       . $transition_id . '" />
 ';
 
 $title_arr=array();
@@ -148,9 +151,9 @@ while ($field_name = trackers_list_all_fields())
         && ($field_name != 'submitted_by')
         && trackers_data_is_used($field_name)
         && ($field_name != $field))
-      {        
+      {
         print "\n".'<tr class="'. utils_get_alt_row_color($i)
-              .'">\n<td width="25%"><span title="'
+              .'">'. "\n" . '<td width="25%"><span title="'
               .trackers_data_get_description($field_name).'" class="help">'
               .trackers_data_get_label($field_name)."</span></td>\n";
 
@@ -165,7 +168,7 @@ while ($field_name = trackers_list_all_fields())
         if (empty($registered[$field_name]))
           $registered[$field_name] = null;
         print '<td>'.$registered['update_value_id'].
-          trackers_field_box($field_name, "form_".$field_name, $group_id,
+          trackers_field_box($field_name, ofu_field_name ($field_name), $group_id,
                              $registered[$field_name], false, false, true,
                              _("No automatic update")).
           "</td>\n</tr>\n";

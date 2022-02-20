@@ -186,18 +186,21 @@ function user_getname($user_id=0, $getrealname=0)
   return $USER_NAMES[$prefix."_$user_id"];
 }
 
-function user_getid($username=0)
+function user_getid  ($username = 0)
 {
   if (!$username)
     {
       # No username, return info for the current user.
       global $G_USER;
-      return ($G_USER?$G_USER['user_id']:0);
+      if ($G_USER)
+        return $G_USER['user_id'];
+      return 0;
     }
   $result = db_execute("SELECT user_id FROM user WHERE user_name=?",
                        array($username));
   if ($result and db_numrows($result) > 0)
     return db_result($result,0,"user_id");
+  return 0;
 }
 
 function user_exists($user_id, $squad_only=false)

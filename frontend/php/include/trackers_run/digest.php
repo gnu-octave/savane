@@ -20,10 +20,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extract(sane_import('get', array(
-  'func',
-  'dependencies_of_item', 'dependencies_of_tracker',
-  'items_for_digest', 'field_used')));
+extract (sane_import ('get',
+  [
+    'funcs' => 'func',
+    'digits' =>  'dependencies_of_item',
+    'artifact' => 'dependencies_of_tracker',
+    'array' =>
+      [
+        ['items_for_digest', ['digits', 'digits']],
+        ['field_used', ['name', ['digits', [0, 1]]]]
+      ]
+  ]
+));
 
 if ($func == "digest")
   {
@@ -35,17 +43,13 @@ fields you wish to include in your digest at the next step.")
 <p class="warn">'
 ._("Once your selection is made, push the button &ldquo;Proceed to Digest next
 step&rdquo; at the bottom of this page.")
-.'</p>';
+. "</p>\n";
   }
 elseif ($func == "digestselectfield")
   {
-  # Determines items to digest, if we are supposed to digest dependencies.
+    # Determines items to digest, if we are supposed to digest dependencies.
     if ($dependencies_of_item && $dependencies_of_tracker)
       {
-        if (!ctype_alnum($dependencies_of_tracker))
-          util_die(sprintf(_("Invalid tracker name %s"),
-                   "<em>".htmlspecialchars($dependencies_of_tracker)."</em>"));
-
         $res_deps = db_execute("SELECT is_dependent_on_item_id FROM "
                                .$dependencies_of_tracker
                                ."_dependencies WHERE item_id=? "
@@ -67,11 +71,11 @@ elseif ($func == "digestselectfield")
     trackers_header(array('title'=>_("Digest Items: Fields Selection")));
 
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="get">
-<input type="hidden" name="group" value="'.htmlspecialchars($group).'" />
+<input type="hidden" name="group" value="' . $group . '" />
 <input type="hidden" name="func" value="digestget" />
 ';
 
-  # Keep track of the selected items.
+    # Keep track of the selected items.
     $count = 0;
     foreach ($items_for_digest as $item)
       {
@@ -82,42 +86,44 @@ elseif ($func == "digestselectfield")
     print "\n\n<p>";
     printf(ngettext("You selected %s item for this digest.",
                     "You selected %s items for this digest.", $count),
-           $count)
+           $count);
+    print ' '
 ._("Now you must unselect fields you do not want to be included in the digest.")
 ."</p>\n";
 
     $i = 0;
-  # Select fields.
+    # Select fields.
     while ($field_name = trackers_list_all_fields())
       {
-        if (trackers_data_is_used($field_name))
-          {
-          # Open/Close and Group id are meaningless in this context:
-          # they'll be on the output page in any cases.
-            if ($field_name == 'group_id'
-                || $field_name == 'status_id')
+        if (!trackers_data_is_used ($field_name))
+          continue;
+        # Open/Close and Group id are meaningless in this context:
+        # they'll be on the output page in any cases.
+        if ($field_name == 'group_id' || $field_name == 'status_id')
+          continue;
+
+        # Item ID is mandatory.
+        if ($field_name == "bug_id")
+            {
+              print
+                form_input (
+                  "hidden", "field_used[" . $field_name . "]", "1"
+                )
+                . "\n";
               continue;
+            }
 
-          # Item ID is mandatory.
-            if ($field_name == "bug_id")
-                {
-                  print form_input("hidden", "field_used[".$field_name."]", "1").
-                    "\n";
-                  continue;
-                }
-
-              print '<div class="'. utils_get_alt_row_color($i) .'">'
-              .'<input type="checkbox" name="field_used['.$field_name
-              .']" value="1" checked="checked" />&nbsp;&nbsp;'
-              .trackers_data_get_label($field_name)
-              .' <span class="smaller"><em>- '
-              .trackers_data_get_description($field_name)
-              ."</em></span></div>\n";
-              $i++;
-          }
+        print '<div class="' . utils_get_alt_row_color ($i) . '">'
+          . '<input type="checkbox" name="field_used['. $field_name
+          . ']" value="1" checked="checked" />&nbsp;&nbsp;'
+          . trackers_data_get_label ($field_name)
+          . ' <span class="smaller"><em>- '
+          . trackers_data_get_description ($field_name)
+          . "</em></span></div>\n";
+          $i++;
       }
-  # Comments is not an authentic field but could be useful. We allow
-  # addition of the latest comment.
+    # Comments is not an authentic field but could be useful. We allow
+    # addition of the latest comment.
     print '<div class="'. utils_get_alt_row_color($i) .'">'
       .'<input type="checkbox" name="field_used[latestcomment]" '
       .'value="1" checked="checked" />&nbsp;&nbsp;'._("Latest Comment")
@@ -189,7 +195,7 @@ elseif ($func == "digestget")
                 || $field_name == "comment_type_id" )
               continue;
 
-# Check the fields.
+            # Check the fields.
             if (!isset($field_used[$field_name])
                 || $field_used[$field_name] != 1)
               continue;
@@ -198,10 +204,8 @@ elseif ($func == "digestget")
             if ($field_count == 2)
               $field_count = 0;
 
-            if ($field_count == 1)
-               print '<span class="splitright">';
-            else
-               print '<span class="splitleft">';
+            $side = $field_count? "right": "left";
+            print '<span class="' . "split$side" .'">';
 
           # Extract value.
             $value = trackers_field_display($field_name,
@@ -261,8 +265,7 @@ elseif ($func == "digestget")
                          "$realname $user_name").'</span> '
                 .markup_rich($last_comment).'</div>';
           }
-        print '<p class="clearr">&nbsp;</p>';
-        print '</div>'."\n\n";
+        print '<p class="clearr">&nbsp;' . "</p>\n</div>\n\n";
       }
     trackers_footer(array());
   }

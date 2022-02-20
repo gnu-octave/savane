@@ -142,8 +142,8 @@ function show_item_list ($result_arr,
               # Dirty workaround to have boxes selected by default in the
               # form_input.
               print '<td class="center">'
-                    . form_input("checkbox", "items_for_digest[]",
-                                 "$thisitem_id\" checked=\"checked") . "</td>\n";
+                . form_input("checkbox", "items_for_digest[]", $thisitem_id)
+                . "</td>\n";
               continue;
             }
 

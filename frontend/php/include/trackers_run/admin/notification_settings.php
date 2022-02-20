@@ -26,7 +26,7 @@ require_once(dirname(__FILE__).'/../../trackers/data.php');
 
 $is_admin_page='y';
 
-extract(sane_import('post', array('submit')));
+extract(sane_import('post', ['true' => 'submit']));
 
 if (!$group_id)
   exit_no_group();
@@ -43,20 +43,16 @@ $user_id = user_getid();
 # Get notification roles.
 $res_roles = trackers_data_get_notification_roles();
 $num_roles = db_numrows($res_roles);
-$i=0;
-while ($arr = db_fetch_array($res_roles))
-  {
-    $arr_roles[$i] = $arr; $i++;
-  }
+
+for ($i = 0; $arr = db_fetch_array ($res_roles); $i++)
+  $arr_roles[$i] = $arr;
 
 # Get notification events.
 $res_events = trackers_data_get_notification_events();
 $num_events = db_numrows($res_events);
-$i=0;
-while ($arr = db_fetch_array($res_events))
-  {
-    $arr_events[$i] = $arr; $i++;
-  }
+
+for ($i = 0; $arr = db_fetch_array ($res_events); $i++)
+  $arr_events[$i] = $arr;
 
 # Build the default notif settings in case the user has not yet defined her own.
 # By default it's all 'yes'.
@@ -90,13 +86,12 @@ if ($submit)
       fb(_("Update failed"));
 
   }
-# Show Main Page.
 
 trackers_header_admin(array ('title'=>_("Set Notifications")));
 
 print '
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />';
+<input type="hidden" name="group_id" value="' . $group_id . '" />';
 
 if (user_ismember($group_id,'A'))
   trackers_data_show_notification_settings($group_id, ARTIFACT, 1);
@@ -107,3 +102,4 @@ print '
 </form>';
 
 trackers_footer(array());
+?>

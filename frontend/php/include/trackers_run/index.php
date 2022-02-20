@@ -31,37 +31,74 @@ if (!$group_id)
   exit_no_group();
 
 # Get parameters.
-extract(sane_import('all',
-  array('func', 'printer',
-        'item_file_id', 'item_cc_id',
-        )));
-extract(sane_import('post',
-  array('form_id', # anti double-post
-        'comment', 'additional_comment', 'canned_response',
-        'comment_type_id', # comment type
-        'originator_email',
-        # carbon-copy
-        'add_cc', 'cc_comment',
-        'new_vote',
-        # Reassign item: search a project to assign the item to.
-        'depends_search',
-        'depends_search_only_artifact', 'depends_search_only_project',
-        'reassign_change_project_search', 'reassign_change_project',
-        'reassign_change_artifact',
-        'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support', 'dependent_on_patch',
-        # Second button 'submit but then edit this item again'.
+extract (sane_import ('request',
+  [
+    'funcs' => 'func',
+    'true' => 'printer',
+    'digits' => ['item_file_id', 'item_cc_id']
+  ]
+));
+extract (sane_import ('post',
+  [
+    'hash' => 'form_id',
+    'pass' =>
+      [
+        'comment', 'additional_comment', 'depends_search',
+        'reassign_change_project_search'
+      ],
+    'digits' => ['comment_type_id', 'new_vote', 'quote_no'],
+    'specialchars' => 'cc_comment',
+    'preg' =>
+      [
+        ['canned_response', '/^(\d+|!multiple!)$/'],
+        [
+          'originator_email',
+          '/^[a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+\.)+[a-zA-Z0-9]+$/'
+        ],
+        ['add_cc', '/^[-+_@.,;\s\da-zA-Z]*$/'],
+        [
+          'reassign_change_project', '/^[-_[:alnum:]]*$/'
+        ]
+      ],
+    'strings' =>
+      [
+        [
+          'depends_search_only_artifact',
+          'reassign_change_artifact',
+          ['all', 'support', 'bugs', 'task', 'patch']
+        ],
+        [
+          'depends_search_only_project',
+          ['any', 'notany']
+        ]
+      ],
+    'true' =>
+      [
         'submitreturn',
-        # Button to preview comment.
         'preview',
-        # Comment to quote.
-        'quote_no'
-        )));
+      ],
+    'array' =>
+      [
+        [
+          'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support',
+          'dependent_on_patch',
+          [null, 'digits']
+        ]
+      ]
+  ]
+));
 
-# Spam-related
-extract(sane_import('get',
-  array('comment_internal_id',
-        'item_depends_on', 'item_depends_on_artifact',
-)));
+if ($canned_response === null)
+  extract (sane_import ('post',
+    ['array' => [['canned_response', [null, 'digits']]]]
+  ));
+
+extract (sane_import ('get',
+  [
+    'digits' => ['comment_internal_id', 'item_depends_on'],
+    'artifact' => 'item_depends_on_artifact',
+  ]
+));
 
 # If we are on an artifact index page and we have only one argument which is
 # a numeric number, we suppose it is an item_id.
@@ -85,7 +122,8 @@ $sober = false;
 
 $address = '';
 
-$func = $func or 'browse';
+if (!$func)
+  $func = 'browse';
 
 $process_comment = false;
 if ($preview || isset($quote_no))
@@ -154,13 +192,20 @@ switch ($func)
 
  case 'postadditem' :
    {
-# Actually add in the database what was filled in the form.
-     $fields = sane_import('post', array('form_id', 'check', 'details'));
+     # Actually add in the database what was filled in the form.
+     $fields = sane_import ('post',
+       [
+         'hash' => 'form_id', 'digits' => 'check',
+         # As of 2022-02, frontend never reads from the spam_stats table,
+         # so we may safely 'pass' 'details'.
+         'pass' => 'details',
+       ]
+     );
      db_autoexecute('spam_stats',
                     array('tracker' => ARTIFACT,
                           'bug_id' => 0,
                           'type' => 'new',
-                          'user_id' => user_isloggedin() ? user_getid() : null,
+                          'user_id' => user_getid (),
                           'form_id' => $fields['form_id'],
                           'ip' => '127.0.0.1',
                           'check_value' => $fields['check'],
@@ -273,7 +318,7 @@ to the Carbon-Copy list."), 1);
              $filenames = array();
              for ($i = 1; $i < 5; $i++)
                $filenames[] = "input_file$i";
-             $files = sane_import('files', $filenames);
+             $files = sane_import ('files', ['pass' => $filenames]);
              foreach ($files as $file)
                {
                  if ($file['error'] == UPLOAD_ERR_OK)
@@ -306,16 +351,20 @@ to the Carbon-Copy list."), 1);
 
  case 'postmoditem' :
    {
-# Actually add in the database what was filled in the form
-# for a bug already in the database, reserved to item techn.
-# or manager.
-
-     $fields = sane_import('post', array('item_id', 'form_id', 'check', 'comment'));
+     # Actually add in the database what was filled in the form
+     # for a bug already in the database, reserved to item techn.
+     # or manager.
+     $fields = sane_import ('post',
+       [
+         'hash' => 'form_id', 'digits' => ['check', 'item_id'],
+         'pass' => 'comment'
+       ]
+     );
      db_autoexecute('spam_stats',
                     array('tracker' => ARTIFACT,
                           'bug_id' => $fields['item_id'],
                           'type' => 'comment',
-                          'user_id' => user_isloggedin() ? user_getid() : null,
+                          'user_id' => user_getid (),
                           'form_id' => $fields['form_id'],
                           'ip' => '127.0.0.1',
                           'check_value' => $fields['check'],
@@ -403,7 +452,7 @@ to select the one you want to use to compose your answer."));
              $filenames = array();
              for ($i = 1; $i < 5; $i++)
                $filenames[] = "input_file$i";
-             $files = sane_import('files', $filenames);
+             $files = sane_import ('files',  ['pass' => $filenames]);
              foreach ($files as $file)
                {
                  if ($file['error'] == UPLOAD_ERR_OK)
@@ -518,13 +567,17 @@ to select the one you want to use to compose your answer."));
 
  case 'postaddcomment' :
    {
-     $fields = sane_import('post', array('item_id', 'form_id', 'check',
-                                         'comment'));
+     $fields = sane_import ('post',
+       [
+         'hash' => 'form_id', 'digits' => ['check', 'item_id'],
+         'pass' => 'comment'
+       ]
+     );
      db_autoexecute('spam_stats',
                     array('tracker' => ARTIFACT,
                           'bug_id' => $fields['item_id'],
                           'type' => 'comment',
-                          'user_id' => user_isloggedin() ? user_getid() : null,
+                          'user_id' => user_getid (),
                           'form_id' => $fields['form_id'],
                           'ip' => '127.0.0.1',
                           'check_value' => $fields['check'],

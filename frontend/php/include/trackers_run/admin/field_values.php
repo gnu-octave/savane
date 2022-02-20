@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -23,36 +23,41 @@
 
 $is_admin_page='y';
 
-extract(sane_import('request', array(
-  'func', 'update_value',
-  'field', 'fv_id',
-  'create_canned', 'update_canned', 'item_canned_id',
-)));
-extract(sane_import('get', array(
-  'list_value',
-  'delete_canned',
-  'transition_id',
-)));
-extract(sane_import('post', array(
-  'post_changes',
-  'create_value',
-  'title', 'description', 'order_id',
-  'body',
-  'by_field_id', 'from', 'to', 'allowed', 'mail_list',
-  'status',
-)));
+extract (sane_import ('request',
+  [
+    'strings' => [['func', ['deltransition']]],
+    'true' => ['update_value', 'create_canned', 'update_canned'],
+    'digits' => ['fv_id', 'item_canned_id'],
+    'name' => 'field'
+  ]
+));
+extract (sane_import ('get',
+  [
+    'true' => ['list_value'],
+    'strings' => [['delete_canned', [1]]],
+    'digits' => 'transition_id'
+  ]
+));
+extract (sane_import ('post',
+  [
+    'true' => ['post_changes', 'create_value', 'by_field_id'],
+    'specialchars' => ['title', 'description', 'body'],
+    'digits' => ['order_id', 'from', 'to'],
+    'strings' =>
+      [
+        ['allowed', ['A', 'F']],
+        ['status', ['A', 'P', 'H']]
+      ],
+    'preg' => [['mail_list', '/^[-+_@.,\s\da-zA-Z]*$/']]
+  ]
+));
 
-if (!($group_id && user_ismember($group_id,'A')))
-  {
-    if (!$group_id)
-      exit_no_group();
-    else
-      exit_permission_denied();
-  }
-# Initialize global bug structures
-trackers_init($group_id);
+if (!$group_id)
+  exit_no_group();
+if (!user_ismember($group_id, 'A'))
+  exit_permission_denied();
 
-# ################################ Update the database
+trackers_init ($group_id);
 
 if ($func == "deltransition")
   {
@@ -82,8 +87,8 @@ elseif ($post_changes || $delete_canned)
           {
             trackers_data_create_value($field,
                                        $group_id,
-                                       htmlspecialchars($title),
-                                       htmlspecialchars($description),
+                                       $title,
+                                       $description,
                                        $order_id,
                                        'A');
           }
@@ -98,8 +103,8 @@ elseif ($post_changes || $delete_canned)
             trackers_data_update_value($fv_id,
                                        $field,
                                        $group_id,
-                                       htmlspecialchars($title),
-                                       htmlspecialchars($description),
+                                       $title,
+                                       $description,
                                        $order_id,
                                        $status);
           }
@@ -112,8 +117,8 @@ elseif ($post_changes || $delete_canned)
         $result = db_autoexecute(ARTIFACT.'_canned_responses',
           array(
             'group_id' => $group_id,
-            'title' => htmlspecialchars($title),
-            'body' => htmlspecialchars($body),
+            'title' => $title,
+            'body' => $body,
             'order_id' => $order_id,
           ), DB_AUTOQUERY_INSERT);
         if (!$result)
@@ -126,8 +131,8 @@ elseif ($post_changes || $delete_canned)
 # A form was posted to update a canned response.
         $result = db_autoexecute(ARTIFACT.'_canned_responses',
           array(
-            'title' => htmlspecialchars($title),
-            'body' => htmlspecialchars($body),
+            'title' => $title,
+            'body' => $body,
             'order_id' => $order_id,
           ), DB_AUTOQUERY_UPDATE,
           'group_id = ? AND bug_canned_id = ?',
@@ -268,13 +273,10 @@ if ($list_value)
                 $value = $fld_val['value'];
                 $description = $fld_val['description'];
                 $order_id = $fld_val['order_id'];
-                if ($field == 'comment_type_id')
-                  // FIXME: not a table field... weird
-                  $usage = 0;
-                else
-                  $usage = trackers_data_count_field_value_usage($group_id,
-                                                                 $field,
-                                                                 $value_id);
+                $usage =
+                  trackers_data_count_field_value_usage (
+                    $group_id, $field, $value_id
+                  );
                 $html = '';
 # Keep the rank of the 'None' value in mind if any (see below).
                 if ($value == 100)
@@ -376,9 +378,8 @@ that suits your needs.")."</p>\n";
       <input type="hidden" name="post_changes" value="y" />
       <input type="hidden" name="create_value" value="y" />
       <input type="hidden" name="list_value" value="y" />
-      <input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
-      <input type="hidden" name="group_id" value="'.htmlspecialchars($group_id)
-             .'" />
+      <input type="hidden" name="field" value="' . $field . '" />
+      <input type="hidden" name="group_id" value="' . $group_id . '" />
       <span class="preinput"><label for="title">'._("Value:").'</label> </span>'
               .form_input("text", "title", "", 'size="30" maxlength="60"').'
       &nbsp;&nbsp;
@@ -417,8 +418,8 @@ that suits your needs.")."</p>\n";
 default ones, use the following form:").'</p>
 
 <form action="field_values_reset.php" method="post" class="center">
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
-<input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
+<input type="hidden" name="group_id" value="' . $group_id . '" />
+<input type="hidden" name="field" value="' . $field . '" />
 <input type="submit" name="submit" value="'._("Reset values").'" />
 </form>
 <p>'._("For your information, the default active values are:")."</p>\n";
@@ -580,9 +581,9 @@ allowed to customize it"),$field));
                     print utils_link($GLOBALS['sys_home'].ARTIFACT
   ."/admin/field_values_transition-ofields-update.php?group=".$group
   ."&amp;transition_id=".$transition['transition_id'], $content);
-                    print "</td>\n" . '<td align="center">'
-                      . htmlspecialchars ($transition['notification_list'])
-                      . "</td>\n";
+                    print '</td>
+<td align="center">'
+                      .$transition['notification_list']."</td>\n";
                   }
                 else
                   {
@@ -614,8 +615,8 @@ allowed to customize it"),$field));
 <form action="'.htmlentities ($_SERVER['PHP_SELF']).'#registered" method="post">
 <input type="hidden" name="post_transition_changes" value="y" />
 <input type="hidden" name="list_value" value="y" />
-<input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />';
+<input type="hidden" name="field" value="' . $field . '" />
+<input type="hidden" name="group_id" value="' . $group_id . '" />';
 
         $result = db_execute("SELECT transition_default_auth FROM ".ARTIFACT
                              ."_field_usage "
@@ -703,14 +704,14 @@ elseif ($update_value)
     <input type="hidden" name="update_value" value="y" />
     <input type="hidden" name="list_value" value="y" />
     <input type="hidden" name="fv_id" value="'.$fv_id.'" />
-    <input type="hidden" name="field" value="'.htmlspecialchars($field).'" />
-    <input type="hidden" name="group_id" value="'.htmlspecialchars($group_id)
-           .'" />
+    <input type="hidden" name="field" value="' . $field . '" />
+    <input type="hidden" name="group_id" value="'. $group_id .'" />
     <p><span class="preinput"><label for="title">'
 ._("Value:").'</label> </span><br />
 '
-.form_input("text", "title", db_result($res,0,'value'),
-            'size="30" maxlength="60"')
+   . form_input("text", "title",
+       htmlspecialchars_decode (db_result($res, 0, 'value')),
+       'size="30" maxlength="60"')
 .'
     &nbsp;&nbsp;
     <span class="preinput"><label for="order_id">'._("Rank:").'</label> </span>'

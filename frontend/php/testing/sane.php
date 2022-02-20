@@ -1004,9 +1004,366 @@ $reference = 'include/trackers_run/admin/field_values.php';
         ['allowed', ['A', 'F']],
         ['status', ['A', 'P', 'H']]
       ],
-    'pass' => 'mail_list'
+    'preg' => [['mail_list', '/^[-+_@.,\s\da-zA-Z]*$/']]
   ];
-#  test_sane_import ($in, $names, $out);
+  $in = [
+    'post_changes' => 'y',
+    'title' => 'a&b',
+    'description' => 'de<scription>',
+    'body' => 'b"od"y',
+    'order_id' => 0,
+    'from' => 1,
+    'to' => 2,
+    'allowed' => 'F',
+    'status' => 'P',
+    'mail_list' => 'agn_ter, dis-cuss0@test.mil, A+B@C@.org,.,'
+  ];
+  $out = $in;
+  $out['post_changes'] = true;
+  $out['create_value'] = null;
+  $out['by_field_id'] = null;
+  $out['title'] = htmlspec ($in['title']);
+  $out['description'] = htmlspec ($in['description']);
+  $out['body'] = htmlspec ($in['body']);
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/field_values_reset.php';
+{
+  $names = [
+    'name' => 'field',
+    'true' => ['confirm', 'cancel']
+  ];
+  $in = ['field' => 'severity', 'cancel' => 'Cancel'];
+  $out = [
+    'field' => 'severity',
+    'cancel' => true,
+    'confirm' => null
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/field_values_transition-ofields-update.php';
+{
+  $names = ['digits' => 'transition_id'];
+  $in = ['form_id' => 'abcdef01', 'transition_id' => 'i'];
+  $out = ['transition_id' => null];
+  test_sane_import ($in, $names, $out);
+  $all_fields = ['category_id', 'resolution_id', 'privacy', 'status_id'];
+  $name_digits = [];
+  foreach ($all_fields as $f)
+    $name_digits[] = "form_$f";
+  $names = [
+    'true' => 'update',
+    'digits' => $name_digits
+  ];
+  $in = [];
+  foreach ($name_digits as $n)
+    $in[$n] = '102';
+  $out = $in;
+  $in['update'] = 'Update';
+  $out['update'] = true;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/notification_settings.php';
+{
+  $names = ['true' => 'submit'];
+  $in = [];
+  $out = ['submit' => null];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/other_settings.php';
+{
+  $names = ['true' => 'submit', 'specialchars' => 'form_preamble'];
+  $in = ['submit' => 'Submit', 'form_preamble' => 'a'];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/admin/userperms.php';
+{
+  define ('ARTIFACT', 'bugs');
+  $names = [
+    'true' => 'update',
+    'digits' =>
+      [
+        ARTIFACT . '_restrict_event2',
+        [ARTIFACT . '_restrict_event1', [0, 99]]
+      ]
+  ];
+  $in = [
+    'update' => 'Update',
+    ARTIFACT . '_restrict_event2' => 4913,
+    ARTIFACT . '_restrict_event1' => 289,
+  ];
+  $out = [
+    'update' => true,
+    ARTIFACT . '_restrict_event2' => 4913,
+    ARTIFACT . '_restrict_event1' => null,
+  ];
+  test_sane_import ($in, $names, $out);
+  $in[ARTIFACT . '_restrict_event1'] = 68;
+  $in['update'] = null;
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+  if (null * 100 + 51 != 51)
+    {
+      print_reference ();
+      print '(null * 100 + 51 != 51)' . "\n";
+    }
+}
+
+$reference = 'include/trackers_run/browse.php';
+{
+  $names = [
+    'digits' =>
+      [
+        'chunksz', 'offset', 'report_id',
+        ['msort', 'sumORdet', 'advsrch', 'history_search', [0, 1]],
+        ['spamscore', [1, null]],
+        ['history_date_yearfd', [1900, null]],
+        ['history_date_monthfd', [1, 12]],
+        ['history_date_dayfd', [1, 31]],
+      ],
+    'name' => 'history_field',
+    'strings' =>
+      [
+        ['func', ['default' => 'browse', 'digest']],
+        ['set', ['custom', 'my', 'open']],
+        ['history_event', ['modified', 'not modified']]
+      ],
+    'preg' =>
+      [
+        ['history_date', '/^\d{4}-\d{1,2}-\d{1,2}$/'],
+        ['order', '/^([_a-zA-Z-][_[:alnum:]-]*)?$/'],
+        ['morder', '/^[,<>_[:alnum:]-]*$/']
+      ],
+    'true' => 'printer'
+  ];
+  $in = [
+    'chunksz' => 40,
+    'offset' => 83521,
+    'report_id' => 5,
+    'history_field' => 0,
+    'msort' => 0,
+    'sumORdet' => 0,
+    'advsrch' => 1,
+    'history_search' => 1,
+    'spamscore' => 40,
+    'history_date_yearfd' => 1983,
+    'history_date_monthfd' => 9,
+    'history_date_dayfd' => 27,
+    'func' => 'digestselectfield',
+    'order' => 'priority',
+    'set' => 'my',
+    'history_event' => 'modified',
+    'history_date' => '1983-09-27',
+    'morder' => 'bug_id<,status>',
+    'printer' => 'printer'
+  ];
+  $out = $in;
+  $out['func'] = 'browse';
+  test_sane_import ($in, $names, $out);
+  $in['order'] = '';
+  $out['order'] = '';
+  unset ($in['advsrch']);
+  $out['advsrch'] = null;
+  test_sane_import ($in, $names, $out);
+  if (intval (null) != 0)
+    {
+      print_reference ();
+      print 'intval(null) != 0' . "\n";
+    }
+  $co_field = 'status_op';
+  $names = ['strings' => [[$co_field, ['>', '=', '<']]]];
+  $in = [$co_field => '='];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+  $co_field = 'category_end';
+  $names = ['preg' => [[$co_field, '/^\d{4}-\d{1,2}-\d{1,2}$/']]];
+  $in = [$co_field => '1983-09-27'];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/detail-sober.php';
+{
+  $names = ['digits' => 'comingfrom'];
+  $in = ['digits' => '123'];
+  $out = ['comingfrom' => null];
+  test_sane_import ($in, $names, $out);
+  $in['comingfrom'] = 'x119y';
+  $out['comingfrom'] = '119';
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/digest.php';
+{
+  $names = [
+    'funcs' => 'func',
+    'digits' =>  'dependencies_of_item',
+    'artifact' => 'dependencies_of_tracker',
+    'array' =>
+      [
+        ['items_for_digest', ['digits', 'digits']],
+        ['field_used', ['name', ['digits', [0, 1]]]]
+      ]
+  ];
+  $in = [
+    'func' => 'digestselectfield',
+    'dependencies_of_item' => 289,
+    'dependencies_of_tracker' => 'bugs',
+    'items_for_digest' => ['4913' => '83521', '1' => '2'],
+    'field_used' => ['status_id' => '0', 'summary' => '1']
+  ];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/download.php';
+{
+  $names = ['digits' => 'file_id'];
+  $in = ['file_id' => 1];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/export.php';
+{
+  $names = ['true' => 'download'];
+  $in = ['download' => 1];
+  $out = ['download' => true];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/index.php';
+{
+  $names = [
+    'funcs' => 'func',
+    'true' => 'printer',
+    'digits' => ['item_file_id', 'item_cc_id']
+  ];
+  $in = [
+    'func' => 'digest',
+    'item_file_id' => 1,
+    'item_cc_id' => 289
+  ];
+  $out = $in;
+  $out['printer'] = null;
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'hash' => 'form_id',
+    'pass' =>
+      [
+        'comment', 'additional_comment', 'depends_search',
+        'reassign_change_project_search'
+      ],
+    'digits' => ['comment_type_id', 'new_vote', 'quote_no'],
+    'specialchars' => 'cc_comment',
+    'preg' =>
+      [
+        ['canned_response', '/^(\d+|!multiple!)$/'],
+        [
+          'originator_email',
+          '/^[a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+\.)+[a-zA-Z0-9]+$/'
+        ],
+        ['add_cc', '/^[-+_@.,;\s\da-zA-Z]*$/'],
+        [
+          'reassign_change_project', '/^[-_[:alnum:]]*$/'
+        ]
+      ],
+    'strings' =>
+      [
+        [
+          'depends_search_only_artifact',
+          'reassign_change_artifact',
+          ['all', 'support', 'bugs', 'task', 'patch']
+        ],
+        [
+          'depends_search_only_project',
+          ['any', 'notany']
+        ]
+      ],
+    'true' =>
+      [
+        'submitreturn',
+        'preview',
+      ],
+    'array' =>
+      [
+        [
+          'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support',
+          'dependent_on_patch',
+          [null, 'digits']
+        ]
+      ]
+  ];
+  $in = [
+    'form_id' => md5 ('form_id'),
+    'comment' => 'comment',
+    'additional_comment' => 'a',
+    'depends_search' => 'd',
+    'reassign_change_project_search' => 'r',
+    'comment_type_id' => 127,
+    'new_vote' => 10,
+    'quote_no' => 3,
+    'cc_comment' => 'a',
+    'canned_response' => '!multiple!',
+    'originator_email' => 'agn@test.mil',
+    'add_cc' => 'agn,a@b.ca;d@e.fgh',
+    'reassign_change_project' => '0-grep_up',
+    'depends_search_only_artifact' => 'bugs',
+    'reassign_change_artifact' => 'all',
+    'depends_search_only_project' => 'any',
+    'submitreturn' => true,
+    'preview' => true,
+    'dependent_on_task' => [1, 2, 3],
+    'dependent_on_bugs' => [2, 3, 4],
+    'dependent_on_support' => [3, 4, 5],
+    'dependent_on_patch' => [4, 5, 6],
+  ];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+  $in['canned_response'] = ['127', '128', '129'];
+  $out['canned_response'] = null;
+  $out = $in;
+  $names = ['array' => [['canned_response', [null, 'digits']]]];
+  $in = ['canned_response' => ['127', '128', '129']];
+  $out = $in;
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'digits' => ['comment_internal_id', 'item_depends_on'],
+    'artifact' => 'item_depends_on_artifact',
+  ];
+  $in = [
+    'comment_internal_id' => 1,
+    'item_depends_on_artifact' => 'bugs'
+  ];
+  $out = $in;
+  $out['item_depends_on'] = null;
+  test_sane_import ($in, $names, $out);
+  $names = ['hash' => 'form_id', 'digits' => 'check', 'pass' => 'details'];
+  $in = ['form_id' => md5(''), 'check' => 1];
+  $out = $in;
+  $out['details'] = null;
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'hash' => 'form_id', 'digits' => ['check', 'item_id'],
+    'pass' => 'comment'
+  ];
+  $out['item_id'] = $in['item_id'] = 3;
+  $out['comment'] = $in['comment'] = 'comment';
+  unset ($out['details']);
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'include/trackers_run/reporting.php';
+{
+  $names = ['name' => 'field'];
+  $in = $out = ['field' => 'aging'];
+  test_sane_import ($in, $names, $out);
 }
 
 # The test for the following files is the same.
