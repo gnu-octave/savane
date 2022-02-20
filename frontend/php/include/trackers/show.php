@@ -724,7 +724,7 @@ ORDER BY bug_fv_id DESC LIMIT 1",
         {
           print '<span class="trash"><a href="'
             . htmlentities ($_SERVER['PHP_SELF'])
-            . '?func=delete_dependancy&amp;item_id=' . $item_id
+            . '?func=delete_dependency&amp;item_id=' . $item_id
             . '&amp;item_depends_on=' . $current_item_id
             . '&amp;item_depends_on_artifact=' . $tracker . '">'
             . '<img src="' . $GLOBALS['sys_home'] . 'images/' . SV_THEME

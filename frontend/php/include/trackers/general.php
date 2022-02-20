@@ -1497,7 +1497,7 @@ function trackers_delete_cc_by_user ($item_id, $user_id)
   return (db_numrows($result) >= 1);
 }
 
-function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on,
+function trackers_delete_dependency ($group_id, $item_id, $item_depends_on,
                                      $item_depends_on_artifact, &$changes)
 {
   # Can be done only by at least technicians.

@@ -717,9 +717,9 @@ anti-spam number, please go back!"));
      break;
    }
 
- case 'delete_dependancy' :
+ case 'delete_dependency' :
    {
-     $changed |= trackers_delete_dependancy($group_id,
+     $changed |= trackers_delete_dependency($group_id,
                                             $item_id,
                                             $item_depends_on,
                                             $item_depends_on_artifact,
