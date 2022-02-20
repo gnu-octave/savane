@@ -1520,18 +1520,16 @@ function trackers_delete_dependancy ($group_id, $item_id, $item_depends_on,
       return false;
     }
   fb(_("Dependency Removed."));
-  trackers_data_add_history("Dependencies",
-                            "Removed dependency to "
-                            .$item_depends_on_artifact." #"
-                            .$item_depends_on,
-                            "-",
-                            $item_id,
-                            0,0,1);
-  trackers_data_add_history("Dependencies",
-                            "Removed dependency from ".ARTIFACT." #".$item_id,
-                            "-",
-                            $item_depends_on,
-                            0,0,1);
+  trackers_data_add_history (
+    "Dependencies",
+    "Removed dependency to $item_depends_on_artifact #$item_depends_on",
+    "-", $item_id, 0, 0, 1
+  );
+  trackers_data_add_history (
+    "Dependencies",
+    "Removed dependency from " . ARTIFACT . " #$item_id",
+    "-", $item_depends_on, 0, $item_depends_on_artifact, 1
+  );
 
   $changes['Dependency Removed']['add'] = $item_depends_on_artifact." #"
                                           .$item_depends_on;
