@@ -103,19 +103,25 @@ function theme_validate ($user_theme)
 {
   utils_get_content("forbidden_theme");
 
-  if (isset($GLOBALS['forbid_theme_regexp'])
-      && preg_match($GLOBALS['forbid_theme_regexp'], $user_theme))
+  # Disallow going towards filesystem root and other queer paths.
+  $forbidden = preg_match (',(/[.]*/|^/|/$|\s),', $user_theme);
+
+  if (
+    isset ($GLOBALS['forbid_theme_regexp'])
+    && preg_match ($GLOBALS['forbid_theme_regexp'], $user_theme)
+  )
+    $forbidden = true;
+
+  if ($forbidden)
     {
-      error_log ("Forbidden theme '" . $user_theme . "', user "
-                 . user_getname ());
+      error_log ("Forbidden theme '$user_theme', user " . user_getname ());
       return $GLOBALS['sys_themedefault'];
     }
 
-  if (file_exists($GLOBALS['sys_www_topdir'] . "/css/"
-                  . $user_theme . ".css"))
+  if (file_exists ($GLOBALS['sys_www_topdir'] . "/css/$user_theme.css"))
     return $user_theme;
   if ($user_theme != '')
-    error_log ("Invalid theme '" . $user_theme . "', user " . user_getname ());
+    error_log ("Invalid theme '$user_theme', user " . user_getname ());
   return $GLOBALS['sys_themedefault'];
 }
 
