@@ -2,7 +2,7 @@
 # Get group keyrings.
 #
 # Copyright (C) 2005 Mathieu Roy <yeupou--at--gnu.org>
-# Copyright (C) 2017, 2021 Ineiev
+# Copyright (C) 2017, 2021, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -21,7 +21,7 @@
 
 require_once('../include/init.php');
 
-extract(sane_import('get', array('download')));
+extract (sane_import ('get', ['true' => 'download']));
 $project = project_get_object ($group_id);
 
 if (basename($_SERVER['PHP_SELF']) === 'memberlist-gpgkeys.php')
@@ -48,23 +48,27 @@ else
 if (!$keyring)
   exit_error ($error_no_keyring);
 
-if (!$download)
+if ($download)
   {
-    site_project_header (array ('title' => $title, 'group' => $group_id,
-                                'context' => 'keys'));
-    print '<p>'
-. sprintf(_("You can <a href=\"%s\">download the keyring</a> and import it with
-the command %s."), htmlentities ($_SERVER['PHP_SELF']) . '?group=' . $group
-                   . '&amp;download=1',
-'<em>gpg --import &lt;file&gt;</em>') . "</p>\n";
+    header ('Content-Type: application/pgp-keys');
+    header ("Content-Disposition: attachment; filename=$filename");
+    header ("Content-Description: $description");
+    print "$description$note\n\n$keyring";
+    exit (0);
+  }
 
-    site_project_footer (array ());
-  }
-else
-  {
-    header('Content-Type: application/pgp-keys');
-    header('Content-Disposition: attachment; filename=' . $filename);
-    header('Content-Description: ' . $description);
-    print $description . $note . "\n\n" . $keyring;
-  }
+site_project_header (
+  ['title' => $title, 'group' => $group_id, 'context' => 'keys']
+);
+
+print '<p>';
+printf (
+  _("You can <a href=\"%s\">download the keyring</a> and import it with
+the command %s."),
+  htmlentities ($_SERVER['PHP_SELF']) . "?group=$group&amp;download=1",
+  '<em>gpg --import &lt;file&gt;</em>'
+);
+print "</p>\n";
+
+site_project_footer (array ());
 ?>

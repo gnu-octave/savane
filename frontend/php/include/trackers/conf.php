@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2004 Mathieu Roy <yeupou--at--gnu.org>
 # Copyright (C) 2004 Yves Perrin <yves.perrin--at--cern.ch>
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -77,9 +77,6 @@ function artifact_name ($artifact)
 
 function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 {
-  if (!ctype_alnum($artifact))
-    die("Invalid artifact name: " . htmlspecialchars($artifact));
-
   if (!$artifact || !$group_id || !$from_group_id)
     {
       # Case that should never happen.
@@ -316,9 +313,6 @@ function trackers_conf_copy ($group_id, $artifact, $from_group_id)
 
 function conf_form ($group_id, $artifact)
 {
-  if (!ctype_alnum($artifact))
-    die("Invalid artifact name: " . htmlspecialchars($artifact));
-
   $result = db_execute("SELECT groups.group_name,groups.group_id
                        FROM groups,user_group
                        WHERE groups.group_id=user_group.group_id
@@ -330,38 +324,40 @@ function conf_form ($group_id, $artifact)
   $vals = array();
   $texts = array();
   $found = false;
-  while ($thisgroup = db_fetch_array($result))
+  while ($thisgroup = db_fetch_array ($result))
     {
       $vals[] = $thisgroup['group_id'];
       $texts[] = $thisgroup['group_name'];
       $found = true;
     }
-  if ($found)
+  print '<p>';
+  $art_name = artifact_name ($artifact);
+  if (!$found)
     {
-      print '<p>'.sprintf(
+      printf (
 # TRANSLATORS: the argument is previously defined string (bug|patch|task|...)
-                          _("You can copy the configuration of the %s tracker
-of the following projects (this list was established according to your
-currently membership record)."), artifact_name ($artifact)).'</p>
-<p class="warn">'._("Beware, your current configuration will be irremediably
-lost.").'</p>
-
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
-<input type="hidden" name="artifact" value="'.htmlspecialchars($artifact).'" />
-<span class="preinput"><label for="from_group_id">'._("Projects:")
-.'</label></span>&nbsp;&nbsp;&nbsp;
-';
-      print html_build_select_box_from_arrays($vals, $texts, 'from_group_id');
-      print form_footer();
-    }
-  else
-    {
-      print '<p>'.sprintf(
-# TRANSLATORS: the argument is previously defined string (bug|patch|task|...)
-                          _("You cannot copy the configuration of other
+        _("You cannot copy the configuration of other
 projects because you are not member of any project hosted here that uses a %s
-tracker."), artifact_name($artifact))."</p>\n";
+tracker.") . "</p>\n",
+        $art_name
+      );
+      return;
     }
+  printf(
+    # TRANSLATORS: the argument is previously defined string (bug|patch|...)
+    _("You can copy the configuration of the %s tracker
+of the following projects (this list was established according to your
+currently membership record)."),
+    $art_name);
+  print"</p>\n<p class='warn'>"
+    . _("Beware, your current configuration will be irremediably lost.")
+    . "</p>\n\n<form action=\""
+    . htmlentities ($_SERVER['PHP_SELF']) . "\" method='post'>\n"
+    . "<input type='hidden' name='group_id' value='$group_id)' />\n"
+    . "<input type='hidden' name='artifact' value='$artifact' />\n"
+    . '<span class="preinput"><label for="from_group_id">' . _("Projects:")
+    . "</label></span>&nbsp;&nbsp;&nbsp;\n";
+  print html_build_select_box_from_arrays ($vals, $texts, 'from_group_id');
+  print form_footer();
 }
 ?>

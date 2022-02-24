@@ -5,7 +5,7 @@
 # Copyright (C) 2000-2003 Free Software Foundation
 # Copyright (C) 2000-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007 Sylvain Beucler
-# Copyright (C) 2017, 2018, 2020, 2021 Ineiev
+# Copyright (C) 2017, 2018, 2020, 2021, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -28,15 +28,23 @@ require_once('../../include/gpg.php');
 $gpg_heading_level = 3;
 require(utils_get_content_filename ("gpg-sample"));
 
-extract(sane_import('post', array('update',
-  'update_keyring', 'test_keyring', 'reset_keyring', 'new_keyring',
-  'form_group_name', 'form_shortdesc', 'form_longdesc', 'form_devel_status',
-  'upgrade_gpl')));
+extract (sane_import ('post',
+  [
+    'true' =>
+      [
+        'update', 'update_keyring', 'reset_keyring', 'test_keyring',
+        'upgrade_gpl',
+      ],
+    'pass' => ['new_keyring', 'form_longdesc'],
+    'specialchars' => ['form_group_name', 'form_shortdesc'],
+    'digits' => 'form_devel_status',
+  ]
+));
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+session_require (['group' => $group_id, 'admin_flags' => 'A']);
 
 # Update info for page.
-$res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
+$res_grp = db_execute ("SELECT * FROM groups WHERE group_id = ?", [$group_id]);
 if (db_numrows($res_grp) < 1)
   exit_no_group();
 $row_grp = db_fetch_array($res_grp);
@@ -51,12 +59,12 @@ if ($reset_keyring)
 
 if ($update)
   {
-    group_add_history ('Changed Public Info','',$group_id);
+    group_add_history ('Changed Public Info', '', $group_id);
 
     $result = db_autoexecute('groups',
       array(
-        'group_name' => htmlspecialchars($form_group_name),
-        'short_description' => htmlspecialchars($form_shortdesc),
+        'group_name' => $form_group_name,
+        'short_description' => $form_shortdesc,
         'long_description' => $form_longdesc,
         'devel_status' => $form_devel_status,
       ), DB_AUTOQUERY_UPDATE,
@@ -65,8 +73,10 @@ if ($update)
       fb(_("Update failed."), 1);
 
     if ($row_grp['license'] == 'gpl' and $upgrade_gpl)
-      db_execute("UPDATE groups SET license='gplv3orlater' WHERE group_id=?",
-                 array($group_id));
+      db_execute (
+        "UPDATE groups SET license = 'gplv3orlater' WHERE group_id = ?",
+        [$group_id]
+     );
   }
 
 if ($test_keyring)
@@ -85,7 +95,7 @@ if ($update_keyring)
       fb (_("Update failed."), 1);
   }
 
-$res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
+$res_grp = db_execute ("SELECT * FROM groups WHERE group_id = ?", [$group_id]);
 if (db_numrows($res_grp) < 1)
   exit_no_group();
 $row_grp = db_fetch_array($res_grp);
@@ -98,28 +108,37 @@ site_project_header(array('title' => _("Editing Public Information"),
 print form_header($_SERVER['PHP_SELF'], $extra = 'name=""')
      . form_input("hidden", "group_id", $group_id);
 
-print '
-<p><span class="preinput"><label for="form_group_name">' . _("Group Name:")
-.'</label></span>
-<br />&nbsp;&nbsp;&nbsp;' . form_input("text",
-                                     "form_group_name",
-                                     $row_grp['group_name'],
-                                     'size="60" maxlen="254"') . "</p>\n";
-print '
-<p><span class="preinput"><label for="form_shortdesc">'
-. _("Short Description (255 characters max)")
-. '</label> ' . markup_info("none") . '</span>
-<br />&nbsp;&nbsp;&nbsp;' . form_textarea("form_shortdesc",
-                                        $row_grp['short_description'],
-                                        'cols="70" rows="3" wrap="virtual"')
-. "</p>\n";
-print '
-<p><span class="preinput"><label for="form_longdesc">' . _("Long Description")
-. '</label> ' . markup_info ("full") . '</span>
-<br />&nbsp;&nbsp;&nbsp;' . form_textarea ("form_longdesc",
-                                        $row_grp['long_description'],
-                                        'cols="70" rows="10" wrap="virtual"')
-. "</p>\n";
+$print_preinput = function ($label, $name, $markup = '')
+{
+  if (!empty ($markup))
+    $markup = ' ' . markup_info ($markup);
+  print "<p><span class='preinput'><label for='$name'>"
+    . "$label</label>$markup</span><br />\n&nbsp;&nbsp;&nbsp;";
+};
+
+$print_preinput (_("Group Name:"), 'form_group_name');
+print
+  form_input (
+    "text", "form_group_name",
+    htmlspecialchars_decode ($row_grp['group_name']), 'size="60" maxlen="254"'
+  )
+  . "</p>\n";
+$print_preinput (
+  _("Short Description (255 characters max)"), 'form_shortdesc', 'none'
+);
+print
+  form_textarea (
+    "form_shortdesc", $row_grp['short_description'],
+    'cols="70" rows="3" wrap="virtual"'
+  )
+  . "</p>\n";
+$print_preinput (_("Long Description"), 'form_longdesc', 'full');
+print
+  form_textarea (
+    "form_longdesc", htmlspecialchars ($row_grp['long_description']),
+    'cols="70" rows="10" wrap="virtual"'
+  )
+  . "</p>\n";
 
 $type_id = $row_grp['type'];
 $result1 = db_execute("SELECT * FROM group_type WHERE type_id=?", array($type_id));
@@ -130,11 +149,8 @@ if($DEVEL_STATUS1 = $row_grp1['devel_status_array'])
 
 if ($project->CanUse("devel_status"))
   {
-    print '
-<p><span class="preinput"><label for="form_devel_status">'
-      . _("Development Status:")
-      . '</label></span><br />&nbsp;&nbsp;&nbsp;<select '
-      . 'name="form_devel_status" id="form_devel_status">';
+    $print_preinput (_("Development Status:"), "form_devel_status");
+    print  '<select name="form_devel_status" id="form_devel_status">';
 
     foreach ($DEVEL_STATUS as $k => $v)
       {
@@ -142,7 +158,7 @@ if ($project->CanUse("devel_status"))
         if ($k == $row_grp['devel_status'])
           print ' selected';
         print '>' . $v;
-        print '</option>';
+        print "</option>\n";
       }
     print "</select></p>\n";
   }
@@ -156,8 +172,8 @@ if ($project->getLicense() == 'gpl')
   {
     print '<p><span class="preinput">' . _("GNU GPL v3:")
           . "</span>\n<br />&nbsp;&nbsp;";
-  html_build_checkbox ("upgrade_gpl");
-    print " <label for=\"upgrade_gpl\">"
+    html_build_checkbox ("upgrade_gpl");
+    print "\n<label for=\"upgrade_gpl\">"
           . _("Upgrade license to &quot;GNU GPLv3 or later&quot;");
     print "</label></p>\n";
   }
@@ -177,7 +193,8 @@ if ($project->getTypeBaseHost() == "savannah.gnu.org")
 if (!$new_keyring)
   $new_keyring = $keyring;
 
-print form_textarea("new_keyring", $new_keyring, 'cols="70" rows="10" wrap="virtual"');
+print form_textarea ("new_keyring",
+  htmlspecialchars ($new_keyring), 'cols="70" rows="10" wrap="virtual"');
 print '<p>'
 . form_submit (_("Test GPG keys"), 'test_keyring') . "\n"
 . form_submit (_("Cancel"), 'reset_keyring') . "\n"

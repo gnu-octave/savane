@@ -1841,6 +1841,242 @@ $reference = 'news/approve.php';
   test_sane_import ($in, $names, $out);
 }
 
+$reference = 'people/admin/index.php';
+{
+  $names = ['true' => ['people_cat', 'people_skills']];
+  $in = $out = ['people_cat' => true, 'people_skills' => true];
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'true' => 'post_changes',
+    'specialchars' => ['skill_name', 'cat_name'],
+  ];
+  $in = [
+    'skill_name' => 'inv<a"lidate',
+    'cat_name' => 'v\'ery <w id="ell',
+  ];
+  $out = ['post_changes' => null];
+  foreach ($in as $k => $v)
+    $out[$k] = htmlspec ($v);
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'people/editjob.php';
+{
+  $names = [
+    'true' =>
+      [
+       'add_job', 'update_job', 'add_to_job_inventory', 'update_job_inventory',
+       'delete_from_job_inventory',
+      ],
+    'digits' =>
+      [
+        'status_id', 'category_id', 'job_inventory_id', 'skill_id',
+        'skill_level_id', 'skill_year_id',
+      ],
+    'specialchars' => 'title',
+    'pass' => 'description',
+  ];
+  $in = $out = [
+    'add_job' => 'y', 'status_id' => 1, 'category_id' => 2,
+    'job_inventory_id' => 3, 'skill_id' => 4, 'skill_level_id' => 5,
+    'skill_year_id' => 6,
+    'title' => 'a',
+    'description' => 'a<"b\''
+  ];
+  $out['update_job'] = $out['add_to_job_inventory']
+    = $out['update_job_inventory'] = $out['delete_from_job_inventory'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'people/index.php';
+{
+  $names = [
+    'true' => 'submit',
+    'array' => [['categories', 'types', [null, 'digits']]],
+  ];
+  $in = $out = [
+    'submit' => true,
+    'categories' => [1, 1, 1, 1],
+    'types' => [1, 2, 3, 5],
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+# The next two files share the test.
+$reference = 'people/resume.php';
+$reference = 'people/viewgpg.php';
+{
+  $names = ['digits' => 'user_id'];
+  $in = $out = ['user_id' => 1];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'people/viewjob.php';
+{
+  $names = ['digits' => ['group_id', 'job_id']];
+  $in = $out = ['job_id' => 1, 'group_id' => '4913'];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/admin/conf-copy.php';
+{
+  $names = [
+    'true' => 'update',
+    'digits' => 'from_group_id',
+    'artifact' => 'artifact',
+  ];
+  $in = $out = [
+    'from_group_id' => 119,
+    'artifact' => 'patch',
+  ];
+  $out['update'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/admin/editgroupfeatures.php';
+{
+  $post_names = function ()
+  {
+    $vcs = ['cvs', 'arch', 'svn', 'git', 'hg', 'bzr'];
+    $use_url = [
+      'bugs', 'support', 'patch', 'task', 'mail', 'download', 'homepage',
+      'forum', 'extralink_documentation',
+    ];
+    $use_ = array_merge ($vcs, $use_url, ['news']);
+    $names = ['true' => ['update'], 'specialchars' => ['dir_download']];
+    foreach ($use_ as $u)
+      $names['true'][] = 'use_' . $u;
+    $viewvcs = [];
+    foreach ($vcs as $v)
+      $viewvcs[] = $v . '_viewcvs';
+    $urls = array_merge ($vcs, $viewvcs, $use_url);
+    foreach ($urls as $u)
+      $names['specialchars'][] = 'url_' . $u;
+    $names['specialchars'][] = 'url_cvs_viewcvs_homepage';
+    return $names;
+  };
+  $names = $post_names ();
+  $in = $out = [];
+  foreach ($names['true'] as $n)
+    $in[$n] = $out[$n] = true;
+  foreach ($names['specialchars'] as $n)
+    $in[$n] = $out[$n] = $n;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/admin/editgroupinfo.php';
+{
+  $names = [
+    'true' =>
+      [
+        'update', 'update_keyring', 'reset_keyring', 'test_keyring',
+        'upgrade_gpl',
+      ],
+    'pass' => ['new_keyring', 'form_longdesc'],
+    'specialchars' => ['form_group_name', 'form_shortdesc'],
+    'digits' => 'form_devel_status',
+  ];
+  $in = $out = [
+    'update' => true, 'update_keyring' => true, 'upgrade_gpl' => true,
+    'new_keyring' => 'a',
+    'form_group_name' => 'grep', 'form_shortdesc' => 'shortdesc',
+    'form_longdesc' => 'longdesc',
+    'form_devel_status' => 0
+  ];
+  $out['reset_keyring'] = $out['test_keyring'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/admin/editgroupnotifications.php';
+{
+  $names = [
+    'true' => 'update',
+    'pass' => 'form_news_address',
+    'digits' => [['form_frequency', [0, 3]]],
+  ];
+  $in = $out = [
+    'update' => true,
+    'form_news_address' => 'agn@test.org',
+    'form_frequency' => 2,
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/admin/squadadmin.php';
+{
+  $names = [
+    'true' =>
+      [
+        'update', 'update_general', 'update_delete_step1',
+        'update_delete_step2', 'deletionconfirmed', 'add_to_squad',
+        'remove_from_squad',
+      ],
+    'hash' => 'form_id',
+    'array' => [['user_ids', ['digits', 'digits']]],
+    'digits' => ['squad_id_to_delete'],
+     # form_realname is sanitized further.
+    'pass' => 'form_realname',
+    'name' => 'form_loginname',
+  ];
+  $in = $out = [
+    'update' => true, 'update_general' => true, 'add_to_squad' => true,
+    'form_id' => md5 ('update'), 'squad_id_to_delete' => 289,
+    'user_ids' => [1, 2], 'form_realname' => 'agn', 'form_loginname' => 'agn',
+  ];
+  $out['update_delete_step1'] = $out['update_delete_step2']
+    = $out['deletionconfirmed'] = $out['remove_from_squad'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/admin/useradmin.php';
+{
+  $names = [
+    'array' => [['user_ids', [null, 'digits']]],
+    'pass' => 'words',
+    'strings' =>
+      [
+        [
+          'action',
+          [
+            'approve_for_group', 'remove_from_group', 'add_to_group_list',
+            'add_to_group',
+          ]
+        ]
+      ],
+  ];
+  $in = $out = [
+    'user_ids' => [1, 2, 3], 'words' => 'user admin',
+    'action' => 'add_to_group',
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/admin/userperms.php';
+{
+  $perm_regexp = '/^(\d+|NULL)$/';
+  $fields = ['privacy_289', 'admin_289'];
+  $fields[] = $perm_regexp;
+  $names = [
+    'true' => ['update', 'onduty_user_289'],
+    'preg' => [$fields],
+  ];
+  $in = $out = [
+    'update' => true,
+    'onduty_user_289' => true,
+    'privacy_289' => 'NULL',
+    'admin_289' => 1
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'project/memberlist-gpgkeys.php';
+{
+  $names = ['true' => 'download'];
+  $in = $names;
+  $out = ['download' => null];
+  test_sane_import ($in, $names, $out);
+}
+
 $reference = 'register/upload.php';
 # (no test: the only import is a file)
 
@@ -1870,5 +2106,4 @@ $reference = 'sendmessage.php';
 
   test_sane_import ($in, $names, $out);
 }
-
 ?>

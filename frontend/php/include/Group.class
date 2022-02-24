@@ -141,16 +141,21 @@ class Group extends savane_error
 
   function CanUse($artifact)
     {
-      # tolerates "bugs" to say "bug"
+      # Tolerates "bugs" to say "bug" and "mail" to "mailing_list".
       if ($artifact == "bugs")
-	{ $artifact = "bug"; }
+	$artifact = "bug";
+      if ($artifact == 'mail')
+        $artifact = 'mailing_list';
       return isset($this->type_data_array['can_use_'.$artifact])
 	? $this->type_data_array['can_use_'.$artifact]
 	: false;
     }
 
   function CanModifyUrl($artifact)
-    { return isset($this->type_data_array['is_menu_configurable_'.$artifact])
+    {
+      if ($artifact == 'mail')
+        $artifact = 'mailing_list';
+      return isset($this->type_data_array['is_menu_configurable_'.$artifact])
 	? $this->type_data_array['is_menu_configurable_'.$artifact]
 	: false;
     }

@@ -22,11 +22,16 @@
 
 require_once('../../include/init.php');
 
-extract(sane_import('request', array('people_cat', 'people_skills')));
-extract(sane_import('post', array('post_changes', 'cat_name', 'skill_name')));
+extract (sane_import ('request', ['true' => ['people_cat', 'people_skills']]));
+extract (sane_import ('post',
+  [
+    'true' => 'post_changes',
+    'specialchars' => ['skill_name', 'cat_name'],
+  ]
+));
 
 # This page is for site admins only.
-if (!user_ismember(1,'A'))
+if (!user_ismember (1, 'A'))
   exit_permission_denied();
 
 if ($post_changes)
@@ -34,8 +39,10 @@ if ($post_changes)
     # Update the database.
     if ($people_cat)
       {
-        $result = db_execute("INSERT INTO people_job_category (name) VALUES (?)",
-                             array($cat_name));
+        $result = db_execute (
+          "INSERT INTO people_job_category (name) VALUES (?)",
+          array($cat_name)
+        );
         if (!$result)
           {
             print db_error();
@@ -43,10 +50,10 @@ if ($post_changes)
           }
         fb(_("Category Inserted"));
       }
-    else if ($people_skills)
+    elseif ($people_skills)
       {
-        $result=db_execute("INSERT INTO people_skill (name) VALUES (?)",
-                           array($skill_name));
+        $result = db_execute ("INSERT INTO people_skill (name) VALUES (?)",
+           array($skill_name));
         if (!$result)
           {
             print db_error();
@@ -56,11 +63,10 @@ if ($post_changes)
       }
   }
 
-# Show UI forms.
 if ($people_cat)
   {
     # Show categories and blank row.
-    print site_header(array('title'=>_('Change Categories')));
+    site_header (['title' => _('Change Categories')]);
     # List of possible categories for this group.
     $result = db_query("SELECT category_id,name FROM people_job_category");
     if ($result && db_numrows($result) > 0)
@@ -91,7 +97,7 @@ if ($people_cat)
 else if ($people_skills)
   {
     # Show people_groups and blank row.
-    print site_header(array('title'=>_('Change People Skills')));
+    site_header (['title' => _('Change People Skills')]);
     # List of possible people_groups for this group.
     $result = db_query("SELECT skill_id,name FROM people_skill");
     print "<p>";
@@ -121,7 +127,7 @@ else if ($people_skills)
 else # ! $people_skills
   {
     # Show main page.
-    print site_header(array('title'=>_('People Administration')));
+    site_header (['title' => _('People Administration')]);
     print '<h1>'._("Help Wanted Administration").'</h1>';
     print '<p><a href="'.htmlentities ($_SERVER['PHP_SELF'])
           .'?people_cat=1">'._("Add Job Categories").'</a><br />';

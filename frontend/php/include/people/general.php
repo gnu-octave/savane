@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2013, 2017, 2018 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2013, 2017, 2018, 2022 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -25,122 +25,104 @@
 # Since all three files orginial were included by pre.php
 # it just makes sense to wrap them all up into this
 
-# category.php
-
 function people_get_type_name($type_id)
 {
-  if (!ctype_digit($type_id))
-    return 'Invalid ID';
   $result = db_execute("SELECT group_type.name
                         FROM group_type WHERE type_id = ?",
                         array($type_id));
   if (!$result || db_numrows($result) < 1)
-    {
-      return 'Invalid ID';
-    }
+    return 'Invalid ID';
   return db_result($result,0,'name');
 }
 
 function people_get_category_name($category_id)
 {
-  if (!ctype_digit($category_id))
-    return 'Invalid ID';
   $result = db_execute("SELECT name FROM people_job_category WHERE category_id=?",
 		       array($category_id));
   if (!$result || db_numrows($result) < 1)
-    {
-      return 'Invalid ID';
-    }
-  else
-    {
-      return db_result($result,0,'name');
-    }
+    return 'Invalid ID';
+  return db_result($result,0,'name');
 }
 
 # Show job selection controls.
 function people_show_table()
 {
-  $return = '<h2>'._("Category").'</h2>';
+  $return = '<h2>' . _("Category") . "</h2>\n";
   $form_is_empty = 1;
+  $no_categories = '<p><strong>' . _("No Categories Found") . "</strong></p>\n";
 
-  $result = db_query("SELECT * FROM people_job_category ORDER BY category_id");
-  $rows=db_numrows($result);
+  $result = db_query ("SELECT * FROM people_job_category ORDER BY category_id");
+  $rows = db_numrows ($result);
   if (!$result || $rows < 1)
     {
-      $return .= '<p><strong>'._("No Categories Found").'</strong></p>';
+      $return .= $no_categories;
     }
   else
     {
       $form_is_empty = 0;
-      for ($i=0; $i<$rows; $i++)
+      for ($i = 0; $i < $rows; $i++)
         {
-          $count_res=db_execute("SELECT count(*) AS count FROM people_job
-                                 WHERE category_id=? AND status_id=1",
-                                 array(db_result($result,$i,'category_id')));
-          print db_error();
+          $count_res = db_execute ("
+            SELECT count(*) AS count FROM people_job
+            WHERE category_id = ? AND status_id = 1",
+            [db_result ($result, $i, 'category_id')]
+          );
+          print db_error ();
           $return .= '<input type="checkbox" title="'
-             .db_result($result,$i,'name')
-             .'" name="categories[]" value="'
-             .db_result($result,$i,'category_id') .'"><a href="'
-             .htmlentities ($_SERVER["PHP_SELF"]).'?categories[]='
-             .db_result($result,$i,'category_id').'">'
-             .db_result($result,$i,'name') .' ('
-             .db_result($count_res,0,'count') .')</a><br />
-';
+            . db_result ($result, $i, 'name')
+            . '" name="categories[]" value="'
+            . db_result ($result, $i, 'category_id') . '"><a href="'
+            . htmlentities ($_SERVER["PHP_SELF"]) . '?categories[]='
+            . db_result ($result, $i, 'category_id') . '">'
+            . db_result ($result, $i, 'name') .' ('
+            . db_result ($count_res, 0, 'count') . ")</a><br />\n";
         }
     }
 
-  $return .= '
-<h2>'._("Project type").'</h2>';
-  $result=db_query("SELECT group_type.type_id, group_type.name,
-                    COUNT(people_job.job_id) AS count FROM
-                    group_type JOIN (groups JOIN people_job ON
-                                     groups.group_id = people_job.group_id)
-                    ON group_type.type_id = groups.type
-                    WHERE status_id = 1 GROUP BY type_id ORDER BY type_id");
-  $rows=db_numrows($result);
+  $return .= '<h2>' . _("Project type") . "</h2>\n";
+  $result = db_query ("
+    SELECT group_type.type_id, group_type.name,
+    COUNT(people_job.job_id) AS count
+    FROM
+      group_type
+      JOIN
+      (groups JOIN people_job ON groups.group_id = people_job.group_id)
+      ON group_type.type_id = groups.type
+    WHERE status_id = 1 GROUP BY type_id ORDER BY type_id"
+  );
+  $rows = db_numrows($result);
   if (!$result || $rows < 1)
     {
-      $return .= '<p><strong>'._("No Categories Found").'</strong></p>';
+      $return .= $no_categories;
     }
   else
     {
       $form_is_empty = 0;
-
-      for ($i=0; $i<$rows; $i++)
+      for ($i = 0; $i < $rows; $i++)
         {
           $return .= '<input type="checkbox" title="'
-             .db_result($result,$i,'name') 
-             .'" name="types[]" value="'
-             .db_result($result,$i,'type_id') . '"><a href="'
-             .htmlentities ($_SERVER["PHP_SELF"]).'?types[]='
-             . db_result($result,$i,'type_id')
-             .'">' .  db_result($result,$i,'name') . ' ('
-             .db_result($result,$i,'count'). ')</a><br />
-';
+            . db_result ($result, $i, 'name')
+            . '" name="types[]" value="'
+            . db_result ($result, $i, 'type_id') . '"><a href="'
+            . htmlentities ($_SERVER["PHP_SELF"]).'?types[]='
+            .  db_result ($result, $i, 'type_id')
+            . '">' . db_result ($result, $i, 'name') . ' ('
+            . db_result ($result, $i, 'count') . ")</a><br />\n";
         }
     }
-  if(!$form_is_empty)
-    {
-      $return = '<form action="'
-                .htmlentities ($_SERVER["PHP_SELF"]).'" method="get">
-' . $return . '
-<hr />
-<input type="checkbox" name="show_any" id="show_any" value="1">
-<label for="show_any">'._('Show all jobs for all project types').'</label><br />
-<input type="submit" name="submit" value="'._("Search").'" />
-</form>
-';
-    }
-  return $return;
+  if ($form_is_empty)
+    return $return;
+  return '<form action="'
+    . htmlentities ($_SERVER["PHP_SELF"])
+    . "\" method='get'>\n$return<hr />\n"
+    . "<input type='submit' name='submit' value=\"" . _("Search")
+    . "\" />\n</form\n";
 }
 
+# Show a list of categories.
+# Provide links to drill into a detail page that shows these categories.
 function people_show_category_list()
 {
-
-  #show a list of categories
-  #provide links to drill into a detail page that shows these categories
-
   $sql="SELECT * FROM people_job_category ORDER BY category_id";
   $result=db_query($sql);
   $rows=db_numrows($result);
@@ -158,17 +140,16 @@ function people_show_category_list()
                                  WHERE category_id=? AND status_id=1",
 				array(db_result($result,$i,'category_id')));
 
-	  # Print only if there are result within the category
-	  if (db_result($count_res,0,'count') > 0)
-	    {
-	      $j++;
-	      $return .= '<li class="'.utils_get_alt_row_color($j)
-                         .'"><span class="smaller">&nbsp;&nbsp;- <a href="'
-                         .$GLOBALS['sys_home'].'people/?category_id='
-		         .db_result($result,$i,'category_id') .'">'
-                         .db_result($count_res,0,'count').
-		' '.db_result($result,$i,'name') .'</a></span></li>';
-	    }
+	  # Print only if there are results within the category.
+	  if (db_result ($count_res, 0,'count') <= 0)
+            continue;
+	$j++;
+	$return .= '<li class="' . utils_get_alt_row_color ($j)
+          . '"><span class="smaller">&nbsp;&nbsp;- <a href="'
+          . $GLOBALS['sys_home'] . 'people/?categories[]='
+	  . db_result ($result, $i, 'category_id') . '">'
+          . db_result ($count_res, 0, 'count')
+          . ' ' . db_result ($result, $i, 'name') . "</a></span></li>\n";
 	}
     }
   if (!$return)
@@ -176,8 +157,6 @@ function people_show_category_list()
 
   return "<ul class=\"boxli\">".$return."</ul>";
 }
-
-# jobs.php
 
 function people_job_status_box($name='status_id',$checked='xyxy')
 {
@@ -346,76 +325,65 @@ function people_draw_skill_box ($result, $job_id=false, $group_id=false)
   $title_arr[]=_('Action');
 
   $rows = db_numrows($result);
-  $i = 0;
   if (!$result || $rows < 1)
     {
       print html_build_list_table_top ($title_arr);
-      print '
-<tr><td colspan="4"><strong>'._("No Skill Inventory Set Up")
-        .'</strong></td></tr>';
-      print "\n</table>\n";
+      print "\n<tr><td colspan='4'><strong>"
+        . _("No Skill Inventory Set Up")
+        . "</strong></td></tr>\n</table>\n";
       print db_error();
     }
   else
     {
-      for (; $i < $rows; $i++)
+      for ($i = 0; $i < $rows; $i++)
 	{
-	  print '
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-';
+	  print "<form action='"
+            . htmlentities ($_SERVER['PHP_SELF']) . "' method='POST'>\n";
           print html_build_list_table_top ($title_arr);
-          print '
-<tr class="'. utils_get_alt_row_color($i) .'">
-<td><input type="hidden" name="'.$infix.'_inventory_id" value="'
-                . db_result($result,$i,''.$infix.'_inventory_id') .'" />
-<input type="hidden" name="'.$infix.'_id" value="'. db_result($result,$i,''.$infix.'_id')
-                .'" />
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
-<span class="smaller">'. db_result($result,$i,'skill_name') . '</span></td>
-<td><span class="smaller">'
-. people_skill_level_box('skill_level_id', db_result($result,$i,'skill_level_id'))
-                           . '</span></td>
-<td><span class="smaller">'. people_skill_year_box('skill_year_id',
-                                                   db_result($result,$i,
-                                                             'skill_year_id'))
-                           . '</span></td>
-<td nowrap><span class="smaller"><input type="submit" name="update_'.$infix.'_inventory" '
-    .'value="'._("Update").'"> &nbsp;
-<input type="submit" name="delete_from_'.$infix.'_inventory" value="'
-    ._("Delete").'"></span></td>
-</tr></table>
-</form>
-';
+          print "<tr class='". utils_get_alt_row_color($i)
+            . "'>\n<td><input type='hidden' name='{$infix}_inventory_id' "
+            . 'value="' . db_result ($result, $i, $infix . '_inventory_id')
+            . "\" />\n<input type='hidden' name='{$infix}_id' "
+            . "value='" . db_result ($result, $i, $infix . '_id')
+            . "' />\n<input type='hidden' name='group_id' "
+            . "value='$group_id' />\n<span class='smaller'>"
+            . db_result ($result, $i, 'skill_name')
+            . "</span></td>\n<td><span class='smaller'>"
+            . people_skill_level_box (
+                'skill_level_id', db_result ($result, $i, 'skill_level_id')
+              )
+            . "</span></td>\n<td><span class='smaller'>"
+            . people_skill_year_box (
+               'skill_year_id', db_result($result, $i, 'skill_year_id')
+              )
+            . "</span></td>\n<td nowrap><span class='smaller'>"
+            . "<input type='submit' name='update_{$infix}_inventory' "
+            . "value='" . _("Update") . "'> &nbsp;\n"
+            . "<input type='submit' name='delete_from_{$infix}_inventory' "
+            . "value='" . _("Delete") . "'></span></td>\n</tr></table>\n"
+            . "</form>\n";
 	}
-
     }
 
-  $i = 0;
-  print '
-<h3>'._("Add a New Skill").'</h3>
-';
+  print "\n<h3>" . _("Add a New Skill") . "</h3>\n";
 
-  print '
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-';
+  print "\n<form action='" . htmlentities ($_SERVER['PHP_SELF'])
+    . "' method='POST'>\n";
   print html_build_list_table_top ($title_arr);
-print '
-<tr class="'. utils_get_alt_row_color($i) .'">
-<td>';
+  print "\n<tr class='" . utils_get_alt_row_color (0) . "'>\n<td>";
 
-if ($job_id !== false)
-  print '<input type="hidden" name="'.$infix.'_id" value="'.$job_id.'" />
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
-';
+  if ($job_id !== false)
+    print "<input type='hidden' name='{$infix}_id' value='$job_id' />"
+      . "<input type='hidden' name='group_id' value='$group_id' />\n";
 
-print '<span class="smaller">'. people_skill_box('skill_id'). '</span></td>
-<td><span class="smaller">'. people_skill_level_box('skill_level_id'). '</span></td>
-<td><span class="smaller">'. people_skill_year_box('skill_year_id'). '</span></td>
-<td nowrap><span class="smaller"><input type="submit" name="add_to_'
-.$infix.'_inventory"
-value="'._("Add Skill").'"></span></td>
-</tr></table>
-</form>';
+  print '<span class="smaller">' . people_skill_box('skill_id')
+    . "</span></td>\n<td><span class='smaller'>"
+    . people_skill_level_box ('skill_level_id')
+    . "</span></td>\n<td><span class='smaller'>"
+    . people_skill_year_box ('skill_year_id')
+    . "</span></td>\n<td nowrap><span class='smaller'><input type='submit' "
+    . "name='add_to_{$infix}_inventory'\n value='" . _("Add Skill")
+    . "'></span></td>\n</tr></table>\n</form>\n";
 }
 
 function people_edit_job_inventory($job_id,$group_id)
@@ -428,69 +396,53 @@ function people_edit_job_inventory($job_id,$group_id)
   people_draw_skill_box ($result, $job_id, $group_id);
 }
 
-function people_show_job_list($result, $edit=0)
+# Take a result set from a query and show the jobs.
+function people_show_job_list ($result, $edit = 0)
 {
   global $sys_datefmt;
-  #takes a result set from a query and shows the jobs
 
-  #query must contain 'group_id', 'job_id', 'title', 'category_name', 'status_name' and 'type'
+  $title_arr = [];
+  $title_arr[] = _("Title");
+  $title_arr[] = _("Category");
+  $title_arr[] = _("Date Opened");
+  $title_arr[] = _("Project");
+  $title_arr[] = _("Type");
 
-  $title_arr=array();
-  $title_arr[]=_("Title");
-  $title_arr[]=_("Category");
-  $title_arr[]=_("Date Opened");
-  $title_arr[]=_("Project");
-  $title_arr[]=_("Type");
+  $page = 'viewjob.php';
+  if ($edit)
+    $page = 'editjob.php';
+  $tail = "</table>\n";
 
-  $return = '';
-  $return .= html_build_list_table_top ($title_arr);
-
-  $rows=db_numrows($result);
+  $return = html_build_list_table_top ($title_arr);
+  $rows = db_numrows($result);
   if ($rows < 1)
+    return $return . '<tr><td colspan="3"><strong>'
+      . _("None found") . '</strong>' . db_error() . "</td></tr>\n" . $tail;
+
+  for ($i = 0; $i < $rows; $i++)
     {
-      $return .= '<tr><td colspan="3"><strong>'._("None found").'</strong>'
-                . db_error() .'</td></tr>';
+      $res_type = db_execute (
+        "SELECT name FROM group_type WHERE type_id=?",
+         array (db_result ($result, $i, 'type'))
+      );
+      $return .= "<tr class=\"" . utils_get_alt_row_color ($i)
+        . '"><td><a href="' . $GLOBALS['sys_home'] . "people/$page?group_id="
+        . db_result ($result, $i, 'group_id') . '&job_id='
+        . db_result ($result, $i, 'job_id') . '">'
+        . db_result ($result, $i, 'title') . "</a></td>\n<td>"
+        . db_result ($result, $i, 'category_name') . "</td>\n<td>"
+        . utils_format_date (db_result ($result,$i,'date'), 'natural')
+        . "</td>\n<td><a href=\"" . $GLOBALS['sys_home'] . 'projects/'
+        . strtolower (db_result ($result, $i, 'unix_group_name')) . '/">'
+        . db_result ($result, $i, 'group_name') . "</a></td>\n<td>"
+        . db_result ($res_type, 0, 'name') . "</td></tr>\n";
     }
-  else
-    {
-      for ($i=0; $i < $rows; $i++)
-	{
-	  # get type infos
-	  $res_type = db_execute("SELECT name FROM group_type WHERE type_id=?",
-				 array(db_result($result, $i, 'type')));
-
-	  if ($edit)
-	    {
-	      $page = 'editjob.php';
-	    }
-	  else
-	    {
-	      $page = 'viewjob.php';
-	    }
-	  $return .= '
-<tr class="'. utils_get_alt_row_color($i)
-	     .'"><td><a href="'.$GLOBALS['sys_home'].'people/'.$page.'?group_id='
-	     .db_result($result,$i,'group_id') .'&job_id='
-	     .db_result($result,$i,'job_id') .'">'
-	     .db_result($result,$i,'title') .'</a></td><td>'
-	     .db_result($result,$i,'category_name') .'</td><td>'
-	     .utils_format_date(db_result($result,$i,'date'), 'natural')
-	     .'</td><td><a href="'.$GLOBALS['sys_home'].'projects/'
-             .strtolower(db_result($result,$i,'unix_group_name')).'/">'
-	     .db_result($result,$i,'group_name') .'</a></td><td>'
-	     .db_result($res_type,0,'name') . '</td></tr>';
-	}
-    }
-
-  $return .= '</table>
-';
-
-  return $return;
+  return $return . $tail;
 }
 
-function people_show_project_jobs($group_id,$edit=0)
+# Show open jobs for this project.
+function people_show_project_jobs ($group_id, $edit = 0)
 {
-  #show open jobs for this project
   $result = db_execute("SELECT people_job.group_id,people_job.job_id,"
      ."groups.group_name,groups.unix_group_name,groups.type,people_job.title,"
      ."people_job.date,people_job_category.name AS category_name "
@@ -500,7 +452,7 @@ function people_show_project_jobs($group_id,$edit=0)
      ."AND people_job.category_id=people_job_category.category_id "
      ."AND people_job.status_id=1 ORDER BY date DESC", array($group_id));
 
-  return people_show_job_list($result,$edit);
+  return people_show_job_list ($result, $edit);
 }
 
 function people_project_jobs_rows($group_id)
@@ -519,54 +471,41 @@ function people_project_jobs_rows($group_id)
 }
 
 # Show open jobs for the given job categories and types of projects,
-# or all open jobs when $show_any is true.
-function people_show_jobs($categories, $types, $show_any)
+# or all open jobs when $categories and $types are empty.
+function people_show_jobs ($categories, $types)
 {
-  #show open jobs for this category
-  $category_ids = '';
-  $type_ids = '';
-  $sql_args = array();
-  if (!$show_any)
+  $sql_args = [];
+  $enum_ids =
+    function ($id_arr, $field) use (&$sql_args)
     {
-      $n = 0;
-      if(count($categories))
+      if (empty ($id_arr))
+        return '';
+      $ids = $pref = '';
+      foreach ($id_arr as $cat)
         {
-          $category_ids = 'AND ( people_job.category_id = ? ';
-          $sql_args[$n++] = $categories[0];
-
-          for ($i = 1; $i < count($categories); ++$i)
-            {
-              $category_ids .= 'OR people_job.category_id = ? ';
-              $sql_args[$n++] = $categories[$i];
-            }
-          $category_ids .= ')';
+          $ids .= $pref . $field . ' = ?';
+          $pref = ' OR ';
+          $sql_args[] = $cat;
         }
-      if(count($types))
-        {
-          $type_ids = 'AND ( groups.type = ? ';
-          $sql_args[$n++] = $types[0];
-
-          for ($i = 1; $i < count($types); ++$i)
-            {
-              $type_ids .= 'OR groups.type = ? ';
-              $sql_args[$n++] = $types[$i];
-            }
-          $type_ids .= ')';
-        }
-    }
-  $result = db_execute("SELECT people_job.group_id,people_job.job_id,
-     groups.unix_group_name,groups.group_name,groups.type,
-     people_job.title,people_job.date,
-     people_job_category.name AS category_name
-     FROM (people_job JOIN people_job_category ON
-           people_job.category_id=people_job_category.category_id)
-       JOIN groups ON people_job.group_id=groups.group_id
-     WHERE  groups.is_public = 1 AND people_job.status_id=1 ".
-     $category_ids . $type_ids . " ORDER BY date DESC", $sql_args);
-  return people_show_job_list($result);
+      return 'AND (' . $ids . ')';
+    };
+  $cat_ids = $enum_ids ($categories, 'j.category_id');
+  $type_ids = $enum_ids ($types, 'groups.type');
+  $result = db_execute ("
+    SELECT
+      j.group_id, j.job_id, j.title, j.date,
+      groups.unix_group_name, groups.group_name, groups.type,
+      c.name AS category_name
+    FROM
+      (people_job j JOIN people_job_category c
+       ON j.category_id = c.category_id)
+      JOIN groups ON j.group_id = groups.group_id
+    WHERE groups.is_public = 1 AND j.status_id = 1
+    ${cat_ids} ${type_ids} ORDER BY date DESC",
+    $sql_args
+  );
+  return people_show_job_list ($result);
 }
-
-# skill.php
 
 function people_skill_box($name='skill_id',$checked='xyxy')
 {

@@ -3,7 +3,7 @@
 #
 #  Copyright (C) 2003-2004 Yves Perrin <Yves.Perrin@cern.ch>
 #  Copyright (C) 2003-2004 Mathieu Roy <yeupou--at--gnu.org>
-#  Copyright (C) 2017, 2018 Ineiev
+#  Copyright (C) 2017, 2018, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -26,27 +26,36 @@ require_once('../../include/vars.php');
 
 require_directory("trackers");
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+session_require (['group' => $group_id, 'admin_flags' => 'A']);
 
-extract(sane_import('post', array('update',
-  'form_news_address',
-  'form_frequency',
-)));
+extract (sane_import ('post',
+  [
+    'true' => 'update', 'pass' => 'form_news_address',
+    'digits' => [['form_frequency', [0, 3]]],
+  ]
+));
+
+if (empty ($form_news_address))
+  $form_news_address = '';
+
+$artifacts = [
+  'bugs' => _("Bug Tracker Email Notification Settings"),
+  'support' => _("Support Tracker Email Notification Settings"),
+  'task' => _("Task Tracker Email Notification Settings"),
+  'patch' => _("Patch Tracker Email Notification Settings"),
+  'cookbook' => _("Cookbook Manager Email Notification Settings"),
+];
 
 if ($update)
   {
-    group_add_history('Changed Group Notification Settings','',$group_id);
-    $res_new = trackers_data_post_notification_settings($group_id, "bugs");
-    $res_new = trackers_data_post_notification_settings($group_id, "support");
-    $res_new = trackers_data_post_notification_settings($group_id, "task");
-    $res_new = trackers_data_post_notification_settings($group_id, "patch");
-    $res_new = trackers_data_post_notification_settings($group_id, "cookbook");
-    db_execute("UPDATE groups SET "
-             ."new_news_address=?"
-             . " WHERE group_id=?",
-             array($form_news_address ? $form_news_address : '', $group_id));
+    group_add_history ('Changed Group Notification Settings', '', $group_id);
+    foreach ($artifacts as $art => $label)
+      trackers_data_post_notification_settings ($group_id, $art);
+    db_execute (
+      "UPDATE groups SET new_news_address = ? WHERE group_id = ?",
+      [$form_news_address, $group_id]
+    );
 
-  ######### Reminder
     if (group_set_preference($group_id, "batch_frequency", $form_frequency))
       fb(_("Successfully Updated Reminder Settings"));
     else
@@ -61,68 +70,46 @@ if ($update)
       }
   }
 
-# Update info for page.
 $res_grp = db_execute("SELECT * FROM groups WHERE group_id=?", array($group_id));
 if (db_numrows($res_grp) < 1)
   exit_no_group();
 $row_grp = db_fetch_array($res_grp);
 
-site_project_header(array('title'=>_("Set Notifications"),'group'=>$group_id,
-                    'context'=>'ahome'));
-# General Description.
-print '
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />';
+site_project_header (
+  ['title' => _("Set Notifications"),'group' => $group_id, 'context' => 'ahome']
+);
+print "<form action=\"" . htmlentities ($_SERVER['PHP_SELF'])
+  . "\" method='post'>\n<input type='hidden' name='group_id' "
+  . "value=\"$group_id\" />\n";
 
-print '<h2>'._("Bug Tracker Email Notification Settings").'</h2>
-';
-trackers_data_show_notification_settings($group_id, 'bugs', 0);
-print '<br />
-';
+function print_h2 ($x)
+{
+  print '<h2>' . $x . "</h2>\n";
+}
 
-print '<h2>'._("Support Tracker Email Notification Settings").'</h2>
-';
-trackers_data_show_notification_settings($group_id, 'support', 0);
-print '<br />
-';
+foreach ($artifacts as $art => $label)
+  {
+    print_h2 ($label);
+    trackers_data_show_notification_settings ($group_id, $art, 0);
+    print "<br />\n";
+  }
+$news_address = htmlspecialchars ($row_grp['new_news_address']);
+print_h2 (_("News Manager Email Notification Settings"));
+print '<span class="preinput">' . _("Carbon-Copy List:")
+  . "</span><br />\n&nbsp;&nbsp;<input type='text' name='form_news_address' "
+  . "value=\"{$news_address}\" size=\"40\" maxlength=\"255\" />"
+  . "<br /><br />\n";
 
-print '<h2>'._("Task Tracker Email Notification Settings").'</h2>
-';
-trackers_data_show_notification_settings($group_id, 'task', 0);
-print '<br />
-';
-
-print '<h2>'._("Patch Tracker Email Notification Settings").'</h2>
-';
-trackers_data_show_notification_settings($group_id, 'patch', 0);
-print '<br />
-';
-
-print '<h2>'._("Cookbook Manager Email Notification Settings").'</h2>
-';
-trackers_data_show_notification_settings($group_id, 'cookbook', 0);
-print '<br />
-';
-
-# yeupou--gnu.org 2004-09-17: in the end, the goal is to make news
-# using the common tracker code
-print '<h2>'._("News Manager Email Notification Settings").'</h2>
-';
-print '<span class="preinput">'._("Carbon-Copy List:")
-.'</span><br />&nbsp;&nbsp;<input type="text" name="form_news_address" value="'
-.$row_grp['new_news_address'].'" size="40" maxlength="255" />';
-print '<br /><br />
-';
-
-print '<h2>'._("Reminders").'</h2>
-';
-print '<p>'._("You can configure the project so that reminder emails get sent
+print_h2 (_("Reminders"));
+print '<p>'
+  . _("You can configure the project so that reminder emails get sent
 to project members who have opened items with priority higher than 5 assigned
-to them.").'<br/>
-<span class="warn">'._("This will be done regardless of the
+to them.")
+  . "<br/>\n<span class='warn'>"
+  . _("This will be done regardless of the
 fact project members have or have not requested to receive such reminders via
-their personal notification settings!").'</span></p>
-';
+their personal notification settings!")
+  . "</span></p>\n";
 $frequency = array("0" =>
 # TRANSLATORS: this is frequency.
                           _("Never"),
@@ -130,15 +117,13 @@ $frequency = array("0" =>
                    "2" => _("Weekly"),
                    "3" => _("Monthly"));
 
-print '<span class="preinput">'._("Frequency of reminders:")
-      .'</span> &nbsp;&nbsp;';
+print '<span class="preinput">' . _("Frequency of reminders:")
+  . "</span>\n&nbsp;&nbsp;";
 print html_build_select_box_from_array($frequency,
                                        "form_frequency",
                                        group_get_preference($group_id,
                                                             "batch_frequency"));
-print '
-<p align="center"><input type="submit" name="update" value="'._("Update").'" />
-</form>
-';
+print "\n<p align='center'><input type='submit' name='update' value='"
+  . _("Update") . "' />\n</form>\n";
 site_project_footer(array());
 ?>

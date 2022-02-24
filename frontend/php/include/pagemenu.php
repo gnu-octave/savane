@@ -173,15 +173,13 @@ function pagemenu_submenu_title ($title, $url, $selected=0, $available=1, $help=
   # We make appear the submenu with both CSS and javascript. That is because
   # some browsers (MSIE) have poor CSS supports and cannot do it otherwise.
   # (When it gains focus, the submenu appears.)
-   print '        <li class="topmenuitemmainitem">
-          '.utils_link($url, $title, $class, $available, $help);
+   print "        <li class='topmenuitemmainitem'>\n"
+     . utils_link ($url, $title, $class, $available, $help);
 }
 
 function pagemenu_submenu_end ()
 {
-  print '        </li><!-- end topmenuitemmainitem -->
-
-';
+  print "        </li><!-- end topmenuitemmainitem -->\n\n";
 }
 
 function pagemenu_submenu_content ($content)
@@ -199,11 +197,8 @@ function pagemenu_submenu_content ($content)
         $GLOBALS['stone_age_menu_submenu_content'] = $content;
       return;
     }
-  print '
-          <ul id="submenu'.$GLOBALS['submenucount']
-          .'" class="topmenuitemsubmenu">'.$content.'
-          </ul><!-- end submenu -->
-';
+  print "<ul id='submenu{$GLOBALS['submenucount']}' "
+    . "class='topmenuitemsubmenu'>$content\n</ul><!-- end submenu -->\n";
 }
 
 function pagemenu_submenu_entry ($title, $url, $available=1, $help="")
@@ -212,10 +207,9 @@ function pagemenu_submenu_entry ($title, $url, $available=1, $help="")
 
   if ($GLOBALS['stone_age_menu'])
     $class = "topmenuitemmainitem";
-  return '
-            <li class="'.$class.'">'.
-              utils_link($url, $title, '', $available, $help).'
-            </li>';
+  return "<li class=\"$class\">"
+    . utils_link ($url, $title, '', $available, $help)
+    . "</li>\n";
 }
 
 function pagemenu_submenu_entry_separator ()

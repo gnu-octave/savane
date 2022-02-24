@@ -27,6 +27,15 @@ require_once('../../include/init.php');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
+# Labels are used as keys because they are used less often.
+$trackers = [
+  _("Support Tracker") => 'support', _("Bug Tracker") => 'bugs',
+  _("Task Tracker") => 'task', _("Patch Tracker") => 'patch',
+  _("Cookbook Manager") => 'cookbook', _("News Manager") => 'news'
+];
+
+$perm_regexp = '/^(\d+|NULL)$/';
+
 # Internal function to determine if a squad permission must override user perm
 # or not
 #  * If user got lower rights, we override, because we assume that user has
@@ -84,12 +93,11 @@ function _compare_perms ($squad_perm, $user_perm)
   return $user_perm;
 }
 
-extract(sane_import('post', array('update')));
+extract (sane_import ('post', ['true' => 'update']));
 $project = project_get_object($group_id);
 
 if ($update)
   {
-  # Update members permissions.
     $feedback_able = null;
     $feedback_unable = null;
     $feedback_squad_override = null;
@@ -104,8 +112,8 @@ if ($update)
 
     while ($row_dev = db_fetch_array($res_dev))
       {
-        $is_squad = false;
-        $name = user_getname($row_dev['user_id']);
+        $row_uid = $row_dev['user_id'];
+        $name = user_getname ($row_uid);
 
         # Site admins are not allowed to changer their own user rights
         # on a project they are member of.
@@ -120,111 +128,100 @@ this group or use the admin user interface."), $row_dev['user_id']), 1);
             continue;
           }
 
-        $bugs_flags="bugs_user_{$row_dev['user_id']}";
-        $task_flags="task_user_{$row_dev['user_id']}";
-        $patch_flags="patch_user_{$row_dev['user_id']}";
-        $support_flags="support_user_{$row_dev['user_id']}";
-        $cookbook_flags="cookbook_user_{$row_dev['user_id']}";
-        $news_flags="news_user_{$row_dev['user_id']}";
+        $names = [];
+        foreach ($trackers as $flag)
+          {
+            $var = $flag . '_flags';
+            $names[] = $$var = "${flag}_user_{$row_uid}";
+          }
+        $names[] = $perm_regexp;
 
-        $admin_flags="admin_user_{$row_dev['user_id']}";
-        $privacy_flags="privacy_user_{$row_dev['user_id']}";
-        $onduty="onduty_user_{$row_dev['user_id']}";
+        $onduty = "onduty_user_{$row_uid}";
+        $cb_names = [$onduty];
+        $cb_names[] = $privacy_flags = "privacy_user_{$row_uid}";
+        $admin_flags = "admin_user_$row_uid";
 
-        $permissions = sane_import('post', array(
-                                                 $bugs_flags,
-                                                 $task_flags,
-                                                 $patch_flags,
-                                                 $support_flags,
-                                                 $cookbook_flags,
-                                                 $news_flags,
-                                                 $admin_flags,
-                                                 $onduty,
-                                                 $privacy_flags,));
+        $permissions =
+          sane_import ('post',
+            [
+              'preg' => [$names],
+              'strings' =>  [[$admin_flags, ['A', 'SQD', 'P']]],
+              'true' => $cb_names,
+            ]
+          );
+
+        $sq_flag_arr = $trackers;
+        $sq_flag_arr[] = 'privacy';
+        $sq_flag_arr[] = 'admin';
 
         # Admin are not allowed to turn off their own admin flag.
         # It is too dangerous -- set it back to 'A'.
-        if (user_getid() == $row_dev['user_id'])
+        if (user_getid() == $row_uid)
           $permissions[$admin_flags] = 'A';
+        $is_squad = $row_dev['admin_flags'] == 'SQD';
         # Squads flag cannot be changed, squads should not be turned into normal
         # users.
-        if ($row_dev['admin_flags'] == 'SQD')
-          {
-            $permissions[$admin_flags] = 'SQD';
-            $is_squad = true;
-          }
-        if ($permissions[$admin_flags] == null)
+        if ($is_squad)
+          $permissions[$admin_flags] = 'SQD';
+        if ($permissions[$admin_flags] === null)
           $permissions[$admin_flags] = '';
 
-        # If someone is made admin, he got automatically the right to read
-        # private items.
+        # Admins have the access to the private items.
         if ($permissions[$admin_flags] == "A")
           $permissions[$privacy_flags] = '1';
 
         if ($is_squad)
           {
-            # If it is a squad, save every setting even if useless, it cost
+            # If it is a squad, save every setting even if useless, it costs
             # nothing.
             $squad_id = $row_dev['user_id'];
-            $squad_permissions[$squad_id.'bugs'] = $permissions[$bugs_flags];
-            $squad_permissions[$squad_id.'task'] = $permissions[$task_flags];
-            $squad_permissions[$squad_id.'patch'] = $permissions[$patch_flags];
-            $squad_permissions[$squad_id.'support'] = $permissions[$support_flags];
-            $squad_permissions[$squad_id.'cookbook'] = $permissions[$cookbook_flags];
-            $squad_permissions[$squad_id.'news'] = $permissions[$news_flags];
-            $squad_permissions[$squad_id.'privacy'] = $permissions[$privacy_flags];
+            foreach ($sq_flag_arr as $flag)
+              {
+                $var = $flag . '_flags';
+                $squad_permissions[$squad_id . $flag]
+                  = $permissions[$$var];
+              }
           }
         else
           {
             # If it is not a squad, we then have to check if the user is
             # member of any squad, and if he is, we have to check which
             # setting must be kept (see _compare_perms comments).
-            $result_user_squads = db_execute("SELECT squad_id FROM user_squad "
-                                             ."WHERE user_id=? AND group_id=?",
-                                             array($row_dev['user_id'], $group_id));
+            $result_user_squads = db_execute ("
+              SELECT squad_id FROM user_squad
+              WHERE user_id=? AND group_id = ?",
+              array($row_dev['user_id'], $group_id)
+            );
             if (db_numrows($result_user_squads))
               {
                 while ($thissquad = db_fetch_array($result_user_squads))
                   {
+                    $thesquad = $thissquad['squad_id'];
                     $GLOBALS['did_squad_override'] = false;
-                    $out[$bugs_flags] =
-                      _compare_perms($squad_permissions[$thissquad['squad_id']
-                                                        .'bugs'],
-                                     $permissions[$bugs_flags]);
-                    $out[$task_flags] =
-                      _compare_perms($squad_permissions[$thissquad['squad_id']
-                                                        .'task'],
-                                     $permissions[$task_flags]);
+                    foreach ($trackers as $flag)
+                      {
+                        $var = $flag . '_flags';
+                        $perm =
+                          $squad_permissions[$thesquad . $flag];
+                        $out[$$var] =
+                          _compare_perms ($perm, $permissions[$$var]);
+                      }
 
-                    $out[$patch_flags] =
-                      _compare_perms($squad_permissions[$thissquad['squad_id']
-                                                        .'patch'],
-                                     $permissions[$patch_flags]);
-                    $out[$support_flags] =
-                      _compare_perms($squad_permissions[$thissquad['squad_id']
-                                                        .'support'],
-                                     $permissions[$support_flags]);
-                    $out[$cookbook_flags] =
-                      _compare_perms($squad_permissions[$thissquad['squad_id']
-                                                        .'cookbook'],
-                                     $permissions[$cookbook_flags]);
-                    $out[$news_flags] =
-                      _compare_perms($squad_permissions[$thissquad['squad_id']
-                                                        .'news'],
-                                     $permissions[$news_flags]);
-
-                    if ($squad_permissions[$thissquad['squad_id'].'privacy']
+                    if ($squad_permissions[$thesquad . 'privacy']
                          > $permissions[$privacy_flags])
                       {
                         $GLOBALS['did_squad_override'] = true;
                         $permissions[$privacy_flags] =
-                          $squad_permissions[$thissquad['squad_id'].'privacy'];
+                          $squad_permissions[$thesquad . 'privacy'];
                       }
                     # Record any squad override for later generated feedback.
                     if ($GLOBALS['did_squad_override'])
-                      $feedback_squad_override = sprintf(
-# TRANSLATORS: the argument is user's name.
-_("Personal permissions of %s were overridden by squad permissions")."\n", $name);
+                      $feedback_squad_override =
+                        sprintf (
+                      # TRANSLATORS: the argument is user's name.
+_("Personal permissions of %s were overridden by squad permissions")."\n",
+                          $name
+                        );
                   }
               }
           }
@@ -233,20 +230,14 @@ _("Personal permissions of %s were overridden by squad permissions")."\n", $name
           'admin_flags' => $permissions[$admin_flags],
           'privacy_flags' => $permissions[$privacy_flags],
           'onduty' => $permissions[$onduty],
-          'cookbook_flags' => $permissions[$cookbook_flags],
         );
 
-        if ($project->Uses("bugs"))
-          $fields_values['bugs_flags'] = $permissions[$bugs_flags];
-        if ($project->Uses("news"))
-          $fields_values['news_flags'] = $permissions[$news_flags];
-        if ($project->Uses("task"))
-          $fields_values['task_flags'] = $permissions[$task_flags];
-        if ($project->Uses("patch"))
-          $fields_values['patch_flags'] = $permissions[$patch_flags];
-        if ($project->Uses("support"))
-          $fields_values['support_flags'] = $permissions[$support_flags];
-
+        foreach ($trackers as $art)
+          {
+            $var = $art . '_flags';
+            if (tracker_uses ($project, $art))
+              $fields_values[$var] = $permissions[$$var];
+          }
         $result = db_autoexecute('user_group',
                                  $fields_values,
                                  DB_AUTOQUERY_UPDATE,
@@ -285,7 +276,7 @@ _("Personal permissions of %s were overridden by squad permissions")."\n", $name
                                         ."\n",
                                         $name);
           }
-      }
+      } # while ($row_dev = db_fetch_array($res_dev))
 
     if ($feedback_able)
       fb($feedback_able);
@@ -295,14 +286,11 @@ _("Personal permissions of %s were overridden by squad permissions")."\n", $name
       fb($feedback_unable);
 
     # Update group default permissions.
-    extract(sane_import('post', array(
-      'bugs_user_',
-      'task_user_',
-      'patch_user_',
-      'support_user_',
-      'cookbook_user_',
-      'news_user_',
-    )));
+    $names = [];
+    foreach ($trackers as $art)
+      $names[] = $art . "_user_";
+    $names[] = $perm_regexp;
+    extract (sane_import ('post', ['preg' => [$names]]));
 
     # If the group entry do not exists, create it.
     if (!db_numrows(db_execute("SELECT groups_default_permissions_id "
@@ -312,18 +300,13 @@ _("Personal permissions of %s were overridden by squad permissions")."\n", $name
                  array($group_id));
 
     # Update the table.
-    $fields_values = array('cookbook_flags' => $cookbook_user_);
-
-    if ($project->Uses("bugs"))
-      $fields_values['bugs_flags'] = $bugs_user_;
-    if ($project->Uses("news"))
-      $fields_values['news_flags'] = $news_user_;
-    if ($project->Uses("task"))
-      $fields_values['task_flags'] = $task_user_;
-    if ($project->Uses("patch"))
-      $fields_values['patch_flags'] = $patch_user_;
-    if ($project->Uses("support"))
-      $fields_values['support_flags'] = $support_user_;
+    $fields_values = [];
+    foreach ($trackers as $art)
+      {
+        $var = $art . '_user_';
+        if (tracker_uses ($project, $art))
+          $fields_values[$art . '_flags'] = $$var;
+      }
 
     $result = db_autoexecute('groups_default_permissions',
                              $fields_values,
@@ -340,57 +323,66 @@ _("Personal permissions of %s were overridden by squad permissions")."\n", $name
 
     # Update posting restrictions
     # (if equal to 0, manually set to NULL, since 0 have a different meaning).
-    extract(sane_import('post', array(
-      'bugs_restrict_event1',     'bugs_restrict_event2',
-      'task_restrict_event1',     'task_restrict_event2',
-      'support_restrict_event1',  'support_restrict_event2',
-      'patch_restrict_event1',    'patch_restrict_event2',
-      'cookbook_restrict_event1', 'cookbook_restrict_event2',
-      'news_restrict_event1')));
-    $bugs_flags = ($bugs_restrict_event2)*100 + $bugs_restrict_event1;
-    if (!$bugs_flags)
-      $bugs_flags = 'NULL';
-
-    $task_flags = ($task_restrict_event2)*100 + $task_restrict_event1;
-    if (!$task_flags)
-      $task_flags = 'NULL';
-
-    $support_flags = ($support_restrict_event2)*100 + $support_restrict_event1;
-    if (!$support_flags)
-      $support_flags = 'NULL';
-
-    $patch_flags = ($patch_restrict_event2)*100 + $patch_restrict_event1;
-    if (!$patch_flags)
-      $patch_flags = 'NULL';
-
-    $cookbook_flags = ($cookbook_restrict_event2)*100 + $cookbook_restrict_event1;
-    if (!$cookbook_flags)
-      $cookbook_flags = 'NULL';
-
-    $news_flags = $news_restrict_event1;
-    if (!$news_flags)
-      $news_flags = 'NULL';
-
-    $result = db_autoexecute('groups_default_permissions',
-                             array('bugs_rflags' => $bugs_flags,
-                                   'news_rflags' => $news_flags,
-                                   'cookbook_rflags' => $cookbook_flags,
-                                   'task_rflags' => $task_flags,
-                                   'patch_rflags' => $patch_flags,
-                                   'support_rflags' => $support_flags,
-                                  ), DB_AUTOQUERY_UPDATE,
-                             "group_id=?", array($group_id));
+    $names = [];
+    foreach ($trackers as $art)
+      foreach ([1, 2] as $ev_no)
+        $names[] = "${art}_restrict_event$ev_no";
+    $names[] = $perm_regexp;
+    extract (sane_import ('post', ['preg' => [$names]]));
+    foreach ($trackers as $art)
+      {
+        $flags = $art . '_flags';
+        $ev1 = $art . '_restrict_event1'; $ev2 = $art . '_restrict_event2';
+        $$flags  = ($$ev2) * 100 + $$ev1;
+        if (!$$flags)
+          $$flags = 'NULL';
+      }
+    $fields = [];
+    foreach ($trackers as $art)
+      {
+        $var = $art . '_flags';
+        $fields[$art . '_rflags'] = $$var;
+      }
+    $result = db_autoexecute (
+      'groups_default_permissions', $fields, DB_AUTOQUERY_UPDATE,
+      "group_id = ?", [$group_id]
+    );
 
     if ($result && db_affected_rows($result))
       {
-        group_add_history('Changed Posting Restrictions','',$group_id);
+        group_add_history ('Changed Posting Restrictions', '', $group_id);
         fb(_("Posting restrictions updated."));
       }
     elseif (!$result)
       fb(_("Unable to change posting restrictions."), 1);
-  }
+  } # if ($update)
 
-# Start HTML.
+function finish_page ()
+{
+  site_project_footer(array());
+  exit (0);
+}
+
+function attr_checked ($x)
+{
+  if ($x)
+    return 'checked="checked"';
+  return '';
+}
+
+function tracker_uses ($project, $art)
+{
+  return $art == 'cookbook' || $project->Uses ($art);
+}
+
+function add_used_tracker_titles (&$title_arr, $project)
+{
+  global $trackers;
+  foreach ($trackers as $title => $art)
+    if (tracker_uses ($project, $art))
+      $title_arr[] = $title;
+}
+
 site_project_header(array('title'=>_("Set Permissions"),'group'=>$group_id,
                           'context'=>'ahome'));
 
@@ -401,176 +393,108 @@ form_input("hidden", "group", $group);
 # Exists also in trackers config (missing for news).
 
 $i = 0;
-$title_arr=array();
-$title_arr[]=
-# TRANSLATORS: this is the header for a column with two rows,
-# "Posting new items" and "Posting comments".
-_("Applies when ...");
-if ($project->Uses("support"))
-  $title_arr[]=_("Support Tracker");
-if ($project->Uses("bugs"))
-  $title_arr[]=_("Bug Tracker");
-if ($project->Uses("task"))
-  $title_arr[]=_("Task Tracker");
-if ($project->Uses("patch"))
-  $title_arr[]=_("Patch Tracker");
-$title_arr[]=_("Cookbook Manager");
-if ($project->Uses("news"))
-  $title_arr[]=_("News Manager");
+$title_arr = [
+  # TRANSLATORS: this is the header for a column with two rows,
+  # "Posting new items" and "Posting comments".
+  _("Applies when ...")
+];
+add_used_tracker_titles ($title_arr, $project);
 
-print '<h2>'._("Group trackers posting restrictions").'</h2>
-<p>';
+print '<h2>' . _("Group trackers posting restrictions") . "</h2>\n<p>";
 print _("Here you can set the minimal authentication level required in order to
 post on the trackers.");
-print '</p>
-';
+print "</p>\n";
 
 print html_build_list_table_top ($title_arr);
 
 $i++;
-print '
-  <tr class="'. utils_get_alt_row_color($i) .'">
-    <td>'
-# TRANSLATORS: this is a column row which header says "Applies when ...".
-._("Posting new items").'</td>';
-if ($project->Uses("support"))
-  html_select_restriction_box("support", group_getrestrictions($group_id, "support"));
-if ($project->Uses("bugs"))
-  html_select_restriction_box("bugs", group_getrestrictions($group_id, "bugs"));
-if ($project->Uses("task"))
-  html_select_restriction_box("task", group_getrestrictions($group_id, "task"));
-if ($project->Uses("patch"))
-  html_select_restriction_box("patch", group_getrestrictions($group_id, "patch"));
-html_select_restriction_box("cookbook", group_getrestrictions($group_id, "cookbook"));
-if ($project->Uses("news"))
-  html_select_restriction_box("news", group_getrestrictions($group_id, "news"));
+print "\n<tr class=\"" . utils_get_alt_row_color ($i) . "\">\n<td>"
+  # TRANSLATORS: this is a column row which header says "Applies when ...".
+  . _("Posting new items") . "</td>\n";
 
-print '  </tr>';
+function select_box_if_uses (
+  $project, $tracker, $group_id, $infix, $extra = null
+)
+{
+  if (!tracker_uses ($project, $tracker))
+    return;
+  $perm_func = 'group_get' . $infix . 's';
+  $func = 'html_select_' . $infix . '_box';
+  if ($extra === null)
+    {
+      $perm = $perm_func ($group_id, $tracker);
+      $func ($tracker, $perm, 'group');
+      return;
+    }
+  $perm = $perm_func ($group_id, $tracker, $extra);
+  $func ($tracker, $perm, '', '', $extra);
+}
+
+foreach ($trackers as $art)
+  select_box_if_uses ($project, $art, $group_id, 'restriction');
+
+print "</tr>\n";
 
 $i++;
-print '
-  <tr class="'. utils_get_alt_row_color($i) .'">
-    <td>'
-# TRANSLATORS: this is a column row which header says "Applies when ...".
-._("Posting comments").'</td>';
-if ($project->Uses("support"))
-  html_select_restriction_box("support",
-                              group_getrestrictions($group_id, "support", 2),
-                              '', '', 2);
-if ($project->Uses("bugs"))
-  html_select_restriction_box("bugs", group_getrestrictions($group_id,
-                                                            "bugs", 2),
-                              '', '', 2);
-if ($project->Uses("task"))
-  html_select_restriction_box("task", group_getrestrictions($group_id, "task", 2),
-                              '', '', 2);
-if ($project->Uses("patch"))
-  html_select_restriction_box("patch", group_getrestrictions($group_id,
-                                                             "patch", 2),
-                              '', '', 2);
-html_select_restriction_box("cookbook", group_getrestrictions($group_id,
-                                                              "cookbook", 2),
-                            '', '', 2);
+print '<tr class="' . utils_get_alt_row_color ($i) . "\">\n<td>"
+  # TRANSLATORS: this is a column row which header says "Applies when ...".
+  . _("Posting comments") . "</td>\n";
+
+foreach ($trackers as $art)
+  if ($art != 'news')
+    select_box_if_uses ($project, $art, $group_id, 'restriction', 2);
+
 if ($project->Uses("news"))
 # Not yet effective!
   print '<td align="center">---</td>';
-print '  </tr>
-';
+print "</tr>\n";
 
-print '
-</table>
-<p class="center">'.form_submit(_("Update Permissions")).'</p>
-';
+print "</table>\n<p class='center'>"
+  . form_submit(_("Update Permissions")). "</p>\n";
 
 # Group defaults.
-$title_arr=array();
-if ($project->Uses("support"))
-  $title_arr[]=_("Support Tracker");
-if ($project->Uses("bugs"))
-  $title_arr[]=_("Bug Tracker");
-if ($project->Uses("task"))
-  $title_arr[]=_("Task Tracker");
-if ($project->Uses("patch"))
-  $title_arr[]=_("Patch Tracker");
-$title_arr[]=_("Cookbook Manager");
-if ($project->Uses("news"))
-  $title_arr[]=_("News Manager");
+$title_arr = [];
+add_used_tracker_titles ($title_arr, $project);
 
-print '<p>&nbsp;</p>
-<h2>'._("Group Default Permissions").'</h2>
-';
+print "<p>&nbsp;</p>\n<h2>" . _("Group Default Permissions") . "</h2>\n";
 member_explain_roles();
 print html_build_list_table_top ($title_arr);
 
-if ($project->Uses("support"))
-  html_select_permission_box("support", group_getpermissions($group_id,
-                                                             "support"),
-                             "group");
-if ($project->Uses("bugs"))
-  html_select_permission_box("bugs", group_getpermissions($group_id, "bugs"),
-                             "group");
-if ($project->Uses("task"))
-  html_select_permission_box("task", group_getpermissions($group_id, "task"),
-                             "group");
-if ($project->Uses("patch"))
-  html_select_permission_box("patch", group_getpermissions($group_id, "patch"),
-                             "group");
-html_select_permission_box("cookbook", group_getpermissions($group_id,
-                                                            "cookbook"),
-                           "group");
-if ($project->Uses("news"))
-  html_select_permission_box("news", group_getpermissions($group_id, "news"),
-                             "group");
-print '  </tr>
-</table>
-<p class="center">'.form_submit(_("Update Permissions")).'</p>
-';
+print "<tr>\n";
+
+foreach ($trackers as $art)
+  select_box_if_uses ($project, $art, $group_id, 'permission');
+
+print "</tr>\n</table>\n<p class='center'>"
+  . form_submit (_("Update Permissions")) . "</p>\n";
 
 # Get squad list.
-$result = db_execute("SELECT user.user_name AS user_name,"
-. "user.realname AS realname, "
-. "user.user_id AS user_id, "
-. "user_group.admin_flags, "
-. "user_group.privacy_flags, "
-. "user_group.bugs_flags, "
-. "user_group.cookbook_flags, "
-. "user_group.forum_flags, "
-. "user_group.task_flags, "
-. "user_group.patch_flags, "
-. "user_group.news_flags, "
-. "user_group.support_flags "
-. "FROM user JOIN user_group ON user.user_id=user_group.user_id "
-. "WHERE user_group.group_id = ? AND user_group.admin_flags='SQD' "
-. "ORDER BY user.user_name", array($group_id));
+$result = db_execute ("
+  SELECT
+    user.user_name, user.realname, user.user_id,
+    user_group.admin_flags, user_group.privacy_flags,
+    user_group.bugs_flags, user_group.cookbook_flags,
+    user_group.forum_flags, user_group.task_flags,
+    user_group.patch_flags, user_group.news_flags,
+    user_group.support_flags
+  FROM user JOIN user_group ON user.user_id = user_group.user_id
+  WHERE user_group.group_id = ? AND user_group.admin_flags = 'SQD'
+  ORDER BY user.user_name",
+  array($group_id)
+);
 
-print '<p>&nbsp;</p>
-<h2>'._("Permissions per squad").'</h2>
-';
+print "<p>&nbsp;</p>\n<h2>" . _("Permissions per squad") . "</h2>\n";
 
 if (!$result || db_numrows($result) < 1)
-  print '<p class="warn">'._("No Squads Found").'</p>
-';
+  print '<p class="warn">' . _("No Squads Found") . "</p>\n";
 else
   {
-    $title_arr=array();
-    $title_arr[]=_("Squad");
-    $title_arr[]=_("General Rights");
-    if ($project->Uses("support"))
-      $title_arr[]=_("Support Tracker");
-    if ($project->Uses("bugs"))
-      $title_arr[]=_("Bug Tracker");
-    if ($project->Uses("task"))
-      $title_arr[]=_("Task Tracker");
-    if ($project->Uses("patch"))
-      $title_arr[]=_("Patch Tracker");
-    $title_arr[]=_("Cookbook Manager");
-    if ($project->Uses("news"))
-      $title_arr[]=_("News Manager");
+    $title_arr = [_("Squad"), _("General Permissions")];
+    add_used_tracker_titles ($title_arr, $project);
 
-    print '<p>
-'._("Squad Members will automatically obtain, at least, the Squad permissions.")
-.'</p>
-';
+    print '<p>'
+      . _("Squad members will automatically obtain their squad permissions.")
+      . "</p>\n";
     print html_build_list_table_top ($title_arr);
 
     $reprinttitle = 0;
@@ -584,156 +508,111 @@ else
             print html_build_list_table_top($title_arr, 0, 0);
             $reprinttitle = 0;
           }
-        print '
-  <tr class="'. utils_get_alt_row_color($i) .'">
-    <td align="center" id="'.$row['user_name'].'">'
-.utils_user_link($row['user_name'], $row['realname']).'</td>';
-        print '
-    <td class="smaller">';
+        $row_uname = $row['user_name'];
+        $row_uid = $row['user_id'];
+        print "<tr class=\"" . utils_get_alt_row_color ($i)
+          . "\">\n<td align=\"center\" id=\"$row_uname\">"
+          . utils_user_link ($row_uname, $row['realname']) . "</td>\n";
+        print "<td class='smaller'>\n";
+        print "<input type='checkbox' name=\"privacy_user_$row_uid\"\n"
+          . "id=\"privacy_user_$row_uid\" value=\"1\" "
+          . attr_checked ($row['privacy_flags'] == '1')
+          . " />&nbsp;<label for=\"privacy_user_$row_uid\"> "
+          . _("Private Items") . "</label>\n</td>\n";
 
-        print '
-      <input type="checkbox" name="privacy_user_'.$row['user_id'].'"
-             id="privacy_user_'.$row['user_id']
-.'" value="1" '.(($row['privacy_flags']=='1')?'checked="checked"':'')
-.' />&nbsp;<label for="privacy_user_'.$row['user_id'].'"> '._("Private Items")
-."</label>\n</td>\n";
-
-       if ($project->Uses("support"))
-         html_select_permission_box("support", $row);
-       if ($project->Uses("bugs"))
-         html_select_permission_box("bugs", $row);
-       if ($project->Uses("task"))
-         html_select_permission_box("task", $row);
-       if ($project->Uses("patch"))
-         html_select_permission_box("patch", $row);
-       html_select_permission_box("cookbook", $row);
-       if ($project->Uses("news"))
-         html_select_permission_box("news", $row);
-       print '  </tr>
-';
+       foreach ($trackers as $art)
+         if (tracker_uses ($project, $art))
+           html_select_permission_box ($art, $row);
+       print "</tr>\n";
      }
 
-    print '
-</table>
-<p class="center">'.form_submit(_("Update Permissions")).'</p>
-';
+    print "</table>\n<p class='center'>"
+      . form_submit (_("Update Permissions")) . "</p>\n";
   }
 
-# Per member.
+$result = db_execute("
+  SELECT
+    user.user_name, user.realname, user.user_id,
+    user_group.admin_flags, user_group.onduty, user_group.privacy_flags,
+    user_group.bugs_flags, user_group.cookbook_flags, user_group.forum_flags,
+    user_group.task_flags, user_group.patch_flags, user_group.news_flags,
+    user_group.support_flags
+  FROM user JOIN user_group ON user.user_id = user_group.user_id
+  WHERE
+    user_group.group_id = ?
+    AND user_group.admin_flags <> 'P' AND user_group.admin_flags <> 'SQD'
+  ORDER BY user.user_name",
+  array($group_id)
+);
 
-$result = db_execute("SELECT user.user_name AS user_name,"
-. "user.realname AS realname, "
-. "user.user_id AS user_id, "
-. "user_group.admin_flags, "
-. "user_group.onduty, "
-. "user_group.privacy_flags, "
-. "user_group.bugs_flags, "
-. "user_group.cookbook_flags, "
-. "user_group.forum_flags, "
-. "user_group.task_flags, "
-. "user_group.patch_flags, "
-. "user_group.news_flags, "
-. "user_group.support_flags "
-. "FROM user JOIN user_group ON user.user_id=user_group.user_id "
-. "WHERE user_group.group_id = ? AND user_group.admin_flags<>'P' "
-. "AND user_group.admin_flags<>'SQD' "
-. "ORDER BY user.user_name", array($group_id));
-
-print '<p>&nbsp;</p>
-<h2>'._("Permissions per member").'</h2>
-';
+print "<p>&nbsp;</p>\n<h2>" . _("Permissions per member") . "</h2>\n";
 
 if (!$result || db_numrows($result) < 1)
-  # Unusual case! No point in changing permissions of an orphaned project.
-  print '<p class="warn">'._("No Members Found").'</p>
-';
-else
   {
-    $title_arr=array();
-    $title_arr[]=_("Member");
-    $title_arr[]=_("General Rights");
-    $title_arr[]=_("On Duty");
-    if ($project->Uses("support"))
-      $title_arr[]=_("Support Tracker");
-    if ($project->Uses("bugs"))
-      $title_arr[]=_("Bug Tracker");
-    if ($project->Uses("task"))
-      $title_arr[]=_("Task Tracker");
-    if ($project->Uses("patch"))
-      $title_arr[]=_("Patch Tracker");
-    $title_arr[]=_("Cookbook Manager");
-    if ($project->Uses("news"))
-      $title_arr[]=_("News Manager");
-    print '<p class="warn">';
-    print _("Projects Admins are always allowed to read private items.");
-    print '</p>
-';
-    print html_build_list_table_top ($title_arr);
-
-    $reprinttitle = 0;
-    $i = 0;
-    while ($row = db_fetch_array($result))
-      {
-        $i++;
-        $reprinttitle++;
-        if ($reprinttitle == 9)
-          {
-            print html_build_list_table_top($title_arr, 0, 0);
-            $reprinttitle = 0;
-          }
-        print '
-  <tr class="'. utils_get_alt_row_color($i) .'">
-    <td align="center" id="'.$row['user_name'].'">'
-.utils_user_link($row['user_name'], $row['realname']).'</td>
-';
-        print '
-    <td class="smaller">';
-        if ($row['user_id'] == user_getid())
-          print '<em>'._("You are Admin").'</em>';
-        else
-          {
-            $extra = ($row['admin_flags'] == 'A' ) ?'checked="checked"':'';
-            print form_input("checkbox", "admin_user_"
-                  .$row['user_id'], "A", $extra).'&nbsp;'
-                  .'<label for="admin_user_'.$row['user_id'].'">'
-                  ._("Admin").'</label>';
-          }
-        if ($row['admin_flags'] != 'A')
-         {
-           $extra = ($row['privacy_flags'] == '1' ) ?'checked="checked"':'';
-           print '<br />'.form_input("checkbox", "privacy_user_"
-                 .$row['user_id'], "1", $extra).'&nbsp;'
-                  .'<label for="privacy_user_'.$row['user_id'].'">'
-                 ._("Private Items").'</label>';
-          }
-        else
-          print form_input("hidden", 'privacy_user_'.$row['user_id'], 1);
-        print '
-    </td>
-';
-        print '<td align="center">';
-        $extra = ($row['onduty'] == '1' ) ? 'checked="checked"' : '';
-        $extra .= ' title="'._("On Duty").'"';
-        print form_input("checkbox", "onduty_user_".$row['user_id'], 1, $extra);
-        print '</td>
-';
-        if ($project->Uses("support"))
-          html_select_permission_box("support", $row);
-        if ($project->Uses("bugs"))
-          html_select_permission_box("bugs", $row);
-        if ($project->Uses("task"))
-          html_select_permission_box("task", $row);
-        if ($project->Uses("patch"))
-          html_select_permission_box("patch", $row);
-        html_select_permission_box("cookbook", $row);
-        if ($project->Uses("news"))
-          html_select_permission_box("news", $row);
-        print '  </tr>
-';
-      }
-    print '
-</table>'.form_footer(_("Update Permissions"));
+    # No point in changing permissions of an orphaned project.
+    print '<p class="warn">' . _("No Members Found") . "</p>\n";
+    finish_page ();
   }
 
-site_project_footer(array());
+$title_arr = [_("Member"), _("General Permissions"), _("On Duty")];
+add_used_tracker_titles ($title_arr, $project);
+
+print '<p class="warn">';
+print _("Projects Admins are always allowed to read private items.");
+print "</p>\n";
+
+print html_build_list_table_top ($title_arr);
+
+$reprinttitle = 0;
+$i = 0;
+
+while ($row = db_fetch_array ($result))
+  {
+    $i++;
+    $reprinttitle++;
+    $row_uid = $row['user_id'];
+    if ($reprinttitle == 9)
+      {
+        print html_build_list_table_top($title_arr, 0, 0);
+        $reprinttitle = 0;
+      }
+    print " <tr class=\"" . utils_get_alt_row_color($i) . "'\">\n"
+      . "<td align='center' id=\"{$row['user_name']}\">"
+      . utils_user_link ($row['user_name'], $row['realname']) . "</td>\n";
+    print '<td class="smaller">';
+    if ($row_uid == user_getid())
+      print '<em>' . _("You are Admin") . '</em>';
+    else
+      {
+        $extra = attr_checked ($row['admin_flags'] == 'A');
+        print
+          form_input ("checkbox", "admin_user_$row_uid", "A", $extra)
+          . "&nbsp;<label for=\"admin_user_$row_uid\">"
+          . _("Admin") . '</label>';
+      }
+    if ($row['admin_flags'] != 'A')
+     {
+       $extra = attr_checked ($row['privacy_flags'] == '1');
+       print "<br />\n"
+         . form_input ("checkbox", "privacy_user_$row_uid", "1", $extra)
+         . "&nbsp;<label for=\"privacy_user_$row_uid\">"
+         . _("Private Items") . '</label>';
+      }
+    else
+      print form_input("hidden", "privacy_user_$row_uid", 1);
+    print "</td>\n";
+    print '<td align="center">';
+    $extra = attr_checked ($row['onduty'] == '1');
+    $extra .= ' title="' . _("On Duty") . '"';
+    print form_input("checkbox", "onduty_user_$row_uid", 1, $extra);
+    print "</td>\n";
+    foreach ($trackers as $art)
+      if (tracker_uses ($project, $art))
+        html_select_permission_box($art, $row);
+    print "</tr>\n";
+  } # while ($row = db_fetch_array($result))
+
+print "</table>\n" . form_footer (_("Update Permissions"));
+
+finish_page ();
 ?>

@@ -24,13 +24,23 @@ require_once('../include/init.php');
 require_once('../include/sane.php');
 require_once('../include/people/general.php');
 
-extract(sane_import('request', array('job_id')));
-extract(sane_import('post',
-  array(
-    'add_job', 'update_job', 'add_to_job_inventory', 'update_job_inventory',
-    'delete_from_job_inventory',
-    'title', 'description', 'status_id', 'category_id',
-    'job_inventory_id', 'skill_id', 'skill_level_id', 'skill_year_id')));
+extract (sane_import ('request', ['digits' => 'job_id']));
+extract (sane_import ('post',
+  [
+    'true' =>
+      [
+       'add_job', 'update_job', 'add_to_job_inventory', 'update_job_inventory',
+       'delete_from_job_inventory',
+      ],
+    'digits' =>
+      [
+        'status_id', 'category_id', 'job_inventory_id', 'skill_id',
+        'skill_level_id', 'skill_year_id',
+      ],
+    'specialchars' => 'title',
+    'pass' => 'description',
+  ]
+));
 
 if (!$group_id)
   exit_no_group();
@@ -165,42 +175,38 @@ if ($job_id)
       {
         print db_error();
         fb(_("POSTING fetch FAILED"));
-        print '<h1>'._("No Such Posting For This Project").'</h1>
-';
+        print '<h1>' . _("No Such Posting For This Project") . "</h1>\n";
       }
     else
       {
+        $description = htmlspecialchars (db_result ($result, 0, 'description'));
         utils_get_content("people/editjob");
-        print '
-<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="POST">
-<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id).'" />
-<input type="hidden" name="job_id" value="'.htmlspecialchars($job_id).'" />
-<strong>'
-        ._("Category:").'</strong><br />'
-        . people_job_category_box('category_id',db_result($result,0,
-                                                          'category_id')) .'
-<p><strong>'
-        ._("Status").':</strong><br />'
-        . people_job_status_box('status_id',db_result($result,0,'status_id')) .'
-</p>
-<p><strong><label for="title">'
-        ._("Short Description:").'</label></strong><br />
-<input type="text" id="title" name="title" value="'
-        . db_result($result,0,'title')
-        .'" size="40" maxlength="60" />
-</p>
-<p><strong><label for="description">'
-        ._("Long Description:").'</label></strong><br />
-<textarea name="description" id="description" rows="10" cols="60" wrap="soft">'
-        .htmlspecialchars(db_result($result,0,'description')) .'</textarea>
-</p>
-<p><input type="submit" name="update_job" value="'
-        ._("Update Descriptions").'" />
-</form>
-';
-      print '<p>'.people_edit_job_inventory($job_id,$group_id).'</p>
-<p>[<a href="/people">'._("Back to jobs listing").'</a>]</p>';
-
+        print "\n<form action='" . htmlentities ($_SERVER['PHP_SELF'])
+          . "' method='POST'>\n<input type='hidden' name='group_id' "
+          . "value='$group_id' />\n<input type='hidden' name='job_id' "
+          . "value='$job_id' />\n <strong>" . _("Category:")
+          . "</strong><br />\n"
+          . people_job_category_box (
+              'category_id', db_result ($result, 0, 'category_id')
+            )
+          . "\n<p><strong>" . _("Status") . ":</strong><br />\n"
+          . people_job_status_box (
+              'status_id', db_result ($result, 0, 'status_id')
+            )
+          . "</p>\n<p><strong><label for='title'>"
+          . _("Short Description:") . "</label></strong><br />\n"
+          . "<input type='text' id='title' name='title' value=\""
+          . db_result ($result, 0, 'title')
+          . "\" size='40' maxlength='60' /></p>\n<p><strong>"
+          . "<label for='description'>" . _("Long Description:")
+          . "</label></strong><br />\n"
+          . "<textarea name='description' id='description' rows='10' "
+          . "cols='60' wrap='soft'>$description</textarea>\n</p>\n"
+          . '<p><input type="submit" name="update_job" value="'
+          . _("Update Descriptions") . "\" />\n</form>\n";
+        print '<p>' . people_edit_job_inventory ($job_id, $group_id)
+          . "</p>\n<p>[<a href='/people'>" . _("Back to jobs listing")
+          . "</a>]</p>\n";
       }
   }
 else # ! $job_id
@@ -208,10 +214,9 @@ else # ! $job_id
     site_project_header(array('title'=>_("Looking for a job to Edit"),
                         'group'=>$group_id,'context'=>'ahome'));
     print '<p>'
-      ._("Here is a list of positions available for this project, choose the
-one you want to modify.").'</p>
-';
-    print people_show_project_jobs($group_id, $edit=1);
+      . _("Here is a list of positions available for this project, choose the
+one you want to modify.") . "</p>\n";
+    print people_show_project_jobs ($group_id, $edit = 1);
   }
 site_project_footer(array());
 ?>
