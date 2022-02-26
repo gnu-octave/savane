@@ -99,8 +99,13 @@ function member_remove ($user_id, $group_id)
           group_add_history('Deleted Squad',user_getname($user_id),$group_id);
           # If it is a squad, it means that we also mark the user account as
           # shutdowned.
-          db_execute("UPDATE user SET realname='-Deleted Squad-', status='S'
-                      WHERE user_id=?", array($user_id));
+
+          db_execute ("
+            UPDATE user
+            SET realname = '-Deleted Squad-', status='S', user_name = ?
+            WHERE user_id = ?",
+            ["_$user_id", $user_id]
+          );
           # We also  make sure no user is any longer associated
           # to the squad.
           db_execute("DELETE FROM user_squad WHERE squad_id=? AND group_id=?",

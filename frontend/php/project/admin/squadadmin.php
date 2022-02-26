@@ -239,9 +239,7 @@ else # $squad_id
       {
         site_project_header(array('title' => _("Manage Squads"),
                             'group' => $group_id, 'context' => 'ahome'));
-        print '<p>'
-. _('This action cannot be undone, the squad login name will no longer be
-available.') . "</p>\n";
+        print '<p>' . _('This action cannot be undone.') . "</p>\n";
 
         print form_header($_SERVER["PHP_SELF"]);
         print form_input("hidden", "group_id", $group_id);
