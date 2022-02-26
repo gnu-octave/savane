@@ -4,7 +4,7 @@
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -63,10 +63,17 @@ function specific_showinput_inverted ($title, $form, $id = false)
 ';
 }
 
+extract (sane_import ('request', ['digits' => 'type_id']));
+extract (sane_import ('get', ['true' => 'create']));
+extract (sane_import ('post', ['true' => ['delete', 'update']]));
 
-extract(sane_import('request', array('type_id')));
-extract(sane_import('get', array('create')));
-extract(sane_import('post', array('delete', 'update')));
+$trackers = ['cookbook', 'bugs', 'news', 'task', 'support', 'patch'];
+
+$vcs_list = [
+  no_i18n ("CVS") => 'cvs', no_i18n ("GNU Arch") => 'arch',
+  no_i18n ("Subversion") => 'svn', no_i18n ("Git") => 'git',
+  no_i18n ("Mercurial") => 'hg', no_i18n ("Bazaar") => 'bzr',
+];
 
 # group public choice
 if ($delete)
@@ -84,123 +91,120 @@ if ($delete)
   exit;
 }
 
-if ($update) {
-  // Name-matching params
-  $fields = array(
-    // General
-    'name', 'description', 'base_host', 'can_use_homepage',
-    'dir_type_cvs', 'dir_type_svn', 'dir_type_arch', 'dir_type_git',
-    'dir_type_hg', 'dir_type_bzr',
-    'dir_type_download', 'dir_type_homepage',
-    'dir_cvs', 'dir_arch', 'dir_svn', 'dir_git', 'dir_hg','dir_bzr',
-    'homepage_scm', 'dir_homepage', 'url_homepage',
-    'url_cvs_viewcvs_homepage', 'can_use_arch', 'can_use_svn',
-    'can_use_cvs', 'can_use_git', 'can_use_hg', 'can_use_bzr',
-    'can_use_forum',
-    'url_cvs_viewcvs', 'url_arch_viewcvs', 'url_svn_viewcvs',
-    'url_git_viewcvs', 'url_hg_viewcvs', 'url_bzr_viewcvs',
-    'can_use_license', 'can_use_devel_status', 'can_use_download',
-    'dir_download', 'url_download',
-    'can_use_mailing_list', 'mailing_list_host',
-    'url_mailing_list_listinfo', 'url_mailing_list_subscribe',
-    'url_mailing_list_unsubscribe', 'url_mailing_list_archives',
-    'url_mailing_list_archives_private', 'url_mailing_list_admin',
-    'mailing_list_address', 'mailing_list_virtual_host',
-    'mailing_list_format', 'can_use_patch', 'can_use_task',
-    'can_use_news', 'can_use_bug', 'admin_email_adress',
-
-    // Menu
-    'is_menu_configurable_homepage',
-    'is_menu_configurable_extralink_documentation',
-    'is_menu_configurable_download',
-    'is_menu_configurable_support',
-    'is_menu_configurable_forum',
-    'is_menu_configurable_mail',
-    'is_menu_configurable_cvs',
-    'is_menu_configurable_cvs_viewcvs',
-    'is_menu_configurable_cvs_viewcvs_homepage',
-    'is_menu_configurable_arch',
-    'is_menu_configurable_arch_viewcvs',
-    'is_menu_configurable_svn',
-    'is_menu_configurable_svn_viewcvs',
-    'is_menu_configurable_git',
-    'is_menu_configurable_git_viewcvs',
-    'is_menu_configurable_hg',
-    'is_menu_configurable_hg_viewcvs',
-    'is_menu_configurable_bzr',
-    'is_menu_configurable_bzr_viewcvs',
-    'is_menu_configurable_bugs',
-    'is_menu_configurable_task',
-    'is_menu_configurable_patch',
-    'is_configurable_download_dir',
+$name_matching = function ($trackers, $vcs_list)
+{
+  $names = [
+    'name' => 'name',
+    'specialchars' => [
+      'description',  'base_host', 'homepage_scm',
+      'admin_email_adress', # Sic! adress not address
+    ],
+    'true' => []
+  ];
+  $hm_dw = ['download', 'homepage'];
+  $vcs_extra = array_merge ($vcs_list, $hm_dw);
+  foreach ($vcs_extra as $vcs)
+    {
+      $names['specialchars'][] = "dir_type_$vcs";
+      $names['specialchars'][] = "dir_$vcs";
+    }
+  foreach ($hm_dw as $hd)
+    $names['specialchars'][] = "url_$hd";
+  foreach ($vcs_list as $vcs)
+    $names['specialchars'][] = "url_${vcs}_viewcvs";
+  $names['specialchars'][] = "url_cvs_viewcvs_homepage";
+  foreach (
+    [
+      'listinfo', 'subscribe', 'unsubscribe', 'archives', 'archives_private',
+      'admin'
+    ] as $f
+  )
+    $names['specialchars'][] = "url_mailing_list_$f";
+  foreach (['address', 'virtual_host', 'format'] as $f)
+    $names['specialchars'][] = "mailing_list_$f";
+  $can_use_ = array_merge (
+    $vcs_extra, $trackers,
+    ['forum', 'license', 'devel_status', 'mailing_list', 'bug']
   );
-  $values = sane_import('post', $fields);
+  foreach ($can_use_ as $art)
+    if ($art != 'bugs' && $art != 'cookbook')
+      $names['true'][] = "can_use_$art";
+  $conf = array_merge (
+    ['forum', 'extralink_documentation', 'mail'], $trackers, $vcs_extra
+  );
+  foreach ($conf as $art)
+    if ($art != 'cookbook' && $art != 'news')
+      $names['true'][] = "is_menu_configurable_$art";
+  foreach ($vcs_list as $vcs)
+    $names['true'][] = "is_menu_configurable_${vcs}_viewcvs";
+  $names['true'][] = "is_configurable_download_dir";
+  return $names;
+};
 
-  $result = db_autoexecute('group_type',
-    $values, DB_AUTOQUERY_UPDATE,
-    "type_id=?", array($type_id));
+if ($update)
+  {
+    $names = $name_matching ($trackers, $vcs_list);
+    $values = sane_import ('post', $names);
+    foreach ($names['true'] as $k)
+      if ($values[$k] === null)
+        $values[$k] = 0;
+    $result = db_autoexecute (
+      'group_type', $values, DB_AUTOQUERY_UPDATE, "type_id = ?", [$type_id]
+    );
 
-# TRANSLATORS: the argument is error message.
-  if (!$result)
-    { fb(sprintf(no_i18n("Unable to update group type settings: %s"),
-                   db_error()), 1); }
-  else
-    { fb(no_i18n("group type general settings updated")); }
+    if ($result)
+      fb (no_i18n ("group type general settings updated"));
+    else
+      fb (
+        sprintf (
+          # TRANSLATORS: the argument is error message.
+          no_i18n("Unable to update group type settings: %s"),
+          db_error()),
+        1
+      );
+
+    $names = [];
+    foreach ($trackers as $art)
+      {
+        $names[] = "${art}_user_";
+        $names[] = "${art}_restrict_event1";
+      }
+    $names[] = '/^(\d+|NULL)$/';
+    extract (sane_import ('post', ['preg' => [$names]]));
+    $arg_arr = [];
+    foreach ($trackers as $art)
+      {
+        $var = "${art}_user_";
+        $arg_arr["${art}_flags"] = $$var;
+        $var = "${art}_restrict_event1";
+        $arg_arr["${art}_rflags"] = $$var;
+      }
+
+    $result = db_autoexecute (
+      'group_type', $arg_arr , DB_AUTOQUERY_UPDATE, "type_id = ?", [$type_id]
+    );
+  }
 
 
-  // Not-name-maching params
-  extract(sane_import('post',
-    array('cookbook_user_','bugs_user_',
-	  'news_user_','task_user_',
-	  'patch_user_','support_user_',
-
-          'bugs_restrict_event1','cookbook_restrict_event1',
-	  'news_restrict_event1','task_restrict_event1',
-	  'patch_restrict_event1','support_restrict_event1')));
-
-  $result = db_autoexecute('group_type',
-    array(
-    # User permissions
-    'cookbook_flags' => $cookbook_user_,
-    'bugs_flags' => $bugs_user_,
-    'news_flags' => $news_user_,
-    'task_flags' => $task_user_,
-    'patch_flags' => $patch_user_,
-    'support_flags' => $support_user_,
-
-    # Posting restrictions
-    'bugs_rflags' => $bugs_restrict_event1,
-    'cookbook_rflags' => $cookbook_restrict_event1,
-    'news_rflags' => $news_restrict_event1,
-    'task_rflags' => $task_restrict_event1,
-    'patch_rflags' => $patch_restrict_event1,
-    'support_rflags' => $support_restrict_event1,
-    ), DB_AUTOQUERY_UPDATE,
-    "type_id=?", array($type_id));
-}
-
-
-if (!isset($type_id))
+if (empty ($type_id))
 {
   site_admin_header(array('title'=>no_i18n('Group Type Management'),
                     'context'=>'admgrptype'));
 
   $result = db_query("SELECT type_id,name FROM group_type ORDER BY type_id");
 
-  print '<br />
-';
+  print "<br />\n";
   while ($usr = db_fetch_array($result))
     {
+      $last = $usr['type_id'];
 # TRANSLATORS: the first argument is type No, the second is group name.
-      print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
-            .'?type_id='.$usr['type_id'].'">'
-            .sprintf('Type #%1$s: %2$s', $usr['type_id'], gettext($usr['name']))
-            .'</a><br />
-';
-      $last=$usr['type_id'];
+      print '<a href="' . htmlentities ($_SERVER['PHP_SELF'])
+        . "?type_id=$last\">";
+      printf ('Type #%1$s: %2$s', $last, gettext($usr['name']));
+      print "</a><br />\n";
     }
   # Find an appropriate unused group type ID (skip value 100).
-  $type=$last+1;
+  $type = $last + 1;
   if ($type == 100)
     $type = 101;
 
@@ -229,32 +233,33 @@ else
                     'context'=>'admgrptype'));
 
 
-  print '<h1>'.$row_grp['name'].' (#'.$row_grp['type_id'].')</h1>';
+  print "<h1>{$row_grp['name']} (#{$row_grp['type_id']})</h1>\n";
 
+  print '<form action="' . htmlentities ($_SERVER['PHP_SELF'])
+    . "\" method='post'>\n"
+    . "<input type='hidden' name='type_id' value=\"$type_id\" />\n";
 
-  print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
-<input type="hidden" name="type_id" value="'.htmlspecialchars($type_id).'" />';
-
-  print '<h2>'.no_i18n("General Default Settings for Groups of this Type").'</h2>
-';
-
-  $textfield_size='65';
-
-  print '
-<p>'.no_i18n('Basic Help: host means hostname (as savannah.gnu.org), dir means directory
-(as /var/www/savane).').'</p>
-
-<p class="warn">'
-.no_i18n('Everytime a project\'s unix_group_name should appear, use the special
-string %PROJECT.').'</p>
-
-<p>'
-.no_i18n('Fields marked with [BACKEND SPECIFIC] are only useful is you use the
-savannah backend.').'</p>
-
-<p>'.no_i18n('Fill only the fields that have a specific setting, differing from the
-whole installation settings.').'</p>
-';
+  print '<h2>' . no_i18n("General Default Settings for Groups of this Type")
+    . "</h2>\n";
+  $textfield_size = '65';
+  print '<p>'
+    . no_i18n (
+        'Basic Help: host means hostname (like savannah.gnu.org), '
+        . 'dir means directory (like /var/www/savane).'
+      )
+    . "</p>\n<p class='warn'>"
+    . no_i18n (
+        'Everytime a project\'s unix_group_name should appear, use the '
+        . 'special string %PROJECT.')
+    . "</p>\n<p>"
+    . no_i18n(
+        'Fields marked with [BACKEND SPECIFIC] are only useful is you use '
+        . 'the savannah backend.')
+    ."</p>\n<p>"
+    . no_i18n (
+        'Fill only the fields that have a specific setting, differing '
+        . 'from the whole installation settings.')
+    . "</p>\n";
 
   print $HTML->box_top(no_i18n("General Settings"));
 
@@ -373,14 +378,8 @@ no_i18n("Repository view URL (cvsweb, viewcvs, archzoom...):"),
   print "<br /><br />\n";
 }
 
-source_code_manager ($HTML, $row_grp, $textfield_size, no_i18n("CVS"), 'cvs');
-source_code_manager ($HTML, $row_grp, $textfield_size, no_i18n("GNU Arch"), 'arch');
-source_code_manager ($HTML, $row_grp, $textfield_size, no_i18n("Subversion"), 'svn');
-source_code_manager ($HTML, $row_grp, $textfield_size, no_i18n("Git"), 'git');
-source_code_manager ($HTML, $row_grp, $textfield_size, no_i18n("Mercurial"), 'hg');
-source_code_manager ($HTML, $row_grp, $textfield_size, no_i18n("Bazaar"), 'bzr');
-
-  # Download
+foreach ($vcs_list as $title => $name)
+  source_code_manager ($HTML, $row_grp, $textfield_size, $title, $name);
 
   print $HTML->box_top(no_i18n("Download Area"));
   print '<p>'.no_i18n('This is useful if you provide directly download areas
@@ -694,21 +693,15 @@ don't activate this feature unless you truly know what you're doing"),0);
 users added to a group of this type, unless this group defined its own
 configuration.").'</p>';
 
-  $title_arr=array();
-  $title_arr[]=no_i18n("Cookbook Manager");
-  $title_arr[]=no_i18n("Support Tracking");
-  $title_arr[]=no_i18n("Bug Tracking");
-  $title_arr[]=no_i18n("Task Tracking");
-  $title_arr[]=no_i18n("Patch Tracking");
-  $title_arr[]=no_i18n("News Manager");
+  $title_arr = [
+    no_i18n("Cookbook Manager"), no_i18n("Support Tracking"),
+    no_i18n("Bug Tracking"), no_i18n("Task Tracking"),
+    no_i18n("Patch Tracking"), no_i18n("News Manager"),
+  ];
   print html_build_list_table_top ($title_arr);
   print "<tr>\n";
-  html_select_permission_box("cookbook", $row_grp['cookbook_flags'], "type");
-  html_select_permission_box("support", $row_grp['support_flags'], "type");
-  html_select_permission_box("bugs", $row_grp['bugs_flags'], "type");
-  html_select_permission_box("task", $row_grp['task_flags'], "type");
-  html_select_permission_box("patch", $row_grp['patch_flags'], "type");
-  html_select_permission_box("news", $row_grp['news_flags'], "type");
+  foreach ($trackers as $art)
+    html_select_permission_box ($art, $row_grp["${art}_flags"], "type");
 
   print '  </tr>
 </table>';
@@ -728,14 +721,9 @@ on this group trackers.").'</p>';
 
   print html_build_list_table_top ($title_arr);
   print "<tr>\n";
-  html_select_restriction_box("cookbook", $row_grp['cookbook_rflags'], "type");
-  html_select_restriction_box("support", $row_grp['support_rflags'], "type");
-  html_select_restriction_box("bugs", $row_grp['bugs_rflags'], "type");
-  html_select_restriction_box("task", $row_grp['task_rflags'], "type");
-  html_select_restriction_box("patch", $row_grp['patch_rflags'], "type");
-  html_select_restriction_box("news", $row_grp['news_rflags'], "type");
-  print '  </tr>
-</table>';
+  foreach ($trackers as $art)
+    html_select_restriction_box ($art, $row_grp["${art}_rflags"], "type");
+  print "</tr>\n</table>\n";
 
   $HTML->box1_bottom();
 

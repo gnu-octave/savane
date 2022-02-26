@@ -2080,6 +2080,26 @@ $reference = 'project/memberlist-gpgkeys.php';
 $reference = 'register/upload.php';
 # (no test: the only import is a file)
 
+$reference = 'search/index.php';
+{
+  $names = [
+    'digits' =>
+      ['type', 'offset', 'max_rows', 'only_group_id', ['exact', [0, 1]]],
+    'strings' => [
+      [
+        'type_of_search',
+        ['soft', 'people', 'bugs', 'support', 'patch', 'cookbook', 'task'],
+      ],
+    ],
+    'pass' => 'words',
+  ];
+  $in = $out = [
+    'type' => 1, 'exact' => 0, 'offset' => 2, 'max_rows' => 3,
+    'only_group_id' => 4, 'type_of_search' => 'soft', 'words' => 'w',
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
 $reference = 'sendmessage.php';
 {
   unset ($out);
@@ -2104,6 +2124,200 @@ $reference = 'sendmessage.php';
     'pass' => ['subject', 'body', 'feedback']
   ];
 
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/groupedit.php';
+{
+  $names = ['true' => 'updatefast', 'preg' => [['status', '/^[A-Z]$/']]];
+  $in = $out = ['updatefast' => 'true', 'status' => 'P'];
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'true' => 'update',
+    'name' => 'form_name',
+    'digits' => ['group_type', 'form_public'],
+    'specialchars' => ['form_license', 'form_license_other'],
+    'preg' => [['form_status', '/^[A-Z]$/']]
+  ];
+  $dirs = ['cvs', 'arch', 'svn', 'git', 'hg', 'bzr', 'homepage', 'download'];
+  foreach ($dirs as $d)
+    $names['specialchars'][] = "form_dir_$d";
+  $in = $out = [
+    'update' => true, 'form_public' => 0, 'form_status' => 'A',
+    'form_name' => 'grep', 'group_type' => 1,
+  ];
+  foreach ($names['specialchars'] as $n)
+    $in[$n] = $out[$n] = $n;  
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/grouplist.php';
+{
+  $names = ['pass' => 'search', 'true' => 'groupsearch'];
+  $in = $out = ['search' => 'search', 'groupsearch' => true];
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'digits' => ['offset', 'max_rows'],
+    'name' => 'group_name_search',
+    'preg' => [['status', '/^[A-Z]$/']],
+  ];
+  $in = $out = [
+    'offset' => 0, 'max_rows' => 25, 'status' => 'P',
+    'group_name_search' => 'gre'
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/group_type.php';
+{
+  function no_i18n ($x) { return $x; }
+
+  $trackers = ['cookbook', 'bugs', 'news', 'task', 'support', 'patch'];
+
+  $vcs_list = [
+    no_i18n ("CVS") => 'cvs', no_i18n ("GNU Arch") => 'arch',
+    no_i18n ("Subversion") => 'svn', no_i18n ("Git") => 'git',
+    no_i18n ("Mercurial") => 'hg', no_i18n ("Bazaar") => 'bzr',
+  ];
+
+  $names = [
+    'name' => 'name',
+    'specialchars' => [
+      'description',  'base_host', 'homepage_scm',
+      'admin_email_adress', # Sic! adress not address
+    ],
+    'true' => []
+  ];
+  $hm_dw = ['download', 'homepage'];
+  $vcs_extra = array_merge ($vcs_list, $hm_dw);
+  foreach ($vcs_extra as $vcs)
+    {
+      $names['specialchars'][] = "dir_type_$vcs";
+      $names['specialchars'][] = "dir_$vcs";
+    }
+  foreach ($hm_dw as $hd)
+    $names['specialchars'][] = "url_$hd";
+  foreach ($vcs_list as $vcs)
+    $names['specialchars'][] = "url_${vcs}_viewcvs";
+  $names['specialchars'][] = "url_cvs_virecvs_homepage";
+  foreach (
+    [
+      'listinfo', 'subscribe', 'unsubscribe', 'archives', 'archives_private',
+      'admin'
+    ] as $f
+  )
+    $names['specialchars'][] = "url_mailing_list_$f";
+  foreach (['address', 'virtual_host', 'format'] as $f)
+    $names['specialchars'][] = "mailing_list_$f";
+  $can_use_ = array_merge (
+    $vcs_extra, $trackers,
+    ['forum', 'license', 'devel_status', 'mailing_list', 'bug']
+  );
+  foreach ($can_use_ as $art)
+    if ($art != 'bugs')
+      $names['true'][] = "can_use_$art";
+  $conf = array_merge (
+    ['forum', 'extralink_documentation', 'mail'], $trackers, $vcs_extra
+  );
+  foreach ($conf as $art)
+    $names['true'][] = "is_menu_configurable_$art";
+  foreach ($vcs_list as $vcs)
+    $names['true'][] = "is_menu_configurable_${vcs}_viewvcs";
+  $names['true'][] = "is_configurable_download_dir";
+  $in = $out = [];
+  foreach ($names['true'] as $n)
+    $in[$n] = $out[$n] = true;
+  foreach ($names['specialchars'] as $n)
+    $in[$n] = $out[$n] = $n;
+  $in['name'] = $out['name'] = 'name';
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/index.php';
+{
+  $names = ['strings' => [['func', ['configure', 'manage', 'monitor']]]];
+  $in = $out = ['func' => 'manage'];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/spamlist.php';
+{
+  $names = [
+    'digits' => ['ban_user_id', 'wash_user_id', 'max_rows', 'offset']
+  ];
+  $in = $out = [
+    'ban_user_id' => 1, 'wash_user_id' => 2, 'max_rows' => 3, 'offset' => 4
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/user_changepw.php';
+{
+  $names = ['true' => 'update', 'pass' => ['form_pw', 'form_pw2']];
+  $in = $out = ['form_pw' => 'p>"w', 'form_pw2' => '2<"wp'];
+  $out['update'] = null;
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/usergroup.php';
+{
+  $names = [
+    'digits' => ['user_id', 'comment_max_rows', 'comment_offset'],
+    'strings' => [
+      [
+        'action',
+        [
+          'remove_user_from_group', 'update_user_group', 'update_user',
+          'add_user_to_group', 'rename', 'delete'
+        ],
+      ],
+    ],
+  ];
+  $in = $out = [
+    'user_id' => 83521, 'comment_max_rows' => 51, 'comment_offset' => 119,
+    'action' => 'delete'
+  ];
+  test_sane_import ($in, $names, $out);
+  $names = [
+    'name' => 'new_name',
+    'preg' => [
+      ['email', '/^[a-zA-Z\d_.+-]+@(([a-zA-Z\d-])+\.)+[a-zA-Z\d]+$/'],
+      ['admin_flags', '/^[A-Z\d]+$/'],
+    ],
+  ];
+  $in = $out = [
+    'new_name' => 'new_agn', 'email' => 'test@test.org', 'admin_flags' => 'A'
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'siteadmin/userlist.php';
+{
+  $names = [
+    'digits' => ['offset', 'user_id'],
+    'specialchars' => 'text_search',
+    'strings' => [
+      ['action', ['delete', 'suspend', 'activate']],
+    ],
+    'name' => 'user_name_search',
+  ];
+  $in = $out = [
+    'offset' => 1, 'user_id' => 289, 'text_search' => 'text',
+    'action' => 'delete', 'user_name_search' => 'agn'
+  ];
+  test_sane_import ($in, $names, $out);
+}
+
+$reference = 'stats/index.php';
+{
+  $digit_names = [];
+  foreach (['day', 'month', 'year'] as $term)
+    foreach (['since', 'until'] as $prep)
+      $digit_names[] = "${prep}_$term";
+  $names = ['true' => 'update', 'digits' => $digit_names];
+  $in = $out = ['update' => true];
+  foreach ($digit_names as $n)
+    $in[$n] = $out[$n] = 83521;
   test_sane_import ($in, $names, $out);
 }
 ?>

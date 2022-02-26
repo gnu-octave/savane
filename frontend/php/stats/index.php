@@ -28,16 +28,25 @@ require_once('../include/graphs.php');
 
 register_globals_off();
 
-extract(sane_import('get',
-  array('update', 'since_month', 'since_day', 'since_year',
-        'until_month', 'until_day', 'until_year')));
+$digit_names = [];
+foreach (['day', 'month', 'year'] as $term)
+  foreach (['since', 'until'] as $prep)
+    $digit_names[] = "${prep}_$term";
+
+extract (sane_import ('get', ['true' => 'update', 'digits' => $digit_names]));
 
 # Assemble page body first because we need to insert a link to generated
 # stylesheet in its header.
 
 $page = '';
 
-if (empty($update))
+if ($update)
+  {
+    # If the user selected date, assume he speaks of completed days.
+    $hour = 0;
+    $min = 0;
+  }
+else
   {
     # Replace since_ and util_ parameters.
     $since_month = date("m")-1;
@@ -50,12 +59,6 @@ if (empty($update))
 
     $hour = date("H");
     $min = date("i");
-  }
-else
-  {
-    # If the user selected date, assume he speaks of completed days.
-    $hour = 0;
-    $min = 0;
   }
 
 $since = mktime($hour,$min,0,$since_month, $since_day, $since_year);

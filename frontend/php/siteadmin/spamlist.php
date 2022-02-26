@@ -31,8 +31,9 @@ function no_i18n($string)
   return $string;
 }
 
-extract(sane_import('get', array('ban_user_id', 'wash_user_id',
-                                 'max_rows', 'offset')));
+extract (sane_import ('get',
+  ['digits' => ['ban_user_id', 'wash_user_id', 'max_rows', 'offset']]
+));
 
 if ($ban_user_id)
   {
@@ -74,86 +75,84 @@ reputation.") . ' <span class="warn">'
 process. Be careful. For efficiency purpose, there won't be any
 warnings.") . "</span></p>\n";
 
-$title_arr = array();
-$title_arr[] = no_i18n("User");
-$title_arr[] = no_i18n("Score");
-$title_arr[] = no_i18n("Ban user");
-$title_arr[] = no_i18n("Wash score");
-$title_arr[] = no_i18n("Incriminated content");
-$title_arr[] = no_i18n("Flagged by");
+$title_arr = [
+  no_i18n("User"), no_i18n("Score"), no_i18n("Ban user"),
+  no_i18n("Wash score"), no_i18n("Incriminated content"),
+  no_i18n("Flagged by")
+];
 
-if (!isset($max_rows))
+if (empty ($max_rows))
   $max_rows = 50;
-else
-  $max_rows = intval($max_rows);
 
-if (!isset($offset))
+if (empty ($offset))
   $offset = 0;
-else
-  $offset = intval($offset);
+$offset = intval($offset);
 
 $result = db_execute("SELECT user_name,realname,user_id,spamscore FROM user "
                      ."WHERE status='A' AND spamscore > 0 ORDER BY spamscore "
                      ."DESC LIMIT ?,?", array($offset,($max_rows+1)));
 if (!db_numrows($result))
-  print '<p>' . no_i18n("No suspects found") . "</p\n";
-else
   {
-    print html_build_list_table_top($title_arr);
+    print '<p>' . no_i18n("No suspects found") . "</p\n";
+    $HTML->footer(array());
+    exit (0);
+  }
 
-    $i = 0;
-    while ($entry = db_fetch_array($result))
+print html_build_list_table_top($title_arr);
+
+$i = 0;
+while ($entry = db_fetch_array($result))
+  {
+    $i++;
+
+    # The sql was artificially asked to search more result than the number
+    # we print. If $i > $max, it means that there were more results than
+    # the max, we shan't print these more, but below we will add next/prev
+    # links.
+    if ($i > $max_rows)
+      break;
+
+    $res_score = db_execute("SELECT trackers_spamscore.artifact,"
+                            . "trackers_spamscore.item_id,"
+                            . "trackers_spamscore.comment_id,"
+                            . "user.user_name FROM trackers_spamscore,user "
+                            . "WHERE trackers_spamscore.affected_user_id=? "
+                            . "AND user.user_id="
+                            . "trackers_spamscore.reporter_user_id "
+                            . "LIMIT 50", array($entry['user_id']));
+    $flagged_by = '';
+    $incriminated_content = '';
+    $seen_before = array();
+    while ($entry_score = db_fetch_array($res_score))
       {
-        $i++;
-
-        # The sql was artificially asked to search more result than the number
-        # we print. If $i > $max, it means that there were more results than
-        # the max, we shan't print these more, but below we will add next/prev
-        # links.
-        if ($i > $max_rows)
-          break;
-
-        $res_score = db_execute("SELECT trackers_spamscore.artifact,"
-                                . "trackers_spamscore.item_id,"
-                                . "trackers_spamscore.comment_id,"
-                                . "user.user_name FROM trackers_spamscore,user "
-                                . "WHERE trackers_spamscore.affected_user_id=? "
-                                . "AND user.user_id="
-                                . "trackers_spamscore.reporter_user_id "
-                                . "LIMIT 50", array($entry['user_id']));
-        $flagged_by = '';
-        $incriminated_content = '';
-        $seen_before = array();
-        while ($entry_score = db_fetch_array($res_score))
+        if (!isset($seen_before[$entry_score['user_name']]))
           {
-            if (!isset($seen_before[$entry_score['user_name']]))
-              {
-                $flagged_by .= utils_user_link($entry_score['user_name']).', ';
-                $seen_before[$entry_score['user_name']] = true;
-              }
-
-            if (!isset($seen_before[$entry_score['artifact']
-                       . $entry_score['item_id']
-                       . 'C' . $entry_score['comment_id']]))
-              {
-                # Only put the string "here" for each item, otherwise it gets
-                # overlong when we have to tell comment #nnn of item #nnnn.
-                $incriminated_content .= utils_link($GLOBALS['sys_home']
-                                      . $entry_score['artifact'] . '/?item_id='
-                                      . $entry_score['item_id']
-                                      . '&amp;func=viewspam&amp;comment_internal_id='
-                                      . $entry_score['comment_id'] . '#spam'
-                                      . $entry_score['comment_id'],
-                                                   no_i18n("here")) . ', ';
-                $seen_before[$entry_score['artifact'] . $entry_score['item_id']
-                             . 'C' . $entry_score['comment_id']] = true;
-              }
+            $flagged_by .= utils_user_link($entry_score['user_name']).', ';
+            $seen_before[$entry_score['user_name']] = true;
           }
-        $flagged_by = rtrim($flagged_by, ', ');
-        $incriminated_content = rtrim($incriminated_content, ', ');
 
-        print '<tr class="' . utils_get_alt_row_color($i) . '">';
-        print '<td width="25%">'
+        if (!isset($seen_before[$entry_score['artifact']
+                   . $entry_score['item_id']
+                   . 'C' . $entry_score['comment_id']]))
+          {
+            # Only put the string "here" for each item, otherwise it gets
+            # overlong when we have to tell comment #nnn of item #nnnn.
+            $incriminated_content .= utils_link($GLOBALS['sys_home']
+                                  . $entry_score['artifact'] . '/?item_id='
+                                  . $entry_score['item_id']
+                                  . '&amp;func=viewspam&amp;comment_internal_id='
+                                  . $entry_score['comment_id'] . '#spam'
+                                  . $entry_score['comment_id'],
+                                               no_i18n("here")) . ', ';
+            $seen_before[$entry_score['artifact'] . $entry_score['item_id']
+                         . 'C' . $entry_score['comment_id']] = true;
+          }
+      }
+    $flagged_by = rtrim($flagged_by, ', ');
+    $incriminated_content = rtrim($incriminated_content, ', ');
+
+    print '<tr class="' . utils_get_alt_row_color($i) . '">';
+    print '<td width="25%">'
 . utils_user_link($entry['user_name'], $entry['realname'])
 . '</td>
 <td width="5%" class="center">' . $entry['spamscore'] . '</td>
@@ -173,12 +172,10 @@ else
 <td width="30%">' . $flagged_by . '</td>
 </tr>
 ';
-      }
-    print "</table>\n";
-
-    # More results than $max? Print next/prev.
-    html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "users");
   }
+print "</table>\n";
 
+# More results than $max? Print next/prev.
+html_nextprev(htmlentities ($_SERVER['PHP_SELF']).'?', $max_rows, $i, "users");
 $HTML->footer(array());
 ?>

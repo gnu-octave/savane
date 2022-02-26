@@ -36,13 +36,25 @@ function no_i18n($string)
   return $string;
 }
 
-extract(sane_import('post',
-  array('update', 'form_name', 'form_status', 'form_public',
-        'form_license', 'form_license_other', 'group_type',
-        'form_dir_cvs', 'form_dir_arch', 'form_dir_svn', 'form_dir_git',
-        'form_dir_hg', 'form_dir_bzr', 'form_dir_homepage', 'form_dir_download')));
-extract(sane_import('get',
-  array('updatefast', 'status')));
+$post_names = function ()
+{
+  $names = [
+    'true' => 'update',
+    'name' => 'form_name',
+    'digits' => ['group_type', 'form_public'],
+    'specialchars' => ['form_license', 'form_license_other'],
+    'preg' => [['form_status', '/^[A-Z]$/']]
+  ];
+  $dirs = ['cvs', 'arch', 'svn', 'git', 'hg', 'bzr', 'homepage', 'download'];
+  foreach ($dirs as $d)
+    $names['specialchars'][] = "form_dir_$d";
+  return $names;
+};
+
+extract (sane_import ('post', $post_names ()));
+extract (sane_import ('get',
+  ['true' => 'updatefast', 'preg' => [['status', '/^[A-Z]$/']]]
+));
 
 if ($update || $updatefast)
   {
@@ -115,13 +127,13 @@ print '<h2>'.no_i18n("Registration Management Shortcuts").'</h2>
 ';
 print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
 .'?status=A&amp;updatefast=1&amp;group_id='
-.htmlspecialchars($group_id).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+. $group_id . '"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/bool/ok.orig.png" alt="'.no_i18n("Approve").'" /></a>&nbsp;&nbsp;&nbsp;';
 print '<a href="'.htmlentities ($_SERVER['PHP_SELF'])
 .'?status=D&amp;updatefast=1&amp;group_id='
-.htmlspecialchars($group_id).'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
+. $group_id . '"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/bool/wrong.orig.png" alt="'.no_i18n("Discard").'" /></a>&nbsp;&nbsp;&nbsp;';
-print '<a href="triggercreation.php?group_id='.htmlspecialchars($group_id)
+print '<a href="triggercreation.php?group_id=' . $group_id
 .'"><img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
 .'.theme/contexts/preferences.orig.png" alt="'
 .no_i18n("Send New Project Instruction Email and Trigger Project Creation (should be
@@ -229,7 +241,7 @@ print no_i18n("If other:").'</label><br />
 .$row_grp['license_other'].'" />';
 print '</p>
 ';
-print '<input type="hidden" name="group_id" value="'.htmlspecialchars($group_id)
+print '<input type="hidden" name="group_id" value="' . $group_id
               .'" />';
 
 $i++;
@@ -242,7 +254,7 @@ print '
 
 $HTML->box1_bottom();
 
-print '<p><a href="triggercreation.php?group_id='.htmlspecialchars($group_id).'">'
+print '<p><a href="triggercreation.php?group_id=' . $group_id . '">'
 .no_i18n("Send New Project Instruction Email and Trigger Project Creation (should be
 done only once)").'</a>';
 print '</p>

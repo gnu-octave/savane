@@ -4,7 +4,7 @@
 # This file is part of the Savane project
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -32,13 +32,17 @@ require_once('../include/init.php');
 require_once('../include/account.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-extract(sane_import('request', array('user_id')));
-extract(sane_import('post', array('update', 'form_pw', 'form_pw2')));
+extract (sane_import ('request', ['digits' => 'user_id']));
+extract (sane_import ('post',
+  ['true' => 'update', 'pass' => ['form_pw', 'form_pw2']]
+));
+
+$error = '';
 
 # Check for valid register from form post.
-function register_valid()
+function register_valid ()
 {
-  global $update, $user_id;
+  global $update, $user_id, $error;
 
   if (!$update)
     return 0;
@@ -46,11 +50,20 @@ function register_valid()
   db_execute("SELECT user_pw FROM user WHERE user_id=?", array($user_id));
 
   if (!$GLOBALS['form_pw'])
-    return 0;
+    {
+      $error = no_i18n ('no password provided');
+      return 0;
+    }
   if ($GLOBALS['form_pw'] != $GLOBALS['form_pw2'])
-    return 0;
+    {
+      $error = no_i18n ('passwords don\'t match');
+      return 0;
+    }
   if (!account_pwvalid($GLOBALS['form_pw']))
-    return 0;
+    {
+      $error = no_i18n ('provided password is considered weak');
+      return 0;
+    }
 
   # If we got this far, it must be good.
   db_autoexecute('user', array('user_pw' =>
@@ -59,13 +72,15 @@ function register_valid()
   return 1;
 }
 
+$title = sprintf (no_i18n ('Change Password for %s'), user_getname ($user_id));
+
+$HTML->header(['title' => $title]);
 # Check for valid login, if so, congratulate.
 if (register_valid())
   {
-    $HTML->header(array('title' => no_i18n("Change Password")));
     print '
 <p><strong>'.no_i18n('Savannah Change Confirmation').'</strong></p>
-<p>'.no_i18n('Congratulations, genius. You have managed to change this user\'s
+<p>'.no_i18n('Congratulations. You have managed to change this user\'s
 password.').'
 </p>
 <p>'.sprintf(no_i18n('You should now <a href="%s">Return to UserList</a>.'),
@@ -73,24 +88,20 @@ password.').'
 
   }
 else
-  { # Not valid registration, or first time to page.
-    $HTML->header(array('title' => "Change Password"));
+  {
+    if ($error)
+      $error = '<p><b>' . no_i18n ('Password change failed')
+        . ": $error</b></p>\n";
 
-    print '
-<p><strong>'.no_i18n('Savannah Password Change').'</strong></p>
-<form action="user_changepw.php" method="post">
-<p>'.no_i18n('New Password:').'
-<br /><input type="password" name="form_pw" />
-</p>
-<p>'.no_i18n('New Password (repeat):').'
-<br /><input type="password" name="form_pw2" />
-<input type=hidden name="user_id" value="'.htmlspecialchars($user_id).'">
-</p>
-<p><input type="submit" name="update" value="'.no_i18n('Update').'" />
-</p>
-</form>
-';
-
+    print "<h2>" . no_i18n ('Savannah Password Change')
+      . "</h2>\n$error<form action='user_changepw.php' method='post'>\n"
+      . '<p>' . no_i18n ('New Password:')
+      . "<br />\n<input type='password' name='form_pw' />\n</p>\n<p>"
+      . no_i18n ('New Password (repeat):')
+      . "<br />\n<input type='password' name='form_pw2' />\n"
+      . "<input type='hidden' name='user_id' value='$user_id'>\n</p>\n"
+      . '<p><input type="submit" name="update" value=\''
+      . no_i18n ('Update') . "' />\n</p>\n</form>\n";
   }
 $HTML->footer(array());
 ?>

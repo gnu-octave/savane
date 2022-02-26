@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018, 2019 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -31,197 +31,196 @@ require_once('../include/init.php');
 
 site_admin_header(array('title'=>no_i18n("User List"),'context'=>'admuser'));
 
-extract(sane_import('get', array('user_name_search', 'offset', 'text_search',
-                                 'action', 'user_id')));
-extract(sane_import('request', array('search')));
+extract (sane_import ('get',
+  [
+    'digits' => ['offset', 'user_id'],
+    'specialchars' => 'text_search',
+    'strings' => [
+      ['action', ['delete', 'suspend', 'activate']],
+    ],
+    'name' => 'user_name_search',
+  ]
+));
+extract (sane_import ('request', ['pass' => 'search']));
 
 # Get user_name and realname as they were before the action to display
 # in further feedback.
-if ($action == 'delete' || $action == 'activate' || $action == 'suspend')
-  {
-    $result = db_execute("SELECT user_name,realname FROM user WHERE user_id=?",
-                         array($user_id));
-  }
-else
-  $action = false;
+if ($action)
+  $result = db_execute (
+    "SELECT user_name, realname FROM user WHERE user_id = ?", [$user_id]
+  );
 
 if ($action == 'delete' || $action == 'suspend')
   {
     user_delete ($user_id);
     $out = no_i18n("DELETE");
   }
-elseif ($action == 'activate')
+if ($action == 'activate')
   {
     db_execute("UPDATE user SET status='A' WHERE user_id=?", array($user_id));
     $out = no_i18n("ACTIVE");
   }
 
 if ($action)
-{
-  print '<h2>'.no_i18n("Action done").' :</h2>';
-  print '<p>';
+  {
+    print '<h2>' . no_i18n("Action done") . ":</h2>\n</p>";
 
-  $usr = db_fetch_array($result);
-  printf(no_i18n('Status updated to %s for user %s %s.'), $out, $user_id,
-         utils_user_link ($usr['user_name'], $usr['realname']));
-  print '</p>
-';
-  print db_error();
-}
-
+    $usr = db_fetch_array($result);
+    printf(no_i18n('Status updated to %s for user %s %s.'), $out, $user_id,
+           utils_user_link ($usr['user_name'], $usr['realname']));
+    print "</p>\n";
+    print db_error();
+  }
 
 # Search users.
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N',
                    'O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1',
                    '2','3','4','5','6','7','8','9', '_');
 
-print '<h2>'.no_i18n("User Search").'</h2>
-<p>'.no_i18n("Display users beginning with").': ';
+print '<h2>' . no_i18n ("User Search") . "</h2>\n<p>"
+  . no_i18n ("Display users beginning with:") . ' ';
 
 for ($i=0; $i < count($abc_array); $i++)
-  print '<a href="'.htmlentities ($_SERVER["PHP_SELF"])
-        .'?user_name_search='.
-        $user_name_search.$abc_array[$i].'">'.
-        $user_name_search.$abc_array[$i].'</a> ';
+  print '<a href="' . htmlentities ($_SERVER["PHP_SELF"])
+    . "?user_name_search=$user_name_search{$abc_array[$i]}\">"
+    . "$user_name_search{$abc_array[$i]}</a>\n";
 
-print '<br />'.no_i18n("Search by email, username, realname or userid").':';
-print '
-<form name="usersrch" action="'.htmlentities ($_SERVER["PHP_SELF"])
-  .'" method="GET">
-  <input type="text" name="text_search" value="'.htmlspecialchars($text_search)
-         .'" />
-  <input type="hidden" name="usersearch" value="1" />
-  <input type="submit" value="'.no_i18n("Search").'" />
-</form>
-</p>
-';
+print "<br />\n"
+  . no_i18n ("Search by email, username, realname or userid:") . "\n";
+print "<form name='usersrch' action=\"" . htmlentities ($_SERVER["PHP_SELF"])
+  . "\" method='GET'>\n"
+  . "<input type='text' name='text_search' value=\"$text_search\" />\n"
+  . form_input ('hidden', 'usersearch', '1')
+  . form_submit (no_i18n ("Search")) . "\n</form>\n</p>\n";
 
 # Show list of users.
 
 $MAX_ROW=100;
-if (!$offset)
-  $offset = 0;
+$offset = intval($offset);
+
+$sql_fields =
+  "user.user_id, user.user_name, user.status, user.people_view_skills";
+$sql_order = 'ORDER BY user.user_name LIMIT ?,?';
+
+if ($group_id)
+  {
+    # Show list for one group.
+    $group_listed = group_getname ($group_id);
+
+    $result = db_execute ("
+      SELECT $sql_fields FROM user, user_group
+      WHERE user.user_id = user_group.user_id AND user_group.group_id = ?
+      $sql_order",
+      [$group_id, $offset, $MAX_ROW + 1]
+    );
+  }
 else
-  $offset = intval($offset);
+  {
+    $group_listed = no_i18n("All Groups");
 
-if (!$group_id)
-{
-  $group_listed = no_i18n("All Groups");
-
-  if ($user_name_search)
-    {
-      $result = db_execute("SELECT user_name,user_id,status,people_view_skills "
-                           ."FROM user WHERE user_name LIKE ? "
-                           ."ORDER BY user_name LIMIT ?,?",
-                           array(str_replace ('_', '\_', $user_name_search).'%',
-                                 $offset, $MAX_ROW+1));
-    }
-  elseif ($text_search)
-    $result = db_execute("SELECT user_name,user_id,status,people_view_skills
-                          FROM user WHERE user_name LIKE ? OR user_id LIKE ?
-                          OR realname LIKE ? OR email LIKE ?
-                          ORDER BY user_name LIMIT ?,?",
-                          array($text_search, $text_search,
-                                $text_search, $text_search,
-                                $offset, $MAX_ROW+1));
-  else
-    {
-      $result = db_execute("SELECT user_name,user_id,status,people_view_skills "
-                           ."FROM user ORDER BY user_name LIMIT ?,?",
-                           array($offset, $MAX_ROW+1));
-    }
-
-}
-else
-{
-  # Show list for one group.
-  $group_listed = group_getname($group_id);
-
-  $result = db_execute("SELECT user.user_id AS user_id, user.user_name "
-                     . "AS user_name, user.status AS status, "
-                     . "user.people_view_skills AS people_view_skills "
-                     . "FROM user,user_group "
-                     . "WHERE user.user_id=user_group.user_id AND "
-                     . "user_group.group_id=? ORDER BY user.user_name LIMIT ?,?",
-                       array($group_id, $offset, $MAX_ROW+1));
-
-}
+    if ($user_name_search)
+      {
+        $result = db_execute("
+          SELECT $sql_fields FROM user
+          WHERE user_name LIKE ?
+          $sql_order",
+          [
+            str_replace ('_', '\_', $user_name_search) . '%',
+            $offset, $MAX_ROW + 1
+          ]
+        );
+      }
+    elseif ($text_search)
+      {
+        $term = htmlspecialchars_decode ($text_search);
+        $result = db_execute ("
+          SELECT $sql_fields FROM user
+          WHERE
+            user_name LIKE ? OR user_id LIKE ?
+            OR realname LIKE ? OR email LIKE ?
+          $sql_order",
+          [$term, $term, $term, $term, $offset, $MAX_ROW + 1]
+        );
+      }
+    else
+      {
+        $result = db_execute ("
+          SELECT $sql_fields FROM user $sql_order",
+          [$offset, $MAX_ROW + 1]
+        );
+      }
+  }
 
 print '<h2>'.sprintf(no_i18n("User List for %s"),
                      '<strong>'.$group_listed.'</strong>')."</h2>\n";
 
 $rows = $rows_returned = db_numrows($result);
 
-$title_arr=array();
-$title_arr[]=no_i18n("Id");
-$title_arr[]=no_i18n("User");
-$title_arr[]=no_i18n("Status");
-$title_arr[]=no_i18n("Member Profile");
-$title_arr[]=no_i18n("Action");
+print html_build_list_table_top (
+  [
+    no_i18n("Id"), no_i18n("User"), no_i18n("Status"),
+    no_i18n("Member Profile"), no_i18n("Action")
+  ]
+);
 
-print html_build_list_table_top ($title_arr);
+function finish_page ()
+{
+  global $user_name_search, $search, $text_search, $rows, $rows_returned, $HTML;
+  print "</table>\n";
+  html_nextprev(
+    htmlentities ($_SERVER['PHP_SELF']) . "?user_name_search=$user_name_search"
+    . '&amp;usersearch=1&amp;search=' . urlencode($search)
+    . "&amp;text_search=$text_search",
+    $rows, $rows_returned
+  );
+  $HTML->footer(array());
+  exit (0);
+}
 
 $inc = 0;
 if ($rows_returned < 1)
 {
-  print '<tr class="'.utils_get_alt_row_color($inc++).'"><td colspan="7">';
-  print no_i18n("No matches");
-  print '.</td></tr>
-';
-
+  print '<tr class="' . utils_get_alt_row_color ($inc++)
+    . '"><td colspan="7">'. no_i18n ("No matches") . ".</td></tr>\n";
+  finish_page ();
 }
-else
-{
-  if ($rows_returned > $MAX_ROW)
-    $rows = $MAX_ROW;
 
-  for ($i = 0; $i < $rows; $i++)
-    {
-      $usr = db_fetch_array($result);
-      print '<tr class="'.utils_get_alt_row_color($inc++).'"><td>'
-            .$usr['user_id'].'</td><td><a href="usergroup.php?user_id='
-            .$usr['user_id'].'">';
-      print "$usr[user_name]</a>";
-      print "</td>\n<td>\n";
+if ($rows_returned > $MAX_ROW)
+  $rows = $MAX_ROW;
 
-      switch ($usr['status'])
-        {
-        case 'A': print no_i18n("Active"); break;
-        case 'D': # Fall through.
-        case 'S': print no_i18n("Deleted"); break;
-        case 'SQD': print no_i18n("Active (Squad)"); break;
-        case 'P': print no_i18n("Pending"); break;
-        default: print no_i18n("Unknown status")." : ".$usr['status']; break;
-        }
-      if ($usr['people_view_skills'] == 1 )
-        {
-          print '<td><a href="'.$GLOBALS['sys_home']
-                .'people/resume.php?user_id='.$usr['user_id'].'">['.no_i18n("View")
-                .']</a></td>
-';
-        }
-      else
-        {
-          print '<td>('.no_i18n("Private").')</td>
-';
-        }
-      print '<td>';
-      if ($usr['status'] != 'D' && $usr['status'] != 'S' && $usr['status'] != 'SQD')
-        print '<a href="?action=delete&user_id='.$usr['user_id'].'">['
-                .no_i18n("Delete").']</a> ';
-      if ($usr['status'] != 'A' && $usr['status'] != 'SQD')
-        print '<a href="?action=activate&user_id='.$usr['user_id'].'">['
-                .no_i18n("Activate").']</a> ';
-      print "</td>\n</tr>\n";
-    }
-}
-print "</table>\n";
+for ($i = 0; $i < $rows; $i++)
+  {
+    $usr = db_fetch_array($result);
+    $stat = $usr['status'];
+    $usr_id = $usr['user_id'];
+    print '<tr class="' . utils_get_alt_row_color ($inc++)
+      . "\">\n<td>$usr_id</td>\n"
+      . "<td><a href=\"usergroup.php?user_id=$usr_id\">"
+      . "$usr[user_name]</a></td>\n<td>\n";
 
-html_nextprev(htmlentities ($_SERVER['PHP_SELF']).
-              '?user_name_search='.urlencode($user_name_search).
-              '&amp;usersearch=1&amp;search='.urlencode($search).
-              '&amp;text_search='.urlencode($text_search),
-              $rows, $rows_returned);
-
-$HTML->footer(array());
+    switch ($stat)
+      {
+      case 'A': print no_i18n("Active"); break;
+      case 'D': # Fall through.
+      case 'S': print no_i18n("Deleted"); break;
+      case 'SQD': print no_i18n("Active (Squad)"); break;
+      case 'P': print no_i18n("Pending"); break;
+      default: print no_i18n("Unknown status") . ": $stat"; break;
+      }
+    if ($usr['people_view_skills'] == 1)
+      print '<td><a href="' . $GLOBALS['sys_home']
+        . "people/resume.php?user_id=$usr_id\">["
+        . no_i18n ("View") . "]</a></td>\n";
+    else
+      print '<td>(' . no_i18n ("Private") . ")</td>\n";
+    print '<td>';
+    if ($stat != 'D' && $stat != 'S' && $stat != 'SQD')
+      print "<a href='?action=delete&user_id=$usr_id'>["
+        . no_i18n("Delete") . "]</a>\n";
+    if ($stat != 'A' && $stat != 'SQD')
+      print "<a href='?action=activate&user_id=$usr_id'>["
+        . no_i18n("Activate") . "]</a>\n";
+    print "</td>\n</tr>\n";
+  }
+finish_page ()
 ?>

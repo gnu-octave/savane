@@ -32,9 +32,14 @@ function no_i18n($string)
 
 site_admin_header(array('title'=>no_i18n("Group List"),'context'=>'admgroup'));
 
-extract(sane_import('post', array('search', 'groupsearch')));
-extract(sane_import('get', array('group_name_search', 'offset', 'max_rows',
-                                 'status')));
+extract(sane_import('post', ['pass' => 'search', 'true' => 'groupsearch']));
+extract (sane_import ('get', 
+  [
+    'digits' => ['offset', 'max_rows'],
+    'name' => 'group_name_search',
+    'preg' => [['status', '/^[A-Z]$/']],
+  ]
+));
 
 print '<h2>'.no_i18n("Group List Filter").'</h2>
 ';

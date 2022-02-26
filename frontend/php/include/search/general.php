@@ -58,31 +58,30 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
     $words = "*";
 
   if ($class)
-    $class = ' class="'.$class.'"';
+    $class = " class=\"$class\"";
 
-  $ret = '      <form action="'.$GLOBALS['sys_home']
-         .'search/#options" method="get" '.$class.'>';
+  $ret = "<form action=\"{$GLOBALS['sys_home']}search/#options\" "
+    . "method='get' $class>\n";
 
   if (!$is_small)
     {
       # If it's a big form, we want the submit button on the right.
       $ret .= '<span class="boxoptionssubmit">'
-              .'<input type="submit" name="Search" value="'._("Search")
-              .'" /></span>';
+        . '<input type="submit" name="Search" value="' . _("Search")
+        . "\" />&nbsp;</span>\n";
     }
 
-  $ret .= '<input type="text" '
-          .'title="'._("Terms to look for").'" '
-          .'size="'.$size.'" name="words" value="'
-          .htmlspecialchars($searched_words).'" />';
+  $ret .= '<input type="text" title="' . _("Terms to look for") . '" '
+    . "size=\"$size\" name=\"words\" value=\""
+    . htmlspecialchars ($searched_words) . "\" />\n";
 
   if ($is_small)
-    $ret .= '<br />';
+    $ret .= "<br />\n";
 
   if (!empty($only_artifact))
     {
       $ret .= '<input type="hidden" name="type_of_search" value="'
-              .htmlspecialchars($only_artifact).'" />';
+        . "$only_artifact\" />\n";
     }
   else
     {
@@ -222,15 +221,15 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
   if (isset($group_id))
     {
-      $ret .="<input type=\"hidden\" value=\"".htmlspecialchars($group_id)."\" "
-             ."name=\"only_group_id\" />\n";
+      $ret .="<input type=\"hidden\" value=\"$group_id\" "
+        . "name=\"only_group_id\" />\n";
     }
 
   if ($size < 16)
     {
       # If it's a small form, the submit button has not already been inserted.
       $ret .= '&nbsp;&nbsp;&nbsp;<input type="submit" name="Search" value="'
-              ._("Search").'" />';
+        . _("Search") . "\" />&nbsp;\n";
     }
 
   if ($size > 15)
@@ -246,7 +245,7 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
               .sprintf(ngettext("%s result per page", "%s results per page",
                                 intval($max_rows)),
                        '<input type="text" name="max_rows" value="'
-                       .htmlspecialchars($max_rows).'" title="'
+                       . $max_rows.'" title="'
                        ._("Number of items to show per page")
                        .'" size="4" />')."\n";
       if (!isset($group_id))

@@ -37,19 +37,35 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>no_i18n('Admin: User Info')));
 
-extract(sane_import('request', array('user_id', 'action',
-                                     'comment_max_rows', 'comment_offset')));
-extract(sane_import('post', array('admin_flags', 'email', 'new_name')));
+extract (sane_import ('request', 
+  [
+    'digits' => ['user_id', 'comment_max_rows', 'comment_offset'],
+    'strings' => [
+      [
+        'action',
+        [
+          'remove_user_from_group', 'update_user_group', 'update_user',
+          'add_user_to_group', 'rename', 'delete'
+        ],
+      ],
+    ],
+  ]
+));
+extract (sane_import ('post',
+  [
+    'name' => 'new_name',
+    'preg' => [
+      ['email', '/^[a-zA-Z\d_.+-]+@(([a-zA-Z\d-])+\.)+[a-zA-Z\d]+$/'],
+      ['admin_flags', '/^[A-Z\d]+$/'],
+    ],
+  ]
+));
 
-if (!isset($comment_max_rows))
-  $max_rows = 50;
-else
-  $max_rows = intval($comment_max_rows);
+if (empty ($comment_max_rows))
+  $comment_max_rows = 50;
 
-if (!isset($comment_offset))
-  $offset = 0;
-else
-  $offset = intval($comment_offset);
+$max_rows = intval ($comment_max_rows);
+$offset = intval ($comment_offset);
 
 function list_user_contributions ($user_id, $user_name)
 {
@@ -66,42 +82,45 @@ function list_user_contributions ($user_id, $user_name)
   $query = '';
   foreach ($trackers as $tracker)
     {
-      $query .= '
-SELECT CONCAT("<a href=\"/' . $tracker. '/?", bug_id, "\">New Item in ",
-              "' . $tracker . ' #", bug_id, ": ", summary, "</a>") as summary,
-       details as details, spamscore as spamscore, 0 as comment_id, date as date
-  FROM ' . $tracker . '
-  WHERE submitted_by=' . $user_id . '
-UNION
-SELECT CONCAT("<a href=\"/' . $tracker. '/?", bug_id, "\">Comment #",
-              bug_history_id, " in ", "' . $tracker . ' #", bug_id,
-              " (", field_name ,")</a>") as summary,
-       old_value as details, spamscore as spamscore,
-       bug_history_id as comment_id, date as date
-  FROM ' . $tracker . '_history
-  WHERE mod_by=' . $user_id . '
-UNION';
+      $link = "<a href='/$tracker/\?\", bug_id, \"'>";
+      $query .= "
+        SELECT
+          CONCAT(\"$link\", 'New Item in ', '$tracker #', bug_id, ': ',
+                 summary, '</a>') as summary,
+          details, spamscore, 0 as comment_id, date
+        FROM $tracker
+        WHERE submitted_by = $user_id
+        UNION
+        SELECT
+          CONCAT(\"$link\", 'Comment #', bug_history_id, ' in ',
+                 '$tracker #', bug_id, ' (', field_name, ')</a>')
+          as summary,
+          old_value as details, spamscore, bug_history_id as comment_id, date
+        FROM ${tracker}_history
+        WHERE mod_by = $user_id
+        UNION";
     }
   $query .= '
-SELECT CONCAT("<a href=\"/project/admin/history.php?group=",
-              groups.unix_group_name,
-              "\">Request for inclusion in ", groups.group_name, "</a>")
-         as summary, " " as details, -1 as spamscore,
-         group_history_id as comment_id, group_history.date as date
-  FROM group_history,groups
-  WHERE group_history.old_value = "' . $user_name . '"
-        AND groups.group_id = group_history.group_id
-        AND group_history.field_name = "User Requested Membership"
-ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
+    SELECT CONCAT("<a href=\"/project/admin/history.php?group=",
+                  groups.unix_group_name,
+                  "\">Request for inclusion in ", groups.group_name, "</a>")
+             as summary, " " as details, -1 as spamscore,
+             group_history_id as comment_id, group_history.date as date
+      FROM group_history,groups
+      WHERE group_history.old_value = "' . $user_name . '"
+            AND groups.group_id = group_history.group_id
+            AND group_history.field_name = "User Requested Membership"
+    ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
   $result = db_execute ($query);
   if (!db_numrows($result))
     {
       print '<p>' . no_i18n ('No contributions found.') . "</p>\n";
       return;
     }
-  html_nextprev (htmlentities ($_SERVER['PHP_SELF']) . '?user_id='
-                 . urlencode ($user_id), $max_rows, db_numrows ($result),
-                 'comment');
+  html_nextprev (
+    htmlentities ($_SERVER['PHP_SELF']) . "?user_id=$user_id",
+    $max_rows, db_numrows ($result), 'comment'
+  );
   print "<dl id=\"comment_results\">\n";
   $i = 0;
   while ($entry = db_fetch_array ($result))
@@ -110,36 +129,34 @@ ORDER BY date DESC LIMIT ' . $offset . ',' . ($max_rows + 1);
         break;
       $spam = $entry['spamscore'];
       $date = utils_format_date ($entry['date'], 'natural');
-      if ($spam == 0)
-        $spam = no_i18n ('Spam score') . ' ' . $spam . "; ";
-      elseif ($spam > 0)
-        $spam = no_i18n ('Spam score') . ' <b>' . $spam . '</b>; ';
-      else
-        $spam = '';
-      print "  <dt><b>" . ($i + $offset) . "</b>: " . $spam
-             . $date . " " . $entry['summary'] . "</dt>\n";
+      if ($spam > 0)
+        $spam = "<b>$spam</b>";
+      $spam = no_i18n ('Spam score') . " $spam; ";
+      print "  <dt><b>" . ($i + $offset)
+        . "</b>: $spam$date {$entry['summary']}</dt>\n";
+      if (isset ($entry['details']))
+        $decoded = trackers_decode_value ($entry['details']);
       if (preg_match ('/">New Item in/', $entry['summary']))
         {
-          $entry['details'] = trackers_decode_value ($entry['details']);
           $entry['details'] = '<div class="tracker_comment">'
-                              . markup_full ($entry['details']) . "</div>\n";
+                              . markup_full ($decoded) . "</div>\n";
         }
       elseif (preg_match ('/ \(details\)<\/a>$/', $entry['summary']))
         {
-          $entry['details'] = trackers_decode_value ($entry['details']);
           $entry['details'] = '<div class="tracker_comment">'
-                              . markup_rich ($entry['details']) . "</div>\n";
+                              . markup_rich ($decoded) . "</div>\n";
         }
       elseif ($entry['spamscore'] < 0)
-          $entry['details'] = markup_rich (trackers_decode_value ($entry['details']));
+          $entry['details'] = markup_rich ($decoded);
       else
         $entry['details'] = htmlentities ($entry['details']);
       print "    <dd>" . $entry['details'] . "</dd>\n";
     }
   print "</dl>\n";
-  html_nextprev (htmlentities ($_SERVER['PHP_SELF']) . '?user_id='
-                 . urlencode ($user_id), $max_rows, db_numrows ($result),
-                 'comment');
+  html_nextprev (
+    htmlentities ($_SERVER['PHP_SELF']) . "?user_id=$user_id",
+    $max_rows, db_numrows ($result), 'comment'
+  );
 }
 
 if ($user_id == 100)
@@ -226,11 +243,11 @@ else
 ' . no_i18n('Account Info:') . '</p>
 <form method="post" action="' . htmlentities ($_SERVER['PHP_SELF']) . '">
 <input type="hidden" name="action" value="update_user">
-<input type="hidden" name="user_id" value="' . htmlspecialchars($user_id) . '">
+<input type="hidden" name="user_id" value="' . $user_id . '">
 </p>
 <p>Email:
 <input type="text" title="' . no_i18n("Email") . '" name="email" value="'
-. htmlspecialchars($row_user['email']) . '" size="25" maxlength="55">
+. $row_user['email'] . '" size="25" maxlength="55">
 </p>
 <p>
 <input type="submit" name="Update_Unix" value="' . no_i18n('Update') . '">
@@ -238,10 +255,10 @@ else
 </form>
 <form method="post" action="' . htmlentities ($_SERVER['PHP_SELF']) . '">
 <input type="hidden" name="action" value="rename">
-<input type="hidden" name="user_id" value="' . htmlspecialchars($user_id) . '">
+<input type="hidden" name="user_id" value="' . $user_id . '">
 <p>Account name:
 <input type="text" title="' . no_i18n("New name") . '" name="new_name" value="'
-. htmlspecialchars ($row_user['user_name']) . '" size="25" maxlength="55">
+. $row_user['user_name'] . '" size="25" maxlength="55">
 </p>
 <p>
 <input type="submit" name="' . no_i18n('Update_Name') . '" value="'
@@ -268,27 +285,27 @@ while ($row_cat = db_fetch_array($res_cat))
       {
         print "<br />\n"
          . '<a href="/project/admin/squadadmin.php?squad_id='
-         . htmlspecialchars($user_id) . '&amp;group_id=' . $row_cat['group_id']
+         . $user_id . '&amp;group_id=' . $row_cat['group_id']
          . '">' . group_getname($row_cat['group_id']) . "</a>\n";
         continue;
       }
     print ("<br /><hr /><strong>"
          . group_getname($row_cat['group_id']) . "</strong> "
          . "<a href=\"usergroup.php?user_id="
-         . htmlspecialchars($user_id)."&amp;action=remove_user_from_group&amp;group_id="
-         . htmlspecialchars($row_cat['group_id']) . "\">"
+         . $user_id."&amp;action=remove_user_from_group&amp;group_id="
+         . $row_cat['group_id'] . "\">"
          . "[" . no_i18n('Remove User from Group') . "]</a>");
     print '
 <form action="' . htmlentities ($_SERVER['PHP_SELF']) . '" method="post">
 <input type="hidden" name="action" value="update_user_group">
-<input name="user_id" type="hidden" value="' . htmlspecialchars($user_id) . '">
+<input name="user_id" type="hidden" value="' . $user_id . '">
 <input name="group_id" type="hidden" value="'
-       .htmlspecialchars($row_cat['group_id']).'">
+       .$row_cat['group_id'].'">
 <br /><label for="admin_flags">
 '.no_i18n('Admin Flags:').'</label>
 <br />
 <input type="text" name="admin_flags" id="admin_flags" value="'
-. htmlspecialchars($row_cat['admin_flags'], ENT_QUOTES) . '">
+. $row_cat['admin_flags'] . '">
 <br />
 <input type="submit" name="Update_Group" value="' . no_i18n('Update') . '" />
 </form>
@@ -302,7 +319,7 @@ if ($row_user['status'] != 'SQD')
 <p>
 <form action="' . htmlentities ($_SERVER['PHP_SELF']) . '" method="post">
 <input type="hidden" name="action" value="add_user_to_group">
-<input name="user_id" type="hidden" value="' . htmlspecialchars($user_id) . '">
+<input name="user_id" type="hidden" value="' . $user_id . '">
 <p><label for="group_id">
 ' . no_i18n('Add User to Group (group_id):') . '</label>
 <br />
@@ -313,7 +330,7 @@ if ($row_user['status'] != 'SQD')
 </form>
 
 <p><a href="user_changepw.php?user_id='
-    . htmlspecialchars($user_id) . '">[' . no_i18n('Change User\'s Password')
+    . $user_id . '">[' . no_i18n('Change User\'s Password')
     . "]</a>\n</p>\n";
     list_user_contributions ($user_id, $row_user['user_name']);
   }
