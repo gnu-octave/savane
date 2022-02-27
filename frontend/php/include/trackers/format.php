@@ -66,10 +66,7 @@ function format_item_details ($item_id, $group_id, $ascii = false,
           $data[$i]['realname'] = $entry['realname'];
           $data[$i]['date'] = $entry['date'];
           $data[$i]['comment_type'] = $entry['comment_type'];
-          $data[$i]['content'] = $entry['old_value'];
-          if ($data[$i]['comment_type'] == 'None'
-              || $data[$i]['comment_type'] === null)
-            $data[$i]['content'] = trackers_decode_value ($entry['old_value']);
+          $data[$i]['content'] = trackers_decode_value ($entry['old_value']);
           $data[$i]['comment_internal_id'] = $entry['bug_history_id'];
           $hist_id = $entry['bug_history_id'] + 1;
 
