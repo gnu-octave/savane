@@ -23,14 +23,6 @@
 #   php testing/sane.php
 #
 # In case of fail, diagnositc text is output to stdout.
-#
-# Commands to list files to update to the new version of sane_import:
-#
-# f=`sed -e '1s,.*,(,;:egin;' \
-#      -e 's,\(^\|\n\)[$]reference = .\([^\n ]*\)\.php.;$,\2),;' \
-#      -e 't next;s,\n.*,,;:next;s,)\(.\),\|\1,;N;begin;' \
-#      testing/sane.php`
-# grep -rlI '\<sane_import\>' | egrep -v "^$f"'\.php'
 
 require_once('include/sane.php');
 
@@ -97,18 +89,6 @@ function test_sane_import ($in, $names, $out)
   unset ($out['arr']['4913']);
 
   test_sane_import ($in, $names, $out);
-
-  $names = ['user', 'user_id'];
-  unset ($out['cancel']);
-  unset ($out['post']);
-  unset ($out['group_id']);
-  unset ($out['cc_list']);
-  unset ($out['arr']);
-
-  test_sane_import ($in, $names, $out);
-  $tmp = strlen (123);
-  if ($tmp != 3)
-    print "strlen (123) != 3 ($tmp)\n";
 }
 
 $reference = 'account/impersonate.php';

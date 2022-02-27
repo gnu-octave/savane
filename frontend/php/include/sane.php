@@ -27,120 +27,10 @@
 #            - do sanitization checks
 #            - provide functions to access user input in a sane way
 
-# Beuc: we only need sane_import. Check doc/devel/CLEANUP where I
-# explain this cleaner approach.
-
 # Sanitization checks.
 
 # Unset variables that users are not allowed to set in any cases.
 unset($feedback_html);
-
-# Keep only numerical characters in the item_id
-# (Set both the global and the _REQUEST vars, because the global may be
-# unregistered by register_globals_off()).
-if (isset($item_id) && !ctype_digit($item_id))
-  {
-    preg_match("/(\d+)/", $item_id, $match);
-    $item_id = $match[0];
-  }
-
-# Keep only numerical characters in the export_id
-# (Set both the global and the _REQUEST vars, because the global may be
-# unregistered by register_globals_off()).
-if (isset($export_id) && !ctype_digit($export_id))
-  {
-    preg_match("/(\d+)/", $export_id, $match);
-    $export_id = $match[0];
-  }
-
-# Keep only numerical characters in the group_id
-# (Set both the global and the _REQUEST vars, because the global may be
-# unregistered by register_globals_off()).
-if (isset($group_id) && !ctype_digit($group_id))
-  {
-    preg_match("/(\d+)/", $group_id, $match);
-    $group_id = $match[0];
-  }
-
-# Keep only numerical characters in the user_id
-# (Set both the global and the _REQUEST vars, because the global may be
-# unregistered by register_globals_off()).
-if (isset($user_id) && !ctype_digit($user_id) && !is_array($user_id))
-  {
-    preg_match("/(\d+)/", $user_id, $match);
-    $user_id = $match[0];
-  }
-
-# Clean our input values, centeral place to filter for XSS is here.
-# This should be called by any function that touches $_GET, $_POST,
-# $_REQUEST, $_COOOKIE or any other data that comes from the user.
-function sane_clean($values)
-{
-  # Unset variables that users are not allowed to set in any cases
-  unset($values['feedback_html']);
-
-  # Keep only numerical characters in the item_id
-  # (Set both the global and the _REQUEST vars, because the global may be
-  # unregistered by register_globals_off()).
-  if (isset($values['item_id']) && !ctype_digit($values['item_id']))
-    {
-      preg_match("/(\d+)/", $values['item_id'], $match);
-      if(isset($matches))
-        $values['item_id'] = $match[0];
-      else
-        unset($values['item_id']);
-    }
-
-  # Keep only numerical characters in the export_id
-  # (Set both the global and the _REQUEST vars, because the global may be
-  # unregistered by register_globals_off()).
-  if (isset($values['export_id']) && !ctype_digit($values['export_id']))
-    {
-      preg_match("/(\d+)/", $values['export_id'], $match);
-      if(isset($matches))
-        $values['export_id'] = $match[0];
-      else
-        unset($values['export_id']);
-    }
-
-  # Keep only numerical characters in the comingfrom
-  # (Set both the global and the _REQUEST vars, because the global may be
-  # unregistered by register_globals_off()).
-  if (isset($values['comingfrom']) && !ctype_digit($values['comingfrom']))
-    {
-      preg_match("/(\d+)/", $values['comingfrom'], $match);
-      if(isset($matches))
-        $values['comingfrom'] = $match[0];
-      else
-        unset($values['comingfrom']);
-    }
-
-  # Keep only numerical characters in the group_id
-  # (Set both the global and the _REQUEST vars, because the global may be
-  # unregistered by register_globals_off()).
-  if (isset($values['group_id']) && !ctype_digit($values['group_id']))
-    {
-      preg_match("/(\d+)/", $values['group_id'], $match);
-      if(isset($matches))
-        $values['group_id'] = $match[0];
-      else
-        unset($values['group_id']);
-    }
-
-  # Keep only numerical characters in the user_id
-  # (Set both the global and the _REQUEST vars, because the global may be
-  # unregistered by register_globals_off()).
-  if (isset($values['user_id']) && !ctype_digit($values['user_id'])
-      && !is_array($values['user_id']))
-    {
-      preg_match("/(\d+)/", $values['user_id'], $match);
-      if(isset($matches))
-        $values['user_id'] = $match[0];
-      else
-        unset($values['user_id']);
-    }
-  return $values;
-}
 
 # Fuctions to sanitize user-supplied values.
 # Return 0 when the variable was set, 1 otherwize (the caller will set
@@ -423,20 +313,8 @@ function sane_input_array_name ($method)
 # $func: function to apply
 # $input: source array
 # $values: destination array
-# $name: set of indices to work on.
-# when $name is a scalar, use it as the only item.
-# when $name is an array, every item if it is processed,
-#   when $name[$i] is a acalar, it's passed to $func,
-#   when $name[$i] is an array, its last item is used as $arg,
-#     the rest items are passed to $func.
-#
-# Examples of $func => $name:
-#   'specialchars' => 'comment'
-#   'true'         => ['basic', 'rich', 'full']
-#   'digits'       =>
-#     ['group_id', 'job_id',
-#       ['ten_to_twelve', '10_to_dozen', 'tento12', [10, 12]]
-#     ]
+# $name: set of indices to work on (an entry from the $names array
+# passed to sane_import ()).
 function sane_apply_func ($func, $input, $name, &$values)
 {
   if (is_array ($name))
@@ -465,30 +343,54 @@ function sane_apply_func ($func, $input, $name, &$values)
 
 # Check the existence of a series of input parameters, then return an
 # array suitable for extract().
-# Ex: extract(sane_import('post',
-#       array('insert_group_name', 'rand_hash',
-#             'form_full_name', 'form_unix_name')));
-# Note: there's another import function to clean-up in trackers/general.php.
+# E.g.: extract (sane_import ('post',
+#         [
+#           'true' => 'insert_group_name', 'hash' => 'rand_hash',
+#           'name' => ['form_full_name', 'form_unix_name']
+#         ]));
+# $method is the way the parameters are passed ('get', 'post', 'cookie'...)
+# $name describes how the parameters are filtered: the keys are indices
+# of functions from $sane_sanitizers[] to apply, the values define the names
+# of parameters to import and additional arguments for the function to use.
+#
+# When $names[$i] is a scalar, use it as the only parameter to import.
+# when $names[$i] is an array, every item of it is processed this way:
+# when $name[$i][$j] is a scalar, it's the parameter to import,
+# when $name[$i][$j] is an array, its last item is used as $arg
+# in $sane_sanitizers[$i] (), the rest items are the parameters to import.
+#
+# Example of $names:
+# [
+#   'specialchars' => 'comment',
+#   'true'         => ['basic', 'rich', 'full'],
+#   'digits'       => [
+#     'group_id', 'job_id',
+#     ['ten_to_twelve', '10_to_dozen', 'tento12', [10, 12]],
+#   ],
+#   'strings' => [
+#     ['func', ['add', 'rm', 'update']],
+#     ['status', ['A', 'P', 'SQD']],
+#   ],
+#   'array' => [
+#     ['user_ids', [null, 'digits']],
+#     ['group_flags', ['digits', ['preg', '/^(\d|NULL)$/']]],
+#   ],
+# ]
+# For more examples, see testing/sane.php.
 function sane_import($method, $names)
 {
   $values = array();
-  $sane_cleaned = array();
   $input =& $GLOBALS[sane_input_array_name ($method)];
 
   foreach ($names as $fn => $name)
     {
       $func = sane_prefix_func ($fn);
       if ($func !== null)
-        {
-          sane_apply_func ($func, $input, $name, $values);
-          continue;
-        }
-      if (is_int($fn) && isset ($input[$name]))
-        $sane_cleaned[$name] = $input[$name];
+        sane_apply_func ($func, $input, $name, $values);
       else
-        $sane_cleaned[$name] = null;
+        $values[$name] = null;
     }
-  return array_merge (sane_clean($sane_cleaned), $values);
+  return $values;
 }
 
 # Backward security function. This will sanitize input already passed via
