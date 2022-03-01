@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2019, 2021  Ineiev
+# Copyright (C) 2017, 2019, 2021, 2022  Ineiev
 #
 # This file is part of Savane.
 #
@@ -46,6 +46,18 @@ function project_does_not_already_exist($form_unix_name)
   return (db_numrows(db_execute("SELECT group_id FROM groups "
                                 . "WHERE unix_group_name LIKE ? AND status <> 'I'",
                                 array($form_unix_name))) == 0);
+}
+
+function license_exists ($form_license)
+{
+  global $LICENSE;
+  return isset ($LICENSE[$form_license]);
+}
+
+function group_type_exists ($type_id)
+{
+  global $types;
+  return isset ($types[$type_id]);
 }
 
 session_require(array('isloggedin' => '1'));
@@ -141,6 +153,9 @@ $form->addRule('unix_name', _("Invalid Unix name"), 'callback',
                'account_groupnamevalid');
 $form->addRule('unix_name', _("A project with that name already exists."),
                'callback', 'project_does_not_already_exist');
+$form->addRule('license', _("Invalid license"), 'callback', 'license_exists');
+$form->addRule('group_type', _("Invalid group type"),
+               'callback', 'group_type_exists');
 
 # <savannah-specific>
 for ($i = 1; $i <= 7; $i++)
@@ -169,7 +184,7 @@ if ($form->validate())
 
     # Complete the db entries.
     db_autoexecute('groups',
-                   array('group_name' => $form_full_name,
+                   array('group_name' => htmlspecialchars ($form_full_name),
                          'unix_group_name' => strtolower($form_values['unix_name']),
                          'status' => 'P',
                          'is_public' => 1,
