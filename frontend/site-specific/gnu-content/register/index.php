@@ -97,4 +97,12 @@ print '<p>'
 after you follow the registration steps, but it will have to be evaluated
 by one of the Savannah administrators. Preliminary evaluation may take from one day
 to a week, depending on the current number of pending projects.')."</p>\n";
+
+echo "<p>"
+._("Please fill in this submission form. The Savannah Hackers will then review
+it for hosting compliance.") . "</p>\n";
+    echo '<p class="smaller">'
+. sprintf(_("Note: if you wish to submit your package for GNU Evaluation, please
+check the <a href='%s'>GNU Software Evaluation</a> webpage instead."),
+         'https://www.gnu.org/help/evaluation.html') . "</p>\n";
 ?>

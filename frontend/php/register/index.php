@@ -73,9 +73,9 @@ if (db_numrows(db_execute("SELECT type_id FROM group_type")) < 1)
 group type. They can make it so visiting the link &ldquo;Group Type
 Admin&rdquo; on the Administration section of the left side menu, while logged
 in as admin.");
+   $HTML->footer(array());
+   exit (0);
   }
-else
-  utils_get_content("register/index");
 
 $form = new GPLQuickForm('change_date');
 
@@ -169,68 +169,78 @@ $form->addRule('purpose', _("This is too short!"), 'minlength', 30);
 $form->addRule('tarball_url',
  _("Please give us a link to your project latest release"), 'minlength', 4);
 
-if ($form->validate())
+if (!$form->validate())
   {
-    $form_values = $form->exportValues();
-    $form->freeze();
+    # The form isn't filled or some fields are wrong.
+    utils_get_content("register/index");
 
-    $form_full_name = $form_values['full_name'];
-    $form_purpose = $form_values['purpose'];
-    $form_required_sw = $form_values['required_sw'];
-    $form_comments = $form_values['comments'];
-    $form_license = $form_values['license'];
-    $form_license_other = $form_values['license_other'];
-    $group_type = $form_values['group_type'];
+    $form->display();
+    $HTML->footer(array());
+    exit (0);
+  }
 
-    # Complete the db entries.
-    db_autoexecute('groups',
-                   array('group_name' => htmlspecialchars ($form_full_name),
-                         'unix_group_name' => strtolower($form_values['unix_name']),
-                         'status' => 'P',
-                         'is_public' => 1,
-                         'register_time' => time(),
-                         'register_purpose' => htmlspecialchars($form_purpose),
-                         'required_software' => htmlspecialchars($form_required_sw),
-                         'other_comments' => htmlspecialchars($form_comments),
-                         'license' => $form_license,
-                         'license_other' => htmlspecialchars($form_license_other),
-                         'type' => $group_type,), DB_AUTOQUERY_INSERT);
-    $result = db_execute("SELECT group_id FROM groups WHERE unix_group_name = ?",
-    array($form_values['unix_name']));
-    $group_id = db_result($result, 0, 'group_id');
-    $project=project_get_object($group_id);
+utils_get_content("register/confirmation");
 
-    if (db_affected_rows($result) < 1)
-      exit_error(_("Unable to update database, please contact administrators"));
+$form_values = $form->exportValues();
+$form->freeze();
 
-    # Make the current user an admin.
-    $result = member_add(user_getid(), $group_id, "A");
+$form_full_name = $form_values['full_name'];
+$form_purpose = $form_values['purpose'];
+$form_required_sw = $form_values['required_sw'];
+$form_comments = $form_values['comments'];
+$form_license = $form_values['license'];
+$form_license_other = $form_values['license_other'];
+$group_type = $form_values['group_type'];
 
-    if (!$result)
-      exit_error(_("Setting you as project admin failed"));
+# Complete the db entries.
+db_autoexecute('groups',
+               array('group_name' => htmlspecialchars ($form_full_name),
+                     'unix_group_name' => strtolower($form_values['unix_name']),
+                     'status' => 'P',
+                     'is_public' => 1,
+                     'register_time' => time(),
+                     'register_purpose' => htmlspecialchars($form_purpose),
+                     'required_software' => htmlspecialchars($form_required_sw),
+                     'other_comments' => htmlspecialchars($form_comments),
+                     'license' => $form_license,
+                     'license_other' => htmlspecialchars($form_license_other),
+                     'type' => $group_type,), DB_AUTOQUERY_INSERT);
+$result = db_execute("SELECT group_id FROM groups WHERE unix_group_name = ?",
+array($form_values['unix_name']));
+$group_id = db_result($result, 0, 'group_id');
+$project=project_get_object($group_id);
 
-    $user_realname = user_getrealname(user_getid());
-    $user_email = user_getemail(user_getid());
-    $unix_name = group_getunixname($group_id);
-    $sql_type = db_execute("SELECT name FROM group_type WHERE type_id=?",
-                           array($group_type));
-    $type = db_result($sql_type,0,'name');
-    $type_base_host = $project->getTypeBaseHost();
-    $type_admin_email_address = $project->getTypeAdminEmailAddress();
+if (db_affected_rows($result) < 1)
+  exit_error(_("Unable to update database, please contact administrators"));
 
-    # Get site-specific content. It will define confirmation_gen_email().
-    utils_get_content("register/confirmation_mail");
+# Make the current user an admin.
+$result = member_add(user_getid(), $group_id, "A");
 
-    $message = confirmation_gen_email ($type_base_host, $user_realname,
-                                       $user_email, $type_admin_email_address,
-                                       $form_license, $form_license_other,
-                                       $form_full_name, $unix_name, $type,
-                                       $form_purpose, $form_required_sw,
-                                       $form_comments);
+if (!$result)
+  exit_error(_("Setting you as project admin failed"));
 
-    $message_user = "$message";
+$user_realname = user_getrealname(user_getid());
+$user_email = user_getemail(user_getid());
+$unix_name = group_getunixname($group_id);
+$sql_type = db_execute("SELECT name FROM group_type WHERE type_id=?",
+                       array($group_type));
+$type = db_result($sql_type,0,'name');
+$type_base_host = $project->getTypeBaseHost();
+$type_admin_email_address = $project->getTypeAdminEmailAddress();
 
-    $message_admin = "A new project has been registered at ".$GLOBALS['sys_name']."
+# Get site-specific content. It will define confirmation_gen_email().
+utils_get_content("register/confirmation_mail");
+
+$message = confirmation_gen_email ($type_base_host, $user_realname,
+                                   $user_email, $type_admin_email_address,
+                                   $form_license, $form_license_other,
+                                   $form_full_name, $unix_name, $type,
+                                   $form_purpose, $form_required_sw,
+                                   $form_comments);
+
+$message_user = "$message";
+
+$message_admin = "A new project has been registered at {$GLOBALS['sys_name']}.
 This project account will remain inactive until a site admin approves
 or discards the registration.
 
@@ -238,95 +248,76 @@ or discards the registration.
 = Registration Administration =
 
 While this item will be useful to track the registration process,
-*approving or discarding the registration must be done using "
-. "the specific [" . $GLOBALS['sys_https_url'] . $GLOBALS['sys_home']
-. "siteadmin/groupedit.php?group_id=" . $group_id
+*approving or discarding the registration must be done using
+the specific [{$GLOBALS['sys_https_url']}{$GLOBALS['sys_home']}"
+. "siteadmin/groupedit.php?group_id=$group_id"
 . " Group Administration] page*, accessible only to site administrators,
 effectively *logged as site administrators* (superuser):
 
-* [" . $GLOBALS['sys_https_url'] . $GLOBALS['sys_home']
-. "siteadmin/groupedit.php?group_id=" . $group_id . " Group Administration]
+* [{$GLOBALS['sys_https_url']}{$GLOBALS['sys_home']}"
+. "siteadmin/groupedit.php?group_id=$group_id Group Administration]
 
 
 = Registration Details =
 
-* Name: *" . $form_full_name . "*
-* System Name:  *" . $unix_name . "*
-* Type: " . $type . "
-* License: " . $LICENSE_EN[$form_license];
+* Name: *$form_full_name*
+* System Name:  *$unix_name*
+* Type: $type
+* License: {$LICENSE_EN[$form_license]}";
 
-    if ($form_license_other)
-      $message_admin .= " (" . $form_license_other . ")";
+if ($form_license_other)
+  $message_admin .= " ($form_license_other)";
 
-    $message_admin .= "
+$message_admin .= "\n\n----\n\n== Description: ==\n$form_purpose\n\n";
 
-----
+if ($form_required_sw)
+  $message_admin .= "\n== Other Software Required: ==\n"
+                    . $form_required_sw . "\n\n";
 
-== Description: ==
-" . $form_purpose . "\n\n";
+if ($form_comments)
+  $message_admin .= "\n== Other Comments: ==\n" . $form_comments . "\n\n";
 
-    if ($form_required_sw)
-      $message_admin .= "\n== Other Software Required: ==\n"
-                        . $form_required_sw . "\n\n";
+$message_admin .= "\n== Tarball URL: ==\n" . $form_values['tarball_url']
+                  . "\n\n";
 
-    if ($form_comments)
-      $message_admin .= "\n== Other Comments: ==\n" . $form_comments . "\n\n";
+sendmail_mail($type_admin_email_address, $user_email,
+              "submission of $form_full_name - $type_base_host",
+              $message_user, 0, 0, 0, $type_admin_email_address);
 
-    $message_admin .= "\n== Tarball URL: ==\n" . $form_values['tarball_url']
-                      . "\n\n";
+{
+  require_directory("trackers");
+  trackers_init($GLOBALS['sys_group_id']);
 
-    sendmail_mail($type_admin_email_address, $user_email,
-                  "submission of $form_full_name - $type_base_host",
-                  $message_user, 0, 0, 0, $type_admin_email_address);
+  # Create a new item on the admin task tracker
+  # (planned close date: 10 days later).
+  $vfl = array();
+  $vfl['category_id'] = '1';
+  $vfl['summary'] = 'Submission of ' . $form_full_name;
+  $vfl['details'] = $message_admin;
+  $vfl['planned_starting_date'] = date("Y") . "-" . date("m") . "-"
+                                  . date("d");
+  $vfl['planned_close_date'] = date("Y") . "-" . date("m") . "-"
+                               . (date("d") + 10);
 
-    {
-      require_directory("trackers");
-      trackers_init($GLOBALS['sys_group_id']);
+  $address = "";
+  $item_id = trackers_data_create_item($GLOBALS['sys_group_id'], $vfl,
+                                       $address);
+  # Send an email to notify the admins of the ite update.
+  list($additional_address, $sendall) =
+    trackers_data_get_item_notification_info($item_id, ARTIFACT, 1);
+  if ((trim($address) != "") && (trim($additional_address) != ""))
+    $address .= ", ";
+  $address .= $additional_address;
+  # Exclude the submitter from the notification, he got a specific mail
+  # for himself.
+  trackers_mail_followup($item_id, $address, false, user_getname());
+}
 
-      # Create a new item on the admin task tracker
-      # (planned close date: 10 days later).
-      $vfl = array();
-      $vfl['category_id'] = '1';
-      $vfl['summary'] = 'Submission of ' . $form_full_name;
-      $vfl['details'] = $message_admin;
-      $vfl['planned_starting_date'] = date("Y") . "-" . date("m") . "-"
-                                      . date("d");
-      $vfl['planned_close_date'] = date("Y") . "-" . date("m") . "-"
-                                   . (date("d") + 10);
-
-      $address = "";
-      $item_id = trackers_data_create_item($GLOBALS['sys_group_id'], $vfl,
-                                           $address);
-      # Send an email to notify the admins of the ite update.
-      list($additional_address, $sendall) =
-        trackers_data_get_item_notification_info($item_id, ARTIFACT, 1);
-      if ((trim($address) != "") && (trim($additional_address) != ""))
-        $address .= ", ";
-      $address .= $additional_address;
-      # Exclude the submitter from the notification, he got a specific mail
-      # for himself.
-      trackers_mail_followup($item_id, $address, false, user_getname());
-    }
-
-    # Get site-specific content, if it is not the localadmin project.
-    # Create the page header just like if there was not yet any group_id.
-    $group_id_not_yet_valid = $group_id;
-    unset($group_id);
-    $group_id = $group_id_not_yet_valid;
-
-    utils_get_content("register/confirmation");
-    echo "<hr />\n";
-  } # if ($form->validate())
-else
-  {
-    echo "<p>"
-._("Please fill in this submission form. The Savannah Hackers will then review
-it for hosting compliance.") . "</p>\n";
-    echo '<p class="smaller">'
-. sprintf(_("Note: if you wish to submit your package for GNU Evaluation, please
-check the <a href='%s'>GNU Software Evaluation</a> webpage instead."),
-         'https://www.gnu.org/help/evaluation.html') . "</p>\n";
-  }
+# Get site-specific content, if it is not the localadmin project.
+# Create the page header just like if there was not yet any group_id.
+$group_id_not_yet_valid = $group_id;
+unset($group_id);
+$group_id = $group_id_not_yet_valid;
 
 $form->display();
 $HTML->footer(array());

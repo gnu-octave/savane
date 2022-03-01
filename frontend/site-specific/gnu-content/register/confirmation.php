@@ -30,5 +30,6 @@ your project has been approved, or you have to do some changes before it is
 approved.').'
 </p>
 ';
+print "<hr />\n";
 
 ?>
