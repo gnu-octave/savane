@@ -1,4 +1,8 @@
-Copyright (C) 2019 Ineiev
+Copyright (C) 1999-2000 The SourceForge Crew
+Copyright (C) 2002-2006 Mathieu Roy
+Copyright (C) 2007-2009 Sylvain Beucler
+Copyright (C) 2014, 2016, 2017 Assaf Gordon
+Copyright (C) 2013, 2014, 2017-2022 Ineiev
 
 This file is part of Savane.
 
@@ -6,7 +10,7 @@ Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved.  This file is offered as-is,
 without any warranty.
-
+
 Savane is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -19,8 +23,8 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Savane is free software hosting system.  As of 2019, it runs
+
+Savane is free software hosting system.  As of 2022, it runs
 on GNU Savannah and on Puszcza: each site runs its own version
 of Savane; this tarball distributes the version of GNU Savannah.
 
@@ -45,9 +49,9 @@ Dependencies
 
 Current version of Savane depends on:
 
-* PHP (5.4, 5.5, 5.6 or 7.0)
+* PHP (5.4, 5.5, 5.6, 7.0 or 7.2)
 * Apache
-* MySQL
+* MySQL or MariaDB
 * Perl
 
 Documentation

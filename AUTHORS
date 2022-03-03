@@ -1,3 +1,26 @@
+Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
+Copyright (C) 2022 Ineiev
+
+This file is part of Savane.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+Savane is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Savane is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 The following people were involved in the cooperative building of Savane.
 This list is non-exhaustive, if we forgot your name here, blame the author
 of the list for the period.
@@ -17,7 +40,7 @@ software.
 See AUTHORS.Savannah for the authors of the Savannah software.
 
 -------------------------------------------------------------------------------
- Nowadays, 2004-2006
+ 2004-2006
 -------------------------------------------------------------------------------
 
 Timothee Besset		<ttimo--ttimo.net>
@@ -49,7 +72,7 @@ Joxean Koret		<joxeankoret--yahoo.es >
 	Code improvements.
 
 Elfyn McBratney 	<beu--gnu.org>
-	Bugfixing, code improvements. 
+	Bugfixing, code improvements.
 
 Yves Perrin		<yves.perrin--cern.ch>
 	Bugfixing, code improvements.
@@ -58,7 +81,7 @@ Paul Pogonyshev 	<pogonyshev--gmx.net>
 	Code improvements.
 
 Mathieu Roy		<yeupou--gnu.org>
-	Development coordination, code improvements, bugfixing, 
+	Development coordination, code improvements, bugfixing,
 	French translation.
 
 Philippe Roy 		<phroy--gna.org>
@@ -68,6 +91,8 @@ Tobias Toedter		<t.toedter--gmx.net>
 	Code improvements, bugfixing, German translation.
 
 + Translators:
+	Dmitri I GOULIAEV <dig@telkel.net> (Russian)
+	Marek Kubica <pythonmailing@web.de> (German)
 	Daniel Nylander <info--danielnylander.se> (Swedish)
 	Ajuntament Santa Coloma de Gramenet <ajstc--grame.net> (Catalan)
 	Matteo Settenvini <msettenvini--tin.it> (Italian)
@@ -78,3 +103,54 @@ Tobias Toedter		<t.toedter--gmx.net>
 
 [list in alphabetical order made by yeupou--gnu.org]
 -------------------------------------------------------------------------------
+ 2007-2021 (since start of Git logs)
+-------------------------------------------------------------------------------
+
+Karl Berry		<karl@freefriends.org>
+	Bugfixing, code improvements.
+
+Sylvain Beucler		<beuc@beuc.net>
+	Bugfixing, code improvements.
+
+Ryan Doyle		<ryan@doylenet.net>
+	Code improvements.
+
+Aleix Conchillo Flaque	<aleix@member.fsf.org>
+	Code improvements.
+
+Michael J. Flickinger	<mjflick@gnu.org>
+	Bugfixing, code improvements.
+
+Federico Gimenez	<fgimenez@coit.es>
+	Code improvements.
+
+Jonathan Gonzalez V	<zeus@gnu.org>
+	Bugfixing, code improvements, Spanish translation.
+
+Assaf Gordon		<assafgordon@gmail.com>
+	Bugfixing, code improvements.
+
+Brian Gough		<bjg@hp2.config>
+	Bugfixing, code improvements.
+
+Ineiev			<ineiev@gnu.org>
+	Bugfixing, code improvements, Russian translation.
+
+Bob Proulx		<bob@proulx.com>
+	Bugfixing, code improvements.
+
+Tobias Toedter		<t.toedter@gmx.net>
+	Code improvements, bugfixing.
+
++ Translators:
+	Rafael Fontenelle <rafaelff@gnome.org> (Brazilian Portuguese)
+	Anders Jonsson <anders.jonsson@norsjovallen.se> (Swedish)
+	Joerg Kohne <joeko (AT) online (PUNKT) de> (German)
+	Frédéric Marchal <fmarchal@perso.be> (French)
+	Rene Lopez <rsl@members.fsf.org> (Spanish)
+	Sebastiano Pistore <sebastianopistore.info@protonmail.ch> (Italian)
+	Roman Pominov <Roman.Pominov@ihep.ru> (Russian)
+	Gonzalo Sebastian <gonzalop1984@gmail.com> (Spanish)
+	Francisco Javier Serrador <fserrador@gmail.com> (Spanish)
+	Yaron Shahrabani <sh.yaron@gmail.com> (Hebrew)
+	Boyuan Yang <073plan@gmail.com> (Simplified Chinese)
