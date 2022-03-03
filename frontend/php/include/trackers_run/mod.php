@@ -428,10 +428,11 @@ priority and open/close items"))) . "</p>\n";
             while ($canned = db_fetch_array($result_canned))
               {
                 print '&nbsp;&nbsp;&nbsp;';
-                print form_input("checkbox", "canned_response[]",
-                                 $canned['bug_canned_id']) . ' '
-                                 . $canned['title'];
-                print "<br />\n";
+                print form_checkbox (
+                        "canned_response[]", 0,
+                        ['value' => $canned['bug_canned_id']]
+                      );
+                print " {$canned['title']}<br />\n";
               }
             print "</div>\n";
           }
@@ -635,12 +636,13 @@ of '%s' in the database:"), htmlspecialchars ($depends_search));
                       {
 # Right now only print id, summary and group.
 # We may change that depending on users feedback.
-                         print '<br />';
+                         print "<br />\n";
                          print '&nbsp;&nbsp;&nbsp;'
-                           . form_input("checkbox", "dependent_on_" . $tracker
-                                        . "[]", $res_id)
-                           . ' ' . $tracker . ' #' . $res_id . ': '
-                           . $res_summary;
+                           . form_checkbox (
+                               "dependent_on_{$tracker}[]", 0,
+                               ['value' => $res_id]
+                             )
+                           . " $tracker # $res_id: $res_summary";
                          print ', ' . _("group") . ' '
                            . group_getname($res_group);
                       }

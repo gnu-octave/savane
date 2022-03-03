@@ -371,20 +371,15 @@ who will approve or disapprove the request, and submit the form.");
 
         while ($val = db_fetch_array($result_search))
           {
-            if (!user_is_group_member($row_user['user_id'], $val['group_id']))
+            if (user_is_group_member($row_user['user_id'], $val['group_id']))
               {
-                print '<input type="checkbox" id="form_groups['
-                      .$val['group_id'].']"  name="form_groups['
-                      .$val['group_id'].']" />
-<label for="form_groups['
-                      .$val['group_id'].']">';
-                print $val['group_name']."</label><br />\n";
+                print "+ {$val['group_name']} ";
+                print _('(already a member)') . "<br />\n";
+                continue;
               }
-            else
-              {
-                print '+ '.$val['group_name'].' ';
-                print _('(already a member)').'<br />'."\n";
-              }
+            print form_checkbox ("form_groups[{$val['group_id']}]")
+              . "\n<label for=\"form_groups[{$val['group_id']}]\">";
+            print "{$val['group_name']}</label><br />\n";
           }
 
         print '<br />'."\n<label for='form_message'>"._("Comments (required):")

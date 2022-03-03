@@ -31,7 +31,7 @@ Header("Cache-Control: must-revalidate");
 # Input checks.
 extract(sane_import('request',
   [
-    'digits' => 'language'
+    'preg' => [['language', '/^(([a-z]{2}((-[a-z]{2})?))|100)$/']],
     'internal_uri' => 'lang_uri',
     'true' => ['cookie_test', 'cookie_for_a_year']
   ]
@@ -98,14 +98,11 @@ print '<form action="'.$GLOBALS['sys_https_url'].$GLOBALS['sys_home']
       .'i18n.php" method="post">';
 print '<input type="hidden" name="lang_uri" value="'.htmlspecialchars($lang_uri, ENT_QUOTES)
       .'" />';
-$checked = '';
-if ($cookie_for_a_year)
-  $checked = 'checked="checked" ';
 
-print '<p><input type="checkbox" id="cookie_for_a_year" name="cookie_for_a_year"
-tabindex="1" value="1" '."\n"
-      .$checked.'/><span class="preinput"><label for="cookie_for_a_year">'
-      ._("Keep for a year")."</label></span><br />\n";
+print '<p>'
+  . form_checkbox ('cookie_for_a_year', $cookie_for_a_year, ['tabindex' => 1])
+  . '<span class="preinput"><label for="cookie_for_a_year">'
+  . _("Keep for a year") . "</label></span><br />\n";
 print '<span class="text">'
       ._("Your language choice will be stored in a cookie for a year.
 When unchecked, it will be cleared at the end of browser session.")

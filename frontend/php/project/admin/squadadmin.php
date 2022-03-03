@@ -97,7 +97,7 @@ function confirm_squad_deletion ($group_id, $squad_id, $realname, $squad_name)
     . _("Do you really want to delete this squad account?")
     . "</span></p>\n";
   print "<p>$realname &lt;$squad_name&gt;&nbsp;&nbsp;";
-  print form_input ("checkbox", "deletionconfirmed", "yes")
+  print form_checkbox ("deletionconfirmed", 0, ['value' => "yes"])
     . ' ' . _("Yes, I really do") . "</p>\n";
   print form_submit (_("Update"), "update_delete_step2");
   finish_page ();

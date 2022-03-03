@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2018 Ineiev
+# Copyright (C) 2017, 2018, 2022 Ineiev
 # Modified 2016 Karl Berry (trivial wording changes)
 #
 # This file is part of Savane.
@@ -28,176 +28,130 @@ require_once('../../include/account.php');
 require_directory("trackers");
 register_globals_off();
 
-extract(sane_import('post',
-  [
-    'true' =>
-      [
-        'update', 'form_notifset_unless_im_author',
-        'form_notifset_item_closed',
-        'form_notifset_item_statuschanged',
-        'form_skipcc_postcomment',
-        'form_skipcc_updateitem',
-        'form_removecc_notassignee',
-      ],
-     'digits' => [['form_frequency', [0, 3]]],
-     'pass' => 'form_subject_line', # Validated later.
-  ]
-));
+$notif_arr = [
+  'notify_unless_im_author', 'notify_item_closed',
+  'notify_item_statuschanged', 'skipcc_postcomment',
+  'skipcc_updateitem', 'removecc_notassignee',
+];
 
-# The form has been submitted - update the database.
+$names = [
+  'true' => ['update'],
+  'digits' => [['form_frequency', [0, 3]]],
+  'pass' => 'form_subject_line', # Validated later.
+];
+
+foreach ($notif_arr as $n)
+  $names['true'][] = "form_$n";
+
+extract (sane_import ('post', $names));
+
+function update_subject_line ($form_subject_line)
+{
+  if (!preg_replace("/ /", "", $form_subject_line))
+    {
+      # Empty line requested? Clear if set.
+      if (user_get_preference("subject_line"))
+        user_unset_preference("subject_line");
+      return;
+    }
+  if (
+    strspn (
+      $form_subject_line,
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW'
+      . 'XYZ0123456789-_[]()&=$*:!,;?./%$ <>|'
+    )
+    != strlen ($form_subject_line)
+  )
+    {
+      fb(_("Non alphanumeric characters in the proposed subject line, subject
+line configuration skipped."), 1);
+      return;
+    }
+  if (user_set_preference ("subject_line", $form_subject_line))
+    fb (_("Successfully configured subject line."));
+}
+
 if ($update)
   {
-  # Item Notif exceptions
     $success = false;
-    if ($form_notifset_unless_im_author)
-      $success += user_set_preference("notify_unless_im_author", 1);
-    else
-      $success += user_unset_preference("notify_unless_im_author");
+    foreach ($notif_arr as $n)
+      if (${"form_$n"})
+        $success += user_set_preference ($n, 1);
+      else
+        $success += user_unset_preference ($n);
 
-    if ($form_notifset_item_closed)
-      $success += user_set_preference("notify_item_closed", 1);
+    if ($success == count ($notif_arr))
+      fb(_("Successfully set notification exceptions."));
     else
-      $success += user_unset_preference("notify_item_closed");
+      fb(_("Failed to set notification exceptions."), 1);
 
-    if ($form_notifset_item_statuschanged)
-      $success += user_set_preference("notify_item_statuschanged", 1);
-    else
-      $success += user_unset_preference("notify_item_statuschanged");
-
-    if ($form_skipcc_postcomment)
-      $success += user_set_preference("skipcc_postcomment", 1);
-    else
-      $success += user_unset_preference("skipcc_postcomment");
-
-    if ($form_skipcc_updateitem)
-      $success += user_set_preference("skipcc_updateitem", 1);
-    else
-      $success += user_unset_preference("skipcc_updateitem");
-
-    if ($form_removecc_notassignee)
-      $success += user_set_preference("removecc_notassignee", 1);
-    else
-      $success += user_unset_preference("removecc_notassignee");
-    if ($success == 6)
-      fb(_("Successfully set Notification Exceptions"));
-    else
-      fb(_("Failed to set Notification Exceptions"), 1);
-
-  # Reminder
     if (user_set_preference("batch_frequency", $form_frequency))
-      fb(_("Successfully Updated Reminder Settings"));
+      fb(_("Successfully updated reminder settings."));
     else
-      fb(_("Failed to Update Reminder Setting"), 1);
+      fb(_("Failed to update reminder setting."), 1);
 
     if (user_get_preference("batch_lastsent") == "")
-      {
-        if (user_set_preference("batch_lastsent", "0"))
-          fb(_("Successfully set Timestamp of the Latest Reminder"));
-        else
-          fb(_("Failed to Reset Timestamp of the Latest Reminder"), 1);
-      }
-  ####### Subject line
-  # First test content: to avoid people entering white space and being in
-  # trouble at a later point, first check if we can find something else than
-  # white space.
-    if (preg_replace("/ /", "", $form_subject_line))
-      {
-        # Some characters cannot be allowed
-        if (strspn($form_subject_line,
-            'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW'
-            .'XYZ0123456789-_[]()&יטא=$ש*:!,;?./%$ <>|')
-            == strlen($form_subject_line))
-          {
-            user_set_preference("subject_line", $form_subject_line);
-            fb(_("Successfully configured subject line"));
-          }
-        else
-          fb(_("Non alphanumeric characters in the proposed subject line, subject
-line configuration skipped."), 1);
-      }
-    else
-      {
-      # Empty? Check if there is a configuration already. If so, kill it.
-        if (user_get_preference("subject_line"))
-          user_unset_preference("subject_line");
-      }
+      user_set_preference ("batch_lastsent", "0");
+
+    update_subject_line ($form_subject_line);
   } # if ($update)
 
-# Start HTML.
 site_user_header(array('title'=>_("Mail Notification Settings"),
                        'context'=>'account'));
 
-print '<h2>'._("Notification Exceptions").'</h2>';
-print '<p>'._("When you post or update an item, you are automatically added to
+print '<h2>' . _("Notification Exceptions") . "</h2>\n";
+print '<p>'
+  . _("When you post or update an item, you are automatically added to
 its Carbon-Copy list to receive notifications regarding future updates. You can
 always remove yourself from an item Carbon-Copy list.")
-  ."</p>\n<p>"
-  ._("If an item is assigned to you, you will receive notifications as long as
+  . "</p>\n<p>"
+  . _("If an item is assigned to you, you will receive notifications as long as
 you are the assignee; however, you will not be added to the Carbon-Copy list.
 If you do not post any comment or update to the item while you are the
 assignee, and the item gets reassigned, you will not receive further update
 notifications.")
-  ."</p>\n<p>"
-  ._("Here, you can tune your notification settings.").'</p>
-';
+  . "</p>\n<p>"
+  . _("Here, you can tune your notification settings.") . "</p>\n";
 
-print '
-'.form_header($_SERVER['PHP_SELF']);
+print "\n" . form_header($_SERVER['PHP_SELF']);
 
-print '<span class="preinput">'
-      ._("Send notification to me only when:").'</span><br />&nbsp;&nbsp;';
+print '&nbsp;&nbsp;<span class="preinput">'
+  . _("Send notification to me only when:") . "</span><br />\n&nbsp;&nbsp;";
 
-$checked = '';
-if (user_get_preference("notify_unless_im_author"))
-  $checked = 'checked="checked"';
-print form_input("checkbox", "form_notifset_unless_im_author", "1", $checked)
-      .' <label for="form_notifset_unless_im_author">'
-      ._("I am not the author of the item update").'</label><br />
-&nbsp;&nbsp;';
-$checked = '';
-if (user_get_preference("notify_item_closed"))
-  $checked = 'checked="checked"';
-print form_input("checkbox", "form_notifset_item_closed", "1", $checked)
-      .' <label for="form_notifset_item_closed">'
-      ._("the item was closed").'</label><br />
-&nbsp;&nbsp;';
-$checked = '';
-if (user_get_preference("notify_item_statuschanged"))
-  $checked = 'checked="checked"';
-print form_input("checkbox", "form_notifset_item_statuschanged", "1", $checked)
-      .' <label for="form_notifset_item_statuschanged">'
-      ._("the item status changed").'</label><br />'."\n";
+function pref_cbox ($name, $title)
+{
+  print form_checkbox ("form_$name", user_get_preference ($name));
+  print " <label for=\"form_$name\">$title</label><br />\n&nbsp;&nbsp;";
+}
 
-print '<span class="preinput">'._("Do not add me in Carbon-Copy when:")
-      .'</span><br />
-&nbsp;&nbsp;';
-$checked = '';
-if (user_get_preference("skipcc_postcomment"))
-  $checked = 'checked="checked"';
-print form_input("checkbox", "form_skipcc_postcomment", "1", $checked)
-      .' <label for="form_skipcc_postcomment">'
-      ._("I post a comment").'</label><br />
-&nbsp;&nbsp;'."\n";
-$checked = '';
-if (user_get_preference("skipcc_updateitem"))
-  $checked = 'checked="checked"';
-print form_input("checkbox", "form_skipcc_updateitem", "1", $checked)
-      .' <label for="form_skipcc_updateitem">'
-      ._("I update a field, add dependencies, attach file, etc").'<br />'."\n";
-$checked = '';
+$pref_arr = [
+  "notify_unless_im_author" => _("I am not the author of the item update"),
+  "notify_item_closed" => _("the item was closed"),
+  "notify_item_statuschanged" => _("the item status changed"),
+];
 
-print '<span class="preinput">'._("Remove me from Carbon-Copy when:")
-      .'</span><br />
-&nbsp;&nbsp;'."\n";
-$checked = '';
-if (user_get_preference("removecc_notassignee"))
-  $checked = 'checked="checked"';
-print form_input("checkbox", "form_removecc_notassignee", "1", $checked)
-      .' <label for="form_removecc_notassignee">'
-      ._("I am no longer assigned to the item").'</label><br />
-&nbsp;&nbsp;'."\n";
+foreach ($pref_arr as $n => $t)
+  pref_cbox ($n, $t);
 
-print '<h2>'._("Subject Line").'</h2>'."\n";
+print '<span class="preinput">' . _("Do not add me to Carbon-Copy when:")
+  . "</span><br />\n&nbsp;&nbsp;";
+
+
+$pref_arr = [
+  "skipcc_postcomment" => _("I post a comment"),
+  "skipcc_updateitem" =>
+    _("I update a field, add dependencies, attach file, etc"),
+];
+
+foreach ($pref_arr as $n => $t)
+  pref_cbox ($n, $t);
+
+print '<span class="preinput">' . _("Remove me from Carbon-Copy when:")
+  . "</span><br />\n&nbsp;&nbsp;";
+
+pref_cbox ("removecc_notassignee", _("I am no longer assigned to the item"));
+
+print '<h2>' . _("Subject Line") . "</h2>\n";
 print '<p>';
 printf(_('The header &ldquo;%s&rdquo; will always be included, and when
 applicable, so will &ldquo;%s,&rdquo; &ldquo;%s,&rdquo; and &ldquo;%s.&rdquo;'),
@@ -220,7 +174,7 @@ print
 '<input name="form_subject_line" id="form_subject_line" size="50"
         type="text" value="'.user_get_preference("subject_line").'" />';
 
-print '<h2>'._("Reminder").'</h2>'."\n";
+print '<h2>' . _("Reminder") . "</h2>\n";
 print '<p>'._("You can also receive reminders about opened items assigned to
 you, when their priority is higher than 5. Note that projects administrators
 can also set reminders for you, out of your control, for your activities on the
@@ -235,14 +189,11 @@ $frequency = array("0" =>
                    "3" => _("Monthly"));
 
 print '<span class="preinput"><label for="form_frequency">'
-      ._("Frequency of reminders:")
-      .'</label></span><br />
-&nbsp;&nbsp;';
+  . _("Frequency of reminders:") . "</label></span><br />\n&nbsp;&nbsp;";
 
-print html_build_select_box_from_array($frequency,
-                                       "form_frequency",
-                                       user_get_preference("batch_frequency"));
-print '<br />
-'.form_footer(_("Update"));
+print html_build_select_box_from_array (
+  $frequency, "form_frequency", user_get_preference("batch_frequency")
+);
+print "<br />\n" . form_footer (_("Update"));
 site_user_footer(array());
 ?>

@@ -489,24 +489,21 @@ $preamble = '';
 $input_specific = '';
 
 # Defines some information if not specific.
-$form_item_name = "newvalue";
-$input_title = '';
-$input_type = "text";
-$input2_type = NULL;
-$input3_type = NULL;
-$input4_type = NULL;
+$form_item_names = ['newvalue'];
+$input_titles = [''];
+$input_types = ['text'];
 
 # Defines the page depending on the item given.
 if ($item == "realname")
   {
     $title = _("Change Real Name");
-    $input_title = _("New Real Name:");
+    $input_titles[0] = _("New Real Name:");
   }
 elseif ($item == "timezone")
   {
     require_once('../../include/timezones.php');
     $title = _("Change Timezone");
-    $input_title =
+    $input_titles[0] =
 _("No matter where you live, you can see all dates and times as if it were in
 your neighborhood.");
     $input_specific = html_build_select_box_from_arrays ($TZs, $TZs, 'newvalue',
@@ -519,22 +516,19 @@ elseif ($item == "password")
   {
     $title = _("Change Password");
     $preamble = account_password_help();
-    $input_title = _("Current password:");
-    $input2_title = _("New password / passphrase:");
-    $input3_title = _("Re-type new password:");
+    $input_titles = [
+      _("Current password:"),
+      _("New password / passphrase:"),
+      _("Re-type new password:"),
+    ];
 
-    $form_item_name = "oldvalue";
-    $form_item2_name = "newvalue";
-    $form_item3_name = "newvaluecheck";
-
-    $input_type = "password";
-    $input2_type = "password";
-    $input3_type = "password";
+    $form_item_names = ["oldvalue", "newvalue", "newvaluecheck"];
+    $input_types = ["password", "password", "password"];
 
   # AFS CERN Stuff
     if ($sys_use_pamauth == "yes")
       {
-        $input4_title = "<br />Instead of providing a new Savannah password you
+        $input_titles[] = "<br />Instead of providing a new Savannah password you
 may choose to authenticate via an <strong>AFS</strong> account you own
 at this site (this requires your Savannah login name to be the
 same as the AFS account name). In this case, you don't need to fill the
@@ -544,11 +538,9 @@ two &ldquo;New Password&rdquo; fields. Instead, check the following box:";
                    array(user_getid()));
         $row_pw = db_fetch_array();
         $uses_pam_auth = 0;
-        if ($row_pw[user_pw] == 'PAM')
-          $input4_type = 'checkbox" CHECKED';
-        else
-          $input4_type = 'checkbox"';
-        $form_item4_name = "usepam";
+        $pam_idx = count ($form_item_names);
+        $form_item_names[$pam_idx] = "usepam";
+        $input_types[$pam_idx] = $row_pw['user_pw'] == 'PAM';
       }
   }
 elseif ($item == "gpgkey")
@@ -558,7 +550,7 @@ elseif ($item == "gpgkey")
                            array(user_getid()));
     $row_user = db_fetch_array($res_user);
     $title = _("Change GPG Keys");
-    $input_title = "";
+    $input_titles = [""];
     $input_specific = $gpg_sample_text;
 
     if (!$newvalue)
@@ -581,7 +573,7 @@ elseif ($item == "email")
     if (!$step)
       {
         $title = _("Change Email Address");
-        $input_title = _('New email address:');
+        $input_titles = [_('New email address:')];
         $preamble = _("Changing your email address will require confirmation from
 your new email address, so that we can ensure we have a good email address on
 file.").'</p>
@@ -601,7 +593,7 @@ request.").'</p>
       {
         $title = _("Confirm Email Change");
         $preamble = _('Push &ldquo;Update&rdquo; to confirm your email change');
-        $input_title = _('Confirmation hash:');
+        $input_titles = [_('Confirmation hash:')];
         $input_specific = "<input type='text' readonly='readonly' "
           . "name='confirm_hash' value='$confirm_hash' />";
         $input_specific .= "<input type='hidden' name='step' value='confirm2' />";
@@ -621,18 +613,20 @@ elseif ($item == "delete")
     if (!$step)
       {
         $title = _("Delete Account");
-        $input_title = _('Do you really want to delete your user account?');
-        $input_specific = form_input("checkbox", "newvalue",
-                                     "deletionconfirmed",
-                                     ' title="'.("Delete Account").'"')
-                          .' '._("Yes, I really do");
+        $input_titles = [_('Do you really want to delete your user account?')];
+        $input_specific =
+          form_checkbox (
+            "newvalue", 0,
+            ['value' => "deletionconfirmed", 'title' => _("Delete Account"),]
+          )
+          . ' ' . _("Yes, I really do");
         $preamble = _("This process will require email confirmation.");
       }
     elseif ($step == "confirm")
       {
         $title = _("Confirm account deletion");
         $preamble = _('Push &ldquo;Update&rdquo; to confirm your account deletion');
-        $input_title = _('Confirmation hash:');
+        $input_titles = [_('Confirmation hash:')];
         $input_specific = "<input type='text' readonly='readonly' "
                           .'name="confirm_hash" value="'
                           . $confirm_hash . '" />';
@@ -641,7 +635,7 @@ elseif ($item == "delete")
     elseif ($step == 'discard')
       {
         $title = _("Discard account deletion");
-        $input_title = _('Discard hash:');
+        $input_titles = [_('Discard hash:')];
         $input_specific = "<input type='text' readonly='readonly' "
                           . "name='confirm_hash' value='$confirm_hash' />";
         $input_specific .= "<input type='hidden' name='step' value='discard' />";
@@ -651,67 +645,46 @@ elseif ($item == "delete")
 if (empty($title))
   $title = sprintf (_("Unknown user settings item (%s)"), $item);
 
-# Actually print the HTML page.
-site_user_header(array('title'=>$title,
-                       'context'=>'account'));
-if (!$input_title)
-  $input_title = $title;
+site_user_header (['title' => $title, 'context' => 'account']);
+if (empty($input_titles[0]))
+  $input_titles[0] = $title;
 
 if ($preamble)
-  print '<p>'.$preamble.'</p>';
+  print "<p>$preamble</p>\n";
 
 print form_header($_SERVER['PHP_SELF'], false, "post");
-print '<span class="preinput">';
-if (!$input_specific)
-  print '<label for="'.$form_item_name.'">';
-print $input_title;
-if (!$input_specific)
-  print '</label>';
-print '</span>';
 
-# Print the usual input unless we have something specific.
-if (!$input_specific)
-  print '<br />
-&nbsp;&nbsp;&nbsp;<input name="'.$form_item_name
-        .'" id="'.$form_item_name.'" type="'.$input_type.'" />';
-else
-  print '<br />&nbsp;&nbsp;&nbsp;'.$input_specific;
-
-# Add one more input if required.
-if ($input2_type)
+$input_spec = [$input_specific];
+for ($i = 0; $i < 3; $i++)
   {
-    print '<br />
-<span class="preinput"><label for="'.$form_item2_name.'">'
-          .$input2_title.'</label></span>';
-    print '<br />
-&nbsp;&nbsp;&nbsp;<input type="'.$input2_type
-          .'" id="'.$form_item2_name.'" name="'.$form_item2_name.'" />';
+    $head = $tail = '';
+    if (!isset ($form_item_names[$i]))
+      break;
+    $n = $form_item_names[$i];
+    if (empty ($input_spec[$i]))
+      {
+        $head = "<label for=\"$n\">";
+        $tail = '</label>';
+      }
+    print "<span class='preinput'>$head{$input_titles[$i]}$tail</span>";
+    print "<br />\n&nbsp;&nbsp;&nbsp;";
+    if (empty($input_spec[$i]))
+      print "<input name=\"$n\" id=\"$n\" type=\"{$input_types[$i]}\" />";
+    else
+      print $input_spec[$i];
+    print "<br />\n";
   }
 
-# Add one more input if required.
-if ($input3_type)
+if (isset ($pam_idx))
   {
-    print '<br />
-<span class="preinput"><label for="'.$form_item3_name.'">'
-          .$input3_title.'</label></span>';
-    print '<br />
-&nbsp;&nbsp;&nbsp;<input type="'.$input3_type
-          .'" id="'.$form_item3_name.'" name="'.$form_item3_name.'" />';
+    $n = $form_item_names[$pam_idx];
+    $checked = $input_types[$pam_idx];
+    print "<br />\n<span class='preinput'>"
+      . "<label for=\"$n\">{$input_titles[$pam_idx]}</label></span>";
+    print "<br />\n&nbsp;&nbsp;&nbsp;" . form_checkbox ($n, $checked) . "\n";
   }
 
-# Add one more input if required.
-if ($input4_type)
-  {
-    print '<br />
-<span class="preinput"><label for="'.$form_item4_name.'">'
-          .$input4_title.'</label></span>';
-    print '<br />
-&nbsp;&nbsp;&nbsp;<input type="'.$input4_type
-          .'" id="'.$form_item4_name.'" name="'.$form_item4_name.'" />';
-  }
-
-print '<p><input type="hidden" name="item" value="'.$item.'" /></p>';
-print '<p><input type="submit" name="update" value="'._("Update").'" /></p>';
-print '</form>';
+print "<input type='hidden' name='item' value=\"$item\" />\n";
+print '<p>' . form_submit (_("Update")) .  "</p>\n</form>\n";
 site_user_footer(array());
 ?>

@@ -869,11 +869,10 @@ function html_select_theme_box ($input_name="user_theme", $current=0)
 
 function html_build_checkbox ($name, $is_checked=0, $title="")
 {
-  print  '<input type="checkbox" '.html_title_attr ($title).' id="'.$name
-         .'" name="'.$name.'" value="1"';
-  if ($is_checked)
-    print ' checked="checked"';
-  print ' />';
+  $attr = [];
+  if ($title !== '')
+    $attr['title'] = $title;
+  print  form_checkbox ($name, $is_checked, $attr);
 }
 
 # Catch all header functions.

@@ -105,18 +105,14 @@ elseif ($func == "digestselectfield")
         # Item ID is mandatory.
         if ($field_name == "bug_id")
             {
-              print
-                form_input (
-                  "hidden", "field_used[" . $field_name . "]", "1"
-                )
+              print form_input ("hidden", "field_used[$field_name]", "1")
                 . "\n";
               continue;
             }
 
         print '<div class="' . utils_get_alt_row_color ($i) . '">'
-          . '<input type="checkbox" name="field_used['. $field_name
-          . ']" value="1" checked="checked" />&nbsp;&nbsp;'
-          . trackers_data_get_label ($field_name)
+          . form_checkbox ("field_used[$field_name]", 1)
+          . '&nbsp;&nbsp;' . trackers_data_get_label ($field_name)
           . ' <span class="smaller"><em>- '
           . trackers_data_get_description ($field_name)
           . "</em></span></div>\n";
@@ -125,10 +121,9 @@ elseif ($func == "digestselectfield")
     # Comments is not an authentic field but could be useful. We allow
     # addition of the latest comment.
     print '<div class="'. utils_get_alt_row_color($i) .'">'
-      .'<input type="checkbox" name="field_used[latestcomment]" '
-      .'value="1" checked="checked" />&nbsp;&nbsp;'._("Latest Comment")
-      .' <span class="smaller"><em>- '
-      ._("Latest comment posted about the item.").'</em></span></div>'."\n";
+      . form_checkbox ("field_used[latestcomment]", 1) . '&nbsp;&nbsp;'
+      . _("Latest Comment") . ' <span class="smaller"><em>- '
+      . _("Latest comment posted about the item.") . "</em></span></div>\n";
 
     print form_footer(_("Submit"));
     trackers_footer(array());

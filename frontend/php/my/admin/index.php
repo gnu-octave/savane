@@ -129,8 +129,7 @@ $res_user = db_execute("SELECT * FROM user WHERE user_id=?", array(user_getid())
 $row_user = db_fetch_array($res_user);
 
 print '<p>'._("You can change all of your account features from here.")
-      .'</p>
-';
+      . "</p>\n";
 utils_get_content("account/index_intro");
 print '<form action="'.htmlentities ($_SERVER["PHP_SELF"]).'" method="post">';
 
@@ -142,8 +141,7 @@ print '<a href="change.php?item=password">'._("Change Password").'</a>';
 print '<p class="smaller">'
       ._("This password gives access to the web interface.").'<br />';
 utils_get_content("account/index_passwd");
-print '</p>
-';
+print "</p>\n";
 
 # Get shared key count from DB.
 $expl_keys = explode("###",$row_user['authorized_keys']);
@@ -165,16 +163,14 @@ else
 
 print '</a><p class="smaller">';
 utils_get_content("account/index_ssh");
-print '</p>
-';
+print "</p>\n";
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="change.php?item=gpgkey">'._("Edit GPG Key").'</a>';
 print '<p class="smaller">';
 utils_get_content("account/index_gpg");
-print '</p>
-';
+print "</p>\n";
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
@@ -188,18 +184,23 @@ print '</a><br /><br />
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print
-'<input type="checkbox" name="form_keep_only_one_session"
-        id="form_keep_only_one_session"  value="1" '
-      .(user_get_preference("keep_only_one_session") ? 'checked="checked"':'')
-      .' />
-<label for="form_keep_only_one_session">'
-      ._("Keep only one session opened at a time")."</label>\n";
+function pref_cbox ($name, $label, $checked = null)
+{
+  if ($checked === null)
+    $checked = user_get_preference ($name);
+  print form_checkbox ("form_$name", $checked) . "\n";
+  print "<label for=\"form_$name\">$label</label>\n";
+}
 
+pref_cbox (
+  'keep_only_one_session',
+  _("Keep only one session opened at a time")
+);
 print '<p class="smaller">'
 ._("By default, you can open as many session concurrently as you want. But you
 may prefer to allow only one session to be opened at a time, killing previous
-sessions each time you log in.").'</p>';
+sessions each time you log in.");
+print "</p>\n";
 
 print $HTML->box_bottom();
 print "<br />\n";
@@ -209,37 +210,39 @@ print html_splitpage(2);
 print $HTML->box_top(_('Identity Record'));
 
 print sprintf(_("Account #%s"), $row_user['user_id']);
-print '<p class="smaller">'.sprintf(_("Your login is %s."),
-                                    '<strong>'.$row_user['user_name'].'</strong>')
-      .' '.sprintf(
+print '<p class="smaller">';
+printf (_("Your login is %s."), "<strong>{$row_user['user_name']}</strong>");
+printf (
 # TRANSLATORS: the argument is registration date.
-                   _("You registered your account on %s."),
-                   '<strong>'.utils_format_date($row_user['add_date']).'</strong>')
-      .'</p>
-';
+  ' ' . _("You registered your account on %s."),
+  '<strong>' . utils_format_date($row_user['add_date']) . '</strong>'
+);
+print "</p>\n";
 
 $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="change.php?item=realname">'._("Change Real Name").'</a>';
-print '<p class="smaller">'
-      .sprintf(
+print '<p class="smaller">';
+printf (
 # TRANSLATORS: the argument is full name.
-_("You are %s."), '<strong>'.$row_user['realname'].'</strong>')
-      .'</p>
-';
+  _("You are %s."),
+  "<strong>{$row_user['realname']}</strong>"
+);
+print "</p>\n";
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="resume.php">'._("Edit Resume and Skills").'</a>';
 print '<p class="smaller">'
 ._("Details about your experience and skills may be of interest to other users
-or visitors.").'</p>';
+or visitors.") . "</p>\n";
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="'.$GLOBALS['sys_home'].'users/'.$row_user['user_name'].'">'
       ._("View your Public Profile").'</a>';
-print '<p class="smaller">'._("Your profile can be viewed by everybody.").'</p>';
+print '<p class="smaller">'._("Your profile can be viewed by everybody.")
+ . "</p>\n";
 
 print $HTML->box_bottom();
 print "<br />\n";
@@ -248,11 +251,12 @@ print "<br />\n";
 print $HTML->box_top(_('Mail Setup'));
 
 print '<a href="change.php?item=email">'._("Change Email Address").'</a>';
-print '<p class="smaller">'
-      .sprintf(_("Your current address is %s. It is essential to us that this
+print '<p class="smaller">';
+printf (_("Your current address is %s. It is essential to us that this
 address remains valid. Keep it up to date."),
-               '<strong>'.$row_user['email'].'</strong>').'</p>
-';
+  "<strong>{$row_user['email']}</strong>"
+);
+print "</p>\n";
 
 $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
@@ -261,28 +265,25 @@ print '<a href="change_notifications.php">'
       ._("Edit Personal Notification Settings").'</a>';
 print '<p class="smaller">'
       ._("Here is defined when the trackers should send email notifications. It
-permits also to configure the subject line prefix of sent mails.").'</p>
-';
+permits also to configure the subject line prefix of sent mails.") . "</p>\n";
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 print '<a href="cc.php">'._("Cancel Mail Notifications").'</a>';
 print '<p class="smaller">'._("Here, you can cancel all mail notifications.")
-      .'</p>
-';
+  . "</p>\n";
 
 print $HTML->box_bottom();
 print "<br />\n";
 
 print html_splitpage(3);
 
-print '<span class="clearr" /><p class="center">'
-      .'<input type="submit" name="update" value="'
-      ._("Update").'" /></p></span>';
-print "<br />\n";
+$update_btn = '<p class="center"><span class="clearr" />'
+  . '<input type="submit" name="update" value="'
+  . _("Update") . "\" /></span></p>\n";
+print $update_btn;
 
-print '<h2>'._("Secondary Arrangements").'</h2>
-';
+print "<br />\n<h2>" . _("Secondary Arrangements") . "</h2>\n";
 
 if (is_broken_msie() && empty($_GET["printer"]))
 print '<p>'
@@ -298,63 +299,46 @@ print html_splitpage(1);
 
 print $HTML->box_top(_('Account Deletion'));
 print '<a href="change.php?item=delete">'._("Delete Account").'</a>';
-print '<p class="smaller">'
-.sprintf(
+print '<p class="smaller">';
+printf(
 # TRANSLATORS: the argument is site name (like Savannah).
 _("If you are no longer member of any project and do not intend to use
 %s further, you may want to delete your account. This action cannot be undone
 and your current login will be forever lost."),
-         $GLOBALS['sys_name']).'</strong></p>
-';
+  "<strong>{$GLOBALS['sys_name']}</strong>"
+);
+print "</p>\n";
 
 print $HTML->box_bottom();
 print "<br />\n";
 
 print $HTML->box_top(_('Optional Features'));
-print
-'<input type="checkbox" name="form_use_bookmarks"
-        id="form_use_bookmarks" value="1" '
-      .(user_get_preference("use_bookmarks") ? 'checked="checked"':'')
-      .' />
-<label for="form_use_bookmarks">'
-      ._("Use integrated bookmarks")."</label>\n";
 
+pref_cbox ("use_bookmarks", _("Use integrated bookmarks"));
 print '<p class="smaller">'
 ._("By default, integrated bookmarks are deactivated to avoid redundancy with
 the bookmark feature provided by most modern web browsers. However, you may
 prefer integrated bookmarks if you frequently use different workstations
-without web browsers bookmarks synchronization.").'</p>
-';
+without web browsers bookmarks synchronization.") . "</p>\n";
 
 $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print
-'<input type="checkbox" name="form_email_hide"
-        id="form_email_hide" value="1" '
-      .($row_user['email_hide'] ? 'checked="checked"':'').' />
-<label for="form_email_hide">'
-      ._("Hide email address from your account information")."</label>\n";
-
+pref_cbox (
+  "email_hide", _("Hide email address from your account information"),
+  $row_user['email_hide']
+);
 print '<p class="smaller">'
 ._("When checked, the only way for users to get in touch with you would be to
 use the form available to logged-in users. It is generally a bad idea to choose
-this option, especially if you are a project administrator.").'</p>
-';
+this option, especially if you are a project administrator.") . "</p>\n";
 
-print
-'<input type="checkbox" name="form_email_encrypted"
-        id="form_email_encrypted" value="1" '
-.(user_get_preference("email_encrypted") ? 'checked="checked"':'').' />
-<label for="form_email_encrypted">'
-._("Encrypt emails when resetting password")."</label>\n";
-
+pref_cbox ('email_encrypted', _("Encrypt emails when resetting password"));
 print '<p class="smaller">'
 ._("When checked, Savannah will encrypt email messages
 with your registered public GPG key when resetting password is requested.
 If no suitable key is available, the messages still go unencrypted.")
-.'</p>
-';
+  . "</p>\n";
 
 print $HTML->box_bottom();
 print "<br />\n";
@@ -370,8 +354,7 @@ print html_build_select_box_from_arrays($TZs, $TZs, 'form_timezone',
 print ' '._("Timezone");
 print '<p class="smaller">'
 ._("No matter where you live, you can see all dates and times as if it were in
-your neighborhood.").'</p>
-';
+your neighborhood.") . "</p>\n";
 
 $i = 0;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
@@ -380,11 +363,9 @@ html_select_theme_box("user_theme", $row_user['theme']);
 print ' ' . _("Theme");
 
 if ("rotate" === $row_user['theme'] || 'random' === $row_user['theme'])
-  print '<br />
-<input type="checkbox" name="theme_rotate_jump"
-       id="theme_rotate_jump" value="1" />
-<label for="theme_rotate_jump">'
-        . _("Jump to the next theme") . "</label>\n";
+  print "<br />\n" . form_checkbox ('theme_rotate_jump')
+    . '<label for="theme_rotate_jump">' . _("Jump to the next theme")
+    . "</label>\n";
 print '<p class="smaller">'
 . _("Not satisfied with the default color theme of the interface?") . "</p>\n";
 
@@ -412,65 +393,42 @@ care of Savane CSS Guidelines, since it is the default theme."),
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print
-'<input type="checkbox" name="form_reverse_comments_order"
-        id="form_reverse_comments_order" value="1" '
-      .(user_get_preference("reverse_comments_order") ? 'checked="checked"':'')
-      .' />
-<label for="form_reverse_comments_order">'
-      ._("Print items comments from the oldest to the latest")."</label>\n";
-
+pref_cbox (
+  "reverse_comments_order",
+  _("Print items comments from the oldest to the latest")
+);
 print '<p class="smaller">'
 ._("By default, comments are listed in reverse chronological order. This means
 that for a given item, comments are printed from the latest to the oldest. If
-this behavior does not suit you, select this option.").'</p>
-';
+this behavior does not suit you, select this option.") . "</p>\n";
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print
-'<input type="checkbox" name="form_stone_age_menu"
-        id="form_stone_age_menu" value="1" '
-      .(user_get_preference("stone_age_menu") ? 'checked="checked"':'')
-      .' />
-<label for="form_stone_age_menu">'._("Use the Stone Age menu")."</label>\n";
-
+pref_cbox ("stone_age_menu", _("Use the Stone Age menu"));
 print '<p class="smaller">'
 ._("By default, the top menu includes links, via dropdown submenus, to all
 relevant pages in the current context (project area, personal area). However,
 the dropdown submenu mechanism may not work with a few old or lightweight
 browsers, for instance very old Konqueror versions (< 3.1, before 2003).
 Selecting this option enables an old-fashioned submenu like the one shipped
-in older Savane releases (< 2.0).").'</p>
-';
+in older Savane releases (< 2.0).") . "</p>\n";
 
 $i++;
 print $HTML->box_nextitem(utils_get_alt_row_color($i));
 
-print
-'<input type="checkbox" name="form_nonfixed_feedback"
-        id="form_nonfixed_feedback" value="1" '
-      .(user_get_preference("nonfixed_feedback") ? 'checked="checked"':'')
-      .' />
-<label for="form_nonfixed_feedback">'
-      ._("Show feedback in relative position")."</label>\n";
-
+pref_cbox ("nonfixed_feedback", _("Show feedback in relative position"));
 print '<p class="smaller">'
 ._("By default, the feedback box appear as a fixed box on top of the window.
 If you check this option, the feedback will
-be added in the page flow, after the top menu.").'</p>
-';
+be added in the page flow, after the top menu.") . "</p>\n";
 
 print $HTML->box_bottom();
 print "<br />\n";
 
 print html_splitpage(3);
 
-print '<span class="clearr" /><p class="center">'
-      .'<input type="submit" name="update" value="'
-      ._("Update").'" /></p></span>';
-
-print '</form>';
+print $update_btn;
+print "</form>\n";
 $HTML->footer(array());
 ?>

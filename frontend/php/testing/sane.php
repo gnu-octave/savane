@@ -442,13 +442,13 @@ $reference = 'forum/message.php';
 $reference = 'i18n.php';
 {
   $names = [
-    'digits' => 'language',
+    'preg' => [['language', '/^(([a-z]{2}((-[a-z]{2})?))|100)$/']],
     'internal_uri' => 'lang_uri',
     'true' => ['cookie_test', 'cookie_for_a_year']
   ];
 
   $in = [
-    'language' => 3,
+    'language' => 'pt-br',
     'lang_uri' => '/account/logout.php',
     'cookie_for_a_year' => 1
   ];
@@ -457,6 +457,13 @@ $reference = 'i18n.php';
   $out['cookie_for_a_year'] = true;
   $out['cookie_test'] = null;
 
+  test_sane_import ($in, $names, $out);
+  $out['language'] = $in['language'] = 'he';
+  test_sane_import ($in, $names, $out);
+  $out['language'] = $in['language'] = 100;
+  test_sane_import ($in, $names, $out);
+  $out['language'] = null;
+  $in['language'] = 'EN';
   test_sane_import ($in, $names, $out);
 }
 
@@ -1493,29 +1500,29 @@ $reference = 'my/admin/cc.php';
 
 $reference = 'my/admin/change_notifications.php';
 {
+
+  $notif_arr = [
+    'notify_unless_im_author', 'notify_item_closed',
+    'notify_item_statuschanged', 'skipcc_postcomment',
+    'skipcc_updateitem', 'removecc_notassignee',
+  ];
+
   $names = [
-    'true' =>
-      [
-        'update', 'form_notifset_unless_im_author',
-        'form_notifset_item_closed',
-        'form_notifset_item_statuschanged',
-        'form_skipcc_postcomment',
-        'form_skipcc_updateitem',
-        'form_removecc_notassignee',
-      ],
+     'true' => ['update'],
      'digits' => [['form_frequency', [0, 3]]],
      'pass' => 'form_subject_line', # Validated later.
   ];
+
+  foreach ($notif_arr as $n)
+    $names['true'][] = "form_$n";
+
   $in = $out = [
-    'update' => true,
-    'form_notifset_unless_im_author' => true,
-    'form_notifset_item_closed' => true,
-    'form_notifset_item_statuschanged' => true,
-    'form_skipcc_postcomment' => true,
-    'form_skipcc_updateitem' => true,
     'form_frequency' => 2,
     'form_subject_line' => 'subject'
   ];
+  foreach ($names['true'] as $n)
+    $in[$n] = $out[$n] = true;
+  unset ($in['form_removecc_notassignee']);
   $out['form_removecc_notassignee'] = null;
   test_sane_import ($in, $names, $out);
 }

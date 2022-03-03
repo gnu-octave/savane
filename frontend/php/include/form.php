@@ -64,8 +64,21 @@ function form_input ($type, $name, $value="", $extra=false)
   if ($type == 'hidden' || $type == 'submit' || $type == 'radio')
     $id_attr = '';
 
-  return '
-    <input type="'.$type.'"'.$id_attr.' name="'.$name.'" '.$value.$extra.' />';
+  return "<input type=\"$type\"$id_attr name=\"$name\" $value$extra />";
+}
+
+function form_checkbox ($name, $is_checked = 0, $attr = [])
+{
+  $extra = '';
+  if ($is_checked)
+    $extra .= ' checked="checked"';
+  if (!empty ($attr))
+    foreach ($attr as $k => $v)
+      $extra .= " $k=\"$v\"";
+  $val = '1';
+  if (isset ($attr['value']))
+    $val = '';
+  return form_input ('checkbox', $name, $val, $extra);
 }
 
 # Special input: textarea.

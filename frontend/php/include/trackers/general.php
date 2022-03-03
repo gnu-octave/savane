@@ -580,31 +580,6 @@ function trackers_multiple_field_box($field_name,
                                         $text_any,$show_value);
 }
 
-# Similar to trackers_multiple_field_box except that it will use checkboxes
-# instead of a multiple select field. Multiple select field is nice for
-# expert users, but it is not simple user-friendly, unlike checkboxes.
-function trackers_multiple_field_box2 ($field_name,
-                                       $box_name='',
-                                       $group_id,
-                                       $checked=false,
-                                       $show_none=false,
-                                       $text_none='None',
-                                       $show_any=false,
-                                       $text_any='Any',
-                                       $show_value=false)
-{
-  if (!$group_id)
-    return _("Internal error: no group id");
-  $result = trackers_data_get_field_predefined_values($field_name,$group_id,
-                                                      $checked);
-  if ($box_name == '')
-    {
-      $box_name = $field_name.'[]';
-    }
-  return html_build_checkbox($result,$box_name,$checked,6,$show_none,
-                             $text_none, $show_any,$text_any,$show_value);
-}
-
 # Returns the list of field names in the HTML Form corresponding to a
 # field used by this project
 function trackers_extract_field_list($post_method=true)

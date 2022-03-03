@@ -171,8 +171,8 @@ them to change your project license.') . "</p>\n";
 if ($project->getLicense() == 'gpl')
   {
     print '<p><span class="preinput">' . _("GNU GPL v3:")
-          . "</span>\n<br />&nbsp;&nbsp;";
-    html_build_checkbox ("upgrade_gpl");
+      . "</span>\n<br />&nbsp;&nbsp;";
+    print form_checkbox ("upgrade_gpl");
     print "\n<label for=\"upgrade_gpl\">"
           . _("Upgrade license to &quot;GNU GPLv3 or later&quot;");
     print "</label></p>\n";

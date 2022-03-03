@@ -184,7 +184,7 @@ if (!empty($login) && !$success)
 Visiting the link sent to you in this email will activate your account.")
               .'</p>';
         print '<p><a href="pending-resend.php?form_user='
-              .htmlspecialchars($form_loginname, ENT_QUOTES).'">['
+              . "$form_loginname\">["
               ._("Resend Confirmation Email").']</a></p>';
       }
     else
@@ -220,8 +220,7 @@ print '<input type="hidden" name="uri" value="'.htmlspecialchars($uri, ENT_QUOTE
 # so they dont mess with the normal order when you press TAB on the keyboard
 # (login -> password -> post).
 print '<p><span class="preinput">'._("Login Name:").'</span><br />&nbsp;&nbsp;';
-print '<input type="text" name="form_loginname" value="'
-      .htmlspecialchars($form_loginname, ENT_QUOTES)
+print '<input type="text" name="form_loginname" value="' . $form_loginname
       .'" tabindex="1" /> <a class="smaller" href="register.php" tabindex="2">['
       ._("No account yet?").']</a></p>';
 
@@ -230,13 +229,13 @@ print '<input type="password" name="form_pw" tabindex="1" /> '
       .'<a class="smaller" href="lostpw.php" tabindex="2">['
       ._("Lost your password?").']</a></p>';
 
+$attr_list = ['tabindex' => '1'];
+
 if (isset($GLOBALS['sys_https_host']))
   {
-    $checked = 'checked="checked" ';
-    if ($login and !$stay_in_ssl)
-      $checked = '';
-    print '<p><input type="checkbox" name="stay_in_ssl" '
-          .'value="1" tabindex="1" '.$checked.'/><span class="preinput">';
+    print '<p>'
+      . form_checkbox ('stay_in_ssl', $stay_in_ssl || !$login, $attr_list)
+      . '<span class="preinput">';
     print _("Stay in secure (https) mode after login")."</span><br />\n";
   }
 else
@@ -247,30 +246,22 @@ sent may be viewed by other people. Do not use any important
 passwords.").'</p>';
   }
 
-$checked = '';
-if ($cookie_for_a_year)
-  $checked = 'checked="checked" ';
-
-print '<p><input type="checkbox" name="cookie_for_a_year" tabindex="1" value="1" '
-      .$checked.'/><span class="preinput">'._("Remember me").'</span><br />';
+print '<p>'
+  . form_checkbox ('cookie_for_a_year', $cookie_for_a_year, $attr_list)
+  . '<span class="preinput">' . _("Remember me") . "</span><br />\n";
 print '<span class="text">'
       ._("For a year, your login information will be stored in a cookie. Use
 this only if you are using your own computer.").'</span>';
 
 if (!empty($GLOBALS['sys_brother_domain']))
   {
-    $checked = 'checked="checked" ';
-    if ($login and !$brotherhood)
-       $checked = '';
-
-    print '<p><input type="checkbox" name="brotherhood" value="1" tabindex="1" '
-          .$checked.'/><span class="preinput">';
+    print '<p>'
+      .  form_checkbox ('brotherhood', $brotherhood || !$login, $attr_list)
+      . '<span class="preinput">';
 # TRANSLATORS: the argument is a domain (like "savannah.gnu.org"
 # vs. "savannah.nongnu.org").
     printf (_("Login also in %s").'</span><br />', $GLOBALS['sys_brother_domain']);
   }
-print '<div class="center"><input type="submit" name="login" value="'
-      ._("Login").'" tabindex="1" /></div>';
-print '</form>';
+print form_footer (_("Login"), 'login');
 $HTML->footer(array());
 ?>

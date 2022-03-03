@@ -207,21 +207,20 @@ addresses (comma separated list)."),
       for ($i=0; $i < $grtrsettings['nb_categories'] ; $i++)
         {
           $tr_cat = $tracker_name . '_cat_' . $i;
+          $cb_name = $tr_cat . '_send_all_flag';
+          $settings = $grtrsettings['category'][$i];
           print '<input type="hidden" name="' . $tr_cat . '_bug_fv_id" value="'
-            . $grtrsettings['category'][$i]['fv_id'] . '" />';
-          print '<span class="preinput"><label for="' . $tr_cat . '_email">'
-            . $grtrsettings['category'][$i]['name']
-            . "</span><br />\n" . '&nbsp;&nbsp;<input type="text" id="'
-            . $tr_cat . '_email" name="' . $tr_cat . '_email" value="'
-            . htmlspecialchars ($grtrsettings['category'][$i]['email'])
-            . '" size="50" maxlength="255" />' . "\n"
-            . '&nbsp;&nbsp;<span class="preinput">(' . "\n    "
-            . '<input type="checkbox" id="' . $tr_cat
-            . '_send_all_flag" name="' . $tr_cat . '_send_all_flag" value="1" '
-            .  (($grtrsettings['category'][$i]['send_all_flag'])?
-                 'checked="checked"': '')
-            . ' /><label for="' . $tr_cat . '_send_all_flag">'
-            . _("Send on all updates") . ")</label></span><br />\n";
+            . $settings['fv_id'] . '" />';
+          print "<span class='preinput'><label for=\"${tr_cat}_email\">"
+            . $settings['name']
+            . "</span><br />\n&nbsp;&nbsp;<input type='text' id=\""
+            . "${tr_cat}_email\" name=\"${tr_cat}_email\" value=\""
+            . htmlspecialchars ($settings['email'])
+            . "\" size='50' maxlength='255' />\n"
+            . "&nbsp;&nbsp;<span class='preinput'>("
+            . form_checkbox ($cb_name, $settings['send_all_flag'])
+            . "<label for=\"$cb_name\">" . _("Send on all updates")
+            . ")</label></span><br />\n";
         }
       print '<h2>' . _("Global list") . "</h2>\n";
     }
@@ -237,34 +236,33 @@ depend on the categories or not and you must provide the corresponding email
 addresses (comma separated list)."), utils_get_tracker_name($tracker_name))
 . "</p>\n";
     }
+
+$cb_name = $tracker_name . '_send_all_changes';
+$txt_name = $tracker_name . '_new_item_address';
   print '<span class="preinput"><label
-for="' . $tracker_name . '_new_item_address">' . _("Global List:")
-. '</label></span><br />
-&nbsp;&nbsp;<input type="text" id="' . $tracker_name
-. '_new_item_address" name="' . $tracker_name
-. '_new_item_address" value="' . htmlspecialchars ($grtrsettings['glnewad'])
-. '" size="50" maxlength="255" />
-      &nbsp;&nbsp;<span class="preinput">(<input type="checkbox" id="'
-. $tracker_name . '_send_all_changes" name="'
-. $tracker_name . '_send_all_changes" value="1" '
-. (($grtrsettings['glsendall'])?'checked':'')
-. '><label for="' . $tracker_name . '_send_all_changes">'
-. _("Send on all updates") . '</label>)</span>';
+for="' . $txt_name . '">' . _("Global List:")
+    . "</label></span><br />\n&nbsp;&nbsp;"
+    . "<input type='text' id=\"$txt_name\" name=\"$txt_name\""
+    . 'value="' . htmlspecialchars ($grtrsettings['glnewad'])
+    . '" size="50" maxlength="255" />
+      &nbsp;&nbsp;<span class="preinput">('
+    . form_checkbox ($cb_name, $grtrsettings['glsendall'])
+    . "<label for=\"$cb_name\">"
+    . _("Send on all updates") . '</label>)</span>';
 
   print '<h2>' . _("Private items exclude list") . "</h2>\n";
   if ($show_intro_msg != 0)
     print '<p>'
-. _("Addresses registered in this list will be excluded from default mail
+      . _("Addresses registered in this list will be excluded from default mail
 notification for private items.")
-. "</p>\n";
+      . "</p>\n";
 
-  print '<span class="preinput"><label for="' . $tracker_name
-. '_private_exclude_address">' . _("Exclude List:") . '</label></span><br />
-&nbsp;&nbsp;<input type="text" id="' . $tracker_name
-. '_private_exclude_address" name="' . $tracker_name
-. '_private_exclude_address" value="'
-. htmlspecialchars ($grtrsettings['private_exclude'])
-. '" size="50" maxlength="255" />' . "<br />\n";
+  $txt_name = $tracker_name . '_private_exclude_address';
+  print '<span class="preinput"><label for="' . $txt_name
+    . '">' . _("Exclude List:") . "</label></span><br />\n&nbsp;&nbsp;"
+    . "<input type='text' id=\"$txt_name\" name=\"$txt_name\" value=\""
+    . htmlspecialchars ($grtrsettings['private_exclude'])
+    . "\" size='50' maxlength='255' /><br />\n";
 }
 
 function trackers_data_post_notification_settings($group_id, $tracker_name)

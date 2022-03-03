@@ -319,9 +319,8 @@ _("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),
         at this site (this requires your new login name to be the
         same as the AFS account name):")."</p>\n";
 
-        print '<p>&nbsp;&nbsp;&nbsp;<input type="checkbox"
-        name="form_usepam" value="1" > '._('use AFS based authentication')
-              ."</p>\n";
+        print '<p>&nbsp;&nbsp;&nbsp;' . form_checkbox ('form_usepam', 0)
+          . _('use AFS based authentication') . "</p>\n";
       }
     print form_footer();
   }

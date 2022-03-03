@@ -199,7 +199,7 @@ while ($row = db_fetch_array ($result))
     echo "<tr>\n";
     echo "<td>";
     echo "<input type='hidden' name='arr_id[$cur]' value='$cur' />\n";
-    echo html_build_checkbox("arr_remove[$cur]", 0);
+    print form_checkbox ("arr_remove[$cur]", 0);
     echo "</td>\n";
     echo "<td>";
     echo html_build_select_box_from_array(array('sources', 'web'),
@@ -216,7 +216,7 @@ while ($row = db_fetch_array ($result))
     echo "<td><input type='text' name='arr_emails_notif[$cur]' "
          ."value='{$row['emails_notif']}' /></td>\n";
     echo "<td>";
-    echo html_build_checkbox("arr_enable_diff[$cur]", $row['enable_diff']);
+    print form_checkbox ("arr_enable_diff[$cur]", $row['enable_diff']);
     echo "</td>\n";
     echo "<td><input type='text' name='arr_emails_diff[$cur]' "
          ."value='{$row['emails_diff']}' /></td>\n";
@@ -265,7 +265,7 @@ echo "<input type='text' name='arr_emails_notif[new]' "
      ."value='{$row['emails_notif']}' />";
 echo "</li>\n<li>";
 echo _("Send diffs?") . " ";
-echo html_build_checkbox("arr_enable_diff[new]", $row['enable_diff']);
+print form_checkbox ("arr_enable_diff[new]", $row['enable_diff']);
 echo "</li>\n<li>";
 echo _("Optional alternate list of emails to send diffs separately to, e.g.
       him@domain.org, her@domain.org.<br />

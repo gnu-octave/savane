@@ -355,14 +355,14 @@ while ($row = db_fetch_array($result))
     if ($row['status'] == LIST_STATUS_CREATED
         || $row['status'] == LIST_STATUS_NEED_RECONFIGURATION)
       {
-        print '<br />
-<span class="preinput"><label for="'."reset_password[$id]".'">'
-              ._("Reset List Admin Password:").'</label></span>';
-        $checked = '';
-        if ($row['password'] == "1")
-          $checked = ' checked="checked"';
+        print "<br />\n<span class='preinput'>"
+          . "<label for=\"reset_password[$id]\">"
+          . _("Reset List Admin Password:") . '</label></span>';
         print '<br />&nbsp;&nbsp;&nbsp;'
-              .form_input("checkbox", "reset_password[$id]", "1", $checked).' '
+          . form_checkbox (
+              "reset_password[$id]", $row['password'] == "1"
+            )
+          . "\n"
 # TRANSLATORS: this string relates to the previous, it means
 # [checkbox] "request resetting admin password".
 ._("Requested - <em> this will have no effect if this list is not managed by

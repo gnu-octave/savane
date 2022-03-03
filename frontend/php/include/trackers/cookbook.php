@@ -2,7 +2,7 @@
 # Cookbook functions
 #
 # Copyright (C) 2005 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2020 Ineiev
+# Copyright (C) 2017, 2020, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -153,42 +153,36 @@ function cookbook_build_form ($which="audience")
                            array($item_id, $group_id));
     }
 
-  $content = '';
+  $content = $ln_brk = '';
 
   foreach ($possiblevalues as $field => $label)
     {
-      $checked = '';
+      $checked = false;
+      $field_name = "{$which}_$field";
+      $cb_name = "recipe_$field_name";
 
       # Take into account database content.
-      if ($item_id && db_result($result, 0, $which."_".$field) == 1)
-        $checked = ' checked="checked"';
+      if ($item_id && db_result($result, 0, $field_name) == 1)
+        $checked = true;
 
       # Ultimately take into account what was posted, in the case the form
       # was reprovided to the user because he forgot mandatory fields.
       if ($previous_form_bad_fields)
-        {
-          if ($_POST["recipe_".$which."_".$field] == true)
-            $checked = ' checked="checked"';
-          else
-            unset($checked);
-        }
+        $checked = ($_POST[$cb_name]);
 
-      if (!defined('PRINTER'))
-        {
-          # Normal output.
-          $content .= '<input type="checkbox" name="recipe_'.$which.'_'.$field
-                      .'"'.$checked.' />'.$label."<br />\n";
-        }
-      else
+      if (defined('PRINTER'))
         {
           # Printer mode output, show only selected entries.
           if ($checked)
-            $content .= $label.'<br />';
-
+            $content .= "$ln_brk$label";
         }
+      else
+        {
+          # Normal output.
+          $content .= $ln_brk . form_checkbox ($cb_name, $checked) . $label;
+        }
+      $ln_brk = "<br />\n";
     }
-  # Remove the extra line break.
-  $content = rtrim($content, '<br />');
   return $content;
 }
 

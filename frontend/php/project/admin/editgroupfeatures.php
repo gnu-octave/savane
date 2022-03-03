@@ -169,10 +169,10 @@ function specific_line ($artifact, $explanation, $use, $increment=1)
   $next_td ($i);
   # Print the checkbox to de/activate it
   # (viewcvs cannot be activated or deactivated, they are not in the menu).
-  if (!str_match ("viewcvs", $artifact))
-    html_build_checkbox ("use_$artifact", $use);
-  else
+  if (str_match ("viewcvs", $artifact))
     print "---";
+  else
+    print form_checkbox ("use_$artifact", $use);
   $close_td ();
   # Print the default setting
   # (extralink_* does not have any default).

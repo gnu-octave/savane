@@ -68,13 +68,18 @@ function people_show_table()
             [db_result ($result, $i, 'category_id')]
           );
           print db_error ();
-          $return .= '<input type="checkbox" title="'
-            . db_result ($result, $i, 'name')
-            . '" name="categories[]" value="'
-            . db_result ($result, $i, 'category_id') . '"><a href="'
+          $return .=
+            form_checkbox (
+              'categories[]', 0,
+              [
+                'title' => db_result ($result, $i, 'name'),
+                'value' => db_result ($result, $i, 'category_id'),
+              ]
+            )
+            . '<a href="'
             . htmlentities ($_SERVER["PHP_SELF"]) . '?categories[]='
             . db_result ($result, $i, 'category_id') . '">'
-            . db_result ($result, $i, 'name') .' ('
+            . db_result ($result, $i, 'name') . ' ('
             . db_result ($count_res, 0, 'count') . ")</a><br />\n";
         }
     }
@@ -100,13 +105,18 @@ function people_show_table()
       $form_is_empty = 0;
       for ($i = 0; $i < $rows; $i++)
         {
-          $return .= '<input type="checkbox" title="'
-            . db_result ($result, $i, 'name')
-            . '" name="types[]" value="'
-            . db_result ($result, $i, 'type_id') . '"><a href="'
-            . htmlentities ($_SERVER["PHP_SELF"]).'?types[]='
-            .  db_result ($result, $i, 'type_id')
-            . '">' . db_result ($result, $i, 'name') . ' ('
+          $return .=
+            form_checkbox (
+              'types[]', 0,
+              [
+                'title' => db_result ($result, $i, 'name'),
+                'value' => db_result ($result, $i, 'type_id'),
+              ]
+            )
+            . '<a href="'
+            . htmlentities ($_SERVER["PHP_SELF"]) . '?types[]='
+            .  db_result ($result, $i, 'type_id') . '">'
+            . db_result ($result, $i, 'name') . ' ('
             . db_result ($result, $i, 'count') . ")</a><br />\n";
         }
     }

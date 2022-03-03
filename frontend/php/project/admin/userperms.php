@@ -363,13 +363,6 @@ function finish_page ()
   exit (0);
 }
 
-function attr_checked ($x)
-{
-  if ($x)
-    return 'checked="checked"';
-  return '';
-}
-
 function tracker_uses ($project, $art)
 {
   return $art == 'cookbook' || $project->Uses ($art);
@@ -514,10 +507,10 @@ else
           . "\">\n<td align=\"center\" id=\"$row_uname\">"
           . utils_user_link ($row_uname, $row['realname']) . "</td>\n";
         print "<td class='smaller'>\n";
-        print "<input type='checkbox' name=\"privacy_user_$row_uid\"\n"
-          . "id=\"privacy_user_$row_uid\" value=\"1\" "
-          . attr_checked ($row['privacy_flags'] == '1')
-          . " />&nbsp;<label for=\"privacy_user_$row_uid\"> "
+        print form_checkbox (
+                "privacy_user_$row_uid", $row['privacy_flags'] == '1'
+              );
+        print "&nbsp;<label for=\"privacy_user_$row_uid\"> "
           . _("Private Items") . "</label>\n</td>\n";
 
        foreach ($trackers as $art)
@@ -584,17 +577,19 @@ while ($row = db_fetch_array ($result))
       print '<em>' . _("You are Admin") . '</em>';
     else
       {
-        $extra = attr_checked ($row['admin_flags'] == 'A');
         print
-          form_input ("checkbox", "admin_user_$row_uid", "A", $extra)
+          form_checkbox (
+            "admin_user_$row_uid", $row['admin_flags'] == 'A', ['value' => 'A']
+          )
           . "&nbsp;<label for=\"admin_user_$row_uid\">"
-          . _("Admin") . '</label>';
+          . _("Admin") . "</label>\n";
       }
     if ($row['admin_flags'] != 'A')
      {
-       $extra = attr_checked ($row['privacy_flags'] == '1');
        print "<br />\n"
-         . form_input ("checkbox", "privacy_user_$row_uid", "1", $extra)
+         . form_checkbox (
+             "privacy_user_$row_uid", $row['privacy_flags'] == '1'
+           )
          . "&nbsp;<label for=\"privacy_user_$row_uid\">"
          . _("Private Items") . '</label>';
       }
@@ -602,9 +597,10 @@ while ($row = db_fetch_array ($result))
       print form_input("hidden", "privacy_user_$row_uid", 1);
     print "</td>\n";
     print '<td align="center">';
-    $extra = attr_checked ($row['onduty'] == '1');
-    $extra .= ' title="' . _("On Duty") . '"';
-    print form_input("checkbox", "onduty_user_$row_uid", 1, $extra);
+    print form_checkbox (
+            "onduty_user_$row_uid", $row['onduty'] == '1',
+            ['title' => _("On Duty")]
+          );
     print "</td>\n";
     foreach ($trackers as $art)
       if (tracker_uses ($project, $art))

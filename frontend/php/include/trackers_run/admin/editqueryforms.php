@@ -151,19 +151,20 @@ if ($post_changes)
     $sql = substr($sql,0,-1);
 
     $res = db_execute($sql, $params);
+    $fb_name = htmlspecialchars_decode ($rep_name);
     if ($res)
       {
         if ($create_report)
-          fb(sprintf(_("Query form '%s' created successfully"),$rep_name));
+          fb(sprintf(_("Query form '%s' created successfully"), $fb_name));
         else
-          fb(sprintf(_("Query form '%s' updated successfully"),$rep_name));
+          fb(sprintf(_("Query form '%s' updated successfully"), $fb_name));
       }
     else
       {
         if ($create_report)
-          fb(sprintf(_("Failed to create query form '%s'"),$rep_name), 1);
+          fb(sprintf(_("Failed to create query form '%s'"), $fb_name), 1);
         else
-          fb(sprintf(_("Failed to update query form '%s'"),$rep_name), 1);
+          fb(sprintf(_("Failed to update query form '%s'"), $fb_name), 1);
       }
   } /* if($post_changes) */
 else if ($delete_report)
@@ -178,20 +179,16 @@ else if ($delete_report)
                array($report_id));
   }
 
+$title_arr = [
+  _("Field Label"), _("Description"), _("Use as a Search Criterion"),
+  _("Rank on Search"), _("Use as an Output Column"), _("Rank on Output"),
+  _("Column width (optional)"),
+];
+
 # Display the UI forms.
 if ($new_report)
   {
     trackers_header_admin(array ('title'=>_("Create a New Query Form")));
-
-# Display the table of all fields that can be included in the report.
-    $title_arr=array();
-    $title_arr[]=_("Field Label");
-    $title_arr[]=_("Description");
-    $title_arr[]=_("Use as a Search Criterion");
-    $title_arr[]=_("Rank on Search");
-    $title_arr[]=_("Use as an Output Column");
-    $title_arr[]=_("Rank on Output");
-    $title_arr[]=_("Column width (optional)");
 
     print'
       <form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
@@ -216,92 +213,91 @@ if ($new_report)
             value="" size="50" maxlength="120" />
 </p>
 ';
-
     print html_build_list_table_top ($title_arr);
     $i=0;
     while ($field = trackers_list_all_fields())
       {
-        // Do not show fields not used by the project
+        # Do not show fields not used by the project
         if ( !trackers_data_is_used($field))
           continue;
 
-        // Do not show some special fields any way
+        # Do not show some special fields any way
         if (trackers_data_is_special($field))
           {
             if (($field == 'group_id') || ($field == 'comment_type_id'))
               continue;
           }
 
-        $cb_search = 'CBSRCH_'.$field;
-        $cb_report = 'CBREP_'.$field;
-        $tf_search = 'TFSRCH_'.$field;
-        $tf_report = 'TFREP_'.$field;
-        $tf_colwidth = 'TFCW_'.$field;
+        $cb_search = "CBSRCH_$field";
+        $cb_report = "CBREP_$field";
+        $tf_search = "TFSRCH_$field";
+        $tf_report = "TFREP_$field";
+        $tf_colwidth = "TFCW_$field";
 
-        // For the rank values, set defaults, for the common fields, as
-        // it gets easily messy when not specified.
+        # For the rank values, set defaults, for the common fields, as
+        # it gets easily messy when not specified.
         $tf_report_val = 100;
 
-        // Summary should be just after the item id.
+        # Summary should be just after the item id.
         if ($field == 'summary')
           $tf_report_val = 5;
-        // Statis should just after
+        # Statis should just after.
         if ($field == 'resolution_id')
           $tf_report_val = 10;
-        // Moderately important fields
+        # Moderately important fields.
         if ($field == 'category_id' || $field == 'severity' || $field == 'vote')
           $tf_report_val = 25;
-        // Very moderately important fields
+        # Very moderately important fields.
         if ($field == 'submitted_by' || $field == 'assigned_to')
           $tf_report_val = 50;
 
-        print '<tr class="'. utils_get_alt_row_color($i) .'">';
-        print "\n<td>".trackers_data_get_label($field)."</td>\n"
-          ."<td>".trackers_data_get_description($field)."</td>\n"
-          ."<td align=\"center\">".'<input title="'._("Use as a Search Criterion")
-          .'" type="checkbox" name="'.$cb_search
-          .'" value="1" /></td>'
-          ."\n<td align=\"center\">".'<input type="text" title="'
-          ._("Rank on Search").'" name="'
-          .$tf_search.'" value="" size="5" maxlen="5" />'."</td>\n";
+        print '<tr class="'. utils_get_alt_row_color ($i) .'">';
+        print "\n<td>" . trackers_data_get_label ($field) . "</td>\n"
+          . "<td>" . trackers_data_get_description ($field) . "</td>\n"
+          . "<td align=\"center\">"
+          . form_checkbox (
+              $cb_search, 0, ['title' => _("Use as a Search Criterion")]
+            )
+          . "</td>\n<td align=\"center\"><input type=\"text\" title=\""
+          . _("Rank on Search") . "\" name=\"$tf_search\" value='' size='5' "
+          . "maxlen='5' /></td>\n";
 
-        // If the current field is item id, we force its presence on the
-        // report with rank 0. This field is mandatory: otherwise some
-        // links would be broken or there would be even no links.
+        # If the current field is item id, we force its presence on the
+        # report with rank 0. This field is mandatory: otherwise some
+        # links would be broken or there would be even no links.
         if ($field == 'bug_id')
           {
-            print "\n<td align=\"center\"><input type=\"hidden\" name=\""
-              .$cb_report."\" value=\"1\" />X</td>\n"
-              ."\n<td align=\"center\"><input type=\"hidden\" name=\""
-              .$tf_report."\" value=\"0\" />0</td>\n";
+            print "\n<td align=\"center\"><input type=\"hidden\" "
+              . "name=\"$cb_report\" value=\"1\" />X</td>\n"
+              . "\n<td align=\"center\"><input type=\"hidden\" "
+              . "name=\"$tf_report\" value=\"0\" />0</td>\n";
           }
         else
           {
-            print "\n<td align=\"center\">".'<input type="checkbox" name="'
-              .$cb_report.'" title="'._("Use as an Output Column")
-              .'" value="1" />'."</td>\n"
-              ."<td align=\"center\">".'<input type="text" title="'
-              ._("Rank on Output").'" name="'.$tf_report
-              .'" value="'.$tf_report_val.'" size="5" maxlen="5" />'."</td>\n";
+            print "\n<td align=\"center\">"
+              . form_checkbox (
+                  $cb_report, 0, ['title' => _("Use as an Output Column")]
+                )
+              . "</td>\n<td align=\"center\"><input type='text' title=\""
+              . _("Rank on Output") . "\" name=\"$tf_report\" "
+              . "value=\"$tf_report_val\" size='5' maxlen='5' /></td>\n";
           }
 
-        print "\n<td align=\"center\">".'<input type="text" name="'
-              .$tf_colwidth.'" title="'._("Column width (optional)")
-              .'" value="" size="5" maxlen="5" />'."</td>\n"
+        print "\n<td align=\"center\">"
+              . "<input type='text' name=\"$tf_colwidth\" title=\""
+              . _("Column width (optional)")
+              . "\" value='' size='5' maxlen='5' /></td>\n"
           ."</tr>\n";
         $i++;
       }
-    print "</table>\n"
-      .'<p><center><input type="submit" name="submit" value="'
-      ._('Submit').'" /></center></p>
-</form>
-';
+    print "</table>\n<p><center><input type='submit' name='submit' value=\""
+      . _('Submit') . "\" /></center></p>\n</form>\n";
   } # if ($new_report)
 else if ($show_report)
   {
     trackers_header_admin(array ('title'=>_("Modify a Query Form")));
 
-    // Fetch the report to update.
+    # Fetch the report to update.
     $res = db_execute("SELECT * FROM ".ARTIFACT."_report WHERE report_id=?",
                       array($report_id));
     $rows = db_numrows($res);
@@ -311,7 +307,7 @@ else if ($show_report)
         exit_error(sprintf(_("Unknown Report ID (%s)"), $report_id));
       }
 
-    // Make sure this user has the right to modify the bug report.
+    # Make sure this user has the right to modify the bug report.
     if ( (db_result($res,0,'scope') == 'P') &&
          !user_ismember($group_id,'A'))
       {
@@ -322,22 +318,11 @@ else if ($show_report)
                           ."_report_field WHERE report_id=?",
                           array($report_id));
 
-    // Build the list of fields involved in this report.
+    # Build the list of fields involved in this report.
     while ( $arr = db_fetch_array($res_fld) )
       {
         $fld[$arr['field_name']] = $arr;
       }
-
-    // Display the table of all fields that can be included in the
-    // report along with their current state in this report.
-    $title_arr=array();
-    $title_arr[]=_("Field Label");
-    $title_arr[]=_("Description");
-    $title_arr[]=_("Use as a Search Criterion");
-    $title_arr[]=_("Rank on Search");
-    $title_arr[]=_("Use as an Output Column");
-    $title_arr[]=_("Rank on Output");
-    $title_arr[]=_("Column width (optional)");
 
     print '<form action="'.htmlentities ($_SERVER['PHP_SELF']).'" method="post">
              <input type="hidden" name="update_report" value="y" />
@@ -363,63 +348,66 @@ else if ($show_report)
     $i = 0;
     while ( $field = trackers_list_all_fields() )
       {
-        // Do not show fields not used by the project.
+        # Do not show fields not used by the project.
         if ( !trackers_data_is_used($field))
           continue;
 
-        // Do not show some special fields any way.
+        # Do not show some special fields any way.
         if (trackers_data_is_special($field))
           {
             if (($field == 'group_id') || ($field == 'comment_type_id'))
               continue;
           }
 
-        $cb_search = 'CBSRCH_'.$field;
-        $cb_report = 'CBREP_'.$field;
-        $tf_search = 'TFSRCH_'.$field;
-        $tf_report = 'TFREP_'.$field;
-        $tf_colwidth = 'TFCW_'.$field;
+        $cb_search = "CBSRCH_$field";
+        $cb_report = "CBREP_$field";
+        $tf_search = "TFSRCH_$field";
+        $tf_report = "TFREP_$field";
+        $tf_colwidth = "TFCW_$field";
 
-        $cb_search_chk = (!empty($fld[$field]['show_on_query'])
-                          ? 'checked="checked"':'');
-        $cb_report_chk = (!empty($fld[$field]['show_on_result'])
-                          ? 'checked="checked"':'');
-        $tf_search_val = (!empty($fld[$field]['place_query'])
-                          ? $fld[$field]['place_query']:'');
-        $tf_report_val = (!empty($fld[$field]['place_result'])
-                          ? $fld[$field]['place_result']:'');
-        $tf_colwidth_val = (!empty($fld[$field]['col_width'])
-                          ? $fld[$field]['col_width']:'');
+        $cb_search_chk = !empty ($fld[$field]['show_on_query']);
+        $cb_report_chk = !empty ($fld[$field]['show_on_result']);
+        foreach (
+          [
+            'search' => 'place_query', 'report' => 'result',
+            'colwidth' => 'col_width',
+          ] as $k => $v
+        )
+        ${"tf_${k}_val"} = (empty ($fld[$field][$v]) ? '': $fld[$field][$v]);
 
-        print '<tr class="'. utils_get_alt_row_color($i) .'">';
+        print '<tr class="' . utils_get_alt_row_color($i) . '">';
 
-        print "\n<td>".trackers_data_get_label($field).'</td>'
-          ."\n<td>".trackers_data_get_description($field).'</td>'
-          ."\n<td align=\"center\">"
-          .'<input type="checkbox" title="'._("Use as a Search Criterion")
-          .'" name="'.$cb_search
-          .'" value="1" '.$cb_search_chk.'  /></td>'
-          ."\n<td align=\"center\">".'<input type="text" name="'.$tf_search
-          .'" title="'._("Rank on Search")
-          .'" value="'.$tf_search_val.'" size="5" maxlen="5" /></td>';
-        // If the current field is item id, we force it's presence on
-        // the report with rank 0. This field is mandatory: otherwise
-        // some links would be broken or there would be even no links.
+        print "\n<td>" . trackers_data_get_label ($field)
+          . "</td>\n<td>" . trackers_data_get_description ($field)
+          . "</td>\n<td align=\"center\">"
+          . form_checkbox (
+              $cb_search, $cb_search_chk,
+              ['title' => _("Use as a Search Criterion")]
+            )
+          . "</td>\n<td align='center'><input type='text' name=\"$tf_search\" "
+          . 'title="' . _("Rank on Search")
+          . "\" value=\"$tf_search_val\" size='5' maxlen='5' /></td>\n";
+        # If the current field is item id, we force it's presence on
+        # the report with rank 0. This field is mandatory: otherwise
+        # some links would be broken or there would be even no links.
         if ($field == 'bug_id')
           {
             print "\n<td align=\"center\"><input type=\"hidden\" name=\""
-              .$cb_report."\" value=\"1\" />X</td>"
-              ."\n<td align=\"center\"><input type=\"hidden\" name=\""
-              .$tf_report."\" value=\"0\" />0</td>\n";
+              . "$cb_report\" value=\"1\" />X</td>"
+              . "\n<td align=\"center\"><input type=\"hidden\" name=\""
+              . "$tf_report\" value=\"0\" />0</td>\n";
           }
         else
           {
-            print "\n<td align=\"center\">".'<input type="checkbox" name="'
-              .$cb_report.'" title="'._("Use as an Output Column")
-              .'" value="1" '.$cb_report_chk.'  /></td>'
-              ."\n<td align=\"center\">".'<input type="text" name="'.$tf_report
-              .'" title="'._("Rank on Output")
-              .'" value="'.$tf_report_val.'" size="5" maxlen="5" />'."</td>\n";
+            print "\n<td align=\"center\">"
+              . form_checkbox (
+                  $cb_report, $cb_report_chk,
+                  ['title' => _("Use as an Output Column")]
+                )
+              . "</td>\n<td align=\"center\">"
+              . "<input type='text' name=\"$tf_report\" title=\""
+              . _("Rank on Output")
+              . "\" value=\"$tf_report_val\" size='5' maxlen='5' /></td>\n";
           }
         print "\n<td align=\"center\">".'<input type="text" name="'
           .$tf_colwidth.'" title="'._("Column width (optional)")
@@ -466,15 +454,16 @@ else
       {
 # Loop through the list of all bug report.
         $title_arr=array();
-        $title_arr[]=_("ID");
-        $title_arr[]=_("Query form name");
-        $title_arr[]=_("Description");
-        $title_arr[]=_("Scope");
-        $title_arr[]=_("Delete");
 
         print "<h2>" . _("Existing Query Forms") . "</h2>\n";
-        print html_build_list_table_top ($title_arr);
-        $i=0;
+        print
+          html_build_list_table_top (
+            [
+              _("ID"), _("Query form name"), _("Description"), _("Scope"),
+              _("Delete"),
+            ]
+          );
+        $i = 0;
         while ($arr = db_fetch_array($res))
           {
             print '<tr class="'. utils_get_alt_row_color($i) .'"><td>';

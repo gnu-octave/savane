@@ -193,7 +193,7 @@ if ($update_field)
 </select>';
         }
 
-    print "\n\n<p>&nbsp;</p><h2>"._("Access:").'</h2>';
+    print "\n\n<p>&nbsp;</p><h2>" . _("Access:") . "</h2>\n";
 
     # Set mandatory bit: if the field is special, meaning it is entered
     # by the system, or if it is "priority", assume the
@@ -222,89 +222,67 @@ if ($update_field)
     $checkbox_members = '';
     $checkbox_loggedin = '';
     $checkbox_anonymous = '';
-    if (!trackers_data_is_required($field))
+    $sh_add_mem = trackers_data_is_showed_on_add_members ($field);
+    $sh_add = trackers_data_is_showed_on_add ($field);
+    $sh_anon = trackers_data_is_showed_on_add_nologin ($field);
+    if (trackers_data_is_required ($field))
       {
-        # Some fields require specific treatment.
-        if ($field != "vote" && $field != "originator_email")
-          {
-            $checkbox_members =
-              '<input type="checkbox" title="'._("Show field to members")
-              .'" name="show_on_add_members" value="1"'
-              .(trackers_data_is_showed_on_add_members($field)?
-                ' checked="checked"':'')
-              .' />';
-            $checkbox_anonymous =
-              '<input type="checkbox" title="'
-              ._("Show field to logged-in users")
-              .'" name="show_on_add_logged" value="2"'
-              .(trackers_data_is_showed_on_add_nologin($field)?
-                ' checked="checked"':'')
-              .' />';
-            $checkbox_loggedin =
-              '<input type="checkbox" title="'._("Show field to anonymous users")
-              .'" name="show_on_add" value="1"'
-              .(trackers_data_is_showed_on_add($field)?' checked="checked"':'')
-              .' />';
-          }
-        else
-          {
-            # Vote must be possible for members.
-            # Vote cannot be possible for non logged in.
-            if ($field != "vote")
-              {
-                $checkbox_members = '+';
-                $checkbox_anonymous = 0;
-                $checkbox_loggedin =
-                  '<input type="checkbox" name="show_on_add" value="1"'
-                  .(trackers_data_is_showed_on_add($field)?
-                    ' checked="checked"':'').' />';
-              }
-
-            # Originator email is, by the code, available only to
-            # anonymous.
-            if ($field != "vote")
-              {
-                $checkbox_members = 0;
-                $checkbox_loggedin = 0;
-                $checkbox_anonymous =
-                  '<input type="checkbox" name="show_on_add_logged" value="2"'
-                  .(trackers_data_is_showed_on_add_nologin($field)?
-                    ' checked="checked"':'').' />';
-              }
-          }
+        # Do not let the user change these field settings.
+        if ($sh_add_mem)
+          $checkbox_members = '+';
+        if ($sh_add)
+          $checkbox_loggedin = '+';
+        if ($sh_anon)
+          $checkbox_anonymous = '+';
       }
     else
       {
-        # Do not let the user change these field settings.
-        if (trackers_data_is_showed_on_add_members($field))
+        # Some fields require specific treatment.
+        if ($field == "vote")
           {
+            # Vote is always available for members.
+            # Vote is impossible unless logged in.
             $checkbox_members = '+';
+            $checkbox_anonymous = 0;
+            $checkbox_loggedin = form_checkbox ("show_on_add", $sh_add);
           }
-        if (trackers_data_is_showed_on_add($field))
+        elseif ($field == "originator_email")
           {
-            $checkbox_loggedin = '+';
+            # Originator email is, by the code, available only to anonymous.
+            $checkbox_members = 0;
+            $checkbox_loggedin = 0;
+            $checkbox_anonymous =
+              form_checkbox ("show_on_add_logged", $sh_anon, ['value' => "2"]);
           }
-        if (trackers_data_is_showed_on_add_nologin($field))
+        else
           {
-            $checkbox_anonymous = '+';
+            $checkbox_members =
+              form_checkbox (
+                "show_on_add_members", $sh_add_mem,
+                ['title' => _("Show field to members")]
+              );
+            $checkbox_anonymous =
+              form_checkbox (
+                "show_on_add_logged", $sh_anon,
+                ['title' => _("Show field to logged-in users"), 'value' => "2"]
+              );
+            $checkbox_loggedin =
+              form_checkbox (
+                "show_on_add_members", $sh_add,
+                ['title' => _("Show field to anonymous users")]
+              );
           }
-      }
+      } # !trackers_data_is_required ($field)
 
       if ($checkbox_members)
-        {
-          print '<br />&nbsp;&nbsp;&nbsp;
-'.$checkbox_members.' '._("<!-- present this field to --> Project Members");
-        }
+        print "<br />\n&nbsp;&nbsp;&nbsp;$checkbox_members "
+          . _("<!-- present this field to --> Project Members");
       if ($checkbox_loggedin)
-        {
-          print '<br />&nbsp;&nbsp;&nbsp;
-'.$checkbox_loggedin.' '._("<!-- present this field to --> Logged-in Users");
-        }
+        print "<br />\n&nbsp;&nbsp;&nbsp;$checkbox_loggedin "
+          . _("<!-- present this field to --> Logged-in Users");
       if ($checkbox_anonymous)
-        {
-          print '<br />&nbsp;&nbsp;&nbsp;
-'.$checkbox_anonymous.' '._("<!-- present this field to --> Anonymous Users");
-        }
+        print "<br />\n&nbsp;&nbsp;&nbsp;$checkbox_anonymous "
+           . _("<!-- present this field to --> Anonymous Users");
 
       print "\n\n<p>&nbsp;</p>\n<h2>"._("Display:")."</h2>\n";
 
