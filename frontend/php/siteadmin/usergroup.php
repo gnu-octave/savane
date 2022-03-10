@@ -4,7 +4,7 @@
 # This file is part of the Savane project
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
-# Copyright (C) 2017, 2018, 2019 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -37,7 +37,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>no_i18n('Admin: User Info')));
 
-extract (sane_import ('request', 
+extract (sane_import ('request',
   [
     'digits' => ['user_id', 'comment_max_rows', 'comment_offset'],
     'strings' => [
@@ -136,7 +136,7 @@ function list_user_contributions ($user_id, $user_name)
         . "</b>: $spam$date {$entry['summary']}</dt>\n";
       if (isset ($entry['details']))
         $decoded = trackers_decode_value ($entry['details']);
-      if (preg_match ('/">New Item in/', $entry['summary']))
+      if (preg_match ('/\'>New Item in/', $entry['summary']))
         {
           $entry['details'] = '<div class="tracker_comment">'
                               . markup_full ($decoded) . "</div>\n";
