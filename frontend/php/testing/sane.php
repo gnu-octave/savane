@@ -117,16 +117,12 @@ $reference = 'account/impersonate.php';
 $reference = 'account/login.php';
 {
   $names = [
-    'true' => [
-      'stay_in_ssl', 'brotherhood', 'cookie_for_a_year', 'login',
-      'cookie_test'
-    ],
+    'true' => ['brotherhood', 'cookie_for_a_year', 'login', 'cookie_test'],
     'name' => 'form_loginname',
     'pass' => 'form_pw',
     'internal_uri' => 'uri'
   ];
   $in = [
-    'stay_in_ssl' => true,
     'brotherhood' => true,
     'login' => 'Login',
     'form_loginname' => 'agn',

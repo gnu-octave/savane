@@ -37,16 +37,14 @@ if (user_isloggedin() && !$from_brother)
 # Input checks.
 extract(sane_import('request',
   [
-    'true' => [
-      'stay_in_ssl', 'brotherhood', 'cookie_for_a_year', 'login',
-      'cookie_test'
-    ],
+    'true' => ['brotherhood', 'cookie_for_a_year', 'login', 'cookie_test'],
     'name' => 'form_loginname',
     'pass' => 'form_pw',
     'internal_uri' => 'uri'
   ]
 ));
 
+$stay_in_ssl = isset ($GLOBALS['sys_https_host']);
 $uri_enc = urlencode ($uri);
 
 # Check cookie support.
@@ -217,7 +215,7 @@ Visiting the link sent to you in this email will activate your account.")
 
 if (isset($GLOBALS['sys_https_host']))
   utils_get_content("account/login");
-print "<form action=\"{$GLOBALS['sys_https_url']$GLOBALS['sys_home']}"
+print "<form action=\"{$GLOBALS['sys_https_url']}{$GLOBALS['sys_home']}"
   . 'account/login.php" method="post">';
 print form_input ('hidden', 'uri', $uri);
 
@@ -239,16 +237,9 @@ print '<input type="password" name="form_pw" tabindex="1" /> '
 
 $attr_list = ['tabindex' => '1'];
 
-if (isset($GLOBALS['sys_https_host']))
+if (!isset ($GLOBALS['sys_https_host']))
   {
-    print '<p>'
-      . form_checkbox ('stay_in_ssl', $stay_in_ssl || !$login, $attr_list)
-      . '<span class="preinput">';
-    print _("Stay in secure (https) mode after login")."</span><br />\n";
-  }
-else
-  {
-    print '<p class="warn"><input type="hidden" name="stay_in_ssl" value="0" />';
+    print '<p class="warn">';
     print _("This server does not encrypt data (no https), so the password you
 sent may be viewed by other people. Do not use any important
 passwords.") . "</p>\n";
