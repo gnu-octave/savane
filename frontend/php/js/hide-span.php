@@ -21,12 +21,11 @@
 require_once('../include/init.php');
 require_once('../include/http.php');
 require_once('../include/sane.php');
-header('Content-Type: text/javascript');
+header ('Content-Type: text/javascript');
+extract (sane_import ('request', ['preg' => [['box_id', '/^\w*$/']]]));
 
-extract(sane_import('request', ['preg' => [['box_id', '/^\w*$/']]]));
-
-if ($box_id === null))
+if ($box_id === null)
   $box_id = "";
 
-print "document.getElementById('".$box_id."').style.display='none';\n";
+print "document.getElementById('$box_id').style.display='none';\n";
 ?>
