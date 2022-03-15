@@ -237,7 +237,7 @@ foreach ($items_for_digest as $item)
       }
 
     # Finally include details + last comment, if asked.
-    if ($field_used["details"] == 1)
+    if (isset ($field_used['details']) && $field_used["details"] == 1)
       print '<hr class="clearr" /><div class="smaller">'
         . trackers_field_display(
             "details", db_result ($result, 0, 'group_id'),

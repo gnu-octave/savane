@@ -920,14 +920,14 @@ $form = '
 $res_report = trackers_data_get_reports($group_id,user_getid(),$sober);
 if ($printer)
   {
+    $form_query_type = null;
     while (list ($f, $v) = db_fetch_array ($res_report))
       {
         if ($f != $report_id)
           continue;
-        $report_name = $v;
+        $form_query_type = $v;
         break;
       }
-    $form_query_type = $report_name;
   }
 else
   {
@@ -999,10 +999,14 @@ else
     $form_submit = '<input class="bold" value="' . _("Apply")
       .'" name="go_report" type="submit" />' . "\n";
   }
-# TRANSLATORS: the first argument is kind of query form (like Basic),
-# the second argument is kind of selection (Simple or Multiple).
-$form .= sprintf (_('Browse with the %1$s query form and %2$s selection.'),
-                  $form_query_type, $form_sel_type);
+if ($form_query_type !== null)
+  $form .=
+     sprintf (
+       # TRANSLATORS: the first argument is kind of query form (like Basic),
+       # the second argument is kind of selection (Simple or Multiple).
+       _('Browse with the %1$s query form and %2$s selection.'),
+       $form_query_type, $form_sel_type
+     ) . "\n";
 
 $form .= '<table cellpadding="0" cellspacing="5">
         <tr><td colspan="'.$fields_per_line.'" nowrap="nowrap">';
