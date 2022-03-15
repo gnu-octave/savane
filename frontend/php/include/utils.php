@@ -699,31 +699,21 @@ function utils_get_tracker_prefix ($tracker)
   return $tracker;
 }
 
-# Return the translation for the given tracker, if available.
+# Return the localized name for the given tracker, if available.
 # Otherwise, return the input string.
-function utils_get_tracker_name($tracker)
+function utils_get_tracker_name ($tracker)
 {
-  switch ($tracker)
-    {
-      case 'bugs':
-        $name = _('bugs');
-        break;
-      case 'cookbook':
-        $name = _('recipes');
-        break;
-      case 'patch':
-        $name = _('patches');
-        break;
-      case 'support':
-        $name = _('support requests');
-        break;
-      case 'task':
-        $name = _('tasks');
-        break;
-      default:
-        $name = $tracker;
-    }
-  return $name;
+  if ($tracker == 'bugs')
+    return _('bugs');
+  if ($tracker == 'cookbook')
+    return _('recipes');
+  if ($tracker == 'patch')
+    return _('patches');
+  if ($tracker == 'support')
+    return _('support requests');
+  if ($tracker == 'task')
+    return _('tasks');
+  return $tracker;
 }
 
 function utils_get_priority_color ($index, $closed="")
