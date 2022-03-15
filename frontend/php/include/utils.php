@@ -677,11 +677,6 @@ function show_priority_colors_key()
   print  "</p>\n";
 }
 
-function get_priority_color ($index, $closed="")
-{
-  return utils_get_priority_color($index, $closed);
-}
-
 function utils_get_tracker_icon ($tracker)
 {
   if ($tracker == "bugs")

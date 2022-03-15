@@ -714,9 +714,11 @@ ORDER BY bug_fv_id DESC LIMIT 1",
       $status =
         $dstatus[$current_group_id . $tracker . $content[$key]['resolution_id']];
 
-      print '
-  <div class="' . get_priority_color($content[$key]['priority'],
-                                     $content[$key]['status_id']) . '">';
+      print '<div class=\''
+        . utils_get_priority_color (
+            $content[$key]['priority'], $content[$key]['status_id']
+          )
+        . "'>\n";
 
       # Ability to remove a dependency is only given to technician
       # level members of a project.
