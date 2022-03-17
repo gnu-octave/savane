@@ -5,7 +5,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017-2020 Ineiev
+# Copyright (C) 2017-2020, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -146,6 +146,7 @@ Follow-up Comments:\n\n";
         }
     }
 
+  $img_base_url = $GLOBALS['sys_home'] . 'images/' . SV_THEME . '.theme';
   # Provide a shortcut to the original submission, if more than 5 comments
   # and not in reversed order.
   if (!$ascii && empty($_REQUEST['printer'])
@@ -156,9 +157,8 @@ Follow-up Comments:\n\n";
         $jumpto_text = _("Jump to the recipe preview");
 
       $out = '<p class="center"><span class="xsmall">'
-        . '(<a href="#comment0"><img src="' . $GLOBALS['sys_home'] . 'images/'
-        . SV_THEME . '.theme/arrows/bottom.png" class="icon" alt="" /> '
-        . $jumpto_text . "</a>)</span></p>\n" . $out;
+        . "(<a href='#comment0'><img src=\"$img_base_url/arrows/bottom.png\" "
+        . "class='icon' alt='' /> $jumpto_text </a>)</span></p>\n" . $out;
     }
 
   # Loop throuh the follow-up comments and format them.
@@ -182,6 +182,11 @@ Follow-up Comments:\n\n";
       if ($ascii && $is_spam)
         continue;
 
+      $score = sprintf(_("Current spam score: %s"), $entry['spamscore']);
+      $score = 'title="' . $score . '"';
+      $int_id = $entry['comment_internal_id'];
+      $comment_ids = "&amp;item_id=$item_id&amp;comment_internal_id=$int_id";
+      $url_start = htmlentities ($_SERVER['PHP_SELF']) . '?func=';
       $j++; # Counter for background color.
 
       # Find out what would be this comment number.
@@ -221,59 +226,56 @@ Follow-up Comments:\n\n";
           if (!empty($_REQUEST['printer']))
             continue;
 
-          $class = utils_get_alt_row_color($j);
+          $class = utils_get_alt_row_color ($j);
 
           # The admin may actually want to see the incriminated item.
           # The submitter too.
-          if (($func == "viewspam"
-               && $comment_internal_id == $entry['comment_internal_id'])
+          if (($func == "viewspam" && $comment_internal_id == $int_id)
               || ($entry['user_id'] != 100 && user_getid() == $entry['user_id']))
             {
               # Should be item content, without making links, with no markup.
               # It is only for checks purpose, nothing else.
-              $out .= "\n" . '<tr class="' . $class . '">'
+              $out .= "\n<tr class=\"$class\">"
                 . '<td valign="top"><span class="warn">('
-. _("Why is this post is considered to be spam? Users may have reported it to be
-spam or, if it has been recently posted, it may just be waiting for spamchecks
-to be run.")
-. ')</span><br />
-<span class="preinput">' . _("Spam content:") . "</span><br />\n<br />"
-. nl2br($entry['content']) . "</td>\n"
-. '<td class="' . $class . 'extra" id="spam' . $entry['comment_internal_id']
-. '">' . "\n";
+                . _("Why is this post is considered to be spam? "
+                    . "Users may have reported it to be\nspam or, if it has "
+                    . "been recently posted, it may just be waiting for "
+                    . "spamchecks\nto be run.")
+                . ")</span><br />\n<span class='preinput'>"
+                . _("Spam content:") . "</span><br />\n<br />"
+                . nl2br ($entry['content']) . "</td>\n<td class=\"{$class}extra\" "
+                . "id=\"spam{$int_id}\">\n";
 
               $out .= utils_user_link($entry['user_name'],
                                       $entry['realname'], true) . "<br />\n";
 
               if ($is_admin)
                 {
-                  $out .= "\n<br /><br />" . '(<a title="'
-. sprintf(_("Current spam score: %s"), $entry['spamscore']) . '" href="'
-. htmlentities ($_SERVER['PHP_SELF']) . '?func=unflagspam&amp;item_id=' . $item_id
-. '&amp;comment_internal_id=' . $entry['comment_internal_id'] . '#comment'
-. ($comment_number + 1) . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
-. SV_THEME . '.theme/bool/ok.png" class="icon" alt="" />'
-. _("Unflag as spam") . '</a>)';
+                  $cn = $comment_number + 1;
+                  $out .= "\n<br /><br />(<a $score href=\"$url_start"
+                    . "unflagspam$comment_ids#comment$cn\">"
+                    . "<img\n src=\"$img_base_url/bool/ok.png\"\n "
+                    . "class='icon' alt='' />" . _("Unflag as spam") . '</a>)';
                 }
               $out .= "</td></tr>\n";
             }
           else
             {
-              $out .= "\n" . '<tr class="' . $class . 'extra">'
-. "<td class=\"xsmall\">&nbsp;</td>\n"
-. '<td class="xsmall"><a href="'
-. htmlentities ($_SERVER['PHP_SELF']) . '?func=viewspam&amp;item_id=' . $item_id
-. '&amp;comment_internal_id=' . $entry['comment_internal_id'] . '#spam'
-. $entry['comment_internal_id'] . '" title="'
-. sprintf(_("Current spam score: %s"), $entry['spamscore']) . '">'
-. sprintf(_("Spam posted by %s"), $spammer_user_name) . "</a></td></tr>\n";
+              $out .= "\n<tr class=\"{$class}extra\">"
+                . "<td class=\"xsmall\">&nbsp;</td>\n"
+                . "<td class='xsmall'><a $score href=\"$url_start"
+                . "viewspam$comment_ids#spam$int_id\">"
+                . sprintf (_("Spam posted by %s"), $spammer_user_name)
+                . "</a></td></tr>\n";
             }
           continue;
-        }
+        } # if ($is_spam)
 
       $i++;
-      $comment_type = isset($entry['comment_type']) ? $entry['comment_type']
-                                                      : null;
+      $comment_type = null;
+      if (isset($entry['comment_type']))
+        $comment_type = $entry['comment_type'];
+
       if ($comment_type == 'None' || $comment_type == '')
         $comment_type = '';
       else
@@ -293,136 +295,129 @@ to be run.")
           if ($comment_type)
             $out .= "\n";
           $out .= markup_ascii ($entry['content']) . "\n";
+          continue;
+        }
+      if ($comment_type)
+        {
+          # Put the comment type in strong.
+          $comment_type = "<strong>$comment_type</strong><br />\n";
+        }
+
+      $icon = '';
+      $icon_alt = '';
+      $class = utils_get_alt_row_color($j);
+
+      # Find out the user id of the comment author.
+      $poster_id = $entry['user_id'];
+
+      # Ignore user 100 (anonymous).
+      if ($poster_id != 100)
+        {
+          # Cosmetics if the user is assignee.
+          if (array_key_exists($poster_id, $assignees_id))
+            {
+              # Highlight the latest comment of the assignee.
+              if ($previous != 1)
+                {
+                  $class = "boxhighlight";
+                  $previous = 1;
+                }
+            }
+
+          # Cosmetics if the user is project member (we shan't go as far
+          # as presenting a different icon for specific roles, like
+          # manager).
+
+          if (member_check($poster_id, $group_id, 'A'))
+            {
+              # Project admin case: if the group is the admin group,
+              # show the specific site admin icon.
+              if ($group_id == $GLOBALS['sys_group_id'])
+                {
+                  $icon = "site-admin";
+                  $icon_alt = _("Site Administrator");
+                }
+              else
+                {
+                  $icon = "project-admin";
+                  $icon_alt = _("Project Administrator");
+                }
+            }
+          elseif (member_check($poster_id, $group_id))
+            {
+              # Simple project member.
+              $icon = "project-member";
+              $icon_alt = _("Project Member");
+            }
+        }
+
+      $text_to_markup = $entry['content'];
+
+      $out .= "\n" . '<tr class="' . $class . '"><td valign="top">';
+      $out .= '<a id="comment' . $comment_number . '" href="#comment'
+              . $comment_number . '" class="preinput">';
+      $out .= utils_format_date($entry['date']);
+      $out .= ', ';
+
+      if ($comment_number < 1)
+        {
+          if (ARTIFACT != "cookbook")
+            $out .= '<strong>' . _("original submission:") . "</strong>\n";
+          else
+            $out .= '<strong>' . _("recipe preview:") . "</strong>\n";
         }
       else
+        $out .= sprintf(_("comment #%s:"), $comment_number);
+
+      $out .= "</a>&nbsp;";
+      if ($allow_quote)
+        $out .=  '<button name="quote_no" value="' . $comment_number
+                 . '">' . _('Quote') . "</button>";
+      $out .= "<br />\n$comment_type";
+      $out .= '<div class="tracker_comment">';
+      # Full markup only for original submission.
+      if ($comment_number < 1)
+        $out .= markup_full ($text_to_markup);
+      else
+        $out .= markup_rich ($text_to_markup);
+      $out .= "</div>\n</td>\n";
+
+      $out .= "<td class=\"{$class}extra\">"
+        . utils_user_link($entry['user_name'], $entry['realname'], true);
+
+      if ($icon)
         {
-          if ($comment_type)
-            {
-              # Put the comment type in strong.
-              $comment_type = "<strong>$comment_type</strong><br />\n";
-            }
-
-          $icon = '';
-          $icon_alt = '';
-          $class = utils_get_alt_row_color($j);
-
-          # Find out the user id of the comment author.
-          $poster_id = $entry['user_id'];
-
-          # Ignore user 100 (anonymous).
-          if ($poster_id != 100)
-            {
-              # Cosmetics if the user is assignee.
-              if (array_key_exists($poster_id, $assignees_id))
-                {
-                  # Highlight the latest comment of the assignee.
-                  if ($previous != 1)
-                    {
-                      $class = "boxhighlight";
-                      $previous = 1;
-                    }
-                }
-
-              # Cosmetics if the user is project member (we shan't go as far
-              # as presenting a different icon for specific roles, like
-              # manager).
-
-              if (member_check($poster_id, $group_id, 'A'))
-                {
-                  # Project admin case: if the group is the admin group,
-                  # show the specific site admin icon.
-                  if ($group_id == $GLOBALS['sys_group_id'])
-                    {
-                      $icon = "site-admin";
-                      $icon_alt = _("Site Administrator");
-                    }
-                  else
-                    {
-                      $icon = "project-admin";
-                      $icon_alt = _("Project Administrator");
-                    }
-                }
-              elseif (member_check($poster_id, $group_id))
-                {
-                  # Simple project member.
-                  $icon = "project-member";
-                  $icon_alt = _("Project Member");
-                }
-            }
-
-          $text_to_markup = $entry['content'];
-
-          $out .= "\n" . '<tr class="' . $class . '"><td valign="top">';
-          $out .= '<a id="comment' . $comment_number . '" href="#comment'
-                  . $comment_number . '" class="preinput">';
-          $out .= utils_format_date($entry['date']);
-          $out .= ', ';
-
-          if ($comment_number < 1)
-            {
-              if (ARTIFACT != "cookbook")
-                $out .= '<strong>' . _("original submission:") . "</strong>\n";
-              else
-                $out .= '<strong>' . _("recipe preview:") . "</strong>\n";
-            }
-          else
-            $out .= sprintf(_("comment #%s:"), $comment_number);
-
-          $out .= "</a>&nbsp;";
-          if ($allow_quote)
-            $out .=  '<button name="quote_no" value="' . $comment_number
-                     . '">' . _('Quote') . "</button>";
-          $out .= "<br />\n$comment_type";
-
-          $out .= '<div class="tracker_comment">';
-          # Full markup only for original submission.
-          if ($comment_number < 1)
-            $out .= markup_full($text_to_markup);
-          else
-            $out .= markup_rich($text_to_markup);
-          $out .= "</div>\n";
-
-          $out .="</td>\n";
-          $out .= '<td class="' . $class . 'extra">'
-                  . utils_user_link($entry['user_name'],
-                                   $entry['realname'], true);
-
-          if ($icon)
-            {
-              $out .= '<br /><span class="help" title="' . $icon_alt
-                      . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
-                      . SV_THEME . '.theme/roles/' . $icon . '.png" alt="'
-                      . $icon_alt . '" /></span>';
-            }
-
-          if ($poster_id != 100 && array_key_exists($poster_id, $assignees_id))
-            {
-              $out .= '<span class="help" title="' . _("In charge of this item.")
-                      . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
-                      . SV_THEME . '.theme/roles/assignee.png" alt="'
-                      . _("In charge of this item.") . '" /></span>';
-            }
-
-          # If not a member of the project, allow to mark as spam.
-          # For performance reason, do not check here if the user already
-          # flagged the comment as spam, it will be done only if he tries to
-          # to it twice.
-          if (user_isloggedin() && !$icon
-              && $poster_id != user_getid() && empty($_REQUEST['printer']))
-            {
-              # Surround by two line breaks, to keep that link clearly
-              # separated from anything else, to avoid clicks by error.
-              $out .= '<br /><br />(<a title="'
-. sprintf(_("Current spam score: %s"), $entry['spamscore']) . '" href="'
-. htmlentities ($_SERVER['PHP_SELF']) . '?func=flagspam&amp;item_id=' . $item_id
-. '&amp;comment_internal_id=' . $entry['comment_internal_id'] . '#comment'
-. ($comment_number - 1) . '"><img src="' . $GLOBALS['sys_home'] . 'images/'
-. SV_THEME . '.theme/misc/trash.png" class="icon" alt="" />'
-. _("Flag as spam") . "</a>)<br /><br />\n";
-            }
-          $out .= "</td></tr>\n";
+          $out .= "<br />\n<span class='help'>"
+            . "<img src=\"$img_base_url/roles/$icon.png\" alt=\"$icon_alt\" "
+            . '/></span>';
         }
-    }
+
+      if ($poster_id != 100 && array_key_exists($poster_id, $assignees_id))
+        {
+          $out .= '<span class="help" title="' . _("In charge of this item.")
+                  . "\"><img src=\"$img_base_url/roles/assignee.png\" alt=\""
+                  . _("In charge of this item.") . '" /></span>';
+        }
+
+      # If not a member of the project, allow to mark as spam.
+      # For performance reason, do not check here if the user already
+      # flagged the comment as spam, it will be done only if he tries to
+      # do it twice.
+      if (user_isloggedin() && !$icon
+          && $poster_id != user_getid () && empty ($_REQUEST['printer']))
+        {
+          # Surround by two line breaks, to keep that link clearly
+          # separated from anything else, to avoid clicks by error.
+          $out .= "<br /><br />\n";
+          $cn = $comment_number - 1;
+          $icon_url = "$img_base_url/misc/trash.png";
+          $out .= "(<a $score\n  href=\"$url_start"
+            . "flagspam$comment_ids#comment$cn\">"
+            . "<img\n src=\"$icon_url\" class='icon' alt=''\n />"
+            . _("Flag as spam") . "</a>)<br /><br />\n";
+        }
+      $out .= "</td></tr>\n";
+    } # foreach ($data as $entry)
   $out .= ($ascii ? "\n\n\n" : "</table>\n");
 
   return $out;

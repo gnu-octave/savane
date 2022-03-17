@@ -152,27 +152,18 @@ function trackers_data_show_notification_settings($group_id, $tracker_name,
 {
   $grtrsettings = &trackers_data_get_notification_settings($group_id,
                                                            $tracker_name);
-  if (!(user_ismember($group_id, 'A')))
+  if (!(user_ismember ($group_id, 'A')))
     return;
+  $check = ' checked="checked" ';
+  $cat_ck = $glob_ck = $both_ck ='';
   if ($grtrsettings['glnotif'] == 0)
-    {
-      $categoryradio = "checked";
-      $globalradio = "";
-      $bothradio = "";
-    }
+    $cat_ck = $check;
   if ($grtrsettings['glnotif'] == 1)
-    {
-      $categoryradio = "";
-      $globalradio = "checked";
-      $bothradio = "";
-    }
+    $glob_ck = $check;
   if ($grtrsettings['glnotif'] == 2)
-    {
-      $categoryradio = "";
-      $globalradio = "";
-      $bothradio = "checked";
-    }
-  if ($grtrsettings['nb_categories'] > 0)
+    $both_ck = $check;
+  $cat_n = $grtrsettings['nb_categories'];
+  if ($cat_n > 0)
     {
       if ($show_intro_msg != 0)
           print '<p>'
@@ -181,27 +172,22 @@ function trackers_data_show_notification_settings($group_id, $tracker_name,
                 . "depend on item categories, and provide the respective "
                 . "email addresses (comma-separated list).")
              . "</p>\n";
-      print '
-           <input type="radio" name="' . $tracker_name
-. '_notif_scope" value="global" ' . $globalradio
-. ' />&nbsp;&nbsp;<span class="preinput">'
-. _("Notify persons in the global list only") . '</span><br />
-          <input type="radio" name="' . $tracker_name
-. '_notif_scope" value="category" ' . $categoryradio
-. ' />&nbsp;&nbsp;<span class="preinput">'
-. _("Notify persons in the category related list instead of the global list")
-. '</span><br />
-          <input type="radio" name="' . $tracker_name
-. '_notif_scope" value="both" ' . $bothradio
-. ' />&nbsp;&nbsp;<span class="preinput">'
-. _("Notify persons in the category related list in addition to the global list")
-. '</span><br />
+      print "<input type='radio' name=\"${tracker_name}_notif_scope\" "
+        . "value='global'$glob_ck/>&nbsp;&nbsp;<span class='preinput'>"
+        . _("Notify persons in the global list only") . "</span><br />\n"
+        . "<input type='radio' name=\"${tracker_name}_notif_scope\" "
+        . "value='category'$cat_ck/>&nbsp;&nbsp;<span class='preinput'>"
+        . _("Notify persons in the category related list "
+            . "instead of the global list") . "</span><br />\n"
+        . "<input type='radio' name=\"${tracker_name}_notif_scope\" "
+        . "value='both'$both_ck/>&nbsp;&nbsp;<span class='preinput'>"
+        . _("Notify persons in the category related list in addition to "
+            . "the global list")
+        . "</span><br />\n<h2>" . _("Category related lists") . "</h2>\n";
+      print "<input type='hidden' name=\"${tracker_name}_nb_categories\" "
+        . "value=\"$cat_n\" />\n";
 
-          <h2>' . _("Category related lists") . "</h2>\n";
-      print '<input type="hidden" name="' . $tracker_name
-. '_nb_categories" value="' . $grtrsettings['nb_categories'] . '" />';
-
-      for ($i=0; $i < $grtrsettings['nb_categories'] ; $i++)
+      for ($i = 0; $i < $cat_n ; $i++)
         {
           $tr_cat = $tracker_name . '_cat_' . $i;
           $cb_name = $tr_cat . '_send_all_flag';
