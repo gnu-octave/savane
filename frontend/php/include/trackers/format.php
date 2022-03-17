@@ -482,8 +482,8 @@ function format_item_changes ($changes, $item_id, $group_id)
       if ($changes['details']['type'] != 'None'
           && $changes['details']['type'] != '(Error - Not Found)')
         $out_com .= '[' . $changes['details']['type'] . "]\n";
-      $out_com .= utils_unconvert_htmlspecialchars($changes['details']['add']);
-      unset($changes['details']);
+      $out_com .= markup_ascii ($changes['details']['add']);
+      unset ($changes['details']);
 
       $out .= $out_com;
     }

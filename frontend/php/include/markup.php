@@ -954,7 +954,7 @@ function markup_ascii_line ($line, &$item_no)
   if (empty ($item_no[$n]))
     $item_no[$n] = 0;
   $item_no[$n]++;
-  return str_repeat ($indent_base, $n) . "{$item_no[$n]} {$matches[2]}";
+  return str_repeat ($indent_base, $n) . "{$item_no[$n]}. {$matches[2]}";
 }
 
 # Implement applicable parts of tracker comment in ASCII, which currently
