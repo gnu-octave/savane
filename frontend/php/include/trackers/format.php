@@ -281,28 +281,18 @@ to be run.")
 
       if ($ascii)
         {
-          $fmt = "\n-------------------------------------------------------\n"
-            . "Date: %-30sBy: %s\n";
-          if ($comment_type)
-            $fmt .= "%s\n%s";
-          else
-            $fmt .= "%s%s";
-          $fmt .= "\n";
-        }
+          $out .= "\n-------------------------------------------------------\n";
 
-      if ($ascii)
-        {
+          $date = utils_format_date($entry['date']);
           if ($entry['realname'])
-            $name = $entry['realname'] . " <" . $entry['user_name'] . ">";
+            $name = "{$entry['realname']} <{$entry['user_name']}>";
           else
             $name = "Anonymous";
-
-          $out .= sprintf($fmt,
-                          utils_format_date($entry['date']),
-                          $name,
-                          $comment_type,
-                          utils_unconvert_htmlspecialchars($entry['content'])
-                          );
+          $out .= sprintf ("Date: %-30sBy: %s\n", $date, $name);
+          $out .= $comment_type;
+          if ($comment_type)
+            $out .= "\n";
+          $out .= markup_ascii ($entry['content']) . "\n";
         }
       else
         {

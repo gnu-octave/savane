@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2005-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2005-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2018, 2019, 2020, 2021 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020, 2021, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -930,5 +930,42 @@ function _markup_inline($line)
                            . $GLOBALS['sys_file_domain'] . '/file', $line);
     }
   return $line;
+}
+
+# Process a single line for markup_ascii ().
+function markup_ascii_line ($line, &$item_no)
+{
+  # Purge all list indices starting from $n.
+  $markup_trim_item_no = function (&$item_no, $n)
+  {
+    $cnt = count ($item_no);
+    for ($i = $n; $i < $cnt; $i++)
+      unset ($item_no[$i]);
+  };
+  $indent_base = "\t";
+  if (!preg_match('/^\s?([0]+) (.+)$/', $line, $matches))
+    {
+      $item_no = [];
+      return $line;
+    }
+  $n = strlen ($matches[1]);
+  $markup_trim_item_no ($item_no, $n);
+  $n--;
+  if (empty ($item_no[$n]))
+    $item_no[$n] = 0;
+  $item_no[$n]++;
+  return str_repeat ($indent_base, $n) . "{$item_no[$n]} {$matches[2]}";
+}
+
+# Implement applicable parts of tracker comment in ASCII, which currently
+# amounts to enumerations in ordered lists, Savannah sr #110621.
+function markup_ascii ($text)
+{
+  $lines = explode ("\n", utils_unconvert_htmlspecialchars ($text));
+  $item_no = [];
+  $ret = '';
+  foreach ($lines as $line)
+    $ret .= markup_ascii_line ($line, $item_no) . "\n";
+  return $ret;
 }
 ?>
