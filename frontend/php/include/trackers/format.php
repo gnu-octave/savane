@@ -159,8 +159,8 @@ Follow-up Comments:\n\n";
 
   # Loop throuh the follow-up comments and format them.
   reset($data);
-  $i = 0;
-  $j = 0;
+  $i = 0; # Comment counter.
+  $j = 0; # Counter for background color.
   $previous = false;
   $is_admin = member_check(0, $group_id, 'A');
   foreach ($data as $entry)
@@ -183,13 +183,13 @@ Follow-up Comments:\n\n";
       $int_id = $entry['comment_internal_id'];
       $comment_ids = "&amp;item_id=$item_id&amp;comment_internal_id=$int_id";
       $url_start = htmlentities ($_SERVER['PHP_SELF']) . '?func=';
-      $j++; # Counter for background color.
+      $class = utils_get_alt_row_color (++$j);
 
       # Find out what would be this comment number.
-      if (!$user_pref_fromoldertonewer)
-        $comment_number = ($max_entries - $i);
-      else
+      if ($user_pref_fromoldertonewer)
         $comment_number = $i;
+      else
+        $comment_number = ($max_entries - $i);
       $i++;
 
       extract(sane_import('get',
@@ -223,8 +223,6 @@ Follow-up Comments:\n\n";
           if (!empty($_REQUEST['printer']))
             continue;
 
-          $class = utils_get_alt_row_color ($j);
-
           # The admin may actually want to see the incriminated item.
           # The submitter too.
           if (($func == "viewspam" && $comment_internal_id == $int_id)
@@ -232,8 +230,8 @@ Follow-up Comments:\n\n";
             {
               # Should be item content, without making links, with no markup.
               # It is only for checks purpose, nothing else.
-              $out .= "\n<tr class=\"$class\">"
-                . '<td valign="top"><span class="warn">('
+              $out .= "\n<tr class=\"$class\">\n"
+                . "<td valign='top'>\n<span class='warn'>("
                 . _("Why is this post is considered to be spam? "
                     . "Users may have reported it to be\nspam or, if it has "
                     . "been recently posted, it may just be waiting for "
@@ -294,16 +292,10 @@ Follow-up Comments:\n\n";
           continue;
         }
       if ($comment_type)
-        {
-          # Put the comment type in strong.
-          $comment_type = "<strong>$comment_type</strong><br />\n";
-        }
+        $comment_type = "<b>$comment_type</b><br />\n";
 
       $icon = '';
       $icon_alt = '';
-      $class = utils_get_alt_row_color($j);
-
-      # Find out the user id of the comment author.
       $poster_id = $entry['user_id'];
 
       # Ignore user 100 (anonymous).
@@ -345,30 +337,28 @@ Follow-up Comments:\n\n";
               $icon = "project-member";
               $icon_alt = _("Project Member");
             }
-        }
+        } # if ($poster_id != 100)
 
       $text_to_markup = $entry['content'];
 
-      $out .= "\n" . '<tr class="' . $class . '"><td valign="top">';
-      $out .= '<a id="comment' . $comment_number . '" href="#comment'
-              . $comment_number . '" class="preinput">';
-      $out .= utils_format_date($entry['date']);
-      $out .= ', ';
+      $out .= "\n<tr class=\"$class\"><td valign='top'>\n"
+        . "<a id='comment$comment_number' href='#comment$comment_number' "
+        . "class='preinput'>\n" . utils_format_date($entry['date']) . ', ';
 
       if ($comment_number < 1)
         {
           if (ARTIFACT != "cookbook")
-            $out .= '<strong>' . _("original submission:") . "</strong>\n";
+            $out .= '<b>' . _("original submission:") . "</b>\n";
           else
-            $out .= '<strong>' . _("recipe preview:") . "</strong>\n";
+            $out .= '<b>' . _("recipe preview:") . "</b>\n";
         }
       else
         $out .= sprintf(_("comment #%s:"), $comment_number);
 
       $out .= "</a>&nbsp;";
       if ($allow_quote)
-        $out .=  '<button name="quote_no" value="' . $comment_number
-                 . '">' . _('Quote') . "</button>";
+        $out .=  "<button name='quote_no' value='$comment_number'>"
+          . _('Quote') . "</button>";
       $out .= "<br />\n$comment_type";
       $out .= '<div class="tracker_comment">';
       # Full markup only for original submission.
