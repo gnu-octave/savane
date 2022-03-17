@@ -38,19 +38,19 @@ $in = '0 item 1
 0 item 1
 0 item 2
 0 item 3';
-$out = '1 item 1
-	1 item 1.1
-	2 item 1.2
-		1 item 1.2.1
-		2 item 1.2.2
-		3 item 1.2.3
-2 item 2
-	1 item 2.1
-3 item 3
+$out = '1. item 1
+	1. item 1.1
+	2. item 1.2
+		1. item 1.2.1
+		2. item 1.2.2
+		3. item 1.2.3
+2. item 2
+	1. item 2.1
+3. item 3
 
-1 item 1
-2 item 2
-3 item 3
+1. item 1
+2. item 2
+3. item 3
 ';
 
 $res = markup_ascii ($in);
