@@ -87,10 +87,12 @@ function print_h2 ($x)
   print '<h2>' . $x . "</h2>\n";
 }
 
+$show_intro = 1;
 foreach ($artifacts as $art => $label)
   {
     print_h2 ($label);
-    trackers_data_show_notification_settings ($group_id, $art, 0);
+    trackers_data_show_notification_settings ($group_id, $art, $show_intro);
+    $show_intro = 0;
     print "<br />\n";
   }
 $news_address = htmlspecialchars ($row_grp['new_news_address']);

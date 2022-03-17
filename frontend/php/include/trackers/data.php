@@ -7,7 +7,7 @@
 # Copyright (C) 2001-2002 Laurent Julliard, CodeX Team, Xerox
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2018, 2019, 2020 Ineiev
+# Copyright (C) 2018, 2019, 2020, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -176,14 +176,11 @@ function trackers_data_show_notification_settings($group_id, $tracker_name,
     {
       if ($show_intro_msg != 0)
           print '<p>'
-. sprintf(
-# TRANSLATORS: the argument is tracker name (like bugs, support requests, tasks).
-         _("As a project administrator you must decide if the list of persons
-to be systematically notified on new %s submissions (and possibly updates)
-depend on the categories or not and you must provide the corresponding email
-addresses (comma separated list)."),
-           utils_get_tracker_name($tracker_name))
-. "</p>\n";
+            . _("Here you can decide whether the lists "
+                . "of persons to be notified on new submissions and updates "
+                . "depend on item categories, and provide the respective "
+                . "email addresses (comma-separated list).")
+             . "</p>\n";
       print '
            <input type="radio" name="' . $tracker_name
 . '_notif_scope" value="global" ' . $globalradio
@@ -224,18 +221,13 @@ addresses (comma separated list)."),
         }
       print '<h2>' . _("Global list") . "</h2>\n";
     }
-  else
-    {
-      if ($show_intro_msg != 0)
-        print '<p>'
-. sprintf(
-# TRANSLATORS: the argument is tracker name (like bugs, support requests, tasks).
-         _("As a project administrator you must decide if the list of persons
-to be systematically notified on new %s submissions (and possibly updates)
-depend on the categories or not and you must provide the corresponding email
-addresses (comma separated list)."), utils_get_tracker_name($tracker_name))
-. "</p>\n";
-    }
+  elseif ($show_intro_msg != 0)
+    print '<p>'
+        . _("Here you can decide whether the lists "
+            . "of persons to be notified on new submissions and updates "
+            . "depend on item categories, and provide the respective "
+            . "email addresses (comma-separated list).")
+         . "</p>\n";
 
 $cb_name = $tracker_name . '_send_all_changes';
 $txt_name = $tracker_name . '_new_item_address';
