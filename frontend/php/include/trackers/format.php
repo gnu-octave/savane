@@ -71,11 +71,7 @@ function format_item_details ($item_id, $group_id, $ascii = false,
           $hist_id = $entry['bug_history_id'] + 1;
 
           $data[$i]['spamscore'] = $entry['spamscore'];
-          if ($entry['spamscore'] < 5)
-            {
-              # Count the entry only if not a spam.
-              $max_entries++;
-            }
+          $max_entries++;
         }
     }
 
@@ -191,9 +187,10 @@ Follow-up Comments:\n\n";
 
       # Find out what would be this comment number.
       if (!$user_pref_fromoldertonewer)
-        $comment_number = ($max_entries-$i);
+        $comment_number = ($max_entries - $i);
       else
         $comment_number = $i;
+      $i++;
 
       extract(sane_import('get',
         [
@@ -271,7 +268,6 @@ Follow-up Comments:\n\n";
           continue;
         } # if ($is_spam)
 
-      $i++;
       $comment_type = null;
       if (isset($entry['comment_type']))
         $comment_type = $entry['comment_type'];
