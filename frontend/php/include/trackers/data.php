@@ -1019,20 +1019,19 @@ function trackers_data_copy_default_values($field, $group_id, $by_field_id=false
     }
 }
 
-function trackers_data_get_cached_field_value($field,$group_id,$value_id)
+function trackers_data_get_cached_field_value ($field, $group_id, $value_id)
 {
   global $BF_VALUE_BY_NAME;
 
-  if (!isset($BF_VALUE_BY_NAME[$field][$value_id]))
+  if (isset ($BF_VALUE_BY_NAME[$field][$value_id]))
+    return $BF_VALUE_BY_NAME[$field][$value_id];
+  $res = trackers_data_get_field_predefined_values ($field, $group_id);
+  while ($fv_array = db_fetch_array($res))
     {
-      $res = trackers_data_get_field_predefined_values ($field, $group_id,
-                                                        false, false, false);
-      while ($fv_array = db_fetch_array($res))
-        {
-          # $fv_array[0] has the value_id and [1] is the value
-          $BF_VALUE_BY_NAME[$field][$fv_array['value_id']] = $fv_array[1];
-        }
+      $BF_VALUE_BY_NAME[$field][$fv_array['value_id']] = $fv_array['value'];
     }
+  if (!isset ($BF_VALUE_BY_NAME[$field][$value_id]))
+    $BF_VALUE_BY_NAME[$field][$value_id] = null;
   return $BF_VALUE_BY_NAME[$field][$value_id];
 }
 
