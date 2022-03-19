@@ -247,9 +247,9 @@ or discards the registration.
 
 = Registration Administration =
 
-While this item will be useful to track the registration process,
-*approving or discarding the registration must be done using
-the specific [{$GLOBALS['sys_https_url']}{$GLOBALS['sys_home']}"
+While this item will be useful to track the registration process, "
+. "*approving or discarding the registration must be done using the "
+. "specific [{$GLOBALS['sys_https_url']}{$GLOBALS['sys_home']}"
 . "siteadmin/groupedit.php?group_id=$group_id"
 . " Group Administration] page*, accessible only to site administrators,
 effectively *logged as site administrators* (superuser):
