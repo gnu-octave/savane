@@ -5,7 +5,7 @@
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Nicodemo Alvaro
-# Copyright (C) 2017, 2018, 2021 Ineiev
+# Copyright (C) 2017, 2018, 2021, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -22,20 +22,105 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# only_artifact is quite important here:
-#       - if it is not set, it will allow to select all trackers
-#       - if it is set to menu, it will make sure the search is not restricted
-#       to a given group, since it means it is in the left menu
-function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
+# Check if the group uses any trackers to search in.
+function search_has_group_anything_to_search ($gid)
 {
-  global $words,$group_id,$exact,$type_of_search,$type,$max_rows;
-  global $only_group_id,$project;
+  $cases = ['support', 'bugs', 'task', 'patch'];
+  $group = project_get_object ($gid);
+  foreach ($cases as $tracker)
+    if ($group->Uses ($tracker))
+      return true;
+  return false;
+}
+
+# List tracker search options for given group and kind of search;
+# used in search_box ().
+function search_list_tracker_options ($gid, $type_of_search, $is_small)
+{
+   $sel = '';
+   if (!empty ($gid))
+     {
+       $group_realname = substr (group_getname ($gid), 0, 10) . "...";
+       $group = project_get_object ($gid);
+     }
+   $cases = [
+     'support' => [
+       # TRANSLATORS: this string is used in the context
+       # of "Search [...] in Support"; the HTML comment is used
+       # to differentiate the usages of the same English string.
+       _("<!-- Search... in -->Support"),
+       # TRANSLATORS: this string is used in the context
+       # of "Search [...] in %s Support"; the argument is group name
+       # (like GNU Coreutils).
+       _("%s Support"),
+     ],
+     'bugs'  => [
+       # TRANSLATORS: this string is used in the context
+       # of "Search [...] in Bugs"; the HTML comment is used
+       # to differentiate the usages of the same English string.
+       _("<!-- Search... in -->Bugs"),
+       # TRANSLATORS: this string is used in the context of
+       # "Search [...] in %s Bugs"; the argument is group name
+       # (like GNU Coreutils).
+       _("%s Bugs"),
+     ],
+     'task' => [
+       # TRANSLATORS: this string is used in the context of
+       # "Search [...] in Tasks"; the HTML comment is used to differentiate
+       # the usages of the same English string.
+       _("<!-- Search... in -->Tasks"),
+       # TRANSLATORS: this string is used in the context
+       # of "Search [...] in %s Tasks"; the argument is group name
+       # (like GNU Coreutils).
+       _("%s Tasks"),
+     ],
+     'patch' => [
+       # TRANSLATORS: this string is used in the context
+       # of "Search [...] in Patches"; the HTML comment is used
+       # to differentiate the usages of the same English string.
+       _("<!-- Search... in -->Patches"),
+       # TRANSLATORS: this string is used in the context
+       # of "Search [...] in %s Patches"; the argument is group name
+       # (like GNU Coreutils).
+       _("%s Patches"),
+     ],
+   ];
+
+   foreach ($cases as $key => $msg)
+     {
+       $text = '';
+       if (empty ($gid) || ($is_small && $group->Uses ($key)))
+         $text = $msg[0];
+       elseif ($group->Uses ($key))
+         $text = sprintf ($msg[1], $group_realname);
+       if (!$text)
+         continue;
+       $sel_attr = '';
+       if ($type_of_search == $key)
+          $sel_attr = ' selected="selected"';
+       $sel .= "<option value='$key' $sel_attr>$text</option>\n";
+     }
+  return $sel;
+}
+
+# Build a search box.
+# $search_words: terms to look for.
+# $scope defines the search area:
+#   empty      - all trackers
+#   'sitewide' - trackers of all groups (used in the left menu)
+#   artifact   - given tracker
+# $size: width of the text field used for $search_words.
+function search_box ($searched_words = '', $scope = null, $size = 15)
+{
+  global $words, $group_id, $exact, $type_of_search, $type, $max_rows;
+  global $only_group_id;
+
+  $gid = null;
+  if (!empty ($group_id))
+    $gid = $group_id;
 
   if ($only_group_id)
-    {
-      $group_id = $only_group_id;
-    }
+    $gid = $only_group_id;
 
   if ($size > 15)
     $is_small = 0;
@@ -44,24 +129,21 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
 
   # If it is the left menu, small box, then make sure any group_id info
   # is ignored, because we want to keep the left menu site-wide.
-  if ($only_artifact == "menu")
-    unset($group_id, $only_group_id, $only_artifact);
+  if ($scope == "sitewide")
+    $gid = $scope = null;
 
-# If there is no search currently, set the default.
-  if (!isset($type_of_search))
+  # If there is no search currently, set the default.
+  if (!isset ($type_of_search))
     $exact = 1;
-  if (!isset($max_rows))
+  if (!isset ($max_rows))
     $max_rows = "25";
 
-# If the wildcard '%%%' is searched, replace it with the more usual '*'.
+  # If the wildcard '%%%' is searched, replace it with the more usual '*'.
   if ($words == "%%%")
     $words = "*";
 
-  if ($class)
-    $class = " class=\"$class\"";
-
-  $ret = "<form action=\"{$GLOBALS['sys_home']}search/#options\" "
-    . "method='get' $class>\n";
+  $ret =
+    "<form action=\"{$GLOBALS['sys_home']}search/#options\" method='get'>\n";
 
   if (!$is_small)
     {
@@ -78,213 +160,115 @@ function search_box ($searched_words='', $only_artifact=0, $size=15, $class="")
   if ($is_small)
     $ret .= "<br />\n";
 
-  if (!empty($only_artifact))
+  if (empty ($scope))
     {
-      $ret .= '<input type="hidden" name="type_of_search" value="'
-        . "$only_artifact\" />\n";
-    }
-  else
-    {
-      $sel = '<select title="'._("Area to search in").'" '
-             .'name="type_of_search">'."\n";
+      $sel = '<select title="' . _("Area to search in") . '" '
+        . "name='type_of_search'>\n";
 
       # If the search is restricted to a given group, remove the possibility
       # to search another group, unless we're showing the left box.
-      if (empty($group_id))
+      if (empty ($gid))
         {
           $sel .= '<option value="soft"'
-               .(($type_of_search == "soft")||($type_of_search == "") ?
-                 ' selected="selected"' : "")
-               .'>'
-# TRANSLATORS: this string is used in the context of "Search [...] in Projects"
-               ._("Projects")."</option>\n";
+            . (($type_of_search == "soft")||($type_of_search == "") ?
+               ' selected="selected"' : "")
+            . '>'
+            # TRANSLATORS: this string is used in the context
+            # of "Search [...] in Projects"
+            . _("Projects") . "</option>\n";
 
           $sel .= '<option value="people"'
-               .(($type_of_search == "people") ? ' selected="selected"' : "")
-               .'>'
-# TRANSLATORS: this string is used in the context of "Search [...] in People"
-               ._("People")."</option>\n";
+            . (($type_of_search == "people") ? ' selected="selected"' : "")
+            . '>'
+            # TRANSLATORS: this string is used in the context
+            # of "Search [...] in People"
+            . _("People") . "</option>\n";
         }
+      $sel .=
+        search_list_tracker_options ($gid, $type_of_search, $is_small)
+        . "</select>\n";
 
-      if (!empty($group_id))
-        $group_realname = substr(group_getname($group_id), 0, 10)."...";
-
-      if (!$project && !empty($group_id))
-        $project = project_get_object($group_id);
-
-      $text = '';
-      if (empty($group_id)
-          || ($is_small && $project->Uses("support")))
-        $text =
-# TRANSLATORS: this string is used in the context of "Search [...] in Support";
-# the HTML comment is used to differentiate the usages of the same English string.
-                _("<!-- Search... in -->Support");
-      else
-        {
-          if ($project->Uses("support"))
-            {
-              $text = sprintf(
-# TRANSLATORS: this string is used in the context of "Search [...] in %s Support"
-# the argument is group name (like GNU Coreutils).
-                              _("%s Support"), $group_realname);
-            }
-        }
-
-      if ($text)
-        {
-          $sel .= '<option value="support"'
-                  .(($type_of_search == "support") ? ' selected="selected"' : "")
-                  .'>'.$text."</option>\n";
-        }
-
-      $text = '';
-      if (empty($group_id) || ($is_small && $project->Uses("bugs")))
-        $text =
-# TRANSLATORS: this string is used in the context of "Search [...] in Bugs";
-# the HTML comment is used to differentiate the usages of the same English string.
-                _("<!-- Search... in -->Bugs");
-      else
-        {
-          if ($project->Uses("bugs"))
-            {
-              $text = sprintf(
-# TRANSLATORS: this string is used in the context of "Search [...] in %s Bugs"
-# the argument is group name (like GNU Coreutils).
-                              _("%s Bugs"), $group_realname);
-            }
-        }
-      if ($text)
-        {
-          $sel .= '<option value="bugs"'
-                  .(($type_of_search == "bugs") ? ' selected="selected"' : "")
-                  .'>'.$text."</option>\n";
-        }
-
-      $text = '';
-      if (empty($group_id)
-          || ($is_small && $project->Uses("task")))
-        $text =
-# TRANSLATORS: this string is used in the context of "Search [...] in Tasks";
-# the HTML comment is used to differentiate the usages of the same English string.
-                _("<!-- Search... in -->Tasks");
-      else
-        {
-          if ($project->Uses("task"))
-            {
-              $text = sprintf(
-# TRANSLATORS: this string is used in the context of "Search [...] in %s Tasks"
-# the argument is group name (like GNU Coreutils).
-                              _("%s Tasks"), $group_realname);
-            }
-        }
-      if ($text)
-        {
-          $sel .= '<option value="task"'
-                  .(($type_of_search == "task") ? ' selected="selected"' : "")
-                  .'>'.$text."</option>\n";
-        }
-
-      $text = '';
-      if (empty($group_id)
-          || ($is_small && $project->Uses("patch")))
-        $text =
-# TRANSLATORS: this string is used in the context of "Search [...] in Patches";
-# the HTML comment is used to differentiate the usages of the same English string.
-                _("<!-- Search... in -->Patches");
-      else
-        {
-          if ($project->Uses("patch"))
-            {
-              $text = sprintf(
-# TRANSLATORS: this string is used in the context of "Search [...] in %s Patches"
-# the argument is group name (like GNU Coreutils).
-                              _("%s Patches"), $group_realname);
-            }
-        }
-      if ($text)
-        {
-          $sel .= '<option value="patch"'
-                  .(($type_of_search == "patch") ? ' selected="selected"' : "")
-                  .'>'.$text."</option>\n";
-        }
-      $sel .= "</select>\n";
-
-      $ret .= ' '.sprintf(
       # TRANSLATORS: this word is used in the phrase "Search [...] in
       # [Projects|People|Support|Bugs|Tasks|Patches]"
       # in the main menu on the left side.
       # Make sure to put this piece in agreement with the following strings.
-           _("in %s"), $sel);
+      $ret .= sprintf (' ' . _("in %s"), $sel);
     }
-  if ($size < 16)
-    $ret .= '<br />';
-
-  if (isset($group_id))
+  else # !empty ($scope)
     {
-      $ret .="<input type=\"hidden\" value=\"$group_id\" "
-        . "name=\"only_group_id\" />\n";
+      $ret .= '<input type="hidden" name="type_of_search" value="'
+        . "$scope\" />\n";
     }
+  if ($is_small)
+    $ret .= "<br />\n";
 
-  if ($size < 16)
+  if (isset ($gid))
+    $ret .= "<input type='hidden' value='$gid' name='only_group_id' />\n";
+
+  if ($is_small)
     {
       # If it's a small form, the submit button has not already been inserted.
       $ret .= '&nbsp;&nbsp;&nbsp;<input type="submit" name="Search" value="'
         . _("Search") . "\" />&nbsp;\n";
     }
 
-  if ($size > 15)
-    {
-      $ret .= '<br />&nbsp;<input type="radio" name="exact" value="0"'
-              .( $exact ? " " : " checked").' title="'
-              ._("with at least one of the words").'"/>'
-              ._("with at least one of the words")."\n";
-      $ret .= '<br />&nbsp;<input type="radio" name="exact" value="1"'
-              .( $exact ? " checked" : " " ).' title="'._("with all of the words")
-              .'"/>'._("with all of the words")."\n";
-      $ret .= '<br />&nbsp;'
-              .sprintf(ngettext("%s result per page", "%s results per page",
-                                intval($max_rows)),
-                       '<input type="text" name="max_rows" value="'
-                       . $max_rows.'" title="'
-                       ._("Number of items to show per page")
-                       .'" size="4" />')."\n";
-      if (!isset($group_id))
-        {
-          # Add the functionality to restrict the search to a project type.
-          $ret .="<br />&nbsp;";
-
-          $select = '<select name="type" title="'._("Group type to search in")
-                    .'" size="1"><option value="">'
-# TRANSLATORS: this string is used in the context of "Search [...] in any group type"
-                    ._("any")
-                    .'</option>'."\n";
-          $result = db_query("SELECT type_id,name FROM group_type "
-                             ."ORDER BY type_id");
-          while ($eachtype = db_fetch_array($result))
-            {
-              $select .= '<option value="'.$eachtype['type_id'].'"'
-                     .($type == $eachtype['type_id'] ?
-                       ' selected="selected"' : '')
-                     .'>'.$eachtype['name'].'</option>'."\n";
-            }
-          $select .= '</select>'."\n";
-
-          $ret .= sprintf(
-# TRANSLATORS: the argument is group type (like Official GNU software).
-_("Search in %s group type, when searching for a Project."),
-                  $select);
-        }
-       $ret .= '<p>'
-._("Notes: You can use the wildcard *, standing for everything. You can also
-search items by number.")
-               ."</p>\n";
-    }
+  if ($is_small)
+    $ret .= "<input type='hidden' name='exact' value='1' />\n";
   else
     {
-      $ret .= '<input type="hidden" name="exact" value="1" />';
-    }
-  $ret .= "      </form>\n";
-  return $ret;
+      $ck_mark = " checked='checked'";
+      $ck = $exact? '': $ck_mark;
+      $ret .= "<br />\n&nbsp;<input type='radio' name='exact' value='0'$ck/>"
+        . _("with at least one of the words") . "\n";
+      $ck = $exact? $ck_mark: '';
+      $ret .= "<br />\n&nbsp;<input type='radio' name='exact' value='1'$ck/>"
+        . _("with all of the words") . "\n";
+      $ret .= "<br />\n&nbsp;"
+        . sprintf (
+            ngettext (
+              "%s result per page", "%s results per page", intval ($max_rows)
+            ),
+            "<input type='text' name='max_rows' value='$max_rows' title=\""
+            . _("Number of items to show per page") . '" size="4" />'
+          )
+        . "\n";
+      if (!isset ($gid))
+        {
+          # Add the functionality to restrict the search to a group type.
+          $ret .= "<br />\n&nbsp;";
+
+          $select = '<select name="type" title="' . _("Group type to search in")
+            . '" size="1"><option value="">'
+            # TRANSLATORS: this string is used in the context
+            # of "Search [...] in any group type"
+            . _("any") . "</option>\n";
+          $result =
+            db_query("SELECT type_id,name FROM group_type ORDER BY type_id");
+          while ($eachtype = db_fetch_array($result))
+            {
+              $sel_attr = '';
+              if ($type == $eachtype['type_id'])
+                 $sel_attr = ' selected="selected"';
+              $select .=
+                "<option value=\"{$eachtype['type_id']}\"$sel_attr>"
+                . "{$eachtype['name']}</option>\n";
+            }
+          $select .= "</select>\n";
+
+          # TRANSLATORS: the argument is group type
+          # (like Official GNU software).
+          $ret .=
+             sprintf (
+               _("Search in %s group type, when searching for a Project."),
+               $select
+             );
+        } # !isset ($gid)
+      $ret .= '<p>'
+        . _("Notes: You can use the wildcard *, standing for everything. "
+            . "You can also\nsearch items by number.")
+        . "</p>\n";
+    } # !$is_small
+  return "$ret</form>\n";
 }
 
 function search_send_header ()

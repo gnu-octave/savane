@@ -162,7 +162,7 @@ function sitemenu_search()
   global $HTML,$group_id;
   $HTML->menuhtml_top(_("Search"));
   print '       <li class="menusearch">';
-  print search_box("", "menu");
+  print search_box("", "sitewide");
   print '       </li><!-- end menusearch -->';
   $HTML->menuhtml_bottom();
 }

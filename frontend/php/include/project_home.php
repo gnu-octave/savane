@@ -111,12 +111,12 @@ print '</span>';
 print $HTML->box_bottom();
 print "<br />\n";
 
-# As all projects use the cookbook, this is accurate is all cases.
-print $HTML->box_top(_("Search in this Group"));
-print '<span class="smaller">';
-print search_box('','');
-print '</span>';
-print $HTML->box_bottom();
+if (search_has_group_anything_to_search ($group_id))
+  {
+    print $HTML->box_top (_("Search in this Group"));
+    print '<span class="smaller">' . search_box () . '</span>';
+    print $HTML->box_bottom ();
+  }
 
 print '
 </div><!-- end indexright -->
