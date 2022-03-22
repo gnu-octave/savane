@@ -24,6 +24,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+Copyright notices of Savane may use year ranges ('2002-2006') instead
+of listing individual years ('2002, 2003, 2004, 2005, 2006').
+
 Savane is free software hosting system.  As of 2022, it runs
 on GNU Savannah and on Puszcza: each site runs its own version
 of Savane; this tarball distributes the version of GNU Savannah.
