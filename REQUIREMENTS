@@ -1,11 +1,35 @@
+Copyright (C) 1999-2000 The SourceForge Crew
+
+This file is part of Savane.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.  This file is offered as-is,
+without any warranty.
+
+Savane is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Savane is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 = General Requirements =
 
 * GNU coreutils, textutils, shellutils...
 * GNU gettext
-* PHP >= 4.3
+* GnuPG
+* PHP (5.4, 5.5, 5.6, 7.0 or 7.2)
 * Perl >= 5.6
 * Exim (or sendmail, postfix...)
-* MySQL
+* MySQL or MariaDB
 * Apache
 
 
@@ -22,10 +46,7 @@
 * String::Random (for sv_mailman, libstring-random-perl in debian)
 
 
-(comes from recipe #257)
-
-
 = Optional =
 
 * Kerberos authentication support (bindings for the krb5 library):
-  http://savannah.nongnu.org/projects/phpkrb5
+  https://savannah.nongnu.org/projects/phpkrb5
