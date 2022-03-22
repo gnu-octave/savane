@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017, 2019 Ineiev
+# Copyright (C) 2017, 2019, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -188,11 +188,10 @@ if ($is_suspended)
 print "<br />\n";
 
 print $HTML->box_top (_("Project Information"), '', 1);
-# Now get listing of groups for that user.
 $result = db_execute ("
   SELECT
     groups.group_name, groups.group_id, groups.unix_group_name,
-    groups.status, user_group.admin_flags, group_history.date
+    group_history.date
   FROM groups, user_group, group_history
   WHERE
     groups.group_id = user_group.group_id AND user_group.user_id = ?
@@ -200,7 +199,6 @@ $result = db_execute ("
     AND (
       group_history.field_name = 'Added User'
       OR group_history.field_name = 'Approved User'
-      OR user_group.admin_flags = 'P'
     )
     AND group_history.group_id = user_group.group_id
     AND group_history.old_value = ?
@@ -215,11 +213,12 @@ $rows = db_numrows ($result);
 $result_without_history = db_execute ("
   SELECT
     groups.group_name, groups.group_id, groups.unix_group_name,
-    groups.status, user_group.admin_flags
+    0 as date
   FROM groups, user_group
   WHERE
     groups.group_id = user_group.group_id AND user_group.user_id = ?
     AND groups.status = 'A' AND groups.is_public = '1'
+    AND user_group.admin_flags != 'P'
   GROUP BY groups.unix_group_name
   ORDER BY groups.unix_group_name",
   [$user_id]
@@ -239,22 +238,13 @@ $j = 1;
 $items = '';
 for ($i = 0; $i < $rows; $i++)
   {
-    # Ignore if requesting for inclusion.
-    if (db_result($result, $i, 'admin_flags') == 'P')
-      continue;
-
     $items .= '<li class="' . utils_get_alt_row_color ($j++) . '">';
     $items .= "<a href=\"{$GLOBALS['sys_home']}projects/"
        . db_result ($result, $i, 'unix_group_name') . '/">'
        . db_result ($result, $i, 'group_name') . "</a><br />\n";
-    if ($history_is_flawed)
-      $date_joined = null;
-    else
-      $date_joined = db_result($result, $i, 'date');
+    $date_joined = db_result ($result, $i, 'date');
     if ($date_joined)
       {
-        # If the group history is flawed (site install problem), the
-        # date may be unavailable.
         $items .= '<span class="smaller">'
          . sprintf (_("Member since %s"), utils_format_date ($date_joined))
          . '</span>';
