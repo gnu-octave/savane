@@ -32,7 +32,7 @@ mission is to spread the freedom to copy and modify software.').'</p>
 printf ('<p>'._('<strong>Important</strong>: check <a href="%s">
 Project - How to get it approved quickly</a>.').'</p>
 
-','//savannah.gnu.org/faq/?group_id=5802&amp;question=Project_-_How_to_get_it_approved_quickly.txt');
+','//savannah.gnu.org/maintenance/HowToGetYourProjectApprovedQuickly');
 
 print '<p>'._('It contains a few advices to get your package compliant with
 our hosting policies. Following them will considerably speed up the
