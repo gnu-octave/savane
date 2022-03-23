@@ -1,20 +1,20 @@
 # Autoconf configuration for Savane.
-# 
+#
 # Copyright (C) 2007  Sylvain Beucler
 # Copyright (C) 2014  Assaf Gordon
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -102,11 +102,11 @@ AC_SUBST(SV_DB_OPTIONS)
 # Apache
 # Perl: TODO, see how to autoconfiscate this proPERLy
 echo -n "checking for webserver user... "
-if test -e  "/etc/debian_version"; then 
+if test -e  "/etc/debian_version"; then
     # Debian-based
     GUESS_WWW_SERVER_USER="www-data"
     GUESS_PERL_INC="/usr/lib/perl5"
-elif test -e "/etc/redhat-release"; then 
+elif test -e "/etc/redhat-release"; then
     # Fedora- or RedHat-based
     GUESS_WWW_SERVER_USER="apache"
     GUESS_PERL_INC="/usr/lib/perl5/site_perl"
@@ -120,7 +120,7 @@ fi
 echo $GUESS_WWW_SERVER_USER
 # TODO: --with-php-uid=... (AC_ARG_ENABLE)
 # TODO: ps aux | grep -E 'http|apache' | parse_uid_field...
-# TODO: else { echo "Couldn't guess Apache user"; exit 1}  
+# TODO: else { echo "Couldn't guess Apache user"; exit 1}
 
 
 SV_CONF=$sysconfdir/savane
