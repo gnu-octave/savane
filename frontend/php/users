@@ -30,7 +30,7 @@ require_once('include/sendmail.php');
 # Extract user's name.
 $pathinfo = preg_replace ("/\?.*/", "", basename($_SERVER['REQUEST_URI']));
 
-$res_user = user_get_result_set_from_unix ($pathinfo);
+$res_user = user_get_result_set_from_user_name ($pathinfo);
 
 if (db_numrows($res_user) < 1)
   exit_error (_("Invalid User"), _("That user does not exist."));
