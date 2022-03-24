@@ -1,8 +1,0 @@
-<!-- Savannah - Project registration STEP 2 additional comments -->
-<!-- $Id$ BEGIN -->
-
-<p>
-You may enter here any additional comments.
-</p>
-
-<!-- $Id$ END -->

@@ -1,1 +1,0 @@
-<p>You're going to be connected with a secure (https) server and your password will not be visible to other users.</p>

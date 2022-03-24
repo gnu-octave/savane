@@ -1,8 +1,0 @@
-<!-- Savannah - User account modification about ssh -->
-<!-- $Id$  BEGIN -->
-<h3>SSH Public Keys</h3>
-<P>
-<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1).
-The public key will be placed in '~/.ssh/', with the suffix '.pub'. Read the ssh
-documentation for further information on sharing keys.
-<!-- $Id$  END -->

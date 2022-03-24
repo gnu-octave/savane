@@ -1,7 +1,0 @@
-Replace this paragraph by the technical description of your
-project (approximately 20 lines should be OK). Do not
-forget to include a URL to the source code, even if it
-is not a functional version (it will be easier to sort out
-licensing problems now, rather than having your project
-rejected later on). If you do not have any code
-to show yet, then say that explicitly.

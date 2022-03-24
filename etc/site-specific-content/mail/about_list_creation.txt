@@ -1,5 +1,0 @@
-<!-- Savannah - Speech added about list creation -->
-<!-- $Id$  BEGIN -->
-
-
-<!-- $Id$  END -->

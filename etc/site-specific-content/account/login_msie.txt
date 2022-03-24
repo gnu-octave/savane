@@ -1,5 +1,0 @@
-<!-- Savannah - Login error message with old MSIE-->
-<!-- $Id$  BEGIN -->
-<h2 class="error">Microsoft Internet Explorer users need to upgrade to IE 5.01 or higher, preferably with 128-bit SSL.<br>
-This software is non-free. You should consider using browser like Mozilla.</h2>
-<!-- $Id$  END -->

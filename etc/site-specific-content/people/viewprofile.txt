@@ -1,4 +1,0 @@
-<!-- Savannah - View profile introduction -->
-<!-- $Id$  BEGIN -->
-
-<!-- $Id$  END -->

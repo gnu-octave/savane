@@ -1,4 +1,0 @@
-<!-- Header added to each page -->
-    <meta name="Author" content="Copyright (C) 2006 Undefined" />
-    <meta name="Keywords" content="Savannah,Savane" />
-    <meta name="Description" content="This server is a central point for development, distribution and maintainance of software." />

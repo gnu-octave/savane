@@ -1,6 +1,0 @@
-<!-- Savannah - People index introduction if group is defined -->
-<!-- $Id$ BEGIN -->
-<P>
-Here is a list of positions available for this project.
-<P>
-<!-- $Id$  END -->

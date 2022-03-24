@@ -1,1 +1,0 @@
-Hum, site administrators should explain here (etc/site-specific-content/bzr/index.txt) the way people are supposed to access repositories.

@@ -1,5 +1,0 @@
-<!-- Savannah - User personnal page -->
-<!-- $Id$  BEGIN -->
-This page contains lists of items assigned to or 
-submitted by you.
-<!-- $Id$  END -->
