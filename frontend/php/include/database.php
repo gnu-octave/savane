@@ -7,7 +7,7 @@
 # Copyright (C) 2000-2006  John Lim (ADOdb)
 # Copyright (C) 2007  Cliss XXI (GCourrier)
 # Copyright (C) 2006, 2007  Sylvain Beucler
-# Copyright (C) 2017, 2019, 2020 Ineiev
+# Copyright (C) 2017, 2019, 2020, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -29,80 +29,42 @@ define('DB_AUTOQUERY_UPDATE', 2);
 
 function db_connect()
 {
-  global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
-  global $have_mysqli, $mysql_conn;
+  global $sys_dbhost, $sys_dbuser, $sys_dbpasswd, $conn, $sys_dbname;
+  global $mysql_conn;
 
   $mysql_conn = NULL;
-  $have_mysqli = false;
 
-  # Test the presence of php-mysql - you get a puzzling blank page
+  # Test the presence of php-mysqli - you get a puzzling blank page
   # when it's not installed.
-  if (extension_loaded('mysqli'))
-    $have_mysqli = true;
-  elseif (!extension_loaded('mysql'))
+  if (!extension_loaded ('mysqli'))
     {
-      echo "Please install the MySQL extension for PHP:
-    <ul>
-      <li>Debian-based: <code>aptitude install php4-mysql</code>
-        or <code>aptitude install php5-mysql</code></li>
-      <li>Fedora Core: <code>yum install php-mysql</code></li>
-    </ul>";
-      echo "Check the <a href='"
-           .$GLOBALS['sys_url_topdir']."/testconfig.php'>configuration
-          page</a> and the <a href='http://php.net/mysql'>PHP website</a> for
-          more information.<br />";
-      echo "Once the extension is installed, please restart Apache.";
+      print "<p>Please install the mysqli extension for PHP:
+        <code>aptitude install php-mysqli</code> (Debian-based)</p>
+        <p>Check the <a href='{$GLOBALS['sys_url_topdir']}/testconfig.php'>
+        configuration page</a> and the <a href='https://www.php.net'>PHP
+        website</a> for more information.</p>
+        <p>Once the extension is installed, restart Apache.</p>\n";
       exit;
     }
 
-  if ($have_mysqli)
-    $conn = mysqli_connect ($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
-  else
-    {
-       $conn = @mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
-       if ($conn)
-         if (!mysql_select_db($sys_dbname, $conn))
-           $conn = false;
-    }
+  $conn = mysqli_connect ($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
   if (!$conn)
     {
-      echo "Failed to connect to database: ";
-      if ($have_mysqli)
-        echo mysqli_connect_error();
-      else
-        echo db_error();
-      echo "<br />\nPlease contact as soon as possible server administrators "
-            .$GLOBALS['sys_email_adress'].".<br />\n";
-      echo "Until this problem get fixed, you will not be able to use this site.";
+      print "<p>Failed to connect to database: ";
+      print mysqli_connect_error() . "</p>\n";
+      print "<p>Contact server administrators "
+        . "{$GLOBALS['sys_email_adress']}</p>\n";
       exit;
     }
-
-  if ($have_mysqli)
-    {
-      mysqli_set_charset ($conn, 'utf8');
-      $mysql_conn = $conn;
-      return true;
-    }
-  if (version_compare(PHP_VERSION, '5.2.3', '>='))
-    {
-      mysql_set_charset('utf8', $conn);
-      return true;
-    }
-  # Not available in Etch (5.2.0 < 5.2.3...) - using a work-around meanwhile.
-  # Apparently this means mysql_real_escape_string() isn't aware of the charset,
-  # hence why this isn't recommended.
-  mysql_query('SET NAMES utf8');
+  mysqli_set_charset ($conn, 'utf8');
+  $mysql_conn = $conn;
   return true;
 }
 
 function db_real_escape_string ($string)
 {
-  global $have_mysqli, $mysql_conn;
-
-  if ($have_mysqli)
-    return mysqli_real_escape_string ($mysql_conn, $string);
-
-  return mysql_real_escape_string ($string);
+  global $mysql_conn;
+  return mysqli_real_escape_string ($mysql_conn, $string);
 }
 
 # sprinf-like function to auto-escape SQL strings.
@@ -124,7 +86,7 @@ function db_query_escape()
 
 # Substitute '?' with one of the values in the $inputarr array,
 # properly escaped for inclusion in an SQL query.
-function db_variable_binding($sql, $inputarr=null)
+function db_variable_binding($sql, $inputarr = null)
 {
   $sql_expanded = $sql;
 
@@ -151,7 +113,7 @@ function db_variable_binding($sql, $inputarr=null)
         $sql_expanded .= "'" . db_real_escape_string($v) . "'";
       elseif ($typ == 'double')
         # Locale fix so 1.1 doesn't get converted to 1,1.
-        $sql_expanded .= str_replace(',','.',$v);
+        $sql_expanded .= str_replace(',', '.', $v);
       elseif ($typ == 'boolean')
         $sql_expanded .= $v ? '1' : '0';
       elseif ($typ == 'object')
@@ -173,10 +135,10 @@ function db_variable_binding($sql, $inputarr=null)
   else
     $match = false;
   if (!$match)
-    util_die("db_variable_binding: input array does not match query: <pre>"
-         .htmlspecialchars($sql)
-         ."<br />"
-         .print_r($inputarr, true));
+    util_die(
+      "db_variable_binding: input array does not match query: <pre>"
+      . htmlspecialchars($sql) . "<br />" . print_r ($inputarr, true)
+    );
   return $sql_expanded;
 }
 
@@ -195,8 +157,8 @@ E.g.:
 $success = db_autoexecute('user', array('realname' => $newvalue),
                           DB_AUTOQUERY_UPDATE,
                           "user_id=?", array(user_getid())); */
-function db_autoexecute($table, $dict, $mode=DB_AUTOQUERY_INSERT,
-                        $where_condition=false, $where_inputarr=null)
+function db_autoexecute($table, $dict, $mode = DB_AUTOQUERY_INSERT,
+                        $where_condition = false, $where_inputarr = null)
 {
   # Table name validation and quoting.
   $tables = preg_split('/[\s,]+/', $table);
@@ -279,9 +241,9 @@ function db_execute($sql, $inputarr=null)
   return db_query($expanded_sql);
 }
 
-function db_query($qstring,$print=0)
+function db_query($qstring, $print = 0)
 {
-  global $have_mysqli, $mysql_conn;
+  global $mysql_conn;
 
   # Store query for recap display.
   if ($GLOBALS['sys_debug_on'])
@@ -330,49 +292,31 @@ function db_query($qstring,$print=0)
       print "]</pre>";
     }
 
-  if ($have_mysqli)
-    $GLOBALS['db_qhandle'] = mysqli_query ($mysql_conn, $qstring);
-  else
-    $GLOBALS['db_qhandle'] = mysql_query ($qstring);
+  $GLOBALS['db_qhandle'] = mysqli_query ($mysql_conn, $qstring);
   if (!$GLOBALS['db_qhandle'])
     {
       util_die('db_query: SQL query error ' .
                '<em>' . db_error() . '</em> in ['
-               . htmlspecialchars($qstring) . ']');
+               . htmlspecialchars ($qstring) . ']');
     }
   return $GLOBALS['db_qhandle'];
 }
 
 function db_numrows($qhandle)
 {
-  global $have_mysqli;
-
   if (!$qhandle)
     return 0;
 
-  if ($have_mysqli)
-    return mysqli_num_rows ($qhandle);
-
-  return mysql_numrows($qhandle);
+  return mysqli_num_rows ($qhandle);
 }
 
 function db_free_result($qhandle)
 {
-  global $have_mysqli;
-
-  if ($have_mysqli)
-    return mysqli_free_result ($qhandle);
-
-  return mysql_free_result($qhandle);
+  return mysqli_free_result ($qhandle);
 }
 
-function db_result($qhandle,$row,$field)
+function db_result($qhandle, $row, $field)
 {
-  global $have_mysqli;
-
-  if (!$have_mysqli)
-    return mysql_result($qhandle,$row,$field);
-
   if (!mysqli_data_seek ($qhandle, $row))
     return NULL;
 
@@ -400,67 +344,39 @@ function db_result($qhandle,$row,$field)
 
 function db_numfields($lhandle)
 {
-  global $have_mysqli;
-
-  if ($have_mysqli)
-    return mysqli_num_fields ($lhandle);
-  return mysql_numfields($lhandle);
+  return mysqli_num_fields ($lhandle);
 }
 
-function db_fieldname($lhandle,$fnumber)
+function db_fieldname($lhandle, $fnumber)
 {
-  global $have_mysqli;
-
-  if ($have_mysqli)
-    return mysqli_fetch_field_direct ($lhandle, $fnumber)->name;
-  return mysql_field_name($lhandle,$fnumber);
+  return mysqli_fetch_field_direct ($lhandle, $fnumber)->name;
 }
 
 function db_affected_rows($qhandle)
 {
-  global $have_mysqli, $mysql_conn;
-
-  if ($have_mysqli)
-    return mysqli_affected_rows ($mysql_conn);
-  return mysql_affected_rows();
+  global $mysql_conn;
+  return mysqli_affected_rows ($mysql_conn);
 }
 
 function db_fetch_array($qhandle = 0)
 {
-  global $have_mysqli;
-
-  if ($have_mysqli)
-    {
-      if ($qhandle)
-        return mysqli_fetch_array($qhandle);
-      if (isset($GLOBALS['db_qhandle']))
-        return mysqli_fetch_array($GLOBALS['db_qhandle']);
-      return (array());
-    }
-
   if ($qhandle)
-    return mysql_fetch_array($qhandle);
-  if (isset($GLOBALS['db_qhandle']))
-    return mysql_fetch_array($GLOBALS['db_qhandle']);
-  return (array());
+    return mysqli_fetch_array ($qhandle);
+  if (isset ($GLOBALS['db_qhandle']))
+    return mysqli_fetch_array ($GLOBALS['db_qhandle']);
+  return [];
 }
 
 function db_insertid($qhandle)
 {
-  global $have_mysqli, $mysql_conn;
-
-  if ($have_mysqli)
-    return mysqli_insert_id ($mysql_conn);
-  return mysql_insert_id();
+  global $mysql_conn;
+  return mysqli_insert_id ($mysql_conn);
 }
 
 function db_error()
 {
-  global $have_mysqli, $mysql_conn;
-
-  if ($have_mysqli)
-    return mysqli_error ($mysql_conn);
-  return mysql_error();
+  global $mysql_conn;
+  return mysqli_error ($mysql_conn);
 }
 
 # Return an sql insert command taking in input a qhandle:

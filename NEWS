@@ -2,6 +2,8 @@
 
 [FRONTEND]
 
+* Drop support for mysql extention; always use mysqli.
+
 * Rewrite user-supplied parameter sanitizing framework.
 
 * In /project/admin/editgroupnotifications.php, show intro

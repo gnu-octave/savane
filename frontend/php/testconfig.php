@@ -211,8 +211,8 @@ if ($unset)
 print "\n<h2>PHP functions</h2>\n\n";
 
 $phpfunctions = array (
-        'mysqli_connect|mysql_connect' =>
-          'You must install/configure php-mysql ! [REQUIRED]',
+        'mysqli_connect' =>
+          'You must install/configure php-mysqli ! [REQUIRED]',
         'gettext' => 'You should install/configure php with gettext support '
                          . '! [RECOMMENDED]',
         'ctype_digit' => 'You must have a PHP version supporting ctype '
