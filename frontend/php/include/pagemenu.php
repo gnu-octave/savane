@@ -413,7 +413,7 @@ function pagemenu_group ()
   # Fora are normally deprecated on savane.
   pagemenu_tracker_submenu ($project, "forum", _("Forum"), "");
 
-  if ($project->usesMail())
+  if ($project->Uses ('mail'))
     {
       pagemenu_submenu_title(_("Mailing lists"),
                              $project->getArtifactUrl("mail"),

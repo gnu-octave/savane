@@ -231,13 +231,6 @@ class Group extends savane_error
       );
   }
 
-  function canuseForum ()
-    {
-      # FIXME: until forum reworks in savannah, nobody can.
-      return 0;
-      #    return $this->type_data_array['can_use_forum'];
-    }
-
   # Group info.
   function getGroupId ()
   {
@@ -421,24 +414,6 @@ class Group extends savane_error
            $this->data_array['url_homepage'] == $this->getTypeUrl ('homepage')
            || $this->data_array['url_homepage'] == ""
          );
-  }
-
-  # Deprecated.
-  function isFoundry ()
-  {
-      return false;
-  }
-
-  function isProject ()
-  {
-     return true;
-  }
-
-  function usesMail ()
-  {
-    if ($this->data_array['use_mail'] != "")
-      return $this->data_array['use_mail'];
-    return $this->CanUse("mailing_list");
   }
 
   # Related to mail notification.

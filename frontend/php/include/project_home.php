@@ -381,10 +381,9 @@ function open_vs_total_items ($url, $group_id, $artifact)
 
 # Communication.
 if ($GLOBALS['sys_unix_group_name'] == $group
-    || $project->Uses("support")
-    || $project->Uses("forum")
-    || $project->usesMail()
-    || people_project_jobs_rows($group_id) != 0)
+    || $project->Uses ("support") || $project->Uses ("forum")
+    || $project->Uses ("mail")
+    || people_project_jobs_rows ($group_id) != 0)
   {
     print $HTML->box_top(_("Communication Tools"));
     $i = 1;
@@ -439,7 +438,7 @@ if ($GLOBALS['sys_unix_group_name'] == $group
         $i++;
       }
 
-    if ($project->usesMail())
+    if ($project->Uses ("mail"))
       {
         specific_makesep();
         $url = $project->getArtifactUrl("mail");

@@ -110,10 +110,10 @@ function exit_header($status=false)
 }
 
 # Exit unless group uses mailing lists.
-function exit_test_usesmail($group_id)
+function exit_test_usesmail ($group_id)
 {
-  $project=project_get_object($group_id);
-  if (!$project->usesMail())
-    exit_error(_("Error"),_("This project has turned off mailing lists"));
+  $project = project_get_object ($group_id);
+  if (!$project->Uses ('mail'))
+    exit_error (_("Error"), _("This project has turned off mailing lists"));
 }
 ?>
