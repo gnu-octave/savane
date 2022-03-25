@@ -66,10 +66,12 @@ $fields_per_line=5;
 # Avoid undesired user input.
 $browse_preamble = '';
 
+$default_chunksz = 50;
+
 # Number of bugs displayed on screen in one chunk.
 # Default 50.
 if (!$chunksz)
-  $chunksz = 50;
+  $chunksz = $default_chunksz;
 $chunksz = intval ($chunksz);
 
 # Digest mode? Set the digest variable to one.
@@ -272,7 +274,11 @@ if (!$set)
                 )
                   $$field = $value_id;
                 elseif ($field == 'chunksz')
-                  $chunksz = intval($value_id);
+                  {
+                    $chunksz = intval ($value_id);
+                    if ($chunksz <= 0)
+                      $chunksz = $default_chunksz;
+                  }
                 elseif ($field == 'history')
                   {
                     $history = $value_id;
@@ -315,12 +321,12 @@ elseif ($set == 'custom')
         foreach ($arr_val as $value_id)
           $pref_stg .= "&amp;$field" . "[]=$value_id";
       }
-    $pref_stg .= '&amp;advsrch=' . $advsrch;
-    $pref_stg .= '&amp;msort=' . $msort;
-    $pref_stg .= '&amp;chunksz=' . $chunksz;
-    $pref_stg .= '&amp;spamscore=' . $spamscore;
-    $pref_stg .= '&amp;report_id=' . $report_id;
-    $pref_stg .= '&amp;sumORdet=' . $sumORdet;
+    $pref_stg .= "&amp;advsrch=$advsrch";
+    $pref_stg .= "&amp;msort=$msort";
+    $pref_stg .= "&amp;chunksz=$chunksz";
+    $pref_stg .= "&amp;spamscore=$spamscore";
+    $pref_stg .= "&amp;report_id=$report_id";
+    $pref_stg .= "&amp;sumORdet=$sumORdet";
 
     if ($pref_stg != user_get_preference($preference_prefix.'_brow_cust'
                                          .$group_id))
