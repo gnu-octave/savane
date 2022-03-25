@@ -1,3 +1,92 @@
+????-??-?? 3.8
+
+[FRONTEND]
+
+* Rewrite user-supplied parameter sanitizing framework.
+
+* In /project/admin/editgroupnotifications.php, show intro
+  for the first tracker, Savannah sr #110333.
+
+* In emails reporting tracker comments, ordered lists
+  are enumerated, Savannah sr #110621.
+
+* On the login page, don't ask whether to stay in HTTPS.
+
+* Irrelevant texts were removed from group register confirmation
+  page.
+
+* Names of removed squads can be used for new squads.
+
+* Support for legacy locations for site-specific texts was dropped.
+
+* Don't add user agent and REMOTE_ADDR to headers when sending mails,
+  Savannah sr #110592.
+
+* Remove link to cookbook from sidebar, disable cookbook search.
+
+* Support protocol-relative links in markup.
+
+* Preserve first space in line in markup, Savannah sr #110562.
+
+* Bug fixes:
+
+** Tracker comment numbering was wrong when some comments were marked as spam.
+
+** Comments with removed comment_type were invisible.
+
+** History for removing cross-tracker dependencies were written incorrectly.
+
+** Users who couldn't post resume couldn't also enable skillboxes; now
+   setting skillboxes is allowed for all users.
+
+** Fix processing of '@' in markup:  URLs like www.example.org/a@b.html
+   produced links like
+   <a href="http://www.example.org/a">www.example.org/a</a>@b.html
+
+** Emails in "Replaced by" in tracker item history weren't hidden
+   for anonymous visitors.
+
+[DOCUMENTATION]
+
+* Update REQUIREMENTS.
+
+[BUILD]
+
+* Make distcheck work.
+
+[SAMPLE LOCAL INSTANCE]
+
+* Add $sys_gpg_name to local2/etc-savane/.savane.conf.php; update
+  $sys_unix_group_name and notes on mock-up db.
+
+[BACKEND]
+
+* Add dummy savane.conf.pl installed by default to let basic tests run.
+
+* Install Perl modules to $libexec, make them runnable
+  with --help and --version options.
+
+* Add path to Savane Perl modules to Perl scripts.
+
+* Remove obsolete files.
+
+[I18N]
+
+* Update Russian.
+
+* Add Hebrew from TP.
+
+* Update French and "Simplified" Chinese from TP.
+
+[SITE-SPECIFIC CONTENT]
+
+* Remove obsolete files from etc/ and
+  frontend/php/site-specific/gnu-content/faq/.
+
+* Update bzr info, Savannah task #9943.
+
+* Move FAQ link up in site help menu.
+
 2021-10-05 3.7
 
 [FRONTEND]
@@ -285,7 +374,7 @@
 
 * In Markup, URL parts like "*checkout*" were shown in bold.
 
-[SITE SPECIFIC CONTENT]
+[SITE-SPECIFIC CONTENT]
 
 * Webpages (including "site-specific content") are imported to Git;
   they are localized together with frontend messages.
@@ -312,7 +401,7 @@
   '/etc/membersh-conf.pl'.
 
 
-[SITE SPECIFIC CONTENT]
+[SITE-SPECIFIC CONTENT]
 
 * git/index.txt added: displayed in /git/index.php
 
@@ -360,7 +449,7 @@
 * Full UTF-8 database (including declarations and ordering)
 
 ================================================================
-Copyright (C) 2017, 2018, 2019, 2021 Ineiev
+Copyright (C) 2017, 2018, 2019, 2021, 2022 Ineiev
 Copyright (C) 2007, 2009, 2010 Sylvain Beucler
 
 This file is part of Savane.
