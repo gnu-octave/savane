@@ -409,13 +409,11 @@ class Group extends savane_error
 	{ return $this->getTypeDir($artifact); }
     }
 
-
-  function Uses($artifact)
+  function Uses ($artifact)
     {
-      if ($this->data_array['use_'.$artifact] != "")
-	{ return $this->data_array['use_'.$artifact]; }
-      else
-	{ return $this->CanUse($artifact); }
+      if (empty ($this->data_array["use_$artifact"]))
+        return $this->CanUse ($artifact);
+      return $this->data_array["use_$artifact"];
     }
 
   function UsesForHomepage($artifact)

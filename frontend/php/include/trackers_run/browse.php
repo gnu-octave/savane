@@ -70,7 +70,7 @@ $default_chunksz = 50;
 
 # Number of bugs displayed on screen in one chunk.
 # Default 50.
-if (!$chunksz)
+if (empty ($chunksz))
   $chunksz = $default_chunksz;
 $chunksz = intval ($chunksz);
 
