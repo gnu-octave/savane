@@ -1,10 +1,10 @@
-#! @PERL@
+#! @PERL@ -I@libexecdir@
 #
 # Run cleanup tasks.
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 BBN Technologies Corp
-# Copyright (C) 2019 Ineiev
+# Copyright (C) 2019, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -44,94 +44,88 @@ our $sys_dry_remove_idle_accounts;
 
 my $script = "sv_cleaner";
 my $logfile = "/var/log/sv_cleaner.log";
-my $getopt;
 my $help;
 my $debug;
 my $big_cleanup;
 my $cron;
-my $version = GetVersion();
+my $version = GetVersion ();
 
 my @trackers = ("bugs", "support", "task", "patch", "cookbook");
 
-eval {
-    $getopt = GetOptions("help" => \$help,
-                         "cron" => \$cron,
-                         "big-cleanup" => \$big_cleanup,
-                         "debug" => \$debug);
-};
+$help =
+"Usage: $0 [OPTIONS]
 
-if ($help)
-  {
-    print STDERR <<EOF;
-Usage: $0 [project] [OPTIONS]
-
-Cleaner of the database. Why cleaning up? Well, in some case, when an
+Clean up the database. Why cleaning up? Well, in some case, when an
 operation is interrupted, the PHP frontend cannot make this cleanup by
 itself.
 
-  -h, --help                   Show this help and exit.
+  -h, --help                   Show this help and exit
+  -v, --version                Show Savane version and exit
       --big-cleanup            Will take care of unusual cases (like removing
                                items from deleted groups). Should be run
                                only once per week, or manually from time to
                                time.
-                  Warning: The first time you use that option, you should
-                    first make a backup of your database, just in case.
-      --cron                   Option to set when including this script
-                               in a crontab.
+                               Warning:
+                                   The first time you use that option,
+                                   you should first backup your database,
+                                   just in case.
+      --cron                   Option used when including this script
+                               in a crontab.";
+PrintVersionOrHelp ($help);
 
-Savane version: $version
-EOF
-exit(1);
-  }
+GetOptions (
+  "cron" => \$cron, "big-cleanup" => \$big_cleanup, "debug" => \$debug
+);
 
 sub add_to_log
 {
-  my $msg = shift;
-
-  print LOG strftime "[$script] %c " . $msg . "\n", localtime;
+  print LOG strftime "[$script] %c $_[0]\n", localtime;
 }
 
-# Test if we should run, according to conf file.
 exit if ($cron && ! $sys_cron_cleaner);
 
-# Log: Start logging.
 open (LOG, ">>$logfile");
 add_to_log ("- starting");
 
-# Locks: This script should not run concurrently.
-AcquireReplicationLock();
+AcquireReplicationLock ();
 
-# NORMAL CLEANUP
+# Normal cleanup.
 
 # Remove user account registration not confirmed after three days.
-my $result = DeleteUsers("status='P' AND "
-                         ."TIMESTAMPDIFF(hour, FROM_UNIXTIME(add_date), now())"
-                         ." > 71");
+my $result =
+  DeleteUsers (
+    "status='P' AND TIMESTAMPDIFF(hour, FROM_UNIXTIME(add_date), now())"
+    ." > 71"
+  );
 
 add_to_log ("---- deleted $result unconfirmed user accounts") if $result > 0;
 
 # Remove deleted projects.
-my $result = DeleteGroups("status='D'");
+my $result = DeleteGroups ("status='D'");
 
 add_to_log ("---- deleted $result deleted groups") if $result > 0;
 
 # Remove too old form_id, forms created more than one day ago an still
 # not submitted.
-my $result = DeleteDB("form",
-                      "TIMESTAMPDIFF(hour, FROM_UNIXTIME(timestamp), now()) > 23");
+my $result =
+  DeleteDB (
+    "form", "TIMESTAMPDIFF(hour, FROM_UNIXTIME(timestamp), now()) > 23"
+  );
 
 add_to_log ("---- deleted $result outdated form ids") if $result > 0;
 
 # Remove session more than one year old.
-my $result = DeleteDB("session",
-                      "TIMESTAMPDIFF(day, FROM_UNIXTIME(time), now()) > 365");
+my $result =
+  DeleteDB (
+    "session", "TIMESTAMPDIFF(day, FROM_UNIXTIME(time), now()) > 365"
+  );
 
 add_to_log ("---- deleted $result sessions older than one year")
   if $result > 0;
 
 # Remove lost password request count, if they were not made this day.
 my $result =
-  DeleteDB("user_lostpw", "TIMESTAMPDIFF(hour, date, now()) > 23");
+  DeleteDB ("user_lostpw", "TIMESTAMPDIFF(hour, date, now()) > 23");
 
 add_to_log ("---- deleted $result lost password request") if $result > 0;
 
@@ -139,15 +133,19 @@ sub send_notification
 {
   my ($name, $email) = @_;
   my $input;
-  open($input, '|-', 'sendmail -t');
-  print $input "From: <INVALID.NOREPLY\@gnu.org>\n";
-  print $input "To: <$email>\n";
-  print $input "Subject: Your Savannah account <$name>\n\n";
-  print $input "Your Savannah account <$name> is automatically\n";
-  print $input "removed due to inactivity.\n\n";
-  print $input "For criteria of removing idle accounts, please check\n";
-  print $input "https://savannah.gnu.org/maintenance/IdleAccounts/ .\n";
-  close($input);
+  open ($input, '|-', 'sendmail -t');
+  print $input <<~"EOF";
+    From: <INVALID.NOREPLY\@gnu.org>
+    To: <$email>
+    Subject: Your Savannah account <$name>
+
+    Your Savannah account <$name> is automatically
+    removed due to inactivity.
+
+    For criteria of removing idle accounts, please check
+    https://savannah.gnu.org/maintenance/IdleAccounts/ .
+    EOF
+  close ($input);
 }
 
 sub remove_account
@@ -156,7 +154,7 @@ sub remove_account
 
   if ($purge)
     {
-      $dbd->do("DELETE FROM user WHERE user_id=$id")
+      $dbd->do ("DELETE FROM user WHERE user_id=$id")
         unless ($sys_dry_remove_idle_accounts);
       add_to_log ("----- purged account #$id <$name>"
                   . ($sys_dry_remove_idle_accounts? " (dry run)": ""));
@@ -165,22 +163,21 @@ sub remove_account
     {
       unless ($sys_dry_remove_idle_accounts)
         {
-          $dbd->do("UPDATE group_history SET old_value = '_" . $id . "'"
-                   . " WHERE old_value = '" . $name . "'");
-          $dbd->do("UPDATE user SET user_name = '_" . $id . "',
-                                user_pw = '!',
-                                realname = '-*-',
-                                status = 'S',
-                                email = 'idontexist\@example.net',
-                                confirm_hash = '',
-                                authorized_keys = '',
-                                people_view_skills = 0,
-                                people_resume = '',
-                                timezone = 'GMT',
-                                theme = '',
-                                gpg_key = '',
-                                email_new = ''
-                            WHERE user_id = $id");
+          $dbd->do (
+            "UPDATE group_history SET old_value = '_$id'"
+            . " WHERE old_value = '$name'"
+          );
+          $dbd->do (<<~"EOF");
+            UPDATE user
+            SET
+              user_name = '_$id', user_pw = '!', realname = '-*-',
+              status = 'S', email = 'idontexist\@example.net',
+              confirm_hash = '', authorized_keys = '',
+              people_view_skills = 0, people_resume = '',
+              timezone = 'GMT', theme = '',
+              gpg_key = '', email_new = ''
+            WHERE user_id = $id
+            EOF
         }
       add_to_log ("----- suspended account #$id <$name>"
                   . ($sys_dry_remove_idle_accounts? " (dry run)": ""));
@@ -193,9 +190,13 @@ sub clean_idle_accounts
   my $t1 = `date +%s` - 17 * 24 * 3600;
   my $t0 = $t1 - 24 * 3600;
 
-  foreach my $user (GetDB("user",
-                    "status = 'A' and add_date > $t0 and add_date < $t1",
-                    "user_id,user_name,realname,email,status,from_unixtime(add_date)"))
+  foreach my $user
+    (
+      GetDB (
+        "user", "status = 'A' AND add_date > $t0 AND add_date < $t1",
+        "user_id, user_name, realname, email, status, from_unixtime(add_date)"
+      )
+    )
     {
       my $active = 0;
       chomp ($user);
@@ -203,19 +204,22 @@ sub clean_idle_accounts
           split (",", $user);
       foreach my $tracker (@trackers)
         {
-          foreach my $line (GetDB($tracker, "submitted_by = $id limit 1"))
+          foreach my $line (GetDB ($tracker, "submitted_by = $id limit 1"))
             {
               $active = 2;
             }
           last if $active;
-          foreach my $line (GetDB($tracker."_history", "mod_by = $id limit 1"))
+          foreach my $line
+            (
+              GetDB ($tracker."_history", "mod_by = $id limit 1")
+            )
             {
               $active = 2;
             }
           last if $active;
         }
       next if $active;
-      foreach my $line (GetDB("group_history",
+      foreach my $line (GetDB ("group_history",
                               "old_value = '$name'", "field_name"))
         {
           chomp ($line);
@@ -230,17 +234,20 @@ sub clean_idle_accounts
             }
         }
       next if $active > 1;
-      foreach my $line (GetDB("user_group",
-                              "user_id = '$id' AND admin_flags != 'P' limit 1"))
+      foreach my $line
+        (
+          GetDB (
+            "user_group", "user_id = '$id' AND admin_flags != 'P' limit 1"
+          )
+        )
         {
           $active = 2;
         }
       next if $active > 1;
       add_to_log ("---- removing $user: $active");
       remove_account ($id, $name, $email, $active < 1);
-    }
+    } # foreach my $user...
 }
-
 clean_idle_accounts ();
 
 if ($big_cleanup)
@@ -254,7 +261,7 @@ if ($big_cleanup)
     # First build an hash of valid group_id. We take as valid any group_id
     # actually in the database. We want to remove items only if the group
     # no longer exists in the database.
-    my @group_ids = GetGroupList("1", "group_id");
+    my @group_ids = GetGroupList ("1", "group_id");
     my %group_exists;
     for (@group_ids)
       {
@@ -267,14 +274,14 @@ if ($big_cleanup)
         my @items_to_delete;
 
         # Find items to delete in tracker-specific tables.
-        foreach my $line (GetDB($tracker, "1", "bug_id,group_id"))
+        foreach my $line (GetDB ($tracker, "1", "bug_id,group_id"))
           {
-            chomp($line);
-            my ($item_id, $group_id) = split(",", $line);
+            chomp ($line);
+            my ($item_id, $group_id) = split (",", $line);
 
             unless ($group_exists{$group_id})
               {
-                push(@items_to_delete, $item_id);
+                push (@items_to_delete, $item_id);
                 print "DBG: item to delete $item_id, "
                       ."because group $group_id is dead\n"
                   if $debug;
@@ -292,15 +299,15 @@ if ($big_cleanup)
             foreach my $item (@items_to_delete)
               {
                 # Clean tables that are tracker-specific.
-                DeleteDB($tracker, "bug_id='$item'");
-                DeleteDB($tracker."_cc", "bug_id='$item'");
-                DeleteDB($tracker."_history", "bug_id='$item'");
-                DeleteDB($tracker."_dependencies",
+                DeleteDB ($tracker, "bug_id='$item'");
+                DeleteDB ($tracker."_cc", "bug_id='$item'");
+                DeleteDB ($tracker."_history", "bug_id='$item'");
+                DeleteDB ($tracker."_dependencies",
                          "item_id='$item' OR (is_dependent_on_item_id='$item' "
                          ."AND is_dependent_on_item_id_artifact='$tracker')");
 
                 # Clean tables that are common to all trackers.
-                DeleteDB("trackers_file",
+                DeleteDB ("trackers_file",
                          "artifact='$tracker' AND item_id='$item'");
               }
           }
@@ -324,41 +331,39 @@ if ($big_cleanup)
 
     foreach my $table (@tables_to_check)
       {
-        foreach my $line (GetDB($table, "1", "group_id"))
+        foreach my $line (GetDB ($table, "1", "group_id"))
           {
-            chomp($line);
-            my ($group_id) = split(",", $line);
+            chomp ($line);
+            my ($group_id) = split (",", $line);
 
             next if $group_exists{$group_id};
             next if $dead_group_id_already_found{$group_id};
 
-            push(@dead_group_id, $group_id);
+            push (@dead_group_id, $group_id);
             $dead_group_id_already_found{$group_id} = 1;
             print "DBG: $table found dead group $group_id\n" if $debug;
           }
       }
 
+    my @suffices = ("_report", "_field_usage", "_field_value");
     # Find entries to delete in trackers query forms (dont bother removing
     # the query forms in depth values, they wont be visible anyway
     # since they refer to an query id that will be made bogus.
     # Do exactly the same for project field values.
     foreach my $tracker (@trackers)
       {
-        @tables_to_check = ($tracker."_report",
-                            $tracker."_field_usage",
-                            $tracker."_field_value");
-
-        foreach my $table (@tables_to_check)
+        foreach my $suf (@suffices)
           {
-            foreach my $line (GetDB($table, "1", "group_id"))
+            my $table = "$tracker$suf";
+            foreach my $line (GetDB ($table, "1", "group_id"))
               {
-                chomp($line);
-                my ($group_id) = split(",", $line);
+                chomp ($line);
+                my ($group_id) = split (",", $line);
 
                 next if $group_exists{$group_id};
                 next if $dead_group_id_already_found{$group_id};
 
-                push(@dead_group_id, $group_id);
+                push (@dead_group_id, $group_id);
                 $dead_group_id_already_found{$group_id} = 1;
                 print "DBG: ".$table." found dead group $group_id\n" if $debug;
               }
@@ -376,33 +381,34 @@ if ($big_cleanup)
             add_to_log ("---- delete anything else "
                         ."that belong to dead group #$group_id");
 
-            DeleteDB("user_group", "group_id='$group_id'");
-            DeleteDB("groups_default_permissions", "group_id='$group_id'");
-            DeleteDB("group_preferences", "group_id='$group_id'");
-            DeleteDB("group_history", "group_id='$group_id'");
-            DeleteDB("user_group", "group_id='$group_id'");
-            DeleteDB("news_bytes", "group_id='$group_id'");
-            DeleteDB("forum_group_list", "group_id='$group_id'");
-            DeleteDB("trackers_watcher", "group_id='$group_id'");
+            DeleteDB ("user_group", "group_id='$group_id'");
+            DeleteDB ("groups_default_permissions", "group_id='$group_id'");
+            DeleteDB ("group_preferences", "group_id='$group_id'");
+            DeleteDB ("group_history", "group_id='$group_id'");
+            DeleteDB ("user_group", "group_id='$group_id'");
+            DeleteDB ("news_bytes", "group_id='$group_id'");
+            DeleteDB ("forum_group_list", "group_id='$group_id'");
+            DeleteDB ("trackers_watcher", "group_id='$group_id'");
 
             # For mailing-list, we mark the lists as deleted, so sv_mailman
             # will finish the job, unless their status is equal to 0,
             # which means they no longer exists already
             # (backward compat case).
-            SetDBSettings("mail_group_list",
+            SetDBSettings ("mail_group_list",
                           "group_id='$group_id'",
                           "is_public='9'");
-            DeleteDB("mail_group_list", "group_id='$group_id' AND status='0'");
+            DeleteDB ("mail_group_list", "group_id='$group_id' AND status='0'");
 
             foreach my $tracker (@trackers)
               {
-                DeleteDB($tracker."_report", "group_id='$group_id'");
-                DeleteDB($tracker."_field_usage", "group_id='$group_id'");
-                DeleteDB($tracker."_field_value", "group_id='$group_id'");
+                foreach my $suf (@suffices)
+                  {
+                    DeleteDB ("$tracker$suf", "group_id='$group_id'");
+                  }
               }
           } # foreach my $group_id (@dead_group_id)
       } # unless ($debug)
-  } # if($big_cleanup)
+  } # if ($big_cleanup)
 
 add_to_log ("- work finished");
 print LOG "[$script] ------------------------------------------------------\n";

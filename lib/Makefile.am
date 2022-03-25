@@ -1,24 +1,44 @@
-# Autotools -> ExtUtils::MakeMaker integration
-all:
-	$(MAKE) -f Makefile.perl VPATH=.:$(srcdir)
+# Public domain.  Originally written by Ineiev from the scratch.
 
-MANIFEST:
-	$(MAKE) -f Makefile.perl manifest VPATH=.:$(srcdir)
-install-data-local: MANIFEST
-	$(MAKE) -f Makefile.perl install VPATH=.:$(srcdir)
+dist_libexec_SCRIPTS = sv_pm_true
 
-uninstall-local:
-	PERLLIB=`find $(DESTDIR)/$(prefix)/lib -name perl -type d` \
-          $(PERL) $(srcdir)/uninstall.pl Savane
-	$(RM) `find $(DESTDIR)/$(prefix)/lib -name perllocal.pod`
+modules = \
+	Savane.pm \
+	Savane/Bzr.pm \
+	Savane/Conf.pm \
+	Savane/Cvs.pm \
+	Savane/DB.pm \
+	Savane/Download.pm \
+	Savane/Frontend.pm \
+	Savane/Frontend/Exit.pm \
+	Savane/Git.pm \
+	Savane/Groups.pm \
+	Savane/Hg.pm \
+	Savane/Locks.pm \
+	Savane/Mail.pm \
+	Savane/Session.pm \
+	Savane/Svn.pm \
+	Savane/Trackers.pm \
+	Savane/User.pm \
+	Savane/Util.pm \
+	Savane/Version.pm
 
-CLEANFILES = Savane-*.tar.gz MANIFEST MANIFEST.bak
-clean-local:
-	$(MAKE) -f Makefile.perl clean VPATH=.:$(srcdir)
-	$(RM) Makefile.perl.old
+nobase_libexec_SCRIPTS = $(modules)
+sysconf_DATA = savane.conf.pl
 
-all MANIFEST install-local clean-local: Makefile.perl
-Makefile.perl:
-	$(PERL) $(srcdir)/Makefile.PL PREFIX=$(prefix)
+substituted = $(modules) savane.conf.pl
 
-EXTRA_DIST = Makefile.PL Savane.pm Savane/ uninstall.pl
+subst_pm = sed \
+	-e 's,[@]libexecdir[@],$(libexecdir),' \
+	-e 's,[@]sysconfdir[@],$(sysconfdir),' \
+	-e 's,[@]PERL[@],$(PERL),' \
+	-e 's,[@]VERSION[@],$(VERSION),'
+	chmod +x $@
+
+$(substituted): %: %.in
+	$(MKDIR_P) $(dir $@)
+	$(subst_pm) < $^ > $@
+
+CLEANFILES = $(substituted)
+
+EXTRA_DIST = README $(modules:%=%.in) savane.conf.pl.in

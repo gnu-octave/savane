@@ -1,53 +1,48 @@
-#!/usr/bin/perl
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 2003-2005 (c) Mathieu Roy <yeupou--gnu.org>
-#                         Yves Perrin <yves.perrin--cern.ch>
+#! @libexecdir@/sv_pm_true
+# Copyright (C) 2003-2005 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2003-2005 Yves Perrin <yves.perrin--cern.ch>
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-##
-## Desc: any subs related to database access...
-## Usually used in other subs.
-##
+# Any subs related to database access...
+# Usually used in other subs.
 
 use strict;
 require Exporter;
 
-# Exports
 our @ISA = qw(Exporter);
 our @EXPORT = qw(GetDBDescribe GetDBSettings GetDBList GetDBAsIs GetDB GetDBAlt GetDBHash GetDBLists GetDBListsRef SetDBSettings DeleteDB InsertDB );
 our $version = 1;
 
-# Imports (needed for strict).
 our $sys_dbname;
 our $sys_dbhost;
 our $sys_dbuser;
 our $sys_dbpasswd;
 our $sys_dbparams;
+our $sys_db_skip_init;
+our $dbd;
 
-# Init
-our $dbd =DBI->connect('DBI:mysql:database='.$sys_dbname
-		       .':host='.$sys_dbhost
-		       .':'.$sys_dbparams,
-                       $sys_dbuser, $sys_dbpasswd,
-                       { RaiseError => 1, AutoCommit => 1});
+$dbd =
+  DBI->connect (
+    "DBI:mysql:database=$sys_dbname:host=$sys_dbhost:$sys_dbparams",
+    $sys_dbuser, $sys_dbpasswd, { RaiseError => 1, AutoCommit => 1}
+  )
+  unless ($sys_db_skip_init);
 
-## Returns the name and type of every field of the table
+# Return the name and type of every field of the table.
 # arg0 : table
 sub GetDBDescribe {
     my $table = $_[0];
@@ -72,14 +67,14 @@ sub GetDBSettings {
     my $table = $_[0];
     my $criterion;
     my $fields = "*";
- 
+
     $criterion = "WHERE ".$_[1] if $_[1];
     $fields = $_[2] if $_[2];
 
     return $dbd->selectrow_array("SELECT ".$fields." FROM ".$table." ".$criterion);
 }
 
-## Returns a list of entries 
+## Returns a list of entries
 # arg0 : table
 # arg1 : criterion
 # arg2 : fields to show (* for all)
@@ -103,7 +98,7 @@ sub GetDBAsIs {
     my $sql = $_[0];
     my $hop;
     my @ret;
-                                                                                
+
     $hop = $dbd->prepare($sql);
     $hop->execute;
     while (my (@line) = $hop->fetchrow_array) {
@@ -113,7 +108,7 @@ sub GetDBAsIs {
     return @ret;
 }
 
-## Returns a list of entries 
+## Returns a list of entries
 # arg0 : table
 # arg1 : criterion
 # arg2 : fields to show (* for all)
@@ -188,7 +183,7 @@ sub GetDBHash {
 
 
 
-## Same purpose, but return true list 
+## Same purpose, but return true list
 # arg0 : table
 # arg1 : criterion
 # arg2 : fields to show (* for all)
@@ -225,7 +220,7 @@ sub GetDBListsRef {
 # arg0 : table
 # arg1 : criterion
 # arg2 : new values
-sub SetDBSettings { 
+sub SetDBSettings {
     my $table = $_[0];
     my $criterion = $_[1];
     my $value = $_[2];
@@ -243,7 +238,7 @@ sub DeleteDB {
     unless ($table || $criterion) {
 	return 0;
     }
-    
+
     return $dbd->do("DELETE FROM ".$table." WHERE ".$criterion);
 }
 
@@ -256,3 +251,5 @@ sub InsertDB {
 
     return $dbd->do("INSERT INTO ".$table." (".$fields.") VALUES (".$values.")");
 }
+
+return "true";

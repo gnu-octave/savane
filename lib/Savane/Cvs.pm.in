@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! @libexecdir@/sv_pm_true
 # Cvs-related subroutines.
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
@@ -198,7 +198,7 @@ sub BuildHooks {
     $dir_list = '' if (!defined($dir_list));
     $emails_diff = '' if (!defined($emails_diff));
     $branches = '' if (!defined($branches));
-    
+
     my @dirs = split(',', $dir_list);
 
     # Check for spaces in dir names - this could be used to insert
@@ -588,3 +588,5 @@ sub WebCvsMakeAreaSavannahNonGNU {
     my ($name,$dir_cvs,$is_public) = @_;
     WebCvsMakeArea($name, $dir_cvs, $is_public, 0);
 }
+
+return "true";

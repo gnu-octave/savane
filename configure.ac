@@ -2,6 +2,7 @@
 #
 # Copyright (C) 2007  Sylvain Beucler
 # Copyright (C) 2014  Assaf Gordon
+# Copyright (C) 2022  Ineiev
 #
 # This file is part of Savane.
 #
@@ -52,7 +53,6 @@ prefix="$final_prefix"
 eval "datarootdir=\"${datarootdir}\""
 eval "localedir=\"${datadir}/locale\""
 prefix="$save_prefix"
-dnl AC_SUBST(localedir)
 
 dnl Support for the po directory.
 AM_PO_SUBDIRS
@@ -130,56 +130,13 @@ AC_SUBST(SV_CONF)
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([ \
 autotools/m4/Makefile \
-backend/Makefile \
-backend/system-specific/Makefile \
-backend/system-specific/darwin/Makefile \
 etc/Makefile \
 frontend/Makefile \
 frontend/php/images/Makefile \
 lib/Makefile \
 local/Makefile])
 AC_CONFIG_FILES([po/Makefile], [AM_POSTPROCESS_PO_MAKEFILE])
-
 AC_CONFIG_FILES([frontend/php/include/ac_config.php])
-AC_CONFIG_FILES([lib/Savane/Version.pm])
-
-dnl associate the setting of the execute bit with the individual scripts
-dnl [idea from cvs-1.1.13/contrib]
-dnl AC_CONFIG_FILES(backend/accounts/sv_groups, [chmod +x backend/accounts/sv_groups])
-AC_CONFIG_FILES(backend/accounts/sv_groups, [chmod +x backend/accounts/sv_groups])
-AC_CONFIG_FILES(backend/accounts/sv_users, [chmod +x backend/accounts/sv_users])
-AC_CONFIG_FILES(backend/accounts/sv_membersh, [chmod +x backend/accounts/sv_membersh])
-AC_CONFIG_FILES(backend/mail/sv_mailman, [chmod +x backend/mail/sv_mailman])
-AC_CONFIG_FILES(backend/mail/sv_aliases, [chmod +x backend/mail/sv_aliases])
-AC_CONFIG_FILES(backend/mail/sv_mailman_and_mailarchivedotcom,
-	[chmod +x backend/mail/sv_mailman_and_mailarchivedotcom])
-AC_CONFIG_FILES(backend/extra/subversion/sv_extra_svn_postcommit_brigde,
-	[chmod +x backend/extra/subversion/sv_extra_svn_postcommit_brigde])
-AC_CONFIG_FILES(backend/extra/subversion/sv_extra_daily_svn_tarball,
-	[chmod +x backend/extra/subversion/sv_extra_daily_svn_tarball])
-AC_CONFIG_FILES(backend/extra/cvs/sv_extra_daily_cvs_tarball,
-	[chmod +x backend/extra/cvs/sv_extra_daily_cvs_tarball])
-AC_CONFIG_FILES(backend/extra/cvs/sv_extra_viewcvs_forbidden,
-	[chmod +x backend/extra/cvs/sv_extra_viewcvs_forbidden])
-AC_CONFIG_FILES(backend/extra/cvs/sv_extra_daily_cvs_tarball_forbid,
-	[chmod +x backend/extra/cvs/sv_extra_daily_cvs_tarball_forbid])
-AC_CONFIG_FILES(backend/extra/cvs/sv_extra_import_cvs,
-	[chmod +x backend/extra/cvs/sv_extra_import_cvs])
-AC_CONFIG_FILES(backend/extra/cvs/sv_extra_pserver_cvsroots,
-	[chmod +x backend/extra/cvs/sv_extra_pserver_cvsroots])
-AC_CONFIG_FILES(backend/extra/siteadmin/sv_extra_dead_projects,
-	[chmod +x backend/extra/siteadmin/sv_extra_dead_projects])
-AC_CONFIG_FILES(backend/extra/siteadmin/sv_extra_merge_projects,
-	[chmod +x backend/extra/siteadmin/sv_extra_merge_projects])
-AC_CONFIG_FILES(backend/install/sv_update_conf, [chmod +x backend/install/sv_update_conf])
-AC_CONFIG_FILES(backend/misc/sv_spamcheck_peon, [chmod +x backend/misc/sv_spamcheck_peon])
-AC_CONFIG_FILES(backend/misc/sv_reminder, [chmod +x backend/misc/sv_reminder])
-AC_CONFIG_FILES(backend/misc/sv_spamcheck_monitor, [chmod +x backend/misc/sv_spamcheck_monitor])
-AC_CONFIG_FILES(backend/misc/sv_cleaner, [chmod +x backend/misc/sv_cleaner])
-AC_CONFIG_FILES(backend/misc/sv_spamcheck_scholar, [chmod +x backend/misc/sv_spamcheck_scholar])
-AC_CONFIG_FILES(backend/misc/sv_spammers_purge, [chmod +x backend/misc/sv_spammers_purge])
-AC_CONFIG_FILES(backend/accounts/sv_assign_uid_gid, [chmod +x backend/accounts/sv_assign_uid_gid])
-AC_CONFIG_FILES(backend/accounts/sv_get_authorized_keys, [chmod +x backend/accounts/sv_get_authorized_keys])
 
 AC_OUTPUT
 

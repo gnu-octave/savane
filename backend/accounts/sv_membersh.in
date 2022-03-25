@@ -1,28 +1,28 @@
-#! @PERL@
-# Restricted shell to be used as login shell for Savane system users
-# 
-# Copyright 2004-2005 (c) Loic Dachary <loic--gnu.org>
-#                         Mathieu Roy <yeupou--gnu.org>
-#                         Timothee Besset <ttimo--ttimo.net>
+#! @PERL@ -I@libexecdir@
+#
+# Restricted shell to be used as login shell for Savane system users.
+#
+# Copyright (C) 2004-2005 Loic Dachary <loic--gnu.org>
+# Copyright (C) 2004-2005 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2004-2005 Timothee Besset <ttimo--ttimo.net>
 # Copyright (C) 2007, 2008, 2017  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
+# Copyright (C) 2022  Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
 
 # Login shell for people who should only have limited access.
 # You probably should add/modify the following option of your sshd_config
@@ -32,21 +32,23 @@
 #     AllowTcpForwarding no
 
 use strict;
+use Savane::Version;
 
 $ENV{PATH}="/usr/local/bin:/usr/bin:/bin";
 $ENV{CVSEDITOR}="/bin/false";
 
-# Import conf options
 our $use_cvs = "0";
 our $bin_cvs = "cvs";
- 
+
 our $use_scp = "0";
 our $bin_scp = "scp";
 our $regexp_scp = "^scp( -[prv])* -t (-- )?/(upload|var/ftp)";
 
 our $use_sftp = "0";
 our $bin_sftp = "sftp-server";
-our $regexp_sftp = "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server|/usr/lib/openssh/sftp-server)";
+our $regexp_sftp =
+  "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server"
+  . "|/usr/lib/openssh/sftp-server)";
 
 our $use_rsync = "0";
 our $bin_rsync = "rsync";
@@ -73,26 +75,38 @@ our $dir_hg = "/srv/hg";
 # of $dir_hg:
 our $regexp_hg = '^hg -R ([a-zA-Z0-9-_][a-zA-Z0-9-_/]*) serve --stdio$';
 
-# Open configuration file
-if (-e "/etc/membersh-conf.pl") {
-    do "/etc/membersh-conf.pl" or die "System misconfiguration, contact administrators. Exiting";
-} else {
-    die "System misconfiguration, contact administrators. Exiting";
-} 
+my $help =
+"Usage: $0 [OPTIONS]
+
+Restricted shell to be used as login shell for Savane system users.
+(Most options are undocumented).
+
+  -h, --help                   Show this help and exit
+  -v, --version                Show Savane version and exit
+
+";
+PrintVersionOrHelp ($help);
+
+my $conf_file = "@sysconfdir@/membersh-conf.pl";
+
+# Open configuration file.
+die "System misconfiguration, contact administrators. Exiting"
+  unless (-e $conf_file and do $conf_file);
 
 # A configuration file /etc/membersh-conf.pl must exists.
 # Here come an example:
 #
 # $use_cvs = "1";
 # $bin_cvs = "/usr/bin/cvs";
-# 
+#
 # $use_scp = "1";
 # $bin_scp = "/usr/bin/scp";
 # $regexp_scp = "^scp .*-t (/upload)|(/var/ftp)";
 
 # $use_sftp = "1";
 # $bin_sftp = "/usr/lib/sftp-server";
-# $regexp_sftp = "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server)";
+# $regexp_sftp =
+#   "^(/usr/lib/ssh/sftp-server|/usr/lib/sftp-server|/usr/libexec/sftp-server)";
 #
 # $use_rsync = "1";
 # $bin_rsync = "/usr/bin/rsync";
@@ -101,90 +115,95 @@ if (-e "/etc/membersh-conf.pl") {
 # # For read-only rsync:
 # #$regexp_rsync = '^rsync --server --sender ';
 
-
-
-if ($#ARGV == 1 and $ARGV[0] eq "-c") {
-    if ($use_cvs and $ARGV[1] eq 'cvs server') {
-	
-	# Run a cvs server command
-        exec($bin_cvs, 'server') or die("Failed to exec $bin_cvs: $!");
-
-    } elsif ($use_scp and 
-	     $ARGV[1] =~ m:$regexp_scp:) {
-
-	# Authorize scp command
-        my (@args) = split(' ', $ARGV[1]);
-        shift(@args);             
-        exec($bin_scp, @args);
-
-    } elsif ($use_sftp and 
-	     $ARGV[1] =~ m:$regexp_sftp:) {
-	
-	# Authorize sftp login
-        exec($bin_sftp) or die("Failed to exec $bin_sftp: $!");
-
-    } elsif ($use_rsync and 
-	     $ARGV[1] =~ m:$regexp_rsync:) {
-
-	my ($rsync, @rest) = split(' ', $ARGV[1]);
-	my ($dir) = $rest[$#rest];
-
-	# Authorize rsync command, if the directory is acceptable
-	if ($dir =~ m:$regexp_dir_rsync:) {
-            exec($bin_rsync, @rest) or die("Failed to exec $bin_rsync: $!");
-        } 
-	
-    } elsif ($use_svn and
-	     $ARGV[1] =~ m:$regexp_svn:) {
-	
-	# authorize svnserve in tunnel mode, with the svn root prepended
-        my (@args) = @prepend_args_svn;
-	my (@args_user) = split(' ', $ARGV[1]);
-	shift( @args_user );
-	push( @args, @args_user );
-	exec($bin_svn, @args) or die("Failed to exec $bin_svn: $!");
-
-    } elsif ($use_git and $ARGV[1] =~ m/^git-/) {
-	
-	# Delegate filtering to git-shell
-        exec($bin_git, @ARGV) or die("Failed to exec $bin_git: $!");
-
-    } elsif ($use_bzr and $ARGV[1] =~ m:$regexp_bzr:) {
-
-	# rgm@gnu 2013/06/06. Let's try logging + logrotate to limit the size.
-	$ENV{'BZR_LOG'} = '/var/log/bzr/bzr.log';
-	$ENV{'HOME'} = '/var/lib/bzr';
-	# rgm@gnu addition 2013/08/28.
-	# https://lists.ubuntu.com/archives/bazaar/2013q3/075681.html
-	$ENV{'LANG'} = 'en_US.ISO8859-1';
-	# rgm@gnu addition 2013/06/05.
-	$ENV{'BZR_PLUGIN_PATH'} = '-user:+core:-site';
-	# authorize 'bzr serve' in SSH tunnel mode
-	# rgm@gnu removed '--no-plugins' 2013/06/05.
-	exec($bin_bzr, 'serve', '--client-timeout=3600', '--inet',
-		'--directory='.$dir_bzr, '--allow-writes')
-	    or die("Failed to exec '$bin_bzr serve --inet --directory=$dir_bzr --allow-writes': $!");
-
-    } elsif ($use_hg and $ARGV[1] =~ m:$regexp_hg:) {
-
-	# Get path to repository
-	my $repo_path = $1; # get repo_path from $regexp_hg
-
-	# Run in $dir_hg to get rid of the path prefix (e.g. /srv/hg)
-	exec($bin_hg, '--cwd', $dir_hg, '-R', $repo_path, 'serve', '--stdio')
-	    or die("Failed to exec $bin_hg -R $repo_path serve --stdio: $!");
-
+sub OutputErrorMsg
+{
+  unless (-e "/etc/membersh-errormsg")
+    {
+      print STDERR "You tried to execute: @ARGV[1..$#ARGV]\n";
+      print STDERR "Sorry, you are not allowed to execute that command.\n";
     }
+  else
+    {
+      open (ERRORMSG, "< /etc/membersh-errormsg");
+      while (<ERRORMSG>)
+        {
+          print STDERR $_;
+        }
+      close (ERRORMSG);
+    }
+  exit (1);
 }
 
-unless (-e "/etc/membersh-errormsg") {
-    print STDERR "You tried to execute: @ARGV[1..$#ARGV]\n";
-    print STDERR "Sorry, you are not allowed to execute that command.\n";
-} else {
-    open(ERRORMSG, "< /etc/membersh-errormsg");
-    while (<ERRORMSG>) {
-	print STDERR $_;
-    }
-    close(ERRORMSG);
-}
-exit(1);
+OutputErrorMsg unless ($#ARGV == 1 and $ARGV[0] eq "-c");
+
+if ($use_cvs and $ARGV[1] eq 'cvs server')
+  {
+    # Run a cvs server command.
+    exec($bin_cvs, 'server') or die("Failed to exec $bin_cvs: $!");
+  }
+elsif ($use_scp and $ARGV[1] =~ m:$regexp_scp:)
+  {
+    # Authorize scp command.
+    my (@args) = split(' ', $ARGV[1]);
+    shift(@args);
+    exec($bin_scp, @args);
+  }
+elsif ($use_sftp and $ARGV[1] =~ m:$regexp_sftp:)
+  {
+    # Authorize sftp login.
+    exec($bin_sftp) or die("Failed to exec $bin_sftp: $!");
+  }
+elsif ($use_rsync and $ARGV[1] =~ m:$regexp_rsync:)
+  {
+    my ($rsync, @rest) = split(' ', $ARGV[1]);
+    my ($dir) = $rest[$#rest];
+
+    # Authorize rsync command, if the directory is acceptable.
+    if ($dir =~ m:$regexp_dir_rsync:)
+      {
+        exec($bin_rsync, @rest) or die("Failed to exec $bin_rsync: $!");
+      }
+  }
+elsif ($use_svn and $ARGV[1] =~ m:$regexp_svn:)
+  {
+    # Authorize svnserve in tunnel mode, with the svn root prepended.
+    my (@args) = @prepend_args_svn;
+    my (@args_user) = split(' ', $ARGV[1]);
+    shift( @args_user );
+    push( @args, @args_user );
+    exec($bin_svn, @args) or die("Failed to exec $bin_svn: $!");
+  }
+elsif ($use_git and $ARGV[1] =~ m/^git-/)
+  {
+    # Delegate filtering to git-shell.
+    exec($bin_git, @ARGV) or die("Failed to exec $bin_git: $!");
+  }
+elsif ($use_bzr and $ARGV[1] =~ m:$regexp_bzr:)
+  {
+    # rgm@gnu 2013/06/06. Let's try logging + logrotate to limit the size.
+    $ENV{'BZR_LOG'} = '/var/log/bzr/bzr.log';
+    $ENV{'HOME'} = '/var/lib/bzr';
+    # rgm@gnu addition 2013/08/28.
+    # https://lists.ubuntu.com/archives/bazaar/2013q3/075681.html
+    $ENV{'LANG'} = 'en_US.ISO8859-1';
+    # rgm@gnu addition 2013/06/05.
+    $ENV{'BZR_PLUGIN_PATH'} = '-user:+core:-site';
+    # authorize 'bzr serve' in SSH tunnel mode
+    # rgm@gnu removed '--no-plugins' 2013/06/05.
+    exec ($bin_bzr, 'serve', '--client-timeout=3600', '--inet',
+      '--directory='.$dir_bzr, '--allow-writes'
+    )
+    or die (
+         "Failed to exec '$bin_bzr serve --inet "
+         . "--directory=$dir_bzr --allow-writes': $!"
+       );
+  }
+elsif ($use_hg and $ARGV[1] =~ m:$regexp_hg:)
+  {
+    # Get path to repository.
+    my $repo_path = $1; # Get repo_path from $regexp_hg.
+    # Run in $dir_hg to get rid of the path prefix (e.g. /srv/hg).
+    exec ($bin_hg, '--cwd', $dir_hg, '-R', $repo_path, 'serve', '--stdio')
+      or die ("Failed to exec $bin_hg -R $repo_path serve --stdio: $!");
+  }
+OutputErrorMsg;

@@ -1,0 +1,59 @@
+#! @libexecdir@/sv_pm_true
+# Copyright (C) 2022 Ineiev
+#
+# This file is part of Savane.
+#
+# Savane is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# Savane is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Read configuration file.
+# Configuration variables are defined as our $sys_var = "value";
+
+use strict;
+require Exporter;
+
+our @ISA = qw(Exporter);
+our @EXPORT = qw(GetConf);
+
+my $conf_prefix = '@sysconfdir@';
+my $conf_file;
+my $res;
+
+$conf_prefix = $ENV{SAVANE_CONF} if $ENV{SAVANE_CONF};
+
+$conf_file = "$conf_prefix/savane.conf.pl";
+die "Configuration file $conf_file not found" unless (-e $conf_file);
+
+$res = do $conf_file;
+
+unless ($res)
+  {
+     my $err_msg;
+     $err_msg = "Failed to run configuration file $conf_file\n";
+     $err_msg = "Failed to compile configuration file $conf_file: $@\n" if $@;
+     $err_msg = "Failed to read configuration file $conf_file: $!\n"
+       unless ($@ || not $!);
+     die $err_msg, "\nDied ";
+  }
+
+# Return a configured variable.
+# In fact, they are usually accessed via our $sys_var;
+sub GetConf
+{
+  no strict 'refs';
+  my $val = ${$_[0]};
+  use strict;
+  return $val;
+}
+
+return 1;

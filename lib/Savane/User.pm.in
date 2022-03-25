@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! @libexecdir@/sv_pm_true
 # Subs related to users.
 #
 # Copyright (C) 2003-2005 Mathieu Roy <yeupou--gnu.org>

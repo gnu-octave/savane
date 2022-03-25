@@ -1,28 +1,22 @@
-#!/usr/bin/perl
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 2006 (c) Mathieu Roy <yeupou--gnu.org>
+#! @libexecdir@/sv_pm_true
+# Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
 
-##
-## Desc: any subs related to trackers
-## (not loaded by default)
+# Subs related to trackers (not loaded by default).
 
 use strict;
 require Exporter;
@@ -42,12 +36,12 @@ our $dbd;
 # arg1: item_id
 # arg2: comment_id
 # arg3: spamscore
-sub SendTrackersDelayedNotification { 
+sub SendTrackersDelayedNotification {
     # Using PHP CLI to do that would avoid reimplementing frontend code to
     # build notifications but it is not shipped in SLC4, so it is blocker
     #
     # Only sensible option: putting in the database the content of mail notifs
-    # as the frontend would have sent it. 
+    # as the frontend would have sent it.
     # Not wonderful for the database but... well. It saves the time need
     # to maintain duplicated codeduplic
 
@@ -66,13 +60,13 @@ sub SendTrackersDelayedNotification {
 	foreach my $entry (GetDBLists($table, $where, "to_header,other_headers,subject_header,message")) {
 	    my ($to_header, $other_headers, $subject_header, $message) = @$entry;
 	    my (@other_headers) = split("\n", $other_headers);
-	    MailSend(0, 
+	    MailSend(0,
 		     $to_header,
 		     $subject_header,
 		     $message,
 		     0,
 		     @other_headers);
-	} 
+	}
     }
 
     # Remove the notif from the queue
@@ -89,11 +83,11 @@ sub SendTrackersDelayedNotification {
 # arg5 = timestamp
 # arg6 = subject
 # arg7 = message
-sub GetTrackersContentAsMail { 
+sub GetTrackersContentAsMail {
     my $maildomain = GetConf("sys_mail_domain");
     my $wwwdomain = GetConf("sys_default_domain");
     my $version = GetVersion();
-    
+
     my $uid = $_[0];
     my $sender_ip = $_[1];
     my $tracker = $_[2];
@@ -104,7 +98,7 @@ sub GetTrackersContentAsMail {
     my $message = $_[7];
 
     my $user = "A Logged In User";
-    $user = "Ann Honymous One" if $uid eq "100";   
+    $user = "Ann Honymous One" if $uid eq "100";
 
     return 'Return-Path: <user'.$uid.'@foo2.com>
 Delivered-To: foo@'.$maildomain.'
@@ -125,3 +119,5 @@ Reply-To: user'.$uid.'foo2.com
 '.$message;
 
 }
+
+return "true";

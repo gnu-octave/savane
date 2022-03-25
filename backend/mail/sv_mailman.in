@@ -1,25 +1,23 @@
-#! @PERL@
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright 2004-2006 (c) Mathieu Roy <yeupou--gnu.org>
-#                          BBN Technologies Corp
+#! @PERL@ -I@libexecdir@
+#
+# Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
+# Copyright (C) 2004-2006 BBN Technologies Corp
+# Copyright (C) 2022 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
 #
 # FIXME: check the drawback explanation below.
 #
@@ -29,22 +27,20 @@
 # be created everyday.
 # This scalability issue should be kept in mind, however.
 
-## Note about status of list:
-##   - Status 0: list is deleted (ie, does not exist).
-##   - Status 1: list is marked for creation.
-##   - Status 2: list is marked for reconfiguration.
-##   - Status 5: list has been created (ie, it exists).
-##
-##   The frontend php script sets status to:
-##      0 if user deletes a list before the backend ever actually created it.
-##      1 if user adds a list
-##      2 if user reconfigures an _existing_ list (ie, status was 5)
-##
-##   This backend sv_mailman.pl script sets status to:
-##      0 when a list is actually deleted
-##      5 when a list is actually created
-
-
+# Note about status of list:
+#   - Status 0: list is deleted (ie, does not exist).
+#   - Status 1: list is marked for creation.
+#   - Status 2: list is marked for reconfiguration.
+#   - Status 5: list has been created (ie, it exists).
+#
+#   The frontend php script sets status to:
+#      0 if user deletes a list before the backend ever actually created it.
+#      1 if user adds a list
+#      2 if user reconfigures an _existing_ list (ie, status was 5)
+#
+#   This backend sv_mailman.pl script sets status to:
+#      0 when a list is actually deleted
+#      5 when a list is actually created
 
 use strict;
 use Getopt::Long;
@@ -56,35 +52,24 @@ use String::Random qw(random_string);
 my $script = "sv_mailman";
 my $logfile = "/var/log/sv_database2system.log";
 
-# Import
+# Import.
 our $sys_mail_domain;
 our $sys_cron_mailman;
 
-# Preconfigure
-my $getopt;
-my $help;
 my $debug;
 my $cron;
 my $keeparchives;
 my $skipmail;
 
-eval {
-    $getopt = GetOptions("debug" => \$debug,
-			 "cron" => \$cron,
-			 "keep-archives" => \$keeparchives,
-			 "skip-mail" => \$skipmail,
-			 "help" => \$help);
-};
-
-if($help || !$getopt) {
-    print STDERR <<EOF;
-Usage: $0 [--user=<user> --password=<password>] [--help] [--verbose]
+my $help =
+"Usage: $0 [OPTIONS]
 
 Create with mailman shell command a list for each mailing list found in
-the database with status set to 1. 
+the database with status set to 1.
 It will change the status of the created list to 5.
 
-      --help                   Show this help and exit
+  -h, --help                   Show this help and exit
+  -v, --version                Show Savane version and exit
       --cron                   Option to set when including this script
                                in a crontab
 
@@ -94,274 +79,232 @@ It will change the status of the created list to 5.
                                containing list admin password to admins
 
 
-Author: yeupou\@gnu.org
-EOF
- exit(1);
-}
+Author: yeupou\@gnu.org";
+PrintVersionOrHelp ($help);
 
-# Test if we should run, according to conffile
+GetOptions (
+  "debug" => \$debug, "cron" => \$cron, "keep-archives" => \$keeparchives,
+  "skip-mail" => \$skipmail
+);
+
 exit if ($cron && ! $sys_cron_mailman);
 
-
-sub Escape {
-    my $data = $_[0];
-    $data =~ s/\'/\\\'/g;
-    return $data;
+sub Escape
+{
+  my $data = $_[0];
+  $data =~ s/\'/\\\'/g;
+  return $data;
 }
 
+sub PrintLog
+{
+  print LOG strftime "[$script] %c - $_[0]\n", localtime;
+}
 
-# Log: Starting logging
 open (LOG, ">>$logfile");
-print LOG strftime "[$script] %c - starting\n", localtime;
+PrintLog ("starting");
 
+AcquireReplicationLock ();
 
-# Locks: This script should not run concurrently
-AcquireReplicationLock();
-
-
-
-#################################################################
-### Create new lists
-###
-my $lists_ref = GetDBListsRef("mail_group_list, group_type, groups, user", 
-			      "(mail_group_list.status='1'"
-			      . " OR mail_group_list.status='0')"
-			      . " AND groups.group_id = mail_group_list.group_id"
-			      . " AND group_type.type_id = groups.type"
-			      . " AND user.user_id = mail_group_list.list_admin",
-			      "list_name, mail_group_list.is_public, password,"
-			      . "mail_group_list.description,"
-			      . "group_type.mailing_list_virtual_host,"
-			      . "user.email");
-# TODO: do not use list_admin, rather add all project admins
-foreach my $line (@$lists_ref) {
-    chomp($line);
-    my ($name, $is_public, $password, $description, $virtual_host, $admin) = @$line;
+# Create new lists.
+my $lists_ref = GetDBListsRef (
+  "mail_group_list, group_type, groups, user",
+  "(mail_group_list.status = '1' OR mail_group_list.status = '0')
+  AND groups.group_id = mail_group_list.group_id
+  AND group_type.type_id = groups.type
+  AND user.user_id = mail_group_list.list_admin",
+  "list_name, mail_group_list.is_public, password, mail_group_list.description,
+  group_type.mailing_list_virtual_host, user.email"
+);
+# TODO: do not use list_admin, rather add all project admins.
+foreach my $line (@$lists_ref)
+  {
+    chomp ($line);
+    my ($name, $is_public, $password, $description, $virtual_host, $admin) =
+      @$line;
     my $complete_name = $name;
-    if ($virtual_host && $virtual_host ne '') {
-	$complete_name .= '@'.$virtual_host;
-    }
+    if ($virtual_host && $virtual_host ne '')
+      {
+        $complete_name .= '@' . $virtual_host;
+      }
 
     # Create the list.
-    system("/usr/sbin/newlist",
-	   "-q",
-	   $complete_name, # applies virtual_host configuration
-	   $admin,
-	   $password);
-    print LOG strftime "[$script] %c - List $name <$admin> newlist.\n", localtime;
-     
-    # Find out the list of admins emails
-    # FIXME: group_id is missing up here and I do not want to mess with 
+    system (
+      "/usr/sbin/newlist", "-q",
+      $complete_name, # Apply virtual_host configuration.
+      $admin, $password
+    );
+    PrintLog ("List $name <$admin> newlist.");
+
+    # Find out the list of admins emails.
+    # FIXME: group_id is missing up here and I do not want to mess with
     # such a SQL thing
     #my $admins = join(", ", GetGroupAdminsMail(GetGroupName($group_id)));
 
-    
     # Configure the list.
-    my ($tmpcfgfh, $tmpcfg) = tempfile(UNLINK => 1);
+    my ($tmpcfgfh, $tmpcfg) = tempfile (UNLINK => 1);
 
-    # Always set description
-    print $tmpcfgfh "description = '".Escape($description)."'\n";
+    # Always set description.
+    print $tmpcfgfh "description = '".Escape ($description)."'\n";
     # mailman is not useful to fight spam, in fact being forced to use
     # it's interface instead of having a spamassassin doing the job
     # can be seen as a pain.
     print $tmpcfgfh "require_explicit_destination = 0\n";
-    # Do not advertise, hide archives, require approval if private list
+    # Do not advertise, hide archives, require approval if private list.
     print $tmpcfgfh "archive_private = 1\n" unless $is_public;
     print $tmpcfgfh "advertised = 0\n" unless $is_public;
     print $tmpcfgfh "subscribe_policy = 3\n" unless $is_public;
-    # Always give access to the member list only to list admins
+    # Always give access to the member list only to list admins.
     print $tmpcfgfh "private_roster = 2\n";
-    # Set the message limit size reasonnably big
-    ## Set in mm_cfg.py
-    ## print TMPCFG "max_message_size = 10240\n";
-    close($tmpcfgfh);
-    system("/usr/sbin/config_list",
-           "--inputfile",
-           $tmpcfg,
-           $name);
-    print LOG strftime "[$script] %c - List $name <$admin> config_list.\n", localtime;
+    close ($tmpcfgfh);
+    system ("/usr/sbin/config_list", "--inputfile", $tmpcfg, $name);
+    PrintLog ("List $name <$admin> config_list.");
 
-    # Send a mail giving the password 
-    my $mail = "Hello,
+    # Send a mail giving the password.
+    my $mail = <<~EOF;
+      Hello,
 
-You requested the creation of the list $name at $sys_mail_domain.
+      You requested the creation of the list $name at $sys_mail_domain.
 
-The list administrator password of the mailing list $name is:
-                   $password 
+      The list administrator password of the mailing list $name is:
+              $password
 
-You are advised to change the password, and to avoid at any cost using 
-a password you use for others important account, as mailman does not
-really provide security for these list passwords.
+      You are advised to change the password, and to avoid at any cost using
+      a password you use for others important account, as mailman does not
+      really provide security for these list passwords.
 
-Regards,";
+      Regards
+      EOF
 
-    MailSend("", $admin, "Mailman list $name", $mail)
-	unless $skipmail;
-    print LOG strftime "[$script] %c - Mail sent to $admin for list $name.\n", localtime;
+    MailSend ("", $admin, "Mailman list $name", $mail)
+        unless $skipmail;
+    PrintLog ("Mail sent to $admin for list $name.");
 
-    
-    # Set password to NULL. We have no reason to store this any longer
-    SetDBSettings("mail_group_list",
-		  "list_name='$name'",
-		  "status='5', password=NULL");
-    print LOG strftime "[$script] %c - List $name <$admin> created.\n", localtime;    
-}
+    # Set password to NULL. We have no reason to store this any longer.
+    SetDBSettings (
+      "mail_group_list", "list_name='$name'", "status='5', password=NULL"
+    );
+    PrintLog ("List $name <$admin> created.");
+  } # foreach my $line (@$lists_ref)
 
-#################################################################
-### Delete the lists which are marked for deletion (is_public=9), but haven't
-### been deleted yet (status != 0).
-foreach my $line (GetDB("mail_group_list",
- 			"status!='0' AND is_public='9'",
- 			"group_list_id,list_name,is_public,password,list_admin,description")) {
-     chomp($line);
-     my ($id, $name, $is_public, $password, $admin, $description) = split(",", $line);
- 
+# Delete the lists which are marked for deletion (is_public=9), but haven't
+# been deleted yet (status != 0).
+foreach my $line
+  (
+    GetDB (
+      "mail_group_list", "status != '0' AND is_public = '9'",
+      "group_list_id, list_name, is_public, password, list_admin, description"
+    )
+  )
+  {
+     chomp ($line);
+     my ($id, $name, $is_public, $password, $admin, $description) =
+       split (",", $line);
+
      # Remove the list.
-     unless ($keeparchives) {
-	 system("/usr/sbin/rmlist", "-a", $name);
-     } else {
-	 system("/usr/sbin/rmlist", $name);
-     }
-      
+     unless ($keeparchives)
+       {
+         system ("/usr/sbin/rmlist", "-a", $name);
+       }
+     else
+       {
+         system ("/usr/sbin/rmlist", $name);
+       }
+     PrintLog ("List $name removed with mailman rmlist.");
+     DeleteDB ("mail_group_list", "group_list_id = '$id'");
+     PrintLog ("List $name marked deleted from the database.");
+  }
 
-     print LOG strftime "[$script] %c - List $name removed with mailman rmlist.\n", localtime;
- 
-     DeleteDB("mail_group_list",
-	      "group_list_id='$id'");
-
-     print LOG strftime "[$script] %c - List $name marked deleted from the database.\n", localtime;
-}
-
-#################################################################
-### Reconfigure all lists marked for reconfiguration (status = 2), but
-### that have not been deleted.
-foreach my $line (GetDB("mail_group_list", 
-			"status='2' AND is_public!='9'",
-			"group_list_id,list_name,is_public,password,list_admin,description")) {
-    chomp($line);
-    my ($id, $name, $is_public, $password, $admin, $description) = split(",", $line);
-    $admin = GetUserName($admin);
+# Reconfigure all lists marked for reconfiguration (status = 2), but
+# that have not been deleted.
+foreach my $line
+  (
+     GetDB (
+       "mail_group_list", "status = '2' AND is_public != '9'",
+       "group_list_id, list_name, is_public, password, list_admin, description"
+    )
+  )
+  {
+    chomp ($line);
+    my ($id, $name, $is_public, $password, $admin, $description) =
+      split (",", $line);
+    $admin = GetUserName ($admin);
 
     # Configure the list.
-    my ($tmpcfgfh, $tmpcfg) = tempfile(UNLINK => 1);
+    my ($tmpcfgfh, $tmpcfg) = tempfile (UNLINK => 1);
 
-    # Always set description
-    print $tmpcfgfh "description = '".Escape($description)."'\n";
+    # Always set description.
+    print $tmpcfgfh "description = '" . Escape ($description) . "'\n";
     # mailman is not useful to fight spam, in fact being forced to use
     # it's interface instead of having a spamassassin doing the job
     # can be seen as a pain.
     print $tmpcfgfh "require_explicit_destination = 0\n";
-    # Do not advertise, hide archives, require approval if private list
-    if($is_public) {
-	print $tmpcfgfh "archive_private = 0\n";
-	print $tmpcfgfh "advertised = 1\n";
-	print $tmpcfgfh "subscribe_policy = 1\n";
-    } else {
-	print $tmpcfgfh "archive_private = 1\n";
-	print $tmpcfgfh "advertised = 0\n";
-	print $tmpcfgfh "subscribe_policy = 3\n";
-    }
-    # Always give access to the member list only to list admins
+    my ($arch_priv, $adv, $sub_pol) = (1, 0, 3);
+    ($arch_priv, $adv, $sub_pol) = (0, 1, 1) if ($is_public);
+    print $tmpcfgfh "archive_private = $arch_priv\n";
+    print $tmpcfgfh "advertised = $adv\n";
+    print $tmpcfgfh "subscribe_policy = $sub_pol\n";
+    # Always give access to the member list only to list admins.
     print $tmpcfgfh "private_roster = 2\n";
-    # Set the message limit size reasonnably big
-    ## Set in mm_cfg.py
-    ## print TMPCFG "max_message_size = 10240\n";
-    close($tmpcfgfh);
+    close ($tmpcfgfh);
 
-    system("/usr/sbin/config_list",
-	   "--inputfile",
-	   $tmpcfg,
-	   $name);
-    print LOG strftime "[$script] %c - List $name <$admin> config_list.\n", localtime;
+    system ("/usr/sbin/config_list", "--inputfile", $tmpcfg, $name);
+    PrintLog ("List $name <$admin> config_list.");
 
-    SetDBSettings("mail_group_list",
-		  "group_list_id='$id'",
-		  "status='5'");
-    print LOG strftime "[$script] %c - List $name <$admin> reconfigured.\n", localtime;    
-}
+    SetDBSettings ("mail_group_list", "group_list_id='$id'", "status='5'");
+    PrintLog ("List $name <$admin> reconfigured.");
+  } # foreach my $line...
 
-#################################################################
-### Reset password for careless admins
-### (well, who is able to remember 1,000 passwords anyway?)
+# Reset password for careless admins
+# (well, who is able to remember 1,000 passwords anyway?).
+foreach my $line
+  (
+    GetDB (
+      "mail_group_list", "password='1'", "group_list_id, list_name, group_id"
+    )
+  )
+  {
+    chomp ($line);
+    my ($id, $name, $group_id) = split (",", $line);
 
-# Build the python script necessary to do this: THIS WAS FOR MAILMAN 2.0
-# 
-# but for now it is enough. If you need path to be configurable, please
-# add --command-line options to this script
-# my $pythonscript = "/usr/lib/mailman/bin/change_list_pw.py";
-# unless (-e $pythonscript) {
-#     open(PYTHONSCRIPT, "> $pythonscript");
-#     print PYTHONSCRIPT "from Mailman import Utils
-# from Mailman.Crypt import crypt
+    # Create a new password, random enough, with not too weird characters.
+    my $password = random_string ("ssssssss");
 
-# def change_list_pw(mlist, newpw):
-# \tmlist.password = crypt(newpw, Utils.GetRandomSeed())
-# \tmlist.Save()
-# ";
-#     close(PYTHONSCRIPT);
-#     system("/bin/chmod",
-# 	   "a+x",
-# 	   $pythonscript);
-    
-#     print LOG strftime "[$script] %c - wrote $pythonscript\n", localtime;
+    # Find out the list of admins emails.
+    my $admins = join (", ", GetGroupAdminsMail (GetGroupName ($group_id)));
 
-# }
+    # Call the mailman tool to do the change
+    # (hardcoded path is bad: if you need another one, please add
+    # a getopt option, ask savane-dev).
+    system (
+      "/usr/lib/mailman/bin/change_pw", "-l", $name, "-p", $password,
+      "--quiet"
+    );
 
-foreach my $line (GetDB("mail_group_list",
- 			"password='1'",
- 			"group_list_id,list_name,group_id")) {
-     chomp($line);
-     my ($id, $name, $group_id) = split(",", $line);
- 
-     # Create a new password, random enough, with not too weird characters
-     my $password = random_string("ssssssss");
-     
-     # Find out the list of admins emails
-     my $admins = join(", ", GetGroupAdminsMail(GetGroupName($group_id)));
+    # Impact the change in the database.
+    SetDBSettings ("mail_group_list", "group_list_id='$id'", "password=NULL");
+    PrintLog ("List $name password was reset.");
 
-     # Call the mailman tool to do the change
-     # (hardcoded path is bad: if you need another one, please add a 
-     # getopt option, ask savane-dev)
-     system("/usr/lib/mailman/bin/change_pw",
-	    "-l",
-	    $name,
-	    "-p",
-	    $password,
-	    "--quiet");
+    # Send a mail giving the password.
+    my $mail = <<~EOF;
+      Hello,
 
-     # Impact the change in the database
-     SetDBSettings("mail_group_list",
-		   "group_list_id='$id'",
-		   "password=NULL");
-     
-     print LOG strftime "[$script] %c - List $name password was reset.\n", localtime;
-     
-     # Send a mail giving the password 
-    my $mail = "Hello,
+      You requested the password of the list $name at $sys_mail_domain to be
+      reset.
 
-You requested the password of the list $name at $sys_mail_domain to be
-reset.
+      The new list administrator password of the mailing list $name is:
+              $password
 
-The new list administrator password of the mailing list $name is:
-                   $password 
+      You are advised to change the password, and to avoid at any cost using
+      a password you use for others important account, as mailman does not
+      really provide security for these list passwords.
 
-You are advised to change the password, and to avoid at any cost using 
-a password you use for others important account, as mailman does not
-really provide security for these list passwords.
+      Regards,
+      EOF
+    MailSend ("", $admins, "Mailman list $name", $mail)
+        unless $skipmail;
+    PrintLog ("Mail sent to $admins for list $name.");
+  }
 
-Regards,";
-
-    MailSend("", $admins, "Mailman list $name", $mail)
-	unless $skipmail;
-    print LOG strftime "[$script] %c - Mail sent to $admins for list $name.\n", localtime;
-
-}
-
-
-
-# Final exit
-print LOG strftime "[$script] %c - work finished\n", localtime;
+PrintLog ("work finished");
 print LOG "[$script] ------------------------------------------------------\n";
-
-# END
-

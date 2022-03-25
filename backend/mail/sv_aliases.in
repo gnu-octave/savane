@@ -1,21 +1,21 @@
-#! @PERL@
-# <one line to give a brief idea of what this does.>
-# 
-# Copyright (C) Loic Dachary <loic@gnu.org>, 2001
-#               Mathieu Roy <yeupou@gnu.org>, 2003
+#! @PERL@ -I@libexecdir@
+#
+# Copyright (C) 2001 Loic Dachary <loic@gnu.org>
+# Copyright (C) 2003 Mathieu Roy <yeupou@gnu.org>
+# Copyright (C) 2022 Ineiev
 #
 # This file is part of Savane.
-# 
+#
 # Savane is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # Savane is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -25,134 +25,139 @@ use Savane;
 use File::Copy;
 use File::Temp qw(tempfile tempdir);
 
-# Imports (needed for strict)
+# Imports (needed for strict).
 our $sys_mail_list;
 our $sys_mail_aliases;
 our $sys_cron_mail;
 
-# Preconfigure
+# Preconfigure.
 my $sysemails =  "$sys_mail_list";
 my $sysaliases = "$sys_mail_aliases";
 my $debug = 0;
 my $cron;
-my $getopt;
-my $help;
 
-eval {
-    $getopt = GetOptions("debug" => \$debug,
-			 "cron" => \$cron,
-			 "help" => \$help);
-};
+my $help_email = $sysemails;
+my $help_aliases = $sysaliases;
+my $unconf = "<unconfigured>";
 
-if($help || !$getopt) {
-    print STDERR <<EOF;
-Usage: $0 [--user=<user> --password=<password>] [--help] [--verbose]
+$help_email = $unconf if $help_email eq '';
+$help_aliases = $unconf if $help_aliases eq '';
 
-Include a list of Savannah users in /etc/email-addresses and
-/etc/aliases.
+my $help =
+"Usage: $0 [OPTIONS]
 
-      --help                   Show this help and exit
+Include a list of Savannah users in $help_email (emails) and
+$help_email (aliases).
+
+  -h, --help                   Show this help and exit
+  -v, --version                Show Savane version and exit
       --cron                   Option to set when including this script
                                in a crontab
-      --debug		       Debug mode: do everything apart from 
+      --debug                  Debug mode: do everything apart from
                                overwriting system files
-      --help		       Print this help
 
-Author: loic\@gnu.org
-EOF
- exit(1);
-}
+Author: loic\@gnu.org";
+PrintVersionOrHelp ($help);
 
-# Test if we should run, according to conffile
+GetOptions ("debug" => \$debug, "cron" => \$cron);
+
+# Test if we should run, according to conffile.
 exit if ($cron && ! $sys_cron_mail);
 
-# Avoid concurrent runs
-AcquireReplicationLock();
+# Avoid concurrent runs.
+AcquireReplicationLock ();
 
-###  /etc/email-addresses
-
-# Create a temporary file
-my ($tempfilefh, $tempfile) = tempfile(UNLINK => 1);
+# /etc/email-addresses
+my ($tempfilefh, $tempfile) = tempfile (UNLINK => 1);
 
 # Extract database content, store it in the temporary file
 # We do extracting database content in order to reduce risk of missing
 # entries that would have been added while the script is running
 # (if we that risk starts being unacceptable, we'll have to considere locking
-# files in /etc)
-print $tempfilefh "# Savannah include start\n";
-print $tempfilefh "################################################################\n";
-print $tempfilefh "#  Please DO NOT MODIFY the section in between                 #\n";
-print $tempfilefh "#  'Savannah include start' and 'Savannah include end'.        #\n";
-print $tempfilefh "#  It is generated automatically by sv_aliases                 #\n";
-print $tempfilefh "###############################################################\n";
-PrintAliasesList($tempfilefh);
+# files in /etc).
+print $tempfilefh <<~EOF;
+  # Savannah include start
+  ################################################################
+  #  Please DO NOT MODIFY the section in between                 #
+  #  'Savannah include start' and 'Savannah include end'.        #
+  #  It is generated automatically by sv_aliases                 #
+  ################################################################
+  EOF
+PrintAliasesList ($tempfilefh);
 print $tempfilefh "# Savannah include end\n";
 print "$tempfile written\n" if $debug;
 
-# Extract current system addresses not managed by Savane, put them in 
-# another temporary file
-if ($sysemails || $debug) {
-    my ($tempfilefh_emailadresses, $tempfile_emailadresses) = tempfile(UNLINK => 1);
+# Extract current system addresses not managed by Savane, put them in
+# another temporary file.
+if ($sysemails || $debug)
+  {
+    my ($tmpfh, $tmpf) = tempfile (UNLINK => 1);
 
-    open(IN, "< $sysemails");
-    while(<IN>) {
-	next if(/^\# Savannah include start/ .. /^\# Savannah include end/);
-	print $tempfilefh_emailadresses $_;
-    }
-    close(IN); 
+    open (IN, "< $sysemails");
+    while (<IN>)
+      {
+        next if (/^\# Savannah include start/ .. /^\# Savannah include end/);
+        print $tmpfh $_;
+      }
+    close (IN);
 
-    seek($tempfilefh, 0, 0);
-    while(<$tempfilefh>) {
-	print $tempfilefh_emailadresses $_;
-    }
+    seek ($tempfilefh, 0, 0);
+    while (<$tempfilefh>)
+      {
+        print $tmpfh $_;
+      }
 
-    close($tempfilefh_emailadresses);    
-    print "$tempfile_emailadresses written\n" if $debug;
+    close ($tmpfh);
+    print "$tmpf written\n" if $debug;
 
-    # Overwrite current system emails with the new file
-    unless ($debug) {
-	system("chmod", "a+r", $tempfile_emailadresses);
-	move($tempfile_emailadresses, $sysemails)
-	    or die "Unable to overwrite $sysemails with $tempfile_emailadresses, exiting";
-    } else {
-	print "Would do \"/bin/mv $tempfile_emailadresses $sysemails\"\n";
-    }
-}
+    # Overwrite current system emails with the new file.
+    unless ($debug)
+      {
+        system ("chmod", "a+r", $tmpf);
+        move ($tmpf, $sysemails)
+          or die "Unable to overwrite $sysemails with $tmpf, exiting";
+      }
+    else
+      {
+        print "Would do \"/bin/mv $tmpf $sysemails\"\n";
+      }
+  } # if ($sysemails || $debug)
 
-###  /etc/aliases
-# Extract current system addresses not managed by Savane, put them in 
-# another temporary file
+# /etc/aliases
+# Extract current system addresses not managed by Savane, put them in
+# another temporary file.
+if ($sysaliases || $debug)
+  {
+    my ($tmpfh, $tmpf) = tempfile (UNLINK => 1);
 
-if ($sysaliases || $debug) {
-    my ($tempfilefh_aliases, $tempfile_aliases) = tempfile(UNLINK => 1);
-        
-    open(IN, "< $sysaliases");
-    while(<IN>) {
-	next if(/^\# Savannah include start/ .. /^\# Savannah include end/);
-	print $tempfilefh_aliases $_;
-    }
-    close(IN); 
+    open (IN, "< $sysaliases");
+    while (<IN>)
+      {
+        next if (/^\# Savannah include start/ .. /^\# Savannah include end/);
+        print $tmpfh $_;
+      }
+    close (IN);
 
-    seek($tempfilefh, 0, 0);
-    while(<$tempfilefh>) {
-	print $tempfilefh_aliases $_;
-    }
+    seek ($tempfilefh, 0, 0);
+    while (<$tempfilefh>)
+      {
+        print $tmpfh $_;
+      }
 
-    close($tempfilefh_aliases);
-    print "$tempfile_aliases written\n" if $debug;
+    close ($tmpfh);
+    print "$tmpf written\n" if $debug;
 
-    # Overwrite current system aliases with the new file
-    unless ($debug) {
-	system("chmod", "a+r", $tempfile_aliases);
-	move($tempfile_aliases, $sysaliases)
-	    or die "Unable to overwrite $sysaliases with $tempfile_aliases, exiting";
-	system("/usr/bin/newaliases") if -e "/usr/bin/newaliases";
-    } else {
-	print "Would do \"/bin/mv $tempfile_aliases $sysaliases\"\n";
-	print "Would run \"/usr/bin/newaliases\"\n" if -e "/usr/bin/newaliases";
-    }
-
-}
-
-# END
-
+    # Overwrite current system aliases with the new file.
+    unless ($debug)
+      {
+        system ("chmod", "a+r", $tmpf);
+        move ($tmpf, $sysaliases)
+            or die "Unable to overwrite $sysaliases with $tmpf, exiting";
+        system ("/usr/bin/newaliases") if -e "/usr/bin/newaliases";
+      }
+    else
+      {
+        print "Would do \"/bin/mv $tmpf $sysaliases\"\n";
+        print "Would run \"/usr/bin/newaliases\"\n" if -e "/usr/bin/newaliases";
+      }
+  }

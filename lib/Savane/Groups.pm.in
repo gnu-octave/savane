@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#! @libexecdir@/sv_pm_true
 # Subs related to groups.
 #
 # Copyright (C) 2003-2005 Mathieu Roy <yeupou--gnu.org>
@@ -181,3 +181,5 @@ sub GetGroupTypeName {
     return $dbd->selectrow_array("SELECT name FROM group_type WHERE type_id='"
                                  . $_[0] . "'");
 }
+
+return "true";

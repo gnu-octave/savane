@@ -6,11 +6,46 @@ AUTOMAKE_OPTIONS = gnits
 ACLOCAL_AMFLAGS = -I autotools/m4
 
 # The list of subdirectories containing Makefiles.
-SUBDIRS = backend etc frontend lib autotools/m4 po local
+SUBDIRS = etc frontend lib autotools/m4 po local
+
+backend_scripts = \
+	backend/accounts/sv_groups \
+	backend/accounts/sv_get_authorized_keys \
+	backend/accounts/sv_users \
+	backend/accounts/sv_membersh \
+	backend/mail/sv_mailman \
+	backend/mail/sv_aliases \
+	backend/mail/sv_mailman_and_mailarchivedotcom \
+	backend/extra/subversion/sv_extra_daily_svn_tarball \
+	backend/extra/cvs/sv_extra_daily_cvs_tarball \
+	backend/extra/cvs/sv_extra_viewcvs_forbidden \
+	backend/extra/cvs/sv_extra_daily_cvs_tarball_forbid \
+	backend/extra/cvs/sv_extra_import_cvs \
+	backend/extra/cvs/sv_extra_pserver_cvsroots \
+	backend/misc/sv_reminder \
+	backend/misc/sv_cleaner \
+	backend/accounts/sv_assign_uid_gid
+
+bin_SCRIPTS = $(backend_scripts)
+
+subst_in_scripts = \
+	sed \
+	-e 's,[@]PERL[@],$(PERL),' \
+	-e 's,[@]libexecdir[@],$(libexecdir),' \
+	-e 's,[@]sysconfdir[@],$(sysconfdir),'
+
+$(backend_scripts): %: %.in
+	$(MKDIR_P) $(dir $@)
+	$(subst_in_scripts) < $^ > $@
+	chmod +x $@
 
 EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
 	REQUIREMENTS INSTALL.verbose \
-	db debian devel doc update tests
+	db debian devel doc update tests \
+	$(backend_scripts:%=%.in) \
+	backend/README
+
+CLEANFILES=$(backend_scripts)
 
 database:
 	( \
