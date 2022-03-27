@@ -1,9 +1,10 @@
 <?php
-# Needed in autoconf >= 2.60 to init datarootdir
-# Cf. (autoconf.info)Changed Directory Variables
-# @datarootdir@
-
+$prefix = "@prefix@";
+$datarootdir = "@datarootdir@";
+$sys_confdir = "@sysconfdir@";
+$sys_localedir = "@localedir@";
+unset ($prefix, $datarootdir);
 $sys_localedir = "@localedir@";
 $savane_version = "@VERSION@";
-$savane_url = 'http://savannah.gnu.org/projects/administration';
-
+$savane_url = '//savannah.gnu.org/projects/administration';
+?>
