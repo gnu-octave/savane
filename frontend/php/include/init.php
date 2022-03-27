@@ -20,8 +20,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Database abstraction.
 $file_dir = dirname (__FILE__);
+
+# Autoconf-based:
+require_once ("$file_dir/ac_config.php");
+
+# Database abstraction.
 require_once ("$file_dir/database.php");
 # Security library.
 require_once ("$file_dir/session.php");
@@ -46,8 +50,7 @@ $sys_dbhost = 'localhost';
 $sys_dbname = 'savane';
 $sys_dbuser = 'root';
 
-$sys_etc_dir = '/etc/savane/';
-$sys_incdir = '/etc/savane/content';
+$sys_incdir = "$sys_etc_dir/content";
 $sys_appdatadir = '/var/lib/savane';
 $sys_trackers_attachments_dir = "$sys_appdatadir/trackers_attachments";
 $sys_themedefault = 'Emeraud';
@@ -97,27 +100,8 @@ $pwqcheck_args = 'match=0 max=256 min=24,24,11,8,7';
 # Default uploads directory for './register2/upload.html'.
 $sys_upload_dir = "/var/www/submissions_uploads" ;
 
-# autoconf-based:
-require_once ("$file_dir/ac_config.php");
-
-# This needs to be loaded first because the lines below depend upon it.
-if (
-  getenv ('SAVANE_CONF')
-  and file_exists (getenv ('SAVANE_CONF') . '/.savane.conf.php')
-)
-  include (getenv ('SAVANE_CONF') . '/.savane.conf.php');
-# deprecated:
-elseif (
-  getenv ('SV_LOCAL_INC_PREFIX')
-  and file_exists (getenv ('SV_LOCAL_INC_PREFIX') . '/.savane.conf.php')
-)
-  include (getenv ('SV_LOCAL_INC_PREFIX') . '/.savane.conf.php');
-else
-  {
-    # Go back to default location.
-    if (file_exists ('/etc/savane/.savane.conf.php'))
-      include ('/etc/savane/.savane.conf.php');
-  }
+if (!empty ($sys_conf_file))
+  include ("$sys_conf_file");
 
 if (empty ($sys_file_domain))
   $sys_file_domain = $sys_default_domain;

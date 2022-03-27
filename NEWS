@@ -2,6 +2,8 @@
 
 [FRONTEND]
 
+* init.php takes into account autoconfigured value of $sysconfdir.
+
 * Drop support for mysql extention; always use mysqli.
 
 * Rewrite user-supplied parameter sanitizing framework.

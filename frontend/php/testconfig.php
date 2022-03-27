@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2007 Sylvain Beucler
-# Copyright (C) 2018, 2019 Ineiev
+# Copyright (C) 2018, 2019, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -19,6 +19,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+include ("include/ac_config.php");
 
 function return_bytes($val)
 {
@@ -233,51 +235,45 @@ foreach ($phpfunctions as $func => $comment)
           break;
         }
     if ($have_func)
-      print "function <strong>" . $f . "</strong> exists.<br />\n";
+      print "function <strong>$f</strong> exists.<br />\n";
     else
-      print "function <strong>" . $func
-            . "</strong> not found. <em>$comment</em> <br />\n";
+      print
+        "function <strong>$func</strong> not found. <em>$comment</em><br />\n";
+  }
+
+print "</p>\n\n<h2>Apache environment vars</h2>\n\n<p>";
+if (getenv ('SAVANE_CONF'))
+  {
+    $conf_var = getenv ('SAVANE_CONF');
+    print "SAVANE_CONF configured to $conf_var<br />\n";
+  }
+if (getenv('SV_LOCAL_INC_PREFIX'))
+  {
+    $conf_var = getenv ('SV_LOCAL_INC_PREFIX');
+    print "SV_LOCAL_INC_PREFIX configured to $conf_var<br />\n";
+  }
+print "</p>\n\n<h2>Savane configuration:</h2>\n\n<p>";
+
+if (empty ($sys_conf_file))
+  print "<strong>sys_conf_file not set!</strong>\n";
+else
+  {
+    print "sys_conf_file is set to $sys_conf_file<br />\n";
+    print "File <strong>$sys_conf_file</strong> ";
+
+    if (is_readable ($sys_conf_file))
+      print "exists and is readable.";
+    else
+      print "does not exist or is not readable!";
   }
 print "</p>\n";
 
-print "\n<h2>Apache environment vars</h2>\n\n";
-$configfile = '/etc/savane/';
-
-print "<p>";
-if (getenv('SAVANE_CONF'))
-  {
-    $configfile = getenv('SAVANE_CONF');
-    print "SAVANE_CONF configured to " . $configfile . "<br />\n";
-  }
-elseif (getenv('SV_LOCAL_INC_PREFIX'))
-  {
-    $configfile = getenv('SV_LOCAL_INC_PREFIX');
-    print "SV_LOCAL_INC_PREFIX configured to " . $configfile . "<br />\n";
-  }
-else
-  print "SAVANE_CONF or SV_LOCAL_INC_PREFIX are not set, "
-        . "falling back to default <strong>" . $configfile . "</strong>) <br />\n";
-
-# Add a trailing slash.
-if (!preg_match ('#/$#', $configfile))
-  $configfile .= '/';
-
-$configfile .= '.savane.conf.php';
-
-if (is_readable ($configfile))
-  print "File <strong>$configfile</strong> exists and is readable.";
-else
-  print "File <strong>$configfile</strong> does not exist or is not readable!";
-print "</p>\n";
-
-print "\n<h2>Savane configuration:</h2>\n\n";
-
-if (!is_readable ($configfile))
-  print "Since $configfile does not exist or is not readable, "
+if (!is_readable ($sys_conf_file))
+  print "Since $sys_conf_file does not exist or is not readable, "
         . "this part cannot be checked.";
 else
   {
-    include $configfile;
+    include $sys_conf_file;
     $variables = array (# Name  / required
                       'sys_default_domain',
                       'sys_https_host',
@@ -377,7 +373,7 @@ in the configuration file.</p>\n";
     print "</td></tr>";
     print "</table>\n";
     test_gpg ();
-  } # is_readable ($configfile)
+  } # is_readable ($sys_conf_file)
 
 print "\n<h2>Optional PHP configuration</h2>\n\n";
 
