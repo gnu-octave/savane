@@ -1,10 +1,52 @@
 <?php
+# Basic directory configuration, depending on autoconfigured values.
+#
+# Copyright (C) 2022 Ineiev
+#
+# This file is part of Savane.
+#
+# Savane is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# Savane is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 $prefix = "@prefix@";
 $datarootdir = "@datarootdir@";
 $sys_confdir = "@sysconfdir@";
 $sys_localedir = "@localedir@";
 unset ($prefix, $datarootdir);
-$sys_localedir = "@localedir@";
 $savane_version = "@VERSION@";
 $savane_url = '//savannah.gnu.org/projects/administration';
+$sys_conf_file_name = '.savane.conf.php';
+$sys_conf_file = null;
+
+if (empty ($sys_confdir))
+  $sys_etc_dir = '/etc';
+else
+  $sys_etc_dir = $sys_confdir;
+
+$sys_etc_dir .= '/savane/';
+
+foreach (
+  [getenv ('SAVANE_CONF'), getenv ('SV_LOCAL_INC_PREFIX'), $sys_etc_dir] as $d
+)
+  {
+    if (!$d)
+      continue;
+    if (!preg_match (',/$,', $d))
+      $d .= '/';
+    $conf_file = "$d$sys_conf_file_name";
+    if (!file_exists ($conf_file) || !is_readable ($conf_file))
+      continue;
+    $sys_conf_file = $conf_file;
+    break;
+  }
+unset ($conf_file);
 ?>
