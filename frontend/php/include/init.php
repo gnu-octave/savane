@@ -98,8 +98,6 @@ $sys_upload_dir = "/var/www/submissions_uploads" ;
 
 # autoconf-based:
 require_once(dirname(__FILE__).'/ac_config.php');
-# Backward compatibility for PHP4.
-if (version_compare(PHP_VERSION, '5.0', '<')) require_once(dirname(__FILE__).'/php4.php');
 
 # This needs to be loaded first because the lines below depend upon it.
 if (getenv('SAVANE_CONF') and file_exists(getenv('SAVANE_CONF').'/.savane.conf.php'))
