@@ -304,14 +304,14 @@ else
     unset($unset);
     foreach ($variables as $tag)
       {
-        if (isset($GLOBALS[$tag]))
-          $value = $GLOBALS[$tag];
+        if (isset ($GLOBALS[$tag]))
+          $value = htmlentities ($GLOBALS[$tag]);
         else
-          $value = '';
+          $value = '<strong>unset</strong>';
         if ($tag == "sys_dbpasswd")
           $value = "**************";
 
-        printf ("<tr><td>%s</td><td>%s</td></tr>\n", $tag, htmlentities($value));
+        printf ("<tr><td>%s</td><td>%s</td></tr>\n", $tag, $value);
       }
     if (!isset ($GLOBALS['sys_debug_on']))
       $GLOBALS['sys_debug_on'] = false;
