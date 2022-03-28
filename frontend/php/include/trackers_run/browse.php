@@ -117,7 +117,7 @@ unset($url_params['history_date']);
 # Make safe for inclusion in an URL (replace quotes with dots).
 function sanitize_field (&$x)
 {
-  $x = strtr ($x, '"' . '"', '..');
+  $x = strtr ($x, '"\'', '..');
   return $x;
 }
 
