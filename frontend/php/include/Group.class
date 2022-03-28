@@ -395,9 +395,10 @@ class Group extends savane_error
 
   function Uses ($artifact)
   {
-    if (empty ($this->data_array["use_$artifact"]))
-      return $this->CanUse ($artifact);
-    return $this->data_array["use_$artifact"];
+    if (isset ($this->data_array["use_$artifact"])
+        && $this->data_array["use_$artifact"] != '')
+      return $this->data_array["use_$artifact"];
+    return $this->CanUse ($artifact);
   }
 
   function UsesForHomepage ($artifact)
