@@ -1,5 +1,4 @@
 <?php
-
 # Copyright (C) 2005 Sylvain Beucler
 # Copyright (C) 2017 Ineiev <ineiev@gnu.org>
 #
@@ -34,10 +33,8 @@
 #    As it is regexp for the full address, you can basically block from
 #    here any address your want.
 
+# The perl regexp:
+#    The two slashes (/ /) are mandatory, see the preg_match manual.
 
-// The perl regexp:
-//    The two slashes (/ /) are mandatory, see the preg_match manual.
-
-// $GLOBALS['forbid_mail_domains_regexp'] = "/^(.*\@invalid\.dom)$/";
-
+# $GLOBALS['forbid_mail_domains_regexp'] = "/^(.*\@invalid\.dom)$/";
 ?>

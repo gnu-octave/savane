@@ -1,13 +1,11 @@
 <?php
-# Savannah - Project registration STEP 6 Confirmation mail
-#    Here, you can configure the mail sent to user and admins.
-#    BEWARE, this file content must be PHP, with no parse-error.
-#    Do not modify it until you really know what you're doing.
+# Savannah - Project registration STEP 6 Confirmation mail.
+# Here, you can configure the mail sent to user and admins.
 
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2013 Karl Berry
-# Copyright (C) 2017 Ineiev <ineiev@gnu.org>
+# Copyright (C) 2017, 2022 Ineiev <ineiev@gnu.org>
 #
 # This file is part of Savane.
 #
@@ -24,13 +22,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# we include this as function, it's easier to work with vars
-# in this way
+# We include this as function, it's easier to work with vars
+# in this way.
 
 # This message is not localized because it's sent to admins.
 
-function approval_gen_email ($group_name, $unix_group_name) {
-   $message = sprintf (('
+function approval_gen_email ($group_name, $unix_group_name)
+{
+  $fmt = ('
 Your project registration for %s has been approved.
 Project full name:   %s
 Project system name: %s
@@ -55,11 +54,14 @@ Post scriptum, important note:
    include a copy of the plain text version of the license. If your
    software is published under the GNU GPL, please read
    https://www.gnu.org/licenses/gpl.html.
-'), $GLOBALS['sys_name'], $group_name, $unix_group_name,
-   "https://savannah.gnu.org/projects/".$unix_group_name, $GLOBALS['sys_name'],
-   $GLOBALS['sys_name']);
-
-   return $message;
+');
+  $forge = $GLOBALS['sys_name'];
+  $host = $GLOBALS['sys_https_host'];
+  $message =
+    sprintf (
+      $fmt, $forge, $group_name, $unix_group_name,
+      "https://$host/projects/$unix_group_name", $forge, $forge
+    );
+  return $message;
 }
-
 ?>

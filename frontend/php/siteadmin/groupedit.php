@@ -329,6 +329,5 @@ print '
 <p><input type="submit" name="update" value="'.no_i18n("Update").'">';
 
 $HTML->box1_bottom();
-utils_get_content("admin/groupedit_outro");
 site_admin_footer(array());
 ?>
