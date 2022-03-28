@@ -509,7 +509,7 @@ $check_group = function ($group_id)
   if (!(strcasecmp ($_SERVER['HTTP_HOST'], $type_host) && $type_host))
     return;
   $prot = 'http://';
-  if (session_is_secure ())
+  if (session_issecure ())
     $prot = 'https://';
   header ("Location: $prot$type_host{$_SERVER["REQUEST_URI"]}");
   exit;
