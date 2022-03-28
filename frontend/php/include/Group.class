@@ -585,7 +585,7 @@ function group_getrestrictions_explained ($group_id, $artifact, $event = 1)
           $flag = group_getrestrictions ($group_id, $artifact, 1);
         }
 
-      if ($event == 1)
+      if ($event == 1 || !$flag)
         {
           # Post item or post comment with no group restriction to fallback on.
           $flag = group_gettyperestrictions ($group_id, $artifact);
@@ -636,7 +636,7 @@ function group_restrictions_check ($group_id, $artifact, $event = 1)
           $flag = group_getrestrictions ($group_id, $artifact, 1);
         }
 
-      if ($event == 1)
+      if ($event == 1 || !$flag)
         {
           # Post item or post comment with no group restriction to fallback on.
           $flag = group_gettyperestrictions ($group_id, $artifact);
@@ -723,7 +723,7 @@ function group_set_preference ($group_id, $preference_name, $value)
 {
   if (!user_ismember ($group_id, 'A'))
     return false;
-  
+
   $preference_name = strtolower (trim ($preference_name));
   $result = db_execute ("
     SELECT NULL FROM group_preferences
