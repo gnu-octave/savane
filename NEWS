@@ -2,6 +2,9 @@
 
 [FRONTEND]
 
+* Group names 'bug', 'help', 'info' are disallowed: their mailing
+  lists ("info-gnu") could conflict with standard GNU names.
+
 * init.php takes into account autoconfigured value of $sysconfdir.
 
 * Drop support for mysql extention; always use mysqli.

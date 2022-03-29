@@ -346,6 +346,7 @@ function account_groupnamevalid ($name)
       . "|(admin)"
       . "|(apache)"
       . "|(bin)"
+      . "|(bug)"  # Mailing lists would conflict with <bug-*@gnu.org>.
       . "|(compile)"
       . "|(cvs[0-9]?)"
       . "|(daemon)"
@@ -356,7 +357,9 @@ function account_groupnamevalid ($name)
       . "|(ftp)"
       . "|(ftp[0-9]?)"
       . "|(gnudist)"
+      . "|(help)"  # Mailing lists would conflict with <help-*@gnu.org>.
       . "|(ident)"
+      . "|(info)"  # Mailing lists would conflict with <info-*@gnu.org>.
       . "|(irc[0-9]?)"
       . "|(lists)"
       . "|(lp)"
