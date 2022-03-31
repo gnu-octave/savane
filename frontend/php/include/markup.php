@@ -251,7 +251,8 @@ function markup_preserve_spaces ($buf)
 # it converts headings to <h2> ... <h5>.
 function markup_full($text, $allow_headings=true)
 {
-  $lines = explode("\n", $text);
+  $verb_tag = 'verbatim';
+  $lines = explode ("\n", $text);
   $result = array();
 
   # We use a stack (last in, first out) to track the current
@@ -263,20 +264,13 @@ function markup_full($text, $allow_headings=true)
   extract(sane_import('request', [true => 'printer']));
   foreach ($lines as $index => $line)
     {
+      $found = strpos ($line, "+$verb_tag+") !== false;
+      if ($found)
+        $verbatim++;
       # The verbatim tags are not allowed to be nested, because
-      # they are translated to HTML <textarea> (<pre> in printer mode),
-      # which in turn is also not allowed to be nested.
-      # Therefore, we dont need a counter of the level, but
-      # a simple bool flag.
-      # We also need to bufferize the verbatim content, as we want to now
-      # its exact number of lines.
-      #
-      # yeupou, 2006-10-31: we need a verbatim count, because actually
-      # we may want to put at least one verbatim block into another, for
-      # instance in the recipe that explain the verbatim tag.
-      if (preg_match('/([+]verbatim[+])/', $line) and !$verbatim)
+      # they are translated to HTML code that isn't allowed to be nested.
+      if ($verbatim == 1 && $found)
         {
-          $verbatim = 1;
           $verbatim_buffer = '';
           $line = join("\n", $context_stack);
 
@@ -290,14 +284,9 @@ function markup_full($text, $allow_headings=true)
           continue;
         }
 
-      # Increment the verbatim count if we find a verbatim closing in a
-      # verbatim environment.
-      if (preg_match('/([+]verbatim[+])/', $line) and $verbatim)
-        $verbatim++;
-
       # Decrement the verbatim count if we find a verbatim closing in a
       # verbatim environment.
-      if (preg_match ('/([-]verbatim[-])/', $line) && $verbatim)
+      if ($verbatim && strpos ($line, "-$verb_tag-") !== false)
         {
           $verbatim--;
           if ($verbatim == 0)
@@ -339,7 +328,7 @@ function markup_full($text, $allow_headings=true)
               # line.
               continue;
             } # $verbatim == 0
-        } # preg_match ('/([-]verbatim[-])/', $line) && $verbatim
+        } # $verbatim && strpos ($line, "-$verb_tag-") !== false
 
       # If we're in the verbatim markup, don't apply the markup.
       if ($verbatim)
@@ -360,7 +349,7 @@ function markup_full($text, $allow_headings=true)
                                $quoted_text);
           $result[] = markup_preserve_spaces ($line);
         }
-    }
+    } # foreach ($lines as $index => $line)
 
   # Make sure that all previously used contexts get their
   # proper closing tag by merging in the last closing tags.
