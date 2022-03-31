@@ -46,9 +46,13 @@
 ** Users who couldn't post resume couldn't also enable skillboxes; now
    setting skillboxes is allowed for all users.
 
-** Fix processing of '@' in markup:  URLs like www.example.org/a@b.html
-   produced links like
-   <a href="http://www.example.org/a">www.example.org/a</a>@b.html
+** Markup:
+
+*** Fix processing of '@':  URLs like www.example.org/a@b.html
+    produced links like
+    <a href="http://www.example.org/a">www.example.org/a</a>@b.html
+
+*** Unclosed +verbatim+ tags didn't show up, Savannah sr #110626.
 
 ** Emails in "Replaced by" in tracker item history weren't hidden
    for anonymous visitors.
