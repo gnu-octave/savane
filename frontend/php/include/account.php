@@ -91,7 +91,7 @@ function expand_pwqcheck_options ()
       if ($matches[$i + 1] == 'disabled')
         $help .= $msg_disabled[$i];
       else
-        $help .= sprintf ($msg_number, $matches[$i]);
+        $help .= sprintf ($msg_number[$i], $matches[$i + 1]);
     }
   return $help;
 }
