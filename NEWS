@@ -52,7 +52,7 @@
     produced links like
     <a href="http://www.example.org/a">www.example.org/a</a>@b.html
 
-*** Unclosed +verbatim+ tags didn't show up, Savannah sr #110626.
+*** Unclosed +verbatim+ blocks didn't show up, Savannah sr #110626.
 
 ** Emails in "Replaced by" in tracker item history weren't hidden
    for anonymous visitors.
