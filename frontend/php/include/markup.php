@@ -247,7 +247,7 @@ function markup_preserve_spaces ($buf)
 
 # Compile HTML text for a verbatim block, append it to $result;
 # the function is used further in markup_full ().
-$build_verbatim = function (&$verbatim_buffer, &$context_stack, &$result)
+function markup_build_verbatim (&$verbatim_buffer, &$context_stack, &$result)
 {
   $line = join ("\n", $context_stack);
   array_shift ($context_stack);
@@ -278,7 +278,7 @@ $build_verbatim = function (&$verbatim_buffer, &$context_stack, &$result)
     "$closure<blockquote class='verbatim'>"
     . "<p>$verbatim_buffer</p></blockquote>\n$aperture";
   $verbatim_buffer = '';
-};
+}
 
 # Convert special markup characters in the input text to real HTML.
 #
@@ -287,8 +287,6 @@ $build_verbatim = function (&$verbatim_buffer, &$context_stack, &$result)
 # when $allow_headings.
 function markup_full($text, $allow_headings = true)
 {
-  global $build_verbatim;
-
   $verb_tag = 'verbatim';
   $no_markup_magic = 'no-1a4f67a7-4eae-4aa1-a2ef-eecd8af6a997-markup';
   $lines = explode ("\n", $text);
@@ -324,7 +322,7 @@ function markup_full($text, $allow_headings = true)
 
       if (strpos ($line, "-$verb_tag-") !== false && --$verbatim <= 0)
         {
-          $build_verbatim ($verbatim_buffer, $context_stack, $result);
+          markup_build_verbatim ($verbatim_buffer, $context_stack, $result);
           continue;
         }
 
@@ -347,7 +345,7 @@ function markup_full($text, $allow_headings = true)
     } # foreach ($lines as $index => $line)
 
   if ($verbatim) # Missing "-$verb_tag-": append accumulated text.
-    $build_verbatim ($verbatim_buffer, $context_stack, $result);
+    markup_build_verbatim ($verbatim_buffer, $context_stack, $result);
 
   # Make sure that all previously used contexts get their
   # proper closing tag by merging in the last closing tags.
