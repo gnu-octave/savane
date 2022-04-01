@@ -39,9 +39,8 @@ $(backend_scripts): %: %.in
 	$(subst_in_scripts) < $^ > $@
 	chmod +x $@
 
-EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge BUILD-DEB \
-	REQUIREMENTS INSTALL.verbose \
-	db debian devel doc update tests \
+EXTRA_DIST = bootstrap AUTHORS.Savannah AUTHORS.SourceForge \
+	REQUIREMENTS db debian devel update tests \
 	$(backend_scripts:%=%.in) \
 	backend/README
 

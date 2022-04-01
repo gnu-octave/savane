@@ -379,15 +379,11 @@ function open_vs_total_items ($url, $group_id, $artifact)
                     0, group_restrictions_check($group_id, $artifact));
 }
 
-# Communication.
 if ($GLOBALS['sys_unix_group_name'] == $group
-    || $project->Uses ("support") || $project->Uses ("forum")
-    || $project->Uses ("mail")
-    || people_project_jobs_rows ($group_id) != 0)
+  || $project->Uses ("support") || $project->Uses ("mail")
+  || people_project_jobs_rows ($group_id) != 0)
   {
     print $HTML->box_top(_("Communication Tools"));
-    $i = 1;
-    $j = $i;
 
     if ($project->Uses("support"))
       {
@@ -401,41 +397,6 @@ if ($GLOBALS['sys_unix_group_name'] == $group
                        .'&nbsp;'._("Tech Support Manager"));
         if (group_get_artifact_url("support", 0) == $url)
           open_vs_total_items ($url, $group_id, 'support');
-        $i++;
-      }
-
-    # Fora are disabled on Savannah.
-    if ($project->Uses("forum"))
-      {
-        specific_makesep();
-        $url = $project->getArtifactUrl("forum");
-        print utils_link($url,
-                         html_image("contexts/help.png",
-                                    array('width'=>'24', 'height'=>'24',
-                                          'alt'=>''))
-                         .'&nbsp;'._("Public Forum"));
-        if (group_get_artifact_url("forum", 0) == $url)
-          {
-            $res_count = db_execute("SELECT count(forum.msg_id) AS count "
-                                    . "FROM forum,forum_group_list WHERE "
-                                    . "forum_group_list.group_id=? "
-                                    . "AND forum.group_forum_id="
-                                    . "forum_group_list.group_forum_id "
-                                    . "AND forum_group_list.is_public=1",
-                                    array($group_id));
-            $row_count = db_fetch_array($res_count);
-            $msg_count = '<strong>'.$row_count['count'].'</strong>';
-            $res_count = db_execute("SELECT count(*) AS count "
-                                    . "FROM forum_group_list "
-                                    . "WHERE group_id=? "
-                                    . "AND is_public=1", array($group_id));
-            $row_count = db_fetch_array($res_count);
-            $fora_count = '<strong>'.$row_count['count'].'</strong>';
-# TRANSLATORS: the arguments are numbers of messages and forums.
-            printf (' '._('(messages: %1$s, forums: %2$s)')."\n", $msg_count,
-                    $fora_count);
-          }
-        $i++;
       }
 
     if ($project->Uses ("mail"))
@@ -455,7 +416,6 @@ if ($GLOBALS['sys_unix_group_name'] == $group
         printf(ngettext("(%s public mailing list)", "(%s public mailing lists)",
                         $row_count['count']),
                "<strong>{$row_count['count']}</strong>");
-        $i++;
       }
 
     if (people_project_jobs_rows($group_id) != 0)
@@ -469,7 +429,6 @@ if ($GLOBALS['sys_unix_group_name'] == $group
         $job_count = people_project_jobs_rows($group_id);
         printf(ngettext("(%s contributor wanted)", "(%s contributors wanted)",
                         $job_count), "<strong>$job_count</strong>");
-        $i++;
       }
     print $HTML->box_bottom();
     print '<br />';
@@ -486,7 +445,6 @@ if ($project->Uses("patch")
     print $HTML->box_top("<div id='devtools'>" . _("Development Tools")
                          . "</div>");
     $i = 1;
-    $j = $i;
 
     function print_scm_entry ($project, &$i, $scm, $scm_name)
     {
@@ -593,9 +551,7 @@ if ($project->Uses("patch")
     print $HTML->box_bottom();
   }
 
-if ($project->Uses("news"))
-  print '
-</div><!-- end splitleft -->
-';
+if ($project->Uses ("news"))
+  print "\n</div><!-- end splitleft -->\n";
 site_project_footer(array());
 ?>
