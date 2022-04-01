@@ -7,7 +7,7 @@
 # Copyright (C) 2007, 2008  Sylvain Beucler
 # Copyright (C) 2008  Aleix Conchillo Flaque
 # Copyright (C) 2016  Karl Berry (#devtools anchor for "Source code")
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -24,92 +24,111 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_directory("people");
-require_directory("news");
-require_directory("stats");
-require_once(dirname(__FILE__).'/vars.php');
-require_once(dirname(__FILE__).'/vcs.php');
+require_directory ("people");
+require_directory ("news");
+require_directory ("stats");
+require_once (dirname (__FILE__) . '/vars.php');
+require_once (dirname (__FILE__) . '/vcs.php');
 
 # If we are at wrong url, redirect.
-if (!$sys_debug_nobasehost && strcasecmp($_SERVER['HTTP_HOST'],
-                                         $project->getTypeBaseHost()) != 0
-    && $project->getTypeBaseHost())
+$host = $project->getTypeBaseHost ();
+if (
+    $host && !$sys_debug_nobasehost
+    && strcasecmp ($_SERVER['HTTP_HOST'], $host)
+)
   {
-    header ("Location: http".(session_issecure()?'s':'')."://"
-            .$project->getTypeBaseHost().$_SERVER['PHP_SELF']);
+    $prot = session_issecure()? 'https://': 'http://';
+    header ("Location: $prot$host{$_SERVER['PHP_SELF']}");
     exit;
   }
-$project=new Project($group_id);
-site_project_header(array());
+$project=new Project ($group_id);
+site_project_header (array ());
 
 # Members of this project (little box on the right).
-$res_admin = db_execute("SELECT user.user_id AS user_id,user.user_name "
-                        . "AS user_name, user.realname AS realname "
-                        . "FROM user,user_group "
-                        . "WHERE user_group.user_id=user.user_id "
-                        . "AND user_group.group_id=? AND "
-                        . "user_group.admin_flags = 'A' "
-                        . "AND user_group.onduty = 1", array($group_id));
-print '
-<div class="indexright">
-';
-print $HTML->box_top(_("Membership Info"));
+$res_admin = db_execute ("
+  SELECT
+    user.user_id AS user_id, user.user_name AS user_name,
+    user.realname AS realname
+  FROM user, user_group
+  WHERE
+    user_group.user_id = user.user_id AND user_group.group_id = ?
+    AND user_group.admin_flags = 'A' AND user_group.onduty = 1",
+  [$group_id]
+);
+print "\n<div class='indexright'>\n";
+print $HTML->box_top (_("Membership Info"));
 print '<span class="smaller">';
-$adminsnum = db_numrows($res_admin);
+$next_div = function (&$j)
+{
+  print "</span></div>\n<div class=\""
+    . utils_get_alt_row_color ($j++) . '"><span class="smaller">';
+};
+$adminsnum = db_numrows ($res_admin);
 $j = 0;
 if ($adminsnum > 0)
   {
     print $adminsnum < 2? _("Project Admin:"): _("Project Admins:");
-    while ($row_admin = db_fetch_array($res_admin))
+    while ($row_admin = db_fetch_array ($res_admin))
       {
-        print '</span></div>
-<div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-        print "&nbsp; - ".utils_link($GLOBALS['sys_home']."users/"
-              .$row_admin['user_name'], $row_admin['realname']);
+        $next_div ($j);
+        print "&nbsp; - "
+          . utils_link (
+              "{$sys_home}users/{$row_admin['user_name']}",
+              $row_admin['realname']
+            );
       }
   }
 
 # Count of developers on this project.
-$membersnum = db_fetch_array(db_execute("SELECT COUNT(*) AS count "
-                                        ."FROM user_group WHERE group_id=? "
-                                        ."AND admin_flags<>'P' "
-                                        ."AND admin_flags<>'SQD' "
-                                        ."AND user_group.onduty = 1",
-                                        array($group_id)));
-print '</span></div>
-<div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-printf(ngettext("%s active member", "%s active members", $membersnum['count']),
-       '<strong>'.$membersnum['count'].'</strong>');
+$membersnum = db_fetch_array (db_execute ("
+  SELECT COUNT(*) AS count
+  FROM user_group
+  WHERE
+    group_id = ? AND admin_flags <> 'P' AND admin_flags <> 'SQD'
+    AND user_group.onduty = 1",
+  [$group_id]
+));
+
+$membersnum = $membersnum['count'];
+
+$next_div ($j);
+printf (
+  ngettext ("%s active member", "%s active members", $membersnum),
+  "<strong>$membersnum</strong>"
+);
 
 # If member = 1, it's obviously (or it should be) the project admin.
 # If there's no admin, we need to get access to the list.
 # But we show it anyway: this page can be used for request for membership,
 # provide more info that the little infobox.
-print '</span></div>
-<div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
+$next_div ($j);
 
-print '['.utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='
-                     .$group, _("View Members")).']</span>';
-print $HTML->box_bottom();
+print '['
+  . utils_link (
+     "${sys_home}project/memberlist.php?group=$group", _("View Members")
+    )
+  . ']</span>';
+print $HTML->box_bottom ();
 print "<br />\n";
-print $HTML->box_top(_("Group identification"));
+print $HTML->box_top (_("Group identification"));
 print '<span class="smaller">';
 # TRANSLATORS: the argument is group id (a number).
 printf (_("Id: <strong>#%s</strong>"), $group_id);
 $j = 0;
-print '</span></div>
-<div class="'.utils_get_alt_row_color($j++)
-      .'"><span class="smaller">';
-print _("System Name:").' <strong>'.$group.'</strong>';
-print '</span></div>
-<div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-print _("Name:").' <strong>'.$project->GetName().'</strong>';
-print '</span></div>
-<div class="'.utils_get_alt_row_color($j++).'"><span class="smaller">';
-print _("Group Type:").' <strong>'.$project->getTypeName().'</strong>';
-print '</span>';
-print $HTML->box_bottom();
-print "<br />\n";
+
+$item_arr = [
+  _("System Name:") => $group,
+  _("Name:") => $project->GetName (),
+  _("Group Type:") => $project->getTypeName ()
+];
+
+foreach ($item_arr as $key => $val)
+  {
+    $next_div ($j);
+    print "$key <strong>$val</strong>";
+  }
+unset ($next_div);
+print '</span>'. $HTML->box_bottom () . "<br />\n";
 
 if (search_has_group_anything_to_search ($group_id))
   {
@@ -118,146 +137,143 @@ if (search_has_group_anything_to_search ($group_id))
     print $HTML->box_bottom ();
   }
 
-print '
-</div><!-- end indexright -->
-<div class="indexcenter">
-';
+print "\n</div><!-- end indexright -->\n<div class='indexcenter'>\n";
 
 # General Information.
-if ($project->getTypeDescription())
-  print '<p>'.$project->getTypeDescription()."</p>\n";
+if ($project->getTypeDescription ())
+  print '<p>' . $project->getTypeDescription () . "</p>\n";
 
-if ($project->getLongDescription())
-  {
-    print "<p>".markup_full(htmlspecialchars($project->getLongDescription()))
-          ."</p>\n";
-  }
+if ($project->getLongDescription ())
+  print "<p>"
+    . markup_full (htmlspecialchars ($project->getLongDescription ()))
+    . "</p>\n";
 else
   {
-    if ($project->getDescription())
+    if ($project->getDescription ())
       {
-        print "<p>" .$project->getDescription()."</p>\n";
+        print "<p>" . $project->getDescription () . "</p>\n";
       }
     else
       {
         print '<p>';
-        printf(
-_("This project has not yet submitted a short description. You can <a
-href=\"%s\">submit it</a> now."),
-               $GLOBALS['sys_home'].'project/admin/editgroupinfo.php?group='
-               .$group);
+        printf (
+          _("This project has not yet submitted a short description. "
+            . "You can <a\nhref=\"%s\">submit it</a> now."),
+          "{$sys_home}project/admin/editgroupinfo.php?group=$group"
+        );
         print "</p>\n";
       }
   }
 
-print '<p>'._("Registration Date:").' '
-      .utils_format_date($project->getStartDate())."\n";
+print '<p>' . _("Registration Date:") . ' '
+  . utils_format_date ($project->getStartDate ()) . "\n";
 
-if ($project->CanUse("license"))
+if ($project->CanUse ("license"))
   {
     $license = $project->getLicense();
-    print '<br />'._("License:").' ';
-    if (!empty($LICENSE_URL[$license]))
-      print utils_link($LICENSE_URL[$license], $LICENSE[$license]);
+    print "<br />\n" . _("License:") . ' ';
+    if (!empty ($LICENSE_URL[$license]))
+      print utils_link ($LICENSE_URL[$license], $LICENSE[$license]);
     else
       {
-        if (!empty($LICENSE[$license]))
+        if (!empty ($LICENSE[$license]))
           print $LICENSE[$license];
         else
           print _("Project license is unknown!");
         if ($license == "other")
-          print " - " . $project->getLicense_other();
+          print " - " . $project->getLicense_other ();
       }
   }
 
-if ($project->CanUse("devel_status"))
+if ($project->CanUse ("devel_status"))
   {
-    $devel_status = $project->getDevelStatus();
-    print '<br />'._("Development Status:").' '
-          .$DEVEL_STATUS[$devel_status]."\n";
+    $devel_status = $project->getDevelStatus ();
+    print "<br />\n" . _("Development Status:") . ' '
+      . $DEVEL_STATUS[$devel_status] . "\n";
   }
-print '</p>
-</div><!-- end indexcenter -->
-<p class="clearr">&nbsp;</p>
-';
+print "</p>\n</div><!-- end indexcenter -->\n<p class='clearr'>&nbsp;</p>\n";
 
-# News.
 if ($project->Uses("news"))
   {
 
-    print '
-<div class="splitright">';
+    print "\n<div class='splitright'>";
 
-    print $HTML->box_top(_("Latest News")
-                         . "&nbsp;<a href='{$GLOBALS['sys_home']}news/atom.php?"
-                         . "group=$group'"
-                         . " class='inline-link'><img alt='rss feed'"
-                         . " src='{$GLOBALS['sys_home']}images/common/feed16.png'"
-                         . " /></a>");
-    print news_show_latest($group_id,4,"true");
+    print
+      $HTML->box_top (
+        _("Latest News") . "&nbsp;"
+        . "<a href='{$sys_home}news/atom.php?group=$group' "
+        . "class='inline-link'><img alt='rss feed' "
+        . "src='{$sys_home}images/common/feed16.png' /></a>"
+      );
+    print news_show_latest ($group_id, 4, "true");
     print $HTML->box_bottom();
 
-    print '
-</div><!-- end splitright -->
-<div class="splitleft">
-';
+    print "\n</div><!-- end splitright -->\n<div class='splitleft'>\n";
   }
 
-# Admin area.
 $odd = 0;
 $even = 1;
-if ($GLOBALS['sys_group_id'] == $group_id)
+function proj_home_img ($ctx)
+{
+  $img_attr = ['width' => '24', 'height' => '24', 'alt' => ''];
+  return html_image ("contexts/admin.png", $img_attr) . '&nbsp;';
+}
+if ($sys_group_id == $group_id && member_check (0, $group_id, 'A'))
   {
-    if (member_check(0, $group_id, 'A'))
-      {
-        require $GLOBALS['sys_www_topdir']."/include/features_boxes.php";
-# TRANSLATORS: the argument is site name (like Savannah).
-        print $HTML->box_top(sprintf(_("Administration: %s server"),
-                             $GLOBALS['sys_name']));
-# TRANSLATORS: the argument is site name (like Savannah).
-        print '<div class="justify">'.sprintf(_("Since you are administrator of
-this project, which one is the &ldquo;system project,&rqduo; you are
-administrator of the whole %s server."), $GLOBALS['sys_name'])."</div>\n";
+    require "$sys_www_topdir/include/features_boxes.php";
+    print $HTML->box_top (
+      # TRANSLATORS: the argument is site name (like Savannah).
+      sprintf (_("Administration: %s server"), $sys_name));
+    print '<div class="justify">';
+    # TRANSLATORS: the argument is site name (like Savannah).
+    printf (
+      _("Since you are administrator of\nthis project, which one is the "
+        . "&ldquo;system project,&rqduo; you are\nadministrator of the "
+        . "whole %s server."),
+      $sys_name
+    );
+    print "</div>\n";
 
-        print $HTML->box_nextitem(utils_get_alt_row_color($odd));
-        print utils_link($GLOBALS['sys_home'].'siteadmin/',
-                         html_image("contexts/admin.png",
-                                     array('width'=>'24', 'height'=>'24',
-                                           'alt'=>'')).'&nbsp;'
-                                           ._("Server Main Administration Page"));
-        print $HTML->box_nextitem(utils_get_alt_row_color($even));
-        print utils_link($GLOBALS['sys_home'].'task/?group='
-                         .$GLOBALS['sys_unix_group_name']
-                         .'&amp;category_id=1&amp;status_id=1&amp;set=custom',
-                         html_image("contexts/admin.png",
-                                    array('width'=>'24', 'height'=>'24',
-                                          'alt'=>'')).'&nbsp;'
-                                          ._("Pending Projects List"));
-        $registration_count = number_format(stats_getprojects_pending());
-        printf(' '.ngettext("(%s registration pending)",
-                            "(%s registrations pending)",
-                            $registration_count),
-               "<strong>$registration_count</strong>");
-        print $HTML->box_bottom();
-        print "<br />\n";
-      }
+    print $HTML->box_nextitem (utils_get_alt_row_color ($odd));
+    $img = proj_home_img ("contexts/admin.png");
+    print utils_link (
+      "${sys_home}siteadmin/", $img . _("Server Main Administration Page")
+    );
+    print $HTML->box_nextitem (utils_get_alt_row_color ($even));
+    print utils_link (
+      "${sys_home}task/?group={$sys_unix_group_name}"
+      . '&amp;category_id=1&amp;status_id=1&amp;set=custom',
+      $img . _("Pending Projects List")
+    );
+    $reg_count = number_format (stats_getprojects_pending ());
+    print ' ';
+    printf (
+      ngettext (
+         "(%s registration pending)", "(%s registrations pending)", $reg_count
+      ),
+      "<strong>$reg_count</strong>"
+    );
+    print $HTML->box_bottom ();
+    print "<br />\n";
   }
 
-if (member_check(0, $group_id, 'A'))
+if (member_check (0, $group_id, 'A'))
   {
-# TRANSLATORS: the argument is group name (like GNU Coreutils).
-    print $HTML->box_top(sprintf(_("Administration: %s project"),
-                         $project->getName()));
+    print $HTML->box_top (
+      # TRANSLATORS: the argument is group name (like GNU Coreutils).
+      sprintf (_("Administration: %s project"), $project->getName())
+    );
     print '<div class="justify">'
-          ._("As administrator of this project, you can manage members and
-activate, deactivate and configure your project's tools.")."</div>\n";
+      . _("As administrator of this project, you can manage members and\n"
+          . "activate, deactivate and configure your project's tools.")
+      . "</div>\n";
 
-    print $HTML->box_nextitem(utils_get_alt_row_color($odd));
-    print utils_link($GLOBALS['sys_home'].'project/admin/?group='.$group,
-                     html_image("contexts/main.png",
-                                array('width'=>'24', 'height'=>'24',
-                                      'alt'=>'')).'&nbsp;'
-                                        ._("Project Main Administration Page"));
+    print $HTML->box_nextitem (utils_get_alt_row_color ($odd));
+    $img = proj_home_img ("contexts/main.png");
+    print utils_link (
+      "${sys_home}project/admin/?group=$group",
+       $img . _("Project Main Administration Page")
+    );
     print $HTML->box_bottom();
     print "<br />\n";
   }
@@ -266,290 +282,273 @@ activate, deactivate and configure your project's tools.")."</div>\n";
 function specific_makesep ()
 {
   # Too specific to be general function.
-  global $i, $j, $HTML;
-  if ($i != $j)
-    {
-      print $HTML->box_nextitem(utils_get_alt_row_color($i));
-      $j = $i;
-    }
+  global $i, $HTML;
+  static $j = 0;
+  $j_prev = $j;
+  $j = $i;
+  if ($i <= $j_prev)
+    return;
+  print $HTML->box_nextitem (utils_get_alt_row_color ($i));
 }
 
-print $HTML->box_top(_("Quick Overview"));
+print $HTML->box_top (_("Quick Overview"));
 $i = 1;
-$j = $i;
 
-if ($project->Uses("homepage")
-    && $project->getUrl("homepage") != 'http://'
-    && $project->getUrl("homepage") != '')
+if ($project->Uses ("homepage")
+    && $project->getUrl ("homepage") != 'http://'
+    && $project->getUrl ("homepage") != '')
   {
-    print utils_link($project->getUrl("homepage"),
-                     html_image("misc/www.png",
-                                array('width'=>'24', 'height'=>'24',
-                                      'alt'=>'')).'&nbsp;'
-                                      ._("Project Homepage"));
+    $img = proj_home_img ("misc/www.png");
+    print utils_link (
+      $project->getUrl ("homepage"), $img . _("Project Homepage")
+    );
     $i++;
   }
 
 if ($project->Uses("download"))
   {
-    specific_makesep();
+    specific_makesep ();
 
     # The pointer is always the filelist, this page will handle redirect
     # appropriately in case that no download area is here.
-    print utils_link($project->getArtifactUrl("files"),
-                     html_image("contexts/download.png",
-                                array('width'=>'24', 'height'=>'24',
-                                      'alt'=>'')).'&nbsp;'
-                                      ._("Download Area"));
+    print utils_link (
+      $project->getArtifactUrl ("files"),
+      proj_home_img ("contexts/download.png") . _("Download Area")
+    );
     $i++;
   }
 
 # Cookbook Documentation (internal).
-# Projects dont have the choice to use it, as there maybe site recipe that
+# Projects don't have the choice to use it, as there maybe site recipe that
 # applies to features they use.
 # FIXME: this should print the number of recipes available.
-specific_makesep();
-if ($project->Uses("extralink_documentation")
-    && !$project->getUrl("extralink_documentation"))
+specific_makesep ();
+if ($project->Uses ("extralink_documentation"))
   {
-    print utils_link($project->getArtifactUrl("cookbook"),
-                     html_image("contexts/man.png",
-                                array('width'=>'24', 'height'=>'24',
-                                'alt'=>'')).'&nbsp;'._("Docs"));
-    $i++;
-  }
-elseif ($project->Uses("extralink_documentation")
-        && $project->getUrl("extralink_documentation"))
-  {
-  # The project have an external doc? Print it first. See pagemenu.php
-  # for explanations about this.
-    print html_image("contexts/man.png",array('width'=>'24', 'height'=>'24',
-                                              'alt'=>'')).'&nbsp;'._("Docs");
-    print '<br /> &nbsp; - '.utils_link($project->getUrl("extralink_documentation"),
-                                        _("Browse docs (External to Savane)"));
-    print '<br /> &nbsp; - '.utils_link($project->getArtifactUrl("cookbook"),
-                                        _("Browse the cookbook"));
+    $cb_url = $project->getArtifactUrl ("cookbook");
+    $extra_link = $project->getUrl ("extralink_documentation");
+    $img = proj_home_img ("contexts/man.png") . _("Docs");
+    if ($extra_link)
+      {
+        # The group has an external doc? Print it first. See pagemenu.php
+        # for explanations about this.
+        print $img;
+        $br = "<br />\n&nbsp; - ";
+        print $br
+          . utils_link ($extra_link, _("Browse docs (External to Savane)"));
+        print $br . utils_link ($cb_url, _("Browse the cookbook"));
+      }
+    else
+      print utils_link ($cb_url, $img);
     $i++;
   }
 
-specific_makesep();
-print utils_link($GLOBALS['sys_home'].'project/memberlist.php?group='.$group,
-                 html_image("contexts/people.png",
-                            array('width'=>'24', 'height'=>'24', 'alt'=>''))
-                 .'&nbsp;'._("Project Memberlist"));
-printf(' '.ngettext("(%s member)", "(%s members)", $membersnum['count']),
-       "<strong>{$membersnum['count']}</strong>");
+specific_makesep ();
+print utils_link(
+  "${sys_home}project/memberlist.php?group=$group",
+  proj_home_img ("contexts/people.png") . _("Project Memberlist")
+);
+
+print ' ';
+printf (
+  ngettext ("(%s member)", "(%s members)", $membersnum),
+  "<strong>$membersnum</strong>"
+);
 $i++;
 
 if (group_get_preference ($group_id, 'gpg_keyring'))
   {
-    specific_makesep();
-    print utils_link ($GLOBALS['sys_home']
-                       . 'project/release-gpgkeys.php?group=' . $group,
-                     html_image("contexts/keys.png",
-                                array('width'=>'24', 'height'=>'24', 'alt'=>''))
-                     . '&nbsp;' . _("Project Release GPG Keyring"));
+    specific_makesep ();
+    print utils_link (
+      "${sys_home}project/release-gpgkeys.php?group=$group",
+      proj_home_img ("contexts/keys.png") . _("Project Release GPG Keyring")
+    );
     $i++;
   }
 
-print $HTML->box_bottom();
-print '<br />';
+print $HTML->box_bottom ();
+print "<br />\n";
 
 function open_vs_total_items ($url, $group_id, $artifact)
 {
-  $res_count = db_execute("SELECT count(*) AS count FROM ".$artifact."
-                           WHERE group_id=? AND status_id != 3",
-                          array($group_id));
-  $row_count = db_fetch_array($res_count);
-  $open_num = '<strong>'.$row_count['count'].'</strong>';
-  $res_count = db_execute("SELECT count(*) AS count FROM ".$artifact
-                          ." WHERE group_id=?",
-                          array($group_id));
-  $row_count = db_fetch_array($res_count);
-  $total_num = '<strong>'.$row_count['count'].'</strong>';
-# TRANSLATORS: the arguments are numbers of items.
-  printf (' '._('(open items: %1$s, total: %2$s)')."\n", $open_num,
-          $total_num);
+  $res_count = db_execute ("
+    SELECT count(*) AS count FROM $artifact
+    WHERE group_id = ? AND status_id != 3",
+    [$group_id]);
+  $row_count = db_fetch_array($res_count)['count'];
+  $open_num = "<strong>$row_count</strong>";
+  $res_count = db_execute (
+    "SELECT count(*) AS count FROM $artifact WHERE group_id = ?",
+    [$group_id]
+  );
+  $row_count = db_fetch_array($res_count)['count'];
+  $total_num = "<strong>$row_count</strong>";
+  print ' ';
+  # TRANSLATORS: the arguments are numbers of items.
+  printf (_('(open items: %1$s, total: %2$s)'), $open_num, $total_num);
 
-  print '<br /> &nbsp; - '
-        .utils_link($url.'&amp;func=browse&amp;set=open',
-                    _("Browse open items"));
-  print '<br /> &nbsp; - '
-        .utils_link($url.'&amp;func=additem', _("Submit a new item"),
-                    0, group_restrictions_check($group_id, $artifact));
+  print "<br />\n&nbsp; - "
+    . utils_link ("$url&amp;func=browse&amp;set=open", _("Browse open items"));
+  print "<br />\n&nbsp; - "
+    . utils_link (
+       "$url&amp;func=additem", _("Submit a new item"),
+       0, group_restrictions_check ($group_id, $artifact)
+      );
 }
 
-if ($GLOBALS['sys_unix_group_name'] == $group
-  || $project->Uses ("support") || $project->Uses ("mail")
-  || people_project_jobs_rows ($group_id) != 0)
-  {
-    print $HTML->box_top(_("Communication Tools"));
+$job_num = people_project_jobs_rows ($group_id);
 
-    if ($project->Uses("support"))
+if ($sys_unix_group_name == $group
+  || $project->Uses ("support") || $project->Uses ("mail")
+  || $job_num)
+  {
+    $i = 0; specific_makesep (); $i++;
+    print $HTML->box_top (_("Communication Tools"));
+
+    if ($project->Uses ("support"))
       {
-        specific_makesep();
+        specific_makesep ();
         $url = $project->getArtifactUrl("support");
 
-        print utils_link($url,
-                         html_image("contexts/help.png",
-                                    array('width'=>'24', 'height'=>'24',
-                                          'alt'=>''))
-                       .'&nbsp;'._("Tech Support Manager"));
-        if (group_get_artifact_url("support", 0) == $url)
+        print utils_link (
+          $url, proj_home_img ("contexts/help.png") . _("Tech Support Manager")
+        );
+        if (group_get_artifact_url ("support", 0) == $url)
           open_vs_total_items ($url, $group_id, 'support');
+        $i++;
       }
 
     if ($project->Uses ("mail"))
       {
-        specific_makesep();
-        $url = $project->getArtifactUrl("mail");
-        print utils_link($url,
-                         html_image("contexts/mail.png",
-                                    array('width'=>'24', 'height'=>'24',
-                                          'alt'=>''))
-                         .'&nbsp;'._("Mailing Lists"));
-        $res_count = db_execute("SELECT count(*) AS count FROM mail_group_list "
-                                ."WHERE group_id=? AND is_public=1",
-                                array($group_id));
-        $row_count = db_fetch_array($res_count);
+        specific_makesep ();
+        $url = $project->getArtifactUrl ("mail");
+        print utils_link (
+          $url, proj_home_img ("contexts/mail.png") . _("Mailing Lists")
+        );
+        $res_count = db_execute ("
+          SELECT count(*) AS count FROM mail_group_list
+          WHERE group_id = ? AND is_public = 1",
+          [$group_id]
+        );
+        $row_count = db_fetch_array ($res_count)['count'];
         print " ";
-        printf(ngettext("(%s public mailing list)", "(%s public mailing lists)",
-                        $row_count['count']),
-               "<strong>{$row_count['count']}</strong>");
+        printf (
+          ngettext (
+            "(%s public mailing list)", "(%s public mailing lists)", $row_count
+           ),
+           "<strong>$row_count</strong>"
+        );
+        $i++;
       }
 
-    if (people_project_jobs_rows($group_id) != 0)
+    if ($job_num)
       {
-        specific_makesep();
-        print utils_link($GLOBALS['sys_home'].'people/?group='.$group,
-                           html_image("contexts/people.png",
-                                      array('width'=>'24', 'height'=>'24',
-                                            'alt'=>''))
-                           .'&nbsp;'._("This project is looking for people"));
-        $job_count = people_project_jobs_rows($group_id);
-        printf(ngettext("(%s contributor wanted)", "(%s contributors wanted)",
-                        $job_count), "<strong>$job_count</strong>");
+        specific_makesep ();
+        print utils_link (
+          "${sys_home}people/?group=$group",
+          proj_home_img ("contexts/people.png")
+          . _("This project is looking for people")
+        );
+        printf (
+          ngettext (
+            "(%s contributor wanted)", "(%s contributors wanted)", $job_num
+          ),
+          "<strong>$job_num</strong>"
+        );
+        $i++;
       }
-    print $HTML->box_bottom();
-    print '<br />';
+    print $HTML->box_bottom ();
+    print "<br />\n";
   }
 
 # Development.
-if ($project->Uses("patch")
-    || $project->Uses("cvs")
-    || $project->Uses("homepage")
-    || $project->Uses("bugs")
-    || $project->Uses("task")
-    || $project->Uses("patch"))
+$uses_dev = false;
+foreach (['patch', 'cvs', 'homepage', 'bugs', 'task', 'patch'] as $art)
+  if ($project->Uses ($art))
+    {
+      $uses_dev = true;
+      break;
+    }
+if ($uses_dev)
   {
-    print $HTML->box_top("<div id='devtools'>" . _("Development Tools")
-                         . "</div>");
+    $i = 0; specific_makesep (); $i++;
+    print $HTML->box_top (
+      "<div id='devtools'>" . _("Development Tools") . "</div>"
+    );
     $i = 1;
 
     function print_scm_entry ($project, &$i, $scm, $scm_name)
     {
-      if (!($project->Uses($scm) || $project->UsesForHomepage($scm)))
+      if (!($project->Uses ($scm) || $project->UsesForHomepage ($scm)))
         return;
 
       $group_id = $project->getGroupId ();
 
-      specific_makesep();
-      $url = $project->getArtifactUrl($scm);
+      specific_makesep ();
+      $url = $project->getArtifactUrl ($scm);
 
-      html_image("contexts/cvs.png",array('width'=>'24', 'height'=>'24',
-                 'alt'=>''));
-      print '&nbsp;<a href="'.$url.'">';
-# TRANSLATORS: the argument is name of VCS (like Git or Bazaar).
+      print proj_home_img ("contexts/cvs.png") . "<a href=\"$url\">";
+      # TRANSLATORS: the argument is name of VCS (like Git or Bazaar).
       printf (_("%s Repository"), $scm_name);
       print "</a>\n";
 
-      if ($project->Uses($scm) && $project->getUrl($scm."_viewcvs") != 'http://'
-          && $project->getUrl($scm."_viewcvs") != '')
+      $scm_url = $project->getUrl ("${scm}_viewcvs");
+      if (
+        $project->Uses ($scm) && $scm_url != 'http://' && $scm_url != ''
+      )
         {
           $repos = vcs_get_repos ($scm, $group_id);
           $n = count ($repos);
           if ($n < 2)
-            print "<br />\n" . '&nbsp; - <a href="'
-                  . $project->getUrl($scm . "_viewcvs")
-                  . '">' . _("Browse Sources Repository") . "</a>\n";
+            print "<br />\n&nbsp; - <a href=\"$scm_url\">"
+              . _("Browse Sources Repository") . "</a>\n";
           else
             {
-              $url0 = preg_replace(':/[^/]*$:', '/',
-                                   $project->getUrl($scm . "_viewcvs"));
+              $u = preg_replace(':/[^/]*$:', '/', $scm_url);
               print '<p>' . _("Browse Sources Repository") . "</p>\n";
               print "<ul>\n";
-              for ($k = 0; $k < $n; $k++)
-                print '<li><a href="' . $url0 . $repos[$k]['url']
-                      . '">' . $repos[$k]['desc'] . "</a></li>\n";
+              foreach ($repos as $r)
+                print "<li><a href=\"$u{$r['url']}\">{$r['desc']}</a></li>\n";
               print "</ul>\n";
             }
         }
-      if ((($scm != 'cvs' && $project->UsesForHomepage($scm))
-           || ($scm == 'cvs' && $project->Uses("homepage")))
-          && $project->getUrl("cvs_viewcvs_homepage") != 'http://'
-          && $project->getUrl("cvs_viewcvs_homepage") != '')
+      $view_url = $project->getUrl ("cvs_viewcvs_homepage");
+      if ((($scm != 'cvs' && $project->UsesForHomepage ($scm))
+           || ($scm == 'cvs' && $project->Uses ("homepage")))
+          && $view_url != 'http://' && $view_url != '')
         {
-          print '<br /> &nbsp; - <a href="'
-                .$project->getUrl("cvs_viewcvs_homepage").'">'
-                ._("Browse Web Pages Repository").'</a>';
+          print "<br />\n&nbsp; - <a href=\"$view_url\">"
+            . _("Browse Web Pages Repository") . '</a>';
         }
       $i++;
     } # print_scm_entry
 
-# TRANSLATORS: the string is used as the argument of "%s Repository".
-  print_scm_entry ($project, $i, 'git', _("Git"));
-# TRANSLATORS: the string is used as the argument of "%s Repository".
-    print_scm_entry ($project, $i, 'hg', _("Mercurial"));
-# TRANSLATORS: the string is used as the argument of "%s Repository".
-    print_scm_entry ($project, $i, 'bzr', _("Bazaar"));
-# TRANSLATORS: the string is used as the argument of "%s Repository".
-    print_scm_entry ($project, $i, 'svn', _("Subversion"));
-# TRANSLATORS: the string is used as the argument of "%s Repository".
-    print_scm_entry ($project, $i, 'arch', _("GNU Arch"));
-# TRANSLATORS: the string is used as the argument of "%s Repository".
-    print_scm_entry ($project, $i, 'cvs', _("CVS"));
+    $vcses = [
+      # TRANSLATORS: the string is used as the argument of "%s Repository".
+      'git' => _("Git"), 'hg' => _("Mercurial"), 'bzr' => _("Bazaar"),
+      'svn' => _("Subversion"), 'arch' => _("GNU Arch"), 'cvs' => _("CVS"),
+    ];
+    foreach ($vcses as $v => $label)
+      print_scm_entry ($project, $i, $v, $label);
 
-    if ($project->Uses("bugs"))
-      {
-        specific_makesep();
-        $url = $project->getArtifactUrl("bugs");
-        print utils_link($url,
-                           html_image("contexts/bug.png",
-                                      array('width'=>'24', 'height'=>'24',
-                                            'alt'=>''))
-                           .'&nbsp;'._("Bug Tracker"));
-        if (group_get_artifact_url("bugs", 0) == $url)
-          open_vs_total_items ($url, $group_id, 'bugs');
-        $i++;
-      }
-    if ($project->Uses("task"))
-      {
-        specific_makesep();
-        $url = $project->getArtifactUrl("task");
-        print utils_link($url,
-                           html_image("contexts/task.png",
-                                      array('width'=>'24', 'height'=>'24',
-                                            'alt'=>''))
-                           .'&nbsp;'._("Task Manager"));
-        if (group_get_artifact_url("task", 0) == $url)
-          open_vs_total_items ($url, $group_id, 'task');
-        $i++;
-      }
-    if ($project->Uses("patch"))
-      {
-        specific_makesep();
-        $url = $project->getArtifactUrl("patch");
-        print utils_link($url,
-                           html_image("contexts/patch.png",
-                                      array('width'=>'24', 'height'=>'24',
-                                            'alt'=>''))
-                           .'&nbsp;'._("Patch Manager"));
-        if (group_get_artifact_url("patch", 0) == $url)
-          open_vs_total_items ($url, $group_id, 'patch');
-        $i++;
-      }
+    $tracker_arr = [
+      'bugs' => ['bug', _("Bug Tracker")],
+      'task' => ['task', _("Task Manager")],
+      'patch' => ['patch', _("Patch Manager")],
+    ];
+    foreach ($tracker_arr as $k => $val)
+      if ($project->Uses ($k))
+        {
+          specific_makesep ();
+          $url = $project->getArtifactUrl ($k);
+          $img = proj_home_img ("contexts/{$val[0]}.png");
+          print utils_link ($url,  $img . $val[1]);
+          if (group_get_artifact_url ($k, 0) == $url)
+            open_vs_total_items ($url, $group_id, $k);
+          $i++;
+        }
     print $HTML->box_bottom();
-  }
+  } # $uses_dev
 
 if ($project->Uses ("news"))
   print "\n</div><!-- end splitleft -->\n";
