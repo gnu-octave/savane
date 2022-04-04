@@ -1397,7 +1397,7 @@ $reference = 'js/hide-span.php';
 $reference = 'js/show-hide.php';
 {
   $names = [
-    'true' => 'deploy',
+    'digits' => 'deploy',
     'preg' => [['box_id', 'suffix', '/^\w*$/']],
     'specialchars' => 'legend'
   ];
@@ -1414,7 +1414,7 @@ $reference = 'js/show-hide.php';
   $in['box_id'] = 'abcd';
   $out['box_id'] = 'abcd';
   $in['deploy'] = 1;
-  $out['deploy'] = true;
+  $out['deploy'] = 1;
   test_sane_import ($in, $names, $out);
 }
 

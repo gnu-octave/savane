@@ -27,7 +27,7 @@ header('Content-Type: text/javascript');
 
 extract(sane_import('request',
   [
-    'true' => 'deploy',
+    'digits' => 'deploy',
     'preg' => [['box_id', 'suffix', '/^\w*$/']],
     'specialchars' => 'legend'
   ]
@@ -56,12 +56,12 @@ print "document.write('<span class=\"minusorplus\">"
   .  $sign_func ('-', $hide, $legend) .  $sign_func ('+', $show, $legend)
   . "</span>');\n";
 
-$inline_el = $hide_el;
-$none_el = $show_el;
-if ($deploy != 1)
+$inline_el = $show_el;
+$none_el = $hide_el;
+if ($deploy)
   {
-    $inline_el = $show_el;
-    $none_el = $hide_el;
+    $inline_el = $hide_el;
+    $none_el = $show_el;
   }
 print "$inline_el.style.display = 'inline';\n";
 print "$none_el.style.display = 'none';\n";
