@@ -1,7 +1,7 @@
 <?php
 # Define onclick action for registration captcha.
 #
-# Copyright (C) 2018 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2018, 2022 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -19,15 +19,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once('../include/init.php');
-require_once('../include/http.php');
 header('Content-Type: text/javascript');
 
 print
-'document.getElementById(\'captcha_js_link\').onclick =
-  function ()
-  {
-    document.getElementById(\'captcha\').src =
-     \'' . $GLOBALS['sys_home'] . 'gencaptcha.php?\' + Math.random();
-  }
-';
+"document.getElementById('captcha_js_link').onclick =
+function ()
+{
+  document.getElementById('captcha').src =
+    '${GLOBALS['sys_home']}gencaptcha.php?' + Math.random();
+}\n";
 ?>

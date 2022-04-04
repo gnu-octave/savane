@@ -1,7 +1,7 @@
 <?php
 # Define onclick action for showing feedback.
 #
-# Copyright (C) 2018 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2018, 2022 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once('../include/init.php');
-require_once('../include/http.php');
 require_once('../include/sane.php');
 header('Content-Type: text/javascript');
 extract(sane_import('request', ['preg' => [['suffix', '/^\w*$/']]]));
@@ -28,11 +26,10 @@ if ($suffix === null)
   $suffix = "";
 
 print
-'document.getElementById(\'feedbackback\').onclick =
-  function ()
-  {
-    document.getElementById(\'feedback'.$suffix.'\').style.visibility=\'visible\';
-    document.getElementById(\'feedbackback'.$suffix.'\').style.visibility=\'hidden\';
-  }
-';
+"document.getElementById('feedbackback').onclick =
+function ()
+{
+  document.getElementById('feedback$suffix').style.visibility='visible';
+  document.getElementById('feedbackback$suffix').style.visibility='hidden';
+}\n";
 ?>
