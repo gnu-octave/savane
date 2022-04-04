@@ -49,12 +49,12 @@ foreach (
 
 $sign_func = function ($sign, $id, $legend)
 {
-  return "<span id=\"$id\">($sign)"
+  return "<span id=\"$id\"><span class=\"minusorplus\">($sign)</span>"
     . htmlspecialchars ($legend, ENT_QUOTES) . "</span>";
 };
-print "document.write('<span class=\"minusorplus\">"
+print "document.write('"
   .  $sign_func ('-', $hide, $legend) .  $sign_func ('+', $show, $legend)
-  . "</span>');\n";
+  . "');\n";
 
 $inline_el = $show_el;
 $none_el = $hide_el;
