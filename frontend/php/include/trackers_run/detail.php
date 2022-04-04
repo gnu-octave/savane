@@ -263,26 +263,26 @@ authentication level.");
     foreach ($is_deployed as $key => $value)
       $is_deployed[$key] = true;
 
-# Post a comment.
-
   # For now hidden by default, assuming that people first read comments,
   # then post comment.
   # The bad side is the fact that they are forced to click at least one.
   # The good thing is they do not have to scroll when starting.
   # There is one more click but people feel more in control (well, at least
   # the one that were vocal about Savane UI design).
-  if (group_restrictions_check($group_id, ARTIFACT, 2))
+  if (group_restrictions_check ($group_id, ARTIFACT, 2))
     {
+      if (isset($quote_no))
+        {
+          $quote = trackers_data_quote_comment ($item_id, $quote_no);
+          if ($quote !== false)
+            $comment .= $quote;
+        }
+      if (!empty ($comment))
+        $is_deployed['postcomment'] = true;
       print html_hidsubpart_header("postcomment", _("Post a Comment"));
 
       if (!$item_discussion_lock)
         {
-          if (isset($quote_no))
-            {
-              $quote = trackers_data_quote_comment ($item_id, $quote_no);
-              if ($quote !== false)
-                $comment .= $quote;
-            }
           print '<p class="noprint"><span class="preinput"> '
                 . _("Add a New Comment") . ' ' . markup_info("rich");
           print form_submit (_('Preview'), 'preview')

@@ -345,10 +345,8 @@ priority and open/close items"))) . "</p>\n";
     print '<div class="warn"><span class="smaller">* '
           . _("Mandatory Fields") . '</span></div>';
 
-# Determine which subpart must be deployed.
     $is_deployed = array();
 
-    # Default picks.
     $is_deployed["postcomment"] = false;
     if ($preview)
       $is_deployed["postcomment"] = true;
@@ -383,8 +381,14 @@ priority and open/close items"))) . "</p>\n";
           $is_deployed["reassign"] = true;
       }
 
-# Post a comment.
-
+    if (isset($quote_no))
+      {
+        $quote = trackers_data_quote_comment ($item_id, $quote_no);
+        if ($quote !== false)
+          $comment .= $quote;
+      }
+    if (!empty ($comment))
+      $is_deployed['postcomment'] = true;
     # For now hidden by default, assuming that people first read comments,
     # then post comment.
     # The bad side is the fact that they are forced to click at least one.
@@ -394,16 +398,6 @@ priority and open/close items"))) . "</p>\n";
     print html_hidsubpart_header("postcomment", _("Post a Comment"),
                                  $is_deployed['postcomment']);
 
-    # The discussion lock will not prevent technicians and manager to comment.
-    # The point is too filter spams and to allow to stop flamewars, but
-    # managers and technicians are expected to be serious enough.
-
-    if (isset($quote_no))
-      {
-        $quote = trackers_data_quote_comment ($item_id, $quote_no);
-        if ($quote !== false)
-          $comment .= $quote;
-      }
     print '<p class="noprint"><span class="preinput"> ' . _("Add a New Comment")
           . ' ' . markup_info("rich");
     print form_submit (_('Preview'), 'preview')
