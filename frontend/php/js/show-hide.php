@@ -49,8 +49,9 @@ foreach (
 
 $sign_func = function ($sign, $id, $legend)
 {
-  return "<span id=\"$id\"><span class=\"minusorplus\">($sign)</span>"
-    . htmlspecialchars ($legend, ENT_QUOTES) . "</span>";
+  return "<span class=\"show-hide\" id=\"$id\">"
+   . "<span class=\"minusorplus\">($sign)</span>"
+   . htmlspecialchars ($legend, ENT_QUOTES) . "</span>";
 };
 print "document.write('"
   .  $sign_func ('-', $hide, $legend) .  $sign_func ('+', $show, $legend)
