@@ -235,15 +235,28 @@ canonical representation, etc.)
 
 Check http://phplens.com/adodb/reference.functions.execute.html and
 adodb.inc.php. */
-function db_execute($sql, $inputarr=null)
+function db_execute($sql, $inputarr = null, $multi_query = 0)
 {
   $expanded_sql = db_variable_binding($sql, $inputarr);
-  return db_query($expanded_sql);
+  return db_query($expanded_sql, 0, $multi_query);
 }
 
-function db_query($qstring, $print = 0)
+function db_query_die ($qstring, $errors = null)
 {
-  global $mysql_conn;
+  $str = 'db_query: SQL query error in [' . htmlspecialchars ($qstring) . ']';
+  if (empty ($errors))
+    $str .= ' <i>' . db_error () . '</i>';
+  else
+    foreach ($errors as $idx => $err)
+      {
+        $str .= "<br />\n<b>query $idx:</b> <i>$err</i>";
+      }
+  util_die ($str);
+}
+
+function db_query ($qstring, $print = 0, $multi_query = 0)
+{
+  global $mysql_conn, $db_qhandle;
 
   # Store query for recap display.
   if ($GLOBALS['sys_debug_on'])
@@ -292,14 +305,34 @@ function db_query($qstring, $print = 0)
       print "]</pre>";
     }
 
-  $GLOBALS['db_qhandle'] = mysqli_query ($mysql_conn, $qstring);
-  if (!$GLOBALS['db_qhandle'])
+  if ($multi_query)
     {
-      util_die('db_query: SQL query error ' .
-               '<em>' . db_error() . '</em> in ['
-               . htmlspecialchars ($qstring) . ']');
+      mysqli_multi_query ($mysql_conn, $qstring);
+      $db_qhandle = [];
+      $i = 0;
+      $fail = false;
+      while (true)
+        {
+          $res = mysqli_store_result ($mysql_conn);
+          if (!$res && mysqli_errno ($mysql_conn))
+            {
+              $fail = true;
+              $errors[$i] = db_error ();
+            }
+          $db_qhandle[$i++] = $res;
+          if (!mysqli_more_results ($mysql_conn))
+            break;
+          mysqli_next_result ($mysql_conn);
+        }
+      if ($fail)
+        db_query_die ($qstring, $errors);
     }
-  return $GLOBALS['db_qhandle'];
+  else
+    $db_qhandle = mysqli_query ($mysql_conn, $qstring);
+  if ($db_qhandle)
+    return $db_qhandle;
+  db_query_die ($qstring);
+  return $db_qhandle;
 }
 
 function db_numrows($qhandle)

@@ -719,49 +719,142 @@ function group_get_artifact_url ($artifact, $hostname = 1)
     . $GLOBALS['project']->getUnixName ();
 }
 
+# Normalize preference names before feeding it to SQL.
+# $name is either a strig or an array listing names.
+function group_normalize_pref_name (&$name)
+{
+  $norm_name = function (&$n, $idx = null, $arg = null)
+  {
+    $n = strtolower (trim ($n));
+  };
+  array_walk ($name, $norm_name);
+}
+
+# Make sure that the value is an array; used in further functions.
+function group_make_array ($x)
+{
+  if (is_array ($x))
+    return $x;
+  return [$x];
+}
+
+# A helper function (mix of str_repeat and implode) used further.
+function group_str_implode ($separator, $str, $n)
+{
+  return str_repeat ("$str$separator", $n - 1) . $str;
+}
+
+# Return group preferences. If $preference_names is a string,
+# return a single string or false if the preference isn't set;
+# if $preference_names is an array, return an array of $name => $value,
+# where $value is null when the prefererence isn't set.
+function group_get_preference ($group_id, $preference_names)
+{
+  $pref_names = group_make_array ($preference_names);
+  group_normalize_pref_name ($pref_names);
+  $pref_arr = [];
+  $val_arr = [];
+  foreach ($pref_names as $name)
+    {
+      if (array_key_exists ($name, $val_arr))
+        continue;
+      $pref_arr[] = $name;
+      $val_arr[$name] = null;
+    }
+
+  $arg_list = group_str_implode (", ", "?", count ($pref_arr));
+  $result =
+    db_execute ("
+      SELECT preference_name,preference_value FROM group_preferences
+      WHERE group_id = ? AND preference_name IN ($arg_list)",
+      array_merge ([$group_id], $pref_arr)
+    );
+  if (!is_array ($preference_names))
+    {
+      if (db_numrows ($result) < 1)
+        return false;
+      return db_result ($result, 0, 'preference_value');
+    }
+
+  while ($row = db_fetch_array ())
+    {
+      $val_arr[$row['preference_name']] = $row['preference_value'];
+    }
+  return $val_arr;
+}
+
+function group_set_pref_insert_sql ($group_id, $to_insert)
+{
+  if (empty ($to_insert))
+    return '';
+  # The order of arguments must be the same as
+  # in group_set_pref_update_sql ().
+  $sql =
+    "INSERT INTO group_preferences
+       (preference_value, group_id, preference_name)
+       VALUES\n";
+  $sql .= group_str_implode (",\n", "(?, ?, ?)", count ($to_insert));
+  # Add trailing ';' so that the subsequent query could be added directly.
+  return $sql . ";\n";
+}
+
+function group_set_pref_update_sql ($group_id, $to_update)
+{
+  if (empty ($to_update))
+    return '';
+  # The order of arguments must be the same as
+  # in group_set_pref_insert_sql ().
+  $single_query = "
+    UPDATE group_preferences SET preference_value = ?
+    WHERE group_id = ? AND preference_name = ?";
+  $sql = group_str_implode (";", $single_query, count ($to_update));
+  return $sql;
+}
+
+# Return argument array matching
+# group_set_pref_insert_sql () and group_set_pref_update_sql ().
+function group_set_pref_array ($group_id, $prefs, $names)
+{
+  if (empty ($names))
+    return [];
+  $ret = [];
+  foreach ($names as $name)
+    {
+      $ret[] = $prefs[$name]; $ret[] = $group_id; $ret[] = $name;
+    }
+  return $ret;
+}
 
 function group_set_preference ($group_id, $preference_name, $value)
 {
   if (!user_ismember ($group_id, 'A'))
     return false;
 
-  $preference_name = strtolower (trim ($preference_name));
-  $result = db_execute ("
-    SELECT NULL FROM group_preferences
-    WHERE group_id = ? AND preference_name = ?",
-    [$group_id, $preference_name]
-  );
-  if (db_numrows ($result) < 1)
-    db_autoexecute (
-      'group_preferences',
-      [
-        'group_id' => $group_id, 'preference_name' => $preference_name,
-        'preference_value' => $value
-      ],
-      DB_AUTOQUERY_INSERT
-    );
-  else
-    db_execute ("
-      UPDATE group_preferences
-      SET preference_value = ?
-      WHERE group_id = ? AND preference_name = ?",
-     [$value, $group_id, $preference_name]
-    );
-  return true;
-}
-
-function group_get_preference ($group_id, $preference_name)
-{
-  $preference_name = strtolower (trim ($preference_name));
-
-  $result =
-    db_execute ("
-      SELECT preference_value FROM group_preferences
-      WHERE group_id = ? AND preference_name = ?",
-      [$group_id, $preference_name]
-    );
-  if (db_numrows ($result) < 1)
+  $pref_names = group_make_array ($preference_name);
+  $pref_vals = group_make_array ($value);
+  if (count ($pref_names) != count ($pref_vals))
     return false;
-  return db_result ($result, 0, 'preference_value');
+  $prefs = array_combine ($pref_names, $pref_vals);
+
+  group_normalize_pref_name ($pref_names);
+  $current = group_get_preference ($group_id, $pref_names);
+  $to_update = $to_insert = [];
+  foreach ($pref_names as $n)
+    {
+      if ($current[$n] === null)
+        $to_insert[] = $n;
+      elseif ($current[$n] != $prefs[$n])
+        $to_update[] = $n;
+    }
+  $insert_sql = group_set_pref_insert_sql ($group_id, $to_insert);
+  $insert_arr = group_set_pref_array ($group_id, $prefs, $to_insert);
+  $update_sql = group_set_pref_update_sql ($group_id, $to_update);
+  $update_arr = group_set_pref_array ($group_id, $prefs, $to_update);
+  $sql = $insert_sql . $update_sql;
+  if (empty ($sql))
+    return true;
+  $arr = array_merge ($insert_arr, $update_arr);
+  db_execute ($sql, $arr, true);
+  return true;
 }
 ?>
