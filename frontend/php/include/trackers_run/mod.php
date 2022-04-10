@@ -38,6 +38,11 @@ $result = db_execute ("
 );
 
 $submitter = db_result ($result, 0, 'submitted_by');
+$preambles = [];
+foreach (['comment', 'file'] as $pre)
+  $preambles[] = ARTIFACT . "_${pre}_preamble";
+
+$preambles = group_get_preference  ($group_id, $preambles);
 
 if ($preview)
   $field_list = trackers_extract_field_list ();
@@ -404,6 +409,9 @@ if (!empty ($comment))
 print html_hidsubpart_header ("postcomment", _("Post a Comment"),
                              $is_deployed['postcomment']);
 
+if (!empty ($preambles[ARTIFACT . '_comment_preamble']))
+  print markup_rich ($preambles[ARTIFACT . '_comment_preamble']);
+
 print '<p class="noprint"><span class="preinput"> ' . _("Add a New Comment")
       . ' ' . markup_info ("rich");
 print form_submit (_('Preview'), 'preview')
@@ -473,6 +481,9 @@ print "<p>&nbsp;</p>\n";
 print html_hidsubpart_footer ();
 
 print html_hidsubpart_header ("attached", _("Attached Files"));
+
+if (!empty ($preambles[ARTIFACT . '_file_preamble']))
+  print markup_rich ($preambles[ARTIFACT . '_file_preamble']);
 
 print '<p class="noprint">';
 printf (

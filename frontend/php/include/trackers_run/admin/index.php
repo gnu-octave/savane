@@ -61,10 +61,10 @@ print '<p class="smaller">'
 
 $next_box_item ();
 print "<p><a href=\"other_settings.php?group=$group\">"
-  . _("Edit the Item Post Form Preamble") . "</a></p>\n";
+  . _("Edit Post Form Preambles") . "</a></p>\n";
 print '<p class="smaller">'
-  . _("Define a preamble that will be shown to users when they submit "
-      . "an item\non this tracker.")
+  . _("Define preambles that will be shown to users when they submit "
+      . "changes on this tracker.")
     ."</p>\n";
 
 $next_box_item ();
