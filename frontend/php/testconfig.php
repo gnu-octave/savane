@@ -116,6 +116,25 @@ function test_cgitrepos()
   print 'OK';
 }
 
+function test_sys_upload_dir ()
+{
+  $path = utils_make_upload_file ("test.txt", $errors);
+  if ($path === null)
+    {
+      print "<b>can't make file:</b> $errors";
+      return;
+    }
+  $error_handler = function ($errno, $errstr)
+  {
+    print "<b>unlink failed:</b> $errstr";
+  };
+  $old_handler = set_error_handler ($error_handler, E_WARNING);
+  $res = unlink ($path);
+  set_error_handler ($old_handler, E_WARNING);
+  if ($res)
+    print 'OK';
+}
+
 print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
     \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\n";
@@ -368,9 +387,12 @@ in the configuration file.</p>\n";
     print "\n<h2>Other tests</h2>\n\n";
     print "<table border=\"1\">\n";
     print "<tr><th>Test</th><th>Result</th></tr>\n";
-    print "<tr id='cgitrepos'><td>cgitrepos</td><td>";
+    print "<tr id='cgitrepos'><td>cgitrepos</td><td>\n";
     test_cgitrepos ();
-    print "</td></tr>";
+    print "</td></tr>\n";
+    print "<tr id='sys-upload-dir'><td>sys_upload_dir writability</td><td>\n";
+    test_sys_upload_dir ();
+    print "</td></tr>\n";
     print "</table>\n";
     test_gpg ();
   } # is_readable ($sys_conf_file)

@@ -57,23 +57,7 @@ function try_move ($tmp_path, $path)
   return $path;
 }
 
-$name = $tarball['name'];
-$path = "$sys_upload_dir/$name";
-
-# It might be easier to use tempnam (), but it has no --suffix feature.
-$out = [];
-$res = 0;
-$name = strtr ($name, "'/", ".-");
-exec ("mktemp -p \"$sys_upload_dir\" --suffix='-$name' XXXX", $out, $res);
-
-if ($res)
-  {
-    # Can't create a temporary file; $path most probably will work,
-    # but it would create a race condition, so just don't proceed.
-    $path = null;
-  }
-else
-  $path = try_move ($out[0], $path);
+$path = utils_make_upload_file ($tarball['name'], $errors);
 
 if (empty ($path) || !move_uploaded_file ($tarball['tmp_name'], $path))
   exit_error (_("Cannot move file to the download area."));

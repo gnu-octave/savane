@@ -6,7 +6,7 @@
 # Copyright (C) 2002-2006 Tobias Toedter <t.toedter--gmx.net>
 # Copyright (C) 2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
 # Copyright (C) 2006, 2007, 2008, 2010 Sylvain Beucler
-# Copyright (C) 2017, 2018, 2019, 2020 Ineiev
+# Copyright (C) 2017, 2018, 2019, 2020, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -1135,5 +1135,68 @@ function utils_set_csp_headers ()
   if ($GLOBALS['sys_file_domain'] != $GLOBALS['sys_default_domain'])
     $policy .= "; img-src 'self' " . $GLOBALS['sys_file_domain'];
   header($policy);
+}
+
+# Run a command $cmd, return its exit code; put its output and error streams
+# to $out and $err.
+function utils_run_proc ($cmd, &$out, &$err)
+{
+  $d_spec = [0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"]];
+
+  $out = null;
+  $proc = proc_open ($cmd, $d_spec, $pipes, NULL, $_ENV);
+  if ($proc === false)
+    {
+      $err = "can't run $cmd\n";
+      return -1;
+    }
+  fclose ($pipes[0]);
+  $out = stream_get_contents ($pipes[1]);
+  $err = stream_get_contents ($pipes[2]);
+  fclose ($pipes[1]); fclose ($pipes[2]);
+  return proc_close ($proc);
+}
+
+# Try to move $tmp_path to $path without overwriting if the latter exists;
+# return $path when successful, $tmp_path otherwise.
+function utils_try_move ($tmp_path, $path)
+{
+  $link_error_handler = function ($errno, $errstr, $errfile, $errline)
+  {
+    # Ignore warning.
+  };
+  $old_handler = set_error_handler ($link_error_handler, E_WARNING);
+  $res = link ($tmp_path, $path);
+  set_error_handler ($old_handler, E_WARNING);
+  if (!$res) # Already exists; fallback to temporary file name.
+    return $tmp_path;
+  unlink ($tmp_path);
+  return $path;
+}
+
+# Make a file with a name based on $tarball_name in $sys_upload_dir without
+# overwriting existing files; the new file name is $tarball_name unless
+# such file already exists, otherwise a name based on a template is used.
+# Return the path to the new file; in case of failure return null and
+# put a diagnostic string to $errors.
+function utils_make_upload_file ($tarball_name, &$errors)
+{
+  global $sys_upload_dir;
+  $name = $tarball_name;
+  $path = "$sys_upload_dir/$name";
+  # It might be easier to use tempnam (), but it has no --suffix feature.
+  $name = strtr ($name, "'/", ".-");
+  $res = utils_run_proc (
+    "mktemp -p \"$sys_upload_dir\" --suffix='-$name' XXXXXX", $out, $err
+  );
+  if ($res)
+    {
+      # Can't create a temporary file; $path may work,
+      # but it would at least create a race condition, so just don't proceed.
+      $errors = "$res: $err";
+      return null;
+    }
+  $out = substr ($out, 0, strlen ($out) - 1); # Remove trailing "\n".
+  return utils_try_move ($out, $path);
 }
 ?>
