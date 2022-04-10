@@ -84,10 +84,10 @@ trackers_header ([
 ]);
 
 # Check if the user have a specific role.
-$check_member = function ($group_id, $artifact, $role)
+$check_member = function ($group_id, $artifact, $role, $strict = 1)
 {
   $flag = member_create_tracker_flag ($artifact) . $role;
-  return member_check (0, $group_id, $flag, 1);
+  return member_check (0, $group_id, $flag,  $strict);
 };
 $member_help = function ($title, $arr)
 {
@@ -177,7 +177,7 @@ print '<tr><td colspan="' . ($fields_per_line * 2) . "\">&nbsp;</td></tr>\n";
 
 # Now display the variable part of the field list (depend on the project).
 # Some fields must be displayed differently according to the user role.
-$is_manager = $check_member ($group_id, ARTIFACT, '3');
+$is_manager = $check_member ($group_id, ARTIFACT, '3', 0);
 
 # Variables that will be used afterwards.
 $item_assigned_to = null;
