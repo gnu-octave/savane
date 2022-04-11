@@ -41,8 +41,8 @@ print utils_link ('//www.fsf.org/associate/support_freedom/join_fsf?referrer=244
 # as the "translation" of this string; if it hasn't, repeat the original string
 # in your translation.
                               _('thin-image.png'),
-                              array('alt' => _('Support freedom')),
-                              0) . "\n<br />"
+                              array('alt' => _('Support freedom')))
+                  . "\n<br />"
                   . _('Help us protect your freedom and the rights of computer
 users everywhere by becoming a member of the FSF.') . "\n<br /><strong>"
                   . _('Join Now!') . '</strong>');

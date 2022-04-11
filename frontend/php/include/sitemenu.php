@@ -54,7 +54,7 @@ function sitemenu ($params)
                     html_image($GLOBALS['sys_logo_name'],
 # TRANSLATORS: the argument is site name (like Savannah).
                                array('alt'=>sprintf(_("Back to %s Homepage"),
-                                     $GLOBALS['sys_name'])), 0));
+                                     $GLOBALS['sys_name']))));
     }
   else
     {
