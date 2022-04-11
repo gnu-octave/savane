@@ -293,6 +293,8 @@ print '<p class="smaller">'
       . "administrator.")
   . "</p>\n";
 
+$i++;
+print_box_next_item ();
 pref_cbox ('email_encrypted', _("Encrypt emails when resetting password"));
 print '<p class="smaller">'
   . _("When checked, Savannah will encrypt email messages\nwith your "
