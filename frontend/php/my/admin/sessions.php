@@ -89,7 +89,7 @@ while ($row = db_fetch_array($res))
   {
     $i++;
     if ($i > 1)
-      print $HTML->box_nextitem(utils_get_alt_row_color($i));
+      print $HTML->box_nextitem(utils_altrow($i));
 
   # We destroy a part of the session hash because in no case we want to
   # provide in clear text that complete information that could be used for
@@ -124,7 +124,7 @@ while ($row = db_fetch_array($res))
 if ($i > 3)
   {
     $i++;
-    print $HTML->box_nextitem(utils_get_alt_row_color($i));
+    print $HTML->box_nextitem(utils_altrow($i));
     print '<span class="trash">';
     print utils_link(htmlentities ($_SERVER['PHP_SELF'])
                      .'?func=del&amp;dkeep_one=1',

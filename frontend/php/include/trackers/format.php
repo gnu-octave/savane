@@ -183,7 +183,7 @@ Follow-up Comments:\n\n";
       $int_id = $entry['comment_internal_id'];
       $comment_ids = "&amp;item_id=$item_id&amp;comment_internal_id=$int_id";
       $url_start = htmlentities ($_SERVER['PHP_SELF']) . '?func=';
-      $class = utils_get_alt_row_color (++$j);
+      $class = utils_altrow (++$j);
 
       # Find out what would be this comment number.
       if ($user_pref_fromoldertonewer)
@@ -593,7 +593,7 @@ File Attachments:\n\n";
             $out .= '<div>&nbsp;&nbsp;&nbsp;- ';
           else
             {
-              $out .= '<div class="' . utils_get_alt_row_color($i) . '">'
+              $out .= '<div class="' . utils_altrow($i) . '">'
                       . $html_delete;
             }
 
@@ -760,7 +760,7 @@ function format_item_cc_list ($item_id, $group_id, $ascii = false)
           else
             $html_delete = '';
 
-          $out .= '<li class="' . utils_get_alt_row_color($i) . '">'
+          $out .= '<li class="' . utils_altrow($i) . '">'
             . $html_delete
             . sprintf(
 # TRANSLATORS: the first argument is email, the second is user's name.

@@ -260,7 +260,7 @@ function show_thread($thread_id,$et=0)
       for ($i=0; $i<$rows; $i++)
         {
           $total_rows++;
-          $ret_val .= '<tr class="'. utils_get_alt_row_color($total_rows)
+          $ret_val .= '<tr class="'. utils_altrow($total_rows)
               .'"><td>'
               .(($current_message != db_result($result, $i, 'msg_id'))?'<a href="'
               .$GLOBALS['sys_home'].'forum/message.php?msg_id='
@@ -279,7 +279,7 @@ function show_thread($thread_id,$et=0)
           if ($et == 1)
             {
               $ret_val .= '
-                  <tr class="'. utils_get_alt_row_color($total_rows)
+                  <tr class="'. utils_altrow($total_rows)
                   .'"><td>&nbsp;</td><td colspan=2>'.
                   nl2br(db_result($result, $i, 'body')).'</td><tr>';
             }
@@ -321,7 +321,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0)
         {
           $total_rows++;
 
-          $ret_val .= '<tr class="'. utils_get_alt_row_color($total_rows)
+          $ret_val .= '<tr class="'. utils_altrow($total_rows)
                       .'"><td nowrap>';
           # How far should it indent?
 
@@ -348,7 +348,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0)
             {
               $ret_val .= '
                                     <tr class="'
-                       .utils_get_alt_row_color($total_rows)
+                       .utils_altrow($total_rows)
                        .'"><td>&nbsp;</td><td colspan=2>'
                        .nl2br(db_result($result, $i, 'body'))."</td><tr>\n";
             }

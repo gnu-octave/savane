@@ -401,7 +401,7 @@ print "</p>\n";
 print html_build_list_table_top ($title_arr);
 
 $i++;
-print "\n<tr class=\"" . utils_get_alt_row_color ($i) . "\">\n<td>"
+print "\n<tr class=\"" . utils_altrow ($i) . "\">\n<td>"
   # TRANSLATORS: this is a column row which header says "Applies when ...".
   . _("Posting new items") . "</td>\n";
 
@@ -429,7 +429,7 @@ foreach ($trackers as $art)
 print "</tr>\n";
 
 $i++;
-print '<tr class="' . utils_get_alt_row_color ($i) . "\">\n<td>"
+print '<tr class="' . utils_altrow ($i) . "\">\n<td>"
   # TRANSLATORS: this is a column row which header says "Applies when ...".
   . _("Posting comments") . "</td>\n";
 
@@ -503,7 +503,7 @@ else
           }
         $row_uname = $row['user_name'];
         $row_uid = $row['user_id'];
-        print "<tr class=\"" . utils_get_alt_row_color ($i)
+        print "<tr class=\"" . utils_altrow ($i)
           . "\">\n<td align=\"center\" id=\"$row_uname\">"
           . utils_user_link ($row_uname, $row['realname']) . "</td>\n";
         print "<td class='smaller'>\n";
@@ -569,7 +569,7 @@ while ($row = db_fetch_array ($result))
         print html_build_list_table_top($title_arr, 0, 0);
         $reprinttitle = 0;
       }
-    print " <tr class=\"" . utils_get_alt_row_color($i) . "'\">\n"
+    print " <tr class=\"" . utils_altrow($i) . "'\">\n"
       . "<td align='center' id=\"{$row['user_name']}\">"
       . utils_user_link ($row['user_name'], $row['realname']) . "</td>\n";
     print '<td class="smaller">';

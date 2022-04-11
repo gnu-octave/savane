@@ -23,7 +23,7 @@
 
 function news_new_subbox($row)
 {
-  return $row > 1 ? '</div><div class="'.utils_get_alt_row_color($row).'">' : '';
+  return $row > 1 ? '</div><div class="'.utils_altrow($row).'">' : '';
 }
 
 # Show a simple list of the latest news items with a link to the forum

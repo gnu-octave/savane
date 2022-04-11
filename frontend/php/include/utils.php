@@ -758,7 +758,7 @@ function utils_show_result_set ($result,$title="Untitled",$linkify=false,
       # Create the rows.
       for ($j = 0; $j < $rows; $j++)
         {
-          print '<tr class="'. html_get_alt_row_color($j) .'">';
+          print '<tr class="' . utils_altrow ($j) . '">';
           for ($i = 0; $i < $cols; $i++)
             {
               $link = $linkend = '';

@@ -113,7 +113,7 @@ foreach ($groups_with_cc as $thisunixname => $thisname)
   {
     $i++;
     if ($i > 1)
-      print $HTML->box_nextitem(utils_get_alt_row_color($i));
+      print $HTML->box_nextitem(utils_altrow($i));
 
     print '<span class="trash">';
     print utils_link(htmlentities ($_SERVER['PHP_SELF']).'?cancel='
@@ -132,7 +132,7 @@ foreach ($groups_with_cc as $thisunixname => $thisname)
 if ($i > 3)
   {
     $i++;
-    print $HTML->box_nextitem(utils_get_alt_row_color($i));
+    print $HTML->box_nextitem(utils_altrow($i));
     print '<span class="trash">';
     print utils_link(htmlentities ($_SERVER['PHP_SELF']).'?cancel=any',
                      '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME

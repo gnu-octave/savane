@@ -257,7 +257,7 @@ else
       {
         $wa_res = db_result($result_w, $i, 'watchee_id');
         $gr_res = db_result($result_w, $i, 'group_id');
-        print '<tr class="'.utils_get_alt_row_color($i)
+        print '<tr class="'.utils_altrow($i)
           .'"><td width="99%"><strong>'
           .utils_user_link(user_getname($wa_res), user_getrealname($wa_res))
           .'</strong> <span class="smaller">['.group_getname($gr_res).']'
@@ -411,7 +411,7 @@ else
       {
         if (db_result($result,$i,'admin_flags') == 'A')
           {
-            $content .= '<li class="'.utils_get_alt_row_color($j).'">';
+            $content .= '<li class="'.utils_altrow($j).'">';
             $content .= '<span class="trash">'
                      .'<a href="../my/quitproject.php?quitting_group_id='
                      . db_result($result,$i,'group_id').'">'
@@ -453,7 +453,7 @@ else
       {
         if (db_result($result,$i,'admin_flags') == '')
           {
-            $content .= '<li class="'.utils_get_alt_row_color($j).'">';
+            $content .= '<li class="'.utils_altrow($j).'">';
             $content .= '<span class="trash">'
                      .'<a href="../my/quitproject.php?quitting_group_id='
                      . db_result($result,$i,'group_id').'">'
@@ -495,7 +495,7 @@ else
       {
         if (db_result($result,$i,'admin_flags') == 'P')
           {
-            $content .= '<li class="'.utils_get_alt_row_color($j).'">';
+            $content .= '<li class="'.utils_altrow($j).'">';
             $content .= '<span class="trash">'
                      .'<a href="../my/quitproject.php?quitting_group_id='
                      . db_result($result,$i,'group_id').'">'

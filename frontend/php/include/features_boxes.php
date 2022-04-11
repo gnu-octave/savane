@@ -80,7 +80,7 @@ function show_features_boxes()
                                 $eachtype['name']),'',1);
       $return .= $groupdata;
       global $j;
-      $return .= '<div class="'.utils_get_alt_row_color($j)
+      $return .= '<div class="'.utils_altrow($j)
                  .'"><span class="smaller"><a href="'.$GLOBALS['sys_home']
                  .'search/?type_of_search=soft&amp;words=%%%&amp;type='
                  .$eachtype['type_id'].'">[';
@@ -101,7 +101,7 @@ function show_sitestats()
                               "%s registered users", $users),
                      "<strong>$users</strong>");
   $return .= '</span></div>';
-  $return .= '<div class="'.utils_get_alt_row_color(0).'"><span class="smaller">';
+  $return .= '<div class="'.utils_altrow(0).'"><span class="smaller">';
   $projects = stats_getprojects_active();
   $return .= sprintf(ngettext("%s hosted project",
                               "%s hosted projects", $projects),
@@ -111,7 +111,7 @@ function show_sitestats()
   while ($eachtype = db_fetch_array($result))
     {
       $i++;
-      $return .= '<div class="'.utils_get_alt_row_color($i).'"><span class="smaller">';
+      $return .= '<div class="'.utils_altrow($i).'"><span class="smaller">';
       $return .= '&nbsp;&nbsp;- <a href="'.$GLOBALS['sys_home']
         .'search/?type_of_search=soft&amp;words=%%%&amp;type='
         .$eachtype['type_id'].'" class="center">';
@@ -120,7 +120,7 @@ function show_sitestats()
       $return .= '</span></div>';
     }
   $pending = stats_getprojects_pending();
-  $return .= '<div class="'.utils_get_alt_row_color(($i+1))
+  $return .= '<div class="'.utils_altrow(($i+1))
              .'"><span class="smaller">&nbsp;&nbsp;';
   $return .= sprintf(ngettext("+ %s registration pending",
                               "+ %s registrations pending", $pending),
@@ -158,7 +158,7 @@ ORDER BY register_time DESC LIMIT ?", array($group_type, $since, $limit));
     {
       if ($row_newproj['register_time'])
         {
-          $return .= '<div class="'.utils_get_alt_row_color($j)
+          $return .= '<div class="'.utils_altrow($j)
             .'"><span class="smaller">&nbsp;&nbsp;- <a href="'
             .$base_url.$GLOBALS['sys_home']
             ."projects/$row_newproj[unix_group_name]/\">"
@@ -228,7 +228,7 @@ ORDER BY vote DESC LIMIT ?", array($limit));
                                                     ' '));
           $item_summary[$thisitem] .= "...";
         }
-      $return .= '<div class="'.utils_get_alt_row_color($count).'">'
+      $return .= '<div class="'.utils_altrow($count).'">'
         .'<span class="smaller">&nbsp;&nbsp;- '
         .'<a href="'.$GLOBALS['sys_home'].$tracker.'/?'.$item_id.'">'
         .$prefix .' #'.$item_id.'</a>'.": ".'&nbsp;'

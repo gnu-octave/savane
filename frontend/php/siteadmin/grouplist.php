@@ -53,14 +53,14 @@ $inc = 0;
 
 print html_build_list_table_top ($title_arr);
 
-print '<tr class="'.utils_get_alt_row_color($inc++).'">';
+print '<tr class="'.utils_altrow($inc++).'">';
 $res = db_query("SELECT count(*) AS count FROM groups");
 $row = db_fetch_array();
 print '<td><a href="grouplist.php">'.no_i18n("Any").'</a></td>';
 print '<td>'.$row['count'].'</td>';
 print "</tr>\n";
 
-print '<tr class="'.utils_get_alt_row_color($inc++).'">';
+print '<tr class="'.utils_altrow($inc++).'">';
 $res = db_query("SELECT count(*) AS count FROM groups WHERE status='P' ");
 $row = db_fetch_array();
 print '<td><a href="grouplist.php?status=P">'
@@ -70,7 +70,7 @@ print '<td><a href="grouplist.php?status=P">'
 ';
 print "</tr>\n";
 
-print '<tr class="'.utils_get_alt_row_color($inc++).'">';
+print '<tr class="'.utils_altrow($inc++).'">';
 $res = db_query("SELECT count(*) AS count FROM groups WHERE status='D' ");
 $row = db_fetch_array();
 print '<td><a href="grouplist.php?status=D">'
@@ -175,7 +175,7 @@ print html_build_list_table_top ($title_arr);
 
 if ($rows_returned < 1)
 {
-  print '<tr class="'.utils_get_alt_row_color($inc++).'"><td colspan="7">';
+  print '<tr class="'.utils_altrow($inc++).'"><td colspan="7">';
   print no_i18n("No matches");
   print '.</td></tr>';
 
@@ -188,7 +188,7 @@ else
   for ($i = 0; $i < $rows; $i++)
     {
       $grp = db_fetch_array($res);
-      print '<tr class="'.utils_get_alt_row_color($inc++).'">';
+      print '<tr class="'.utils_altrow($inc++).'">';
       print "<td><a href=\"groupedit.php?group_id=$grp[group_id]\">"
             ."$grp[group_name]</a></td>\n";
       print "<td>$grp[unix_group_name]</td>\n";

@@ -133,7 +133,7 @@ $i = 0;
 function print_box_next_item ()
 {
   global $i, $HTML;
-  print $HTML->box_nextitem (utils_get_alt_row_color ($i));
+  print $HTML->box_nextitem (utils_altrow ($i));
 }
 print_box_next_item ();
 print '<p><a href="editsshkeys.php">';

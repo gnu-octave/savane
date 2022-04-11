@@ -180,7 +180,7 @@ function finish_page ()
 $inc = 0;
 if ($rows_returned < 1)
 {
-  print '<tr class="' . utils_get_alt_row_color ($inc++)
+  print '<tr class="' . utils_altrow ($inc++)
     . '"><td colspan="7">'. no_i18n ("No matches") . ".</td></tr>\n";
   finish_page ();
 }
@@ -193,7 +193,7 @@ for ($i = 0; $i < $rows; $i++)
     $usr = db_fetch_array($result);
     $stat = $usr['status'];
     $usr_id = $usr['user_id'];
-    print '<tr class="' . utils_get_alt_row_color ($inc++)
+    print '<tr class="' . utils_altrow ($inc++)
       . "\">\n<td>$usr_id</td>\n"
       . "<td><a href=\"usergroup.php?user_id=$usr_id\">"
       . "$usr[user_name]</a></td>\n<td>\n";

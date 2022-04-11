@@ -133,7 +133,7 @@ if ($result && $rows > 0)
           ._("News Waiting for Approval").'</div>'."\n";
     for ($j=0; $j<$rows; $j++)
       {
-        print '<div class="'.utils_get_alt_row_color($j).'">';
+        print '<div class="'.utils_altrow($j).'">';
         print '<a href="'.$GLOBALS['sys_home'].'news/approve.php?approve=1&amp;id='
               .db_result($result, $j, 'id').'&amp;group='
               .group_getunixname(db_result($result, $j, 'group_id')).'">'
@@ -172,7 +172,7 @@ if ($result && $rows > 0)
   {
     for ($j=0; $j<$rows; $j++)
       {
-        print '<div class="'.utils_get_alt_row_color($j).'">';
+        print '<div class="'.utils_altrow($j).'">';
         print '<a href="'.$GLOBALS['sys_home'].'forum/forum.php?forum_id='
               .db_result($result, $j, 'forum_id').'">'
               .db_result($result, $j, 'summary').'</a><br />';

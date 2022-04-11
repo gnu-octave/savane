@@ -581,7 +581,7 @@ print $update_delete_buttons;
 
 print $HTML->box_top(no_i18n("Project Menu Settings"),'',1);
 $i = 1;
-print '<p class="' . utils_get_alt_row_color ($i) . '">'
+print '<p class="' . utils_altrow ($i) . '">'
 .no_i18n('This form allows you to choose which menu entries are configurable by the
 projects administrators.').'</p>';
 function specific_checkbox ($val, $explanation, $row_grp, $class)
@@ -640,7 +640,7 @@ foreach ($checkboxes as $k => $v)
       $v = $v[0];
     else
       $i++;
-    specific_checkbox ($k, $v, $row_grp, utils_get_alt_row_color ($i));
+    specific_checkbox ($k, $v, $row_grp, utils_altrow ($i));
   }
 
 print $HTML->box_bottom(1);

@@ -58,7 +58,7 @@ if (db_numrows($res_logins) < 1) {
 
 	$inc=0;
 	while ($row_logins = db_fetch_array($res_logins)) {
-		print '<tr class="'.utils_get_alt_row_color($inc++).'">';
+		print '<tr class="'.utils_altrow($inc++).'">';
 		print "<td>$row_logins[user_name]</td>";
 		print "<td>$row_logins[ip_addr]</td>";
 		print "<td>" . utils_format_date($row_logins['time'])

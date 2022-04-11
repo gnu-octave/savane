@@ -439,7 +439,7 @@ name="form_transition_default_auth" value="F" '
           if ($is_used)
             {
               $html = '<tr class="'
-                 .utils_get_alt_row_color($iu) .'">'.$html."</tr>\n";
+                 .utils_altrow($iu) .'">'.$html."</tr>\n";
               $iu++;
               $hu .= $html;
             }
@@ -448,14 +448,14 @@ name="form_transition_default_auth" value="F" '
               if ($is_custom)
                 {
                   $html = '<tr class="'
-                     .utils_get_alt_row_color($inc) .'">'.$html."</tr>\n";
+                     .utils_altrow($inc) .'">'.$html."</tr>\n";
                   $inc++;
                   $hnc .= $html;
                 }
               else
                 {
                   $html = '<tr class="'
-                     .utils_get_alt_row_color($in) .'">'.$html."</tr>\n";
+                     .utils_altrow($in) .'">'.$html."</tr>\n";
                   $in++;
                   $hn .= $html;
                 }

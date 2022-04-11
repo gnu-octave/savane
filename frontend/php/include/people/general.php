@@ -154,7 +154,7 @@ function people_show_category_list()
 	  if (db_result ($count_res, 0,'count') <= 0)
             continue;
 	$j++;
-	$return .= '<li class="' . utils_get_alt_row_color ($j)
+	$return .= '<li class="' . utils_altrow ($j)
           . '"><span class="smaller">&nbsp;&nbsp;- <a href="'
           . $GLOBALS['sys_home'] . 'people/?categories[]='
 	  . db_result ($result, $i, 'category_id') . '">'
@@ -295,7 +295,7 @@ function people_show_job_inventory($job_id)
       for ($i=0; $i < $rows; $i++)
 	{
 	  print '
-			<tr class="'. utils_get_alt_row_color($i) .'">
+			<tr class="'. utils_altrow($i) .'">
 				<td>'.db_result($result,$i,'skill_name').'</td>
 				<td>'.db_result($result,$i,'level_name').'</td>
 				<td>'.db_result($result,$i,'year_name').'</td>
@@ -350,7 +350,7 @@ function people_draw_skill_box ($result, $job_id=false, $group_id=false)
 	  print "<form action='"
             . htmlentities ($_SERVER['PHP_SELF']) . "' method='POST'>\n";
           print html_build_list_table_top ($title_arr);
-          print "<tr class='". utils_get_alt_row_color($i)
+          print "<tr class='". utils_altrow($i)
             . "'>\n<td><input type='hidden' name='{$infix}_inventory_id' "
             . 'value="' . db_result ($result, $i, $infix . '_inventory_id')
             . "\" />\n<input type='hidden' name='{$infix}_id' "
@@ -380,7 +380,7 @@ function people_draw_skill_box ($result, $job_id=false, $group_id=false)
   print "\n<form action='" . htmlentities ($_SERVER['PHP_SELF'])
     . "' method='POST'>\n";
   print html_build_list_table_top ($title_arr);
-  print "\n<tr class='" . utils_get_alt_row_color (0) . "'>\n<td>";
+  print "\n<tr class='" . utils_altrow (0) . "'>\n<td>";
 
   if ($job_id !== false)
     print "<input type='hidden' name='{$infix}_id' value='$job_id' />"
@@ -435,7 +435,7 @@ function people_show_job_list ($result, $edit = 0)
         "SELECT name FROM group_type WHERE type_id=?",
          array (db_result ($result, $i, 'type'))
       );
-      $return .= "<tr class=\"" . utils_get_alt_row_color ($i)
+      $return .= "<tr class=\"" . utils_altrow ($i)
         . '"><td><a href="' . $GLOBALS['sys_home'] . "people/$page?group_id="
         . db_result ($result, $i, 'group_id') . '&job_id='
         . db_result ($result, $i, 'job_id') . '">'
@@ -655,7 +655,7 @@ function people_show_skill_inventory($user_id)
       for ($i=0; $i < $rows; $i++)
 	{
 	  print '
-<tr class="'. utils_get_alt_row_color($i) .'">
+<tr class="'. utils_altrow($i) .'">
 	<td>'.db_result($result,$i,'skill_name').'</td>
 	<td>'.db_result($result,$i,'level_name').'</td>
 	<td>'.db_result($result,$i,'year_name').'</td></tr>

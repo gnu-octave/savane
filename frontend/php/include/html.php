@@ -344,16 +344,9 @@ function html_build_list_table_top (
 
 function html_get_alt_row_color ($i)
 {
-  GLOBAL $HTML;
-  if ($i % 2 == 0)
-    return 'boxitemalt';
-  return 'boxitem';
-}
-
-# Deprecated.
-function utils_get_alt_row_color ($i)
-{
-  return html_get_alt_row_color ($i);
+  if ($i % 2)
+    return 'boxitem';
+  return 'boxitemalt';
 }
 
 # Auxiliary function to use in html_build_select*box*.

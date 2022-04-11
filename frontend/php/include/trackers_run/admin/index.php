@@ -43,7 +43,7 @@ $next_box_item = function ($reset = false)
   static $i = 0;
   if ($reset)
     $i = 0;
-  print $HTML->box_nextitem (utils_get_alt_row_color ($i++));
+  print $HTML->box_nextitem (utils_altrow ($i++));
 };
 
 print "<p><a href=\"userperms.php?group=$group\">" . _("Set Permissions")

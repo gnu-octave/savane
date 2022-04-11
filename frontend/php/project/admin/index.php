@@ -52,7 +52,7 @@ print '<p class="smaller">'
 ';
 
 $i = 0;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 
 # Feature-specific configuration.
 $features = array("cookbook" =>
@@ -101,7 +101,7 @@ etc.").'</p>
 ';
 
 $i++;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 print '<a href="editgroupnotifications.php?group='.$group.'">'
       ._("Set Notifications").'</a>';
 print '<p class="smaller">'
@@ -111,7 +111,7 @@ triggers.").'</p>
 ';
 
 $i++;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 print '<a href="conf-copy.php?group='.$group.'">'._("Copy Configuration").'</a>';
 print '<p class="smaller">'
 ._("Copy the configuration of trackers of other projects you are member of.")
@@ -134,7 +134,7 @@ print '</p>
 ';
 
 $i = 0;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 print '<a href="history.php?group='.$group.'">'._("Show History").'</a>';
 print '<p class="smaller">'
 ._("This allows you to keep tracks of important changes occurring on your
@@ -152,7 +152,7 @@ print '<p class="smaller">'
 ';
 
 $i = 0;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 print '<a href="squadadmin.php?group='.$group.'">'._("Manage Squads").'</a>';
 print '<p class="smaller">'
 ._("Create and delete squads, add members to squads. Members of a squad will
@@ -160,7 +160,7 @@ share this squad's items assignation, permissions, etc.").'</p>
 ';
 
 $i++;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 print '<a href="userperms.php?group='.$group.'">'._("Set Permissions").'</a>';
 print '<p class="smaller">'
 ._("Set members and group default permissions, set posting
@@ -168,14 +168,14 @@ restrictions.").'</p>
 ';
 
 $i++;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 print '<a href="../../people/createjob.php?group='.$group.'">'._("Post Jobs")
       .'</a>';
 print '<p class="smaller">'._("Add a job offer.").'</p>
 ';
 
 $i++;
-print $HTML->box_nextitem(utils_get_alt_row_color($i));
+print $HTML->box_nextitem(utils_altrow($i));
 print '<a href="../../people/editjob.php?group='.$group.'">'._("Edit Jobs").'</a>';
 print '<p class="smaller">'._("Edit jobs offers for this project.").'</p>
 ';

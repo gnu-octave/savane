@@ -152,7 +152,7 @@ while ($field_name = trackers_list_all_fields())
         && trackers_data_is_used($field_name)
         && ($field_name != $field))
       {
-        print "\n".'<tr class="'. utils_get_alt_row_color($i)
+        print "\n".'<tr class="'. utils_altrow($i)
               .'">'. "\n" . '<td width="25%"><span title="'
               .trackers_data_get_description($field_name).'" class="help">'
               .trackers_data_get_label($field_name)."</span></td>\n";

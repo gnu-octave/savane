@@ -156,7 +156,7 @@ print show_group_type_box('group_type',$row_grp['type']);
 $i=0;
 print '</td>
 </tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 print '<p><span class="preinput"><label for="form_name">'
 .no_i18n("System Name:").'</label></span><br />
@@ -167,7 +167,7 @@ print '<input type="text" name="form_name" id="form_name" value="'
 $i++;
 print '</td>
 </tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 print '<p><span class="preinput"><label for="form_status">'.no_i18n("Status:")
 .'</label></span><br />
@@ -200,7 +200,7 @@ cronjob.").'</p>
 $i++;
 print '</td>
 </tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 print '<p><span class="preinput"><label for="form_public">'.no_i18n("Public?")
 .'</label></span><br />
@@ -216,7 +216,7 @@ flag otherwise unpredictable result will occur.").'<br />
 $i++;
 print '</td>
 </tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 print '<p><span class="preinput"><label for="form_license">'
 .no_i18n("License:").'</label></span><br />
@@ -247,7 +247,7 @@ print '<input type="hidden" name="group_id" value="' . $group_id
 $i++;
 print '</td>
 </tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 print '
 <p><input type="submit" name="update" value="'.no_i18n("Update").'">';
@@ -277,7 +277,7 @@ a pain to handle in the long run.');
 $i=0;
 print '</td>
 </tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 function vcs_directory ($vcs, $label, $row_grp)
 {
@@ -291,35 +291,35 @@ print '<input type="text" name="form_dir_'.$vcs.'" id="form_dir_'.$vcs
 vcs_directory ('cvs', no_i18n("CVS directory:"), $row_grp);
 $i++;
 print '</td></tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 vcs_directory ('arch', no_i18n("GNU Arch directory:"), $row_grp);
 $i++;
 print '</td></tr>
-<tr><td class="'.utils_get_alt_row_color($i).'">';
+<tr><td class="'.utils_altrow($i).'">';
 
 vcs_directory ('svn', no_i18n("Subversion directory:"), $row_grp);
 $i++;
-print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
+print '</td></tr><tr><td class="'.utils_altrow($i).'">';
 
 vcs_directory ('git', no_i18n("Git directory:"), $row_grp);
 $i++;
-print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
+print '</td></tr><tr><td class="'.utils_altrow($i).'">';
 
 vcs_directory ('hg', no_i18n("Mercurial directory:"), $row_grp);
 $i++;
-print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
+print '</td></tr><tr><td class="'.utils_altrow($i).'">';
 
 vcs_directory ('bzr', no_i18n("Bazaar directory:"), $row_grp);
 $i++;
-print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
+print '</td></tr><tr><td class="'.utils_altrow($i).'">';
 
 print '<p><span class="preinput"><label for="form_dir_homepage">'
 .no_i18n("Homepage directory:").'</label></span><br />
 <input type="text" name="form_dir_homepage" id="form_dir_homepage" value="'
       .$row_grp['dir_homepage'].'" size="50" />';
 $i++;
-print '</td></tr><tr><td class="'.utils_get_alt_row_color($i).'">';
+print '</td></tr><tr><td class="'.utils_altrow($i).'">';
 
 print '<p><span class="preinput"><label for="form_dir_download">'
 .no_i18n("Download directory:").'</label></span><br />

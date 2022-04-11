@@ -254,7 +254,7 @@ if it was a custom set just posted && logged in, set pref if it's changed.  */
                 phorum-esque threaded list of messages,
                 not showing message bodies. */
                 $ret_val .= '
-<tr class="'. utils_get_alt_row_color($total_rows) .'">
+<tr class="'. utils_altrow($total_rows) .'">
 <td><a href="'.$GLOBALS['sys_home'].'forum/message.php?msg_id='
               . db_result($result, $i, 'msg_id').'">'
               . '<img src="'.$GLOBALS['sys_home'].'images/'.SV_THEME

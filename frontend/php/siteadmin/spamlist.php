@@ -151,7 +151,7 @@ while ($entry = db_fetch_array($result))
     $flagged_by = rtrim($flagged_by, ', ');
     $incriminated_content = rtrim($incriminated_content, ', ');
 
-    print '<tr class="' . utils_get_alt_row_color($i) . '">';
+    print '<tr class="' . utils_altrow($i) . '">';
     print '<td width="25%">'
 . utils_user_link($entry['user_name'], $entry['realname'])
 . '</td>

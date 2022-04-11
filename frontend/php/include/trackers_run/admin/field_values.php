@@ -317,14 +317,14 @@ if ($list_value)
                 if ($status == 'A' || $status == 'P')
                   {
                     $html = '<tr class="'
-                      .utils_get_alt_row_color($ia) .'">'.$html."</tr>\n";
+                      .utils_altrow($ia) .'">'.$html."</tr>\n";
                     $ia++;
                     $ha .= $html;
                   }
                 else
                   {
                     $html = '<tr class="'
-                      .utils_get_alt_row_color($ih) .'">'.$html."</tr>\n";
+                      .utils_altrow($ih) .'">'.$html."</tr>\n";
                     $ih++;
                     $hh .= $html;
                   }
@@ -779,7 +779,7 @@ elseif ($create_canned || $delete_canned)
           {
 # FIXME: delete should use the basket, like it is done in many
 # other places.
-            print '<tr class="'. utils_get_alt_row_color($i) .'">'
+            print '<tr class="'. utils_altrow($i) .'">'
               .'<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
               .'?update_canned=1&amp;item_canned_id='
               .db_result($result, $i, 'bug_canned_id').'&amp;group_id='
@@ -899,7 +899,7 @@ else
             $scope_label  = (trackers_data_is_project_scope($field_name)
                              ? _("Project"): _("System"));
 
-            print '<tr class="'. utils_get_alt_row_color($i) .'">'
+            print '<tr class="'. utils_altrow($i) .'">'
               .'<td><a href="'.htmlentities ($_SERVER['PHP_SELF'])
               .'?group_id='.$group_id
               .'&list_value=1&field='.$field_name.'">'
@@ -912,7 +912,7 @@ else
       }
 
 # Now the special canned response field.
-    print '<tr class="'. utils_get_alt_row_color($i) .'">';
+    print '<tr class="'. utils_altrow($i) .'">';
     print "<td><a href=\"";
     print htmlentities ($_SERVER['PHP_SELF'])
 ."?group_id=$group_id&amp;create_canned=1\">"

@@ -491,12 +491,12 @@ function show_item_history ($item_id,$group_id, $no_limit=false)
           # and date.
           if ($date == $previous_date && $user == $previous_user)
             print "\n" . '<tr class="'
-              . utils_get_alt_row_color($j) . "\"><td>&nbsp;</td>\n"
+              . utils_altrow($j) . "\"><td>&nbsp;</td>\n"
               . "<td>&nbsp;</td>\n";
           else
             {
               $j++;
-              print "\n" . '<tr class="' . utils_get_alt_row_color($j) . '">';
+              print "\n" . '<tr class="' . utils_altrow($j) . '">';
               print '<td align="center" class="smaller">'
                     . utils_format_date($date, 'natural') . "</td>\n";
               print '<td align="center" class="smaller">'

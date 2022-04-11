@@ -251,7 +251,7 @@ if ($new_report)
         if ($field == 'submitted_by' || $field == 'assigned_to')
           $tf_report_val = 50;
 
-        print '<tr class="'. utils_get_alt_row_color ($i) .'">';
+        print '<tr class="'. utils_altrow ($i) .'">';
         print "\n<td>" . trackers_data_get_label ($field) . "</td>\n"
           . "<td>" . trackers_data_get_description ($field) . "</td>\n"
           . "<td align=\"center\">"
@@ -375,7 +375,7 @@ else if ($show_report)
         )
         ${"tf_${k}_val"} = (empty ($fld[$field][$v]) ? '': $fld[$field][$v]);
 
-        print '<tr class="' . utils_get_alt_row_color($i) . '">';
+        print '<tr class="' . utils_altrow($i) . '">';
 
         print "\n<td>" . trackers_data_get_label ($field)
           . "</td>\n<td>" . trackers_data_get_description ($field)
@@ -466,7 +466,7 @@ else
         $i = 0;
         while ($arr = db_fetch_array($res))
           {
-            print '<tr class="'. utils_get_alt_row_color($i) .'"><td>';
+            print '<tr class="'. utils_altrow($i) .'"><td>';
 
             if ( ($arr['scope']=='P') && !user_ismember($group_id,'A') )
               {

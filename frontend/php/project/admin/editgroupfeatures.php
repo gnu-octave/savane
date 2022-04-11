@@ -151,7 +151,7 @@ site_project_header (
 
 $next_td = function (&$i)
 {
-  print ' <td class="' . utils_get_alt_row_color ($i) . '">';
+  print ' <td class="' . utils_altrow ($i) . '">';
 };
 $close_td = function () { print "</td>\n"; };
 

@@ -94,7 +94,7 @@ else
         $url = htmlspecialchars (db_result ($result, $i, 'bookmark_url'));
         $title = htmlspecialchars (db_result ($result, $i,'bookmark_title'));
         $bm_id = db_result ($result, $i, 'bookmark_id');
-        print '<li class="' . utils_get_alt_row_color($i) . '">';
+        print '<li class="' . utils_altrow($i) . '">';
         print '<span class="trash"><a href="?edit=' . $bm_id . '">'
           . '<img src="' . $GLOBALS['sys_home'] . 'images/' . SV_THEME
           . '.theme/misc/edit.png" alt="' . _("Edit this bookmark")

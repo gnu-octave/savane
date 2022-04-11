@@ -159,7 +159,7 @@ which are not attributed by default when joining this project.").'</p>
         if ($row_memb['admin_flags'] != 'P')
           {
             $i++;
-            $color = utils_get_alt_row_color($i);
+            $color = utils_altrow($i);
             if ($row_memb['admin_flags'] == 'A')
               $color = "boxhighlight";
             print "\n\t<tr class=\"".$color."\">\n";

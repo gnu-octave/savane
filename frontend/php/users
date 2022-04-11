@@ -256,7 +256,7 @@ $j = 1;
 $items = '';
 for ($i = 0; $i < $rows; $i++)
   {
-    $items .= '<li class="' . utils_get_alt_row_color ($j++) . '">';
+    $items .= '<li class="' . utils_altrow ($j++) . '">';
     $items .= "<a href=\"{$GLOBALS['sys_home']}projects/"
        . db_result ($result, $i, 'unix_group_name') . '/">'
        . db_result ($result, $i, 'group_name') . "</a><br />\n";
@@ -293,7 +293,7 @@ if ($is_squad)
     $items = '';
     for ($i = 0; $i < $rows; $i++)
       {
-        $items .= '<li class="' . utils_get_alt_row_color ($j++) . '">';
+        $items .= '<li class="' . utils_altrow ($j++) . '">';
         $items .= utils_user_link (db_result ($result, $i, 'user_name'),
                                    db_result ($result, $i, 'realname'));
         $items .= "</li>\n";

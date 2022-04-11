@@ -119,7 +119,7 @@ if ($func == "digestselectfield")
               continue;
             }
 
-        print '<div class="' . utils_get_alt_row_color ($i) . '">'
+        print '<div class="' . utils_altrow ($i) . '">'
           . form_checkbox ("field_used[$field_name]", 1)
           . '&nbsp;&nbsp;' . trackers_data_get_label ($field_name)
           . ' <span class="smaller"><em>- '
@@ -129,7 +129,7 @@ if ($func == "digestselectfield")
       }
     # Comments is not an authentic field but could be useful. We allow
     # addition of the latest comment.
-    print '<div class="' . utils_get_alt_row_color($i) . '">'
+    print '<div class="' . utils_altrow($i) . '">'
       . form_checkbox ("field_used[latestcomment]", 1) . '&nbsp;&nbsp;'
       . _("Latest Comment") . ' <span class="smaller"><em>- '
       . _("Latest comment posted about the item.") . "</em></span></div>\n";
@@ -184,7 +184,7 @@ foreach ($items_for_digest as $item)
     else
       $icon .= 'wrong.png" alt="' . _("Open Item") . '" />';
 
-    print '<div class="' . utils_get_alt_row_color ($i) . '">';
+    print '<div class="' . utils_altrow ($i) . '">';
     print '<span class="large"><span class="'
      . utils_get_priority_color (
          db_result ($result, 0, 'priority'),

@@ -61,7 +61,7 @@ print '<span class="smaller">';
 $next_div = function (&$j)
 {
   print "</span></div>\n<div class=\""
-    . utils_get_alt_row_color ($j++) . '"><span class="smaller">';
+    . utils_altrow ($j++) . '"><span class="smaller">';
 };
 $adminsnum = db_numrows ($res_admin);
 $j = 0;
@@ -234,12 +234,12 @@ if ($sys_group_id == $group_id && member_check (0, $group_id, 'A'))
     );
     print "</div>\n";
 
-    print $HTML->box_nextitem (utils_get_alt_row_color ($odd));
+    print $HTML->box_nextitem (utils_altrow ($odd));
     $img = proj_home_img ("contexts/admin.png");
     print utils_link (
       "${sys_home}siteadmin/", $img . _("Server Main Administration Page")
     );
-    print $HTML->box_nextitem (utils_get_alt_row_color ($even));
+    print $HTML->box_nextitem (utils_altrow ($even));
     print utils_link (
       "${sys_home}task/?group={$sys_unix_group_name}"
       . '&amp;category_id=1&amp;status_id=1&amp;set=custom',
@@ -268,7 +268,7 @@ if (member_check (0, $group_id, 'A'))
           . "activate, deactivate and configure your project's tools.")
       . "</div>\n";
 
-    print $HTML->box_nextitem (utils_get_alt_row_color ($odd));
+    print $HTML->box_nextitem (utils_altrow ($odd));
     $img = proj_home_img ("contexts/main.png");
     print utils_link (
       "${sys_home}project/admin/?group=$group",
@@ -288,7 +288,7 @@ function specific_makesep ()
   $j = $i;
   if ($i <= $j_prev)
     return;
-  print $HTML->box_nextitem (utils_get_alt_row_color ($i));
+  print $HTML->box_nextitem (utils_altrow ($i));
 }
 
 print $HTML->box_top (_("Quick Overview"));

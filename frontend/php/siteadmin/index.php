@@ -35,8 +35,8 @@ extract (sane_import ('get',
   ['strings' => [['func', ['configure', 'manage', 'monitor']]]]
 ));
 
-$even = utils_get_alt_row_color (0);
-$odd = utils_get_alt_row_color (1);
+$even = utils_altrow (0);
+$odd = utils_altrow (1);
 
 print '<p class="warn">';
 print no_i18n("Administrators functions currently have minimal error checking, if
