@@ -19,17 +19,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require_once('../../include/init.php');
-register_globals_off();
+register_globals_off ();
 
 # Check if the user is logged in.
-session_require(array('isloggedin'=>'1'));
+session_require (['isloggedin' => '1']);
 
 extract (sane_import ('get',
   [
-    'strings' =>
-      [
-        ['func', 'del'],
-      ],
+    'strings' => [['func', 'del']],
     'true' => 'dkeep_one',
     'digits' => 'dtime',
     'preg' =>

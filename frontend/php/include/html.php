@@ -229,7 +229,7 @@ function html_feedback ($bottom)
   print '<script type="text/javascript" src="/js/show-feedback.php?suffix='
     . "$suffix\"></script>\n";
 
-  $img_base = "${sys_home}/images/" . SV_THEME . ".theme";
+  $img_base = "${sys_home}images/" . SV_THEME . ".theme";
   $img_ok = "$img_base/bool/ok.png";
   $img_wrong = "$img_base/bool/wrong.png";
   # Only success.

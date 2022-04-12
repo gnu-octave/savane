@@ -6,7 +6,7 @@
 #
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2003-2006 Yves Perrin <yves.perrin--cern.ch>
-# Copyright (C) 2017, 2018, 2020 Ineiev
+# Copyright (C) 2017, 2018, 2020, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -632,41 +632,107 @@ function trackers_extract_field_list($post_method=true)
 
 # Check whether a field was shown to the submitter
 # (useful if a field is mandatory if shown to the submitter).
-function trackers_check_is_shown_to_submitter ($field_name, $group_id,
-                                               $submitter_id)
+function trackers_check_is_shown_to_submitter (
+  $field_name, $group_id, $submitter_id
+)
 {
-  if ($submitter_id == 100)
+  if ($submitter_id == 100) # Anonymous user.
+    return trackers_data_is_showed_on_add_nologin ($field_name);
+
+  if (member_check ($submitter_id, $group_id)) # Group member.
+   return trackers_data_is_showed_on_add_members ($field_name);
+
+  # Not a member of the group.
+  return trackers_data_is_showed_on_add ($field_name);
+}
+
+function trackers_mandatory_field ($field_name, $new_item)
+{
+  global $item_id, $group_id, $mandatorycheck_submitter_id;
+
+  $mandatory_flag = trackers_data_mandatory_flag ($field_name);
+  if ($mandatory_flag == 1) # Not mandatory.
+    return false;
+  if ($mandatory_flag == 3) # Mandatory whenever possible.
+    return true;
+
+  # $mandatory_flag = 0: mandatory when shown to the submitter.
+  if ($new_item)
+    return true;
+
+  if (!$mandatorycheck_submitter_id)
     {
-      # Anonymous user.
-      if (trackers_data_is_showed_on_add_nologin($field_name))
-        return true;
+      # Save that information for further mandatory checks,
+      # to avoid avoid a SQL request per field checked.
+      $submitter_res = db_execute ("
+        SELECT submitted_by FROM " . ARTIFACT . "
+        WHERE bug_id = ? AND group_id = ?",
+        [$item_id, $group_id]
+      );
+      $mandatorycheck_submitter_id = db_result (
+        $submitter_res, 0, 'submitted_by'
+      );
     }
-  else
-    {
-      if (!member_check($submitter_id, $group_id))
-        {
-          # Not a member of the group.
-          if (trackers_data_is_showed_on_add($field_name))
-            return true;
-        }
-      else
-        {
-          # Group member.
-          if (trackers_data_is_showed_on_add_members($field_name))
-            return true;
-        }
-    }
-  # If we reach this point, it was not mandatory.
+
+  $shown = trackers_check_is_shown_to_submitter (
+    $field_name, $group_id, $mandatorycheck_submitter_id
+  );
+  if ($shown)
+    return true;
   return false;
 }
 
-# Check whether empty values are allowed for the bug fields
-# field_array: associative array of field_name -> value.
-function trackers_check_empty_fields($field_array, $new_item=true)
+function trackers_set_empty_field_feedback ($bad_fields, $new_item)
 {
-  unset($previous_form_bad_fields);
+  # If $new_item, there was no previous value to reset the entry.
+  $joined = join (', ', $bad_fields);
+  if ($new_item)
+    {
+      if (count ($bad_fields) > 1)
+        # TRANSLATORS: The argument is comma-separated list of field names.
+        $msg = sprintf (
+          _("These fields are mandatory: %s.\n"
+            . "Fill them and re-submit the form."),
+          $joined
+        );
+      else
+        $msg = sprintf (
+          _("The field %s is mandatory.\n"
+            . "Fill it and re-submit the form."),
+          $joined
+        );
+      fb ($msg, 1);
+      return;
+    }
+  if (count ($bad_fields) > 1)
+    # TRANSLATORS: The argument is comma-separated list of field names.
+    $msg = sprintf(
+      _("These fields are mandatory: %s.\n"
+        . "They have been reset to their previous value.\n"
+        . "Check them and re-submit the form."),
+      $joined
+    );
+  else
+    $msg = sprintf (
+      _("The field %s is mandatory.\n"
+        . "It has been reset to its previous value.\n"
+        . "Check it and re-submit the form."),
+      $joined
+    );
+  fb ($msg, 1);
+}
+
+# Check whether empty values are submitted in any mandatory fields.
+# $field_array: associative array of field_name -> value.
+# $new_item: whether checks for new items (as opposed to comments) are run.
+# Return true when no empty fields to fill are found, false otherwise.
+# Fill global $previous_form_bad_fields with labels for missing fields
+# as array field_name => label.
+# Call fb() with an error message when returning false.
+function trackers_check_empty_fields ($field_array, $new_item = true)
+{
   global $previous_form_bad_fields;
-  $previous_form_bad_fields = array();
+  $previous_form_bad_fields = [];
 
   foreach ($field_array as $field_name => $val)
     {
@@ -678,93 +744,21 @@ function trackers_check_empty_fields($field_array, $new_item=true)
       if ($field_name == "percent_complete")
         continue;
 
-      # Check if it is empty.
-      $is_empty = (trackers_data_is_select_box($field_name) ? ($val==100)
-                                                            : ($val==''));
-      if (!$is_empty)
+      $non_empty = $val !== '';
+      if (trackers_data_is_select_box ($field_name))
+        $non_empty = $val != 100;
+      if ($non_empty)
         continue;
 
-      # Check if it is mandatory.
-      $mandatory_flag = trackers_data_mandatory_flag($field_name);
-      $is_mandatory = false;
-      if ($mandatory_flag == 1)
-        {
-          # Not mandatory.
-          continue;
-        }
-      elseif ($mandatory_flag == 3)
-        {
-          # Mandatory whenever possible.
-          $is_mandatory = 1;
-        }
-      elseif ($new_item)
-        {
-          # Mandatory when shown to the submitter while we are creating
-          # a new item.
-          # ($mandatory_flag = 0)
-          $is_mandatory = 1;
-        }
-      else
-        {
-          # Mandatory when shown to the submitter, we are updating an item
-          # ($mandatory_flag = 0).
-
-          global $item_id, $group_id, $mandatorycheck_submitter_id;
-          if (!$mandatorycheck_submitter_id)
-            {
-              # Save that information for further mandatory checks,
-              # to avoid avoid a SQL request per field checked.
-              $submitter_res = db_execute("SELECT submitted_by FROM ".ARTIFACT
-                                          ." WHERE bug_id=? AND group_id=?",
-                                          array($item_id, $group_id));
-              $mandatorycheck_submitter_id = db_result($submitter_res,0,
-                                                       'submitted_by');
-            }
-
-          if (trackers_check_is_shown_to_submitter($field_name, $group_id,
-                                                   $mandatorycheck_submitter_id))
-            {
-              $is_mandatory = 1;
-            }
-        }
-
-      if ($is_mandatory)
-        {
-          $value = trackers_data_get_label($field_name);
-          $previous_form_bad_fields[$field_name] = $value;
-        }
+      if (!trackers_mandatory_field ($field_name, $new_item))
+        continue;
+      $value = trackers_data_get_label ($field_name);
+      $previous_form_bad_fields[$field_name] = $value;
     }
 
-  if (count($previous_form_bad_fields) <= 0)
+  if (count ($previous_form_bad_fields) <= 0)
     return true;
-  # If not_new_item is true, it mean that there was no previous value to
-  # reset the entry.
-  if ($new_item)
-    {
-      if (count($previous_form_bad_fields) > 1)
-        $msg = sprintf(
-# TRANSLATORS: The argument is comma-separated list of field names.
-_("These fields are mandatory: %s.
-Fill them and re-submit the form."), join(', ',$previous_form_bad_fields));
-      else
-        $msg = sprintf(_("The field %s is mandatory.
-Fill it and re-submit the form."), implode ($previous_form_bad_fields));
-      fb($msg, 1);
-    }
-  else
-    {
-      if (count($previous_form_bad_fields) > 1)
-        $msg = sprintf(
-# TRANSLATORS: The argument is comma-separated list of field names.
-_("These fields are mandatory: %s.
-They have been reset to their previous value.
-Check them and re-submit the form."), join(', ',$previous_form_bad_fields));
-      else
-        $msg = sprintf(_("The field %s is mandatory.
-It has been reset to its previous value.
-Check it and re-submit the form."), $previous_form_bad_fields);
-      fb($msg, 1);
-    }
+  trackers_set_empty_field_feedback ($previous_form_bad_fields, $new_item);
   return false;
 }
 

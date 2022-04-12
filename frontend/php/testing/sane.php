@@ -1343,14 +1343,21 @@ $reference = 'include/trackers_run/index.php';
   $out = $in;
   $out['item_depends_on'] = null;
   test_sane_import ($in, $names, $out);
-  $names = ['hash' => 'form_id', 'digits' => 'check', 'pass' => 'details'];
-  $in = ['form_id' => md5(''), 'check' => 1];
+  $names = [
+    'hash' => 'form_id', 'strings' => [['check', '1984']],
+    'pass' => 'details'
+  ];
+  $in = ['form_id' => md5(''), 'check' => '1984'];
   $out = $in;
   $out['details'] = null;
   test_sane_import ($in, $names, $out);
+  $in['check'] = '1985'; $out['check'] = null;
+  test_sane_import ($in, $names, $out);
+  $in['check'] = 1984; $out['check'] = '1984';
+  test_sane_import ($in, $names, $out);
   $names = [
-    'hash' => 'form_id', 'digits' => ['check', 'item_id'],
-    'pass' => 'comment'
+    'hash' => 'form_id', 'digits' => ['item_id'],
+    'strings' => [['check', '1984']], 'pass' => 'comment'
   ];
   $out['item_id'] = $in['item_id'] = 3;
   $out['comment'] = $in['comment'] = 'comment';
@@ -1625,10 +1632,7 @@ $reference = 'my/admin/resume.php';
 $reference = 'my/admin/sessions.php';
 {
   $names = [
-    'strings' =>
-      [
-        ['func', 'del'],
-      ],
+    'strings' => [['func', 'del']],
     'true' => 'dkeep_one',
     'digits' => 'dtime',
     'preg' =>
@@ -1644,6 +1648,8 @@ $reference = 'my/admin/sessions.php';
     'dtime' => 1,
     'dsession_hash' => substr (md5 (0), 0, 6) . "..."
   ];
+  test_sane_import ($in, $names, $out);
+  $in['func'] = 'add'; $out['func'] = null;
   test_sane_import ($in, $names, $out);
 }
 
