@@ -2,7 +2,7 @@
 # Form functions.
 #
 # Copyright (C) 2004-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -19,8 +19,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once(dirname(__FILE__).'/dnsbl.php');
-require_once(dirname(__FILE__).'/spam.php');
+$dir_name = dirname (__FILE__);
+require_once ("$dir_name/dnsbl.php");
+require_once ("$dir_name/spam.php");
 
 # To use this form that disallow duplicates:
 #    - form_header must be used on the form
@@ -79,6 +80,14 @@ function form_checkbox ($name, $is_checked = 0, $attr = [])
   if (isset ($attr['value']))
     $val = '';
   return form_input ('checkbox', $name, $val, $extra);
+}
+
+function form_hidden ($name_val)
+{
+  $ret = '';
+  foreach ($name_val as $name => $val)
+    $ret .= "<input type='hidden' name=\"$name\" value=\"$val\" />\n";
+  return $ret;
 }
 
 # Special input: textarea.

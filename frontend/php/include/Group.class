@@ -738,12 +738,6 @@ function group_make_array ($x)
   return [$x];
 }
 
-# A helper function (mix of str_repeat and implode) used further.
-function group_str_implode ($separator, $str, $n)
-{
-  return str_repeat ("$str$separator", $n - 1) . $str;
-}
-
 # Return group preferences. If $preference_names is a string,
 # return a single string or false if the preference isn't set;
 # if $preference_names is an array, return an array of $name => $value,
@@ -762,7 +756,7 @@ function group_get_preference ($group_id, $preference_names)
       $val_arr[$name] = null;
     }
 
-  $arg_list = group_str_implode (", ", "?", count ($pref_arr));
+  $arg_list = utils_str_join (", ", "?", count ($pref_arr));
   $result =
     db_execute ("
       SELECT preference_name,preference_value FROM group_preferences
@@ -793,7 +787,7 @@ function group_set_pref_insert_sql ($group_id, $to_insert)
     "INSERT INTO group_preferences
        (preference_value, group_id, preference_name)
        VALUES\n";
-  $sql .= group_str_implode (",\n", "(?, ?, ?)", count ($to_insert));
+  $sql .= utils_str_join (",\n", "(?, ?, ?)", count ($to_insert));
   # Add trailing ';' so that the subsequent query could be added directly.
   return $sql . ";\n";
 }
@@ -807,7 +801,7 @@ function group_set_pref_update_sql ($group_id, $to_update)
   $single_query = "
     UPDATE group_preferences SET preference_value = ?
     WHERE group_id = ? AND preference_name = ?";
-  $sql = group_str_implode (";", $single_query, count ($to_update));
+  $sql = utils_str_join (";", $single_query, count ($to_update));
   return $sql;
 }
 

@@ -33,7 +33,7 @@ define('FB_ERROR', 1);
 # Get path for site-specific content.
 function utils_get_content_filename ($file)
 {
-  $f = $GLOBALS['sys_incdir'] . '/php/' . $file . '.php';
+  $f = $GLOBALS['sys_incdir'] . "/php/$file.php";
 
   if (is_file($f))
     return $f;
@@ -1015,7 +1015,7 @@ function feedback ($msg, $error=0)
 }
 
 # Add feedback information.
-function fb ($msg, $error=0)
+function fb ($msg, $error = 0)
 {
   $GLOBALS['feedback_count']++;
 
@@ -1025,14 +1025,10 @@ function fb ($msg, $error=0)
       dbg("Add feedback #".$GLOBALS['feedback_count']);
     }
   $msg .= "\n";
-  if (!$error)
-    {
-      $GLOBALS['feedback'] .= $msg;
-    }
+  if ($error)
+    $GLOBALS['ffeedback'] .= $msg;
   else
-    {
-      $GLOBALS['ffeedback'] .= $msg;
-    }
+    $GLOBALS['feedback'] .= $msg;
 }
 
 # Fb function to be used about database error when context of error is obvious.
@@ -1198,5 +1194,11 @@ function utils_make_upload_file ($tarball_name, &$errors)
     }
   $out = substr ($out, 0, strlen ($out) - 1); # Remove trailing "\n".
   return utils_try_move ($out, $path);
+}
+
+# A helper function (mix of str_repeat and implode) used further.
+function utils_str_join ($separator, $str, $n)
+{
+  return str_repeat ("$str$separator", $n - 1) . $str;
 }
 ?>

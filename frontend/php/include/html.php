@@ -126,10 +126,19 @@ function html_splitpage ($how)
   return "\n</div><!-- end  splitleft -->\n";
 }
 
+function html_image_dir ($theme, $suffix = null)
+{
+  global $sys_home;
+  $ret = "${sys_home}images$theme.theme/";
+  if ($suffix)
+    $ret .= "$suffix/";
+  return $ret;
+}
+
 function html_nextprev ($search_url, $rows, $rows_returned, $varprefix = false)
 {
   global $offset, $max_rows, $sys_home;
-  $img_base = "${sys_home}images" . SV_THEME . ".theme/arrrows";
+  $img_base = html_image_dir (SV_THEME) . "arrows";
 
   if (!$varprefix)
     $varprefix = '';
@@ -275,19 +284,22 @@ function html_feedback_bottom ()
   html_feedback (1);
 }
 
-function html_image ($src, $args)
+function html_image ($src, $args = [])
 {
   GLOBAL $img_attr, $sys_home, $sys_www_topdir;
   $base = "images/" . SV_THEME . ".theme/$src";
   $path = "$sys_www_topdir/$base";
 
+  if (empty ($args['alt']))
+    $args['alt'] = '';
+
+  if (empty ($args['border']))
+    $args['border'] = 0;
+
   $return = "<img src=\"$sys_home$base\"";
+
   foreach ($args as $k => $v)
     $return .= " $k=\"$v\"";
-
-  # Insert a border tag if there isn't one.
-  if (empty ($args['border']))
-    $return .= ' border="0"';
 
   # If there is neither height nor width tag, insert them both.
   if (empty ($args['height']) && empty ($args['width']))
@@ -300,10 +312,13 @@ function html_image ($src, $args)
         }
       $return .= ' ' . $img_attr[$src];
     }
-  if (!$args['alt'])
-    $return .= " alt=\"\"";
 
   return "$return />";
+}
+
+function html_image_trash ($args)
+{
+  return html_image ('misc/trash.png', $args);
 }
 
 # Start a list table from an array of titles and builds.
