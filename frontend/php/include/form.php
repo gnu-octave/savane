@@ -92,7 +92,9 @@ function form_textarea ($name, $value="", $extra=false)
 }
 
 # Add submit button.
-function form_submit($text=false, $submit_name="update", $extra=false)
+function form_submit (
+  $text = false, $submit_name = "update", $extra = false, $skip_trap = false
+)
 {
   if (!$text)
     $text = _("Submit");
@@ -103,12 +105,12 @@ function form_submit($text=false, $submit_name="update", $extra=false)
   # Sure, some bots will someday implement CSS support, but the ones that does
   # not will not disappear as soon as this happen.
   $trap = '';
-  if (empty($GLOBALS['int_trapisset']) && !user_isloggedin())
+  if (!$skip_trap && empty($GLOBALS['int_trapisset']) && !user_isloggedin())
     {
-      $trap = " ".form_input("text", "website", "http://");
+      $trap = " " . form_input ("text", "website", "http://");
       $GLOBALS['int_trapisset'] = true;
     }
-  return form_input("submit", $submit_name, $text, $extra).$trap;
+  return form_input ("submit", $submit_name, $text, $extra) . $trap;
 }
 
 # Close the form, with submit button.

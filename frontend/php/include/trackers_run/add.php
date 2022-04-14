@@ -100,7 +100,10 @@ while ($field_name = trackers_list_all_fields ())
       $field_name, $group_id, false, false
     );
     if ($field_name == 'details')
-      $label .= ' <span class="preinput">' . markup_info ("full") . '<span>';
+      $label .=
+        ' <span class="preinput">' . markup_info ("full")
+        . "</span>&nbsp;\n&nbsp;"
+        . form_submit (_('Preview'), 'preview', false, true);
 
     $star = '';
     $mandatory_flag = trackers_data_mandatory_flag ($field_name);
@@ -176,8 +179,15 @@ while ($field_name = trackers_list_all_fields ())
   } # while ($field_name = trackers_list_all_fields ())
 
 print "</table>\n";
-print '<p class="warn"><span class="smaller">* ' . _("Mandatory Fields")
-      . "</span></p>\n";
+print
+  '<p><span class="warn smaller">* ' . _("Mandatory Fields") . "</span></p>\n";
+
+if ($preview)
+  {
+    print '<h2>' . _('Preview') . "</h2>\n\n";
+    print markup_full ($details);
+  }
+
 
 print "<p>&nbsp;</p>\n";
 print '<h2>' . _("Attached Files") . "</h2>\n";
@@ -231,12 +241,16 @@ if (user_isloggedin ())
   }
 
 # Minimal anti-spam.
+if (empty ($fields['check']))
+  $check = '';
+else
+  $check = htmlspecialchars ($fields['check']);
 if (!user_isloggedin ())
   print '<p class="noprint">'
-    . _("Please enter the title of <a "
-        . "href='https://en.wikipedia.org/wiki/George_Orwell'>George Orwell</a>"
-        . "'s famous dystopian book (it's a date):")
-    . " <input type='text' name='check' /></p>\n";
+    . _("Please enter the title of <a\n"
+        . "href=\"https://en.wikipedia.org/wiki/George_Orwell\">George "
+        . "Orwell</a>'s famous\ndystopian book (it's a date):")
+    . "\n<input type='text' value=\"$check\" name='check' /></p>\n";
 
 print "<p>&nbsp;</p>\n";
 print '<p><span class="warn">'

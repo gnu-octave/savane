@@ -200,7 +200,7 @@ switch ($func)
     );
     $stat_id = db_insertid (NULL);
 
-    if (empty ($fields['check']) && !user_isloggedin ())
+    if (empty ($preview) && empty ($fields['check']) && !user_isloggedin ())
       exit_error(_("You're not logged in and you didn't enter the magic\n"
                    . "anti-spam number, please go back!"));
 
@@ -211,14 +211,17 @@ switch ($func)
     # Get the list of bug fields used in the form.
     $vfl = trackers_extract_field_list ();
 
-    # Data control layer.
-    $item_id = trackers_data_create_item ($group_id, $vfl, $address);
-    db_execute (
-      'UPDATE spam_stats SET bug_id = ? WHERE id = ?',
-     [$item_id, $stat_id]
-    );
-
-    if ($item_id)
+    $item_id = null;
+    if (empty ($preview))
+      {
+        # Data control layer.
+        $item_id = trackers_data_create_item ($group_id, $vfl, $address);
+        db_execute (
+          'UPDATE spam_stats SET bug_id = ? WHERE id = ?',
+         [$item_id, $stat_id]
+        );
+      }
+    if ($item_id && empty ($preview))
       {
         # Attach new file if there is one.
         # As we need to create the item first to have an item id so this
@@ -280,7 +283,7 @@ switch ($func)
         $address .= $additional_address;
         trackers_mail_followup ($item_id, $address);
       }
-    else # !$item_id
+    else # !($item_id && empty ($preview))
       {
         # Some error occurred.
 
@@ -307,6 +310,9 @@ switch ($func)
                     fb ($msg, 1);
                   }
               }
+          }
+        if ($previous_form_bad_fields || $preview)
+          {
             # Copy the previous form values (taking into account dates)
             # to redisplay them and initialize nocache to 0.
             foreach ($vfl as $fieldname => $value)
@@ -321,7 +327,7 @@ switch ($func)
           }
         # Otherwise, that's odd and there's not much to do.
         fb (_("Missing parameters, nothing added."), 1);
-      } # !$item_id
+      } # !($item_id && empty ($preview))
 
     # Show browse item page.
     include '../include/trackers_run/browse.php';
