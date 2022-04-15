@@ -1470,6 +1470,46 @@ function trackers_data_add_history (
   return $result;
 }
 
+function trackers_data_append_canned_response ($details, $canned_response)
+{
+  if (
+    $canned_response == 100 || $canned_response == '!multiple!'
+    || empty ($canned_response)
+  )
+    return $details;
+  $separator = "\n\n";
+  if (!empty ($details))
+    $details .= $separator;
+
+  if (!is_array ($canned_response))
+    $canned_response = [$canned_response];
+
+  $any_response_used = false;
+  foreach ($canned_response as $response)
+    {
+      $res = db_execute ("
+        SELECT * FROM " . ARTIFACT . "_canned_responses
+        WHERE bug_canned_id = ?",
+        [$response]
+      );
+
+      if (!$res || db_numrows ($res) <= 0)
+        {
+          fb (_("Unable to use canned response"), 1);
+          continue;
+        }
+      if (!empty ($details))
+        $details .= $separator;
+      $details .= utils_unconvert_htmlspecialchars (
+        db_result ($res, 0, 'body')
+      );
+      $any_response_used = true;
+    }
+  if ($any_response_used)
+    fb (_("Canned response used"));
+  return $details;
+}
+
 #  Handle update of most usual fields.
 function trackers_data_handle_update (
   $group_id, $item_id, $dependent_on_task, $dependent_on_bugs,
@@ -1661,48 +1701,9 @@ function trackers_data_handle_update (
   # Comments field history is handled a little differently. Followup comments
   # are added in the bug history along with the comment type.
   # Comments are called 'details' here for historical reason.
-  $details = $vfl['comment'];
-  if ($canned_response != 100)
-    {
-      if ($details)
-        {
-          # Add a separator between user sbumitted comment and canned
-          # response.
-          $details .= "\n\n";
-        }
-
-      # Make sure we have an array even for a unique answer.
-      if (!is_array ($canned_response))
-        {
-          $tempvalue = $canned_response;
-          $canned_response = array();
-          $canned_response[] = $tempvalue;
-          unset ($tempvalue);
-        }
-
-      # Browse the canned responses.
-      foreach ($canned_response as $thiscanned)
-        {
-          $res3 = db_execute ("
-            SELECT * FROM " . ARTIFACT . "_canned_responses
-            WHERE bug_canned_id = ?",
-            [$thiscanned]
-          );
-
-          if ($res3 && db_numrows ($res3) > 0)
-            {
-              # Add a data separator.
-              if ($details)
-                $details .= "\n\n";
-              $details .= utils_unconvert_htmlspecialchars (
-                db_result ($res3, 0, 'body')
-              );
-              fb (_("Canned response used"));
-            }
-          else
-            fb (_("Unable to use canned response"), 1);
-        }
-    }
+  $details = trackers_data_append_canned_response (
+    $vfl['comment'], $canned_response
+  );
 
   # Comment field history is handled a little differently. Followup comments
   # are added in the bug history along with the comment type.

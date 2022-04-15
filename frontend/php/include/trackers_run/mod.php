@@ -422,13 +422,13 @@ print "</p>\n";
 print '<p class="noprint"><span class="preinput">';
 print _("Comment Type & Canned Response:") . '</span><br />&nbsp;&nbsp;&nbsp;';
 $checked = '';
-if ($preview)
+if ($preview && !empty ($comment_type_id))
   $checked = $comment_type_id;
 print trackers_field_box ('comment_type_id', '', $group_id, $checked, true);
 
 print '&nbsp;&nbsp;&nbsp;';
 
-if ($canned_response == "!multiple!")
+if ($canned_response == "!multiple!" || is_array ($canned_response))
   {
     $result_canned = trackers_data_get_canned_responses ($group_id);
     if (db_numrows ($result_canned) > 0)
@@ -437,11 +437,11 @@ if ($canned_response == "!multiple!")
 
         while ($canned = db_fetch_array ($result_canned))
           {
+            $id = $canned['bug_canned_id'];
+            $ck = is_array ($canned_response)
+              && in_array ($id, $canned_response);
             print '&nbsp;&nbsp;&nbsp;';
-            print form_checkbox (
-                    "canned_response[]", 0,
-                    ['value' => $canned['bug_canned_id']]
-                  );
+            print form_checkbox ("canned_response[]", $ck, ['value' => $id]);
             print " {$canned['title']}<br />\n";
           }
         print "</div>\n";
@@ -455,7 +455,7 @@ if ($canned_response == "!multiple!")
   }
 else
   {
-    print trackers_canned_response_box ($group_id, 'canned_response');
+    print trackers_canned_response_box ($group_id, 'canned_response', $canned_response);
     print '&nbsp;&nbsp;&nbsp;<a class="smaller" href="' . $GLOBALS['sys_home']
           . ARTIFACT . "/admin/field_values.php?group_id=$group_id"
           . '&amp;create_canned=1">(' . _("Or define a new Canned Response")
@@ -487,10 +487,10 @@ if ($preview)
       trackers_data_get_cached_field_value (
         'comment_type_id', $group_id, $comment_type_id
       );
-    $old_val = htmlspecialchars ($comment);
-    if (!empty ($old_val))
-      $old_val = trackers_encode_value ($old_val);
-    $new_comment['old_value'] = $old_val;
+    $comm = trackers_data_append_canned_response ($comment, $canned_response);
+    if (!empty ($comm))
+      $comm = trackers_encode_value (htmlspecialchars ($comm));
+    $new_comment['old_value'] = $comm;
     $new_comment['bug_history_id'] = -1;
     $new_comment['spamscore'] = '0';
   }

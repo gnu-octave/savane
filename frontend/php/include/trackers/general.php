@@ -700,8 +700,12 @@ function trackers_check_empty_fields ($field_array, $new_item = true)
   return false;
 }
 
-function trackers_canned_response_box ($group_id,$name='canned_response')
+function trackers_canned_response_box (
+  $group_id, $name = 'canned_response', $checked = null
+)
 {
+  if (empty ($checked))
+    $checked = 'xzxz';
   if (!$group_id)
     {
       fb (_("Error, no group_id"),1);
@@ -723,9 +727,10 @@ function trackers_canned_response_box ($group_id,$name='canned_response')
           $texts[] = $entry['title'];
 
         }
-      return html_build_select_box_from_arrays($vals, $texts ,$name,
-                                               'xzxz',true,'None',false,'Any',
-                                               false, _("Canned Responses"));
+      return html_build_select_box_from_arrays (
+        $vals, $texts, $name, $checked, true, 'None', false,' Any', false,
+        _("Canned Responses")
+      );
     }
   return form_input ("hidden", "canned_response", "100")
     . _("No canned response available");
