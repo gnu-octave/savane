@@ -30,7 +30,9 @@ $sober = false;
 if (!$group_id)
   exit_no_group();
 
-# Get parameters.
+$is_trackeradmin =
+  member_check (0, $group_id, member_create_tracker_flag (ARTIFACT) . '2');
+
 extract (sane_import ('request',
   [
     'funcs' => 'func',
@@ -40,14 +42,8 @@ extract (sane_import ('request',
 ));
 extract (sane_import ('post',
   [
-    'hash' => 'form_id',
-    'pass' =>
-      [
-        'comment', 'additional_comment', 'depends_search',
-        'reassign_change_project_search'
-      ],
-    'digits' => ['comment_type_id', 'new_vote', 'quote_no'],
-    'specialchars' => 'cc_comment',
+    'hash' => 'form_id', 'true' => ['submitreturn', 'preview'],
+    'digits' => ['comment_type_id', 'quote_no'], 'pass' => 'comment',
     'preg' =>
       [
         ['canned_response', '/^(\d+|!multiple!)$/'],
@@ -55,38 +51,56 @@ extract (sane_import ('post',
           'originator_email',
           '/^[a-zA-Z0-9_.+-]+@(([a-zA-Z0-9-])+\.)+[a-zA-Z0-9]+$/'
         ],
-        ['add_cc', '/^[-+_@.,;\s\da-zA-Z]*$/'],
-        [
-          'reassign_change_project', '/^[-_[:alnum:]]*$/'
-        ]
-      ],
-    'strings' =>
-      [
-        [
-          'depends_search_only_artifact',
-          'reassign_change_artifact',
-          ['all', 'support', 'bugs', 'task', 'patch']
-        ],
-        [
-          'depends_search_only_project',
-          ['any', 'notany']
-        ]
-      ],
-    'true' =>
-      [
-        'submitreturn',
-        'preview',
-      ],
-    'array' =>
-      [
-        [
-          'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support',
-          'dependent_on_patch',
-          [null, 'digits']
-        ]
       ]
   ]
 ));
+
+# Assign null to the fields that only tracker admins may modify.
+foreach (
+  [
+    'depends_search', 'reassign_change_project_search', 'new_vote',
+    'cc_comment', 'add_cc', 'reassign_change_project',
+    'depends_search_only_artifact', 'reassign_change_artifact',
+    'depends_search_only_project', 'dependent_on_task', 'dependent_on_bugs',
+    'dependent_on_support', 'dependent_on_patch',
+  ] as $var
+)
+  $$var = null;
+
+if ($is_trackeradmin)
+  extract (sane_import ('post',
+    [
+      'pass' => ['depends_search', 'reassign_change_project_search'],
+      'digits' => 'new_vote', 'specialchars' => 'cc_comment',
+      'preg' =>
+        [
+          ['add_cc', '/^[-+_@.,;\s\da-zA-Z]*$/'],
+          [
+            'reassign_change_project', '/^[-_[:alnum:]]*$/'
+          ]
+        ],
+      'strings' =>
+        [
+          [
+            'depends_search_only_artifact',
+            'reassign_change_artifact',
+            ['all', 'support', 'bugs', 'task', 'patch']
+          ],
+          [
+            'depends_search_only_project',
+            ['any', 'notany']
+          ]
+        ],
+      'array' =>
+        [
+          [
+            'dependent_on_task', 'dependent_on_bugs', 'dependent_on_support',
+            'dependent_on_patch',
+            [null, 'digits']
+          ]
+        ]
+    ]
+  ));
 
 if ($canned_response === null)
   extract (sane_import ('post',
@@ -130,8 +144,6 @@ if ($preview || isset($quote_no))
   $process_comment = true;
 if ($process_comment)
   $submitreturn = 1;
-$is_trackeradmin =
-  member_check (0, $group_id, member_create_tracker_flag (ARTIFACT) . '2');
 switch ($func)
 {
   case 'search':
@@ -165,18 +177,7 @@ switch ($func)
     break;
 
   case 'detailitem':
-    # Show a bug already in the database, permitting to add comment
-    # or even modify.
-    if ($is_trackeradmin)
-      {
-        dbg("Management/Technician rights, include mod.php");
-        include '../include/trackers_run/mod.php';
-      }
-    else
-      {
-        dbg("No specific rights, include detail.php");
-        include '../include/trackers_run/detail.php';
-      }
+    include '../include/trackers_run/mod.php';
     break;
 
   case 'postadditem':
@@ -354,20 +355,54 @@ switch ($func)
     );
 
     if (!form_check ($form_id))
-      exit_error(_("Exiting"));
+      exit_error (_("Exiting"));
 
-    if (!$is_trackeradmin)
-      exit_permission_denied();
+    if (!user_isloggedin ())
+      {
+        $ncheck = empty ($fields['check']);
+        if ($ncheck && !$process_comment)
+          exit_error (
+            _("You're not logged in and you didn't enter the magic\n"
+              . "anti-spam number, please go back!")
+          );
+      }
 
-    dbg("Techn. or Manager rights, make an update on almost every fields.");
+    # Filter out people that would submit data while they are not allowed
+    # too (obviously by using an old form, or something else).
+    $result = db_execute ("
+      SELECT privacy, discussion_lock, submitted_by
+      FROM " . ARTIFACT . " WHERE bug_id = ? AND group_id = ?",
+      [$item_id, $group_id]
+    );
+
+    if (db_numrows ($result) > 0)
+      {
+        # Check if the item is private, refuse post if it is and the
+        # users has no appropriate rights (not member, not submitter).
+        if (db_result ($result, 0, 'privacy') == '2')
+          {
+            if (
+              !member_check (user_getid (), $group_id)
+              && db_result ($result, 0, 'submitted_by') != user_getid ()
+            )
+              {
+                # As the user here is expected to behave maliciously,
+                # return an error message that does not give too much info.
+                exit_permission_denied ();
+              }
+          }
+        if (db_result ($result, 0, 'discussion_lock'))
+          exit_permission_denied ();
+      }
+    elseif (!$is_trackeradmin)
+      exit_permission_denied ();
 
     # To keep track of changes.
     $changes = [];
 
     # Special case: we may be searching for an item, in that case
     # reprint the same page, plus search results.
-    if ($depends_search
-        || $reassign_change_project_search
+    if ($depends_search || $reassign_change_project_search
         || $canned_response == "!multiple!")
       {
         if ($depends_search)
@@ -399,7 +434,7 @@ switch ($func)
             );
           }
         include '../include/trackers_run/mod.php';
-        break;
+        exit (0);
       }
 
     # Get the list of bug fields used in the form.
@@ -456,7 +491,7 @@ switch ($func)
               }
             $nocache = 0;
             include '../include/trackers_run/mod.php';
-            break;
+            exit (0);
           }
 
         # Add new cc if any.
@@ -525,172 +560,23 @@ switch ($func)
     if (!$submitreturn)
       {
         include '../include/trackers_run/browse.php';
+        exit (0);
       }
-    elseif (!$process_comment)
-      { # Include tracker item number in URL, if present.
+    if (!$process_comment)
+      {
         if (isset ($item_id))
-          header ("Location: {$_SERVER['PHP_SELF']}?$item_id");
-        else
           {
-            $_POST = $_FILES = array();
-            $form_id = $depends_search =
-            $reassign_change_project_search = $add_cc =
-            $input_file = $changed = $vfl = $details = $comment = null;
-            $nocache = 1;
-             include '../include/trackers_run/mod.php';
+            # Include tracker item number in URL, if present.
+            header ("Location: {$_SERVER['PHP_SELF']}?$item_id");
+            exit (0);
           }
+        $_POST = $_FILES = [];
+        $form_id = $depends_search = $reassign_change_project_search =
+        $add_cc = $input_file = $changed = $vfl = $details = $comment = null;
+        $nocache = 1;
       }
-    else
-      include '../include/trackers_run/mod.php';
-    break;
-
-  case 'postaddcomment':
-    $fields = sane_import ('post',
-      [
-        'hash' => 'form_id', 'digits' => ['item_id'],
-        'strings' => [['check', '1984']], 'pass' => 'comment'
-      ]
-    );
-    db_autoexecute (
-      'spam_stats',
-      [
-        'tracker' => ARTIFACT, 'bug_id' => $fields['item_id'],
-        'type' => 'comment', 'user_id' => user_getid (),
-        'form_id' => $fields['form_id'], 'ip' => '127.0.0.1',
-        'check_value' => $fields['check'], 'details' => $fields['comment']
-      ]
-    );
-    $ncheck = empty ($fields['check']);
-    if (!user_isloggedin () && ($ncheck && !$process_comment))
-      exit_error (
-        _("You're not logged in and you didn't enter the magic\n"
-          . "anti-spam number, please go back!")
-      );
-
-    # Add a comment to a bug already in the database,
-    # these are the only changes an non member can make.
-    # Restrictions: don't allow posts/attachments/... but allow votes and CCs.
-    $changed = false;
-
-    # Check for duplicates.
-    if (!form_check ($form_id))
-      exit_error(_("Exiting"));
-
-    # Filter out people that would submit data while they are not allowed
-    # too (obviously by using an old form, or something else).
-    $result = db_execute ("
-      SELECT privacy, discussion_lock, submitted_by
-      FROM " . ARTIFACT . " WHERE bug_id = ? AND group_id = ?",
-      [$item_id, $group_id]
-    );
-
-    if (db_numrows ($result) > 0)
-      {
-        # Check if the item is private, refuse post if it is and the
-        # users has no appropriate rights (not member, not submitter).
-        if (db_result ($result, 0, 'privacy') == '2')
-          {
-            if (
-              !member_check (user_getid (), $group_id)
-              && db_result($result, 0, 'submitted_by') != user_getid()
-            )
-              {
-                # As the user here is expected to behave maliciously,
-                # return an error message that does not give too much info.
-                exit_permission_denied ();
-              }
-          }
-
-        # Exit if the discussion is locked.
-        if (db_result ($result, 0, 'discussion_lock'))
-          {
-            exit_permission_denied ();
-          }
-      }
-    else
-      {
-        # Nothing found? Something obviously weird!
-        exit_permission_denied ();
-      }
-    $changes = [];
-
-    # Attach new file if there is one.
-    # Do that first so it can update the comment.
-    $additional_comment = '';
-    if (
-      !$process_comment && group_restrictions_check ($group_id, ARTIFACT, 2)
-    )
-      {
-        list ($changed, $additional_comment) =
-          trackers_attach_several_files ($item_id, $group_id, $changes);
-      }
-
-    # Add a new comment if there is one.
-    if ($comment != '' and group_restrictions_check($group_id, ARTIFACT, 2))
-      {
-        # Add the additionnal comment that may have been added during
-        # the file upload.
-        $comment .= $additional_comment;
-        # For none project members force the comment type to None (100).
-        # The delay for spamcheck will be called from this function:
-        if (!$process_comment)
-          {
-            $comment = htmlspecialchars ($comment);
-            trackers_data_add_history ('details', $comment, '', $item_id, 100);
-
-            # YPE fix to trigger notifications in case of non member.
-            $changes['details']['add'] = $comment;
-            $changes['details']['type'] = 'None';
-            $changed = true;
-
-            # Add to CC list unless prefs says not to
-            # (usually, this part is handled directly in functions included
-            # in general.php, but here as we do a direct insert, we need
-            # to also do this now).
-            if (
-              user_isloggedin() && !user_get_preference ("skipcc_postcomment")
-            )
-              trackers_add_cc ($item_id, $group_id, user_getid(), "-COM-");
-            fb (_("Comment added"));
-         }
-      }
-
-    # Add new cc if any, only accepted from logged in users.
-    if (!$process_comment && $add_cc && user_isloggedin ())
-      {
-        # No notification needs to be sent when a cc is added,
-        # it is irrelevant to the item itself.
-        trackers_add_cc ($item_id, $group_id, $add_cc, $cc_comment, $changes);
-      }
-
-    # Add vote, if configured to be accepted from non members or if
-    # the user is member.
-    if (!$process_comment && trackers_data_is_used("vote"))
-      {
-        if (trackers_data_is_showed_on_add ("vote") && user_isloggedin ()
-            || member_check (user_getid(), $group_id)
-        )
-          {
-            # Currently votes does not influence notifications
-            # (that could harass developers).
-            trackers_votes_update($item_id, $group_id, $new_vote);
-          }
-      }
-    if ($changed)
-      {
-        list ($additional_address, $sendall) =
-          trackers_data_get_item_notification_info ($item_id, ARTIFACT, 1);
-        if (($sendall == 1) && (trim($address) != "")
-            && (trim($additional_address) != ""))
-          $address .= ", ";
-        $address .= $additional_address;
-        trackers_mail_followup ($item_id, $address, $changes);
-      }
-    if ($process_comment)
-      include '../include/trackers_run/detail.php';
-    else
-      include '../include/trackers_run/browse.php';
-    break;
+    include '../include/trackers_run/mod.php';
+    exit (0);
 
   case 'delete_file':
     # Remove an attached file.
@@ -715,17 +601,7 @@ switch ($func)
     $depends_search = $reassign_change_project_search = $add_cc = $input_file
       = $changed = $vfl = $details = null;
 
-    # CC may be deleted by a user without privilegies, if it is himself.
-    if ($is_trackeradmin)
-      {
-        dbg("Management/Technician rights, include mod.php");
-        include '../include/trackers_run/mod.php';
-      }
-    else
-      {
-        dbg("No specific rights, include detail.php");
-        include '../include/trackers_run/detail.php';
-      }
+    include '../include/trackers_run/mod.php';
     break;
 
   case 'delete_dependency':
@@ -777,16 +653,7 @@ switch ($func)
 
     # Return to the item page if it was not the item itself that was
     # marked as spam.
-    if ($is_trackeradmin)
-      {
-        dbg("Management/Technician rights, include mod.php");
-        include '../include/trackers_run/mod.php';
-      }
-    else
-      {
-        dbg("No specific rights, include detail.php");
-        include '../include/trackers_run/detail.php';
-      }
+    include '../include/trackers_run/mod.php';
     break;
 
   case 'unflagspam':
@@ -803,16 +670,7 @@ switch ($func)
     include '../include/trackers_run/mod.php';
     break;
   case 'viewspam':
-    if ($is_trackeradmin)
-      {
-        dbg("Management/Technician rights, include mod.php");
-        include '../include/trackers_run/mod.php';
-      }
-    else
-      {
-        dbg("No specific rights, include detail.php");
-        include '../include/trackers_run/detail.php';
-      }
+    include '../include/trackers_run/mod.php';
     break;
 
   case 'browse' :

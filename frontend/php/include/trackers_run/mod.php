@@ -31,6 +31,7 @@ require_directory ("search"); # Need search functions.
 
 $fields_per_line = 2;
 $max_size = 40;
+$ro_fields = $printer || !$is_trackeradmin;
 
 $result = db_execute ("
   SELECT * FROM " . ARTIFACT . " WHERE bug_id = ? AND group_id = ?",
@@ -76,6 +77,12 @@ if (db_result ($result, 0, 'privacy') == "2")
           . "allowed to read private items.")
       );
   }
+# Check if it is possible for the current user to post a comment. If not
+# add a message.
+if (!group_restrictions_check($group_id, ARTIFACT, 2))
+  $private_intro .= ' '
+    . _("You are not allowed to post comments on this tracker "
+        . "with your current\nauthentication level.");
 
 trackers_header ([
   'title' =>
@@ -123,11 +130,15 @@ elseif ($check_member ($group_id, ARTIFACT, '3'))
     ]
   );
 
+if (!empty ($private_intro))
+  print '<p>' . $private_intro . "</p>\n";
+
 $class = utils_get_priority_color (
   db_result ($result, 0, 'priority'), db_result ($result, 0, 'status_id')
 );
+
 print "<h1 class=\"$class\">";
-printf (("<i>%s</i>:"), $item_link);
+print "<i>$item_link</i>:";
 print ' ' . db_result ($result, 0, 'summary') . "</h1>\n";
 
 print form_header (
@@ -192,22 +203,35 @@ while ($field_name = trackers_list_all_fields ())
       continue;
 
     # If the field is a special field (not summary) then skip it.
-    if (trackers_data_is_special ($field_name)
-        && $field_name != 'summary')
+    if (trackers_data_is_special ($field_name))
       {
+        if (!$is_trackeradmin)
+          continue;
         # If we are on the cookbook, details (a special field) must be
         # allowed too.
-        if (ARTIFACT == 'cookbook' && $field_name == 'details')
-          {
-            # OK
-          }
-        else
+        if (
+          $field_name != 'summary'
+          && !(ARTIFACT == 'cookbook' && $field_name == 'details')
+        )
           continue;
       }
 
     #  Print the originator email field only if the submitted was anonymous.
     if ($field_name == 'originator_email' && $submitter != '100')
       continue;
+
+    # Save the assigned to value for later.
+    if ($field_name == 'assigned_to')
+      $item_assigned_to = trackers_field_display (
+        $field_name, $group_id, $field_value, false, false, true
+      );
+
+    if ($field_name == 'discussion_lock')
+      {
+        $item_discussion_lock = db_result ($result, 0, $field_name);
+        if (!$is_manager)
+          continue;
+      }
 
     # Display the bug field.
     # If field size is greatest than max_size chars then force it to
@@ -221,7 +245,8 @@ while ($field_name = trackers_list_all_fields ())
     # on database content.
     if (!isset ($nocache))
       $nocache = false;
-    if ((empty ($$field_name) || $nocache) && !$preview)
+    if ((empty ($$field_name) || $nocache)
+        && !($preview && $is_trackeradmin))
       $field_value = db_result ($result, 0, $field_name);
     else
       {
@@ -240,21 +265,6 @@ while ($field_name = trackers_list_all_fields ())
     $label = trackers_field_label_display ($field_name, $group_id,
                                            false, false);
 
-    # Save the assigned to value for later.
-    if ($field_name == 'assigned_to')
-      $item_assigned_to = trackers_field_display (
-        $field_name, $group_id, $field_value, false, false, true
-      );
-
-    # Discussion lock is shown only to at least managers.
-    if ($field_name == 'discussion_lock')
-      {
-        # Save for later.
-        $item_discussion_lock = db_result ($result, 0, $field_name);
-        if (!$is_manager)
-          continue;
-      }
-
     # Some fields must be displayed read-only,
     # assigned_to, status_id and priority too, for technicians
     # (if super_user, do nothing).
@@ -271,7 +281,7 @@ while ($field_name = trackers_list_all_fields ())
       }
     else
       $value = trackers_field_display ($field_name, $group_id, $field_value,
-                                      false, false, $printer, false, false,
+                                      false, false, $ro_fields, false, false,
                                       _("None"), false,
                                       _("Any"), true);
 
@@ -455,11 +465,14 @@ if ($canned_response == "!multiple!" || is_array ($canned_response))
   }
 else
   {
-    print trackers_canned_response_box ($group_id, 'canned_response', $canned_response);
-    print '&nbsp;&nbsp;&nbsp;<a class="smaller" href="' . $GLOBALS['sys_home']
-          . ARTIFACT . "/admin/field_values.php?group_id=$group_id"
-          . '&amp;create_canned=1">(' . _("Or define a new Canned Response")
-          . ')</a>';
+    print trackers_canned_response_box (
+      $group_id, 'canned_response', $canned_response
+    );
+    if (user_ismember ($group_id, 'A'))
+      print "&nbsp;&nbsp;&nbsp;<a class='smaller' href=\"$sys_home"
+        . ARTIFACT . "/admin/field_values.php?group_id=$group_id"
+        . '&amp;create_canned=1">(' . _("Or define a new Canned Response")
+        . ')</a>';
   }
 print "</p>\n";
 
@@ -539,158 +552,159 @@ print html_hidsubpart_footer ();
 
 # Deployed by default, important item info.
 print html_hidsubpart_header ("dependencies", _("Dependencies"));
-
-print '<p class="noprint"><span class="preinput">';
-if ($depends_search)
+if ($is_trackeradmin)
   {
-    # Print a specific message if we are already at step 2 of filling
-    # a dependency.
-    print _("New search, in case the previous one was not satisfactory (to\n"
-            . "fill a dependency against):");
-  }
-else
-  print _("Search an item (to fill a dependency against):");
-
-print "</span><br />\n&nbsp;&nbsp;&nbsp;"
-  . '<input type="text" title="' . _("Terms to look for")
-  . "\" name='depends_search' size='40' maxlength='255' /><br />\n";
-
-$tracker_select =
-'&nbsp;&nbsp;&nbsp;<select title="' . _("Tracker to search in")
-  . '" name="depends_search_only_artifact">';
-
-# Generate the list of searchable trackers.
-$tracker_list = [
-  'all'     => _("Any Tracker"),
-  'support' => _("The Support Tracker Only"),
-  'bugs'    => _("The Bug Tracker Only"),
-  'task'    => _("The Task Manager Only"),
-  'patch'   => _("The Patch Manager Only"),
-];
-
-foreach ($tracker_list as $option_value => $text)
-  {
-    $selected = '';
-    if ($option_value == $depends_search_only_artifact)
-      $selected = ' selected="selected"';
-    $tracker_select .=
-      "<option value=\"$option_value\"$selected>$text</option>\n";
-  }
-$tracker_select .= "</select>\n";
-
-$group_select = '<select title="' . _("Wether to search in any project")
-                . '" name="depends_search_only_project">';
-
-# By default, search restricted to the project (lighter for the CPU,
-# probably also more accurate).
-$selected = '';
-if ($depends_search_only_project == "any")
-  $selected = ' selected="selected"';
-$group_select .= "<option value='any'$selected>"
-  # TRANSLATORS: this string is used in the context like
-  # "search an item of [The Bug Tracker Only] of [Any Project]".
-  . _("Any Project")
-  . "</option>\n";
-
-# Not yet a select? It means we are in the default case.
-if ($selected)
-  $selected = '';
-else
-  $selected = ' selected="selected"';
-
-# TRANSLATORS: this string is used in the context like
-# "search an item of [The Bug Tracker Only] of [This Project Only]".
-$group_select .= "<option value='notany'$selected >"
-  . _("This Project Only") . "</option>\n</select>&nbsp;";
-
-# TRANSLATORS: the first argument is tracker type (like The Bug Tracker),
-# the second argument is either 'This Project Only' or 'Any Project'.
-printf (_('Of %1$s of %2$s'), $tracker_select, $group_select);
-
-if ($depends_search)
-  {
-    # Print a specific message if we are already at step 2 of filling
-    # a dependency.
-    print form_submit (_("New search"), "submit");
-  }
-else
-  print form_submit (_("Search"), "submit");
-
-# Search results, if we are already at step 2 of filling.
-if ($depends_search)
-  {
-    print "</p>\n<p><span class='preinput'>";
-    printf (
-      _("Please select a dependency to add in the result of your search\n"
-        . "of '%s' in the database:"),
-      htmlspecialchars ($depends_search)
-    );
-    print '</span>';
-
-    $success = false;
-
-    # If we have less than 4 characters, to avoid giving lot of feedback
-    # and put an exit to the report, just consider the search as a failure.
-    if (strlen ($depends_search) > 3)
+    print '<p class="noprint"><span class="preinput">';
+    if ($depends_search)
       {
-        # Build the list of trackers to take account of.
-        if ($depends_search_only_artifact == "all")
-          $artifacts = ["support", "bugs", "task", "patch"];
-        else
-          $artifacts = [$depends_search_only_artifact];
-
-        # Actually search on each asked trackers.
-        foreach ($artifacts as $num => $tracker)
-          {
-            if ($depends_search_only_project == "notany")
-              $GLOBALS['only_group_id'] = $group_id;
-
-            # Do not ask for all words,
-            $GLOBALS['exact'] = 0;
-
-            $result_search = search_run ($depends_search, $tracker, 0);
-            $success = db_numrows ($result_search) + $success;
-
-            # Print the result, if existing.
-            if (db_numrows ($result_search) == 0)
-              continue;
-            while (list ($res_id, $res_summary, $res_date, $res_privacy,
-                         $res_submitter_id, $res_submitter_name,
-                         $res_group) = db_fetch_array ($result_search))
-              {
-                # Avoid item depending on itself.
-                # Hide private items. For now, they are excluded for
-                # dependencies. We'll implement that later if necessary.
-                if ($res_privacy == 2)
-                  continue;
-                if ($res_id != $item_id || $tracker != ARTIFACT)
-                  {
-                     # Right now only print id, summary and group.
-                     # We may change that depending on users feedback.
-                     print "<br />\n";
-                     print '&nbsp;&nbsp;&nbsp;'
-                       . form_checkbox (
-                           "dependent_on_{$tracker}[]", 0,
-                           ['value' => $res_id]
-                         )
-                       . " $tracker # $res_id: $res_summary";
-                     print ', ' . _("group") . ' '
-                       . group_getname ($res_group);
-                  }
-                }
-          } # foreach ($artifacts as $num => $tracker)
-      } # if (strlen ($depends_search) > 3)
-    if (!$success)
-      {
-        print "<br />\n<span class='warn'>";
-        print
-          _("None found. Please note that only search words of more than\n"
-            . "three characters are valid.");
-        print '</span>';
+        # Print a specific message if we are already at step 2 of filling
+        # a dependency.
+        print _("New search, in case the previous one was not satisfactory "
+                . "(to\nfill a dependency against):");
       }
-  } # if ($depends_search)
+    else
+      print _("Search an item (to fill a dependency against):");
 
-print "</p>\n";
+    print "</span><br />\n&nbsp;&nbsp;&nbsp;"
+      . '<input type="text" title="' . _("Terms to look for")
+      . "\" name='depends_search' size='40' maxlength='255' /><br />\n";
+
+    $tracker_select =
+    '&nbsp;&nbsp;&nbsp;<select title="' . _("Tracker to search in")
+      . '" name="depends_search_only_artifact">';
+
+    # Generate the list of searchable trackers.
+    $tracker_list = [
+      'all'     => _("Any Tracker"),
+      'support' => _("The Support Tracker Only"),
+      'bugs'    => _("The Bug Tracker Only"),
+      'task'    => _("The Task Manager Only"),
+      'patch'   => _("The Patch Manager Only"),
+    ];
+
+    foreach ($tracker_list as $option_value => $text)
+      {
+        $selected = '';
+        if ($option_value == $depends_search_only_artifact)
+          $selected = ' selected="selected"';
+        $tracker_select .=
+          "<option value=\"$option_value\"$selected>$text</option>\n";
+      }
+    $tracker_select .= "</select>\n";
+
+    $group_select = '<select title="' . _("Wether to search in any project")
+                    . '" name="depends_search_only_project">';
+
+    # By default, search restricted to the project (lighter for the CPU,
+    # probably also more accurate).
+    $selected = '';
+    if ($depends_search_only_project == "any")
+      $selected = ' selected="selected"';
+    $group_select .= "<option value='any'$selected>"
+      # TRANSLATORS: this string is used in the context like
+      # "search an item of [The Bug Tracker Only] of [Any Project]".
+      . _("Any Project")
+      . "</option>\n";
+
+    # Not yet a select? It means we are in the default case.
+    if ($selected)
+      $selected = '';
+    else
+      $selected = ' selected="selected"';
+
+    # TRANSLATORS: this string is used in the context like
+    # "search an item of [The Bug Tracker Only] of [This Project Only]".
+    $group_select .= "<option value='notany'$selected >"
+      . _("This Project Only") . "</option>\n</select>&nbsp;";
+
+    # TRANSLATORS: the first argument is tracker type (like The Bug Tracker),
+    # the second argument is either 'This Project Only' or 'Any Project'.
+    printf (_('Of %1$s of %2$s'), $tracker_select, $group_select);
+
+    if ($depends_search)
+      {
+        # Print a specific message if we are already at step 2 of filling
+        # a dependency.
+        print form_submit (_("New search"), "submit");
+      }
+    else
+      print form_submit (_("Search"), "submit");
+
+    # Search results, if we are already at step 2 of filling.
+    if ($depends_search)
+      {
+        print "</p>\n<p><span class='preinput'>";
+        printf (
+          _("Please select a dependency to add in the result of your search\n"
+            . "of '%s' in the database:"),
+          htmlspecialchars ($depends_search)
+        );
+        print '</span>';
+
+        $success = false;
+
+        # If we have less than 4 characters, to avoid giving lot of feedback
+        # and put an exit to the report, just consider the search as a failure.
+    if (strlen ($depends_search) > 3)
+          {
+            # Build the list of trackers to take account of.
+            if ($depends_search_only_artifact == "all")
+              $artifacts = ["support", "bugs", "task", "patch"];
+            else
+              $artifacts = [$depends_search_only_artifact];
+
+            # Actually search on each asked trackers.
+            foreach ($artifacts as $num => $tracker)
+              {
+                if ($depends_search_only_project == "notany")
+                  $GLOBALS['only_group_id'] = $group_id;
+
+                # Do not ask for all words,
+                $GLOBALS['exact'] = 0;
+
+                $result_search = search_run ($depends_search, $tracker, 0);
+                $success = db_numrows ($result_search) + $success;
+
+                # Print the result, if existing.
+                if (db_numrows ($result_search) == 0)
+                  continue;
+                while (list ($res_id, $res_summary, $res_date, $res_privacy,
+                             $res_submitter_id, $res_submitter_name,
+                             $res_group) = db_fetch_array ($result_search))
+                  {
+                    # Avoid item depending on itself.
+                    # Hide private items. For now, they are excluded for
+                    # dependencies. We'll implement that later if necessary.
+                    if ($res_privacy == 2)
+                      continue;
+                    if ($res_id != $item_id || $tracker != ARTIFACT)
+                      {
+                         # Right now only print id, summary and group.
+                         # We may change that depending on users feedback.
+                         print "<br />\n";
+                         print '&nbsp;&nbsp;&nbsp;'
+                           . form_checkbox (
+                               "dependent_on_{$tracker}[]", 0,
+                               ['value' => $res_id]
+                             )
+                           . " $tracker # $res_id: $res_summary";
+                         print ', ' . _("group") . ' '
+                           . group_getname ($res_group);
+                      }
+                    }
+              } # foreach ($artifacts as $num => $tracker)
+          } # if (strlen ($depends_search) > 3)
+        if (!$success)
+          {
+            print "<br />\n<span class='warn'>";
+            print
+              _("None found. Please note that only search words of more than\n"
+                . "three characters are valid.");
+            print '</span>';
+          }
+      } # if ($depends_search)
+    print "</p>\n";
+  } # if ($is_trackeradmin)
 print show_item_dependency ($item_id);
 print show_dependent_item ($item_id);
 print "\n<p>&nbsp;</p>\n";
@@ -698,41 +712,35 @@ print html_hidsubpart_footer ();
 
 print
   html_hidsubpart_header ("cc", _("Mail Notification Carbon-Copy List"));
-print '<p class="noprint">';
-# TRANSLATORS: the argument is site name (like Savannah).
-printf (
-  _("(Note: for %s users, you can use their login name\n"
-    . "rather than their email addresses.)"),
-  $GLOBALS['sys_name']
-);
+if (user_isloggedin() && !$item_discussion_lock)
+  {
+    print '<p class="noprint">';
+    # TRANSLATORS: the argument is site name (like Savannah).
+    printf (
+      _("(Note: for %s users, you can use their login name\n"
+        . "rather than their email addresses.)"),
+      $GLOBALS['sys_name']
+    );
 
-print "</p>\n<p class='noprint'><span class='preinput'><label for='add_cc'>"
-  . _("Add Email Addresses (comma as separator):")
-  . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
-  . '<input type="text" id="add_cc" name="add_cc" size="40" value="'
-  . htmlspecialchars ($add_cc) . '" />&nbsp;&nbsp;&nbsp;'
-  . "\n<br />\n<span class='preinput'><label for='cc_comment'>"
-  . _("Comment:") . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
-  . '<input type="text" id="cc_comment" name="cc_comment" '
-  . 'size="40" maxlength="255" value="'
-  . htmlspecialchars ($cc_comment) . '" />';
-print "<p>&nbsp;</p>\n";
+    print "</p>\n"
+      . "<p class='noprint'><span class='preinput'><label for='add_cc'>"
+      . _("Add Email Addresses (comma as separator):")
+      . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
+      . '<input type="text" id="add_cc" name="add_cc" size="40" value="'
+      . htmlspecialchars ($add_cc) . '" />&nbsp;&nbsp;&nbsp;'
+      . "\n<br />\n<span class='preinput'><label for='cc_comment'>"
+      . _("Comment:") . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
+      . '<input type="text" id="cc_comment" name="cc_comment" '
+      . 'size="40" maxlength="255" value="'
+      . htmlspecialchars ($cc_comment) . '" />';
+    print "<p>&nbsp;</p>\n";
+  }
 show_item_cc_list ($item_id, $group_id);
 print "<p>&nbsp;</p>\n";
 print html_hidsubpart_footer ();
 
 if (trackers_data_is_used ("vote"))
   {
-    $votes_given = trackers_votes_user_giventoitem_count (
-      user_getid (), ARTIFACT, $item_id
-    );
-    $votes_remaining =
-      trackers_votes_user_remains_count (user_getid ()) + $votes_given;
-    if (!$new_vote)
-      $new_vote = $votes_given;
-
-    # ATM, the mod page is only for technicians/manager. They always have
-    # the right to vote, as they are project member anyway.
     print html_hidsubpart_header ("votes", _("Votes"));
     print '<p>';
     printf (
@@ -745,26 +753,47 @@ if (trackers_data_is_used ("vote"))
       . _("Votes easily highlight which items people would like to see "
           . "resolved\nin priority, independently of the priority of the item "
           . "set by tracker\nmanagers.")
-    . "</p>\n<p class='noprint'>";
+      . "</p>\n<p class='noprint'>";
+    if (trackers_data_is_showed_on_add("vote")
+        || member_check (user_getid(), $group_id))
+      {
+        if (user_isloggedin())
+          {
+            $votes_given = trackers_votes_user_giventoitem_count (
+              user_getid (), ARTIFACT, $item_id
+            );
+            $votes_remaining =
+              trackers_votes_user_remains_count (user_getid ()) + $votes_given;
+            if (!$new_vote)
+              $new_vote = $votes_given;
 
-    # Show how many vote he already gave and allows to remove or give more
-    # votes.
-    # The number of remaining points must be 100 - others votes.
-    print '<span class="preinput"><label for="new_vote">' . _("Your vote:")
-      . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
-      . '<input type="text" name="new_vote" id="new_vote" '
-      . 'size="3" maxlength="3" value="'
-      . htmlspecialchars ($new_vote) . '" /> ';
-    printf (
-      ngettext (
-        "/ %s remaining vote", "/ %s remaining votes",
-        $votes_remaining),
-      $votes_remaining
-    );
+            # Show how many vote he already gave and allows to remove
+            # or give more votes.
+            # The number of remaining points must be 100 - others votes.
+            print '<span class="preinput"><label for="new_vote">'
+              . _("Your vote:")
+              . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
+              . '<input type="text" name="new_vote" id="new_vote" '
+              . 'size="3" maxlength="3" value="'
+              . htmlspecialchars ($new_vote) . '" /> ';
+            printf (
+              ngettext (
+                "/ %s remaining vote", "/ %s remaining votes",
+                $votes_remaining),
+              $votes_remaining
+            );
+          }
+        else
+          print '<span class="warn">' . _("Only logged-in users can vote.")
+            . "</span>";
+      }
+     else
+       print '<span class="warn">' . _("Only project members can vote.")
+         . "</span>";
     print "</p>\n";
     print "<p>&nbsp;</p>\n";
     print html_hidsubpart_footer ();
-  }
+  } # if (trackers_data_is_used ("vote"))
 
 # Reassign an item, if manager of the tracker.
 # Not possible on the cookbook manager, cookbook entries are too specific.
@@ -873,6 +902,14 @@ if ($check_member ($group_id, ARTIFACT, '3') && ARTIFACT != "cookbook")
     print html_hidsubpart_footer ();
     print '</span>';
   } # if ($check_member ($group_id, ARTIFACT, '3') && ARTIFACT != "cookbook")
+
+# Minimal anti-spam.
+if (!user_isloggedin ())
+  print '<p class="noprint"><label for="check">'
+    . _("Please enter the title of <a\n"
+        . "href=\"https://en.wikipedia.org/wiki/George_Orwell\">"
+        . "George Orwell</a>'s famous\ndystopian book (it's a date):")
+    . "</label> <input type='text' id='check' name='check' /></p>\n";
 
 print "<p>&nbsp;</p>\n";
 print '<div align="center" class="noprint">'

@@ -1510,7 +1510,7 @@ function trackers_data_append_canned_response ($details, $canned_response)
   return $details;
 }
 
-#  Handle update of most usual fields.
+# Handle update of most usual fields.
 function trackers_data_handle_update (
   $group_id, $item_id, $dependent_on_task, $dependent_on_bugs,
   $dependent_on_support, $dependent_on_patch, $canned_response, $vfl,
@@ -1550,20 +1550,6 @@ function trackers_data_handle_update (
     "SELECT * FROM " . ARTIFACT . " WHERE bug_id = ?", [$item_id]
   );
 
-
-  if (db_numrows ($result) > 0)
-    {
-      $g_id = db_result ($result, 0, 'group_id');
-      $m_ck =
-        member_check (0, $g_id, member_create_tracker_flag (ARTIFACT) . '2');
-      if (!$m_ck)
-        {
-          # Verify permissions.
-          dbg ("no management/techn. rights");
-          exit_permission_denied ();
-        }
-    }
-
   # Extract field transition possibilities:
   $field_transition = trackers_data_get_transition ($group_id);
   # We will store in an array the transition_id accepted, to check
@@ -1594,7 +1580,7 @@ function trackers_data_handle_update (
       if ($field == 'comment')
         continue;
 
-      $old_value = db_result ($result, 0,$field);
+      $old_value = db_result ($result, 0, $field);
 
       # Handle field transitions checks+cc notif,
       # register id of transition to execute.
@@ -1739,7 +1725,7 @@ function trackers_data_handle_update (
           $change_exists = 1;
           $upd_list['details'] = $details;
           # We should use "details" but since details are used for comment
-          # (which is really nasty), we simply cant.
+          # (which is really nasty), we simply can't.
 
           # How should be print the change?
           # The way we do it here is to show the previous recipe cut to 25 chars
