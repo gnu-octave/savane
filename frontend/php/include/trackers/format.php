@@ -24,7 +24,7 @@
 
 function format_item_details (
   $item_id, $group_id, $ascii = false, $item_assigned_to = false,
-  $new_comment = false, $allow_quote = true
+  $preview = [], $allow_quote = true
 )
 {
   # ASCII must not be translated.
@@ -32,7 +32,28 @@ function format_item_details (
   global $sys_datefmt;
 
   $data = [];
-  $i = 0;
+  $i = $max_entries = $hist_id = 0;
+
+  $add_comment_item = function ($entry, $preview = false)
+    use (&$i, &$max_entries, &$data, &$hist_id)
+  {
+    $i++;
+    $max_entries++;
+    $data[$i]['user_id'] = $entry['user_id'];
+    $data[$i]['user_name'] = $entry['user_name'];
+    $data[$i]['realname'] = $entry['realname'];
+    $data[$i]['date'] = $entry['date'];
+    $data[$i]['comment_type'] = $entry['comment_type'];
+    $data[$i]['text'] = trackers_decode_value ($entry['old_value']);
+    $data[$i]['comment_internal_id'] = $entry['bug_history_id'];
+    if ($entry['bug_history_id'] < 0)
+      $data[$i]['comment_internal_id'] = $hist_id;
+    else
+      $hist_id = $entry['bug_history_id'] + 1;
+
+    $data[$i]['spamscore'] = $entry['spamscore'];
+    $data[$i]['preview'] = $preview;
+  };
 
   # Get original submission.
   $result = db_execute ("
@@ -47,46 +68,21 @@ function format_item_details (
   $data[$i]['user_name'] = $entry['user_name'];
   $data[$i]['realname'] = $entry['realname'];
   $data[$i]['date'] = $entry['date'];
-  $data[$i]['content'] = $entry['details'];
+  $data[$i]['text'] = $entry['details'];
   $data[$i]['comment_internal_id'] = '0';
   $data[$i]['spamscore'] = $entry['spamscore'];
+  $data[$i]['preview'] = false;
 
   # Get comments (the spam is included to preserve comment No).
   $result = trackers_data_get_followups ($item_id);
-  $max_entries = $hist_id = 0;
   if (db_numrows ($result))
     {
       while ($entry = db_fetch_array ($result))
-        {
-          $i++;
-          $max_entries++;
-          $data[$i]['user_id'] = $entry['user_id'];
-          $data[$i]['user_name'] = $entry['user_name'];
-          $data[$i]['realname'] = $entry['realname'];
-          $data[$i]['date'] = $entry['date'];
-          $data[$i]['comment_type'] = $entry['comment_type'];
-          $data[$i]['content'] = trackers_decode_value ($entry['old_value']);
-          $data[$i]['comment_internal_id'] = $entry['bug_history_id'];
-          $hist_id = $entry['bug_history_id'] + 1;
-
-          $data[$i]['spamscore'] = $entry['spamscore'];
-        }
+        $add_comment_item ($entry);
     }
 
-  if ($new_comment)
-    {
-      $i++;
-      $max_entries++;
-      $data[$i]['user_id'] = user_getid();
-      $data[$i]['user_name'] = user_getname(user_getid(), 0);
-      $data[$i]['realname'] = user_getname(user_getid(), 1);
-      $data[$i]['date'] = time();
-      $data[$i]['comment_type'] = '';
-      $data[$i]['content'] = "*" . _("This is a preview") . "*\n\n"
-                             . htmlspecialchars ($new_comment);
-      $data[$i]['comment_internal_id'] = $hist_id;
-      $data[$i]['spamscore'] = '0';
-    }
+  if (!empty ($preview))
+    $add_comment_item ($preview, true);
 
   # Sort entries according to user config.
   $user_pref_fromoldertonewer = user_get_preference ("reverse_comments_order");
@@ -227,7 +223,7 @@ function format_item_details (
                     . "spamchecks\nto be run.")
                 . ")</span><br />\n<span class='preinput'>"
                 . _("Spam content:") . "</span><br />\n<br />"
-                . nl2br ($entry['content']) . "</td>\n<td class=\"{$class}extra\" "
+                . nl2br ($entry['text']) . "</td>\n<td class=\"{$class}extra\" "
                 . "id=\"spam{$int_id}\">\n";
 
               $out .=
@@ -278,7 +274,7 @@ function format_item_details (
           $out .= $comment_type;
           if ($comment_type)
             $out .= "\n";
-          $out .= markup_ascii ($entry['content']) . "\n";
+          $out .= markup_ascii ($entry['text']) . "\n";
           continue;
         }
       if ($comment_type)
@@ -328,10 +324,12 @@ function format_item_details (
             }
         } # if ($poster_id != 100)
 
-      $text_to_markup = $entry['content'];
+      $text_to_markup = $entry['text'];
 
-      $out .= "\n<tr class=\"$class\"><td valign='top'>\n"
-        . "<a id='comment$comment_number' href='#comment$comment_number' "
+      $out .= "\n<tr class=\"$class\"><td valign='top'>\n";
+      if ($entry['preview'])
+        $out .= "<p><b>" . _("This is a preview") . "</b></p>\n";
+      $out .= "<a id='comment$comment_number' href='#comment$comment_number' "
         . "class='preinput'>\n" . utils_format_date($entry['date']) . ', ';
 
       if ($comment_number < 1)

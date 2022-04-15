@@ -46,7 +46,6 @@ $preambles = group_get_preference  ($group_id, $preambles);
 
 if ($preview)
   $field_list = trackers_extract_field_list ();
-
 if (db_numrows ($result)  <= 0)
   {
     trackers_footer ([]);
@@ -422,7 +421,10 @@ print "</p>\n";
 
 print '<p class="noprint"><span class="preinput">';
 print _("Comment Type & Canned Response:") . '</span><br />&nbsp;&nbsp;&nbsp;';
-print trackers_field_box ('comment_type_id', '', $group_id, '', true, 'None');
+$checked = '';
+if ($preview)
+  $checked = $comment_type_id;
+print trackers_field_box ('comment_type_id', '', $group_id, $checked, true);
 
 print '&nbsp;&nbsp;&nbsp;';
 
@@ -474,7 +476,24 @@ print '</span>';
 
 print html_hidsubpart_header ("discussion", _("Discussion"));
 
-$new_comment = $preview? $comment: false;
+$new_comment = false;
+if ($preview)
+  {
+    $new_comment['user_id'] = user_getid ();
+    $new_comment['user_name'] = user_getname (user_getid (), 0);
+    $new_comment['realname'] = user_getname (user_getid (), 1);
+    $new_comment['date'] = time ();
+    $new_comment['comment_type'] =
+      trackers_data_get_cached_field_value (
+        'comment_type_id', $group_id, $comment_type_id
+      );
+    $old_val = htmlspecialchars ($comment);
+    if (!empty ($old_val))
+      $old_val = trackers_encode_value ($old_val);
+    $new_comment['old_value'] = $old_val;
+    $new_comment['bug_history_id'] = -1;
+    $new_comment['spamscore'] = '0';
+  }
 print
   show_item_details ($item_id, $group_id, 0, $item_assigned_to, $new_comment);
 print "<p>&nbsp;</p>\n";
