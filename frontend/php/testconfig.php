@@ -22,21 +22,25 @@
 
 include ("include/ac_config.php");
 
-function return_bytes($val)
+function return_bytes ($v)
 {
-  $val = trim($val);
-  $last = strtolower($val{strlen($val)-1});
-  switch($last)
+  $val = trim ($v);
+  if (is_int ($val))
+    return $val;
+  $last = strtolower (substr ($val, -1));
+  $val = substr ($val, 0, -1);
+  if (!is_int ($val) || !in_array ($last, ['g', 'm', 'k']))
+    return ">$v<";
+  switch ($last)
     {
       # Fall through all cases.
-      case 'g': # The 'G' modifier is available since PHP 5.1.0.
+      case 'g':
         $val *= 1024;
       case 'm':
         $val *= 1024;
       case 'k':
         $val *= 1024;
     }
-
   return $val;
 }
 
