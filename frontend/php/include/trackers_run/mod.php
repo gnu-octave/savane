@@ -432,7 +432,7 @@ print "</p>\n";
 print '<p class="noprint"><span class="preinput">';
 print _("Comment Type & Canned Response:") . '</span><br />&nbsp;&nbsp;&nbsp;';
 $checked = '';
-if ($preview && !empty ($comment_type_id))
+if (($preview || !empty ($anon_check_failed)) && !empty ($comment_type_id))
   $checked = $comment_type_id;
 print trackers_field_box ('comment_type_id', '', $group_id, $checked, true);
 

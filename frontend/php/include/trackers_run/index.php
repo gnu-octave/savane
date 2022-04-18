@@ -33,6 +33,36 @@ if (!$group_id)
 $is_trackeradmin =
   member_check (0, $group_id, member_create_tracker_flag (ARTIFACT) . '2');
 
+# Mention if there was an attached file: we cannot pre-fill an HTML input file.
+function warn_about_uploads ()
+{
+  $filenames = [];
+  for ($i = 1; $i < 5; $i++)
+    $filenames[] = "input_file$i";
+  $files = sane_import ('files',  ['pass' => $filenames]);
+  foreach ($files as $file)
+    {
+      if ($file['error'] != UPLOAD_ERR_OK)
+        continue;
+      $msg = sprintf (
+        _("Warning: do not forget to re-attach your file '%s'"),
+        $file['name']
+      );
+      fb ($msg, 1);
+    }
+}
+
+function fb_anon_check_failed ($check)
+{
+  if (!$check)
+    return;
+  fb (
+    _("You're not logged in and you didn't enter the magic\n"
+      . "anti-spam number, please go back!"),
+    1
+  );
+}
+
 extract (sane_import ('request',
   [
     'funcs' => 'func',
@@ -201,9 +231,9 @@ switch ($func)
     );
     $stat_id = db_insertid (NULL);
 
-    if (empty ($preview) && empty ($fields['check']) && !user_isloggedin ())
-      exit_error(_("You're not logged in and you didn't enter the magic\n"
-                   . "anti-spam number, please go back!"));
+    $anon_check_failed = false;
+    if (!user_isloggedin ())
+      $anon_check_failed = empty ($fields['check']);
 
     # Check for duplicates.
     if (!form_check ($form_id))
@@ -222,7 +252,9 @@ switch ($func)
          [$item_id, $stat_id]
         );
       }
-    if ($item_id && empty ($preview))
+    if ($previous_form_bad_fields || !empty ($preview) || $anon_check_failed)
+       warn_about_uploads ();
+    if ($item_id && empty ($preview) && !$anon_check_failed)
       {
         # Attach new file if there is one.
         # As we need to create the item first to have an item id so this
@@ -284,7 +316,7 @@ switch ($func)
         $address .= $additional_address;
         trackers_mail_followup ($item_id, $address);
       }
-    else # !($item_id && empty ($preview))
+    else # !($item_id && empty ($preview) && !$anon_check_failed)
       {
         # Some error occurred.
 
@@ -292,27 +324,7 @@ switch ($func)
         # The relevant error message was supposedly properly produced by
         # trackers_data_create_item.
         # Reshow the same page.
-        if ($previous_form_bad_fields)
-          {
-            # Mention if there was an attached file: we cannot
-            # pre-fill an HTML input file.
-            $filenames = [];
-            for ($i = 1; $i < 5; $i++)
-              $filenames[] = "input_file$i";
-            $files = sane_import ('files', ['pass' => $filenames]);
-            foreach ($files as $file)
-              {
-                if ($file['error'] == UPLOAD_ERR_OK)
-                  {
-                    $msg = sprintf (
-                      _("Warning: do not forget to re-attach your file '%s'"),
-                      $file['name']
-                    );
-                    fb ($msg, 1);
-                  }
-              }
-          }
-        if ($previous_form_bad_fields || $preview)
+        if ($previous_form_bad_fields || $preview || $anon_check_failed)
           {
             # Copy the previous form values (taking into account dates)
             # to redisplay them and initialize nocache to 0.
@@ -322,13 +334,14 @@ switch ($func)
                   list ($value, $ok) = utils_date_to_unixtime ($value);
                 $$fieldname = $value;
               }
+            fb_anon_check_failed ($anon_check_failed);
             $nocache = 0;
             include '../include/trackers_run/add.php';
             break;
           }
         # Otherwise, that's odd and there's not much to do.
         fb (_("Missing parameters, nothing added."), 1);
-      } # !($item_id && empty ($preview))
+      } # !($item_id && empty ($preview) && !$anon_check_failed)
 
     # Show browse item page.
     include '../include/trackers_run/browse.php';
@@ -357,15 +370,9 @@ switch ($func)
     if (!form_check ($form_id))
       exit_error (_("Exiting"));
 
+    $anon_check_failed = false;
     if (!user_isloggedin ())
-      {
-        $ncheck = empty ($fields['check']);
-        if ($ncheck && !$process_comment)
-          exit_error (
-            _("You're not logged in and you didn't enter the magic\n"
-              . "anti-spam number, please go back!")
-          );
-      }
+      $anon_check_failed = empty ($fields['check']) && !$process_comment;
 
     # Filter out people that would submit data while they are not allowed
     # too (obviously by using an old form, or something else).
@@ -441,46 +448,30 @@ switch ($func)
     $vfl = trackers_extract_field_list();
 
     $changed = 0;
-    # Attach new file if there is one Do that first so it can update
-    # the comment (attach_several_files will use sane_() functions
-    # to get the the necessary info).
     if (!$process_comment)
       {
-        list ($changed, $additional_comment) =
-          trackers_attach_several_files ($item_id, $group_id, $changes);
+        fb_anon_check_failed ($anon_check_failed);
+        if (!$anon_check_failed)
+          {
+            list ($changed, $additional_comment) =
+              trackers_attach_several_files ($item_id, $group_id, $changes);
 
-        # If there is an item for this comment, add the additional
-        # comment providing refs to the item.
-        if (array_key_exists('comment', $vfl) && $vfl['comment'] != '')
-          $vfl['comment'] .= $additional_comment;
+            # If there is an item for this comment, add the additional
+            # comment providing refs to the item.
+            if (array_key_exists('comment', $vfl) && $vfl['comment'] != '')
+              $vfl['comment'] .= $additional_comment;
 
-        $changed |= trackers_data_handle_update (
-          $group_id, $item_id, $dependent_on_task, $dependent_on_bugs,
-          $dependent_on_support, $dependent_on_patch, $canned_response,
-          $vfl, $changes, $address
-        );
-
+            $changed |= trackers_data_handle_update (
+              $group_id, $item_id, $dependent_on_task, $dependent_on_bugs,
+              $dependent_on_support, $dependent_on_patch, $canned_response,
+              $vfl, $changes, $address
+            );
+          }
         # The update failed due to a missing field? Reprint it and squish
         # the rest of the action normally done.
-        if (!$changed && $previous_form_bad_fields)
+        if (!$changed && ($previous_form_bad_fields || $anon_check_failed))
           {
-            # Mention if there was an attached file: we cannot
-            # pre-fill an HTML input file.
-            $filenames = [];
-            for ($i = 1; $i < 5; $i++)
-              $filenames[] = "input_file$i";
-            $files = sane_import ('files',  ['pass' => $filenames]);
-            foreach ($files as $file)
-              {
-                if ($file['error'] != UPLOAD_ERR_OK)
-                  continue;
-                $msg = sprintf (
-                  _("Warning: do not forget to re-attach your file '%s'"),
-                  $file['name']
-                );
-                fb ($msg);
-              }
-
+            warn_about_uploads ();
             # Copy the previous form values (taking into account dates) to
             # redisplay them and initialize nocache to 0.
             foreach ($vfl as $fieldname => $value)
@@ -510,6 +501,8 @@ switch ($func)
         if (trackers_data_is_used ("vote"))
           trackers_votes_update ($item_id, $group_id, $new_vote);
       } # !$process_comment
+    else
+      warn_about_uploads ();
 
     # Now handle notification, after all necessary actions has been.
     if ($changed)
