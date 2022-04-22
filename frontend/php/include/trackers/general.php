@@ -279,7 +279,7 @@ function trackers_field_display (
 
     case 'TA':
       if ($ascii)
-        $output .= utils_unconvert_htmlspecialchars($value);
+        $output .= markup_ascii ($value);
       else
         $output .= $ro? markup_full ($value):
           trackers_field_textarea ($field_name, $value);
