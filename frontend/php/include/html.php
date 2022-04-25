@@ -138,7 +138,6 @@ function html_image_dir ($theme, $suffix = null)
 function html_nextprev ($search_url, $rows, $rows_returned, $varprefix = false)
 {
   global $offset, $max_rows, $sys_home;
-  $img_base = html_image_dir (SV_THEME) . "arrows";
 
   if (!$varprefix)
     $varprefix = '';
@@ -147,6 +146,8 @@ function html_nextprev ($search_url, $rows, $rows_returned, $varprefix = false)
 
   if (($rows_returned > $rows) || ($offset != 0))
     {
+      $prev_msg = _("Previous Results");
+      $next_msg = _("Next Results");
       print "\n<br /><p class=\"nextprev\">\n";
 
       if ($offset != 0)
@@ -154,15 +155,10 @@ function html_nextprev ($search_url, $rows, $rows_returned, $varprefix = false)
           print "<a href=\"$search_url&amp;${varprefix}offset="
             . ($offset - $rows) . "&amp;${varprefix}max_rows="
             . htmlspecialchars ($max_rows) . "#${varprefix}results\">";
-          print "<img src=\"$img_base/previous.png\" border='0' alt='' />"
-            . _("Previous Results") . '</a>';
+          print html_image ("arrows/previous.png") . " $prev_msg</a>";
         }
       else
-        {
-          print
-            "<img src=\"$img_base/previousgrey.png\" border='0' alt='' /><em>"
-             . _("Previous Results") . '</em>';
-        }
+        print html_image ("arrows/previousgrey.png") . " <i>$prev_msg</i>";
       print "&nbsp; &nbsp; &nbsp;";
 
       if ($rows_returned > $rows)
@@ -170,14 +166,10 @@ function html_nextprev ($search_url, $rows, $rows_returned, $varprefix = false)
           print "<a href=\"$search_url&amp;${varprefix}offset="
             . ($offset + $rows) . "&amp;${varprefix}max_rows="
             . htmlspecialchars ($max_rows) . "#${varprefix}results\">";
-          print _("Next Results")
-            . " <img src=\"$img_base/next.png\" border='0' alt='' /></a>";
+          print "$next_msg " . html_image ("arrows/next.png") . "</a>";
         }
       else
-        {
-          print '<em>' . _("Next Results")
-            . "</em> <img src=\"$img_base/nextgrey.png\" border='0' alt='' />";
-        }
+        print "<i>$next_msg</i> " . html_image ("arrows/nextgrey.png");
       print "</p>\n";
     }
 }
@@ -238,14 +230,12 @@ function html_feedback ($bottom)
   print '<script type="text/javascript" src="/js/show-feedback.php?suffix='
     . "$suffix\"></script>\n";
 
-  $img_base = "${sys_home}images/" . SV_THEME . ".theme";
-  $img_ok = "$img_base/bool/ok.png";
-  $img_wrong = "$img_base/bool/wrong.png";
+  $img_ok = "bool/ok.png"; $img_wrong = "bool/wrong.png";
   # Only success.
   if ($feedback && !$ffeedback)
     print "<div id=\"feedback$suffix\" class=\"$class_hide\">"
       . '<span class="feedbacktitle">'
-      . "<img src=\"$img_ok\" class=\"feedbackimage\" alt='' /> "
+      . html_image ($img_ok, ['class' => 'feedbackimage'])
       . _("Success:") . "</span> $feedback</div>\n$script_hide";
 
   # Only errors.
@@ -253,7 +243,7 @@ function html_feedback ($bottom)
     {
       print "<div id=\"feedback$suffix\" class=\"feedbackerror $class_hide\">"
         . "<span class='feedbackerrortitle'>"
-        . "<img src=\"$img_wrong\" class='feedbackimage' alt='' /> "
+        . html_image ($img_wrong, ['class' => 'feedbackimage'])
         . _("Error:") . "</span><br/>\n$ffeedback</div>\n";
     }
 
@@ -262,7 +252,7 @@ function html_feedback ($bottom)
     {
       print "<div id=\"feedback$suffix\" class=\"feedbackerrorandsuccess "
         . "$class_hide\"><span class='feedbackerrorandsuccesstitle'>"
-        . "<img src=\"$img_wrong\" class='feedbackimage' alt='' /> "
+        . html_image ($img_wrong, ['class' => 'feedbackimage'])
         . _("Some Errors:") . "</span> $feedback $ffeedback</div>\n";
     }
 
