@@ -220,12 +220,6 @@ while ($field_name = trackers_list_all_fields ())
     if ($field_name == 'originator_email' && $submitter != '100')
       continue;
 
-    # Save the assigned to value for later.
-    if ($field_name == 'assigned_to')
-      $item_assigned_to = trackers_field_display (
-        $field_name, $group_id, $field_value, false, false, true
-      );
-
     if ($field_name == 'discussion_lock')
       {
         $item_discussion_lock = db_result ($result, 0, $field_name);
@@ -264,6 +258,16 @@ while ($field_name = trackers_list_all_fields ())
     list ($sz,) = trackers_data_get_display_size ($field_name);
     $label = trackers_field_label_display ($field_name, $group_id,
                                            false, false);
+    # Save the assigned to value for later.
+    if ($field_name == 'assigned_to')
+      {
+        $item_assigned_to = trackers_field_display (
+          $field_name, $group_id, $field_value, false, false, true
+        );
+        $value = utils_user_link (
+          user_getname ($field_value), user_getrealname ($field_value)
+        );
+      }
 
     # Some fields must be displayed read-only,
     # assigned_to, status_id and priority too, for technicians
