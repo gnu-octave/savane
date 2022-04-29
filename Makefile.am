@@ -58,3 +58,11 @@ database:
 
 dist-hook:
 	find $(distdir) -type d -name '.svn' -o -name '*~' | xargs -r rm -rf
+
+distcheck-hook:
+	if grep -q '^This is a stub' $(distdir)/ChangeLog; then \
+	  echo; echo; \
+	  echo "ChangeLog hasn't been generated.  " \
+            "Configure with --enable-changelog."; \
+	  echo; echo; false; \
+	fi
