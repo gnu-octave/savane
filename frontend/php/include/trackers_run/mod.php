@@ -482,8 +482,10 @@ print "</p>\n";
 
 if ($item_discussion_lock)
   {
-    print '<p class="warn">' . _("Discussion locked!") . ' '
-          . _("Your privileges however allow to override the lock.");
+    print '<p class="warn">' . _("Discussion locked!");
+    if ($is_trackeradmin)
+      print ' '
+        . _("Your privileges however allow to override the lock.");
     print "</p>\n";
   }
 
