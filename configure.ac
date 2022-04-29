@@ -87,6 +87,25 @@ AC_SUBST([MYSQLADMIN_BIN])
 AC_PATH_PROG([MYSQL_BIN],[mysql],[],
 	     [$PATH$PATH_SEPARATOR/usr/sbin$PATH_SEPARATOR/usr/local/sbin/])
 AC_SUBST([MYSQL_BIN])
+AC_PATH_PROG(GIT, git)
+
+AC_ARG_ENABLE([changelog],
+  [AS_HELP_STRING([--enable-changelog], [update ChangeLog from git logs])],
+  [], [enable_changelog=no]
+)
+AS_CASE(["x$GIT"], [x], [], [
+  AS_IF([test -d "$srcdir/.git"], [
+    AS_CASE(["x$enable_changelog"], [xyes], [
+      AS_ECHO(["Updating ChangeLog..."])
+      sed '1,/^=\{51\}/{/^=\{51\}/p;d}' "$srcdir/ChangeLog" > ChangeLog.git
+      "$GIT" --git-dir="$srcdir/.git" log --numstat \
+        | sed "s,[[[:space:]]]*$,," > "$srcdir/ChangeLog"
+      echo >> "$srcdir/ChangeLog"
+      cat ChangeLog.git >> "$srcdir/ChangeLog"
+      rm ChangeLog.git
+    ])
+  ])
+])
 
 AC_ARG_WITH([db-name], AS_HELP_STRING([--with-db-name],
   [name of the database (default: 'savane')]),
