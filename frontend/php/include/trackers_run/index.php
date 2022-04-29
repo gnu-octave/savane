@@ -398,7 +398,7 @@ switch ($func)
                 exit_permission_denied ();
               }
           }
-        if (db_result ($result, 0, 'discussion_lock'))
+        if (!$is_trackeradmin && db_result ($result, 0, 'discussion_lock'))
           exit_permission_denied ();
       }
     elseif (!$is_trackeradmin)
