@@ -1,3 +1,40 @@
+2022-04-29 3.9
+
+[FRONTEND]
+
+* Add sys_upload_dir writability check in testconfig.php.
+
+* Add new preables to group preferences, Savannah sr #110528.
+
+* Switch to single-column layout in Account Conf, Savannah sr #109699.
+
+* Add preview to original submissions in trackers, Savannah sr #109413.
+
+* Process canned response and comment type in preview.
+
+* Bug fixes:
+
+** Fix JavaScript-related regressions, Savannah sr #110630.
+
+** Make sure that uploaded files aren't overwritten, Savannah sr #109422.
+
+** In emails reporting tracker activity, ordered lists weren't enumerated
+   for original submissions, Savannah sr #110621.
+
+[DOCUMENTATION]
+
+* Drop obsolete info.
+
+[BUILD]
+
+* Regenerate ChangeLog from git automatically.
+
+[I18N]
+
+* Update Russian.
+
+* Update French, Hebrew from the TP.
+
 2022-04-01 3.8
 
 [FRONTEND]
