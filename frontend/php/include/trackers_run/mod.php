@@ -38,7 +38,16 @@ $result = db_execute ("
   [$item_id, $group_id]
 );
 
-$submitter = db_result ($result, 0, 'submitted_by');
+if (db_numrows ($result)  <= 0)
+  {
+    trackers_footer ([]);
+    exit (0);
+  }
+$res_arr = db_fetch_array ($result);
+
+$submitter = $res_arr['submitted_by'];
+$item_discussion_lock = $res_arr['discussion_lock'];
+$enable_comments = !$item_discussion_lock || $is_trackeradmin;
 $preambles = [];
 foreach (['comment', 'file'] as $pre)
   $preambles[] = ARTIFACT . "_${pre}_preamble";
@@ -47,11 +56,6 @@ $preambles = group_get_preference  ($group_id, $preambles);
 
 if ($preview)
   $field_list = trackers_extract_field_list ();
-if (db_numrows ($result)  <= 0)
-  {
-    trackers_footer ([]);
-    exit (0);
-  }
 
 # Item name, converting bugs to bug.
 # (Ideally, the artifact bugs should be named bug).
@@ -61,7 +65,7 @@ $item_link = utils_link ("?$item_id", $item_name);
 # Check whether this item is private or not. If it is private, show only to
 # the submitter or to people that got the right to see private items
 $private_intro = '';
-if (db_result ($result, 0, 'privacy') == "2")
+if ($res_arr['privacy'] == "2")
   {
     if (member_check_private (0, $group_id))
       {
@@ -86,7 +90,7 @@ if (!group_restrictions_check($group_id, ARTIFACT, 2))
 
 trackers_header ([
   'title' =>
-     "$item_name, " . utils_cutstring (db_result ($result, 0, 'summary'))
+     "$item_name, " . utils_cutstring ($res_arr['summary'])
 ]);
 
 # Check if the user have a specific role.
@@ -134,12 +138,11 @@ if (!empty ($private_intro))
   print '<p>' . $private_intro . "</p>\n";
 
 $class = utils_get_priority_color (
-  db_result ($result, 0, 'priority'), db_result ($result, 0, 'status_id')
+  $res_arr['priority'], $res_arr['status_id']
 );
 
-print "<h1 class=\"$class\">";
-print "<i>$item_link</i>:";
-print ' ' . db_result ($result, 0, 'summary') . "</h1>\n";
+print "<h1 class=\"$class\"><i>$item_link</i>: ";
+print $res_arr['summary'] . "</h1>\n";
 
 print form_header (
   $_SERVER['PHP_SELF'], $form_id, "post",
@@ -168,13 +171,13 @@ print "\n\n<table cellpadding='0' width='100%'>\n"
   . "</span></td>\n</tr>\n<tr>\n"
   . '<td class="preinput" width="15%">' . _("Submitted on:")
   . "&nbsp;</td>\n<td width='35%'>"
-  . utils_format_date (db_result ($result, 0, 'date'))
+  . utils_format_date ($res_arr['date'])
   . "</td>\n<td colspan=\"" . ($fields_per_line)
   . '" width="50%" align="center" valign="top"><span class="noprint">'
   . form_submit (_("Submit Changes and Return to this Item"), "submitreturn")
   . "</span></td>\n</tr>\n";
 
-$votes = db_result ($result, 0, 'vote');
+$votes = $res_arr['vote'];
 if ($votes)
   # Display vote here if any, anything else is handled below.
   print "\n<tr>\n"
@@ -191,7 +194,6 @@ $is_manager = $check_member ($group_id, ARTIFACT, '3', 0);
 
 # Variables that will be used afterwards.
 $item_assigned_to = null;
-$item_discussion_lock = null;
 
 $i = 0; # Field counter.
 $j = 0; # Background selector.
@@ -220,12 +222,8 @@ while ($field_name = trackers_list_all_fields ())
     if ($field_name == 'originator_email' && $submitter != '100')
       continue;
 
-    if ($field_name == 'discussion_lock')
-      {
-        $item_discussion_lock = db_result ($result, 0, $field_name);
-        if (!$is_manager)
-          continue;
-      }
+    if ($field_name == 'discussion_lock' && !$is_manager)
+      continue;
 
     # Display the bug field.
     # If field size is greatest than max_size chars then force it to
@@ -241,7 +239,7 @@ while ($field_name = trackers_list_all_fields ())
       $nocache = false;
     if ((empty ($$field_name) || $nocache)
         && !($preview && $is_trackeradmin))
-      $field_value = db_result ($result, 0, $field_name);
+      $field_value = $res_arr[$field_name];
     else
       {
         if ($preview && isset ($field_list[$field_name]))
@@ -295,10 +293,10 @@ while ($field_name = trackers_list_all_fields ())
     if ($mandatory_flag == 3
         || ($mandatory_flag == 0
             && trackers_check_is_shown_to_submitter (
-                 $field_name, $group_id, $submitter)))
-      {
+                 $field_name, $group_id, $submitter))
+    )
+      if ($enable_comments)
         $star = '<span class="warn"> *</span>';
-      }
 
     # Fields colors.
     $field_class = '';
@@ -310,7 +308,7 @@ while ($field_name = trackers_list_all_fields ())
         #
         # We also use the boxitem background color only one time
         # out of two, to keep the page light.
-        $row_class = ' class="' . utils_altrow ($j+1) . '"';
+        $row_class = ' class="' . utils_altrow ($j + 1) . '"';
       }
 
     # If we are working on the cookbook, present checkboxes to
@@ -327,6 +325,7 @@ while ($field_name = trackers_list_all_fields ())
       {
         $field_class = ' class="highlight"';
       }
+    $td = "<td valign='middle'$field_class";
 
     if ($sz > $max_size)
       {
@@ -335,13 +334,10 @@ while ($field_name = trackers_list_all_fields ())
         # Each time prepare the change of the background color.
         $j++;
 
-        print "\n<tr$row_class>"
-          . '<td valign="middle" ' . $field_class . ' width="15%">'
-          . "$label$star</td>\n"
-          . '<td valign="middle" ' . $field_class . ' colspan="'
+        print "\n<tr$row_class>$td width='15%'>"
+          . "$label$star</td>\n$td colspan=\""
           . (2 * $fields_per_line - 1) . '" width="75%">'
-          . $value . "</td>\n"
-          . "</tr>\n";
+          . "$value</td>\n</tr>\n";
           $i = 0;
       }
     else
@@ -355,25 +351,24 @@ while ($field_name = trackers_list_all_fields ())
             $j++;
           }
 
-        print ($i % $fields_per_line ? '': "\n<tr" . $row_class . ">");
-        print '<td valign="middle"' . $field_class.' width="15%">'
-          . $label . $star
-          . '</td><td valign="middle"' . $field_class . ' width="35%">'
-          . $value . " </td>\n";
+        print ($i % $fields_per_line? '': "\n<tr$row_class>");
+        print "$td width='15%'>$label$star</td>\n$td width='35%'>"
+          . "$value</td>\n";
         $i++;
-        print ($i % $fields_per_line ? '': "</tr>\n");
+        print ($i % $fields_per_line? '': "</tr>\n");
       }
   } # while ($field_name = trackers_list_all_fields ())
 
 print "</table>\n";
-print '<div class="warn"><span class="smaller">* '
-      . _("Mandatory Fields") . '</span></div>';
+if ($enable_comments)
+  print '<div class="warn"><span class="smaller">* '
+    . _("Mandatory Fields") . '</span></div>';
 
 $is_deployed = [];
 
 $is_deployed["postcomment"] = false;
 if ($preview)
-  $is_deployed["postcomment"] = true;
+  $is_deployed["postcomment"] = $enable_comments;
 $is_deployed["discussion"] = true;
 $is_deployed["attached"] = true;
 $is_deployed["dependencies"] = true;
@@ -412,74 +407,72 @@ if (isset ($quote_no))
       $comment .= $quote;
   }
 if (!empty ($comment))
-  $is_deployed['postcomment'] = true;
-# For now hidden by default, assuming that people first read comments,
-# then post comment.
-# The bad side is the fact that they are forced to click at least one.
-# The good thing is they do not have to scroll when starting.
-# There is one more click but people feel more in control (well, at least
-# the one that were vocal about Savane UI design).
-print html_hidsubpart_header ("postcomment", _("Post a Comment"),
-                             $is_deployed['postcomment']);
+  $is_deployed['postcomment'] = $enable_comments;
 
-if (!empty ($preambles[ARTIFACT . '_comment_preamble']))
-  print markup_rich ($preambles[ARTIFACT . '_comment_preamble']);
-
-print '<p class="noprint"><span class="preinput"> ' . _("Add a New Comment")
-      . ' ' . markup_info ("rich");
-print form_submit (_('Preview'), 'preview')
-      . "</span><br />&nbsp;&nbsp;&nbsp;\n";
-print trackers_field_textarea ('comment', htmlspecialchars ($comment),
-                              0, 0, _("New comment"));
-print "</p>\n";
-
-print '<p class="noprint"><span class="preinput">';
-print _("Comment Type & Canned Response:") . '</span><br />&nbsp;&nbsp;&nbsp;';
-$checked = '';
-if (($preview || !empty ($anon_check_failed)) && !empty ($comment_type_id))
-  $checked = $comment_type_id;
-print trackers_field_box ('comment_type_id', '', $group_id, $checked, true);
-
-print '&nbsp;&nbsp;&nbsp;';
-
-if ($canned_response == "!multiple!" || is_array ($canned_response))
+if ($enable_comments)
   {
-    $result_canned = trackers_data_get_canned_responses ($group_id);
-    if (db_numrows ($result_canned) > 0)
-      {
-        print '<div>';
+    print html_hidsubpart_header (
+      "postcomment", _("Post a Comment"), $is_deployed['postcomment']
+    );
+    if (!empty ($preambles[ARTIFACT . '_comment_preamble']))
+      print markup_rich ($preambles[ARTIFACT . '_comment_preamble']);
 
-        while ($canned = db_fetch_array ($result_canned))
+    print '<p class="noprint"><span class="preinput"> ' . _("Add a New Comment")
+          . ' ' . markup_info ("rich");
+    print form_submit (_('Preview'), 'preview')
+          . "</span><br />&nbsp;&nbsp;&nbsp;\n";
+    print trackers_field_textarea ('comment', htmlspecialchars ($comment),
+                                  0, 0, _("New comment"));
+    print "</p>\n";
+
+    print '<p class="noprint"><span class="preinput">';
+    print _("Comment Type & Canned Response:")
+      . '</span><br />&nbsp;&nbsp;&nbsp;';
+    $checked = '';
+    if (($preview || !empty ($anon_check_failed)) && !empty ($comment_type_id))
+      $checked = $comment_type_id;
+    print trackers_field_box ('comment_type_id', '', $group_id, $checked, true);
+
+    print '&nbsp;&nbsp;&nbsp;';
+
+    if ($canned_response == "!multiple!" || is_array ($canned_response))
+      {
+        $result_canned = trackers_data_get_canned_responses ($group_id);
+        if (db_numrows ($result_canned) > 0)
           {
-            $id = $canned['bug_canned_id'];
-            $ck = is_array ($canned_response)
-              && in_array ($id, $canned_response);
-            print '&nbsp;&nbsp;&nbsp;';
-            print form_checkbox ("canned_response[]", $ck, ['value' => $id]);
-            print " {$canned['title']}<br />\n";
-          }
-        print "</div>\n";
+            print '<div>';
+            while ($canned = db_fetch_array ($result_canned))
+              {
+                    $id = $canned['bug_canned_id'];
+                $ck = is_array ($canned_response)
+                  && in_array ($id, $canned_response);
+                print '&nbsp;&nbsp;&nbsp;';
+                print
+                  form_checkbox ("canned_response[]", $ck, ['value' => $id]);
+                print " {$canned['title']}<br />\n";
+              }
+            print "</div>\n";
+              }
+        else
+          print '<span class="warn">'
+            . _("Strangely enough, there is no canned response available.")
+            . '</span>';
       }
     else
       {
-        print '<span class="warn">'
-              . _("Strangely enough, there is no canned response available.")
-              . '</span>';
+        print trackers_canned_response_box (
+          $group_id, 'canned_response', $canned_response
+        );
+        if (user_ismember ($group_id, 'A'))
+          print "&nbsp;&nbsp;&nbsp;<a class='smaller' href=\"$sys_home"
+            . ARTIFACT . "/admin/field_values.php?group_id=$group_id"
+            . '&amp;create_canned=1">(' . _("Or define a new Canned Response")
+            . ')</a>';
       }
-  }
-else
-  {
-    print trackers_canned_response_box (
-      $group_id, 'canned_response', $canned_response
-    );
-    if (user_ismember ($group_id, 'A'))
-      print "&nbsp;&nbsp;&nbsp;<a class='smaller' href=\"$sys_home"
-        . ARTIFACT . "/admin/field_values.php?group_id=$group_id"
-        . '&amp;create_canned=1">(' . _("Or define a new Canned Response")
-        . ')</a>';
-  }
-print "</p>\n";
-
+    print "</p>\n";
+    print "<p>&nbsp;</p>\n";
+    print html_hidsubpart_footer ();
+  } # $enable_comments
 if ($item_discussion_lock)
   {
     print '<p class="warn">' . _("Discussion locked!");
@@ -488,10 +481,6 @@ if ($item_discussion_lock)
         . _("Your privileges however allow to override the lock.");
     print "</p>\n";
   }
-
-print "<p>&nbsp;</p>\n";
-print html_hidsubpart_footer ();
-print '</span>';
 
 print html_hidsubpart_header ("discussion", _("Discussion"));
 
@@ -513,8 +502,9 @@ if ($preview)
     $new_comment['bug_history_id'] = -1;
     $new_comment['spamscore'] = '0';
   }
-print
-  show_item_details ($item_id, $group_id, 0, $item_assigned_to, $new_comment);
+print show_item_details (
+  $item_id, $group_id, 0, $item_assigned_to, $new_comment, $enable_comments
+);
 print "<p>&nbsp;</p>\n";
 print html_hidsubpart_footer ();
 
@@ -530,9 +520,6 @@ printf (
   $GLOBALS['sys_upload_max']
 );
 
-print '</p><p class="noprint"><span class="preinput"> ' . _("Attach Files:")
-  . "</span>";
-
 $file_input = function ($n)
 {
   if ($n % 2)
@@ -541,15 +528,24 @@ $file_input = function ($n)
     "<input type='file' name='input_file$n' size='10' title=\""
     . _("File to attach") . '" /> ';
 };
+print "</p>\n";
 
-for ($i = 1; $i < 5; $i++)
-  $file_input ($i);
+if ($enable_comments)
+  {
+    print '<p class="noprint"><span class="preinput"> '
+      . _("Attach Files:") . "</span>";
 
-print "\n<br />\n"
-  . '<span class="preinput">' . _("Comment:")
-  . "</span><br />\n&nbsp;&nbsp;&nbsp;"
-  . '<input type="text" name="file_description" title="'
-  . _("File description") . "\" size='60' maxlength='255' />\n</p>\n<p>";
+    for ($i = 1; $i < 5; $i++)
+      $file_input ($i);
+
+    print "\n<br />\n"
+      . '<span class="preinput">' . _("Comment:")
+      . "</span><br />\n&nbsp;&nbsp;&nbsp;"
+      . '<input type="text" name="file_description" title="'
+      . _("File description") . "\" size='60' maxlength='255' />\n</p>\n";
+  }
+
+print "<p>";
 
 show_item_attached_files ($item_id, $group_id);
 
@@ -745,61 +741,72 @@ show_item_cc_list ($item_id, $group_id);
 print "<p>&nbsp;</p>\n";
 print html_hidsubpart_footer ();
 
-if (trackers_data_is_used ("vote"))
-  {
-    print html_hidsubpart_header ("votes", _("Votes"));
-    print '<p>';
-    printf (
-      ngettext (
-        "There is %s vote so far.", "There are %s votes so far.", $votes
-      ),
-      $votes
-    );
-    print ' '
-      . _("Votes easily highlight which items people would like to see "
-          . "resolved\nin priority, independently of the priority of the item "
-          . "set by tracker\nmanagers.")
-      . "</p>\n<p class='noprint'>";
-    if (trackers_data_is_showed_on_add("vote")
-        || member_check (user_getid(), $group_id))
-      {
-        if (user_isloggedin())
-          {
-            $votes_given = trackers_votes_user_giventoitem_count (
-              user_getid (), ARTIFACT, $item_id
-            );
-            $votes_remaining =
-              trackers_votes_user_remains_count (user_getid ()) + $votes_given;
-            if (!$new_vote)
-              $new_vote = $votes_given;
+$display_votes = function ($group_id, $item_id, $votes,  $new_vote, $lock)
+{
+  if (!trackers_data_is_used ("vote"))
+    return;
+  print html_hidsubpart_header ("votes", _("Votes"));
 
-            # Show how many vote he already gave and allows to remove
-            # or give more votes.
-            # The number of remaining points must be 100 - others votes.
-            print '<span class="preinput"><label for="new_vote">'
-              . _("Your vote:")
-              . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
-              . '<input type="text" name="new_vote" id="new_vote" '
-              . 'size="3" maxlength="3" value="'
-              . htmlspecialchars ($new_vote) . '" /> ';
-            printf (
-              ngettext (
-                "/ %s remaining vote", "/ %s remaining votes",
-                $votes_remaining),
-              $votes_remaining
-            );
-          }
-        else
-          print '<span class="warn">' . _("Only logged-in users can vote.")
-            . "</span>";
-      }
-     else
-       print '<span class="warn">' . _("Only project members can vote.")
-         . "</span>";
-    print "</p>\n";
-    print "<p>&nbsp;</p>\n";
-    print html_hidsubpart_footer ();
-  } # if (trackers_data_is_used ("vote"))
+  print '<p>';
+  printf (
+    ngettext (
+      "There is %s vote so far.", "There are %s votes so far.", $votes
+    ),
+    $votes
+  );
+
+  print ' '
+    . _("Votes easily highlight which items people would like to see "
+        . "resolved\nin priority, independently of the priority of the item "
+        . "set by tracker\nmanagers.");
+  $end = "</p>\n<p>&nbsp;</p>\n" .  html_hidsubpart_footer ();
+  if ($lock)
+    {
+      print $end;
+      return;
+    }
+  print "</p>\n<p class='noprint'>";
+  if (!(trackers_data_is_showed_on_add ("vote")
+      || member_check (user_getid(), $group_id)))
+    {
+      print '<span class="warn">' . _("Only project members can vote.")
+        . "</span>$end";
+      return;
+    }
+  if (!user_isloggedin ())
+    {
+       print '<span class="warn">' . _("Only logged-in users can vote.")
+         . "</span>$end";
+       return;
+    }
+  $votes_given = trackers_votes_user_giventoitem_count (
+    user_getid (), ARTIFACT, $item_id
+  );
+  $votes_remaining =
+    trackers_votes_user_remains_count (user_getid ()) + $votes_given;
+  if (!$new_vote)
+    $new_vote = $votes_given;
+
+  # Show how many vote he already gave and allows to remove
+  # or give more votes.
+  # The number of remaining points must be 100 - others votes.
+  print '<span class="preinput"><label for="new_vote">'
+    . _("Your vote:")
+    . "</label></span><br />\n&nbsp;&nbsp;&nbsp;"
+    . '<input type="text" name="new_vote" id="new_vote" '
+    . "size='3' maxlength='3' value='$new_vote' /> ";
+  printf (
+    ngettext (
+      "/ %s remaining vote", "/ %s remaining votes",
+      $votes_remaining),
+    $votes_remaining
+  );
+  print $end;
+  return;
+};
+
+$display_votes ($group_id, $item_id, $votes, $new_vote, !$enable_comments);
+unset ($display_votes);
 
 # Reassign an item, if manager of the tracker.
 # Not possible on the cookbook manager, cookbook entries are too specific.
