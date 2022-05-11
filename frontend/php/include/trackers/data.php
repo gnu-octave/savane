@@ -283,7 +283,7 @@ function trackers_data_post_notification_settings ($group_id, $tracker)
   $res_gl = db_autoexecute (
     'groups',
     [
-      "$tracker}_glnotif" => $notif_value,
+      "{$tracker}_glnotif" => $notif_value,
       "send_all_$tracker" => $send_all_changes,
       "new_{$tracker}_address" => $new_item_address,
       $private_exclude_address_name => $private_exclude_address
