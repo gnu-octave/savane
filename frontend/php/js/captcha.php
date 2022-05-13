@@ -26,6 +26,6 @@ print
 function ()
 {
   document.getElementById('captcha').src =
-    '${GLOBALS['sys_home']}gencaptcha.php?' + Math.random();
+    '${GLOBALS['sys_home']}captcha.php?' + Math.random();
 }\n";
 ?>

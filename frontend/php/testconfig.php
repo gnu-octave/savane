@@ -139,6 +139,35 @@ function test_sys_upload_dir ()
     print 'OK';
 }
 
+function test_captcha ()
+{
+  global $sys_securimagedir;
+  $default_dir = '/usr/src/securimage';
+
+  print "<h2>Captcha</h2>\n\n";
+  if (empty ($sys_securimagedir))
+    {
+      print "<p><strong>sys_securimagedir isn't set.</strong></p>\n";
+      print "<p>Falling back to default, $default_dir</p>\n";
+      $sys_securimagedir = $default_dir;
+    }
+  else
+    print "<p><b>sys_securimagedir</b> is set to $sys_securimagedir</p>\n";
+  if (!is_dir ($sys_securimagedir))
+    {
+      print "<p><strong>No $sys_securimagedir directory found.</strong></p>\n";
+      return;
+    }
+  $f = "$sys_securimagedir/securimage.php";
+  if (!is_file ($f))
+    {
+      print "<p><strong>No $f file found.</strong></p>\n";
+      return;
+    }
+  print "<p>Sample image:</p>\n"
+    . "<p><img id='captcha' src='/captcha.php' alt='CAPTCHA' /></p>";
+}
+
 print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
     \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n\n";
@@ -158,7 +187,7 @@ if (empty($inside_siteadmin))
 installation is properly configured. It shouldn't display any sensitive
 information, since it could give details about your setup to anybody.</p>\n";
 
-print "\n<h2>Base PHP configuration</h2>\n\n";
+print "\n<h2>Basic PHP configuration</h2>\n\n";
 
 print "<p>PHP version: " . phpversion() . "</p>\n";
 
@@ -336,9 +365,10 @@ else
       $GLOBALS['sys_debug_on'] = false;
 
     print "</table>\n";
-    print "<p>Savane uses safe defaults values when variables are not set
-in the configuration file.</p>\n";
+    print "<p>Savane uses safe defaults values when variables are not set "
+      . "in the configuration file.</p>\n";
     print "<p><img src='/file?file_id=test.png' alt='Test image'/></p>\n";
+    test_captcha ();
 
     print "\n<h2>MySQL configuration</h2>\n\n";
     require_once ("include/utils.php");

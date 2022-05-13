@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2003-2006 Mathieu Roy <yeupou--gna.org>
 # Copyright (C) 2007  Sylvain Beucler
-# Copyright (C) 2017, 2019, 2020 Ineiev
+# Copyright (C) 2017, 2019, 2020, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -74,15 +74,7 @@ if (!empty($update) and form_check($form_id))
           $antispam_is_valid = true;
       }
     if ($GLOBALS['sys_registration_captcha'])
-      {
-        include_once $GLOBALS['sys_securimagedir'] . '/securimage.php';
-        $securimage = new Securimage();
-
-        if ($securimage->check($_POST['captcha_code']) == false)
-          fb(_("Please correctly answer the antispam captcha!"),1);
-        else
-          $antispam_is_valid = true;
-      }
+      include_once '../captcha.php';
     if (!$GLOBALS['sys_registration_captcha']
         && !$GLOBALS['sys_registration_text_spam_test'])
       $antispam_is_valid = true;
@@ -297,16 +289,15 @@ _("In what year was the GNU project announced? [<a href='%s'>hint</a>]"),
       }
     if ($GLOBALS['sys_registration_captcha'])
       {
-        print '<img id="captcha" src="' . $GLOBALS['sys_home']
-              . 'gencaptcha.php" alt="CAPTCHA" /><br />';
-        print '[ <a href="#" id="captcha_js_link">Different Image</a> ] '."\n"
-             .'<script type="text/javascript" src="/js/captcha.php"></script>'
-             ."\n";
-        print '[ <a href="' . $GLOBALS['sys_home'] . 'playcaptcha.php">'
-              . _("Play Captcha") . "</a> ]<br />\n";
+        $url = "{$sys_home}captcha.php";
+        print "<img id='captcha' src=\"$url\" alt='CAPTCHA' /><br />\n";
+        print "[ <a href='#' id='captcha_js_link'>Different Image</a> ]\n"
+          . "<script type='text/javascript' src='/js/captcha.php'></script>\n";
+        print "[ <a href=\"$url?play=1\">" . _("Play Captcha") . "</a> ]"
+          . "<br />\n";
         print _("Antispam test:")
-              .'<input type="text" name="captcha_code" size="10" '
-              .'maxlength="6" />';
+          . '<input type="text" name="captcha_code" size="10" '
+          . 'maxlength="6" />';
       }
   # Extension for PAM authentication.
   # FIXME: for now, only the PAM authentication that exists is for AFS.
