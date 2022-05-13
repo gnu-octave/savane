@@ -333,7 +333,7 @@ _("Personal permissions of %s were overridden by squad permissions")."\n",
       {
         $flags = $art . '_flags';
         $ev1 = $art . '_restrict_event1'; $ev2 = $art . '_restrict_event2';
-        $$flags  = ($$ev2) * 100 + $$ev1;
+        $$flags  = intval ($$ev2) * 100 + intval ($$ev1);
         if (!$$flags)
           $$flags = 'NULL';
       }
