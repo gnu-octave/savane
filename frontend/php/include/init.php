@@ -57,7 +57,8 @@ $sys_themedefault = 'Emeraud';
 $sys_enable_forum_comments = 1;
 $sys_registration_captcha = 0;
 $sys_registration_text_spam_test = 1;
-$sys_securimagedir = '/usr/src/securimage';
+if (empty ($sys_securimagedir))
+  $sys_securimagedir = '/usr/src/securimage';
 
 $sys_default_domain = $_SERVER['SERVER_NAME'];
 if ($_SERVER['SERVER_PORT'] != 80)

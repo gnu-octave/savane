@@ -27,8 +27,6 @@ $img->audio_format = 'mp3';
 if (isset($_GET['format']))
   if (strtolower ($_GET['format']) == 'wav')
     $img->audio_format = 'wav';
-$img->setAudioPath($GLOBALS['sys_securimagedir'] .  '/audio/');
-
 $img->outputAudioFile();
 
 $img->show();
