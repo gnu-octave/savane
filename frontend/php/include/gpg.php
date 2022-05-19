@@ -1,8 +1,7 @@
 <?php
-require_once('../../include/init.php');
 # GPG-specific routines.
 #
-# Copyright (C) 2017, 2018, 2020, 2021 Ineiev
+# Copyright (C) 2017, 2018, 2020, 2021, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -169,5 +168,46 @@ function run_gpg_checks ($key, $run_encryption = true, $level = '2')
     $ret .= "<p>" . _("Can't create temporary directory.") . "</p>\n";
   $ret .= "\n<hr />\n";
   return $ret;
+}
+
+function encrypt_to_user ($user_id, $message)
+{
+  global $sys_gpg_name, $sys_dbname, $sys_dbhost, $sys_dbuser, $sys_dbpasswd;
+
+  $cmd = 'perl ../../perl/encrypt-to-user/index.pl '
+    . "--gpg=\"$sys_gpg_name\" --user=\"$user_id\" "
+    . "--dbname=\"$sys_dbname\" --dbhost=\"$sys_dbhost\"";
+
+  $d_spec = [
+    0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["file", "/dev/null", "a"]
+  ];
+
+  $gpg_proc = proc_open ($cmd, $d_spec, $pipes, NULL, $_ENV);
+  fwrite ($pipes[0], "$sys_dbuser\n");
+  fwrite ($pipes[0], "$sys_dbpasswd\n");
+  fwrite ($pipes[0], $message);
+  fclose ($pipes[0]);
+  $encrypted = stream_get_contents ($pipes[1]);
+  fclose ($pipes[1]);
+  $error_msg = '';
+  $error_code = proc_close ($gpg_proc);
+
+  if ($error_code != 0 || $encrypted === false || $encrypted === "")
+    {
+      $encrypted = $error_msg = "";
+      if ($error_code == 1)
+        $error_msg = _("Encryption failed.");
+      elseif ($error_code == 2)
+        $error_msg = _("No key for encryption found.");
+      elseif ($error_code == 3)
+        $error_msg = _("Can't extract user_id from database.");
+      elseif ($error_code == 4)
+        $error_msg = _("Can't create temporary files.");
+      elseif ($error_code == 5)
+        $error_msg = _("Extracted GPG key ID is invalid.");
+      elseif (!$error_code) # Unknown error, strangely coded as zero.
+        $error_code = -1;
+    }
+  return [$error_code, $error_msg, $encrypted];
 }
 ?>

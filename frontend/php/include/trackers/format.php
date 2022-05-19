@@ -270,7 +270,7 @@ function format_item_details (
             $name = "{$entry['realname']} <{$entry['user_name']}>";
           else
             $name = "Anonymous";
-          $out .= sprintf ("Date: %-30sBy: %s\n", $date, $name);
+          $out .= sprintf ("Date: %-30s By: %s\n", $date, $name);
           $out .= $comment_type;
           if ($comment_type)
             $out .= "\n";

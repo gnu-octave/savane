@@ -4,7 +4,7 @@
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2004-2005 Mathieu Roy <yeupou--gnu.org>
 # Copyright (C) 2004-2005 Joxean Koret <joxeankoret--yahoo.es>
-# Copyright (C) 2017, 2018, 2019 Ineiev <ineiev--gnu.org>
+# Copyright (C) 2017, 2018, 2019, 2022 Ineiev <ineiev--gnu.org>
 #
 # This file is part of Savane.
 #
@@ -21,11 +21,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once('../include/init.php');
-require_once('../include/sane.php');
-require_once('../include/session.php');
-require_once('../include/sendmail.php');
-require_once('../include/database.php');
+require_once ('../include/init.php');
+require_once ('../include/sane.php');
+require_once ('../include/session.php');
+require_once ('../include/sendmail.php');
+require_once ('../include/database.php');
+require_once ('../include/gpg.php');
 
 register_globals_off();
 
@@ -152,44 +153,10 @@ sprintf(("Someone attempted to change a password via email verification\n"
    gmdate('D, d M Y H:i:s \G\M\T'))
 . "\n";
 
-$encrypted_message = "";
-$gpg_error = "";
-if(user_get_preference("email_encrypted", $row_user['user_id']))
-  {
-    $cmd = 'perl ../../perl/encrypt-to-user/index.pl '
-    . '--gpg="' . $GLOBALS['sys_gpg_name'] . '" '
-    . '--user="' . $row_user['user_id'] . '" '
-    . '--dbname="' . $sys_dbname . '" '
-    . '--dbhost="' . $sys_dbhost . '"';
-
-    $d_spec = array(
-        0 => array("pipe", "r"), 1 => array("pipe", "w"),
-        2 => array("file", "/dev/null", "a"));
-
-    $gpg_proc = proc_open($cmd, $d_spec, $pipes, NULL, $_ENV);
-    fwrite($pipes[0], $sys_dbuser."\n");
-    fwrite($pipes[0], $sys_dbpasswd."\n");
-    fwrite($pipes[0], $message);
-    fclose($pipes[0]);
-    $encrypted_message = stream_get_contents($pipes[1]);
-    fclose($pipes[1]);
-    $gpg_result = proc_close($gpg_proc);
-
-    if($gpg_result != 0 or $encrypted_message === FALSE or $encrypted_message === "")
-      {
-        $encrypted_message = "";
-        if($gpg_result == 1)
-          $gpg_error = _("Encryption failed.");
-        else if($gpg_result == 2)
-          $gpg_error = _("No key for encryption found.");
-        else if($gpg_result == 3)
-          $gpg_error = _("Can't extract user_id from database.");
-        else if($gpg_result == 4)
-          $gpg_error = _("Can't create temporary files.");
-        else if($gpg_result == 5)
-          $gpg_error = _("Extracted GPG key ID is invalid.");
-      }
-  }
+$encrypted_message = $gpg_error = $gpg_error = "";
+if (user_get_preference ("email_encrypted", $row_user['user_id']))
+  list ($gpg_error, $gpg_result, $encrypted_message) =
+    encrypt_to_user ($row_user['user_id'], $message);
 
 if($encrypted_message != "")
   $message = $encrypted_message;
