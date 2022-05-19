@@ -24,13 +24,11 @@
 # Base function. The alternatives below should be used whenever relevant,
 # as they may wrap this one with additional useful things
 # (set HTTP response, etc).
-function exit_error ($title, $text = 0)
+function exit_error ($title, $text = 0, $status = false)
 {
-  exit_header ();
+  global $HTML, $feedback;
 
-  global $HTML;
-  global $feedback;
-
+  exit_header ($status);
   $msg = $title;
   if ($text)
     $msg .=
@@ -49,11 +47,13 @@ function exit_error ($title, $text = 0)
   exit;
 }
 
-function exit_permission_denied ()
+function exit_permission_denied ($text = '')
 {
-  exit_header ("403 Forbidden");
+  $status = "403 Forbidden";
+  if ($text)
+    $status .= ": $text";
   exit_log ("permission denied");
-  exit_error (_("Permission Denied"));
+  exit_error (_("Permission Denied"), $text, $status);
 }
 
 function exit_not_logged_in ()
@@ -72,13 +72,11 @@ function exit_not_logged_in ()
 
 function exit_no_group ()
 {
-  exit_header ();
   exit_error (_("No group chosen"), 'nogroup');
 }
 
 function exit_missing_param ($param_list = [])
 {
-  exit_header ();
   exit_error (_("Missing Parameters"), join (', ', $param_list));
 }
 
