@@ -91,21 +91,7 @@ function format_item_details (
   else
     krsort($data);
 
-  # No followup comment -> return now.
   $out = '';
-  if (!count ($data))
-    {
-      if ($ascii)
-        return $out;
-      return '<span class="warn">'
-        . _("No followups have been posted") . '</span>';
-    }
-
-  # Only one comment: it is the original submission, skip it in ascii mode
-  # because it will be already included elsewhere.
-  if (count ($data) < 2 && $ascii)
-    return;
-
   if ($ascii)
     $out .= "    _______________________________________________________\n\n"
       . "Follow-up Comments:\n\n";

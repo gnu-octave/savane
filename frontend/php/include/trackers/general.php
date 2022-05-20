@@ -967,7 +967,6 @@ function trackers_mail_followup (
       );
       $body .= "\n";
       # All other regular fields now.
-      $i = 0;
       while ($field_name = trackers_list_all_fields ())
         {
           # If the field is a special field or if not used by his project
@@ -981,25 +980,11 @@ function trackers_mail_followup (
             $field_name, $group_id, db_result ($result, 0, $field_name),
             false, true, true, true
           );
-          $i++;
           $body .= "\n";
         }
-      $body .= "\n";
-
-      # Now display other special fields.
-      $body .=
-        "    _______________________________________________________\n\n"
-        . "Details:\n"
-        . trackers_field_display (
-            'details', $group_id, db_result ($result, 0, 'details'),
-            true, true, true, true
-          );
-
-      # Then output the history of bug details from newest to oldest.
-      $body .= "\n\n" . format_item_details ($item_id, $group_id, true);
-
-      # Then output the history of bug details from newest to oldest.
-      $body .= "\n\n" . format_item_attached_files ($item_id, $group_id, true);
+      if (ARTIFACT === $artifact)
+        $body .= "\n\n" . format_item_details ($item_id, $group_id, true)
+          . "\n\n" . format_item_attached_files ($item_id, $group_id, true);
     }
 
   # Finally output the message trailer.
