@@ -163,7 +163,7 @@ if (user_is_super_user () || !$is_suspended)
       . db_result ($res_user, 0, 'user_id') . "</strong></td>\n</tr>\n"
       . "$tr_head<td>" . _("Email Address:") . " </td>\n<td>"
       . "<strong><a href=\"{$GLOBALS['sys_home']}sendmessage.php?touser="
-      . db_result ($res_user, 0, 'user_id') . '">';
+      . db_result ($res_user, 0, 'user_id') . '&cc_me=cc_me">';
     # Do not print email address to anonymous user.
     if (
         db_result ($res_user, 0, 'email_hide') == "1" && !user_is_super_user ()

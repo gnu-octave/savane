@@ -26,7 +26,7 @@ require_once ('include/sendmail.php');
 
 extract (sane_import ('request',
   [
-    'true' => 'send_mail',
+    'true' => ['cc_me', 'send_mail'],
     'digits' => 'touser',
     'name' => 'fromuser',
     'pass' => ['subject', 'body', 'feedback']
@@ -52,7 +52,7 @@ if (!$result || db_numrows ($result) < 1)
 if (!$send_mail)
   {
     $HTML->header (['title' => _('Send a message')]);
-    sendmail_form_message (htmlentities ($_SERVER["PHP_SELF"]), $touser);
+    sendmail_form_message (htmlentities ($_SERVER["PHP_SELF"]), $touser, $cc_me);
     $HTML->footer ([]);
     exit;
   }
@@ -63,6 +63,9 @@ foreach (['subject', 'body', 'fromuser'] as $p)
     $missing_params[] = $p;
 if (!empty ($missing_params))
   exit_missing_param (join (', ', $missing_params));
+
+if ($cc_me)
+  $touser .= ", $fromuser";
 
 sendmail_mail ($fromuser, $touser, $subject, $body);
 $HTML->header (['title' => _('Message Sent')]);

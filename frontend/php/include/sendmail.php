@@ -451,12 +451,12 @@ function sendmail_encode_header_content ($header, $charset = "UTF-8")
 }
 
 # A form for logged in users to send mails to others users.
-function sendmail_form_message ($form_action, $user_id)
+function sendmail_form_message ($form_action, $user_id, $cc_me = true)
 {
   global $HTML;
   print $HTML->box_top (
     # TRANSLATORS: the argument is user's name.
-    sprintf (_("Send a Message to %s"), user_getrealname ($user_id))
+    sprintf (_("Send a message to %s"), user_getrealname ($user_id))
   );
   print '<p class="warn">'
     . _("If you are writing for help, did you read the\nproject documentation "
@@ -479,8 +479,10 @@ function sendmail_form_message ($form_action, $user_id)
     . utils_cutstring ($_SERVER['HTTP_USER_AGENT'], "50")
     . "<br />\n$pre<label for='subject'>" . _("Subject:") . "</label>$post"
     . '<input type="text" id="subject" name="subject" '
-    . "size='60' maxlength='45' value='' /><br />"
-    . "<br />\n$pre<label for='body'>" . _("Message:") . "</label>$post"
+    . "size='60' maxlength='45' value='' /><br />\n$pre"
+    . form_checkbox ("cc_me", $cc_me, ['value' => 'cc_me'])
+    . " <label for='cc_me'>" . _("Send me a copy") . "</label>$post"
+    . "$pre<label for='body'>" . _("Message:") . "</label>$post"
     . "<textarea id='body' name='body' rows='20' cols='60'></textarea>\n\n"
     . '<p align="center"><input type="submit" name="send_mail" value="'
     . _('Send Message') . "\" /></p>\n</form>\n";
