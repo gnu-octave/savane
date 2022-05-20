@@ -305,10 +305,12 @@ if ($sys_registration_text_spam_test)
 if ($sys_registration_captcha)
   {
     $url = "{$sys_home}captcha.php";
-    print "<img id='captcha' src=\"$url\" alt='CAPTCHA' /><br />\n";
-    print "[ <a href='#' id='captcha_js_link'>Different Image</a> ]\n"
+    print "<img id='captcha' height='80' width='215' src=\"$url\" "
+      . "alt='" . _('CAPTCHA') . "' /><br />\n";
+    print "[ <a href='#' id='captcha_js_link'>" . _("Try another image")
+      . "</a> ]\n"
       . "<script type='text/javascript' src='/js/captcha.php'></script>\n";
-    print "[ <a href=\"$url?play=1\">" . _("Play Captcha") . "</a> ]"
+    print "[ <a href=\"$url?play=1\">" . _("Play captcha") . "</a> ]"
       . "<br />\n";
     print _("Antispam test:")
       . '<input type="text" name="captcha_code" size="10" '
