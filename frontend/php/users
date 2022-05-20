@@ -23,23 +23,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # The context of this page cannot be guessed later, we have to hardcode it
-define('CONTEXT', 'people');
-require_once('include/init.php');
-require_once('include/sendmail.php');
+define ('CONTEXT', 'people');
+require_once ('include/init.php');
+require_once ('include/sendmail.php');
 
 # Extract user's name.
-$pathinfo = preg_replace ("/\?.*/", "", basename($_SERVER['REQUEST_URI']));
+$pathinfo = preg_replace ("/\?.*/", "", basename ($_SERVER['REQUEST_URI']));
 
 $res_user = user_get_result_set_from_user_name ($pathinfo);
 
-if (db_numrows($res_user) < 1)
+if (db_numrows ($res_user) < 1)
   exit_error (_("Invalid User"), _("That user does not exist."));
 
-$extra_script_name = '/' . $pathinfo;
+$extra_script_name = "/$pathinfo";
 
 $user_id = db_result ($res_user, 0, 'user_id');
 
-require_directory("my");
+require_directory ("my");
 
 # Assumes $res_user result handle is present.
 if (!$res_user || db_numrows ($res_user) < 1)
@@ -52,7 +52,7 @@ $account_status = db_result ($res_user, 0, 'status');
 # accound id, login + description as deleted account.
 $is_suspended = $account_status == 'S' || $account_status == 'D';
 
-if ($is_suspended && !user_is_super_user())
+if ($is_suspended && !user_is_super_user ())
   {
     $realname = _('-deleted account-');
     $email_address = _('-deleted account-');
@@ -60,7 +60,7 @@ if ($is_suspended && !user_is_super_user())
 
 site_header (
   # TRANSLATORS: the argument is user's name (like J. Random Hacker).
-  ['title' => sprintf(_("%s Profile"), $realname), 'context'=>'people']
+  ['title' => sprintf (_("%s Profile"), $realname), 'context' => 'people']
 );
 
 $is_squad = false;
@@ -80,7 +80,7 @@ if ($is_squad)
     . _("It is not a normal user account but a squad: it unites several\n"
         . "users as if they were one (notifications, privileges, etc).");
 print "</p>\n";
-print html_splitpage("start");
+print html_splitpage ("start");
 
 if (!$is_suspended)
   {
@@ -100,7 +100,7 @@ if (!$is_suspended)
         AND groups.status='A'
       GROUP BY groups.unix_group_name
       ORDER BY groups.unix_group_name",
-      [user_getid()]
+      [user_getid ()]
     );
     $rows = db_numrows ($result);
     $usergroups = $usergroups_groupid = $usersquads = $group_data = [];
@@ -138,11 +138,11 @@ print
   "<br />\n<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 
 $tr_head = "<tr valign='top'>\n";
-if ($is_suspended && user_is_super_user())
+if ($is_suspended && user_is_super_user ())
   print "$tr_head<td>" . _("Note:") . " </td>\n<td><strong>"
     . _("The account was deleted") . "</strong></td>\n</tr>\n";
 # We don't translate the text of these links because it's for sysadmins only.
-if (user_is_super_user())
+if (user_is_super_user ())
   {
     $admin_url = "/siteadmin/usergroup.php?user_id=$user_id";
     print $tr_head
@@ -155,7 +155,7 @@ print "$tr_head<td>" . _("Real Name:")
   . "$tr_head<td>" . _("Login Name:") . " </td>\n<td><strong>"
   . db_result ($res_user, 0, 'user_name') . "</strong></td>\n</tr>\n";
 
-if (user_is_super_user() || !$is_suspended)
+if (user_is_super_user () || !$is_suspended)
   {
     print "$tr_head<td>";
     # TRANSLATORS: user's id (a number) shall follow this message.
@@ -165,7 +165,9 @@ if (user_is_super_user() || !$is_suspended)
       . "<strong><a href=\"{$GLOBALS['sys_home']}sendmessage.php?touser="
       . db_result ($res_user, 0, 'user_id') . '">';
     # Do not print email address to anonymous user.
-    if (db_result ($res_user, 0, 'email_hide') == "1" && !user_is_super_user())
+    if (
+        db_result ($res_user, 0, 'email_hide') == "1" && !user_is_super_user ()
+    )
       print _("Send this user a mail");
     else
       print utils_email_basic (db_result ($res_user, 0, 'email'), 1);
@@ -173,7 +175,7 @@ if (user_is_super_user() || !$is_suspended)
   }
 
 # Meaningless for squads.
-if (!$is_squad && (!$is_suspended || user_is_super_user()))
+if (!$is_squad && (!$is_suspended || user_is_super_user ()))
   {
     print "$tr_head<td>" . _("Site Member Since:") . "</td>\n<td><strong>"
       . utils_format_date (db_result ($res_user, 0, 'add_date'))
@@ -183,23 +185,23 @@ if (!$is_squad && (!$is_suspended || user_is_super_user()))
       print _("This user did not enable Resume & Skills.");
     else
       print '<a href="' . $GLOBALS['sys_home'] . 'people/resume.php?user_id='
-        . db_result($res_user, 0, 'user_id') . '"><strong>'
+        . db_result ($res_user, 0, 'user_id') . '"><strong>'
         . _("View Resume & Skills") . '</strong></a>';
     print "</td>\n</tr>\n";
     if (db_result ($res_user, 0, 'gpg_key') != "")
       {
         print '<tr valign="top"><td></td><td>';
         print "<a href=\"{$GLOBALS['sys_home']}people/viewgpg.php?user_id="
-          . db_result($res_user, 0, 'user_id') . '"><strong>'
+          . db_result ($res_user, 0, 'user_id') . '"><strong>'
           . _("Download GPG Key") . '</strong></a>';
         print "</td>\n</tr>\n";
       }
-  } # if (!$is_squad && (!$is_suspended || user_is_super_user()))
+  } # if (!$is_squad && (!$is_suspended || user_is_super_user ()))
 print "</table>\n";
 print $HTML->box_bottom ();
 if ($is_suspended)
   {
-    $HTML->footer (array());
+    $HTML->footer ([]);
     exit (0);
   }
 
@@ -303,13 +305,13 @@ if ($is_squad)
       print _("No member found");
     else
       print "<ul class='boxli'>$items</ul>\n";
-    print $HTML->box_bottom(1);
+    print $HTML->box_bottom (1);
   }
-print html_splitpage (3) . "<p class=\"clearr\">&nbsp;</p>\n";
+print html_splitpage (3) . "<p class='clearr'>&nbsp;</p>\n";
 if (user_isloggedin ())
-  sendmail_form_message($GLOBALS['sys_home'] . 'sendmessage.php', $user_id);
+  sendmail_form_message ($sys_home . 'sendmessage.php', $user_id);
 else
   print '<p class="warn">'
-    . _("You Could Send a Message if you were logged in.") . "</p>\n";
-$HTML->footer (array());
+    . _("You could send a message if you were logged in.") . "</p>\n";
+$HTML->footer ([]);
 ?>
