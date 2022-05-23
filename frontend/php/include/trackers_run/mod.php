@@ -400,11 +400,21 @@ if ($depends_search || $canned_response == "!multiple!"
       $is_deployed["reassign"] = true;
   }
 
+$canned_text = trackers_data_append_canned_response ('', $canned_response);
+
 if (isset ($quote_no))
   {
     $quote = trackers_data_quote_comment ($item_id, $quote_no);
-    if ($quote !== false)
-      $comment .= $quote;
+    if ($quote === false)
+      {
+        # No comment to quote found, probably quoting the preview.
+        $preview = true;
+        $quote = $canned_text;
+        if (!empty ($canned_text))
+          $canned_response = '!multiple!';
+        $canned_text = '';
+      }
+    $comment .= $quote;
   }
 if (!empty ($comment))
   $is_deployed['postcomment'] = $enable_comments;
@@ -495,7 +505,7 @@ if ($preview)
       trackers_data_get_cached_field_value (
         'comment_type_id', $group_id, $comment_type_id
       );
-    $comm = trackers_data_append_canned_response ($comment, $canned_response);
+    $comm = $comment . $canned_text;
     if (!empty ($comm))
       $comm = trackers_encode_value (htmlspecialchars ($comm));
     $new_comment['old_value'] = $comm;
