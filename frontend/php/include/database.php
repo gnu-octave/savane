@@ -86,38 +86,40 @@ function db_query_escape()
 
 # Substitute '?' with one of the values in the $inputarr array,
 # properly escaped for inclusion in an SQL query.
-function db_variable_binding($sql, $inputarr = null)
+function db_variable_binding ($sql, $inputarr = null)
 {
   $sql_expanded = $sql;
 
   if (!$inputarr)
     return $sql_expanded;
 
-  if (!is_array($inputarr))
-    util_die("db_variable_binding: \$inputarr is not an array. Query is: <code>"
-        . htmlspecialchars($sql) . "</code>, \$inputarr is <code>"
-        . print_r($inputarr, 1) . "</code>");
+  if (!is_array ($inputarr))
+    util_die (
+      "db_variable_binding: \$inputarr is not an array. Query is: <code>"
+      . htmlspecialchars ($sql) . "</code>, \$inputarr is <code>"
+      . print_r ($inputarr, 1) . "</code>"
+    );
 
-  $sql_exploded = explode('?', $sql);
+  $sql_exploded = explode ('?', $sql);
 
   $i = 0;
   $sql_expanded = '';
 
-  foreach($inputarr as $v)
+  foreach ($inputarr as $v)
     {
       $sql_expanded .= $sql_exploded[$i];
       # From Ron Baldwin <ron.baldwin#sourceprose.com>.
       # Only quote string types.
-      $typ = gettype($v);
+      $typ = gettype ($v);
       if ($typ == 'string')
-        $sql_expanded .= "'" . db_real_escape_string($v) . "'";
+        $sql_expanded .= "'" . db_real_escape_string ($v) . "'";
       elseif ($typ == 'double')
         # Locale fix so 1.1 doesn't get converted to 1,1.
-        $sql_expanded .= str_replace(',', '.', $v);
+        $sql_expanded .= str_replace (',', '.', $v);
       elseif ($typ == 'boolean')
         $sql_expanded .= $v ? '1' : '0';
       elseif ($typ == 'object')
-        util_die("Don't use db_execute with objects.");
+        util_die ("Don't use db_execute with objects.");
       elseif ($v === null)
         $sql_expanded .= 'NULL';
       else
@@ -125,19 +127,19 @@ function db_variable_binding($sql, $inputarr = null)
       $i += 1;
     }
 
-  $match = true;
-  if (isset($sql_exploded[$i]))
+  $match_arr = true;
+  if (isset ($sql_exploded[$i]))
     {
       $sql_expanded .= $sql_exploded[$i];
-      if ($i+1 != sizeof($sql_exploded))
-        $match = false;
+      if ($i + 1 != sizeof ($sql_exploded))
+        $match_arr = false;
     }
   else
-    $match = false;
-  if (!$match)
+    $match_arr = false;
+  if (!$match_arr)
     util_die(
       "db_variable_binding: input array does not match query: <pre>"
-      . htmlspecialchars($sql) . "<br />" . print_r ($inputarr, true)
+      . htmlspecialchars ($sql) . "<br />" . print_r ($inputarr, true)
     );
   return $sql_expanded;
 }

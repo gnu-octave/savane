@@ -867,12 +867,12 @@ function _markup_inline($line)
     . '(((' . $protocols . '):)?\/\/'
     # match any character except whitespace (non-greedy) for
     # the actual link, followed by the closing brace ']'.
-    . '([^\s]+?))\]/', function ($match) use ($protocol_relative)
+    . '([^\s]+?))\]/', function ($match_arr) use ($protocol_relative)
                       {
-                        $url = $match[1];
+                        $url = $match_arr[1];
                         $string = $url;
-                        if ($match[3] == $protocol_relative)
-                          $string = $match[4];
+                        if ($match_arr[3] == $protocol_relative)
+                          $string = $match_arr[4];
                         return '<a href="' . $url . '">' . $string . '</a>';
                       }, $line);
 

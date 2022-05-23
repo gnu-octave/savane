@@ -461,10 +461,11 @@ foreach ($url_params as $field => $value_id)
       }
     elseif (trackers_data_is_date_field ($field) && $url_params[$field][0])
       {
-      # Transform a date field into a unix time and use <, > or =.
-        list($time,$ok) = utils_date_to_unixtime($url_params[$field][0]);
-        preg_match("/\s*(\d+)-(\d+)-(\d+)/", $url_params[$field][0],$match);
-        list(,$year,$month,$day) = $match;
+        # Transform a date field into a unix time and use <, > or =.
+        $param = $url_params[$field][0];
+        list ($time, $ok) = utils_date_to_unixtime ($param);
+        preg_match ("/\s*(\d+)-(\d+)-(\d+)/", $param, $match_arr);
+        list (, $year, $month, $day) = $match_arr;
 
         if ($advsrch)
           {

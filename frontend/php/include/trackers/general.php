@@ -1430,8 +1430,8 @@ function trackers_add_sort_criteria ($criteria_list, $order, $msort)
       $i = 0;
       foreach ($arr as $attr)
         {
-          preg_match ( "/\s*([^<>]*)([<>]*)/", $attr, $match);
-          list(, $mattr, $mdir) = $match;
+          preg_match ("/\s*([^<>]*)([<>]*)/", $attr, $match_arr);
+          list (, $mattr, $mdir) = $match_arr;
           if ($mattr == $order)
             {
               if (($mdir == '>') || (!isset ($mdir)))

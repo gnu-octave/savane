@@ -72,10 +72,10 @@ $sane_sanitizers['digits'] = function ($in, &$out, $i, $arg)
 {
   if (!is_scalar ($in[$i]))
     return 1;
-  if (!preg_match("/\d+/", $in[$i], $match))
+  if (!preg_match ("/\d+/", $in[$i], $match_arr))
     return 1;
 
-  $out[$i] = $match[0];
+  $out[$i] = $match_arr[0];
 
   if ($arg === null)
     return 0;
@@ -101,9 +101,9 @@ $sane_sanitizers['xdigits'] = function ($in, &$out, $i, $arg)
 {
   if (!is_scalar ($in[$i]))
     return 1;
-  if (!preg_match("/[[:xdigit:]]+/", $in[$i], $match))
+  if (!preg_match ("/[[:xdigit:]]+/", $in[$i], $match_arr))
     return 1;
-  $out[$i] = $match[0];
+  $out[$i] = $match_arr[0];
   return 0;
 };
 
@@ -382,9 +382,9 @@ function sane_import($method, $names)
   $values = array();
   $input =& $GLOBALS[sane_input_array_name ($method)];
 
-  foreach ($names as $fn => $name)
+  foreach ($names as $fnc => $name)
     {
-      $func = sane_prefix_func ($fn);
+      $func = sane_prefix_func ($fnc);
       if ($func !== null)
         sane_apply_func ($func, $input, $name, $values);
       else

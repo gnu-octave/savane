@@ -280,10 +280,10 @@ function utils_format_date($timestamp, $format="default")
 # the conversion went well (true) or bad (false).
 function utils_date_to_unixtime ($date)
 {
-  $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
+  $res = preg_match ("/\s*(\d+)-(\d+)-(\d+)/", $date, $match_arr);
   if ($res == 0)
     return array(0,false);
-  list(,$year,$month,$day) = $match;
+  list (, $year, $month, $day) = $match_arr;
   $time = mktime(0, 0, 0, $month, $day, $year);
   dbg("DBG Matching date $date -> year $year, month $month,"
       ."day $day -> time = $time<br />");
