@@ -192,13 +192,10 @@ function markup_info($level)
       $link_tail = '';
     }
 
+  $img = html_image ('misc/edit.png', ['class' => 'icon']);
   return '<span class="smaller">('
-         .utils_help($link_head.'<img
-    src="'.$GLOBALS['sys_home'].'images/'.SV_THEME
-         .'.theme/misc/edit.png"
-    border="0" class="icon" alt=""'
-         .'
-    />' . $string . $link_tail, $text, true) . ')</span>';
+    . utils_help ("$link_head$img$string$link_tail", $text)
+    . ')</span>';
 }
 
 # Convert special markup characters in the input text to real HTML.
