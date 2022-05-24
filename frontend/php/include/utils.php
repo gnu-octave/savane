@@ -33,9 +33,14 @@ define('FB_ERROR', 1);
 # Get path for site-specific content.
 function utils_get_content_filename ($file)
 {
-  $f = $GLOBALS['sys_incdir'] . "/php/$file.php";
+  global $sys_incdir;
 
-  if (is_file($f))
+  $f = dirname (__FILE__) . "/../../site-specific/$sys_incdir/$file.php";
+  if (is_file ($f))
+    return $f;
+
+  $f = "$sys_incdir/php/$file.php"; # Deprecated old location.
+  if (is_file ($f))
     return $f;
   return null;
 }
