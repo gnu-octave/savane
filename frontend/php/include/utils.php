@@ -366,70 +366,12 @@ function utils_size_readable ($size, $unit = null, $retstring = null, $si = fals
   return sprintf ($retstring, $size, $sizes[$i]);
 }
 
-function utils_fileextension ($filename)
-{
-  $base = basename ($filename); 
-  $ext = substr ($base, strrpos ($base, ".") + 1);
-  if ($ext == 'gz' || $ext == 'bz2')
-    $ext = substr ($base, strrpos ($base, ".") - 3);
-  if ($ext == 'rpm')
-    # TRANSLATORS: this is used in contexts like "rpm package for i386 (ix86)"
-    # or "source rpm package".
-    $long_ext = _("rpm package");
-  if ($ext == 'deb')
-    # TRANSLATORS: this is used in contexts like "debian package for i386 (ix86)"
-    # or "source debian package".
-    $long_ext = _("debian package");
-  if (!($ext == 'deb' || $ext == 'rpm'))
-    return $ext;
-  $arch_type = substr ($base, strrpos ($base, ".") - 3);
-  if ($arch_type == "src.$ext")
-    # TRANSLATORS: the argument is translation of either 'rpm package' or
-    # 'debian package'.
-    $long_ext = sprintf (_("source %s"), $long_ext);
-  if ($arch_type == "rch.$ext")
-    $long_ext = sprintf (_("arch independent %s"), $long_ext);
-  if ($arch_type == "386.$ext")
-    $long_ext = sprintf (_("%s for i386 (ix86)"), $long_ext);
-  if ($arch_type == "586.$ext")
-    $long_ext = sprintf (_("%s for i586"), $long_ext);
-  if ($arch_type == "686.$ext")
-    $long_ext = sprintf (_("%s for i686"), $long_ext);
-  if ($arch_type == "a64.$ext")
-    $long_ext = sprintf (_("%s for Itanium 64"), $long_ext);
-  if ($arch_type == "arc.$ext")
-    $long_ext = sprintf (_("%s for Sparc"), $long_ext);
-  if ($arch_type == "pha.$ext")
-    $long_ext = sprintf (_("%s for Alpha"), $long_ext);
-  if ($arch_type == "ppc.$ext")
-    $long_ext = sprintf (_("%s for PowerPC"), $long_ext);
-  if ($arch_type == "390.$ext")
-    $long_ext = sprintf (_("%s for s390"), $long_ext);
-  $ext = $long_ext;
-  return $ext;
-}
-
-function utils_prep_string_for_sendmail ($body)
-{
-  return str_replace (
-    ["\\", "\"", "\$", "`"] , ["\\\\", "\\\"", "\\\$", "\\`"], $body
-  );
-}
-
 function utils_unconvert_htmlspecialchars ($string)
 {
   if (strlen ($string) < 1)
     return '';
   return str_replace (
     ['&nbsp;', '&quot;', '&gt;', '&lt;', '&amp;'], [' ', '"', '>', '<', '&',],
-    $string
-  );
-}
-
-function utils_remove_htmlheader ($string)
-{
-  return preg_replace (
-    '#(^.*<html[^>]*>.*<body[^>]*>)|(</body[^>]*>.*</html[^>]*>.*$)#i', '',
     $string
   );
 }
@@ -450,66 +392,6 @@ function utils_result_column_to_array ($result, $col = 0, $localize = false)
       $arr[$i] = $val;
     }
   return $arr;
-}
-
-# Backwards compatibility.
-function result_column_to_array ($result, $col = 0)
-{
-  return utils_result_column_to_array ($result, $col);
-}
-
-function utils_wrap_find_space ($string, $wrap)
-{
-  $start = $wrap - 5;
-  $try = 1;
-
-  while (true)
-    {
-      $pos = @strpos ($string, ' ', $start);
-
-      if (($pos > $wrap + 5) || !$pos)
-        {
-          $try++;
-          $start = $wrap - $try * 5;
-          if ($start <= 10)
-            return $wrap;
-        }
-      else
-        break;
-    }
-  return $pos;
-}
-
-function utils_line_wrap ($text, $wrap = 78, $break = "\n")
-{
-  $paras = explode ("\n", $text);
-  $result = [];
-  $i = 0;
-  while ($i < count ($paras))
-    {
-      if (strlen ($paras[$i]) <= $wrap)
-        {
-          $result[] = $paras[$i];
-          $i++;
-        }
-      else
-        {
-          $pos = utils_wrap_find_space ($paras[$i], $wrap);
-          $result[] = substr($paras[$i], 0, $pos);
-
-          $new = trim (substr ($paras[$i], $pos, strlen ($paras[$i]) - $pos));
-          if ($new != '')
-            {
-              $paras[$i] = $new;
-              $pos = utils_wrap_find_space ($paras[$i], $wrap);
-            }
-          else
-            {
-              $i++;
-            }
-        }
-    }
-  return implode ($break, $result);
 }
 
 function utils_user_link ($username, $realname = false, $noneisanonymous = false)
@@ -534,26 +416,6 @@ function utils_user_link ($username, $realname = false, $noneisanonymous = false
   return "$re</a>";
 }
  
-function utils_double_diff_array ($arr1, $arr2)
-{
-  # First transform both arrays in hashes.
-  foreach ($arr1 as $v)
-    $h2[$v] = $v;
-  foreach ($arr2 as $v)
-    $h2[$v] = $v;
-
-  $deleted = [];
-  foreach ($h2 as $k => $v)
-    if (!isset ($h2[$k]))
-      $deleted[] = $k;
-
-  $added = [];
-  foreach ($h2 as $k => $v)
-    if (!isset ($h2[$k]))
-      $added[] = $k;
-  return [$deleted, $added];
-}
-
 function utils_registration_history ($unix_group_name)
 {
   # Meaningless with chrooted system; all www system should be chrooted.

@@ -570,7 +570,7 @@ function handle_monitoring($forum_id,$msg_id)
 
   if ($result && $rows > 0)
     {
-      $tolist = implode(', ', result_column_to_array($result));
+      $tolist = implode(', ', utils_result_column_to_array ($result));
       $result = db_execute("SELECT groups.unix_group_name,user.user_name,"
           ."forum_group_list.forum_name,user.email,user.realname,"
           ."forum.group_forum_id,forum.thread_id,forum.subject,"
