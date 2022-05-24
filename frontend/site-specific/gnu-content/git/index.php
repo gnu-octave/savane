@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-include $GLOBALS['sys_incdir'] . '/php/fingerprints.php';
+include dirname (__FILE__) . '/../fingerprints.php';
 
 global $project, $repo_list;
 
