@@ -46,6 +46,10 @@ if (db_numrows ($result)  <= 0)
 $res_arr = db_fetch_array ($result);
 
 $submitter = $res_arr['submitted_by'];
+$own_post = user_isloggedin () && $submitter == user_getid ();
+if ($res_arr['spamscore'] >= 5 && !($is_trackeradmin || $own_post))
+  exit_permission_denied ();
+
 $item_discussion_lock = $res_arr['discussion_lock'];
 $enable_comments = !$item_discussion_lock || $is_trackeradmin;
 $preambles = [];

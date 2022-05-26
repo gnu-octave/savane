@@ -87,9 +87,8 @@ $hdr = _('Browse Items');
 
 # Make sure spamscore has a numeric value between 1 and 20
 # (we will search for items that have score inferior to $spamscore).
-# Default is five. Under 5, an item is not considered to be spam by the
-# system. But users can however decide to use a tougher limit.
-if ($spamscore === null)
+# Default is 5, and only tracker admins can use other values.
+if ($spamscore === null || !$is_trackeradmin)
   $spamscore = 5;
 if ($spamscore > 20)
   $spamscore = 20;
@@ -1210,15 +1209,16 @@ if (!$sober)
     $form .= '<p class="smaller">';
     if ($printer)
       {
-        $form .=
-         sprintf (
-           ngettext(
-             'Show %1$s item at once with a spam score lower than %2$s.',
-             'Show %1$s items at once with a spam score lower than %2$s.',
-             $chunksz
-           ),
-           $chunksz, $spamscore
-         );
+        if ($is_trackeradmin)
+          $form .=
+            sprintf (
+              ngettext(
+                'Show %1$s item at once with a spam score lower than %2$s.',
+                'Show %1$s items at once with a spam score lower than %2$s.',
+                $chunksz
+              ),
+              $chunksz, $spamscore
+            );
       }
     else
       {
@@ -1229,8 +1229,10 @@ if (!$sober)
               'size="3" maxlength="5" title="'
               . _("Number of items to show at once") . '"')
           )
-          . ' '
-          . sprintf(
+          . ' ';
+        if ($is_trackeradmin)
+          $form .=
+            sprintf (
               _("Show items with a spam score lower than %s."),
               form_input ("text", "spamscore", $spamscore,
                 'size="3" maxlength="2" title="'
@@ -1243,8 +1245,10 @@ if (!$sober)
             # than 10 items at once, which is almost nothing.
             $form .= ' <span class="warn">'
               . sprintf (ngettext (
-"Warning: only %s item can be shown at once, unless using Printer Version.",
-"Warning: only %s items can be shown at once, unless using Printer Version.",
+                  "Warning: only %s item can be shown at once, unless using "
+                    . "Printer Version.",
+                  "Warning: only %s items can be shown at once, unless using "
+                    . "Printer Version.",
                    $chunksz), $chunksz
                 )
               . '</span>';

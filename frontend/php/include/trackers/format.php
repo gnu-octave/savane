@@ -178,6 +178,11 @@ function format_item_details (
           'digits' => 'comment_internal_id'
         ]
       ));
+      # Full markup only for original submission.
+      if ($comment_number < 1)
+        $markedup_text = markup_full ($entry['text']);
+      else
+        $markedup_text = markup_rich ($entry['text']);
       if ($is_spam)
         {
           # If we are dealing with the original submission put a feedback
@@ -193,23 +198,23 @@ function format_item_details (
           # If we are in printer mode, simply skip if.
           if (!empty ($_REQUEST['printer']))
             continue;
+          $own_post = user_isloggedin () && user_getid () == $entry['user_id'];
 
           # The admin may actually want to see the incriminated item.
           # The submitter too.
           if (($func == "viewspam" && $comment_internal_id == $int_id)
-              || ($entry['user_id'] != 100 && user_getid() == $entry['user_id']))
+              || $own_post)
             {
-              # Should be item content, without making links, with no markup.
-              # It is only for checks purpose, nothing else.
               $out .= "\n<tr class=\"$class\">\n"
                 . "<td valign='top'>\n<span class='warn'>("
                 . _("Why is this post is considered to be spam? "
                     . "Users may have reported it to be\nspam or, if it has "
                     . "been recently posted, it may just be waiting for "
                     . "spamchecks\nto be run.")
-                . ")</span><br />\n<span class='preinput'>"
-                . _("Spam content:") . "</span><br />\n<br />"
-                . nl2br ($entry['text']) . "</td>\n<td class=\"{$class}extra\" "
+                . ")</span><br />\n";
+              if ($own_post || $is_admin)
+                $out .=  $markedup_text;
+              $out .= "<br />\n<br /></td>\n<td class=\"{$class}extra\" "
                 . "id=\"spam{$int_id}\">\n";
 
               $out .=
@@ -310,8 +315,6 @@ function format_item_details (
             }
         } # if ($poster_id != 100)
 
-      $text_to_markup = $entry['text'];
-
       $out .= "\n<tr class=\"$class\"><td valign='top'>\n";
       if ($entry['preview'])
         $out .= "<p><b>" . _("This is a preview") . "</b></p>\n";
@@ -333,13 +336,7 @@ function format_item_details (
         $out .=  "<button name='quote_no' value='$comment_number'>"
           . _('Quote') . "</button>";
       $out .= "<br />\n$comment_type";
-      $out .= '<div class="tracker_comment">';
-      # Full markup only for original submission.
-      if ($comment_number < 1)
-        $out .= markup_full ($text_to_markup);
-      else
-        $out .= markup_rich ($text_to_markup);
-      $out .= "</div>\n</td>\n";
+      $out .= "<div class='tracker_comment'>$markedup_text</div>\n</td>\n";
 
       $out .= "<td class=\"{$class}extra\">"
         . utils_user_link ($entry['user_name'], $entry['realname'], true);
