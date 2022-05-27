@@ -277,21 +277,19 @@ if ($update_field)
       print "<br />\n&nbsp;&nbsp;&nbsp;$checkbox_anonymous "
          . _("<!-- present this field to --> Anonymous Users");
 
-    print "\n\n<p>&nbsp;</p>\n<h2>"._("Display:")."</h2>\n";
-
-    if (!trackers_data_is_special ($field))
-      {
-        print '<span class="preinput"><label for="place">'
-           . _("Rank on page:")
-           . "</label></span><br />\n&nbsp;&nbsp;&nbsp;";
-        print '<input type="text" id="place" name="place" value="'
-           . trackers_data_get_place ($field)
-           . "\" size='6' maxlength='6' /><br />\n";
-      }
+    if (trackers_data_is_special ($field))
+      print '<input type="hidden" name="place" value="'
+        . trackers_data_get_place ($field) . '" />';
     else
       {
-        print '<input type="hidden" name="place" value="'
-              . trackers_data_get_place ($field) . '" />';
+        print "\n\n<p>&nbsp;</p>\n<h2>" . _("Display:") . "</h2>\n";
+
+        print '<span class="preinput"><label for="place">'
+          . _("Rank on page:")
+          . "</label></span><br />\n&nbsp;&nbsp;&nbsp;";
+        print '<input type="text" id="place" name="place" value="'
+          . trackers_data_get_place ($field)
+          . "\" size='6' maxlength='6' /><br />\n";
       }
 
     # Customize field size only for text fields and text areas.
