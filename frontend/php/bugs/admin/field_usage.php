@@ -390,7 +390,7 @@ while ($field_name = trackers_list_all_fields ())
           $field_name,
           [
             'group_id', 'comment_type_id', 'bug_id', 'date', 'close_date',
-            'submitted_by'
+            'submitted_by', 'updated'
           ]
         )
     )

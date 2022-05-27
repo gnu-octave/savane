@@ -367,11 +367,9 @@ while ($field = trackers_list_all_fields ())
 # Force the selection of privacy, we always want to be sure that no private
 # item title is provided to everybody.
 $full_field_list = $col_list = $width_list = $lbl_list = [];
-$select_count = "SELECT count(DISTINCT $art.bug_id) AS count ";
+$select_count = "SELECT count(DISTINCT $art.bug_id) AS count";
 $select = "SELECT DISTINCT $art.group_id, $art.priority, $art.privacy,
-  $art.status_id, $art.submitted_by ";
-$from = "FROM $art ";
-$from_params = [];
+  $art.status_id, $art.submitted_by";
 
 # On the cookbook in sober mode, we want the system wide recipes,
 # as long as there is no field that comes as select boxes with values
@@ -725,6 +723,8 @@ function lbl_item ($field, $crit)
 }
 
 $morder_icon_is_set = '';
+$have_last_updated = false;
+$froms = [];
 while ($field = trackers_list_all_fields ('cmp_place_result'))
   {
     # Need the full list of used fields
@@ -734,6 +734,8 @@ while ($field = trackers_list_all_fields ('cmp_place_result'))
         || !trackers_data_is_showed_on_result ($field))
       continue;
 
+    if ($field == 'updated')
+      $have_last_updated = true;
     $col_list[] = $field;
     $width_list[] = trackers_data_get_col_width ($field);
 
@@ -776,26 +778,42 @@ while ($field = trackers_list_all_fields ('cmp_place_result'))
           }
       }
 
-    if (trackers_data_is_username_field ($field))
+    if ($field == 'updated')
+      continue; # This field needs a specific selection, added later.
+
+    if (!trackers_data_is_username_field ($field))
       {
-        # User names require some special processing to display the username
-        # instead of the user_id.
-        $select .= ", user_$field.user_name AS $field";
-        $from = "FROM user user_$field, " . substr ($from, 5);
-        $where .= " AND user_$field.user_id = $art.$field ";
+        # Select column as is.
+        $select .= ", $art.$field";
+        continue;
       }
-    else
-      # Otherwise just select this column as is.
-      $select .= ", $art.$field";
+    # Display the username instead of the user_id.
+    $select .= ", user_$field.user_name AS $field";
+    $froms[] = "user user_$field";
+    $where .= " AND user_$field.user_id = $art.$field ";
   } # while ($field = trackers_list_all_fields ('cmp_place_result'))
 
+$art_h = "${art}_history";
+
+$froms_count = $froms;
+$froms_count[] = $art;
+if ($have_last_updated)
+  {
+    $sel = ", IFNULL(MAX(upd.date), $art.date) AS updated";
+    $select .= $sel;
+    $froms[] = "$art LEFT JOIN $art_h upd ON upd.bug_id = $art.bug_id";
+  }
+else
+  $froms[] = $art;
+
+$from_params = [];
+$more_from = '';
 if ($history_search)
   {
-    $art_h = "${art}_history";
     list ($unix_history_date, $ok) = utils_date_to_unixtime ($history_date);
     if ($history_event == "modified")
       {
-        $from .= ", $art_h ";
+        $more_from .= ", $art_h ";
         $where .= "AND $art_h.bug_id = $art.bug_id AND $art_h.date >= ? ";
         $where_params[] = $unix_history_date;
         if ($history_field != '0')
@@ -806,19 +824,29 @@ if ($history_search)
       }
     else
       {
-        $from .= "
+        $more_from .= "
           LEFT JOIN $art_h
-          ON (($art_h.bug_id = $art.bug_id) AND ($art_h.date >= ?) ";
+          ON ($art_h.bug_id = $art.bug_id AND $art_h.date >= ?";
         $from_params[] = $unix_history_date;
         if ($history_field != '0')
           {
-            $from .= "AND ($art_h.field_name = ?)";
+            $more_from .= " AND $art_h.field_name = ?";
             $from_params[] = $history_field;
           }
-        $from .= ') ';
+        $more_from .= ') ';
         $where .= " AND $art_h.bug_id IS NULL";
       }
   }
+
+foreach (['', '_count'] as $suf)
+  {
+    $froms_joint = join (", ", ${"froms$suf"});
+    ${"from$suf"} = "FROM $froms_joint $more_from";
+  }
+
+$group_by = '';
+if ($have_last_updated)
+  $group_by .= " GROUP BY $art.bug_id";
 
 # Run 2 queries: one to count the total number of results, and the second
 # one with the LIMIT argument. It is faster than selecting all
@@ -826,13 +854,13 @@ if ($history_search)
 # time to transfer all the results from the server to the client.
 # It is also faster than using the SQL_CALC_FOUND_ROWS/FOUND_ROWS()
 # capabilities of MySQL.
-$sql_count = "$select_count $from $where";
+$sql_count = "$select_count $from_count $where";
 $result_count = db_execute (
   $sql_count, array_merge ($from_params, $where_params)
 );
 $totalrows = db_result ($result_count, 0, 'count');
 
-$sql = "$select $from $where $order_by $limit";
+$sql = "$select $from $where$group_by $order_by $limit";
 $result = db_execute (
   $sql, array_merge ($from_params, $where_params, $limit_params)
 );

@@ -43,7 +43,7 @@ $suffices = [
   'release', 'release_id', 'category_version_id', 'platform_version_id',
   'reproducibility_id', 'size_id', 'fix_release_id', 'comment_type_id',
   'plan_release_id', 'component_version', 'fix_release', 'plan_release',
-  'keywords',
+  'keywords', 'updated'
 ];
 
 $custom_suff = ['tf' => 10, 'ta' => 10, 'sb' => 10, 'df' => 5];
