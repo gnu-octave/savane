@@ -34,7 +34,8 @@ $fields = ['group_id', 'privacy'];
 $field_list = join (', ', $fields);
 
 $result = db_execute (
-  "SELECT $field_list FROM $tracker WHERE bug_id = ?", [$item_id]
+  "SELECT $field_list FROM $tracker WHERE bug_id = ? AND spamscore < ?",
+  [$item_id, 5]
 );
 
 if (!$result || db_numrows ($result) < 1)
