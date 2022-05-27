@@ -457,7 +457,7 @@ if ($enable_comments)
             print '<div>';
             while ($canned = db_fetch_array ($result_canned))
               {
-                    $id = $canned['bug_canned_id'];
+                $id = $canned['bug_canned_id'];
                 $ck = is_array ($canned_response)
                   && in_array ($id, $canned_response);
                 print '&nbsp;&nbsp;&nbsp;';
@@ -466,7 +466,7 @@ if ($enable_comments)
                 print " {$canned['title']}<br />\n";
               }
             print "</div>\n";
-              }
+          }
         else
           print '<span class="warn">'
             . _("Strangely enough, there is no canned response available.")

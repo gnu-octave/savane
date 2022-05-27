@@ -133,7 +133,7 @@ if ($post_changes)
     $params = [];
     while ($field = trackers_list_all_fields ())
       {
-        if (($field == 'group_id') || ($field == 'comment_type_id'))
+        if ($field == 'group_id' || $field == 'comment_type_id')
           continue;
 
         $cb_search = "CBSRCH_$field";
