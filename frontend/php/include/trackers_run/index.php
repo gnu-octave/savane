@@ -284,22 +284,10 @@ switch ($func)
             if (!user_isloggedin ()
                 && trackers_data_is_showed_on_add_nologin ($oe_field_name))
               {
-                # Cannot be a registered user.
                 if (validate_email ($originator_email))
-                  {
-                    # Must be different from the submitter field.
-                    $res = db_execute (
-                      "SELECT email FROM user WHERE user_id = ?", [user_getid ()]
-                    );
-                    $submitter_email = db_result ($res, 0, 'email');
-                    if ($originator_email != $submitter_email)
-                      {
-                        trackers_add_cc (
-                          $item_id, $group_id, $originator_email, "-SUB-",
-                          $changes
-                        );
-                      }
-                  }
+                  trackers_add_cc (
+                    $item_id, $group_id, $originator_email, "-SUB-", $changes
+                  );
                 else
                   fb (_("Originator E-mail is not valid, thus was not added\n"
                         . "to the Carbon-Copy list."), 1);
