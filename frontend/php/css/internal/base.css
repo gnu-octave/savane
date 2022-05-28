@@ -310,6 +310,13 @@ pre {
         background-color: #e6e6e6;
 }
 
+.item-navbar span.item-count {
+        font-size: x-large;
+}
+.item-navbar {
+        text-align: center;
+        font-weight: bold;
+}
 .nextprev {
         text-align: center;
 }

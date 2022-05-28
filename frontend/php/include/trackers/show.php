@@ -23,12 +23,73 @@
 
 require_once (dirname (__FILE__) . '/cookbook.php');
 
+function show_item_navbar_begin ($url, $offset, $total_rows)
+{
+  global $chunksz;
+  if ($total_rows <= $chunksz)
+    return '';
+  if ($offset > 0)
+    return
+      '<a href="' . $url . '&amp;offset=0#results">'
+      . html_image ('arrows/first.png')
+      . ' ' . _("Begin") . '</a>&nbsp;&nbsp;&nbsp;&nbsp;'
+      . '<a href="' . $url . '&amp;offset=' . ($offset - $chunksz)
+      . '#results">' . html_image ('arrows/previous.png')
+      . " " . _("Previous Results") . '</a>';
+  return html_image ('arrows/firstgrey.png')
+    . ' <i>' . _("Begin") . '</i>&nbsp;&nbsp;&nbsp;&nbsp;'
+    . html_image ('arrows/previousgrey.png') . ' <i>'
+    . _("Previous Results") . '</i>';
+}
+
+function show_item_navbar_end ($url, $offset, $total_rows)
+{
+  global $chunksz;
+  if ($total_rows <= $chunksz)
+    return '';
+  if ($offset + $chunksz < $total_rows)
+    {
+      $offset_end = $total_rows - ($total_rows % $chunksz);
+      if ($offset_end == $total_rows)
+        $offset_end -= $chunksz;
+
+      return
+        '<a href="' . $url . '&amp;offset='
+        . ($offset + $chunksz) . '#results">' . _("Next Results") . ' '
+        . html_image ('arrows/next.png') . '</a>&nbsp;&nbsp;&nbsp;&nbsp;'
+        . "<a href=\"$url&amp;offset=$offset_end#results\">"
+        . _("End") . ' ' . html_image ('arrows/last.png') . '</a>';
+    }
+  return '<i>' . _("Next Results") . '</i> '
+    . html_image ('arrows/nextgrey.png')
+    . '&nbsp;&nbsp;&nbsp;&nbsp;<i>' . _("End") . '</i> '
+    . html_image ('arrows/lastgrey.png');
+}
+
+# Return HTML showing <-- Prev Total number of items Next -->.
+function show_item_navbar ($url, $offset, $total_rows)
+{
+  global $chunksz;
+  $nav_bar = show_item_navbar_begin ($url, $offset, $total_rows);
+
+  $nav_bar .= "<span class='item-count'> &nbsp;  &nbsp; &nbsp; &nbsp; "
+    . sprintf (ngettext (
+        "%d matching item", "%d matching items", $total_rows), $total_rows
+      );
+  $offset_last = min ($offset + $chunksz - 1, $total_rows - 1);
+  # TRANSLATORS: the arguments are offsets of items in the list.
+  $nav_bar .= " - "
+    . sprintf (_('Items %1$s to %2$s'), $offset + 1, $offset_last + 1)
+    . "  &nbsp; &nbsp; &nbsp; &nbsp; </span>";
+  return $nav_bar . show_item_navbar_end ($url, $offset, $total_rows);
+}
+
 function show_item_list (
   $result_arr, $offset, $total_rows, $field_arr, $title_arr, $width_arr,
   $url, $nolink = false
 )
 {
-  global $group_id, $chunksz, $morder;
+  global $group_id, $morder;
 
   # Build the list of links to use for column headings.
   # Used to trigger sort on that column.
@@ -38,67 +99,10 @@ function show_item_list (
       foreach ($field_arr as $field)
         $links_arr[] = "$url&amp;order=$field#results";
     }
-  # Show extra rows for <-- Prev / Next -->.
 
-  $nav_bar = '';
-  # If all bugs on screen so no prev/begin pointer at all.
-  if ($total_rows > $chunksz)
-    {
-      if ($offset > 0)
-        {
-          $nav_bar .=
-             '<span class="xsmall"><a href="' . $url
-             . '&amp;offset=0#results">' . html_image ('arrows/first.png')
-             . _("Begin") . '</a>&nbsp;&nbsp;&nbsp;&nbsp;'
-             . '<a href="' . $url . '&amp;offset=' . ($offset - $chunksz)
-             . '#results">' . html_image ('arrows/previous.png')
-             . _("Previous Results") . '</a></span>';
-        }
-      else
-        {
-          $nav_bar .=
-             '<span class="xsmall">' . html_image ('arrows/firstgrey.png')
-             . '<em>' . _("Begin") . '</em>&nbsp;&nbsp;&nbsp;&nbsp;'
-             . html_image ('arrows/previousgrey.png') . '<em>'
-             . _("Previous Results") . '</em></span>';
-        }
-    }
+  $nav_bar = show_item_navbar ($url, $offset, $total_rows);
 
-  $offset_last = min ($offset + $chunksz - 1, $total_rows - 1);
-  $nav_bar .= " &nbsp;  &nbsp; &nbsp; &nbsp; "
-    . sprintf (ngettext (
-        "%d matching item", "%d matching items", $total_rows), $total_rows
-      );
-  # TRANSLATORS: the arguments are offsets of items in the list.
-  $nav_bar .= " - "
-    . sprintf (_('Items %1$s to %2$s'), $offset + 1, $offset_last + 1)
-    . "  &nbsp; &nbsp; &nbsp; &nbsp; ";
-
-  # If all items are on screen, no next/end pointer at all.
-  if ($total_rows > $chunksz)
-    {
-      if ($offset + $chunksz < $total_rows )
-        {
-          $offset_end = $total_rows - ($total_rows % $chunksz);
-          if ($offset_end == $total_rows)
-            $offset_end -= $chunksz;
-
-          $nav_bar .=
-            '<span class="xsmall"><a href="' . $url . '&amp;offset='
-            . ($offset + $chunksz) . '#results">' . _("Next Results")
-            . html_image ('arrows/next.png') . '</a>&nbsp;&nbsp;&nbsp;&nbsp;'
-            . "<a href=\"$url&amp;offset=$offset_end#results\">" . _("End")
-            . html_image ('arrows/last.png') . '</a></span>';
-        }
-      else
-        $nav_bar .= '<span class="xsmall"><em>' . _("Next Results")
-          . '</em>' . html_image ('arrows/nextgrey.png')
-          . '&nbsp;&nbsp;&nbsp;&nbsp;<em>' . _("End")
-          . '</em>' . html_image ('arrows/lastgrey.png') . '</span>';
-    }
-
-  # Print prev/next links.
-  print "<h2 id='results' class='nextprev'>$nav_bar</h2><br />\n";
+  print "<p id='results' class='item-navbar'>$nav_bar</p>\n";
   print html_build_list_table_top ($title_arr, $links_arr);
 
   # See if the bugs are too old - so we can highlight them.
@@ -185,7 +189,7 @@ function show_item_list (
     } # foreach ($result_arr as $thisitem)
   print "</table>\n";
   # Print prev/next links.
-  print "<br />\n<h2 $nav_bar<br />\n";
+  print "<br />\n<p class='item-navbar'>$nav_bar</p><br />\n";
 }
 
 # Do the same a item list but in sober output.
