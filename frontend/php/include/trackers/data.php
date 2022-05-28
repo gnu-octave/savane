@@ -1708,7 +1708,7 @@ function trackers_data_handle_update (
         );
 
       # Add poster in CC.
-      if (!user_get_preference ("skipcc_postcomment"))
+      if (user_isloggedin () && !user_get_preference ("skipcc_postcomment"))
         trackers_add_cc (
           $item_id, $group_id, user_getid (), "-COM-", $changes
         );
@@ -1808,7 +1808,7 @@ function trackers_data_handle_update (
 
       # Add CC (CC in case of comment would have been already entered,
       # if there is only a comment, we should not end up here).
-      if (!user_get_preference ("skipcc_updateitem"))
+      if (user_isloggedin () && !user_get_preference ("skipcc_updateitem"))
         trackers_add_cc ($item_id, $group_id, user_getid (), "-UPD-");
     }
   else
