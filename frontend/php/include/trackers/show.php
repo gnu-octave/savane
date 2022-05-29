@@ -678,7 +678,7 @@ function show_dependent_item ($item_id, $dependson = 0)
       print "<a href=\"$link_to_item\" class='block'>";
 
       print html_image (
-        'contexts/' . utils_get_tracker_icon ($tracker),
+        'contexts/' . utils_get_tracker_icon ($tracker) . '.png',
          ['class' => 'icon', 'alt' => $tracker]); 
 
       # Print summary only if the item is not private.

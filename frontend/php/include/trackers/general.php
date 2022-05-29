@@ -33,19 +33,11 @@ require_once ("$dir_name/format.php");
 # requested. If the file start with ?, it's an index.
 function trackers_include ()
 {
-  # Keep the dirname only if it's admin.
-  $dir = get_module_include_dir ($_SERVER['SCRIPT_NAME'], 0, 1);
-  $pre = '';
-  if ($dir != "admin")
-    $dir = '';
-  else
-    {
-      $dir .= "/";
-      $pre = "../";
-    }
-
-  return
-   "$pre../include/trackers_run/$dir" . basename ($_SERVER['SCRIPT_NAME']);
+  $base = basename ($_SERVER['SCRIPT_NAME']);
+  $f = "../include/trackers_run/$base";
+  if (is_file ($f))
+    return $f;
+  return $base;
 }
 
 # Does like trackers_include() but load an arbitrary page of the common
