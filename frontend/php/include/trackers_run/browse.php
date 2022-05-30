@@ -145,7 +145,7 @@ foreach ($url_params as $field => $value_id)
         $names = ['strings' => [[$co_field, ['>', '=', '<']]]];
         if ($advsrch)
           $names = ['preg' => [[$co_field, '/^\d{4}-\d{1,2}-\d{1,2}$/']]];
-        $in = sane_import ('post', $names);
+        $in = sane_import ('request', $names);
         $url_params[$co_field] = $in[$co_field];
         if (!$advsrch && !$url_params[$co_field])
           $url_params[$co_field] = ['='];
