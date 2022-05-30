@@ -264,15 +264,20 @@ if ($new_report)
           $tf_report_val = 50;
 
         print '<tr class="' . utils_altrow ($i) . '">';
+        $cb_attr = ['title' => _("Use as a Search Criterion")];
+        $rank_extra = '';
+        if ($field == 'updated')
+          {
+            $cb_attr['disabled'] = 'disabled';
+            $rank_extra = " disabled='disabled'";
+          }
+
         print "\n<td>" . trackers_data_get_label ($field) . "</td>\n"
           . "<td>" . trackers_data_get_description ($field) . "</td>\n"
-          . "<td align=\"center\">"
-          . form_checkbox (
-              $cb_search, 0, ['title' => _("Use as a Search Criterion")]
-            )
+          . "<td align=\"center\">" . form_checkbox ($cb_search, 0, $cb_attr)
           . "</td>\n<td align=\"center\"><input type=\"text\" title=\""
           . _("Rank on Search") . "\" name=\"$tf_search\" value='' size='5' "
-          . "maxlen='5' /></td>\n";
+          . "maxlen='5' $rank_extra/></td>\n";
 
         # If the current field is item id, we force its presence on the
         # report with rank 0. This field is mandatory: otherwise some
@@ -382,17 +387,23 @@ if ($show_report)
         ${"tf_${k}_val"} = (empty ($fld[$field][$v])? '': $fld[$field][$v]);
 
         print '<tr class="' . utils_altrow ($i) . '">';
+        $cb_attr = ['title' => _("Use as a Search Criterion")];
+        $rank_extra = '';
+        if ($field == 'updated')
+          {
+            $cb_search_chk = 0;
+            $cb_attr['disabled'] = 'disabled';
+            $rank_extra = " disabled='disabled'";
+            $tf_search_val = '';
+          }
 
         print "\n<td>" . trackers_data_get_label ($field)
           . "</td>\n<td>" . trackers_data_get_description ($field)
           . "</td>\n<td align=\"center\">"
-          . form_checkbox (
-              $cb_search, $cb_search_chk,
-              ['title' => _("Use as a Search Criterion")]
-            )
+          . form_checkbox ($cb_search, $cb_search_chk, $cb_attr)
           . "</td>\n<td align='center'><input type='text' name=\"$tf_search\" "
-          . 'title="' . _("Rank on Search")
-          . "\" value=\"$tf_search_val\" size='5' maxlen='5' /></td>\n";
+          . 'title="' . _("Rank on Search") . "\" value=\"$tf_search_val\" "
+          . "size='5' maxlen='5' $rank_extra/></td>\n";
         # If the current field is item id, we force it's presence on
         # the report with rank 0. This field is mandatory: otherwise
         # some links would be broken or there would be even no links.
