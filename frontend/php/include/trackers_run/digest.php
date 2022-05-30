@@ -64,15 +64,11 @@ if ($func == "digestselectfield")
           );
         $items_for_digest = [];
         while ($deps = db_fetch_array ($res_deps))
-          {
-            $items_for_digest[] = $deps['is_dependent_on_item_id'];
-          }
+          $items_for_digest[] = $deps['is_dependent_on_item_id'];
       }
 
     if (!is_array ($items_for_digest))
-      {
-        exit_error (_("No items selected for digest"));
-      }
+      exit_error (_("No items selected for digest"));
 
     trackers_header (['title' => _("Digest Items: Fields Selection")]);
     print '<form action="' . htmlentities ($_SERVER['PHP_SELF'])
@@ -84,7 +80,7 @@ if ($func == "digestselectfield")
     $count = 0;
     foreach ($items_for_digest as $item)
       {
-        print form_input("hidden", "items_for_digest[]", $item);
+        print form_input ("hidden", "items_for_digest[]", $item);
         $count++;
       }
 
@@ -102,7 +98,7 @@ if ($func == "digestselectfield")
 
     $i = 0;
     # Select fields.
-    while ($field_name = trackers_list_all_fields())
+    while ($field_name = trackers_list_all_fields ())
       {
         if (!trackers_data_is_used ($field_name))
           continue;
@@ -114,7 +110,7 @@ if ($func == "digestselectfield")
         # Item ID is mandatory.
         if ($field_name == "bug_id")
             {
-              print form_input ("hidden", "field_used[$field_name]", "1")
+              print form_hidden (["field_used[$field_name]" => "1"])
                 . "\n";
               continue;
             }
@@ -129,24 +125,24 @@ if ($func == "digestselectfield")
       }
     # Comments is not an authentic field but could be useful. We allow
     # addition of the latest comment.
-    print '<div class="' . utils_altrow($i) . '">'
+    print '<div class="' . utils_altrow ($i) . '">'
       . form_checkbox ("field_used[latestcomment]", 1) . '&nbsp;&nbsp;'
       . _("Latest Comment") . ' <span class="smaller"><em>- '
       . _("Latest comment posted about the item.") . "</em></span></div>\n";
 
-    print form_footer(_("Submit"));
-    trackers_footer(array());
+    print form_footer (_("Submit"));
+    trackers_footer ([]);
     goto end_of_file;
   } # if ($func == "digestselectfield")
 
 if ($func != "digestget")
   goto end_of_file;
 
-if (!is_array($items_for_digest))
-  exit_error(_("No items selected for digest"));
+if (!is_array ($items_for_digest))
+  exit_error (_("No items selected for digest"));
 
-if (!is_array($field_used))
-  exit_error(_("No fields selected for digest"));
+if (!is_array ($field_used))
+  exit_error (_("No fields selected for digest"));
 
 trackers_header (
   ['title' => _("Digest") . ' - ' . utils_format_date (time ())]
@@ -159,8 +155,8 @@ foreach ($items_for_digest as $item)
     $i++;
     $result =
       db_execute (
-        "SELECT * FROM " . ARTIFACT . " WHERE bug_id=? AND group_id=?",
-        array($item, $group_id)
+        "SELECT * FROM " . ARTIFACT . " WHERE bug_id = ? AND group_id = ?",
+        [$item, $group_id]
       );
 
     # Skip it is it is private but the user got no privilege.
@@ -173,16 +169,19 @@ foreach ($items_for_digest as $item)
 
     # Show summary if requested.
     $summary = '';
-    if (isset($field_used['summary']) && $field_used['summary'] == 1)
+    if (isset ($field_used['summary']) && $field_used['summary'] == 1)
       $summary = db_result ($result, 0, 'summary');
 
     # Show if the item is closed with an icon.
-    $icon = '<img border="0" src="' . $GLOBALS['sys_home'] . 'images/'
-       . SV_THEME . '.theme/bool/';
     if (db_result ($result, 0, 'status_id') != 1)
-      $icon .= 'ok.png" alt="' .  _("Closed Item") . '" />';
+      {
+        $img_file = 'ok.png'; $img_alt = _("Closed Item");
+      }
     else
-      $icon .= 'wrong.png" alt="' . _("Open Item") . '" />';
+      {
+        $img_file = 'wrong.png'; $img_alt = _("Open Item");
+      }
+    $icon = html_image ("bool/$img_file", ['alt' => $img_alt]);
 
     print '<div class="' . utils_altrow ($i) . '">';
     print '<span class="large"><span class="'
@@ -195,18 +194,16 @@ foreach ($items_for_digest as $item)
      . ": &nbsp;$summary &nbsp;</span></span><br /><br />\n";
 
     $field_count = 0;
-    while ($field_name = trackers_list_all_fields())
+    while ($field_name = trackers_list_all_fields ())
       {
         # Some field can be ignored in any cases.
-        if ($field_name == "status_id"
-            || $field_name == "summary"
-            || $field_name == "bug_id"
-            || $field_name == "details"
-            || $field_name == "comment_type_id" )
+        if (in_array ($field_name,
+              ["status_id", "summary", "bug_id", "details", "comment_type_id"])
+        )
           continue;
 
         # Check the fields.
-        if (!isset($field_used[$field_name]) || $field_used[$field_name] != 1)
+        if (!isset ($field_used[$field_name]) || $field_used[$field_name] != 1)
           continue;
 
         $field_count++;
@@ -214,7 +211,7 @@ foreach ($items_for_digest as $item)
           $field_count = 0;
 
         $side = $field_count? "right": "left";
-        print '<span class="' . "split$side" .'">';
+        print "<span class=\"split$side\">";
 
         $value =
           trackers_field_display (
@@ -222,10 +219,10 @@ foreach ($items_for_digest as $item)
             db_result ($result, 0, $field_name), false, false, true
           );
         # If it is an user name field, show full user info.
-        if ($field_name == "assigned_to"
-            || $field_name == "submitted_by")
-          $value = utils_user_link ($value,
-                                     user_getrealname (user_getid ($value)));
+        if ($field_name == "assigned_to" || $field_name == "submitted_by")
+          $value = utils_user_link (
+            $value, user_getrealname (user_getid ($value))
+          );
         print
           trackers_field_label_display (
             $field_name, db_result ($result, 0, 'group_id'), false, false
@@ -239,10 +236,9 @@ foreach ($items_for_digest as $item)
     # Finally include details + last comment, if asked.
     if (isset ($field_used['details']) && $field_used["details"] == 1)
       print '<hr class="clearr" /><div class="smaller">'
-        . trackers_field_display(
+        . trackers_field_display (
             "details", db_result ($result, 0, 'group_id'),
-             db_result ($result, 0, "details"),
-             false, true, true
+            db_result ($result, 0, "details"), false, true, true
           )
         . "</div>\n";
     if (isset ($field_used["latestcomment"])
@@ -260,8 +256,8 @@ foreach ($items_for_digest as $item)
         $last_comment = null;
         if (db_numrows ($detail_result) > 0)
           {
-            $last_comment = db_result($detail_result, 0, 'old_value');
-            $mod_by = db_result($detail_result, 0, 'mod_by');
+            $last_comment = db_result ($detail_result, 0, 'old_value');
+            $mod_by = db_result ($detail_result, 0, 'mod_by');
             if ($mod_by != 100)
               {
                 $realname = db_result ($detail_result, 0, 'realname');
@@ -275,15 +271,18 @@ foreach ($items_for_digest as $item)
               }
           }
         if ($last_comment)
-          print '<hr class="clearr" /><div class="smaller">'
-            . '<span class="preinput">'
-            . sprintf(_("Latest comment posted (by %s):"),
-                      "$realname $user_name")
-            . '</span> ' . markup_rich ($last_comment) . "</div>\n";
+          {
+            print '<hr class="clearr" /><div class="smaller">'
+              . '<span class="preinput">';
+            printf (
+              _("Latest comment posted (by %s):"), "$realname $user_name"
+            );
+            print '</span> ' . markup_rich ($last_comment) . "</div>\n";
+          }
       }
     print "<p class='clearr'>&nbsp;</p>\n</div>\n\n";
   } # foreach ($items_for_digest as $item)
-trackers_footer(array());
+trackers_footer ([]);
 
 end_of_file:
 ?>
