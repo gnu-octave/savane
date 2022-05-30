@@ -159,21 +159,22 @@ foreach ($items_for_digest as $item)
         [$item, $group_id]
       );
 
+    $res_arr = db_fetch_array ($result);
     # Skip it is it is private but the user got no privilege.
     # Normally, the user should not even been able to select this item.
     # But someone nasty could forge the arguments of the script... So its
     # better to check everytime.
-    if (db_result ($result, 0, 'privacy') == "2"
-        && !member_check_private (0, db_result ($result, 0, 'group_id')))
+    if ($res_arr['privacy'] == "2"
+        && !member_check_private (0, $res_arr['group_id']))
       continue;
 
     # Show summary if requested.
     $summary = '';
     if (isset ($field_used['summary']) && $field_used['summary'] == 1)
-      $summary = db_result ($result, 0, 'summary');
+      $summary = $res_arr['summary'];
 
     # Show if the item is closed with an icon.
-    if (db_result ($result, 0, 'status_id') != 1)
+    if ($res_arr['status_id'] != 1)
       {
         $img_file = 'ok.png'; $img_alt = _("Closed Item");
       }
@@ -185,15 +186,13 @@ foreach ($items_for_digest as $item)
 
     print '<div class="' . utils_altrow ($i) . '">';
     print '<span class="large"><span class="'
-     . utils_get_priority_color (
-         db_result ($result, 0, 'priority'),
-         db_result ($result, 0, 'status_id')
-       )
+     . utils_get_priority_color ($res_arr['priority'], $res_arr['status_id'])
      . "\">$icon&nbsp; "
      . utils_link ("?func=detailitem&amp;item_id=$item", ARTIFACT . " #$item")
      . ": &nbsp;$summary &nbsp;</span></span><br /><br />\n";
 
     $field_count = 0;
+    $halves = ['', ''];
     while ($field_name = trackers_list_all_fields ())
       {
         # Some field can be ignored in any cases.
@@ -206,45 +205,52 @@ foreach ($items_for_digest as $item)
         if (!isset ($field_used[$field_name]) || $field_used[$field_name] != 1)
           continue;
 
+        if ($field_name == 'updated')
+          {
+            $res_arr['updated'] = $res_arr['date'];
+            $result = db_execute ("
+              SELECT date FROM " . ARTIFACT . "_history WHERE bug_id = ?
+              ORDER BY date DESC LIMIT 1", [$item]
+            );
+            if (db_numrows ($result) >= 1)
+              $res_arr['updated'] = db_result ($result, 0, 'date');
+          }
+
         $field_count++;
         if ($field_count == 2)
           $field_count = 0;
 
-        $side = $field_count? "right": "left";
-        print "<span class=\"split$side\">";
-
         $value =
           trackers_field_display (
-            $field_name, db_result ($result, 0, 'group_id'),
-            db_result ($result, 0, $field_name), false, false, true
+            $field_name, $res_arr['group_id'], $res_arr[$field_name],
+            false, false, true
           );
         # If it is an user name field, show full user info.
         if ($field_name == "assigned_to" || $field_name == "submitted_by")
           $value = utils_user_link (
             $value, user_getrealname (user_getid ($value))
           );
-        print
+        $halves[$field_count] .=
           trackers_field_label_display (
-            $field_name, db_result ($result, 0, 'group_id'), false, false
+            $field_name, $res_arr['group_id'], false, false
           )
-         . " $value";
-        print '</span>';
-        if ($field_count == 1)
-          print "<br />\n";
+         . " $value<br />\n";
       }
+    print "<div class='splitright'>{$halves[1]}</div>\n";
+    print "<div class='splitleft'>{$halves[0]}</div>\n";
 
     # Finally include details + last comment, if asked.
     if (isset ($field_used['details']) && $field_used["details"] == 1)
       print '<hr class="clearr" /><div class="smaller">'
         . trackers_field_display (
-            "details", db_result ($result, 0, 'group_id'),
-            db_result ($result, 0, "details"), false, true, true
+            "details", $res_arr['group_id'], $res_arr["details"],
+            false, true, true
           )
         . "</div>\n";
     if (isset ($field_used["latestcomment"])
         && $field_used["latestcomment"] == 1)
       {
-        $detail_result =
+        $result =
           db_execute ("
             SELECT old_value, mod_by, realname, user_name
             FROM " . ARTIFACT . "_history, user
@@ -254,15 +260,15 @@ foreach ($items_for_digest as $item)
             [$item]
           );
         $last_comment = null;
-        if (db_numrows ($detail_result) > 0)
+        if (db_numrows ($result) > 0)
           {
-            $last_comment = db_result ($detail_result, 0, 'old_value');
-            $mod_by = db_result ($detail_result, 0, 'mod_by');
+            $res_arr = db_fetch_array ($result);
+            $last_comment = $res_arr['old_value'];
+            $mod_by = $res_arr['mod_by'];
             if ($mod_by != 100)
               {
-                $realname = db_result ($detail_result, 0, 'realname');
-                $user_name =
-                  '&lt;' . db_result ($detail_result, 0, 'user_name') . '&gt;';
+                $realname = $res_arr['realname'];
+                $user_name = '&lt;' . $res_arr['user_name'] . '&gt;';
               }
             else
               {
