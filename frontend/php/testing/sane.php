@@ -1187,17 +1187,6 @@ $reference = 'include/trackers_run/browse.php';
   test_sane_import ($in, $names, $out);
 }
 
-$reference = 'include/trackers_run/detail-sober.php';
-{
-  $names = ['digits' => 'comingfrom'];
-  $in = ['digits' => '123'];
-  $out = ['comingfrom' => null];
-  test_sane_import ($in, $names, $out);
-  $in['comingfrom'] = 'x119y';
-  $out['comingfrom'] = '119';
-  test_sane_import ($in, $names, $out);
-}
-
 $reference = 'include/trackers_run/digest.php';
 {
   $names = [

@@ -2375,7 +2375,7 @@ function trackers_data_get_canned_responses ($group_id)
   );
 }
 
-function trackers_data_get_reports ($group_id, $user_id = 100, $sober = false)
+function trackers_data_get_reports ($group_id, $user_id = 100)
 {
   # Currently, reports are group based.
   # Print first system reports.
@@ -2384,10 +2384,7 @@ function trackers_data_get_reports ($group_id, $user_id = 100, $sober = false)
   # If user is unknown then get only project-wide and system wide reports
   # else get personal reports in addition  project-wide and system wide.
 
-  # We usually want non-sober specific query forms.
   $system_scope = 'S';
-  if ($sober)
-    $system_scope = 'SSB';
 
   $sql = "
     SELECT report_id,name FROM " . ARTIFACT . "_report

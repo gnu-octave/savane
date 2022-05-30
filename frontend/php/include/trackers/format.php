@@ -471,19 +471,12 @@ function format_item_changes ($changes, $item_id, $group_id)
   return $out;
 }
 
-function format_item_attached_files ($item_id, $group_id, $ascii = false,
-                                     $sober = false)
+function format_item_attached_files ($item_id, $group_id, $ascii = false)
 {
   # ASCII must not be translated.
   global $sys_datefmt, $HTML, $sys_home;
   $out = '';
-  # In sober output, we assume that files are interesting in their
-  # chronological order.
-  # For instance, on the cookbook, if screenshots are provided, the author
-  # of the item is likely to have posted them in the order of their use.
-  # On the other hand, on non-sober output, what matters is the latest
-  # submitted item.
-  $order = $sober? 'ASC': 'DESC';
+  $order = 'DESC';
 
   $result = trackers_data_get_attached_files ($item_id, $order);
   $rows = db_numrows ($result);
@@ -501,7 +494,7 @@ function format_item_attached_files ($item_id, $group_id, $ascii = false,
   if ($ascii)
     $out .= "    _______________________________________________________\n"
       . "File Attachments:\n\n";
-  elseif (!$sober)
+  else
     $out .= $HTML->box_top(_("Attached Files"),'',1);
 
   # Determine what the print out format is based on output type (Ascii, HTML).
@@ -532,7 +525,7 @@ function format_item_attached_files ($item_id, $group_id, $ascii = false,
           $mem_ck = member_check (
             0, $group_id, member_create_tracker_flag (ARTIFACT) . '2'
           );
-          if ($mem_ck && !$sober)
+          if ($mem_ck)
             {
               $html_delete = '<span class="trash"><a href="'
                 . htmlentities ($_SERVER['PHP_SELF'])
@@ -542,28 +535,17 @@ function format_item_attached_files ($item_id, $group_id, $ascii = false,
                 . '</a></span>';
             }
 
-          if ($sober)
-            $out .= '<div>&nbsp;&nbsp;&nbsp;- ';
-          else
-            $out .= '<div class="' . utils_altrow($i) . '">' . $html_delete;
-
+          $out .= '<div class="' . utils_altrow($i) . '">' . $html_delete;
           $out .= "<a href=\"$href\">file #$item_file_id: &nbsp;";
 
-          if ($sober)
-              $out .= "<a href=\"$href\">"
-                . htmlspecialchars (db_result ($result, $i, 'filename'))
-                . '</a>';
-          else
-            {
-              # TRANSLATORS: the first argument is file name, the second
-              # is user's name.
-              $out .= sprintf (
-                _('<!-- file -->%1$s added by %2$s'),
-                htmlspecialchars (db_result ($result, $i, 'filename'))
-                . '</a>',
-                utils_user_link (db_result ($result, $i, 'user_name'))
-              );
-            }
+          # TRANSLATORS: the first argument is file name, the second
+          # is user's name.
+          $out .= sprintf (
+            _('<!-- file -->%1$s added by %2$s'),
+            htmlspecialchars (db_result ($result, $i, 'filename'))
+            . '</a>',
+            utils_user_link (db_result ($result, $i, 'user_name'))
+          );
 
           $out .= ' <span class="smaller">('
             . utils_filesize (0, db_result ($result, $i, 'filesize'));
@@ -580,7 +562,7 @@ function format_item_attached_files ($item_id, $group_id, $ascii = false,
         }
     } # for ($i = 0; $i < $rows; $i++)
 
-  if ($ascii || $sober)
+  if ($ascii)
     $out .= "\n";
   else
     $out .= $HTML->box_bottom (1);

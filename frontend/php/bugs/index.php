@@ -26,9 +26,6 @@ require_once ('../include/init.php');
 require_once ('../include/trackers/general.php');
 require_once ('../include/trackers/votes.php');
 
-# This page does not give access to sober mode.
-$sober = false;
-
 if (!$group_id)
   exit_no_group();
 
@@ -160,13 +157,10 @@ trackers_init($group_id);
 
 $project = project_get_object ($group_id);
 $changed = false;
-$changes = array();
+$changes = [];
 
-$browse_preamble = '';
 $previous_form_bad_fields = false;
-$sober = false;
-
-$address = '';
+$browse_preamble = $address = '';
 
 if (!$func)
   $func = 'browse';

@@ -24,14 +24,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # There are parameters that defined before, in the pages that include browse.
-# For instance, $sober is defined by the cookbook/index.php page.
 
 require_once (dirname (__FILE__) . '/../trackers/show.php');
 
 $preference_prefix = $art = ARTIFACT;
-if ($sober)
-  $preference_prefix .= "-sober";
-
 extract (sane_import ('get',
   [
     'digits' =>
@@ -214,17 +210,8 @@ if (user_isloggedin ())
 if (!$report_id)
   $report_id = group_get_preference ($group_id, "${art}_default_query");
 
-# If still not defined then force it to system 'Basic' report
-# of to 'Sober Basic' in sober mode, 103. This is hardcoded, if at some point
-# we need to put the sober output of existing trackers where 103 may already
-# be used, we will have to think of an other way to put it.
 if (!$report_id)
-  {
-    if ($sober)
-      $report_id = 103;
-    else
-      $report_id = 100;
-  }
+  $report_id = 100; # Fallback to 'Basic' report.
 
 if (!trackers_report_init ($report_id))
   {
@@ -347,19 +334,6 @@ while ($field = trackers_list_all_fields ())
       continue;
     if (!isset ($url_params[$field]))
       $url_params[$field][] = 0;
-
-    # If we are about to generate the sober output, find out if we can
-    # look for items of the site admin project or not.
-    # All fields that have preconfigured values that can be changed by
-    # projects could end up in flawed results, because the value id and the
-    # actual value label (and so, meaning) are likely to be out of sync.
-    # The most obvious case if the category field case.
-    if (!($art == 'cookbook' && $sober))
-      continue;
-    if (trackers_data_is_project_scope ($field)
-        && $url_params[$field][0] != '0'
-        && $url_params[$field][0] != '100')
-      $not_group_specific = 0;
   }
 
 # Start building the SQL query (select and where clauses).
@@ -372,19 +346,8 @@ $select_count = "SELECT count(DISTINCT $art.bug_id) AS count";
 $select = "SELECT DISTINCT $art.group_id, $art.priority, $art.privacy,
   $art.status_id, $art.submitted_by";
 
-# On the cookbook in sober mode, we want the system wide recipes,
-# as long as there is no field that comes as select boxes with values
-# configurable per project set.
-if (ARTIFACT == 'cookbook' && $sober && $not_group_specific)
-  {
-    $where = "WHERE ($art.group_id = ? OR $art.group_id = ?) ";
-    $where_params = [$group_id, $sys_group_id];
-  }
-else
-  {
-    $where = "WHERE $art.group_id = ? ";
-    $where_params = [$group_id];
-  }
+$where = "WHERE $art.group_id = ? ";
+$where_params = [$group_id];
 
 # Take into account the spamscore limit (always shows
 # item posted by the logged in user).
@@ -409,14 +372,8 @@ $wanted_chunksz = $chunksz;
 if ($chunksz > 150 && !$printer && !$digest)
   $chunksz = 150;
 
-# No limit on sober output, we want all recipes.
-$limit = '';
-$limit_params = [];
-if (!$sober)
-  {
-    $limit = " LIMIT ?, ?";
-    $limit_params = [$offset, $chunksz];
-  }
+$limit = " LIMIT ?, ?";
+$limit_params = [$offset, $chunksz];
 
 # Prepare the where clause with the selection criteria given by the user.
 reset ($url_params);
@@ -927,7 +884,7 @@ $form = form_hidden (
 );
 
 # Show the list of available bug reports kind.
-$res_report = trackers_data_get_reports ($group_id, user_getid (), $sober);
+$res_report = trackers_data_get_reports ($group_id, user_getid ());
 if ($printer)
   {
     $form_query_type = null;
@@ -941,10 +898,7 @@ if ($printer)
   }
 else
   {
-    # In sober mode, there is no relevant query form that have reportid = 100.
     $show_100 = true;
-    if ($sober)
-      $show_100 = false;
     $form_query_type = html_build_select_box (
       $res_report, 'report_id', $report_id, $show_100,
       # TRANSLATORS: this string is as argument in
@@ -1101,137 +1055,126 @@ foreach ($fextracted as $field => $label)
 $hist_ev_text = [_("modified"), _("not modified")];
 $hist_ev_value = ["modified", "not modified"];
 
-# If we are in sober mode, additional constraint is not proposed.
-if (!$sober)
+$form_separator = '';
+if (!$printer)
   {
-    $form_separator = '';
-    if (!$printer)
-      {
-        $form_activated =
-          '<select title="'
-          . _("whether additional constraint is activated")
-          . '" name="history_search"><option value="0" '
-          . (!$history_search? 'selected="selected"': '') . '>'
-          # TRANSLATORS: this string is used as the argument in
-          # 'Additional constraint %s'.
-          . _("deactivated") . "</option>\n<option value='1' "
-          . ($history_search? 'selected="selected"': '') . '>'
-          # TRANSLATORS: this string is used as the argument in
-          # 'Additional constraint %s'.
-          . _("activated") . "</option></select>\n";
-        $form_separator = "<br />\n&nbsp;&nbsp;&nbsp;";
-        $form_fieldname = html_build_select_box_from_arrays (
-          $fname, $flabel, 'history_field', $history_field, false, '', true,
-          'Any', false, _("Field for criteria")
-        );
-        $form_modified = html_build_select_box_from_arrays (
-          $hist_ev_value, $hist_ev_text, 'history_event', $history_event,
-          false, '', false, '', false, _("modified or not"));
-        $form_since = trackers_field_date (
-          'history_date', $history_date, 0, 0, false
-        );
-      }
-    elseif ($history_search)
-      # In printer mode, if the additional constraint is off,
-      # no need to print it.
-      {
-        # TRANSLATORS: this string is used as the argument in
-        # 'Additional constraint %s'.
-        $form_activated = _("activated");
-        # TRANSLATORS: this is the argument in a string like
-        #  "%s [modified/not modified] since [date]"
-        $form_fieldname = _('Any field');
-        if ($history_field !== '0')
-          $form_fieldname = $fextracted[$history_field];
-        $form_modified = $hist_ev_text[0];
-        $rows = count ($hist_ev_text);
-        for ($i = 0; $i < $rows; $i++)
-          if ($hist_ev_value[$i] == $history_event)
-            {
-              $form_modified = $hist_ev_text[$i];
-              break;
-            }
-        $form_since = trackers_field_date (
-          'history_date', $history_date, 0, 0, true
-        );
-        $form_separator = ' ';
-      }
-    if ($form_separator != '')
-      $form .= '<p class="smaller"><span class="preinput">'
-        # TRANSLATORS: the argument is 'activated' or 'deactivated'.
-        . sprintf (_('Additional constraint %1$s:'), $form_activated)
-        . "</span>$form_separator"
-        # TRANSLATORS: the first argument is field name, the second argument is
-        # either 'modified' or 'not modified', the third argument is date.
-        . sprintf (
-            _('%1$s %2$s since %3$s'), $form_fieldname, $form_modified,
-            $form_since
-          )
-        . "</p>\n";
-  } # !$sober
+    $form_activated = '<select title="'
+      . _("whether additional constraint is activated")
+      . '" name="history_search"><option value="0" '
+      . (!$history_search? 'selected="selected"': '') . '>'
+      # TRANSLATORS: this string is used as the argument in
+      # 'Additional constraint %s'.
+      . _("deactivated") . "</option>\n<option value='1' "
+      . ($history_search? 'selected="selected"': '') . '>'
+      # TRANSLATORS: this string is used as the argument in
+      # 'Additional constraint %s'.
+      . _("activated") . "</option></select>\n";
+    $form_separator = "<br />\n&nbsp;&nbsp;&nbsp;";
+    $form_fieldname = html_build_select_box_from_arrays (
+      $fname, $flabel, 'history_field', $history_field, false, '', true,
+      'Any', false, _("Field for criteria")
+    );
+    $form_modified = html_build_select_box_from_arrays (
+      $hist_ev_value, $hist_ev_text, 'history_event', $history_event,
+      false, '', false, '', false, _("modified or not"));
+    $form_since = trackers_field_date (
+      'history_date', $history_date, 0, 0, false
+    );
+  }
+elseif ($history_search)
+  # In printer mode, if the additional constraint is off,
+  # no need to print it.
+  {
+    # TRANSLATORS: this string is used as the argument in
+    # 'Additional constraint %s'.
+    $form_activated = _("activated");
+    # TRANSLATORS: this is the argument in a string like
+    #  "%s [modified/not modified] since [date]"
+    $form_fieldname = _('Any field');
+    if ($history_field !== '0')
+      $form_fieldname = $fextracted[$history_field];
+    $form_modified = $hist_ev_text[0];
+    $rows = count ($hist_ev_text);
+    for ($i = 0; $i < $rows; $i++)
+      if ($hist_ev_value[$i] == $history_event)
+        {
+          $form_modified = $hist_ev_text[$i];
+          break;
+        }
+    $form_since = trackers_field_date (
+      'history_date', $history_date, 0, 0, true
+    );
+    $form_separator = ' ';
+  }
+if ($form_separator != '')
+  $form .= '<p class="smaller"><span class="preinput">'
+    # TRANSLATORS: the argument is 'activated' or 'deactivated'.
+    . sprintf (_('Additional constraint %1$s:'), $form_activated)
+    . "</span>$form_separator"
+    # TRANSLATORS: the first argument is field name, the second argument is
+    # either 'modified' or 'not modified', the third argument is date.
+    . sprintf (
+        _('%1$s %2$s since %3$s'), $form_fieldname, $form_modified,
+        $form_since
+      )
+    . "</p>\n";
 
 if ($history_search)
   $url .= "&amp;history_search=$history_search"
     . "&amp;history_field=$history_field&amp;history_event=$history_event"
     . "&amp;history_date=$history_date";
 
-# Number of items printed at once.  In sober mode, they are all printed.
-if (!$sober)
+$form .= '<p class="smaller">';
+if ($printer)
   {
-    $form .= '<p class="smaller">';
-    if ($printer)
+    if ($is_trackeradmin)
+      $form .=
+        sprintf (
+          ngettext (
+            'Show %1$s item at once with a spam score lower than %2$s.',
+            'Show %1$s items at once with a spam score lower than %2$s.',
+            $chunksz
+          ),
+          $chunksz, $spamscore
+        );
+  }
+else
+  {
+    $form .=
+      sprintf (
+        _("Items to show at once: %s."),
+        form_input ("text", "chunksz", $wanted_chunksz,
+          'size="3" maxlength="5" title="'
+          . _("Number of items to show at once") . '"')
+      )
+      . ' ';
+    if ($is_trackeradmin)
+      $form .=
+        sprintf (
+          _("Show items with a spam score lower than %s."),
+          form_input ("text", "spamscore", $spamscore,
+            'size="3" maxlength="2" title="'
+            . _("Spam level of items to hide") . '"')
+        );
+    if ($wanted_chunksz != $chunksz)
       {
-        if ($is_trackeradmin)
-          $form .=
-            sprintf (
-              ngettext (
-                'Show %1$s item at once with a spam score lower than %2$s.',
-                'Show %1$s items at once with a spam score lower than %2$s.',
-                $chunksz
-              ),
-              $chunksz, $spamscore
-            );
+        # No use of ngettext as $chunksz will never be below 10, otherwise
+        # it would mean that Savane would be modified to never list more
+        # than 10 items at once, which is almost nothing.
+        $form .= ' <span class="warn">'
+          . sprintf (ngettext (
+              "Warning: only %s item can be shown at once, unless using "
+                . "Printer Version.",
+              "Warning: only %s items can be shown at once, unless using "
+                . "Printer Version.",
+               $chunksz), $chunksz
+            )
+          . '</span>';
       }
-    else
-      {
-        $form .=
-          sprintf (
-            _("Items to show at once: %s."),
-            form_input ("text", "chunksz", $wanted_chunksz,
-              'size="3" maxlength="5" title="'
-              . _("Number of items to show at once") . '"')
-          )
-          . ' ';
-        if ($is_trackeradmin)
-          $form .=
-            sprintf (
-              _("Show items with a spam score lower than %s."),
-              form_input ("text", "spamscore", $spamscore,
-                'size="3" maxlength="2" title="'
-                . _("Spam level of items to hide") . '"')
-            );
-        if ($wanted_chunksz != $chunksz)
-          {
-            # No use of ngettext as $chunksz will never be below 10, otherwise
-            # it would mean that Savane would be modified to never list more
-            # than 10 items at once, which is almost nothing.
-            $form .= ' <span class="warn">'
-              . sprintf (ngettext (
-                  "Warning: only %s item can be shown at once, unless using "
-                    . "Printer Version.",
-                  "Warning: only %s items can be shown at once, unless using "
-                    . "Printer Version.",
-                   $chunksz), $chunksz
-                )
-              . '</span>';
-          }
-      }
-    $form .= "</p>\n";
-  } # if (!$sober)
+  }
+$form .= "</p>\n";
 
-# In sober mode, do not talk about sorting order, we will anyway not use
-# tables to sort the items.
-if ($totalrows > 0 && !$sober)
+if ($totalrows > 0)
   {
     $form .= '<p class="smaller">';
     if ($msort)
@@ -1282,20 +1225,11 @@ if ($digest)
 
 if ($totalrows > 0)
   {
-    if ($sober)
-      {
-        # Sober got it is own list design.
-        show_item_list_sober ($result_array, $totalrows, $width_list, $url,
-          false);
-      }
-    else
-      {
-        show_item_list ($result_array, $offset, $totalrows, $col_list,
-          $lbl_list, $width_list, $url, false);
-        if ($digest)
-          print form_footer (_("Proceed to Digest next step"));
-        show_priority_colors_key ();
-      }
+    show_item_list ($result_array, $offset, $totalrows, $col_list,
+      $lbl_list, $width_list, $url, false);
+    if ($digest)
+      print form_footer (_("Proceed to Digest next step"));
+    show_priority_colors_key ();
   }
 else
   {
