@@ -307,6 +307,8 @@ elseif ($set == 'custom')
     $pref_stg = '';
     foreach ($url_params as $field => $arr_val)
       {
+        if (!is_array ($arr_val))
+          $arr_val = [$arr_val];
         foreach ($arr_val as $value_id)
           $pref_stg .= "&amp;{$field}[]=$value_id";
       }
