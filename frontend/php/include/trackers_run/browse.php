@@ -156,14 +156,13 @@ foreach ($url_params as $field => $value_id)
 if ($history_search)
   # Dates must numeric date, even can be only modified or unmodified
   # If there is crap in there, ignore silently
-  if ($history_date_yearfd !== null
-      && $history_date_monthfd !== null
+  if ($history_date_yearfd !== null && $history_date_monthfd !== null
       && $history_date_dayfd !== null)
     {
-      $history_date = "$history_date_yearfd-"
-                      ."$history_date_monthfd-$history_date_dayfd";
-      $url_params['history'][] = $history_search.'>'.$history_field.'>'
-                                 .$history_event.'>'.$history_date;
+      $history_date =
+        "$history_date_yearfd-$history_date_monthfd-$history_date_dayfd";
+      $url_params['history'][] =
+        "$history_search>$history_field>$history_event>$history_date";
     }
 
 # Memorize order by field as a user preference if explicitly specified.
@@ -281,8 +280,8 @@ if (!$set)
                     # If not args in URL (means not after post) ...
                     # set $url_params['history'] explicitly since 'history'
                     # is not a tracker field and thus won't be set.
-                    $url_params['history'][] = $history_search.'>'
-                      .$history_field.'>'.$history_event.'>'.$history_date;
+                    $url_params['history'][] = "$history_search>"
+                      . "$history_field>$history_event>$history_date";
                   }
                 else
                   $url_params[$field][] = $value_id;
@@ -342,7 +341,7 @@ while ($field = trackers_list_all_fields ())
   {
     # The select boxes for the bug DB search first.
     if (!(trackers_data_is_showed_on_query ($field)
-        && trackers_data_is_select_box ($field)))
+          && trackers_data_is_select_box ($field)))
       continue;
     if (!isset ($url_params[$field]))
       $url_params[$field][] = 0;
@@ -487,7 +486,7 @@ foreach ($url_params as $field => $value_id)
       }
     elseif ((trackers_data_is_text_field ($field)
              || trackers_data_is_text_area ($field))
-             && $url_params[$field][0])
+            && $url_params[$field][0])
       {
         # Buffer summary and original submission (details) to handle them later
         # in case we have an OR to do between the two, instead of the usual
@@ -698,7 +697,7 @@ if ($morder != '')
       {
         $fields = trackers_criteria_list_to_query ($morder);
         if (!empty ($fields))
-          $order_by = ' ORDER BY '.$fields;
+          $order_by = " ORDER BY $fields";
       }
   }
 
@@ -1114,7 +1113,7 @@ if (!$sober)
           # TRANSLATORS: this string is used as the argument in
           # 'Additional constraint %s'.
           . _("deactivated") . "</option>\n<option value='1' "
-          . ($history_search ? 'selected="selected"':'').'>'
+          . ($history_search? 'selected="selected"': '') . '>'
           # TRANSLATORS: this string is used as the argument in
           # 'Additional constraint %s'.
           . _("activated") . "</option></select>\n";
@@ -1158,15 +1157,15 @@ if (!$sober)
     if ($form_separator != '')
       $form .= '<p class="smaller"><span class="preinput">'
         # TRANSLATORS: the argument is 'activated' or 'deactivated'.
-       . sprintf (_('Additional constraint %1$s:'), $form_activated)
-       . "</span>$form_separator"
-       # TRANSLATORS: the first argument is field name, the second argument is
-       # either 'modified' or 'not modified', the third argument is date.
-      . sprintf (
-          _('%1$s %2$s since %3$s'), $form_fieldname, $form_modified,
-          $form_since
-        )
-      . "</p>\n";
+        . sprintf (_('Additional constraint %1$s:'), $form_activated)
+        . "</span>$form_separator"
+        # TRANSLATORS: the first argument is field name, the second argument is
+        # either 'modified' or 'not modified', the third argument is date.
+        . sprintf (
+            _('%1$s %2$s since %3$s'), $form_fieldname, $form_modified,
+            $form_since
+          )
+        . "</p>\n";
   } # !$sober
 
 if ($history_search)
