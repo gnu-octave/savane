@@ -29,30 +29,6 @@ require_once ("$dir_name/../sendmail.php");
 require_once ("$dir_name/data.php");
 require_once ("$dir_name/format.php");
 
-# Return the file that should be included, according to the URL
-# requested. If the file start with ?, it's an index.
-function trackers_include ()
-{
-  $base = basename ($_SERVER['SCRIPT_NAME']);
-  $f = "../include/trackers_run/$base";
-  if (is_file ($f))
-    return $f;
-  return $base;
-}
-
-# Does like trackers_include() but load an arbitrary page of the common
-# tracker code. This is useful for trackers that have non-standard behavior
-# needs to present some standard page inside a non standard location.
-function trackers_bastardinclude ($page, $is_admin_page = '0')
-{
-  $pre = '';
-  if ($is_admin_page)
-    $pre = "../";
-
-  return "$pre../include/trackers_run/$page.php";
-}
-
-
 # Generate URL arguments from a variable wether scalar or array.
 function trackers_convert_to_url_arg ($varname, $var)
 {
