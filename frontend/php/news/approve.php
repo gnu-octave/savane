@@ -165,7 +165,7 @@ shown on the front page), you must end the superuser session.").'</p>
       $submitted_by = user_getname ($s_by_res);
 
 
-    print '<p>' . _("Submitted by:") . ' '
+    print '<p>' . _("Submitter:") . ' '
      . utils_user_link ($submitted_by, user_getrealname ($s_by_res))
      . "</p>\n";
     print '<form action="' . htmlentities ($_SERVER['PHP_SELF'])

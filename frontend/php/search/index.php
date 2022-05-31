@@ -171,8 +171,7 @@ if (
 
     print html_build_list_table_top (
       [
-        _("Item Id"), _("Item Summary"), _("Group"), _("Submitted By"),
-        _("Date"),
+        _("Item Id"), _("Item Summary"), _("Group"), _("Submitter"), _("Date"),
       ]
     );
     print "\n";

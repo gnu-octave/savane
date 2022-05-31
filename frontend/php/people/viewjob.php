@@ -78,7 +78,7 @@ print"</h1>\n<p><span class='preinput'>" . _("Category:")
   . "</span> <a href=\"{$GLOBALS['sys_home']}people/?categories[]="
   . db_result ($result, 0, 'category_id') . '">'
   . db_result ($result, 0, 'category_name') . "</a><br />\n"
-  . '<span class="preinput">' . _("Submitted By:") . '</span> '
+  . '<span class="preinput">' . _("Submitter:") . '</span> '
   . "<a href='{$GLOBALS['sys_home']}users/$user_name'>$user_name</a><br />\n"
   . '<span class="preinput">' . _("Date:") . '</span> '
   . utils_format_date (db_result ($result, 0, 'date'))

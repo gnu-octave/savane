@@ -167,14 +167,15 @@ print form_input ("hidden", "item_id", $item_id);
 
 print "\n\n<table cellpadding='0' width='100%'>\n"
   . "<tr>\n<td class='preinput' width='15%'>"
-  . _("Submitted by:") . "&nbsp;</td>\n<td width='35%'>"
+  . _("Submitter:") . "&nbsp;</td>\n<td width='35%'>"
   . utils_user_link (user_getname ($submitter), user_getrealname ($submitter))
   . "</td>\n<td colspan=\"" . ($fields_per_line)
   . '" width="50%" align="center" valign="top"><span class="noprint">'
   . form_submit (_("Submit Changes and Browse Items"), "submit", 'class="bold"')
   . "</span></td>\n</tr>\n<tr>\n"
-  . '<td class="preinput" width="15%">' . _("Submitted on:")
-  . "&nbsp;</td>\n<td width='35%'>"
+  . '<td class="preinput" width="15%">'
+  # TRANSLATORS: This is a label for dates.
+  . _("Submitted:") . "&nbsp;</td>\n<td width='35%'>"
   . utils_format_date ($res_arr['date'])
   . "</td>\n<td colspan=\"" . ($fields_per_line)
   . '" width="50%" align="center" valign="top"><span class="noprint">'
