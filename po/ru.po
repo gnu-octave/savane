@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.5\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2022-05-20 08:33+0000\n"
+"POT-Creation-Date: 2022-05-31 08:33+0000\n"
 "PO-Revision-Date: 2022-05-20 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
@@ -40,111 +40,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-
-#: frontend/php/cookbook/download.php:58 frontend/php/bugs/download.php:58
-#: frontend/php/link-to-file.php:80
-msgid "Non-authorized access to file attached to private item"
-msgstr "Несанкционированный доступ к файлу, прилагающемуся к скрытой заявке"
-
-#. TRANSLATORS: the argument is file id (a number).
-#: frontend/php/cookbook/download.php:68 frontend/php/bugs/download.php:68
-#, php-format
-msgid "Couldn't find attached file (file #%s)"
-msgstr "Присоединенный файл не найден (файл №%s)"
-
-#: frontend/php/cookbook/download.php:73 frontend/php/bugs/download.php:73
-msgid "File has a null size"
-msgstr "Размер файла равен нулю"
-
-#: frontend/php/cookbook/export.php:30 frontend/php/bugs/export.php:30
-msgid "Data Export requires an access to private data of the group"
-msgstr "Для экспорта нужен доступ к скрытым данным этой группы"
-
-#: frontend/php/cookbook/export.php:37 frontend/php/bugs/export.php:37
-msgid "Data Export"
-msgstr "Экспорт данных"
-
-#: frontend/php/cookbook/export.php:38 frontend/php/bugs/export.php:38
-msgid "Here you can export data from this tracker."
-msgstr "Здесь можно экспортировать данные этого журнала."
-
-#: frontend/php/cookbook/export.php:40 frontend/php/bugs/export.php:40
-msgid "Download tracker data"
-msgstr "Данные журнала"
-
-#: frontend/php/cookbook/reporting.php:46 frontend/php/bugs/reporting.php:46
-#, php-format
-msgid "%1$s to %2$s"
-msgstr "с %1$s по %2$s"
-
-#: frontend/php/cookbook/reporting.php:86 frontend/php/bugs/reporting.php:86
-msgid "Other statistics:"
-msgstr "Другая статистика:"
-
-#. TRANSLATORS: aging statistics is statistics by date.
-#: frontend/php/cookbook/reporting.php:92 frontend/php/bugs/reporting.php:92
-msgid "Aging Statistics"
-msgstr "Статистика по срокам"
-
-#. TRANSLATORS: the argument is field label.
-#: frontend/php/cookbook/reporting.php:104 frontend/php/bugs/reporting.php:104
-#, php-format
-msgid "Statistics by '%s'"
-msgstr "Статистика по полю '%s'"
-
-#: frontend/php/cookbook/reporting.php:126 frontend/php/bugs/reporting.php:126
-#: frontend/php/include/sitemenu.php:210
-msgid "Statistics"
-msgstr "Статистика"
-
-#. TRANSLATORS: aging statistics is statistics by date.
-#: frontend/php/cookbook/reporting.php:139 frontend/php/bugs/reporting.php:139
-msgid "Aging statistics:"
-msgstr "Статистика по срокам:"
-
-#: frontend/php/cookbook/reporting.php:150 frontend/php/bugs/reporting.php:150
-msgid "Average Turnaround Time for Closed Items"
-msgstr "Среднее время обработки закрытых заявок"
-
-#: frontend/php/cookbook/reporting.php:160 frontend/php/bugs/reporting.php:160
-msgid "Number of Items Opened"
-msgstr "Число открытых заявок"
-
-#: frontend/php/cookbook/reporting.php:173 frontend/php/bugs/reporting.php:173
-msgid "Number of Items Still Open"
-msgstr "Число до сих пор открытых заявок"
-
-#. TRANSLATORS: the argument is field label.
-#: frontend/php/cookbook/reporting.php:184 frontend/php/bugs/reporting.php:184
-#, php-format
-msgid "Statistics by '%s':"
-msgstr "Статистика по полю '%s':"
-
-#: frontend/php/cookbook/reporting.php:185 frontend/php/bugs/reporting.php:185
-msgid "Field Description:"
-msgstr "Описание поля:"
-
-#: frontend/php/cookbook/reporting.php:194 frontend/php/bugs/reporting.php:194
-#, php-format
-msgid "Can't generate report for field %s"
-msgstr "Не удалось создать отчет по полю %s"
-
-#: frontend/php/cookbook/reporting.php:204 frontend/php/bugs/reporting.php:204
-msgid "Open Items"
-msgstr "Открытые заявки"
-
-#: frontend/php/cookbook/reporting.php:251 frontend/php/bugs/reporting.php:251
-msgid "No item found."
-msgstr "Ничего не найдено."
-
-# php-format
-#: frontend/php/cookbook/reporting.php:256 frontend/php/bugs/reporting.php:256
-msgid "All Items"
-msgstr "Все заявки"
-
-#: frontend/php/cookbook/reporting.php:294 frontend/php/bugs/reporting.php:294
-msgid "No item found. This field is probably unused"
-msgstr "Данных для отчета не найдено. Возможно, поле не используется"
 
 #. TRANSLATORS: This string is used in the context of
 #. "Browsing the Git repository" and "You can browse the Git repository",
@@ -158,14 +53,178 @@ msgstr "Данных для отчета не найдено. Возможно, 
 msgid "Git"
 msgstr "Git"
 
-#: frontend/php/bugs/item.php:41
+#: frontend/php/bugs/item.php:42
 msgid "Item not found."
 msgstr "Заявка не найдена."
 
-#: frontend/php/bugs/item.php:64 frontend/php/people/viewgpg.php:27
+#: frontend/php/bugs/item.php:65 frontend/php/people/viewgpg.php:27
 #: frontend/php/people/viewgpg.php:33
 msgid "User not found."
 msgstr "Пользователь не найден."
+
+#: frontend/php/bugs/download.php:58 frontend/php/link-to-file.php:80
+msgid "Non-authorized access to file attached to private item"
+msgstr "Несанкционированный доступ к файлу, прилагающемуся к скрытой заявке"
+
+#. TRANSLATORS: the argument is file id (a number).
+#: frontend/php/bugs/download.php:68
+#, php-format
+msgid "Couldn't find attached file (file #%s)"
+msgstr "Присоединенный файл не найден (файл №%s)"
+
+#: frontend/php/bugs/download.php:73
+msgid "File has a null size"
+msgstr "Размер файла равен нулю"
+
+#: frontend/php/bugs/export.php:32
+msgid "Data Export requires an access to private data of the group"
+msgstr "Для экспорта нужен доступ к скрытым данным этой группы"
+
+#: frontend/php/bugs/export.php:39
+msgid "Data Export"
+msgstr "Экспорт данных"
+
+#: frontend/php/bugs/export.php:40
+msgid "Here you can export data from this tracker."
+msgstr "Здесь можно экспортировать данные этого журнала."
+
+#: frontend/php/bugs/export.php:42
+msgid "Download tracker data"
+msgstr "Данные журнала"
+
+#: frontend/php/bugs/index.php:47
+#, php-format
+msgid "Warning: do not forget to re-attach your file '%s'"
+msgstr "Внимание: не забудьте снова приложить свой файл '%s'"
+
+#: frontend/php/bugs/index.php:59
+msgid ""
+"You're not logged in and you didn't enter the magic\n"
+"anti-spam number, please go back!"
+msgstr ""
+"Вы не представлены системе и не ввели тест против спама. Попробуйте еще раз."
+
+#: frontend/php/bugs/index.php:236 frontend/php/bugs/index.php:355
+#: frontend/php/my/admin/change.php:87 frontend/php/my/admin/editsshkeys.php:47
+msgid "Exiting"
+msgstr "Завершение"
+
+#: frontend/php/bugs/index.php:288
+msgid ""
+"Originator E-mail is not valid, thus was not added\n"
+"to the Carbon-Copy list."
+msgstr ""
+"Адрес приславшего заявку недействителен, таким образом, он не занесен в "
+"список оповещаемых."
+
+#: frontend/php/bugs/index.php:327
+msgid "Missing parameters, nothing added."
+msgstr "Не хватает параметров, ничего не добавлено."
+
+#: frontend/php/bugs/index.php:402
+#, php-format
+msgid ""
+"You provided search words to get a list of items\n"
+"this one may depend on. Below, in the section [%s Dependencies], you can "
+"now\n"
+"select the appropriate ones and submit the form."
+msgstr ""
+"Вы ввели слова для поиска заявок, от которых эта заявка может зависеть. "
+"Ниже, в разделе [%s Зависимости], теперь можно выбрать нужные заявки и "
+"отослать форму."
+
+#: frontend/php/bugs/index.php:413
+#, php-format
+msgid ""
+"You provided search words to get a list of projects\n"
+"this item should maybe reassigned to. Below, in the section\n"
+"[%s Reassign this item], you can now select the appropriate\n"
+"project and submit the form."
+msgstr ""
+"Вы ввели слова для поиска проектов, в которые эту заявку, возможно, надо "
+"перевести. Ниже, в разделе [%s Перевести эту заявку], теперь можно выбрать "
+"нужный проект и отослать форму."
+
+#: frontend/php/bugs/index.php:423
+msgid ""
+"You selected Multiple Canned Responses: you are free now\n"
+"to select the one you want to use to compose your answer."
+msgstr ""
+"Вы выбрали несколько шаблонных ответов; сейчас вы можете выбрать шаблон, по "
+"которому будете составлять свой ответ."
+
+#: frontend/php/bugs/reporting.php:46
+#, php-format
+msgid "%1$s to %2$s"
+msgstr "с %1$s по %2$s"
+
+#: frontend/php/bugs/reporting.php:86
+msgid "Other statistics:"
+msgstr "Другая статистика:"
+
+#. TRANSLATORS: aging statistics is statistics by date.
+#: frontend/php/bugs/reporting.php:92
+msgid "Aging Statistics"
+msgstr "Статистика по срокам"
+
+#. TRANSLATORS: the argument is field label.
+#: frontend/php/bugs/reporting.php:104
+#, php-format
+msgid "Statistics by '%s'"
+msgstr "Статистика по полю '%s'"
+
+#: frontend/php/bugs/reporting.php:126 frontend/php/include/sitemenu.php:210
+msgid "Statistics"
+msgstr "Статистика"
+
+#. TRANSLATORS: aging statistics is statistics by date.
+#: frontend/php/bugs/reporting.php:139
+msgid "Aging statistics:"
+msgstr "Статистика по срокам:"
+
+#: frontend/php/bugs/reporting.php:150
+msgid "Average Turnaround Time for Closed Items"
+msgstr "Среднее время обработки закрытых заявок"
+
+#: frontend/php/bugs/reporting.php:160
+msgid "Number of Items Opened"
+msgstr "Число открытых заявок"
+
+#: frontend/php/bugs/reporting.php:173
+msgid "Number of Items Still Open"
+msgstr "Число до сих пор открытых заявок"
+
+#. TRANSLATORS: the argument is field label.
+#: frontend/php/bugs/reporting.php:184
+#, php-format
+msgid "Statistics by '%s':"
+msgstr "Статистика по полю '%s':"
+
+#: frontend/php/bugs/reporting.php:185
+msgid "Field Description:"
+msgstr "Описание поля:"
+
+#: frontend/php/bugs/reporting.php:194
+#, php-format
+msgid "Can't generate report for field %s"
+msgstr "Не удалось создать отчет по полю %s"
+
+#: frontend/php/bugs/reporting.php:204
+msgid "Open Items"
+msgstr "Открытые заявки"
+
+#: frontend/php/bugs/reporting.php:251
+msgid "No item found."
+msgstr "Ничего не найдено."
+
+# php-format
+#: frontend/php/bugs/reporting.php:256
+msgid "All Items"
+msgstr "Все заявки"
+
+#: frontend/php/bugs/reporting.php:294
+msgid "No item found. This field is probably unused"
+msgstr "Данных для отчета не найдено. Возможно, поле не используется"
 
 #: frontend/php/bugs/admin/field_values.php:74
 msgid "Transition deleted"
@@ -244,7 +303,7 @@ msgid "Existing Values"
 msgstr "Существующие значения"
 
 #: frontend/php/bugs/admin/field_values.php:258
-#: frontend/php/bugs/admin/editqueryforms.php:462
+#: frontend/php/bugs/admin/editqueryforms.php:473
 msgid "ID"
 msgstr "Идентификатор"
 
@@ -254,9 +313,9 @@ msgstr "Метка значения"
 
 #: frontend/php/bugs/admin/field_values.php:260
 #: frontend/php/bugs/admin/field_values.php:842
-#: frontend/php/bugs/admin/field_usage.php:377
+#: frontend/php/bugs/admin/field_usage.php:375
 #: frontend/php/bugs/admin/editqueryforms.php:204
-#: frontend/php/bugs/admin/editqueryforms.php:462
+#: frontend/php/bugs/admin/editqueryforms.php:473
 #: frontend/php/search/index.php:90 frontend/php/include/search/general.php:567
 msgid "Description"
 msgstr "Описание"
@@ -268,7 +327,7 @@ msgid "Rank"
 msgstr "Ранг"
 
 #: frontend/php/bugs/admin/field_values.php:262
-#: frontend/php/bugs/admin/field_usage.php:378
+#: frontend/php/bugs/admin/field_usage.php:376
 #: frontend/php/people/editjob.php:192
 msgid "Status"
 msgstr "Состояние"
@@ -344,7 +403,7 @@ msgstr "Описание (по желанию):"
 
 #: frontend/php/bugs/admin/field_values.php:381
 #: frontend/php/bugs/admin/field_values_transition-ofields-update.php:191
-#: frontend/php/bugs/admin/field_usage.php:363 frontend/php/my/bookmarks.php:70
+#: frontend/php/bugs/admin/field_usage.php:361 frontend/php/my/bookmarks.php:70
 #: frontend/php/my/admin/change.php:688
 #: frontend/php/my/admin/editsshkeys.php:184
 #: frontend/php/my/admin/change_notifications.php:197
@@ -417,18 +476,18 @@ msgstr "Обновление других полей"
 #: frontend/php/bugs/admin/field_values.php:487
 #: frontend/php/bugs/admin/field_values.php:605
 #: frontend/php/bugs/admin/field_values.php:627
-#: frontend/php/include/trackers/format.php:629
+#: frontend/php/include/trackers/format.php:608
 msgid "Carbon-Copy List"
 msgstr "Адреса уведомления"
 
 #: frontend/php/bugs/admin/field_values.php:487
 #: frontend/php/bugs/admin/field_values.php:737
-#: frontend/php/bugs/admin/editqueryforms.php:463
-#: frontend/php/bugs/admin/editqueryforms.php:497
+#: frontend/php/bugs/admin/editqueryforms.php:474
+#: frontend/php/bugs/admin/editqueryforms.php:508
 #: frontend/php/cvs/admin/index.php:190
 #: frontend/php/include/people/general.php:373
-#: frontend/php/include/trackers/format.php:544
-#: frontend/php/include/trackers/format.php:700
+#: frontend/php/include/trackers/format.php:534
+#: frontend/php/include/trackers/format.php:679
 #: frontend/php/news/approve.php:211
 msgid "Delete"
 msgstr "Удалить"
@@ -543,9 +602,9 @@ msgstr ""
 #: frontend/php/bugs/admin/field_values.php:786
 #: frontend/php/bugs/admin/field_values.php:829
 #: frontend/php/bugs/admin/other_settings.php:167
-#: frontend/php/bugs/admin/editqueryforms.php:303
-#: frontend/php/bugs/admin/editqueryforms.php:425
-#: frontend/php/include/trackers_run/digest.php:137
+#: frontend/php/bugs/admin/editqueryforms.php:308
+#: frontend/php/bugs/admin/editqueryforms.php:436
+#: frontend/php/include/trackers_run/digest.php:133
 #: frontend/php/include/pagemenu.php:604 frontend/php/include/pagemenu.php:695
 #: frontend/php/include/form.php:109 frontend/php/news/approve.php:235
 msgid "Submit"
@@ -619,34 +678,34 @@ msgstr "Общие сообщения могут сэкономить много
 #: frontend/php/bugs/admin/field_values.php:842
 #: frontend/php/bugs/admin/field_values_transition-ofields-update.php:152
 #: frontend/php/bugs/admin/field_usage.php:138
-#: frontend/php/bugs/admin/field_usage.php:377
+#: frontend/php/bugs/admin/field_usage.php:375
 #: frontend/php/bugs/admin/editqueryforms.php:204
 msgid "Field Label"
 msgstr "Название поля"
 
 #: frontend/php/bugs/admin/field_values.php:842
-#: frontend/php/bugs/admin/field_usage.php:378
-#: frontend/php/bugs/admin/editqueryforms.php:462
+#: frontend/php/bugs/admin/field_usage.php:376
+#: frontend/php/bugs/admin/editqueryforms.php:473
 msgid "Scope"
 msgstr "Контекст"
 
 #: frontend/php/bugs/admin/field_values.php:853
-#: frontend/php/bugs/admin/field_usage.php:412
+#: frontend/php/bugs/admin/field_usage.php:410
 msgid "System"
 msgstr "Система"
 
 #: frontend/php/bugs/admin/field_values.php:855
 #: frontend/php/bugs/admin/field_values.php:873
-#: frontend/php/bugs/admin/field_usage.php:412
+#: frontend/php/bugs/admin/field_usage.php:410
 #: frontend/php/bugs/admin/editqueryforms.php:223
-#: frontend/php/bugs/admin/editqueryforms.php:486
+#: frontend/php/bugs/admin/editqueryforms.php:497
 #: frontend/php/search/index.php:90 frontend/php/include/people/general.php:418
 #: frontend/php/include/search/general.php:566
 msgid "Project"
 msgstr "Проект"
 
 #: frontend/php/bugs/admin/field_values.php:867
-#: frontend/php/include/trackers/general.php:732
+#: frontend/php/include/trackers/general.php:700
 msgid "Canned Responses"
 msgstr "Шаблоны ответов"
 
@@ -666,16 +725,16 @@ msgstr "Переход не найден"
 #. TRANSLATORS: this string is a job category.
 #. TRANSLATORS: Displayed when no user is selected.
 #: frontend/php/bugs/admin/field_values_transition-ofields-update.php:111
-#: frontend/php/include/trackers_run/mod.php:287
+#: frontend/php/include/trackers_run/mod.php:291
 #: frontend/php/include/people/general.php:194
-#: frontend/php/include/trackers/general.php:243
-#: frontend/php/include/utils.php:616 frontend/php/include/html.php:427
+#: frontend/php/include/trackers/general.php:211
+#: frontend/php/include/utils.php:407 frontend/php/include/html.php:427
 #: frontend/php/include/html.php:625
 msgid "None"
 msgstr "Пусто"
 
 #: frontend/php/bugs/admin/field_values_transition-ofields-update.php:113
-#: frontend/php/include/trackers_run/mod.php:288
+#: frontend/php/include/trackers_run/mod.php:292
 #: frontend/php/include/html.php:429
 msgid "Any"
 msgstr "Любые"
@@ -735,13 +794,13 @@ msgstr "Значения этого поля"
 
 #: frontend/php/bugs/admin/field_usage.php:143
 #: frontend/php/bugs/admin/editqueryforms.php:225
-#: frontend/php/bugs/admin/editqueryforms.php:348
+#: frontend/php/bugs/admin/editqueryforms.php:353
 #: frontend/php/mail/admin/index.php:310 frontend/php/mail/admin/index.php:407
 msgid "Description:"
 msgstr "Описание:"
 
 #: frontend/php/bugs/admin/field_usage.php:159
-#: frontend/php/bugs/admin/field_usage.php:408
+#: frontend/php/bugs/admin/field_usage.php:406
 msgid "Required"
 msgstr "обязательно"
 
@@ -750,12 +809,12 @@ msgid "Usage status"
 msgstr "Используется ли"
 
 #: frontend/php/bugs/admin/field_usage.php:167
-#: frontend/php/bugs/admin/field_usage.php:408
+#: frontend/php/bugs/admin/field_usage.php:406
 msgid "Used"
 msgstr "используется"
 
 #: frontend/php/bugs/admin/field_usage.php:169
-#: frontend/php/bugs/admin/field_usage.php:408
+#: frontend/php/bugs/admin/field_usage.php:406
 msgid "Unused"
 msgstr "не используется"
 
@@ -827,74 +886,74 @@ msgstr "неанонимным пользователям"
 msgid "<!-- present this field to --> Anonymous Users"
 msgstr "анонимным пользователям"
 
-#: frontend/php/bugs/admin/field_usage.php:280
+#: frontend/php/bugs/admin/field_usage.php:285
 msgid "Display:"
 msgstr "Показывать:"
 
-#: frontend/php/bugs/admin/field_usage.php:285
+#: frontend/php/bugs/admin/field_usage.php:288
 msgid "Rank on page:"
 msgstr "Ранг на странице:"
 
-#: frontend/php/bugs/admin/field_usage.php:303
+#: frontend/php/bugs/admin/field_usage.php:301
 msgid "Visible size of the field:"
 msgstr "Видимый размер поля:"
 
-#: frontend/php/bugs/admin/field_usage.php:308
+#: frontend/php/bugs/admin/field_usage.php:306
 msgid "Maximum size of field text (up to 255):"
 msgstr "Максимальный размер текста поля (до 255):"
 
-#: frontend/php/bugs/admin/field_usage.php:318
+#: frontend/php/bugs/admin/field_usage.php:316
 msgid "Number of columns of the field:"
 msgstr "Число столбцов в поле:"
 
-#: frontend/php/bugs/admin/field_usage.php:323
+#: frontend/php/bugs/admin/field_usage.php:321
 msgid "Number of rows  of the field:"
 msgstr "Число строк в поле:"
 
-#: frontend/php/bugs/admin/field_usage.php:349
+#: frontend/php/bugs/admin/field_usage.php:347
 msgid "By default, transitions (from one value to another) are:"
 msgstr "Незарегистрированные переходы (с одного значения на другое):"
 
-#: frontend/php/bugs/admin/field_usage.php:355
+#: frontend/php/bugs/admin/field_usage.php:353
 msgid "Allowed"
 msgstr "разрешены"
 
-#: frontend/php/bugs/admin/field_usage.php:359
+#: frontend/php/bugs/admin/field_usage.php:357
 msgid "Forbidden"
 msgstr "запрещены"
 
-#: frontend/php/bugs/admin/field_usage.php:364
+#: frontend/php/bugs/admin/field_usage.php:362
 msgid "Reset to defaults"
 msgstr "Сбросить в исходное состояние"
 
-#: frontend/php/bugs/admin/field_usage.php:370
+#: frontend/php/bugs/admin/field_usage.php:368
 #: frontend/php/bugs/admin/index.php:85
 msgid "Select Fields"
 msgstr "Выбрать поля"
 
-#: frontend/php/bugs/admin/field_usage.php:377 frontend/php/search/index.php:90
+#: frontend/php/bugs/admin/field_usage.php:375 frontend/php/search/index.php:90
 #: frontend/php/include/people/general.php:419
 #: frontend/php/include/search/general.php:568
 msgid "Type"
 msgstr "Тип"
 
-#: frontend/php/bugs/admin/field_usage.php:377
+#: frontend/php/bugs/admin/field_usage.php:375
 msgid "Rank on page"
 msgstr "Ранг на странице"
 
-#: frontend/php/bugs/admin/field_usage.php:422
+#: frontend/php/bugs/admin/field_usage.php:420
 msgid "Custom Field"
 msgstr "Дополнительное поле"
 
-#: frontend/php/bugs/admin/field_usage.php:457
+#: frontend/php/bugs/admin/field_usage.php:455
 msgid "USED FIELDS"
 msgstr "Использованные поля"
 
-#: frontend/php/bugs/admin/field_usage.php:459
+#: frontend/php/bugs/admin/field_usage.php:457
 msgid "UNUSED STANDARD FIELDS"
 msgstr "Неиспользованные общие поля"
 
-#: frontend/php/bugs/admin/field_usage.php:462
+#: frontend/php/bugs/admin/field_usage.php:460
 msgid "UNUSED CUSTOM FIELDS"
 msgstr "Неиспользованные дополнительные поля"
 
@@ -993,7 +1052,7 @@ msgstr ""
 "Определить набор возможных значений полей, которые выбраны для этого журнала."
 
 #: frontend/php/bugs/admin/index.php:102
-#: frontend/php/bugs/admin/editqueryforms.php:430
+#: frontend/php/bugs/admin/editqueryforms.php:441
 msgid "Edit Query Forms"
 msgstr "Править формы запроса"
 
@@ -1099,32 +1158,32 @@ msgid "Failed to update query form '%s'"
 msgstr "Не удалось обновить форму запроса \"%s\""
 
 #: frontend/php/bugs/admin/editqueryforms.php:204
-#: frontend/php/bugs/admin/editqueryforms.php:271
-#: frontend/php/bugs/admin/editqueryforms.php:391
+#: frontend/php/bugs/admin/editqueryforms.php:267
+#: frontend/php/bugs/admin/editqueryforms.php:390
 msgid "Use as a Search Criterion"
 msgstr "Использовать в качестве критерия поиска"
 
 #: frontend/php/bugs/admin/editqueryforms.php:205
-#: frontend/php/bugs/admin/editqueryforms.php:274
-#: frontend/php/bugs/admin/editqueryforms.php:394
+#: frontend/php/bugs/admin/editqueryforms.php:279
+#: frontend/php/bugs/admin/editqueryforms.php:405
 msgid "Rank on Search"
 msgstr "Ранг в поиске"
 
 #: frontend/php/bugs/admin/editqueryforms.php:205
-#: frontend/php/bugs/admin/editqueryforms.php:289
-#: frontend/php/bugs/admin/editqueryforms.php:411
+#: frontend/php/bugs/admin/editqueryforms.php:294
+#: frontend/php/bugs/admin/editqueryforms.php:422
 msgid "Use as an Output Column"
 msgstr "Использовать как столбец результатов"
 
 #: frontend/php/bugs/admin/editqueryforms.php:205
-#: frontend/php/bugs/admin/editqueryforms.php:292
-#: frontend/php/bugs/admin/editqueryforms.php:415
+#: frontend/php/bugs/admin/editqueryforms.php:297
+#: frontend/php/bugs/admin/editqueryforms.php:426
 msgid "Rank on Output"
 msgstr "Ранг в результатах"
 
 #: frontend/php/bugs/admin/editqueryforms.php:206
-#: frontend/php/bugs/admin/editqueryforms.php:297
-#: frontend/php/bugs/admin/editqueryforms.php:419
+#: frontend/php/bugs/admin/editqueryforms.php:302
+#: frontend/php/bugs/admin/editqueryforms.php:430
 msgid "Column width (optional)"
 msgstr "Ширина столбца (необязательно)"
 
@@ -1140,61 +1199,62 @@ msgstr "Название формы запроса:"
 msgid "Scope:"
 msgstr "Контекст:"
 
-#: frontend/php/bugs/admin/editqueryforms.php:310
+#: frontend/php/bugs/admin/editqueryforms.php:315
 msgid "Modify a Query Form"
 msgstr "Изменить форму запроса"
 
 #. TRANSLATORS: the argument is report id (a number).
-#: frontend/php/bugs/admin/editqueryforms.php:321
+#: frontend/php/bugs/admin/editqueryforms.php:326
 #, php-format
 msgid "Unknown Report ID (%s)"
 msgstr "Неизвестный идентификатор отчета (%s)"
 
-#: frontend/php/bugs/admin/editqueryforms.php:344
+#: frontend/php/bugs/admin/editqueryforms.php:349
 #: frontend/php/include/project_home.php:121
 msgid "Name:"
 msgstr "Имя:"
 
-#. TRANSLATORS: this string is as argument in "Browse with the %s query form".
-#: frontend/php/bugs/admin/editqueryforms.php:438
-#: frontend/php/include/trackers_run/browse.php:948
+#. TRANSLATORS: this string is as argument in
+#. "Browse with the %s query form".
+#: frontend/php/bugs/admin/editqueryforms.php:449
+#: frontend/php/include/trackers_run/browse.php:906
 msgid "Basic"
 msgstr "простой"
 
-#: frontend/php/bugs/admin/editqueryforms.php:439
-#: frontend/php/include/trackers_run/browse.php:949
+#: frontend/php/bugs/admin/editqueryforms.php:450
+#: frontend/php/include/trackers_run/browse.php:906
 msgid "query form"
 msgstr "форма запроса"
 
-#: frontend/php/bugs/admin/editqueryforms.php:443
+#: frontend/php/bugs/admin/editqueryforms.php:454
 #, php-format
 msgid "Browse with the %s query form by default."
 msgstr "По умолчанию просматривать с формой запроса: %s."
 
-#: frontend/php/bugs/admin/editqueryforms.php:446
+#: frontend/php/bugs/admin/editqueryforms.php:457
 #: frontend/php/stats/index.php:69 frontend/php/my/items.php:154
-#: frontend/php/include/trackers_run/browse.php:1005
+#: frontend/php/include/trackers_run/browse.php:958
 #: frontend/php/project/memberlist.php:53 frontend/php/news/index.php:59
 msgid "Apply"
 msgstr "Применить"
 
-#: frontend/php/bugs/admin/editqueryforms.php:458
+#: frontend/php/bugs/admin/editqueryforms.php:469
 msgid "Existing Query Forms"
 msgstr "Существующие формы запроса"
 
-#: frontend/php/bugs/admin/editqueryforms.php:462
+#: frontend/php/bugs/admin/editqueryforms.php:473
 msgid "Query form name"
 msgstr "Название формы запроса"
 
-#: frontend/php/bugs/admin/editqueryforms.php:486
+#: frontend/php/bugs/admin/editqueryforms.php:497
 msgid "Personal"
 msgstr "Личное"
 
-#: frontend/php/bugs/admin/editqueryforms.php:505
+#: frontend/php/bugs/admin/editqueryforms.php:516
 msgid "No query form defined yet."
 msgstr "Ни одна форма запроса еще не определена."
 
-#: frontend/php/bugs/admin/editqueryforms.php:509
+#: frontend/php/bugs/admin/editqueryforms.php:520
 #, php-format
 msgid "You can <a href=\"%s\"> create a new query form</a>."
 msgstr "Можно <a href=\"%s\"> создать новую форму запроса</a>."
@@ -1233,8 +1293,8 @@ msgstr "Файл №%s не найден"
 
 #. TRANSLATORS: the argument is artifact name ('bugs', 'task' etc.)
 #: frontend/php/link-to-file.php:67
-#: frontend/php/include/trackers/general.php:757
-#: frontend/php/include/trackers/general.php:928
+#: frontend/php/include/trackers/general.php:725
+#: frontend/php/include/trackers/general.php:896
 #, php-format
 msgid "Invalid artifact %s"
 msgstr "Недопустимый журнал %s"
@@ -1840,7 +1900,7 @@ msgstr "Добавить навыки"
 #: frontend/php/people/viewjob.php:30 frontend/php/search/index.php:213
 #: frontend/php/account/lostlogin.php:41 frontend/php/account/lostlogin.php:45
 #: frontend/php/account/pending-resend.php:39
-#: frontend/php/include/stats/general.php:33 frontend/php/include/utils.php:56
+#: frontend/php/include/stats/general.php:33 frontend/php/include/utils.php:60
 #: frontend/php/include/exit.php:111 frontend/php/include/news/forum.php:375
 #: frontend/php/forum/forum.php:329 frontend/php/news/admin/index.php:41
 msgid "Error"
@@ -2012,7 +2072,7 @@ msgstr "Группа"
 msgid "Submitted By"
 msgstr "Автор"
 
-#: frontend/php/search/index.php:175 frontend/php/include/trackers/show.php:456
+#: frontend/php/search/index.php:175 frontend/php/include/trackers/show.php:226
 #: frontend/php/include/project/admin.php:43
 #: frontend/php/include/news/forum.php:248 frontend/php/forum/forum.php:221
 msgid "Date"
@@ -2946,7 +3006,7 @@ msgid "Details"
 msgstr "Подробности"
 
 #: frontend/php/register/index.php:139
-#: frontend/php/include/trackers_run/mod.php:556
+#: frontend/php/include/trackers_run/mod.php:570
 msgid "Dependencies"
 msgstr "Зависимости"
 
@@ -3391,7 +3451,7 @@ msgid "Quit this group"
 msgstr "Выйти из этой группы"
 
 #: frontend/php/my/groups.php:433 frontend/php/my/groups.php:473
-#: frontend/php/link-to-users.php:267
+#: frontend/php/link-to-users.php:269
 #, php-format
 msgid "Member since %s"
 msgstr "Участвую с %s"
@@ -3419,7 +3479,7 @@ msgstr "Отменить этот запрос"
 #. TRANSLATORS: it means, no approved news.
 #: frontend/php/my/groups.php:515 frontend/php/my/index.php:192
 #: frontend/php/include/people/general.php:430
-#: frontend/php/include/trackers/show.php:671
+#: frontend/php/include/trackers/show.php:415
 #: frontend/php/include/my/general.php:510
 #: frontend/php/project/admin/squadadmin.php:201
 #: frontend/php/project/admin/squadadmin.php:239
@@ -3451,10 +3511,7 @@ msgstr "Вы собираетесь выйти из группы %s, подтв�
 msgid "Address:"
 msgstr "Адрес:"
 
-#: frontend/php/my/bookmarks.php:75
-#: frontend/php/include/trackers_run/detail-sober.php:49
-#: frontend/php/include/trackers_run/detail-sober.php:72
-#: frontend/php/include/trackers/data.php:1465
+#: frontend/php/my/bookmarks.php:75 frontend/php/include/trackers/data.php:1465
 #: frontend/php/include/init.php:397
 msgid "Item not found"
 msgstr "Заявка не найдена"
@@ -3680,12 +3737,6 @@ msgstr ""
 "Перед удалением учетной записи вы должны выйти изо всех групп. Если вы "
 "зарегистрировали проект, который находится на рассмотрении, попросите "
 "администраторов отменить эту регистрацию."
-
-#: frontend/php/my/admin/change.php:87 frontend/php/my/admin/editsshkeys.php:47
-#: frontend/php/include/trackers_run/index.php:240
-#: frontend/php/include/trackers_run/index.php:371
-msgid "Exiting"
-msgstr "Завершение"
 
 #: frontend/php/my/admin/change.php:94
 msgid "You must supply a new real name."
@@ -4322,7 +4373,7 @@ msgstr "Закрыть все сеансы"
 msgid "All sessions apart from the current one"
 msgstr "Все сеансы, кроме текущего"
 
-#: frontend/php/my/admin/index.php:65 frontend/php/include/utils.php:1043
+#: frontend/php/my/admin/index.php:65 frontend/php/include/utils.php:774
 msgid "Database successfully updated"
 msgstr "База данных успешно обновлена"
 
@@ -4817,8 +4868,8 @@ msgid "Mailing Lists"
 msgstr "Рассылки"
 
 #: frontend/php/include/context.php:327
-#: frontend/php/include/trackers_run/mod.php:633
-#: frontend/php/include/trackers_run/mod.php:860
+#: frontend/php/include/trackers_run/mod.php:647
+#: frontend/php/include/trackers_run/mod.php:874
 #: frontend/php/include/trackers_run/search.php:23
 #: frontend/php/include/people/general.php:128
 #: frontend/php/include/search/general.php:152
@@ -5186,15 +5237,14 @@ msgstr "день месяца"
 msgid "required field"
 msgstr "обязательное поле"
 
-#: frontend/php/include/trackers_run/mod.php:76
+#: frontend/php/include/trackers_run/mod.php:80
 msgid ""
 "This item is private. However, you are allowed to read it as you submitted "
 "it."
 msgstr ""
 "Это скрытая заявка. Однако вы можете читать ее, поскольку вы ее написали."
 
-#: frontend/php/include/trackers_run/mod.php:80
-#: frontend/php/include/trackers_run/detail-sober.php:102
+#: frontend/php/include/trackers_run/mod.php:84
 msgid ""
 "This item is private. You are not listed as member\n"
 "allowed to read private items."
@@ -5202,7 +5252,7 @@ msgstr ""
 "Это скрытая заявка. Вы не указаны как участник, которому позволено читать "
 "скрытые заявки."
 
-#: frontend/php/include/trackers_run/mod.php:88
+#: frontend/php/include/trackers_run/mod.php:92
 msgid ""
 "You are not allowed to post comments on this tracker with your current\n"
 "authentication level."
@@ -5210,38 +5260,38 @@ msgstr ""
 "Вам с текущими привилегиями не разрешено размещать комментарии в этом "
 "журнале."
 
-#: frontend/php/include/trackers_run/mod.php:110
+#: frontend/php/include/trackers_run/mod.php:114
 msgid "You are both technician and manager for this tracker."
 msgstr "Вы и техник и секретарь этого журнала."
 
 #. TRANSLATORS: these roles are explained in html.php:html_member_explain_roles.
-#: frontend/php/include/trackers_run/mod.php:112
-#: frontend/php/include/trackers_run/mod.php:121
+#: frontend/php/include/trackers_run/mod.php:116
+#: frontend/php/include/trackers_run/mod.php:125
 #: frontend/php/project/memberlist.php:33
 msgid "technician"
 msgstr "техник"
 
-#: frontend/php/include/trackers_run/mod.php:113
+#: frontend/php/include/trackers_run/mod.php:117
 msgid "can be assigned items, cannot change status or priority"
 msgstr ""
 "может назначаться ответственным за заявку, не может менять состояние и "
 "приоритет"
 
-#: frontend/php/include/trackers_run/mod.php:114
-#: frontend/php/include/trackers_run/mod.php:130
+#: frontend/php/include/trackers_run/mod.php:118
+#: frontend/php/include/trackers_run/mod.php:134
 #: frontend/php/project/memberlist.php:34
 msgid "manager"
 msgstr "секретарь"
 
-#: frontend/php/include/trackers_run/mod.php:114
+#: frontend/php/include/trackers_run/mod.php:118
 msgid "fully manage the items"
 msgstr "полностью управляет заявками"
 
-#: frontend/php/include/trackers_run/mod.php:119
+#: frontend/php/include/trackers_run/mod.php:123
 msgid "You are technician for this tracker."
 msgstr "Вы техник этого журнала."
 
-#: frontend/php/include/trackers_run/mod.php:122
+#: frontend/php/include/trackers_run/mod.php:126
 msgid ""
 "you can be assigned tracker's items, but you cannot reassign\n"
 "items, change priority nor open/close"
@@ -5249,11 +5299,11 @@ msgstr ""
 "вам могут поручаться заявки из журнала, но вы не можете перепоручать заявки, "
 "изменять приоритеты, открывать и закрывать заявки"
 
-#: frontend/php/include/trackers_run/mod.php:128
+#: frontend/php/include/trackers_run/mod.php:132
 msgid "You are manager for this tracker."
 msgstr "Вы секретарь этого журнала."
 
-#: frontend/php/include/trackers_run/mod.php:131
+#: frontend/php/include/trackers_run/mod.php:135
 msgid ""
 "you can fully manage the trackers items, including assigning\n"
 "items to technicians, reassign items over trackers and projects, changing\n"
@@ -5263,84 +5313,83 @@ msgstr ""
 "техникам, переназначать заявки на другие журналы и проекты, изменять "
 "приоритеты, открывать и закрывать заявки"
 
-#: frontend/php/include/trackers_run/mod.php:166
+#: frontend/php/include/trackers_run/mod.php:170
 #: frontend/php/news/approve.php:168
 msgid "Submitted by:"
 msgstr "Автор:"
 
-#: frontend/php/include/trackers_run/mod.php:170
-#: frontend/php/include/trackers_run/mod.php:929
+#: frontend/php/include/trackers_run/mod.php:174
+#: frontend/php/include/trackers_run/mod.php:943
 msgid "Submit Changes and Browse Items"
 msgstr "Сохранить и вернуться к списку"
 
-#: frontend/php/include/trackers_run/mod.php:172
+#: frontend/php/include/trackers_run/mod.php:176
 msgid "Submitted on:"
 msgstr "Дата размещения:"
 
-#: frontend/php/include/trackers_run/mod.php:177
-#: frontend/php/include/trackers_run/mod.php:931
+#: frontend/php/include/trackers_run/mod.php:181
+#: frontend/php/include/trackers_run/mod.php:945
 msgid "Submit Changes and Return to this Item"
 msgstr "Сохранить и продолжить редактирование"
 
-#: frontend/php/include/trackers_run/mod.php:184
+#: frontend/php/include/trackers_run/mod.php:188
 msgid "Votes:"
 msgstr "Голосование:"
 
-#: frontend/php/include/trackers_run/mod.php:365
+#: frontend/php/include/trackers_run/mod.php:369
 #: frontend/php/include/trackers_run/add.php:183
 msgid "Mandatory Fields"
 msgstr "Обязательные поля"
 
-#: frontend/php/include/trackers_run/mod.php:415
+#: frontend/php/include/trackers_run/mod.php:429
 msgid "Post a Comment"
 msgstr "Оставить комментарий"
 
-#: frontend/php/include/trackers_run/mod.php:420
+#: frontend/php/include/trackers_run/mod.php:434
 msgid "Add a New Comment"
 msgstr "Добавить комментарий"
 
-#: frontend/php/include/trackers_run/mod.php:422
+#: frontend/php/include/trackers_run/mod.php:436
 #: frontend/php/include/trackers_run/add.php:106
 #: frontend/php/include/trackers_run/add.php:187
 msgid "Preview"
 msgstr "Предпросмотр"
 
-#: frontend/php/include/trackers_run/mod.php:425
+#: frontend/php/include/trackers_run/mod.php:439
 msgid "New comment"
 msgstr "Новый комментарий"
 
-#: frontend/php/include/trackers_run/mod.php:429
+#: frontend/php/include/trackers_run/mod.php:443
 msgid "Comment Type & Canned Response:"
 msgstr "Тип комментария и шаблон ответа:"
 
-#: frontend/php/include/trackers_run/mod.php:458
+#: frontend/php/include/trackers_run/mod.php:472
 msgid "Strangely enough, there is no canned response available."
 msgstr "Странно, шаблонов ответа нет."
 
-#: frontend/php/include/trackers_run/mod.php:469
+#: frontend/php/include/trackers_run/mod.php:483
 msgid "Or define a new Canned Response"
 msgstr "Определить новый шаблон ответа"
 
-#: frontend/php/include/trackers_run/mod.php:478
+#: frontend/php/include/trackers_run/mod.php:492
 msgid "Discussion locked!"
 msgstr "Обсуждение заблокировано!"
 
-#: frontend/php/include/trackers_run/mod.php:481
+#: frontend/php/include/trackers_run/mod.php:495
 msgid "Your privileges however allow to override the lock."
 msgstr "Однако ваши привилегии позволяют обходить блокировку."
 
-#: frontend/php/include/trackers_run/mod.php:485
+#: frontend/php/include/trackers_run/mod.php:499
 msgid "Discussion"
 msgstr "Обсуждение"
 
-#: frontend/php/include/trackers_run/mod.php:511
+#: frontend/php/include/trackers_run/mod.php:525
 #: frontend/php/include/trackers_run/add.php:193
-#: frontend/php/include/trackers_run/detail-sober.php:172
-#: frontend/php/include/trackers/format.php:508
+#: frontend/php/include/trackers/format.php:498
 msgid "Attached Files"
 msgstr "Присоединенные файлы"
 
-#: frontend/php/include/trackers_run/mod.php:518
+#: frontend/php/include/trackers_run/mod.php:532
 #: frontend/php/include/trackers_run/add.php:195
 #, php-format
 msgid ""
@@ -5350,27 +5399,27 @@ msgstr ""
 "(Замечание: размер файлов ограничен величиной %s кБ после вставки "
 "необходимых экранирующих символов.)"
 
-#: frontend/php/include/trackers_run/mod.php:529
+#: frontend/php/include/trackers_run/mod.php:543
 msgid "File to attach"
 msgstr "Файл для присоединения"
 
-#: frontend/php/include/trackers_run/mod.php:536
+#: frontend/php/include/trackers_run/mod.php:550
 #: frontend/php/include/trackers_run/add.php:200
 msgid "Attach Files:"
 msgstr "Присоединить файлы:"
 
-#: frontend/php/include/trackers_run/mod.php:542
-#: frontend/php/include/trackers_run/mod.php:734
+#: frontend/php/include/trackers_run/mod.php:556
+#: frontend/php/include/trackers_run/mod.php:748
 #: frontend/php/include/trackers_run/add.php:211
 #: frontend/php/include/trackers_run/add.php:236
 msgid "Comment:"
 msgstr "Комментарий:"
 
-#: frontend/php/include/trackers_run/mod.php:545
+#: frontend/php/include/trackers_run/mod.php:559
 msgid "File description"
 msgstr "Описание файла"
 
-#: frontend/php/include/trackers_run/mod.php:564
+#: frontend/php/include/trackers_run/mod.php:578
 msgid ""
 "New search, in case the previous one was not satisfactory (to\n"
 "fill a dependency against):"
@@ -5378,66 +5427,66 @@ msgstr ""
 "Новый поиск на случай, если предыдущий был неудовлетворителен (для "
 "заполнения зависимости):"
 
-#: frontend/php/include/trackers_run/mod.php:568
+#: frontend/php/include/trackers_run/mod.php:582
 msgid "Search an item (to fill a dependency against):"
 msgstr "Поиск заявки (для заполнения зависимости):"
 
-#: frontend/php/include/trackers_run/mod.php:571
+#: frontend/php/include/trackers_run/mod.php:585
 #: frontend/php/include/search/general.php:156
 msgid "Terms to look for"
 msgstr "Слова для поиска"
 
-#: frontend/php/include/trackers_run/mod.php:575
+#: frontend/php/include/trackers_run/mod.php:589
 msgid "Tracker to search in"
 msgstr "Журнал для поиска"
 
-#: frontend/php/include/trackers_run/mod.php:580
+#: frontend/php/include/trackers_run/mod.php:594
 msgid "Any Tracker"
 msgstr "любого журнала"
 
-#: frontend/php/include/trackers_run/mod.php:581
+#: frontend/php/include/trackers_run/mod.php:595
 msgid "The Support Tracker Only"
 msgstr "только журнала поддержки"
 
-#: frontend/php/include/trackers_run/mod.php:582
+#: frontend/php/include/trackers_run/mod.php:596
 msgid "The Bug Tracker Only"
 msgstr "только журнала ошибок"
 
-#: frontend/php/include/trackers_run/mod.php:583
+#: frontend/php/include/trackers_run/mod.php:597
 msgid "The Task Manager Only"
 msgstr "только журнала задач"
 
-#: frontend/php/include/trackers_run/mod.php:584
+#: frontend/php/include/trackers_run/mod.php:598
 msgid "The Patch Manager Only"
 msgstr "только журнала заплаток"
 
-#: frontend/php/include/trackers_run/mod.php:597
+#: frontend/php/include/trackers_run/mod.php:611
 msgid "Wether to search in any project"
 msgstr "искать ли во всех проектах"
 
 #. TRANSLATORS: this string is used in the context like
 #. "search an item of [The Bug Tracker Only] of [Any Project]".
-#: frontend/php/include/trackers_run/mod.php:608
+#: frontend/php/include/trackers_run/mod.php:622
 msgid "Any Project"
 msgstr "любого проекта"
 
-#: frontend/php/include/trackers_run/mod.php:620
+#: frontend/php/include/trackers_run/mod.php:634
 msgid "This Project Only"
 msgstr "только этого проекта"
 
 #. TRANSLATORS: the first argument is tracker type (like The Bug Tracker),
 #. the second argument is either 'This Project Only' or 'Any Project'.
-#: frontend/php/include/trackers_run/mod.php:624
+#: frontend/php/include/trackers_run/mod.php:638
 #, php-format
 msgid "Of %1$s of %2$s"
 msgstr "%1$s %2$s"
 
-#: frontend/php/include/trackers_run/mod.php:630
-#: frontend/php/include/trackers_run/mod.php:865
+#: frontend/php/include/trackers_run/mod.php:644
+#: frontend/php/include/trackers_run/mod.php:879
 msgid "New search"
 msgstr "Новый поиск"
 
-#: frontend/php/include/trackers_run/mod.php:640
+#: frontend/php/include/trackers_run/mod.php:654
 #, php-format
 msgid ""
 "Please select a dependency to add in the result of your search\n"
@@ -5445,11 +5494,11 @@ msgid ""
 msgstr ""
 "Выберите зависимость, которую нужно добавить, из результата поиска по '%s':"
 
-#: frontend/php/include/trackers_run/mod.php:693
+#: frontend/php/include/trackers_run/mod.php:707
 msgid "group"
 msgstr "группа"
 
-#: frontend/php/include/trackers_run/mod.php:703
+#: frontend/php/include/trackers_run/mod.php:717
 msgid ""
 "None found. Please note that only search words of more than\n"
 "three characters are valid."
@@ -5457,11 +5506,11 @@ msgstr ""
 "Ничего не найдено. Учтите, что в поиске участвуют только слова, в которых "
 "более трех символов."
 
-#: frontend/php/include/trackers_run/mod.php:716
+#: frontend/php/include/trackers_run/mod.php:730
 msgid "Mail Notification Carbon-Copy List"
 msgstr "Список уведомлений"
 
-#: frontend/php/include/trackers_run/mod.php:722
+#: frontend/php/include/trackers_run/mod.php:736
 #: frontend/php/include/trackers_run/add.php:225
 #, php-format
 msgid ""
@@ -5471,16 +5520,16 @@ msgstr ""
 "(Замечание: для пользователей %s вместо адреса электронной почты можно "
 "указывать учетную запись.)"
 
-#: frontend/php/include/trackers_run/mod.php:729
+#: frontend/php/include/trackers_run/mod.php:743
 msgid "Add Email Addresses (comma as separator):"
 msgstr "Добавить адреса электронной почты (разделенные запятыми):"
 
-#: frontend/php/include/trackers_run/mod.php:748
+#: frontend/php/include/trackers_run/mod.php:762
 #: frontend/php/include/pagemenu.php:242
 msgid "Votes"
 msgstr "Голосование"
 
-#: frontend/php/include/trackers_run/mod.php:753
+#: frontend/php/include/trackers_run/mod.php:767
 #, php-format
 msgid "There is %s vote so far."
 msgid_plural "There are %s votes so far."
@@ -5488,7 +5537,7 @@ msgstr[0] "Пока %s голос."
 msgstr[1] "Пока %s голоса."
 msgstr[2] "Пока %s голосов."
 
-#: frontend/php/include/trackers_run/mod.php:759
+#: frontend/php/include/trackers_run/mod.php:773
 msgid ""
 "Votes easily highlight which items people would like to see resolved\n"
 "in priority, independently of the priority of the item set by tracker\n"
@@ -5497,19 +5546,19 @@ msgstr ""
 "Голосование указывает, решение каких заявок люди хотели бы получить прежде "
 "всего, независимо от приоритета, установленного секретарями журнала."
 
-#: frontend/php/include/trackers_run/mod.php:772
+#: frontend/php/include/trackers_run/mod.php:786
 msgid "Only project members can vote."
 msgstr "Голосовать могут только участники проекта."
 
-#: frontend/php/include/trackers_run/mod.php:778
+#: frontend/php/include/trackers_run/mod.php:792
 msgid "Only logged-in users can vote."
 msgstr "Анонимно голосовать нельзя."
 
-#: frontend/php/include/trackers_run/mod.php:794
+#: frontend/php/include/trackers_run/mod.php:808
 msgid "Your vote:"
 msgstr "Ваш голос:"
 
-#: frontend/php/include/trackers_run/mod.php:800
+#: frontend/php/include/trackers_run/mod.php:814
 #, php-format
 msgid "/ %s remaining vote"
 msgid_plural "/ %s remaining votes"
@@ -5517,42 +5566,42 @@ msgstr[0] " из %s оставшегося голоса"
 msgstr[1] " из %s оставшихся голосов"
 msgstr[2] " из %s оставшихся голосов"
 
-#: frontend/php/include/trackers_run/mod.php:817
+#: frontend/php/include/trackers_run/mod.php:831
 msgid "Reassign this item"
 msgstr "Переместить эту заявку"
 
-#: frontend/php/include/trackers_run/mod.php:828
+#: frontend/php/include/trackers_run/mod.php:842
 msgid "Tracker to reassign to"
 msgstr "Журнал, в который перемещать"
 
 #. TRANSLATORS: this string is used in the context of
 #. "Move to the %s".
-#: frontend/php/include/trackers_run/mod.php:833
+#: frontend/php/include/trackers_run/mod.php:847
 msgid "<!-- Move to the -->Support Tracker"
 msgstr "журнал поддержки"
 
-#: frontend/php/include/trackers_run/mod.php:834
+#: frontend/php/include/trackers_run/mod.php:848
 msgid "<!-- Move to the -->Bug Tracker"
 msgstr "журнал ошибок"
 
-#: frontend/php/include/trackers_run/mod.php:835
+#: frontend/php/include/trackers_run/mod.php:849
 msgid "<!-- Move to the -->Task Tracker"
 msgstr "журнал задач"
 
-#: frontend/php/include/trackers_run/mod.php:836
+#: frontend/php/include/trackers_run/mod.php:850
 msgid "<!-- Move to the -->Patch Tracker"
 msgstr "журнал заплаток"
 
-#: frontend/php/include/trackers_run/mod.php:842
+#: frontend/php/include/trackers_run/mod.php:856
 #, php-format
 msgid "Move to the %s"
 msgstr "Переместить в %s"
 
-#: frontend/php/include/trackers_run/mod.php:847
+#: frontend/php/include/trackers_run/mod.php:861
 msgid "Move to the project:"
 msgstr "Переместить в проект:"
 
-#: frontend/php/include/trackers_run/mod.php:852
+#: frontend/php/include/trackers_run/mod.php:866
 msgid ""
 "New search, in case the previous one was not satisfactory\n"
 "(to reassign the item to another project):"
@@ -5560,11 +5609,11 @@ msgstr ""
 "Новый поиск на случай, если предыдущий не удался (для перемещения заявки в "
 "другой проект):"
 
-#: frontend/php/include/trackers_run/mod.php:857
+#: frontend/php/include/trackers_run/mod.php:871
 msgid "Project to reassign item to"
 msgstr "Проект, в который перемещать заявку"
 
-#: frontend/php/include/trackers_run/mod.php:873
+#: frontend/php/include/trackers_run/mod.php:887
 #, php-format
 msgid ""
 "To which project this bug should be reassigned to? This is\n"
@@ -5572,11 +5621,11 @@ msgid ""
 msgstr ""
 "В какой проект переместить эту заявку? Вот результат поиска по строке '%s':"
 
-#: frontend/php/include/trackers_run/mod.php:883
+#: frontend/php/include/trackers_run/mod.php:897
 msgid "Do not reassign to another project."
 msgstr "Не перемещать заявку в другой проект."
 
-#: frontend/php/include/trackers_run/mod.php:910
+#: frontend/php/include/trackers_run/mod.php:924
 msgid ""
 "None found. Please note that only search words of more\n"
 "than three characters are valid."
@@ -5584,7 +5633,7 @@ msgstr ""
 "Ничего не найдено. Учтите, что в поиске участвуют только слова, в которых "
 "более трех символов."
 
-#: frontend/php/include/trackers_run/mod.php:922
+#: frontend/php/include/trackers_run/mod.php:936
 #: frontend/php/include/trackers_run/add.php:250
 msgid ""
 "Please enter the title of <a\n"
@@ -5595,7 +5644,7 @@ msgstr ""
 "Введите название знаменитой антиутопии <a href=\"https://en.wikipedia.org/"
 "wiki/George_Orwell\">Джорджа Оруэлла</a> (это дата):"
 
-#: frontend/php/include/trackers_run/mod.php:935
+#: frontend/php/include/trackers_run/mod.php:949
 msgid "History"
 msgstr "История"
 
@@ -5638,187 +5687,128 @@ msgstr "Добавить адреса (разделенные запятой):"
 msgid "Did you check to see if this item has already been submitted?"
 msgstr "Вы проверяли, не была ли уже эта заявка отправлена?"
 
-#: frontend/php/include/trackers_run/index.php:48
-#, php-format
-msgid "Warning: do not forget to re-attach your file '%s'"
-msgstr "Внимание: не забудьте снова приложить свой файл '%s'"
-
-#: frontend/php/include/trackers_run/index.php:60
-msgid ""
-"You're not logged in and you didn't enter the magic\n"
-"anti-spam number, please go back!"
-msgstr ""
-"Вы не представлены системе и не ввели тест против спама. Попробуйте еще раз."
-
-#: frontend/php/include/trackers_run/index.php:304
-msgid ""
-"Originator E-mail is not valid, thus was not added\n"
-"to the Carbon-Copy list."
-msgstr ""
-"Адрес приславшего заявку недействителен, таким образом, он не занесен в "
-"список оповещаемых."
-
-#: frontend/php/include/trackers_run/index.php:343
-msgid "Missing parameters, nothing added."
-msgstr "Не хватает параметров, ничего не добавлено."
-
-#: frontend/php/include/trackers_run/index.php:418
-#, php-format
-msgid ""
-"You provided search words to get a list of items\n"
-"this one may depend on. Below, in the section [%s Dependencies], you can "
-"now\n"
-"select the appropriate ones and submit the form."
-msgstr ""
-"Вы ввели слова для поиска заявок, от которых эта заявка может зависеть. "
-"Ниже, в разделе [%s Зависимости], теперь можно выбрать нужные заявки и "
-"отослать форму."
-
-#: frontend/php/include/trackers_run/index.php:429
-#, php-format
-msgid ""
-"You provided search words to get a list of projects\n"
-"this item should maybe reassigned to. Below, in the section\n"
-"[%s Reassign this item], you can now select the appropriate\n"
-"project and submit the form."
-msgstr ""
-"Вы ввели слова для поиска проектов, в которые эту заявку, возможно, надо "
-"перевести. Ниже, в разделе [%s Перевести эту заявку], теперь можно выбрать "
-"нужный проект и отослать форму."
-
-#: frontend/php/include/trackers_run/index.php:439
-msgid ""
-"You selected Multiple Canned Responses: you are free now\n"
-"to select the one you want to use to compose your answer."
-msgstr ""
-"Вы выбрали несколько шаблонных ответов; сейчас вы можете выбрать шаблон, по "
-"которому будете составлять свой ответ."
-
-#: frontend/php/include/trackers_run/browse.php:86
-#: frontend/php/include/trackers_run/browse.php:911
+#: frontend/php/include/trackers_run/browse.php:82
+#: frontend/php/include/trackers_run/browse.php:874
 msgid "Browse Items"
 msgstr "Просмотреть заявки"
 
-#: frontend/php/include/trackers_run/browse.php:241
+#: frontend/php/include/trackers_run/browse.php:218
 #, php-format
 msgid "Query form #%s doesn't exist"
 msgstr "Форма запроса №%s не существует"
 
-#: frontend/php/include/trackers_run/browse.php:732
-#: frontend/php/include/trackers_run/digest.php:152
+#: frontend/php/include/trackers_run/browse.php:671
+#: frontend/php/include/trackers_run/digest.php:148
 #: frontend/php/include/pagemenu.php:653 frontend/php/include/pagemenu.php:707
 msgid "Digest"
 msgstr "Обзор"
 
-#: frontend/php/include/trackers_run/browse.php:967
+#: frontend/php/include/trackers_run/browse.php:925
 msgid "Simple Search"
 msgstr "Простой поиск"
 
-#: frontend/php/include/trackers_run/browse.php:972
+#: frontend/php/include/trackers_run/browse.php:930
 msgid "Advanced Search"
 msgstr "Расширенный поиск"
 
 #. TRANSLATORS: this string is used to specify kind of selection.
-#: frontend/php/include/trackers_run/browse.php:980
-#: frontend/php/include/trackers_run/browse.php:1004
+#: frontend/php/include/trackers_run/browse.php:938
+#: frontend/php/include/trackers_run/browse.php:957
 msgid "Multiple"
 msgstr "сложным"
 
 #. TRANSLATORS: this string is used to specify kind of selection.
-#: frontend/php/include/trackers_run/browse.php:983
-#: frontend/php/include/trackers_run/browse.php:1002
+#: frontend/php/include/trackers_run/browse.php:941
+#: frontend/php/include/trackers_run/browse.php:955
 msgid "Simple"
 msgstr "простым"
 
-#: frontend/php/include/trackers_run/browse.php:999
+#: frontend/php/include/trackers_run/browse.php:952
 msgid "type of search"
 msgstr "тип поиска"
 
 #. TRANSLATORS: the first argument is kind of query form (like Basic),
 #. the second argument is kind of selection (Simple or Multiple).
-#: frontend/php/include/trackers_run/browse.php:1013
+#: frontend/php/include/trackers_run/browse.php:966
 #, php-format
 msgid "Browse with the %1$s query form and %2$s selection."
 msgstr "Просмотреть с %1$s формой запроса и %2$s выбором."
 
 #. TRANSLATORS: this is a logical operator, used in string
 #. "Use logical %s between '%s' and '%s' searches.
-#: frontend/php/include/trackers_run/browse.php:1040
-#: frontend/php/include/trackers_run/browse.php:1057
+#: frontend/php/include/trackers_run/browse.php:993
+#: frontend/php/include/trackers_run/browse.php:1010
 msgid "OR"
 msgstr "ИЛИ"
 
 #. TRANSLATORS: this is a logical operator, used in string
 #. "Use logical %s between '%s' and '%s' searches.
-#: frontend/php/include/trackers_run/browse.php:1043
-#: frontend/php/include/trackers_run/browse.php:1053
+#: frontend/php/include/trackers_run/browse.php:996
+#: frontend/php/include/trackers_run/browse.php:1006
 msgid "AND"
 msgstr "И"
 
-#: frontend/php/include/trackers_run/browse.php:1048
+#: frontend/php/include/trackers_run/browse.php:1001
 msgid "logical operation to apply"
 msgstr "логический оператор"
 
-#: frontend/php/include/trackers_run/browse.php:1065
+#: frontend/php/include/trackers_run/browse.php:1018
 #, php-format
 msgid "Use logical %1$s between '%2$s' and '%3$s' searches."
 msgstr "Применить логическое %1$s между поисками по '%2$s' и '%3$s'."
 
 #. TRANSLATORS: the string is used like "<field-name> %s since <date>"
-#: frontend/php/include/trackers_run/browse.php:1106
+#: frontend/php/include/trackers_run/browse.php:1055
 msgid "modified"
 msgstr "изменено"
 
-#. TRANSLATORS: the string is used like "<field-name> %s since <date>"
-#: frontend/php/include/trackers_run/browse.php:1108
+#: frontend/php/include/trackers_run/browse.php:1055
 msgid "not modified"
 msgstr "не изменено"
 
-#: frontend/php/include/trackers_run/browse.php:1121
+#: frontend/php/include/trackers_run/browse.php:1062
 msgid "whether additional constraint is activated"
 msgstr "действует ли дополнительное условие"
 
 #. TRANSLATORS: this string is used as the argument in
 #. 'Additional constraint %s'.
-#: frontend/php/include/trackers_run/browse.php:1126
+#: frontend/php/include/trackers_run/browse.php:1067
 msgid "deactivated"
 msgstr "не действует"
 
 #. TRANSLATORS: this string is used as the argument in
 #. 'Additional constraint %s'.
-#: frontend/php/include/trackers_run/browse.php:1130
-#: frontend/php/include/trackers_run/browse.php:1165
+#: frontend/php/include/trackers_run/browse.php:1071
+#: frontend/php/include/trackers_run/browse.php:1090
 msgid "activated"
 msgstr "действует"
 
-#: frontend/php/include/trackers_run/browse.php:1141
+#: frontend/php/include/trackers_run/browse.php:1075
 msgid "Field for criteria"
 msgstr "поле для этого критерия"
 
-#: frontend/php/include/trackers_run/browse.php:1151
+#: frontend/php/include/trackers_run/browse.php:1079
 msgid "modified or not"
 msgstr "изменено или нет"
 
 #. TRANSLATORS: this is the argument in a string like
 #. "%s [modified/not modified] since [date]"
-#: frontend/php/include/trackers_run/browse.php:1168
+#: frontend/php/include/trackers_run/browse.php:1093
 msgid "Any field"
 msgstr "Любое поле"
 
 #. TRANSLATORS: the argument is 'activated' or 'deactivated'.
-#: frontend/php/include/trackers_run/browse.php:1189
+#: frontend/php/include/trackers_run/browse.php:1112
 #, php-format
 msgid "Additional constraint %1$s:"
 msgstr "Дополнительное условие %1$s:"
 
-#. TRANSLATORS: the first argument is field name, the second argument is
-#. either 'modified' or 'not modified', the third argument is date.
-#: frontend/php/include/trackers_run/browse.php:1193
+#: frontend/php/include/trackers_run/browse.php:1117
 #, php-format
 msgid "%1$s %2$s since %3$s"
 msgstr "Поле %1$s %2$s с %3$s"
 
-#: frontend/php/include/trackers_run/browse.php:1215
+#: frontend/php/include/trackers_run/browse.php:1134
 #, php-format
 msgid "Show %1$s item at once with a spam score lower than %2$s."
 msgid_plural "Show %1$s items at once with a spam score lower than %2$s."
@@ -5826,25 +5816,25 @@ msgstr[0] "Показывать %1$s заявку на странице со с�
 msgstr[1] "Показывать %1$s заявки на странице со счетчиком спама ниже %2$s."
 msgstr[2] "Показывать %1$s заявок на странице со счетчиком спама ниже %2$s."
 
-#: frontend/php/include/trackers_run/browse.php:1226
+#: frontend/php/include/trackers_run/browse.php:1145
 #, php-format
 msgid "Items to show at once: %s."
 msgstr "Показать заявок на странице: %s."
 
-#: frontend/php/include/trackers_run/browse.php:1229
+#: frontend/php/include/trackers_run/browse.php:1148
 msgid "Number of items to show at once"
 msgstr "Число заявок на страницу"
 
-#: frontend/php/include/trackers_run/browse.php:1233
+#: frontend/php/include/trackers_run/browse.php:1154
 #, php-format
 msgid "Show items with a spam score lower than %s."
 msgstr "Показывать заявки со счетчиком спама ниже %s."
 
-#: frontend/php/include/trackers_run/browse.php:1236
+#: frontend/php/include/trackers_run/browse.php:1157
 msgid "Spam level of items to hide"
 msgstr "Уровень спама скрытых заявок"
 
-#: frontend/php/include/trackers_run/browse.php:1245
+#: frontend/php/include/trackers_run/browse.php:1166
 #, php-format
 msgid ""
 "Warning: only %s item can be shown at once, unless using Printer Version."
@@ -5860,8 +5850,7 @@ msgstr[2] ""
 "Внимание: одновременно может быть показано только %s заявок, если не "
 "используется версия для печати."
 
-#: frontend/php/include/trackers_run/browse.php:1264
-#: frontend/php/include/trackers_run/browse.php:1277
+#: frontend/php/include/trackers_run/browse.php:1181
 #, php-format
 msgid ""
 "Column heading links sort results (up or\n"
@@ -5873,28 +5862,28 @@ msgstr ""
 "убывающем порядке), можно также <a href=\"%1$s\">сортировать по приоритету</"
 "a> или <a href=\"%2$s\">сбросить сортировку</a>."
 
-#: frontend/php/include/trackers_run/browse.php:1270
+#: frontend/php/include/trackers_run/browse.php:1192
 #, php-format
 msgid "You can also <a href=\"%s\">deactivate multicolumn sort</a>."
 msgstr ""
 "Можно также <a href=\"%s\">отключить сортировку по нескольким столбцам</a>."
 
-#: frontend/php/include/trackers_run/browse.php:1283
+#: frontend/php/include/trackers_run/browse.php:1201
 #, php-format
 msgid "You can also <a href=\"%s\">activate multicolumn sort</a>."
 msgstr ""
 "Можно также <a href=\"%s\">включить сортировку по нескольким столбцам</a>."
 
-#: frontend/php/include/trackers_run/browse.php:1289
+#: frontend/php/include/trackers_run/browse.php:1208
 #, php-format
 msgid "Currently, results are sorted by %s."
 msgstr "Сейчас результаты отсортированны по %s."
 
-#: frontend/php/include/trackers_run/browse.php:1319
+#: frontend/php/include/trackers_run/browse.php:1226
 msgid "Proceed to Digest next step"
 msgstr "Перейти к следующему этапу"
 
-#: frontend/php/include/trackers_run/browse.php:1326
+#: frontend/php/include/trackers_run/browse.php:1231
 msgid "No matching items found. The display criteria may be too restrictive."
 msgstr "Ничего не найдено. Возможно, заданы слишком жесткие критерии поиска."
 
@@ -5916,16 +5905,16 @@ msgstr ""
 "После выбора нажмите в конце страницы &ldquo;Перейти к следующему "
 "шагу&rdquo;."
 
-#: frontend/php/include/trackers_run/digest.php:74
-#: frontend/php/include/trackers_run/digest.php:146
+#: frontend/php/include/trackers_run/digest.php:71
+#: frontend/php/include/trackers_run/digest.php:142
 msgid "No items selected for digest"
 msgstr "Не выбрано ни одной заявки"
 
-#: frontend/php/include/trackers_run/digest.php:77
+#: frontend/php/include/trackers_run/digest.php:73
 msgid "Digest Items: Fields Selection"
 msgstr "Резюмирование заявок: выбор полей"
 
-#: frontend/php/include/trackers_run/digest.php:94
+#: frontend/php/include/trackers_run/digest.php:90
 #, php-format
 msgid "You selected %s item for this digest."
 msgid_plural "You selected %s items for this digest."
@@ -5933,107 +5922,41 @@ msgstr[0] "Для резюме выбрана %s заявка."
 msgstr[1] "Для резюме выбраны %s заявки."
 msgstr[2] "Для резюме выбрано %s заявок."
 
-#: frontend/php/include/trackers_run/digest.php:99
+#: frontend/php/include/trackers_run/digest.php:95
 msgid ""
 "Now you must unselect fields you do not want to be included in the digest."
 msgstr "Снимите выделение с полей, которые не нужно включать в резюме."
 
-#: frontend/php/include/trackers_run/digest.php:134
+#: frontend/php/include/trackers_run/digest.php:130
 msgid "Latest Comment"
 msgstr "Последние коментарии"
 
-#: frontend/php/include/trackers_run/digest.php:135
+#: frontend/php/include/trackers_run/digest.php:131
 msgid "Latest comment posted about the item."
 msgstr "Последние комментарии из заявки."
 
-#: frontend/php/include/trackers_run/digest.php:149
+#: frontend/php/include/trackers_run/digest.php:145
 msgid "No fields selected for digest"
 msgstr "Для резюме не выбрано ни одного поля"
 
-#: frontend/php/include/trackers_run/digest.php:183
+#: frontend/php/include/trackers_run/digest.php:179
 msgid "Closed Item"
 msgstr "Закрытая заявка"
 
-#: frontend/php/include/trackers_run/digest.php:185
+#: frontend/php/include/trackers_run/digest.php:183
 msgid "Open Item"
 msgstr "Открытая заявка"
 
 #. TRANSLATORS: anonymous user.
-#: frontend/php/include/trackers_run/digest.php:273
-#: frontend/php/include/utils.php:618 frontend/php/include/html.php:688
+#: frontend/php/include/trackers_run/digest.php:275
+#: frontend/php/include/utils.php:409 frontend/php/include/html.php:688
 msgid "Anonymous"
 msgstr "Аноним"
 
-#: frontend/php/include/trackers_run/digest.php:280
+#: frontend/php/include/trackers_run/digest.php:284
 #, php-format
 msgid "Latest comment posted (by %s):"
 msgstr "Последний комментарий (добавлен пользователем %s):"
-
-#: frontend/php/include/trackers_run/detail-sober.php:82
-#: frontend/php/include/trackers_run/detail-sober.php:87
-msgid "This item was not approved"
-msgstr "Эта заявка не была подтверждена"
-
-#: frontend/php/include/trackers_run/detail-sober.php:84
-#, php-format
-msgid ""
-"If you want to edit or comment this recipe, go to [%s this item's edit page]"
-msgstr ""
-"Для редактирования этого рецепта перейдите на [%s страницу редактирования "
-"этой заявки]"
-
-#: frontend/php/include/trackers_run/detail-sober.php:104
-msgid "This item is private."
-msgstr "Это скрытая заявка."
-
-#. TRANSLATORS: the argument is date.
-#: frontend/php/include/trackers_run/detail-sober.php:157
-#, php-format
-msgid "Last update: %s"
-msgstr "Последнее обновление: %s"
-
-#. TRANSLATORS: the argument is site name (like Savannah).
-#: frontend/php/include/trackers_run/detail-sober.php:163
-#, php-format
-msgid "This recipe comes from %s User Docs"
-msgstr "Этот рецепт размещен в Документации пользователя %s"
-
-#: frontend/php/include/trackers_run/detail-sober.php:181
-msgid "Audience and Context"
-msgstr "Аудитория и контекст"
-
-#: frontend/php/include/trackers_run/detail-sober.php:240
-#: frontend/php/include/trackers/cookbook.php:229
-msgid "Audience:"
-msgstr "Аудитория:"
-
-#: frontend/php/include/trackers_run/detail-sober.php:257
-#: frontend/php/include/trackers/cookbook.php:254
-msgid "Feature:"
-msgstr "Функция:"
-
-#: frontend/php/include/trackers_run/detail-sober.php:264
-#: frontend/php/include/trackers/cookbook.php:262
-msgid "Action:"
-msgstr "Действие:"
-
-#: frontend/php/include/trackers_run/detail-sober.php:273
-msgid ""
-"(As there is at least one of the Audience/Feature/Action\n"
-"context information not set, this recipe will not show up in related "
-"recipes\n"
-"links)"
-msgstr ""
-"Поскольку аудитория, функция или действие не были указаны, этот рецепт не "
-"будет показан в соответствующих списках рецептов."
-
-#: frontend/php/include/trackers_run/detail-sober.php:283
-msgid "Item Edition"
-msgstr "Редакция заявки"
-
-#: frontend/php/include/trackers_run/detail-sober.php:286
-msgid "Edit this page"
-msgstr "Править эту страницу"
 
 #: frontend/php/include/member.php:57
 msgid "This user is already member of the group."
@@ -6329,16 +6252,16 @@ msgstr "Предварительный просмотр рецепта"
 msgid "Current spam score: %s"
 msgstr "Текущий спамовый счетчик: %s"
 
-#: frontend/php/include/trackers/format.php:186
+#: frontend/php/include/trackers/format.php:191
 msgid "This item has been reported to be a spam"
 msgstr "Об этой заявке сообщили как о спаме"
 
-#: frontend/php/include/trackers/format.php:191
+#: frontend/php/include/trackers/format.php:196
 #: frontend/php/include/user.php:162
 msgid "anonymous"
 msgstr "анонимный"
 
-#: frontend/php/include/trackers/format.php:206
+#: frontend/php/include/trackers/format.php:210
 msgid ""
 "Why is this post is considered to be spam? Users may have reported it to be\n"
 "spam or, if it has been recently posted, it may just be waiting for "
@@ -6348,95 +6271,91 @@ msgstr ""
 "Почему это считается спамом? Возможно, пользователи сообщили, что это спам, "
 "или это ожидает проверки на спам."
 
-#: frontend/php/include/trackers/format.php:211
-msgid "Spam content:"
-msgstr "Содержимое спама:"
-
-#: frontend/php/include/trackers/format.php:225
+#: frontend/php/include/trackers/format.php:230
 msgid "Unflag as spam"
 msgstr "Сбросить признак спама"
 
-#: frontend/php/include/trackers/format.php:235
+#: frontend/php/include/trackers/format.php:240
 #, php-format
 msgid "Spam posted by %s"
 msgstr "Спам, посланный пользователем %s"
 
-#: frontend/php/include/trackers/format.php:297
+#: frontend/php/include/trackers/format.php:302
 #: frontend/php/project/memberlist.php:178
 msgid "Site Administrator"
 msgstr "Администратор сайта"
 
-#: frontend/php/include/trackers/format.php:302
+#: frontend/php/include/trackers/format.php:307
 #: frontend/php/project/memberlist.php:173
 msgid "Project Administrator"
 msgstr "Администратор проекта"
 
-#: frontend/php/include/trackers/format.php:309
+#: frontend/php/include/trackers/format.php:314
 #: frontend/php/include/html.php:687 frontend/php/project/memberlist.php:189
 msgid "Project Member"
 msgstr "Член проекта"
 
-#: frontend/php/include/trackers/format.php:317
+#: frontend/php/include/trackers/format.php:320
 msgid "This is a preview"
 msgstr "Это предварительный просмотр"
 
-#: frontend/php/include/trackers/format.php:323
-#: frontend/php/include/trackers/data.php:2599
+#: frontend/php/include/trackers/format.php:326
+#: frontend/php/include/trackers/data.php:2596
 msgid "original submission:"
 msgstr "первоначальная заявка:"
 
-#: frontend/php/include/trackers/format.php:325
+#: frontend/php/include/trackers/format.php:328
 msgid "recipe preview:"
 msgstr "предварительный просмотр рецепта:"
 
-#: frontend/php/include/trackers/format.php:329
-#: frontend/php/include/trackers/data.php:2606 frontend/php/markup-test.php:66
+#: frontend/php/include/trackers/format.php:332
+#: frontend/php/include/trackers/data.php:2603 frontend/php/markup-test.php:66
 #, php-format
 msgid "comment #%s:"
 msgstr "комментарий №%s:"
 
-#: frontend/php/include/trackers/format.php:334
+#: frontend/php/include/trackers/format.php:337
 msgid "Quote"
 msgstr "Цитировать"
 
-#: frontend/php/include/trackers/format.php:356
+#: frontend/php/include/trackers/format.php:353
 msgid "In charge of this item."
 msgstr "Отвечает за эту заявку."
 
-#: frontend/php/include/trackers/format.php:373
+#: frontend/php/include/trackers/format.php:370
 msgid "Flag as spam"
 msgstr "Выставить признак спама"
 
-#: frontend/php/include/trackers/format.php:500
+#: frontend/php/include/trackers/format.php:490
 msgid "No files currently attached"
 msgstr "Никакие файлы в настоящее время не приложены"
 
-#: frontend/php/include/trackers/format.php:564
+#: frontend/php/include/trackers/format.php:544
 #, php-format
 msgid "<!-- file -->%1$s added by %2$s"
 msgstr "%1$s добавлен пользователем %2$s"
 
-#: frontend/php/include/trackers/format.php:613
+#: frontend/php/include/trackers/format.php:592
 msgid "CC list is empty"
 msgstr "Список уведомлений пуст"
 
-#: frontend/php/include/trackers/format.php:663
+#: frontend/php/include/trackers/format.php:642
 msgid "Voted in favor of this item"
 msgstr "Голосует за эту заявку"
 
-#: frontend/php/include/trackers/format.php:666
+#: frontend/php/include/trackers/format.php:645
 msgid "Submitted the item"
 msgstr "Автор заявки"
 
-#: frontend/php/include/trackers/format.php:667
+#: frontend/php/include/trackers/format.php:646
 msgid "Posted a comment"
 msgstr "Автор комментария"
 
-#: frontend/php/include/trackers/format.php:668
+#: frontend/php/include/trackers/format.php:647
 msgid "Updated the item"
 msgstr "Редактор заявки"
 
-#: frontend/php/include/trackers/format.php:707
+#: frontend/php/include/trackers/format.php:686
 #, php-format
 msgid "<!-- email --> %1$s added by %2$s"
 msgstr "%1$s добавлен пользователем %2$s"
@@ -6592,60 +6511,72 @@ msgstr ""
 "рецепта по теме. Это не помешает другим пользователям читать этот рецепт в "
 "большом списке рецептов."
 
+#: frontend/php/include/trackers/cookbook.php:229
+msgid "Audience:"
+msgstr "Аудитория:"
+
+#: frontend/php/include/trackers/cookbook.php:254
+msgid "Feature:"
+msgstr "Функция:"
+
+#: frontend/php/include/trackers/cookbook.php:262
+msgid "Action:"
+msgstr "Действие:"
+
 #: frontend/php/include/trackers/cookbook.php:377
 msgid "Audience/Feature/Action updated"
 msgstr "Аудитория/Функция/Действие обновлены"
 
-#: frontend/php/include/trackers/general.php:83
+#: frontend/php/include/trackers/general.php:51
 msgid "This project has turned off this tracker."
 msgstr "В этом проекте этот журнал отключен."
 
-#: frontend/php/include/trackers/general.php:339
-#: frontend/php/include/trackers/general.php:346
+#: frontend/php/include/trackers/general.php:307
+#: frontend/php/include/trackers/general.php:314
 msgid "Start:"
 msgstr "Начало:"
 
-#: frontend/php/include/trackers/general.php:339
-#: frontend/php/include/trackers/general.php:350
+#: frontend/php/include/trackers/general.php:307
+#: frontend/php/include/trackers/general.php:318
 msgid "End:"
 msgstr "Конец:"
 
-#: frontend/php/include/trackers/general.php:341
+#: frontend/php/include/trackers/general.php:309
 msgid "Any time"
 msgstr "Любое время"
 
-#: frontend/php/include/trackers/general.php:349
-#: frontend/php/include/trackers/general.php:353
+#: frontend/php/include/trackers/general.php:317
+#: frontend/php/include/trackers/general.php:321
 msgid "(yyyy-mm-dd)"
 msgstr "(гггг-мм-дд)"
 
-#: frontend/php/include/trackers/general.php:363
+#: frontend/php/include/trackers/general.php:331
 msgid "comparison operator"
 msgstr "оператор сравнения"
 
-#: frontend/php/include/trackers/general.php:417
+#: frontend/php/include/trackers/general.php:385
 msgid "Error: no group defined"
 msgstr "Ошибка: группа не определена"
 
-#: frontend/php/include/trackers/general.php:511
+#: frontend/php/include/trackers/general.php:479
 msgid "Internal error: no group id"
 msgstr "Внутренняя ошибка: нет идентификатора группы"
 
-#: frontend/php/include/trackers/general.php:632
+#: frontend/php/include/trackers/general.php:600
 #, php-format
 msgid ""
 "These fields are mandatory: %s.\n"
 "Fill them and re-submit the form."
 msgstr "Следующие поля обязательны: %s. Заполните их и отправьте форму снова."
 
-#: frontend/php/include/trackers/general.php:638
+#: frontend/php/include/trackers/general.php:606
 #, php-format
 msgid ""
 "The field %s is mandatory.\n"
 "Fill it and re-submit the form."
 msgstr "Поле %s обязательно. Заполните его и отправьте форму снова."
 
-#: frontend/php/include/trackers/general.php:648
+#: frontend/php/include/trackers/general.php:616
 #, php-format
 msgid ""
 "These fields are mandatory: %s.\n"
@@ -6655,7 +6586,7 @@ msgstr ""
 "Следующие поля обязательны: %s. Они сброшены в предыдущие значения. "
 "Проверьте их и отправьте форму снова."
 
-#: frontend/php/include/trackers/general.php:655
+#: frontend/php/include/trackers/general.php:623
 #, php-format
 msgid ""
 "The field %s is mandatory.\n"
@@ -6665,42 +6596,42 @@ msgstr ""
 "Поле %s обязательно. Оно сброшено в предыдущее значение. Проверьте его и "
 "отправьте форму снова."
 
-#: frontend/php/include/trackers/general.php:711
+#: frontend/php/include/trackers/general.php:679
 msgid "Error, no group_id"
 msgstr "Ошибка, нет group_id"
 
-#: frontend/php/include/trackers/general.php:721
+#: frontend/php/include/trackers/general.php:689
 msgid "Multiple Canned Responses"
 msgstr "Несколько шаблонов ответов"
 
-#: frontend/php/include/trackers/general.php:736
+#: frontend/php/include/trackers/general.php:704
 msgid "No canned response available"
 msgstr "Шаблоны ответов недоступны"
 
-#: frontend/php/include/trackers/general.php:918
+#: frontend/php/include/trackers/general.php:886
 msgid "Presumed spam: no mail will be sent"
 msgstr "Предполагается спам: сообщение не будет отправлено"
 
-#: frontend/php/include/trackers/general.php:938
+#: frontend/php/include/trackers/general.php:906
 msgid "Could not send item update."
 msgstr "Не удалось отправить обновление заявки."
 
-#: frontend/php/include/trackers/general.php:1096
+#: frontend/php/include/trackers/general.php:1064
 #, php-format
 msgid "The upload directory '%s' is not writable."
 msgstr "Каталог для загрузки \"%s\" недоступен для записи."
 
-#: frontend/php/include/trackers/general.php:1105
+#: frontend/php/include/trackers/general.php:1073
 #, php-format
 msgid "File %s not attached: unable to open it"
 msgstr "Файл %s не приложен: его не удалось открыть"
 
-#: frontend/php/include/trackers/general.php:1122
+#: frontend/php/include/trackers/general.php:1090
 #, php-format
 msgid "Unexpected error, disregarding file %s attachment"
 msgstr "Неожиданная ошибка, файл приложения %s игнорируется"
 
-#: frontend/php/include/trackers/general.php:1135
+#: frontend/php/include/trackers/general.php:1103
 #, php-format
 msgid "You already uploaded %s kilobyte."
 msgid_plural "You already uploaded %s kilobytes."
@@ -6708,7 +6639,7 @@ msgstr[0] "Вы же отправили %s килобайт."
 msgstr[1] "Вы же отправили %s килобайта."
 msgstr[2] "Вы же отправили %s килобайт."
 
-#: frontend/php/include/trackers/general.php:1152
+#: frontend/php/include/trackers/general.php:1120
 #, php-format
 msgid "File %s not attached: its size is %s kilobyte."
 msgid_plural "File %s not attached: its size is %s kilobytes."
@@ -6716,7 +6647,7 @@ msgstr[0] "Файл %s не приложился: его размер %s кил�
 msgstr[1] "Файл %s не приложился: его размер %s килобайта."
 msgstr[2] "Файл %s не приложился: его размер %s килобайт."
 
-#: frontend/php/include/trackers/general.php:1158
+#: frontend/php/include/trackers/general.php:1126
 #, php-format
 msgid ""
 "Maximum allowed file size is %s kilobyte,\n"
@@ -6734,76 +6665,86 @@ msgstr[2] ""
 "Максимальный допустимый размер файла&nbsp;&mdash; %s килобайт, после "
 "добавления экранирующих символов."
 
-#: frontend/php/include/trackers/general.php:1171
+#: frontend/php/include/trackers/general.php:1139
 #, php-format
 msgid "File %s is empty."
 msgstr "Файл %s пуст."
 
-#: frontend/php/include/trackers/general.php:1194
+#: frontend/php/include/trackers/general.php:1162
 #, php-format
 msgid "Error while attaching file %s"
 msgstr "Ошибка при приложении файла %s"
 
-#: frontend/php/include/trackers/general.php:1203
+#: frontend/php/include/trackers/general.php:1171
 #, php-format
 msgid "Error while saving file %s on disk"
 msgstr "Ошибка при сохранении файла %s на диске"
 
 #. TRANSLATORS: the argument is file id (a number).
-#: frontend/php/include/trackers/general.php:1211
+#: frontend/php/include/trackers/general.php:1179
 #, php-format
 msgid "file #%s attached"
 msgstr "файл №%s приложен"
 
-#: frontend/php/include/trackers/general.php:1273
+#: frontend/php/include/trackers/general.php:1241
 msgid "CC added."
 msgstr "Адрес уведомления добавлен."
 
-#: frontend/php/include/trackers/general.php:1276
+#: frontend/php/include/trackers/general.php:1244
 msgid "CC addition failed."
 msgstr "Не удается добавить адрес уведомления."
 
-#: frontend/php/include/trackers/general.php:1321
+#: frontend/php/include/trackers/general.php:1289
 msgid "Removing CC is not allowed"
 msgstr "Удалять адрес уведомления не разрешено"
 
-#: frontend/php/include/trackers/general.php:1333
+#: frontend/php/include/trackers/general.php:1301
 msgid "Failed to remove CC"
 msgstr "Не удалось удалить адрес уведомления."
 
-#: frontend/php/include/trackers/general.php:1336
+#: frontend/php/include/trackers/general.php:1304
 msgid "CC Removed"
 msgstr "Адрес уведомления удален"
 
-#: frontend/php/include/trackers/general.php:1386
+#: frontend/php/include/trackers/general.php:1354
 msgid "Failed to delete dependency."
 msgstr "Не удалось удалить зависимость."
 
-#: frontend/php/include/trackers/general.php:1389
+#: frontend/php/include/trackers/general.php:1357
 msgid "Dependency Removed."
 msgstr "Зависимость удалена."
 
 #. TRANSLATORS: this string specifies sorting order.
-#: frontend/php/include/trackers/general.php:1494
+#: frontend/php/include/trackers/general.php:1462
 msgid "down"
 msgstr "по убыванию"
 
 #. TRANSLATORS: this string specifies sorting order.
-#: frontend/php/include/trackers/general.php:1496
+#: frontend/php/include/trackers/general.php:1464
 msgid "up"
 msgstr "по возрастанию"
 
-#: frontend/php/include/trackers/show.php:57
-#: frontend/php/include/trackers/show.php:69
+#: frontend/php/include/trackers/show.php:35
+#: frontend/php/include/trackers/show.php:40
 msgid "Begin"
 msgstr "Начало"
 
-#: frontend/php/include/trackers/show.php:61
-#: frontend/php/include/trackers/show.php:72 frontend/php/include/html.php:149
+#: frontend/php/include/trackers/show.php:38
+#: frontend/php/include/trackers/show.php:42 frontend/php/include/html.php:149
 msgid "Previous Results"
 msgstr "Предыдущие"
 
-#: frontend/php/include/trackers/show.php:79
+#: frontend/php/include/trackers/show.php:58
+#: frontend/php/include/trackers/show.php:63 frontend/php/include/html.php:150
+msgid "Next Results"
+msgstr "Следующие"
+
+#: frontend/php/include/trackers/show.php:61
+#: frontend/php/include/trackers/show.php:65
+msgid "End"
+msgstr "Конец"
+
+#: frontend/php/include/trackers/show.php:77
 #, php-format
 msgid "%d matching item"
 msgid_plural "%d matching items"
@@ -6811,45 +6752,16 @@ msgstr[0] "%d подходящая заявка"
 msgstr[1] "%d подходящие заявки"
 msgstr[2] "%d подходящих заявок"
 
-#. TRANSLATORS: the arguments are offsets of items in the list.
-#: frontend/php/include/trackers/show.php:83
+#: frontend/php/include/trackers/show.php:82
 #, php-format
 msgid "Items %1$s to %2$s"
 msgstr "Заявки с %1$s по %2$s"
 
-#: frontend/php/include/trackers/show.php:99
-#: frontend/php/include/trackers/show.php:111 frontend/php/include/html.php:150
-msgid "Next Results"
-msgstr "Следующие"
+#: frontend/php/include/trackers/show.php:206
+msgid "No changes have been made to this item"
+msgstr "Эта заявка не изменялась"
 
-#: frontend/php/include/trackers/show.php:104
-#: frontend/php/include/trackers/show.php:114
-msgid "End"
-msgstr "Конец"
-
-#: frontend/php/include/trackers/show.php:258
-msgid "For Everybody"
-msgstr "Для всех"
-
-#: frontend/php/include/trackers/show.php:259
-msgid "For Project Members Only"
-msgstr "Только для участников проекта"
-
-#: frontend/php/include/trackers/show.php:262
-msgid "Other audience"
-msgstr "Другая аудитория"
-
-#: frontend/php/include/trackers/show.php:263
-msgid "Undefined audience"
-msgstr "Неопределенная аудитория"
-
-#. TRANSLATORS: the argument is site name (like Savannah).
-#: frontend/php/include/trackers/show.php:405
-#, php-format
-msgid "From %s User Docs"
-msgstr "Из документации пользователя сайта %s"
-
-#: frontend/php/include/trackers/show.php:450
+#: frontend/php/include/trackers/show.php:219
 #, php-format
 msgid "Follows %s latest change."
 msgid_plural "Follow %s latest changes."
@@ -6857,69 +6769,65 @@ msgstr[0] "Далее идет %s последнее изменение."
 msgstr[1] "Далее идут %s последние изменения."
 msgstr[2] "Далее идут %s последних изменений."
 
-#: frontend/php/include/trackers/show.php:457
+#: frontend/php/include/trackers/show.php:226
 msgid "Changed by"
 msgstr "Автор"
 
-#: frontend/php/include/trackers/show.php:458
+#: frontend/php/include/trackers/show.php:226
 msgid "Updated Field"
 msgstr "Обновлено поле"
 
-#: frontend/php/include/trackers/show.php:459
+#: frontend/php/include/trackers/show.php:226
 msgid "Previous Value"
 msgstr "Предыдущее значение"
 
-#: frontend/php/include/trackers/show.php:461
+#: frontend/php/include/trackers/show.php:227
 msgid "Replaced by"
 msgstr "Изменено на"
 
-#: frontend/php/include/trackers/show.php:520
+#: frontend/php/include/trackers/show.php:285
 msgid "Automatic update due to transitions settings"
 msgstr "Автоматическое обновление согласно настройкам переходов"
 
-#: frontend/php/include/trackers/show.php:559
-msgid "No changes have been made to this item"
-msgstr "Эта заявка не изменялась"
-
-#: frontend/php/include/trackers/show.php:597
+#: frontend/php/include/trackers/show.php:349
 msgid "Items that depend on this one"
 msgstr "Заявки, зависящие от этой"
 
-#: frontend/php/include/trackers/show.php:599
+#: frontend/php/include/trackers/show.php:351
 msgid "Depends on the following items"
 msgstr "Зависит от следующих заявок"
 
-#: frontend/php/include/trackers/show.php:733
+#: frontend/php/include/trackers/show.php:472
 msgid "Delete this dependency"
 msgstr "Удалить эту зависимость"
 
-#: frontend/php/include/trackers/show.php:757
+#: frontend/php/include/trackers/show.php:494
 msgid "---- Private ----"
 msgstr "---- Скрыто ----"
 
-#: frontend/php/include/trackers/show.php:783
+#: frontend/php/include/trackers/show.php:520
 msgid "Digest:"
 msgstr "Сводка:"
 
-#: frontend/php/include/trackers/show.php:793
+#: frontend/php/include/trackers/show.php:530
 msgid "support dependencies"
 msgstr "зависимости журнала поддержки"
 
-#: frontend/php/include/trackers/show.php:796
+#: frontend/php/include/trackers/show.php:533
 msgid "bug dependencies"
 msgstr "зависимости журнала ошибок"
 
-#: frontend/php/include/trackers/show.php:799
+#: frontend/php/include/trackers/show.php:536
 msgid "task dependencies"
 msgstr "зависимости журнала задач"
 
-#: frontend/php/include/trackers/show.php:802
+#: frontend/php/include/trackers/show.php:539
 msgid "patch dependencies"
 msgstr "зависимости журнала заплаток"
 
 #. TRANSLATORS: the argument is tracker name, unlocalized
 #. (this string is a fallback that should never actually be used).
-#: frontend/php/include/trackers/show.php:808
+#: frontend/php/include/trackers/show.php:544
 #, php-format
 msgid "%s dependencies"
 msgstr "зависимости журнала %s"
@@ -7128,19 +7036,19 @@ msgstr "Опубликована новая заявка (%1$s #%2$s)"
 msgid "(Error - Not Found)"
 msgstr "(Ошибка - не найдено)"
 
-#: frontend/php/include/trackers/data.php:2537
+#: frontend/php/include/trackers/data.php:2534
 #, php-format
 msgid "Item #%s doesn't belong to project"
 msgstr "Заявка №%s не принадлежит этому проекту"
 
 #. TRANSLATORS: the argument is file id (a number); the string
 #. shall be followed by database error message.
-#: frontend/php/include/trackers/data.php:2555
+#: frontend/php/include/trackers/data.php:2552
 #, php-format
 msgid "Can't delete attachment #%s:"
 msgstr "Не удается удалить приложение №%s:"
 
-#: frontend/php/include/trackers/data.php:2560
+#: frontend/php/include/trackers/data.php:2557
 msgid "File successfully deleted"
 msgstr "Файл успешно удален"
 
@@ -7842,219 +7750,128 @@ msgid "This project is not in active state"
 msgstr "Этот проект не в активном состоянии"
 
 #. TRANSLATORS: the argument is file path.
-#: frontend/php/include/utils.php:58
+#: frontend/php/include/utils.php:62
 #, php-format
 msgid "Malformed file path %s"
 msgstr "Неверный синтаксис пути до файла %s"
 
-#: frontend/php/include/utils.php:127 frontend/php/include/utils.php:153
-#: frontend/php/include/utils.php:163
+#: frontend/php/include/utils.php:129 frontend/php/include/utils.php:155
+#: frontend/php/include/utils.php:161
 msgid "(address seems invalid and will probably be ignored)"
 msgstr "(адрес выглядит неправильно, скорее всего, будет проигнорирован)"
 
-#. TRANSLATORS: the argument is mail domain (like localhost or sv.gnu.org).
-#: frontend/php/include/utils.php:134
+#: frontend/php/include/utils.php:136
 #, php-format
 msgid "(address is unknown to Savane, will fail if not valid at %s)"
 msgstr "(адрес неизвестен в Savane, будет сбой, если его нет на %s)"
 
-#: frontend/php/include/utils.php:166 frontend/php/include/utils.php:167
-#: frontend/php/include/utils.php:186 frontend/php/include/utils.php:187
+#: frontend/php/include/utils.php:165 frontend/php/include/utils.php:167
+#: frontend/php/include/utils.php:187 frontend/php/include/utils.php:189
 msgid "-email is unavailable-"
 msgstr "-адрес недоступен-"
 
-#: frontend/php/include/utils.php:168 frontend/php/include/utils.php:188
+#: frontend/php/include/utils.php:168 frontend/php/include/utils.php:190
 msgid "This information is not provided to anonymous users"
 msgstr "Эти сведения анонимным пользователям не предоставляются"
 
 #. TRANSLATORS: this expresses file size.
-#: frontend/php/include/utils.php:316
+#: frontend/php/include/utils.php:309
 #, php-format
 msgid "%sMiB"
 msgstr "%sМиБ"
 
 #. TRANSLATORS: this expresses file size.
-#: frontend/php/include/utils.php:321
+#: frontend/php/include/utils.php:312
 #, php-format
 msgid "%sKiB"
 msgstr "%sКиБ"
 
 #. TRANSLATORS: this expresses file size.
-#: frontend/php/include/utils.php:326
+#: frontend/php/include/utils.php:315
 #, php-format
 msgid "%sB"
 msgstr "%sБ"
 
 #. TRANSLATORS: this is file size unit (no prefix).
-#: frontend/php/include/utils.php:347 frontend/php/include/utils.php:364
+#: frontend/php/include/utils.php:335 frontend/php/include/utils.php:345
 msgid "B"
 msgstr "Б"
 
 #. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:349
+#: frontend/php/include/utils.php:337
 msgid "kB"
 msgstr "кБ"
 
-#. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:351
+#: frontend/php/include/utils.php:337
 msgid "MB"
 msgstr "МБ"
 
-#. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:353
+#: frontend/php/include/utils.php:337
 msgid "GB"
 msgstr "ГБ"
 
-#. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:355
+#: frontend/php/include/utils.php:337
 msgid "TB"
 msgstr "ТБ"
 
-#. TRANSLATORS: this is file size unit (with SI prefix.)
-#: frontend/php/include/utils.php:357
+#: frontend/php/include/utils.php:337
 msgid "PB"
 msgstr "ПБ"
 
 #. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:366
+#: frontend/php/include/utils.php:347
 msgid "KiB"
 msgstr "КиБ"
 
-#. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:368
+#: frontend/php/include/utils.php:347
 msgid "MiB"
 msgstr "МиБ"
 
-#. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:370
+#: frontend/php/include/utils.php:347
 msgid "GiB"
 msgstr "ГиБ"
 
-#. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:372
+#: frontend/php/include/utils.php:347
 msgid "TiB"
 msgstr "ТиБ"
 
-#. TRANSLATORS: this is file size unit (with binary prefix.)
-#: frontend/php/include/utils.php:374
+#: frontend/php/include/utils.php:347
 msgid "PiB"
 msgstr "ПиБ"
 
-#. TRANSLATORS: this is used in contexts like "rpm package for i386 (ix86)"
-#. or "source rpm package".
-#: frontend/php/include/utils.php:410
-msgid "rpm package"
-msgstr "пакет rpm"
-
-#. TRANSLATORS: this is used in contexts like "debian package for i386 (ix86)"
-#. or "source debian package".
-#: frontend/php/include/utils.php:416
-msgid "debian package"
-msgstr "пакет Debian"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:425
-#, php-format
-msgid "source %s"
-msgstr "%s с исходным текстом"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:431
-#, php-format
-msgid "arch independent %s"
-msgstr "архитектурно-независимый %s"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:437
-#, php-format
-msgid "%s for i386 (ix86)"
-msgstr "%s для i386 (ix86)"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:443
-#, php-format
-msgid "%s for i586"
-msgstr "%s для i586"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:449
-#, php-format
-msgid "%s for i686"
-msgstr "%s для i686"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:455
-#, php-format
-msgid "%s for Itanium 64"
-msgstr "%s для Itanium 64"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:461
-#, php-format
-msgid "%s for Sparc"
-msgstr "%s для Sparc"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:467
-#, php-format
-msgid "%s for Alpha"
-msgstr "%s для Alpha"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:473
-#, php-format
-msgid "%s for PowerPC"
-msgstr "%s для PowerPC"
-
-#. TRANSLATORS: the argument is translation of either 'rpm package' or 'debian
-#. package'.
-#: frontend/php/include/utils.php:479
-#, php-format
-msgid "%s for s390"
-msgstr "%s для s390"
-
-#: frontend/php/include/utils.php:661
+#: frontend/php/include/utils.php:427
 msgid "Open Items Priority Colors:"
 msgstr "Цвета приоритета открытых заявок:"
 
-#: frontend/php/include/utils.php:670
+#: frontend/php/include/utils.php:434
 msgid "Closed Items Priority Colors:"
 msgstr "Цвета приоритета закрытых заявок:"
 
-#: frontend/php/include/utils.php:707
+#: frontend/php/include/utils.php:469
 msgid "bugs"
 msgstr "ошибки"
 
-#: frontend/php/include/utils.php:709
+#: frontend/php/include/utils.php:471
 msgid "recipes"
 msgstr "рецепты"
 
-#: frontend/php/include/utils.php:711
+#: frontend/php/include/utils.php:473
 msgid "patches"
 msgstr "Заплатки (патчи)"
 
-#: frontend/php/include/utils.php:713
+#: frontend/php/include/utils.php:475
 msgid "support requests"
 msgstr "запросы на поддержку"
 
-#: frontend/php/include/utils.php:715
+#: frontend/php/include/utils.php:477
 msgid "tasks"
 msgstr "задачи"
 
-#: frontend/php/include/utils.php:741
+#: frontend/php/include/utils.php:504
 msgid "Untitled"
 msgstr "Без заголовка"
 
-#: frontend/php/include/utils.php:1037
+#: frontend/php/include/utils.php:768
 msgid "Error updating database"
 msgstr "Ошибка при обновлении базы данных"
 
@@ -8319,43 +8136,57 @@ msgstr ""
 "могут читать скрытые заявки."
 
 #. TRANSLATORS: the argument is site name (like Savannah).
-#: frontend/php/include/sendmail.php:137
+#: frontend/php/include/sendmail.php:125
 #, php-format
 msgid "Message sent via %s"
 msgstr "Сообщение отправлено по %s"
 
 #. TRANSLATORS: the argument is a comma-separated list of recipients.
 #. TRANSLATORS: the argument is a single email address.
-#: frontend/php/include/sendmail.php:375 frontend/php/include/sendmail.php:403
+#: frontend/php/include/sendmail.php:359 frontend/php/include/sendmail.php:387
 #, php-format
 msgid "Mail sent to %s"
 msgstr "Почта отправлена по адресам: %s"
 
 #. TRANSLATORS: the argument is user's name.
-#: frontend/php/include/sendmail.php:478
+#: frontend/php/include/sendmail.php:459
 #, php-format
-msgid "Send a Message to %s"
+msgid "Send a message to %s"
 msgstr "Отправить сообщение пользователю %s"
 
-#: frontend/php/include/sendmail.php:491
+#: frontend/php/include/sendmail.php:462
+msgid ""
+"If you are writing for help, did you read the\n"
+"project documentation first? Try to provide any potentially useful "
+"information\n"
+"you can think of."
+msgstr ""
+"Если вы просите о попощи, читали ли вы сначала документацию? Постарайтесь "
+"предоставить всю потенциально полезную информацию."
+
+#: frontend/php/include/sendmail.php:475
 msgid "From:"
 msgstr "От кого:"
 
-#: frontend/php/include/sendmail.php:494
+#: frontend/php/include/sendmail.php:478
 msgid "Mailer:"
 msgstr "Программа-отправитель:"
 
-#: frontend/php/include/sendmail.php:496 frontend/php/news/submit.php:97
+#: frontend/php/include/sendmail.php:480 frontend/php/news/submit.php:97
 #: frontend/php/news/approve.php:217
 msgid "Subject:"
 msgstr "Тема:"
 
-#: frontend/php/include/sendmail.php:500
+#: frontend/php/include/sendmail.php:484
+msgid "Send me a copy"
+msgstr "Послать мне копию"
+
+#: frontend/php/include/sendmail.php:485
 #: frontend/php/include/news/forum.php:538
 msgid "Message:"
 msgstr "Сообщение:"
 
-#: frontend/php/include/sendmail.php:505
+#: frontend/php/include/sendmail.php:488
 msgid "Send Message"
 msgstr "Послать сообщение"
 
@@ -10047,7 +9878,7 @@ msgid ""
 "project configuration."
 msgstr "Это позволяет отслеживать важные изменения в конфигурации проекта."
 
-#: frontend/php/project/admin/index.php:148 frontend/php/link-to-users.php:282
+#: frontend/php/project/admin/index.php:148 frontend/php/link-to-users.php:284
 msgid "Members"
 msgstr "Участники"
 
@@ -10728,40 +10559,40 @@ msgstr "Учетная запись удалена"
 msgid "Id:"
 msgstr "Номер:"
 
-#: frontend/php/link-to-users.php:169
+#: frontend/php/link-to-users.php:171
 msgid "Send this user a mail"
 msgstr "Отправить сообщение этому пользователю"
 
-#: frontend/php/link-to-users.php:178
+#: frontend/php/link-to-users.php:180
 msgid "Site Member Since:"
 msgstr "Дата регистрации:"
 
-#: frontend/php/link-to-users.php:183
+#: frontend/php/link-to-users.php:185
 msgid "This user did not enable Resume & Skills."
 msgstr "Этот пользователь не включил свою страницу навыков."
 
-#: frontend/php/link-to-users.php:187
+#: frontend/php/link-to-users.php:189
 msgid "View Resume & Skills"
 msgstr "Редактировать страницу навыков"
 
-#: frontend/php/link-to-users.php:194
+#: frontend/php/link-to-users.php:196
 msgid "Download GPG Key"
 msgstr "Ключ GPG"
 
-#: frontend/php/link-to-users.php:208
+#: frontend/php/link-to-users.php:210
 msgid "Project Information"
 msgstr "Сведения о проекте"
 
-#: frontend/php/link-to-users.php:273
+#: frontend/php/link-to-users.php:275
 msgid "This user is not a member of any Group"
 msgstr "Этот пользователь не входит ни в одну группу"
 
-#: frontend/php/link-to-users.php:303
+#: frontend/php/link-to-users.php:305
 msgid "No member found"
 msgstr "Участников не найдено"
 
-#: frontend/php/link-to-users.php:313
-msgid "You Could Send a Message if you were logged in."
+#: frontend/php/link-to-users.php:315
+msgid "You could send a message if you were logged in."
 msgstr "Посылать сообщения можно после того, как вы представитесь системе."
 
 #. TRANSLATORS: This string is used in the context of
@@ -10793,18 +10624,18 @@ msgid "Text to test"
 msgstr "Текст для теста"
 
 #. TRANSLATORS: the argument is user id (a number).
-#: frontend/php/sendmessage.php:46
+#: frontend/php/sendmessage.php:50
 #, php-format
 msgid "User %s does not exist"
 msgstr "Пользователь %s не существует"
 
-#: frontend/php/sendmessage.php:64
-msgid "Message Sent"
-msgstr "Сообщение отправлено"
-
-#: frontend/php/sendmessage.php:72
+#: frontend/php/sendmessage.php:54
 msgid "Send a message"
 msgstr "Послать сообщение"
+
+#: frontend/php/sendmessage.php:71
+msgid "Message Sent"
+msgstr "Сообщение отправлено"
 
 #: frontend/php/404.php:25
 msgid "Requested Page not Found (Error 404)"
@@ -12605,6 +12436,111 @@ msgstr "Другая вводная документация"
 #, php-format
 msgid "Check the <a href=\"%s\">UsingBzr</a> page at the documentation wiki."
 msgstr "Обратитесь к странице <a href=\"%s\">UsingBzr</a> в вики документации."
+
+#, fuzzy
+#~| msgid ""
+#~| "Column heading links sort results (up or\n"
+#~| "down), you can also <a href=\"%1$s\">sort by priority</a> or <a href="
+#~| "\"%2$s\">reset\n"
+#~| "sort</a>."
+#~ msgid ""
+#~ "Column heading links sort results (up or\n"
+#~ "down), you can also "
+#~ msgstr ""
+#~ "Ссылки в заголовках столбцов сортируют результаты (в возрастающем или "
+#~ "убывающем порядке), можно также <a href=\"%1$s\">сортировать по "
+#~ "приоритету</a> или <a href=\"%2$s\">сбросить сортировку</a>."
+
+#~ msgid "This item was not approved"
+#~ msgstr "Эта заявка не была подтверждена"
+
+#~ msgid ""
+#~ "If you want to edit or comment this recipe, go to [%s this item's edit "
+#~ "page]"
+#~ msgstr ""
+#~ "Для редактирования этого рецепта перейдите на [%s страницу редактирования "
+#~ "этой заявки]"
+
+#~ msgid "This item is private."
+#~ msgstr "Это скрытая заявка."
+
+#~ msgid "Last update: %s"
+#~ msgstr "Последнее обновление: %s"
+
+#~ msgid "This recipe comes from %s User Docs"
+#~ msgstr "Этот рецепт размещен в Документации пользователя %s"
+
+#~ msgid "Audience and Context"
+#~ msgstr "Аудитория и контекст"
+
+#~ msgid ""
+#~ "(As there is at least one of the Audience/Feature/Action\n"
+#~ "context information not set, this recipe will not show up in related "
+#~ "recipes\n"
+#~ "links)"
+#~ msgstr ""
+#~ "Поскольку аудитория, функция или действие не были указаны, этот рецепт не "
+#~ "будет показан в соответствующих списках рецептов."
+
+#~ msgid "Item Edition"
+#~ msgstr "Редакция заявки"
+
+#~ msgid "Edit this page"
+#~ msgstr "Править эту страницу"
+
+#~ msgid "Spam content:"
+#~ msgstr "Содержимое спама:"
+
+#~ msgid "For Everybody"
+#~ msgstr "Для всех"
+
+#~ msgid "For Project Members Only"
+#~ msgstr "Только для участников проекта"
+
+#~ msgid "Other audience"
+#~ msgstr "Другая аудитория"
+
+#~ msgid "Undefined audience"
+#~ msgstr "Неопределенная аудитория"
+
+#~ msgid "From %s User Docs"
+#~ msgstr "Из документации пользователя сайта %s"
+
+#~ msgid "rpm package"
+#~ msgstr "пакет rpm"
+
+#~ msgid "debian package"
+#~ msgstr "пакет Debian"
+
+#~ msgid "source %s"
+#~ msgstr "%s с исходным текстом"
+
+#~ msgid "arch independent %s"
+#~ msgstr "архитектурно-независимый %s"
+
+#~ msgid "%s for i386 (ix86)"
+#~ msgstr "%s для i386 (ix86)"
+
+#~ msgid "%s for i586"
+#~ msgstr "%s для i586"
+
+#~ msgid "%s for i686"
+#~ msgstr "%s для i686"
+
+#~ msgid "%s for Itanium 64"
+#~ msgstr "%s для Itanium 64"
+
+#~ msgid "%s for Sparc"
+#~ msgstr "%s для Sparc"
+
+#~ msgid "%s for Alpha"
+#~ msgstr "%s для Alpha"
+
+#~ msgid "%s for PowerPC"
+#~ msgstr "%s для PowerPC"
+
+#~ msgid "%s for s390"
+#~ msgstr "%s для s390"
 
 #~ msgid "No followups have been posted"
 #~ msgstr "Комментариев пока не было"
