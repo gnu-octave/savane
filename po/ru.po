@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: savannah 3.5\n"
 "Report-Msgid-Bugs-To: savannah-hackers-public@gnu.org\n"
-"POT-Creation-Date: 2022-05-31 08:33+0000\n"
+"POT-Creation-Date: 2022-05-31 10:49+0000\n"
 "PO-Revision-Date: 2022-05-20 15:44+0000\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <savannah-hackers-public@gnu.org>\n"
@@ -725,7 +725,7 @@ msgstr "Переход не найден"
 #. TRANSLATORS: this string is a job category.
 #. TRANSLATORS: Displayed when no user is selected.
 #: frontend/php/bugs/admin/field_values_transition-ofields-update.php:111
-#: frontend/php/include/trackers_run/mod.php:291
+#: frontend/php/include/trackers_run/mod.php:292
 #: frontend/php/include/people/general.php:194
 #: frontend/php/include/trackers/general.php:211
 #: frontend/php/include/utils.php:407 frontend/php/include/html.php:427
@@ -734,7 +734,7 @@ msgid "None"
 msgstr "Пусто"
 
 #: frontend/php/bugs/admin/field_values_transition-ofields-update.php:113
-#: frontend/php/include/trackers_run/mod.php:292
+#: frontend/php/include/trackers_run/mod.php:293
 #: frontend/php/include/html.php:429
 msgid "Any"
 msgstr "Любые"
@@ -1897,7 +1897,7 @@ msgstr "Добавить категории работы"
 msgid "Add Job Skills"
 msgstr "Добавить навыки"
 
-#: frontend/php/people/viewjob.php:30 frontend/php/search/index.php:213
+#: frontend/php/people/viewjob.php:30 frontend/php/search/index.php:212
 #: frontend/php/account/lostlogin.php:41 frontend/php/account/lostlogin.php:45
 #: frontend/php/account/pending-resend.php:39
 #: frontend/php/include/stats/general.php:33 frontend/php/include/utils.php:60
@@ -1922,7 +1922,9 @@ msgid "%1$s for %2$s"
 msgstr "%1$s для %2$s"
 
 #: frontend/php/people/viewjob.php:81
-msgid "Submitted By:"
+#: frontend/php/include/trackers_run/mod.php:170
+#: frontend/php/news/approve.php:168
+msgid "Submitter:"
 msgstr "Автор:"
 
 #: frontend/php/people/viewjob.php:83
@@ -2032,7 +2034,7 @@ msgid ""
 "immediately."
 msgstr "Верхний вариант (&ldquo;Сброс&rdquo;) сбрасывает настройку немедленно."
 
-#: frontend/php/captcha.php:112
+#: frontend/php/captcha.php:51
 msgid "Please correctly answer the antispam captcha!"
 msgstr "Решите правильно на антиспамную задачу!"
 
@@ -2069,16 +2071,16 @@ msgid "Group"
 msgstr "Группа"
 
 #: frontend/php/search/index.php:174
-msgid "Submitted By"
+msgid "Submitter"
 msgstr "Автор"
 
-#: frontend/php/search/index.php:175 frontend/php/include/trackers/show.php:226
+#: frontend/php/search/index.php:174 frontend/php/include/trackers/show.php:226
 #: frontend/php/include/project/admin.php:43
 #: frontend/php/include/news/forum.php:248 frontend/php/forum/forum.php:221
 msgid "Date"
 msgstr "Дата"
 
-#: frontend/php/search/index.php:213
+#: frontend/php/search/index.php:212
 msgid "Invalid Search!!"
 msgstr "Неправильный поиск!"
 
@@ -2156,7 +2158,7 @@ msgstr ""
 #. TRANSLATORS: the argument is site name (like Savannah).
 #: frontend/php/account/lostpw-confirm.php:137
 #: frontend/php/account/pending-resend.php:48
-#: frontend/php/account/register.php:219 frontend/php/my/admin/change.php:255
+#: frontend/php/account/register.php:213 frontend/php/my/admin/change.php:255
 #: frontend/php/my/admin/change.php:274 frontend/php/my/admin/change.php:418
 #: frontend/php/my/admin/editsshkeys.php:122
 #, php-format
@@ -2260,7 +2262,7 @@ msgid "Fill a support request."
 msgstr "Заполните запрос поддержки."
 
 #: frontend/php/account/login.php:226 frontend/php/account/lostpw.php:46
-#: frontend/php/account/register.php:279 frontend/php/link-to-users.php:155
+#: frontend/php/account/register.php:273 frontend/php/link-to-users.php:155
 msgid "Login Name:"
 msgstr "Имя учетной записи:"
 
@@ -2395,7 +2397,7 @@ msgstr ""
 "сайта %s, становиться членом групп или даже создать собственную группу."
 
 #: frontend/php/account/first.php:45 frontend/php/account/pending-resend.php:46
-#: frontend/php/account/register.php:217
+#: frontend/php/account/register.php:211
 msgid "Enjoy the site."
 msgstr "Приятного пользования!"
 
@@ -2444,7 +2446,7 @@ msgid "In order to complete your registration, visit the following URL:"
 msgstr "Чтобы завершить регистрацию, перейдите по URL:"
 
 #: frontend/php/account/pending-resend.php:51
-#: frontend/php/account/register.php:240
+#: frontend/php/account/register.php:234
 msgid "Account Registration"
 msgstr "Регистрация учетной записи"
 
@@ -2473,7 +2475,7 @@ msgstr "Ответьте на антиспамный вопрос!"
 msgid "You must supply a username."
 msgstr "Вы должны ввести имя пользователя."
 
-#: frontend/php/account/register.php:90 frontend/php/account/register.php:203
+#: frontend/php/account/register.php:90 frontend/php/account/register.php:197
 #: frontend/php/project/admin/squadadmin.php:262
 msgid "That username already exists."
 msgstr "Имя пользователя занято."
@@ -2514,7 +2516,7 @@ msgstr ""
 "в системе %s. Это нужно, чтобы предотвратить хищение имени вашей\n"
 "учетной записи."
 
-#: frontend/php/account/register.php:209
+#: frontend/php/account/register.php:203
 #, php-format
 msgid ""
 "Thank you for registering on the %s web site.\n"
@@ -2529,7 +2531,7 @@ msgstr ""
 "\n"
 "Чтобы завершить регистрацию, перейдите по URL:"
 
-#: frontend/php/account/register.php:227
+#: frontend/php/account/register.php:221
 #, php-format
 msgid ""
 "P.S. Your password is now stored in hashed form\n"
@@ -2538,7 +2540,7 @@ msgstr ""
 "Ваш пароль теперь хранится в виде контрольной суммы\n"
 "в базе данных %s."
 
-#: frontend/php/account/register.php:232
+#: frontend/php/account/register.php:226
 msgid ""
 "For better security we advise you to register\n"
 "an encryption-capable GPG key and enable encryption when sending password "
@@ -2552,26 +2554,26 @@ msgstr ""
 "чтобы убедиться, что вы действительно можете прочесть зашифрованные\n"
 "сообщения)."
 
-#: frontend/php/account/register.php:243
+#: frontend/php/account/register.php:237
 msgid "Register Confirmation"
 msgstr "Подтверждение регистрации"
 
-#: frontend/php/account/register.php:245
+#: frontend/php/account/register.php:239
 msgid "New Account Registration Confirmation"
 msgstr "Подтверждение регистрации новой учетной записи"
 
 #. TRANSLATORS: the argument is the name of the system (like "Savannah").
-#: frontend/php/account/register.php:247
+#: frontend/php/account/register.php:241
 #, php-format
 msgid "Congratulations. You have registered on %s."
 msgstr "Поздравляем! Вы зарегистрированы на %s "
 
-#: frontend/php/account/register.php:250 frontend/php/my/admin/index.php:200
+#: frontend/php/account/register.php:244 frontend/php/my/admin/index.php:200
 #, php-format
 msgid "Your login is %s."
 msgstr "Ваша учетная запись&nbsp;&mdash; %s."
 
-#: frontend/php/account/register.php:255
+#: frontend/php/account/register.php:249
 #, php-format
 msgid ""
 "You are now being sent a confirmation email to verify your\n"
@@ -2584,36 +2586,36 @@ msgstr ""
 "Чтобы активировать учетную запись, перейдите по ссылке из письма. Сообщение "
 "отправлено с адреса &lt;%s&gt;, оно содержит такой текст:"
 
-#: frontend/php/account/register.php:264
+#: frontend/php/account/register.php:258
 msgid ""
 "If you don't receive it within a reasonable time, contact website\n"
 "administration."
 msgstr ""
 "Если вы не получите его в ближайшее время, обратитесь к администрации сайта."
 
-#: frontend/php/account/register.php:272
+#: frontend/php/account/register.php:266
 msgid "User account registration"
 msgstr "Регистрация новой учетной записи"
 
-#: frontend/php/account/register.php:282
+#: frontend/php/account/register.php:276
 msgid "Password / passphrase:"
 msgstr "Фраза-пароль:"
 
-#: frontend/php/account/register.php:284
+#: frontend/php/account/register.php:278
 msgid "Re-type Password:"
 msgstr "Пароль (повтор):"
 
-#: frontend/php/account/register.php:286
+#: frontend/php/account/register.php:280
 #: frontend/php/project/admin/squadadmin.php:165
 #: frontend/php/link-to-users.php:153
 msgid "Real Name:"
 msgstr "Полное имя:"
 
-#: frontend/php/account/register.php:289 frontend/php/link-to-users.php:164
+#: frontend/php/account/register.php:283 frontend/php/link-to-users.php:164
 msgid "Email Address:"
 msgstr "Адрес электронной почты"
 
-#: frontend/php/account/register.php:293
+#: frontend/php/account/register.php:287
 msgid ""
 "This email address will be verified before account activation. Check your\n"
 "spam filters. Do not use a hotmail or comcast address here."
@@ -2623,29 +2625,29 @@ msgstr ""
 "Проверьте свои фильтры спама. Не пользуйтесь здесь адресами hotmail и "
 "comcast."
 
-#: frontend/php/account/register.php:300 frontend/php/account/register.php:321
+#: frontend/php/account/register.php:294 frontend/php/account/register.php:315
 msgid "Antispam test:"
 msgstr "Проверка против спама:"
 
-#: frontend/php/account/register.php:305
+#: frontend/php/account/register.php:299
 #, php-format
 msgid "In what year was the GNU project announced? [<a href='%s'>hint</a>]"
 msgstr ""
 "В каком году было объявлено о проекте GNU? [<a href='%s'>подсказка</a>]"
 
-#: frontend/php/account/register.php:315
+#: frontend/php/account/register.php:309
 msgid "CAPTCHA"
 msgstr "капча"
 
-#: frontend/php/account/register.php:316
+#: frontend/php/account/register.php:310
 msgid "Try another image"
 msgstr "Другое изображение"
 
-#: frontend/php/account/register.php:319
+#: frontend/php/account/register.php:313
 msgid "Play captcha"
 msgstr "Воспроизвести вопрос"
 
-#: frontend/php/account/register.php:331
+#: frontend/php/account/register.php:325
 msgid ""
 "Instead of providing a new password you\n"
 "        may choose to authenticate via an <strong>AFS</strong> account you "
@@ -2658,7 +2660,7 @@ msgstr ""
 "сайте (имя вашей новой учетной записи должно совпадать с именем учетной "
 "записи AFS):"
 
-#: frontend/php/account/register.php:337
+#: frontend/php/account/register.php:331
 msgid "use AFS based authentication"
 msgstr "удостоверять личность по AFS"
 
@@ -3006,7 +3008,7 @@ msgid "Details"
 msgstr "Подробности"
 
 #: frontend/php/register/index.php:139
-#: frontend/php/include/trackers_run/mod.php:570
+#: frontend/php/include/trackers_run/mod.php:571
 msgid "Dependencies"
 msgstr "Зависимости"
 
@@ -4868,8 +4870,8 @@ msgid "Mailing Lists"
 msgstr "Рассылки"
 
 #: frontend/php/include/context.php:327
-#: frontend/php/include/trackers_run/mod.php:647
-#: frontend/php/include/trackers_run/mod.php:874
+#: frontend/php/include/trackers_run/mod.php:648
+#: frontend/php/include/trackers_run/mod.php:875
 #: frontend/php/include/trackers_run/search.php:23
 #: frontend/php/include/people/general.php:128
 #: frontend/php/include/search/general.php:152
@@ -5313,83 +5315,79 @@ msgstr ""
 "техникам, переназначать заявки на другие журналы и проекты, изменять "
 "приоритеты, открывать и закрывать заявки"
 
-#: frontend/php/include/trackers_run/mod.php:170
-#: frontend/php/news/approve.php:168
-msgid "Submitted by:"
-msgstr "Автор:"
-
 #: frontend/php/include/trackers_run/mod.php:174
-#: frontend/php/include/trackers_run/mod.php:943
+#: frontend/php/include/trackers_run/mod.php:944
 msgid "Submit Changes and Browse Items"
 msgstr "Сохранить и вернуться к списку"
 
-#: frontend/php/include/trackers_run/mod.php:176
-msgid "Submitted on:"
-msgstr "Дата размещения:"
+#. TRANSLATORS: This is a label for dates.
+#: frontend/php/include/trackers_run/mod.php:178
+msgid "Submitted:"
+msgstr "Размещено:"
 
-#: frontend/php/include/trackers_run/mod.php:181
-#: frontend/php/include/trackers_run/mod.php:945
+#: frontend/php/include/trackers_run/mod.php:182
+#: frontend/php/include/trackers_run/mod.php:946
 msgid "Submit Changes and Return to this Item"
 msgstr "Сохранить и продолжить редактирование"
 
-#: frontend/php/include/trackers_run/mod.php:188
+#: frontend/php/include/trackers_run/mod.php:189
 msgid "Votes:"
 msgstr "Голосование:"
 
-#: frontend/php/include/trackers_run/mod.php:369
+#: frontend/php/include/trackers_run/mod.php:370
 #: frontend/php/include/trackers_run/add.php:183
 msgid "Mandatory Fields"
 msgstr "Обязательные поля"
 
-#: frontend/php/include/trackers_run/mod.php:429
+#: frontend/php/include/trackers_run/mod.php:430
 msgid "Post a Comment"
 msgstr "Оставить комментарий"
 
-#: frontend/php/include/trackers_run/mod.php:434
+#: frontend/php/include/trackers_run/mod.php:435
 msgid "Add a New Comment"
 msgstr "Добавить комментарий"
 
-#: frontend/php/include/trackers_run/mod.php:436
+#: frontend/php/include/trackers_run/mod.php:437
 #: frontend/php/include/trackers_run/add.php:106
 #: frontend/php/include/trackers_run/add.php:187
 msgid "Preview"
 msgstr "Предпросмотр"
 
-#: frontend/php/include/trackers_run/mod.php:439
+#: frontend/php/include/trackers_run/mod.php:440
 msgid "New comment"
 msgstr "Новый комментарий"
 
-#: frontend/php/include/trackers_run/mod.php:443
+#: frontend/php/include/trackers_run/mod.php:444
 msgid "Comment Type & Canned Response:"
 msgstr "Тип комментария и шаблон ответа:"
 
-#: frontend/php/include/trackers_run/mod.php:472
+#: frontend/php/include/trackers_run/mod.php:473
 msgid "Strangely enough, there is no canned response available."
 msgstr "Странно, шаблонов ответа нет."
 
-#: frontend/php/include/trackers_run/mod.php:483
+#: frontend/php/include/trackers_run/mod.php:484
 msgid "Or define a new Canned Response"
 msgstr "Определить новый шаблон ответа"
 
-#: frontend/php/include/trackers_run/mod.php:492
+#: frontend/php/include/trackers_run/mod.php:493
 msgid "Discussion locked!"
 msgstr "Обсуждение заблокировано!"
 
-#: frontend/php/include/trackers_run/mod.php:495
+#: frontend/php/include/trackers_run/mod.php:496
 msgid "Your privileges however allow to override the lock."
 msgstr "Однако ваши привилегии позволяют обходить блокировку."
 
-#: frontend/php/include/trackers_run/mod.php:499
+#: frontend/php/include/trackers_run/mod.php:500
 msgid "Discussion"
 msgstr "Обсуждение"
 
-#: frontend/php/include/trackers_run/mod.php:525
+#: frontend/php/include/trackers_run/mod.php:526
 #: frontend/php/include/trackers_run/add.php:193
 #: frontend/php/include/trackers/format.php:498
 msgid "Attached Files"
 msgstr "Присоединенные файлы"
 
-#: frontend/php/include/trackers_run/mod.php:532
+#: frontend/php/include/trackers_run/mod.php:533
 #: frontend/php/include/trackers_run/add.php:195
 #, php-format
 msgid ""
@@ -5399,27 +5397,27 @@ msgstr ""
 "(Замечание: размер файлов ограничен величиной %s кБ после вставки "
 "необходимых экранирующих символов.)"
 
-#: frontend/php/include/trackers_run/mod.php:543
+#: frontend/php/include/trackers_run/mod.php:544
 msgid "File to attach"
 msgstr "Файл для присоединения"
 
-#: frontend/php/include/trackers_run/mod.php:550
+#: frontend/php/include/trackers_run/mod.php:551
 #: frontend/php/include/trackers_run/add.php:200
 msgid "Attach Files:"
 msgstr "Присоединить файлы:"
 
-#: frontend/php/include/trackers_run/mod.php:556
-#: frontend/php/include/trackers_run/mod.php:748
+#: frontend/php/include/trackers_run/mod.php:557
+#: frontend/php/include/trackers_run/mod.php:749
 #: frontend/php/include/trackers_run/add.php:211
 #: frontend/php/include/trackers_run/add.php:236
 msgid "Comment:"
 msgstr "Комментарий:"
 
-#: frontend/php/include/trackers_run/mod.php:559
+#: frontend/php/include/trackers_run/mod.php:560
 msgid "File description"
 msgstr "Описание файла"
 
-#: frontend/php/include/trackers_run/mod.php:578
+#: frontend/php/include/trackers_run/mod.php:579
 msgid ""
 "New search, in case the previous one was not satisfactory (to\n"
 "fill a dependency against):"
@@ -5427,66 +5425,66 @@ msgstr ""
 "Новый поиск на случай, если предыдущий был неудовлетворителен (для "
 "заполнения зависимости):"
 
-#: frontend/php/include/trackers_run/mod.php:582
+#: frontend/php/include/trackers_run/mod.php:583
 msgid "Search an item (to fill a dependency against):"
 msgstr "Поиск заявки (для заполнения зависимости):"
 
-#: frontend/php/include/trackers_run/mod.php:585
+#: frontend/php/include/trackers_run/mod.php:586
 #: frontend/php/include/search/general.php:156
 msgid "Terms to look for"
 msgstr "Слова для поиска"
 
-#: frontend/php/include/trackers_run/mod.php:589
+#: frontend/php/include/trackers_run/mod.php:590
 msgid "Tracker to search in"
 msgstr "Журнал для поиска"
 
-#: frontend/php/include/trackers_run/mod.php:594
+#: frontend/php/include/trackers_run/mod.php:595
 msgid "Any Tracker"
 msgstr "любого журнала"
 
-#: frontend/php/include/trackers_run/mod.php:595
+#: frontend/php/include/trackers_run/mod.php:596
 msgid "The Support Tracker Only"
 msgstr "только журнала поддержки"
 
-#: frontend/php/include/trackers_run/mod.php:596
+#: frontend/php/include/trackers_run/mod.php:597
 msgid "The Bug Tracker Only"
 msgstr "только журнала ошибок"
 
-#: frontend/php/include/trackers_run/mod.php:597
+#: frontend/php/include/trackers_run/mod.php:598
 msgid "The Task Manager Only"
 msgstr "только журнала задач"
 
-#: frontend/php/include/trackers_run/mod.php:598
+#: frontend/php/include/trackers_run/mod.php:599
 msgid "The Patch Manager Only"
 msgstr "только журнала заплаток"
 
-#: frontend/php/include/trackers_run/mod.php:611
+#: frontend/php/include/trackers_run/mod.php:612
 msgid "Wether to search in any project"
 msgstr "искать ли во всех проектах"
 
 #. TRANSLATORS: this string is used in the context like
 #. "search an item of [The Bug Tracker Only] of [Any Project]".
-#: frontend/php/include/trackers_run/mod.php:622
+#: frontend/php/include/trackers_run/mod.php:623
 msgid "Any Project"
 msgstr "любого проекта"
 
-#: frontend/php/include/trackers_run/mod.php:634
+#: frontend/php/include/trackers_run/mod.php:635
 msgid "This Project Only"
 msgstr "только этого проекта"
 
 #. TRANSLATORS: the first argument is tracker type (like The Bug Tracker),
 #. the second argument is either 'This Project Only' or 'Any Project'.
-#: frontend/php/include/trackers_run/mod.php:638
+#: frontend/php/include/trackers_run/mod.php:639
 #, php-format
 msgid "Of %1$s of %2$s"
 msgstr "%1$s %2$s"
 
-#: frontend/php/include/trackers_run/mod.php:644
-#: frontend/php/include/trackers_run/mod.php:879
+#: frontend/php/include/trackers_run/mod.php:645
+#: frontend/php/include/trackers_run/mod.php:880
 msgid "New search"
 msgstr "Новый поиск"
 
-#: frontend/php/include/trackers_run/mod.php:654
+#: frontend/php/include/trackers_run/mod.php:655
 #, php-format
 msgid ""
 "Please select a dependency to add in the result of your search\n"
@@ -5494,11 +5492,11 @@ msgid ""
 msgstr ""
 "Выберите зависимость, которую нужно добавить, из результата поиска по '%s':"
 
-#: frontend/php/include/trackers_run/mod.php:707
+#: frontend/php/include/trackers_run/mod.php:708
 msgid "group"
 msgstr "группа"
 
-#: frontend/php/include/trackers_run/mod.php:717
+#: frontend/php/include/trackers_run/mod.php:718
 msgid ""
 "None found. Please note that only search words of more than\n"
 "three characters are valid."
@@ -5506,11 +5504,11 @@ msgstr ""
 "Ничего не найдено. Учтите, что в поиске участвуют только слова, в которых "
 "более трех символов."
 
-#: frontend/php/include/trackers_run/mod.php:730
+#: frontend/php/include/trackers_run/mod.php:731
 msgid "Mail Notification Carbon-Copy List"
 msgstr "Список уведомлений"
 
-#: frontend/php/include/trackers_run/mod.php:736
+#: frontend/php/include/trackers_run/mod.php:737
 #: frontend/php/include/trackers_run/add.php:225
 #, php-format
 msgid ""
@@ -5520,16 +5518,16 @@ msgstr ""
 "(Замечание: для пользователей %s вместо адреса электронной почты можно "
 "указывать учетную запись.)"
 
-#: frontend/php/include/trackers_run/mod.php:743
+#: frontend/php/include/trackers_run/mod.php:744
 msgid "Add Email Addresses (comma as separator):"
 msgstr "Добавить адреса электронной почты (разделенные запятыми):"
 
-#: frontend/php/include/trackers_run/mod.php:762
+#: frontend/php/include/trackers_run/mod.php:763
 #: frontend/php/include/pagemenu.php:242
 msgid "Votes"
 msgstr "Голосование"
 
-#: frontend/php/include/trackers_run/mod.php:767
+#: frontend/php/include/trackers_run/mod.php:768
 #, php-format
 msgid "There is %s vote so far."
 msgid_plural "There are %s votes so far."
@@ -5537,7 +5535,7 @@ msgstr[0] "Пока %s голос."
 msgstr[1] "Пока %s голоса."
 msgstr[2] "Пока %s голосов."
 
-#: frontend/php/include/trackers_run/mod.php:773
+#: frontend/php/include/trackers_run/mod.php:774
 msgid ""
 "Votes easily highlight which items people would like to see resolved\n"
 "in priority, independently of the priority of the item set by tracker\n"
@@ -5546,19 +5544,19 @@ msgstr ""
 "Голосование указывает, решение каких заявок люди хотели бы получить прежде "
 "всего, независимо от приоритета, установленного секретарями журнала."
 
-#: frontend/php/include/trackers_run/mod.php:786
+#: frontend/php/include/trackers_run/mod.php:787
 msgid "Only project members can vote."
 msgstr "Голосовать могут только участники проекта."
 
-#: frontend/php/include/trackers_run/mod.php:792
+#: frontend/php/include/trackers_run/mod.php:793
 msgid "Only logged-in users can vote."
 msgstr "Анонимно голосовать нельзя."
 
-#: frontend/php/include/trackers_run/mod.php:808
+#: frontend/php/include/trackers_run/mod.php:809
 msgid "Your vote:"
 msgstr "Ваш голос:"
 
-#: frontend/php/include/trackers_run/mod.php:814
+#: frontend/php/include/trackers_run/mod.php:815
 #, php-format
 msgid "/ %s remaining vote"
 msgid_plural "/ %s remaining votes"
@@ -5566,42 +5564,42 @@ msgstr[0] " из %s оставшегося голоса"
 msgstr[1] " из %s оставшихся голосов"
 msgstr[2] " из %s оставшихся голосов"
 
-#: frontend/php/include/trackers_run/mod.php:831
+#: frontend/php/include/trackers_run/mod.php:832
 msgid "Reassign this item"
 msgstr "Переместить эту заявку"
 
-#: frontend/php/include/trackers_run/mod.php:842
+#: frontend/php/include/trackers_run/mod.php:843
 msgid "Tracker to reassign to"
 msgstr "Журнал, в который перемещать"
 
 #. TRANSLATORS: this string is used in the context of
 #. "Move to the %s".
-#: frontend/php/include/trackers_run/mod.php:847
+#: frontend/php/include/trackers_run/mod.php:848
 msgid "<!-- Move to the -->Support Tracker"
 msgstr "журнал поддержки"
 
-#: frontend/php/include/trackers_run/mod.php:848
+#: frontend/php/include/trackers_run/mod.php:849
 msgid "<!-- Move to the -->Bug Tracker"
 msgstr "журнал ошибок"
 
-#: frontend/php/include/trackers_run/mod.php:849
+#: frontend/php/include/trackers_run/mod.php:850
 msgid "<!-- Move to the -->Task Tracker"
 msgstr "журнал задач"
 
-#: frontend/php/include/trackers_run/mod.php:850
+#: frontend/php/include/trackers_run/mod.php:851
 msgid "<!-- Move to the -->Patch Tracker"
 msgstr "журнал заплаток"
 
-#: frontend/php/include/trackers_run/mod.php:856
+#: frontend/php/include/trackers_run/mod.php:857
 #, php-format
 msgid "Move to the %s"
 msgstr "Переместить в %s"
 
-#: frontend/php/include/trackers_run/mod.php:861
+#: frontend/php/include/trackers_run/mod.php:862
 msgid "Move to the project:"
 msgstr "Переместить в проект:"
 
-#: frontend/php/include/trackers_run/mod.php:866
+#: frontend/php/include/trackers_run/mod.php:867
 msgid ""
 "New search, in case the previous one was not satisfactory\n"
 "(to reassign the item to another project):"
@@ -5609,11 +5607,11 @@ msgstr ""
 "Новый поиск на случай, если предыдущий не удался (для перемещения заявки в "
 "другой проект):"
 
-#: frontend/php/include/trackers_run/mod.php:871
+#: frontend/php/include/trackers_run/mod.php:872
 msgid "Project to reassign item to"
 msgstr "Проект, в который перемещать заявку"
 
-#: frontend/php/include/trackers_run/mod.php:887
+#: frontend/php/include/trackers_run/mod.php:888
 #, php-format
 msgid ""
 "To which project this bug should be reassigned to? This is\n"
@@ -5621,11 +5619,11 @@ msgid ""
 msgstr ""
 "В какой проект переместить эту заявку? Вот результат поиска по строке '%s':"
 
-#: frontend/php/include/trackers_run/mod.php:897
+#: frontend/php/include/trackers_run/mod.php:898
 msgid "Do not reassign to another project."
 msgstr "Не перемещать заявку в другой проект."
 
-#: frontend/php/include/trackers_run/mod.php:924
+#: frontend/php/include/trackers_run/mod.php:925
 msgid ""
 "None found. Please note that only search words of more\n"
 "than three characters are valid."
@@ -5633,7 +5631,7 @@ msgstr ""
 "Ничего не найдено. Учтите, что в поиске участвуют только слова, в которых "
 "более трех символов."
 
-#: frontend/php/include/trackers_run/mod.php:936
+#: frontend/php/include/trackers_run/mod.php:937
 #: frontend/php/include/trackers_run/add.php:250
 msgid ""
 "Please enter the title of <a\n"
@@ -5644,7 +5642,7 @@ msgstr ""
 "Введите название знаменитой антиутопии <a href=\"https://en.wikipedia.org/"
 "wiki/George_Orwell\">Джорджа Оруэлла</a> (это дата):"
 
-#: frontend/php/include/trackers_run/mod.php:949
+#: frontend/php/include/trackers_run/mod.php:950
 msgid "History"
 msgstr "История"
 
@@ -12437,19 +12435,14 @@ msgstr "Другая вводная документация"
 msgid "Check the <a href=\"%s\">UsingBzr</a> page at the documentation wiki."
 msgstr "Обратитесь к странице <a href=\"%s\">UsingBzr</a> в вики документации."
 
-#, fuzzy
-#~| msgid ""
-#~| "Column heading links sort results (up or\n"
-#~| "down), you can also <a href=\"%1$s\">sort by priority</a> or <a href="
-#~| "\"%2$s\">reset\n"
-#~| "sort</a>."
-#~ msgid ""
-#~ "Column heading links sort results (up or\n"
-#~ "down), you can also "
-#~ msgstr ""
-#~ "Ссылки в заголовках столбцов сортируют результаты (в возрастающем или "
-#~ "убывающем порядке), можно также <a href=\"%1$s\">сортировать по "
-#~ "приоритету</a> или <a href=\"%2$s\">сбросить сортировку</a>."
+#~ msgid "Submitted By"
+#~ msgstr "Автор"
+
+#~ msgid "Submitted by:"
+#~ msgstr "Автор:"
+
+#~ msgid "Submitted on:"
+#~ msgstr "Дата размещения:"
 
 #~ msgid "This item was not approved"
 #~ msgstr "Эта заявка не была подтверждена"
