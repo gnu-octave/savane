@@ -1177,16 +1177,17 @@ $form .= "</p>\n";
 if ($totalrows > 0)
   {
     $form .= '<p class="smaller">';
+    $msg =
+      _("Column heading links sort results (up or\ndown), you can also "
+        . '<a href="%1$s">sort by priority</a> or <a href="%2$s">reset'
+        . "\nsort</a>.");
+    $form .= sprintf (
+      $msg, "$url&amp;order=priority#results", "$url&amp;order=#results"
+    );
     if ($msort)
       {
         $url_alternate_sort = str_replace ('msort=1', 'msort=0', $url)
           . '&amp;order=#results';
-        $form .= sprintf (
-          _("Column heading links sort results (up or\ndown), you can "
-            . 'also <a href="%1$s">sort by priority</a> or '
-            . '<a href="%2$s">reset\nsort</a>.'),
-          "$url&amp;order=priority#results", "$url&amp;order=#results"
-        );
 	$form .= sprintf (
           _("You can also <a href=\"%s\">deactivate multicolumn sort</a>."),
           $url_alternate_sort
@@ -1196,12 +1197,6 @@ if ($totalrows > 0)
       {
         $url_alternate_sort = str_replace ('msort=0', 'msort=1', $url)
           . '&amp;order=#results';
-        $form .= sprintf (
-          _("Column heading links sort results (up or\ndown), you can also "
-            . '<a href="%1$s">sort by priority</a> or <a href="%2$s">'
-            . "reset\nsort</a>."),
-          "$url&amp;order=priority#results", "$url&amp;order=#results"
-        );
 	$form .= ' ' . sprintf (
           _("You can also <a href=\"%s\">activate multicolumn sort</a>."),
           $url_alternate_sort
