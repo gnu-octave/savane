@@ -967,8 +967,8 @@ function trackers_mail_followup (
   );
   $to = join(',', $arr_addresses);
   $from = user_getrealname (0, 1) . " <$sys_mail_replyto@$sys_mail_domain>";
-  $subject = utils_unconvert_htmlspecialchars (
-    db_result ($result, 0, 'summary')
+  $subject = htmlspecialchars_decode (
+    db_result ($result, 0, 'summary'), ENT_QUOTES
   );
 
   if ($more_addresses)

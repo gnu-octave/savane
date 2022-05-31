@@ -942,7 +942,7 @@ function markup_ascii_line ($line, &$item_no)
 # amounts to enumerations in ordered lists, Savannah sr #110621.
 function markup_ascii ($text)
 {
-  $lines = explode ("\n", utils_unconvert_htmlspecialchars ($text));
+  $lines = explode ("\n", htmlspecialchars_decode ($text), ENT_QUOTES);
   $item_no = [];
   $ret = '';
   foreach ($lines as $line)

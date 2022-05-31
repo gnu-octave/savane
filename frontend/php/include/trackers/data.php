@@ -1500,8 +1500,8 @@ function trackers_data_append_canned_response ($details, $canned_response)
         }
       if (!empty ($details))
         $details .= $separator;
-      $details .= utils_unconvert_htmlspecialchars (
-        db_result ($res, 0, 'body')
+      $details .= htmlspecialchars_decode (
+        db_result ($res, 0, 'body'), ENT_QUOTES
       );
       $any_response_used = true;
     }
