@@ -2047,6 +2047,16 @@ $reference = 'project/admin/userperms.php';
   test_sane_import ($in, $names, $out);
 }
 
+$reference = 'project/memberlist.php';
+{
+  $names = ['digits' => 'detailed'];
+  $out = $in = ['detailed' => 0];
+  test_sane_import ($in, $names, $out);
+  $names = ['digits' => 'form_grp'];
+  $out = $in = ['form_grp' => 12345];
+  test_sane_import ($in, $names, $out);
+}
+
 $reference = 'project/memberlist-gpgkeys.php';
 {
   $names = ['true' => 'download'];
@@ -2296,6 +2306,12 @@ $reference = 'stats/index.php';
   $in = $out = ['update' => true];
   foreach ($digit_names as $n)
     $in[$n] = $out[$n] = 83521;
+  test_sane_import ($in, $names, $out);
+}
+$reference = 'userguide/index.php';
+{
+  $names = ['preg' => [['file', '/^[[:alnum:]_-]+[.]html$/']]];
+  $in = $out = ['file' => 'ch01.html'];
   test_sane_import ($in, $names, $out);
 }
 ?>

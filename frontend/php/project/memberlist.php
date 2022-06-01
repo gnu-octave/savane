@@ -37,11 +37,11 @@ function specific_print_role ($row, $title)
     print "$title {$roles[$row]},<br />";
 }
 
-$detailed = sane_get("detailed");
-$form_grp = sane_all("form_grp");
+extract (sane_import ('get', ['digits' => "detailed"]));
+extract (sane_import ('request', ['digits' => "form_grp"]));
 
 if ((!$group_id) && $form_grp)
-  $group_id = htmlentities($form_grp);
+  $group_id = $form_grp;
 
 site_project_header (
   [

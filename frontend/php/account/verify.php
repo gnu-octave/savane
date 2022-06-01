@@ -97,7 +97,8 @@ print "</p>\n";
 # Must accept all ways of providing confirm_hash (POST & GET), because
 # in the mail it is a POST but if the form fail (wrong password, etc), it will
 # be a GET.
-print form_hidden (["confirm_hash" => sane_all ('confirm_hash')]);
+extract (sane_import ('request', ['hash' => 'confirm_hash']));
+print form_hidden (["confirm_hash" => $confirm_hash]);
 print form_footer (_("Login"));
 
 site_footer ([]);

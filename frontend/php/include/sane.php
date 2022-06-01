@@ -393,60 +393,6 @@ function sane_import($method, $names)
   return $values;
 }
 
-# Backward security function. This will sanitize input already passed via
-# register globals.
-#
-# In theory, this function should "disappear" from the code and be replaced by
-# sane_XXX functions.
-#
-# This function should be used whenever user input is used:
-#        - get
-#        - post
-#        - cookies
-# This will escape the strings appropriately.
-
-# Function to obtain user input that come from undefined method.
-# This should be used only where user can legitimately send data by
-# different methods.
-# (this is why it is called sane_all, to avoid having it used everywhere)
-# This does not take uploads depending on PHP version, so use sane_upload()
-# instead, if necessary.
-function sane_all($varname)
-{
-  if (sane_isset($varname))
-    return $_REQUEST[$varname];
-  else
-    return '';
-}
-
-# Function to obtain user input submitted as url args
-# (like thispage.php?arg=userinput).
-function sane_get($varname)
-{
-  if (isset($_GET[$varname]))
-    return $_GET[$varname];
-  else
-    return '';
-}
-
-# Function to obtain user input submitted while posting a form.
-function sane_post($varname)
-{
-  if (isset($_POST[$varname]))
-    return $_POST[$varname];
-  else
-    return '';
-}
-
-# Function to obtain user input submitted in a cookie.
-function sane_cookie($varname)
-{
-  if (isset($_COOKIE[$varname]))
-    return $_COOKIE[$varname];
-  else
-    return '';
-}
-
 # Does an isset. Not really necessary, just for cohesion sake.
 function sane_isset($varname)
 {

@@ -383,7 +383,7 @@ $is_deployed["reassign"] = false;
 
 # In printer mode, deploy everything by default: assume that people default
 # printout should contain all necessary info (note that history is excluded).
-if (sane_all ("printer"))
+if ($printer)
   foreach ($is_deployed as $key => $value)
     $is_deployed[$key] = true;
 
