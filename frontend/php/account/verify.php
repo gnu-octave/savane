@@ -3,7 +3,7 @@
 #
 # Copyright (C) 1999-2000 The SourceForge Crew
 # Copyright (C) 2002-2006 Mathieu Roy <yeupou--gnu.org>
-# Copyright (C) 2017 Ineiev
+# Copyright (C) 2017, 2022 Ineiev
 #
 # This file is part of Savane.
 #
@@ -20,16 +20,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once('../include/init.php');
-require_once('../include/dnsbl.php');
-require_once('../include/spam.php');
-require_once('../include/html.php');
-require_once('../include/form.php');
-require_once('../include/exit.php');
+require_once ('../include/init.php');
+require_once ('../include/dnsbl.php');
+require_once ('../include/spam.php');
+require_once ('../include/html.php');
+require_once ('../include/form.php');
+require_once ('../include/exit.php');
 
-register_globals_off();
-
-extract(sane_import('post',
+extract (sane_import ('post',
   [
     'true' => 'update',
     'hash' => ['form_id', 'confirm_hash'],
@@ -39,60 +37,68 @@ extract(sane_import('post',
 ));
 
 # Block here potential robots.
-dnsbl_check();
+dnsbl_check ();
 
 # Logged users have no business here.
-if (user_isloggedin())
-  session_redirect($GLOBALS['sys_home']."my/");
+if (user_isloggedin ())
+  session_redirect ("${sys_home}my/");
 
-if (!empty($update))
+if (!empty ($update))
   {
     # First check just confirmation hash.
-    $res = db_execute('SELECT confirm_hash,status FROM user WHERE '
-                      .'user_name=? and status<>"SQD"',
-                      array($form_loginname));
-    if (db_numrows($res) < 1)
-      exit_error(_("Invalid username."));
+    $res = db_execute ("
+      SELECT confirm_hash, status FROM user
+      WHERE user_name = ? AND status <> 'SQD'",
+      [$form_loginname]
+    );
+    if (db_numrows ($res) < 1)
+      exit_error (_("Invalid username."));
 
-    $usr = db_fetch_array($res);
+    $usr = db_fetch_array ($res);
     if ($confirm_hash != $usr['confirm_hash'])
-# TRANSLATORS: confirmation hash is a secret code sent to the user.
-      exit_error(_("Invalid confirmation hash"));
+      # TRANSLATORS: confirmation hash is a secret code sent to the user.
+      exit_error (_("Invalid confirmation hash"));
 
     # Then check valid login.
-    if (session_login_valid($form_loginname,
-                            $form_pw,
-                            1, # accept not yet confirmed accounts
-                            0, # not a cookie for a year
-                            0, # not crypted
-                            session_issecure()))
+    if (
+      session_login_valid (
+        $form_loginname, $form_pw, 1, 0, 0, session_issecure ()
+      )
+    )
       {
-        $res = db_execute("UPDATE user SET status='A' WHERE user_name=?",
-                          array($form_loginname));
-        session_redirect($GLOBALS['sys_home']."account/first.php");
+        $res = db_execute (
+          "UPDATE user SET status = 'A' WHERE user_name = ?",
+          [$form_loginname]
+        );
+        session_redirect ("${sys_home}account/first.php");
       }
   }
-site_header(array('title'=>_("Login")));
+site_header (['title' => _("Login")]);
 # TRANSLATORS: the argument is the name of the system (like "Savannah").
-print '<h2> '.sprintf(_("%s Account Verification"),$GLOBALS['sys_name'])
-      ."</h2>\n";
-print '<p>'._("In order to complete your registration, login now. Your account
-will then be activated for normal logins.")."</p>\n";
+print '<h2> ';
+printf (_("%s Account Verification"), $sys_name);
+print "</h2>\n";
+print '<p>'
+ . _("In order to complete your registration, login now. Your account\n"
+     . "will then be activated for normal logins.")
+ . "</p>\n";
 
-print form_header($_SERVER["PHP_SELF"], $form_id);
-print '<p><span class="preinput">'._("Login Name").':</span><br />&nbsp;&nbsp;';
-print form_input("text", "form_loginname");
+print form_header ($_SERVER["PHP_SELF"], $form_id);
+print '<p><span class="preinput">'
+  . _("Login Name") . ":</span><br />\n&nbsp;&nbsp;";
+print form_input ("text", "form_loginname");
 print "</p>\n";
 
-print '<p><span class="preinput">'._("Password").':</span><br />&nbsp;&nbsp;';
-print form_input("password", "form_pw");
+print '<p><span class="preinput">'
+  . _("Password") . ":</span><br />\n&nbsp;&nbsp;";
+print form_input ("password", "form_pw");
 print "</p>\n";
 
 # Must accept all ways of providing confirm_hash (POST & GET), because
 # in the mail it is a POST but if the form fail (wrong password, etc), it will
 # be a GET.
-print form_input("hidden", "confirm_hash", sane_all('confirm_hash'));
-print form_footer(_("Login"));
+print form_hidden (["confirm_hash" => sane_all ('confirm_hash')]);
+print form_footer (_("Login"));
 
-site_footer(array());
+site_footer ([]);
 ?>
