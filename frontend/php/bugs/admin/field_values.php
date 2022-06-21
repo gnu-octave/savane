@@ -58,6 +58,8 @@ if (!$group_id)
   exit_no_group ();
 if (!user_ismember ($group_id, 'A'))
   exit_permission_denied ();
+if (empty ($order_id))
+  $order_id = 0;
 
 $server_self = htmlentities ($_SERVER['PHP_SELF']);
 $delete_canned = $func === 'delcanned';
