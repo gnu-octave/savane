@@ -434,36 +434,35 @@ function session_set_new_cookies($user_id, $cookie_for_a_year=0, $stay_in_ssl=1)
 
 function session_set()
 {
-  global $G_SESSION,$G_USER;
+  global $G_SESSION, $G_USER;
 
   # Assume bad session_hash and session. If all checks work, then allow
   # otherwise make new session.
   $id_is_good = 0;
 
   # Here also check for good hash, set if new session is needed.
-  extract(sane_import('cookie',
-    ['hash' =>'session_hash', 'digits' => 'session_uid']));
+  extract (sane_import ('cookie',
+    ['hash' =>'session_hash', 'digits' => 'session_uid'])
+  );
   if ($session_hash && $session_uid)
     {
-      $result=db_execute("SELECT * FROM session WHERE session_hash=? AND user_id=?",
-                         array($session_hash, $session_uid));
-      $G_SESSION = db_fetch_array($result);
+      $result = db_execute ("
+        SELECT * FROM session WHERE session_hash = ? AND user_id = ?",
+        [$session_hash, $session_uid]
+      );
+      $G_SESSION = db_fetch_array ($result);
 
       # Does hash exist?
-      if ($G_SESSION['session_hash'])
-        {
-          $id_is_good = 1;
-        }
+      if (isset ($G_SESSION['session_hash']) && $G_SESSION['session_hash'])
+        $id_is_good = 1;
     } # if ($session_hash && $session_uid)
 
   if ($id_is_good)
-    {
-      session_setglobals($G_SESSION['user_id']);
-    }
+    session_setglobals ($G_SESSION['user_id']);
   else
     {
-      unset($G_SESSION);
-      unset($G_USER);
+      unset ($G_SESSION);
+      unset ($G_USER);
     }
 }
 
